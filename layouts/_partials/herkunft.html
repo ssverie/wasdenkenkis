@@ -18,6 +18,14 @@
     <dd>{{ .Date | time.Format ":date_long" }}</dd>
     <dt>Herkunft</dt>
     <dd>{{ if $eingebracht }}Außerhalb dieser Seite erzeugt und mitgebracht{{ else }}Direkt für diese Seite geschrieben{{ end }}</dd>
+    {{- with .Params.film }}
+    <dt>Film</dt>
+    <dd>{{ . }}</dd>
+    {{- end }}
+    {{- with .Params.kontext }}
+    <dt>Kontext</dt>
+    <dd>{{ . }}</dd>
+    {{- end }}
     {{- with .Params.begleittext }}
     <dt>Begleittext</dt>
     <dd>{{ . }}</dd>

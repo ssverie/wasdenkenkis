@@ -140,6 +140,22 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
   .liste li.mit-bild { grid-template-columns: 1fr; gap: 0.6rem; }
 }
 
+/* Anmerkung der Redaktion unter fremden Beiträgen */
+.anmerkung {
+  margin: 1.5rem 0;
+  padding: 0.9rem 1.1rem;
+  border: 1px dashed var(--linie);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  color: var(--text-leise);
+}
+.anmerkung-kopf {
+  margin: 0 0 0.4rem;
+  font-weight: 600;
+  color: var(--akzent);
+}
+.anmerkung p:last-child { margin-bottom: 0; }
+
 /* Linksammlung */
 .links .liste-titel::after { content: " ↗"; font-weight: 400; }
 .unterlinks { font-size: 0.95rem; }

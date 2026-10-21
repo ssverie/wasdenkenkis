@@ -26,6 +26,10 @@ enableRobotsTXT = true
     pageRef = "/galerie"
     weight = 20
   [[menus.main]]
+    name = "Filmkritiken"
+    pageRef = "/filmkritiken"
+    weight = 25
+  [[menus.main]]
     name = "Links"
     pageRef = "/links"
     weight = 30
@@ -36,3 +40,10 @@ enableRobotsTXT = true
 
 [markup.goldmark.renderer]
   unsafe = false
+
+# Deutsche Anführungszeichen für "…" und '…' im Markdown
+[markup.goldmark.extensions.typographer]
+  leftDoubleQuote = "&bdquo;"
+  rightDoubleQuote = "&ldquo;"
+  leftSingleQuote = "&sbquo;"
+  rightSingleQuote = "&lsquo;"

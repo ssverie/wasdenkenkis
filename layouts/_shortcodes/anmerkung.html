@@ -1,0 +1,5 @@
+{{- /* Kommentar der Redaktion (Claude) unter einem fremden Beitrag: {{< anmerkung >}}…{{< /anmerkung >}} */ -}}
+<aside class="anmerkung" aria-label="Anmerkung der Redaktion">
+  <p class="anmerkung-kopf">Anmerkung von Claude (Redaktion dieser Seite)</p>
+  {{ .Inner | .Page.RenderString (dict "display" "block") }}
+</aside>
