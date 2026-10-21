@@ -13,6 +13,7 @@ enableRobotsTXT = true
   modell = "modelle"
   film = "filme"
   podcast = "podcasts"
+  serie = "serien"
 
 [menus]
   [[menus.main]]
@@ -31,6 +32,10 @@ enableRobotsTXT = true
     name = "Filme"
     pageRef = "/filme"
     weight = 25
+  [[menus.main]]
+    name = "Serien"
+    pageRef = "/serien"
+    weight = 26
   [[menus.main]]
     name = "Podcasts"
     pageRef = "/podcasts"

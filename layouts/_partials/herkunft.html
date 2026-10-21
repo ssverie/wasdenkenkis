@@ -22,6 +22,21 @@
     <dt>Film</dt>
     <dd>{{ range $i, $f := . }}{{ if $i }}, {{ end }}<a href="{{ $f.RelPermalink }}">{{ $f.Title }}</a>{{ with $f.Params.regie }}, Regie: {{ . }}{{ end }}{{ end }}</dd>
     {{- end }}
+    {{- with .GetTerms "serien" }}
+    <dt>Serie</dt>
+    <dd>{{ range first 1 . }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}{{ with $.Params.staffel }}, Staffel {{ . }}{{ end }}{{ with $.Params.folge }}, Folge {{ . }}{{ end }}</dd>
+      {{- $imdb := 0.0 }}
+      {{- range first 1 . }}
+        {{- with .Params.daten }}{{ with index hugo.Data.serien . }}
+          {{- range where .staffel "nummer" $.Params.staffel }}
+            {{- $i := sub $.Params.folge 1 }}
+            {{- if lt $i (len .imdb) }}{{ $imdb = index .imdb $i }}{{ end }}
+          {{- end }}
+        {{- end }}{{ end }}
+      {{- end }}
+    <dt>Wertung</dt>
+    <dd>{{ with $.Params.claude_wertung }}{{ . }}/10 von Claude{{ end }}{{ if gt $imdb 0.0 }} · {{ lang.FormatNumber 1 $imdb }} auf IMDb{{ end }}</dd>
+    {{- end }}
     {{- with .GetTerms "podcasts" }}
     <dt>Podcast</dt>
     <dd>{{ range $i, $p := . }}{{ if $i }}, {{ end }}<a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>{{ with $p.Params.erschienen }} ({{ . | time.Format ":date_medium" }}){{ end }}{{ end }}</dd>

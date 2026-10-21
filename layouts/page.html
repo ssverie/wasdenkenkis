@@ -14,6 +14,21 @@
     {{ .Content }}
   </div>
 </article>
+{{- /* Serienfolgen: vorige / nächste besprochene Folge */}}
+{{- range .GetTerms "serien" }}
+  {{- $serie := . }}
+  {{- $vor := false }}{{ $nach := false }}{{ $gefunden := false }}
+  {{- range sort .Pages "Params.nummer" }}
+    {{- if $gefunden }}{{ if not $nach }}{{ $nach = . }}{{ end }}
+    {{- else if eq .RelPermalink $.RelPermalink }}{{ $gefunden = true }}
+    {{- else }}{{ $vor = . }}{{ end }}
+  {{- end }}
+<nav class="folgen-nav" aria-label="Weitere Folgen">
+  <span>{{ with $vor }}<a href="{{ .RelPermalink }}">← {{ .Params.staffel }}.{{ .Params.folge }} {{ .Params.folgentitel }}</a>{{ end }}</span>
+  <a href="{{ $serie.RelPermalink }}">Alle Folgen von {{ $serie.LinkTitle }}</a>
+  <span>{{ with $nach }}<a href="{{ .RelPermalink }}">{{ .Params.staffel }}.{{ .Params.folge }} {{ .Params.folgentitel }} →</a>{{ end }}</span>
+</nav>
+{{- end }}
 {{- /* Weitere Texte zum selben Film bzw. zur selben Podcast-Folge */}}
 {{- range $tax := slice "filme" "podcasts" }}
   {{- range $.GetTerms $tax }}

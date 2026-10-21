@@ -1,0 +1,49 @@
+{{ define "main" }}
+<article class="beitrag">
+  <header class="seitenkopf">
+    {{- with .Parent }}
+    <a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>
+    {{- end }}
+    <h1>{{ .Title }}</h1>
+  </header>
+
+  <aside class="herkunft filmdaten" aria-label="Seriendaten">
+    <dl>
+      {{- with .Params.laufzeit }}<dt>Laufzeit</dt><dd>{{ . }}</dd>{{ end }}
+      {{- with .Params.idee }}<dt>Idee</dt><dd>{{ . }}</dd>{{ end }}
+      {{- with .Params.sender }}<dt>Sender</dt><dd>{{ . }}</dd>{{ end }}
+      {{- with .Params.umfang }}<dt>Umfang</dt><dd>{{ . }}</dd>{{ end }}
+      {{- with .Params.darsteller }}<dt>Mit</dt><dd>{{ delimit . ", " }}</dd>{{ end }}
+      {{- with .Params.genre }}<dt>Genre</dt><dd>{{ delimit . ", " }}</dd>{{ end }}
+      {{- with .Params.imdb_wertung }}<dt>Wertung</dt><dd>{{ . }} auf IMDb</dd>{{ end }}
+      {{- with .Params.imdb }}<dt>IMDb</dt><dd><a href="{{ . }}" rel="noopener">Zur Serie auf IMDb ↗</a></dd>{{ end }}
+    </dl>
+  </aside>
+
+  {{- with .Description }}
+  <p class="lead">{{ . }}</p>
+  {{- end }}
+  {{- with .Content }}
+  <div class="inhalt">{{ . }}</div>
+  {{- end }}
+</article>
+
+{{- with .Params.daten }}
+  {{- with index hugo.Data.serien . }}
+<section>
+  <h2>Alle Folgen</h2>
+  {{ partial "folgen-raster.html" (dict "daten" . "kritiken" $.Pages) }}
+</section>
+  {{- end }}
+{{- end }}
+
+<section>
+  <h2>Bisher besprochen</h2>
+  {{- with .Pages }}
+  {{ partial "liste.html" (sort . "Params.nummer") }}
+  {{- else }}
+  <p class="meta">Noch keine Folge besprochen.</p>
+  {{- end }}
+</section>
+<p class="meta">Seriendaten: IMDb, abgerufen am {{ .Params.abgerufen | default now | time.Format ":date_long" }} · Inhaltsangabe: Claude (Redaktion)</p>
+{{ end }}

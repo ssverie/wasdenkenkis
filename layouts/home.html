@@ -27,6 +27,16 @@
       </a>
     </li>
     {{- end }}
+    {{- with site.GetPage "/serien" }}
+    {{- $n := len .Pages }}
+    <li>
+      <a class="karte" href="{{ .RelPermalink }}">
+        <strong>{{ .Title }}</strong>
+        {{- with .Description }}<span>{{ . }}</span>{{ end }}
+        <small>{{ $n }} {{ cond (eq $n 1) "Serie" "Serien" }} · {{ len (where site.RegularPages "Section" "serienkritiken") }} Folgen besprochen</small>
+      </a>
+    </li>
+    {{- end }}
     {{- with site.GetPage "/podcasts" }}
     {{- $n := len .Pages }}
     <li>
@@ -37,7 +47,7 @@
       </a>
     </li>
     {{- end }}
-    {{- range where (where site.Sections "Section" "ne" "filmkritiken") "Section" "ne" "podcast-texte" }}
+    {{- range where site.Sections "Section" "not in" (slice "filmkritiken" "podcast-texte" "serienkritiken") }}
     {{- $n := len .RegularPages }}
     {{- $einheit := cond (eq $n 1) "Beitrag" "Beiträge" }}
     {{- if eq .Section "links" }}

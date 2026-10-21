@@ -1,0 +1,47 @@
+# IMDb-Wertungen der Episoden von Mad Men.
+# Quelle: IMDb-Episodenübersicht, Screenshots von Sven (input, 21.10.2026).
+# Je Staffel: Anzahl Folgen, IMDb-Durchschnitt der Staffel, Wertungen in Folgen-Reihenfolge.
+# Fehlende Werte (noch nicht geliefert) einfach weglassen – die Liste darf kürzer sein als „folgen“.
+abgerufen = 2026-10-21
+
+[[staffel]]
+  nummer = 1
+  folgen = 13
+  schnitt = 8.1
+  imdb = [8.1, 7.5, 7.6, 7.9, 8.1, 7.8, 8.0, 8.3, 8.2, 8.2, 8.1]
+
+[[staffel]]
+  nummer = 2
+  folgen = 13
+  schnitt = 8.2
+  imdb = [7.6, 7.8, 7.8, 8.1, 8.3, 7.9, 8.4, 8.3, 8.5, 7.9, 8.3]
+
+[[staffel]]
+  nummer = 3
+  folgen = 13
+  schnitt = 8.4
+  imdb = [8.1, 7.7, 8.0, 8.0, 8.0, 9.1, 8.4, 7.9, 8.1, 8.3, 9.2]
+
+[[staffel]]
+  nummer = 4
+  folgen = 13
+  schnitt = 8.7
+  imdb = [8.5, 8.2, 8.7, 8.2, 8.6, 8.6, 9.7, 8.6, 8.8, 8.7, 8.3]
+
+[[staffel]]
+  nummer = 5
+  folgen = 13
+  schnitt = 8.6
+  imdb = [8.5, 8.4, 7.8, 8.6, 9.1, 9.1, 8.7, 8.2, 8.0, 8.2, 9.4]
+
+[[staffel]]
+  nummer = 6
+  folgen = 13
+  schnitt = 8.3
+  imdb = [7.5, 7.6, 7.8, 8.0, 8.2, 8.8, 7.9, 8.7, 8.3, 8.1, 8.8]
+
+[[staffel]]
+  nummer = 7
+  folgen = 14
+  schnitt = 8.6
+  imdb = [7.9, 8.3, 8.6, 8.5, 8.5, 8.9, 9.5, 8.1, 7.8, 8.2, 8.9]

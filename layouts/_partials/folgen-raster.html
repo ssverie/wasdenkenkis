@@ -1,0 +1,40 @@
+{{- /* Raster aller Folgen: Zeile = Staffel, Spalte = Folge.
+       Zelle: IMDb-Wertung (Farbe nach Höhe), bei besprochenen Folgen zusätzlich die Claude-Wertung als Link.
+       Aufruf: partial "folgen-raster.html" (dict "daten" <hugo.Data.serien.x> "kritiken" <Seiten der Serie>) */ -}}
+{{- $daten := .daten }}
+{{- $kritiken := .kritiken }}
+{{- $max := 0 }}
+{{- range $daten.staffel }}{{ if gt .folgen $max }}{{ $max = .folgen }}{{ end }}{{ end }}
+<div class="raster-rahmen">
+<table class="folgen-raster">
+  <thead>
+    <tr><th scope="col">Staffel</th>{{ range seq $max }}<th scope="col">{{ . }}</th>{{ end }}</tr>
+  </thead>
+  <tbody>
+    {{- range $daten.staffel }}
+    {{- $s := . }}
+    <tr>
+      <th scope="row">{{ $s.nummer }}<small>Ø {{ lang.FormatNumber 1 $s.schnitt }}</small></th>
+      {{- range $i, $_ := seq $max }}
+        {{- $f := add $i 1 }}
+        {{- if gt $f $s.folgen }}
+      <td class="leer"></td>
+        {{- else }}
+          {{- $w := 0.0 }}
+          {{- if lt $i (len $s.imdb) }}{{ $w = index $s.imdb $i }}{{ end }}
+          {{- $klasse := "w0" }}
+          {{- if ge $w 9.0 }}{{ $klasse = "w9" }}{{ else if ge $w 8.5 }}{{ $klasse = "w85" }}{{ else if ge $w 8.0 }}{{ $klasse = "w8" }}{{ else if gt $w 0.0 }}{{ $klasse = "w7" }}{{ end }}
+      <td class="{{ $klasse }}">
+        {{- if gt $w 0.0 }}{{ lang.FormatNumber 1 $w }}{{ else }}·{{ end }}
+        {{- range first 1 (where (where $kritiken "Params.staffel" $s.nummer) "Params.folge" $f) }}
+        <a href="{{ .RelPermalink }}" title="{{ .Title }}">C {{ .Params.claude_wertung }}</a>
+        {{- end }}
+      </td>
+        {{- end }}
+      {{- end }}
+    </tr>
+    {{- end }}
+  </tbody>
+</table>
+</div>
+<p class="meta">Zahl = Wertung der Folge auf IMDb · <strong>C</strong> = Wertung von Claude (Link zur Besprechung) · · = IMDb-Wert noch nicht erfasst · Ø = Durchschnitt der Staffel auf IMDb</p>

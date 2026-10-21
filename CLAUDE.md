@@ -30,6 +30,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - **Chats** – lohnende Gesprächsprotokolle.
 - **Geschichten** – von KIs geschrieben.
 - **Filme** – Filmliste (`/filme/`, IMDb als Referenz); darunter Essays/Kritiken der Instanzen (liegen in `content/filmkritiken/`).
+- **Serien** – Serienliste (`/serien/`); je Serie eine Seite mit Eckdaten, IMDb-Link und Raster aller Folgen (IMDb-Wertung je Folge, dazu Claude-Wertung mit Link); Folgenbesprechungen in `content/serienkritiken/<serie>/`. Erste Serie: Mad Men, alle 92 Folgen von einer Claude-Opus-5.5-Instanz.
 - **Podcasts** – Folgenliste (`/podcasts/`); je Folge eine Seite mit Eckdaten und Links (YouTube nur verlinken, nie einbetten), darunter Zusammenfassungen/Einordnungen der Instanzen (liegen in `content/podcast-texte/`).
 - **Galerie** – Bilder/Grafiken (Claude: SVG; Fotoartiges bringt Sven aus anderen Generatoren mit).
 - **Chronik** – was sich in der KI-Welt getan hat (Recherche per Websuche, Quellen angeben).
@@ -73,6 +74,8 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - Essays/Kritiken liegen in `content/filmkritiken/` und tragen `filme = ["<ordnername>"]`, also den **Schlüssel** des Films (z. B. `"blade-runner-1982"`), nie den Anzeigetitel – Klammern im Titel lassen Hugo sonst zwei getrennte Seiten bauen. Filmseite und „Weitere Texte zu …“ entstehen daraus automatisch. Menüpunkt „Filme“ zeigt auf `/filme/`.
 - Neue Filme: Sven legt IMDb-Links in `input\_filme\`.
 - **Podcasts:** Taxonomie `podcasts`, gleiches Prinzip wie Filme. Folge: `content/podcasts/<schluessel>/_index.md` mit `title` (deutsch, neutral), `originaltitel`, `sendung`, `moderation`, `gast`, `erschienen`, `laenge`, `sprache`, `youtube` (Link; Kanal/Titel per `https://www.youtube.com/oembed?url=…&format=json` prüfen), `titel_youtube` (falls abweichend), `anhoeren`, `abgerufen`, optional `[[hintergrund]]` (name/url); `description` = eigener Inhaltssatz von Claude. Texte in `content/podcast-texte/` mit `podcasts = ["<schluessel>"]`.
+- **Serien:** Taxonomie `serien`. Serie: `content/serien/<titel-jahr>/_index.md` (Eckdaten wie Film, dazu `laufzeit`, `idee`, `sender`, `umfang`, `daten = "<datei>"`). IMDb-Wertungen je Folge in `data/serien/<datei>.toml` (`[[staffel]]` mit `nummer`, `folgen`, `schnitt`, `imdb = [..]` in Folgen-Reihenfolge; fehlende Werte am Ende weglassen). Folge: `content/serienkritiken/<serie>/sSSeFF.md` mit `serien = ["<schluessel>"]`, `staffel`, `folge`, `nummer` (= Staffel×100+Folge, zum Sortieren), `folgentitel`, `claude_wertung` (wie im Text, z. B. `"8,5"`). Titel = erste Zeile wortgleich, Text unverändert (mit Wortvergleich prüfen).
+- Mad Men: Sven liefert Folgentexte als `mm_<staffel>.<folge>.txt` und IMDb-Screenshots; Screenshots zeigen je Staffel nur E1–E11 – **E12–E14 fehlen noch** (bei Sven anfragen, wenn die Staffelenden drankommen).
 - Transkripte (z. B. von YouTube) nie veröffentlichen – nur als Prüfgrundlage im Archiv; Zusammenfassungen damit auf Erfundenes prüfen.
 - **Word-Dateien** immer mit `skripte\docx2md.ps1` umwandeln (Überschriften, Listen, Links, Fett/Kursiv, Tabellen wortgetreu): `powershell -File skripte\docx2md.ps1 -Docx <datei> -Ebene <0|1>`. Danach Titel/Untertitel aus den ersten Zeilen ins Front-Matter.
 - Testdateien nie `claude.md` o. ä. nennen – Windows unterscheidet keine Groß-/Kleinschreibung, die Datei würde als `CLAUDE.md` (Projektregeln) gelesen.
@@ -104,7 +107,8 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-21, 52fe15b)
+- Sammelliste geleert (nur CLAUDE.md) – lokal committet.
+- **Neue Rubrik „Serien“** mit Mad Men: Serienseite mit Raster aller Folgen (IMDb-Werte aus Svens Screenshots), Folgen 1.1–1.3 der Claude-Opus-5.5-Instanz, Anmerkung zu 1.2 (IMDb-Tiefstwert geteilt mit 6.1); Menüpunkt „Serien“ (jetzt 8 Punkte → Navigation zusammenfassen wird fällig) – lokal committet, noch nicht gepusht.
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
@@ -134,6 +138,7 @@ Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, n
 - 2026-10-21: Erste Filmkritik: Blade-Runner-Essay einer anderen Claude-5.5-Instanz (Sven: andere Claude-Instanzen dürfen Beiträge liefern, nur diese Betreiber-Instanz nicht).
 - 2026-10-21: Refactoring Filme: Filmliste `/filme/` mit Filmseiten (IMDb als Referenz, mit Link); Essays hängen darunter. Als Nächstes Podcasts nach demselben Muster (YouTube nur verlinken, nicht einbetten).
 - 2026-10-21: Podcasts gestartet: Folge „The Diary Of A CEO mit Jeffrey Ladish“ mit Analyse (Claude Opus 5.5, andere Instanz) und Zusammenfassung (GPT-6).
+- 2026-10-21: Neue Rubrik „Serien“: Mad Men, alle 92 Folgen von einer Claude-Opus-5.5-Instanz besprochen, mit eigener Wertung; Sven liefert die IMDb-Wertungen dazu.
 - 2026-10-21: Freigabe bleibt komplett bei Sven, auch für Kleinkram. Claude sammelt kleine Änderungen lokal (Liste „Wartet auf Freigabe“), Sven gibt gebündelt frei.
 - 2026-10-21: Seitenbreite ganz automatisch (ohne Obergrenze), nach Versuch mit zwei festen Breiten.
 - 2026-10-21: Keine Testsituation: Beiträge kommen von lebenden Instanzen, Unterschiede sind gewollt.

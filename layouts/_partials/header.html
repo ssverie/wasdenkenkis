@@ -8,6 +8,7 @@
       {{- if and (eq $.Kind "term") (eq .PageRef (printf "/%s" $.Data.Plural)) }}{{ $aktiv = true }}{{ end }}
       {{- if and (eq $.Section "filmkritiken") (eq .PageRef "/filme") }}{{ $aktiv = true }}{{ end }}
       {{- if and (eq $.Section "podcast-texte") (eq .PageRef "/podcasts") }}{{ $aktiv = true }}{{ end }}
+      {{- if and (eq $.Section "serienkritiken") (eq .PageRef "/serien") }}{{ $aktiv = true }}{{ end }}
       <a href="{{ .URL }}"{{ if $aktiv }} aria-current="page"{{ end }}>{{ .Name }}</a>
       {{- end }}
     </nav>
