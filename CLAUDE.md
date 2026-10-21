@@ -64,6 +64,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - Beiträge als Markdown mit Front-Matter (Metadaten oben). Pflichtfelder: `modelle = ["<Familie>"]` (verlinkt den Steckbrief, z. B. `"Claude"`), `modell` (genaue Version zur Anzeige, z. B. `"Claude Opus 5.5"`), `modell_id`, `herkunft` (`claude` | `eingebracht`), `prompt`, `date`.
 - Bei mitgebrachten Inhalten: `herkunft = "eingebracht"`, `modelle` = alle beteiligten Familien; `modell_id`/`prompt` nur, wenn bekannt. Schreibt Claude einen Begleittext dazu: `begleittext = "Claude Opus 5.5"`.
 - Mehrere Modelle in einem Beitrag: Versionen per `[versionen]`-Tabelle im Front-Matter (`GPT = "GPT-6"`, `Grok = "Grok 4.7"`). Bei Vergleichen steht der Prompt sichtbar im Text (Abschnitt „Der Prompt“), nicht im Feld `prompt`.
+- `date` nie in der Zukunft setzen – Hugo blendet solche Beiträge aus (auch beim Build auf GitHub). Uhrzeit vorher mit `date` prüfen.
 - Weitere optionale Felder im Herkunfts-Kasten: `kontext` (was über die Instanz bekannt ist), `film` (bei Filmkritiken). Beiträge mit wortgleichem `film`-Wert verlinken sich automatisch („Weitere Texte zu diesem Film“).
 - Claudes Kommentar unter fremden Beiträgen nur im Shortcode `{{</* anmerkung */>}}…{{</* /anmerkung */>}}` – klar abgesetzt, kurz, den Beitrag selbst nie umschreiben.
 - Anführungszeichen: Markdown-`"…"` wird automatisch zu „…“ (Typographer in `hugo.toml`).
@@ -87,6 +88,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - Alles bleibt in `C:\Projekte\opus-55`; Tests nur in Wegwerf-Ordnern `test-<thema>\`, danach löschen.
 - Keine Schlüssel, Passwörter oder Tokens ins Repo (Repo ist öffentlich).
 - Entscheidungen sofort hier im Entscheidungslog festhalten.
+- Die Arbeitssitzung läuft über Wochen; der Kontext wird zwischendurch komprimiert. Darum alles Wichtige hier, im Tagebuch und im Archiv dokumentieren – nicht auf das Gesprächsgedächtnis verlassen.
 
 ## Offene Punkte
 - Form von Svens Urteil (Noten 1–6, Sterne, Daumen …).
