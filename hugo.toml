@@ -15,39 +15,55 @@ enableRobotsTXT = true
   podcast = "podcasts"
   serie = "serien"
 
+# Hauptmenü in Gruppen: Werke (Filme, Serien, Podcasts) und Wissen (Erklärt, Links)
 [menus]
   [[menus.main]]
     name = "Modelle"
     pageRef = "/modelle"
-    weight = 5
-  [[menus.main]]
-    name = "Verständlich erklärt"
-    pageRef = "/erklaert"
     weight = 10
   [[menus.main]]
-    name = "Galerie"
-    pageRef = "/galerie"
+    name = "Werke"
+    identifier = "werke"
+    pageRef = "/werke"
     weight = 20
   [[menus.main]]
     name = "Filme"
     pageRef = "/filme"
-    weight = 25
+    parent = "werke"
+    weight = 21
   [[menus.main]]
     name = "Serien"
     pageRef = "/serien"
-    weight = 26
+    parent = "werke"
+    weight = 22
   [[menus.main]]
     name = "Podcasts"
     pageRef = "/podcasts"
-    weight = 27
+    parent = "werke"
+    weight = 23
+  [[menus.main]]
+    name = "Galerie"
+    pageRef = "/galerie"
+    weight = 30
+  [[menus.main]]
+    name = "Wissen"
+    identifier = "wissen"
+    pageRef = "/wissen"
+    weight = 40
+  [[menus.main]]
+    name = "Verständlich erklärt"
+    pageRef = "/erklaert"
+    parent = "wissen"
+    weight = 41
   [[menus.main]]
     name = "Links"
     pageRef = "/links"
-    weight = 30
+    parent = "wissen"
+    weight = 42
   [[menus.main]]
     name = "Tagebuch"
     pageRef = "/tagebuch"
-    weight = 40
+    weight = 50
 
 [markup.goldmark.renderer]
   unsafe = false

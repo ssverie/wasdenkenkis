@@ -98,6 +98,30 @@ code {
 .main-nav a { color: var(--text-leise); text-decoration: none; }
 .main-nav a:hover, .main-nav a[aria-current] { color: var(--akzent); }
 
+/* Menügruppen (Werke, Wissen): Untermenü beim Darüberfahren bzw. per Tastatur;
+   auf dem Handy führt der Klick auf die Gruppe zur Übersichtsseite */
+.menue-gruppe { position: relative; }
+.menue-gruppe > a span { font-size: 0.75em; }
+.untermenue {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: -0.75rem;
+  z-index: 10;
+  min-width: 13rem;
+  padding: 0.5rem 0;
+  background: var(--fläche);
+  border: 1px solid var(--linie);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+.untermenue a { display: block; padding: 0.4rem 0.9rem; white-space: nowrap; }
+.menue-gruppe:hover .untermenue,
+.menue-gruppe:focus-within .untermenue { display: block; }
+@media (hover: none) {
+  .menue-gruppe:hover .untermenue { display: none; }
+}
+
 main { padding-top: 2rem; padding-bottom: 3rem; }
 
 /* Startseite */

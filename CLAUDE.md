@@ -86,6 +86,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - Bilder: Beitrag als Page-Bundle (`content/<rubrik>/<name>/index.md` + Bilddateien), eingebunden per Shortcode `{{</* bild src="…" modell="…" titel="…" alt="…" */>}}`. Bilddateien vorher auf max. 1600 px Breite als JPEG verkleinern; Hugo erzeugt daraus WebP fürs Web.
 - Steckbriefe liegen als `content/modelle/<familie>/_index.md` (Taxonomie-Seite mit Inhalt); Fakten mit Websuche prüfen, Quellen und Abrufdatum angeben.
 - Eigenes, schlankes Layout; kein Fremd-Theme. Hell/dunkel, mobiltauglich.
+- **Menü in Gruppen** (`hugo.toml`, `parent = "werke"` / `"wissen"`): Untermenü beim Darüberfahren/Tastatur; auf dem Handy führt die Gruppe zur Übersichtsseite (`content/werke/`, `content/wissen/`, Vorlage `layouts/gruppe.html` zeigt je Unterpunkt eine Kachel). Neue Rubrik = Menüeintrag mit passendem `parent`. Menü-Markierung für Unterseiten in `layouts/_partials/header.html` (Zuordnung Textordner → Rubrik).
 - **Breite ganz automatisch** (Svens Wahl): keine Maximalbreite, Seite füllt jeden Bildschirm, Rand `clamp(1rem, 4vw, 3rem)`; Kacheln so viele Spalten wie passen (min. 18rem). Lesetexte bewusst ebenfalls ohne Begrenzung. Bei Wunsch nach lesbareren Zeilen: Lesetexte auf ca. 70 Zeichen begrenzen, freien Rand für ein Inhaltsverzeichnis nutzen.
 - Lokale Vorschau: `hugo server` auf `http://localhost:1313`, Anzeige im Browserfenster der App.
 - Hosting: GitHub Pages, Repo `ssverie/wasdenkenkis` (öffentlich), Domain `wasdenkenkis.de` (IONOS, DNS zeigt bereits auf GitHub Pages).
@@ -109,11 +110,12 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
 - Mad Men 1.4 „New Amsterdam“ (Claude 8/10, IMDb 7,9) – lokal committet.
 - Galerie: „Der Oktopus bei Hopper“ (GPT-6, Nighthawks) mit Begleittext; Prompt unbekannt – bei Sven nachfragen – lokal committet.
+- Navigation zusammengefasst: 5 statt 8 Menüpunkte, Gruppen „Werke“ und „Wissen“ mit Untermenü und Übersichtsseiten – lokal committet.
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
 1. ~~Transkript-Check Ladish~~ – erledigt 2026-10-21 (Transkript im Archiv: `input-arc\2026-10-21\_podcasts\`).
-2. **Navigation zusammenfassen:** „Werke“ (Filme, Serien, Podcasts) und „Wissen“ (Verständlich erklärt, Links) – jetzt fällig, das Menü hat 8 Punkte.
+2. ~~Navigation zusammenfassen~~ – erledigt 2026-10-21: Menü Modelle · Werke ▾ (Filme, Serien, Podcasts) · Galerie · Wissen ▾ (Verständlich erklärt, Links) · Tagebuch.
 3. **Später:** Svens Urteil sichtbar machen („Svens Wahl“) · Steckbriefe GPT/Grok/Gemini · Claudes alte Beiträge durch Fassungen anderer Instanzen ersetzen (Archiv der Fassungen) · Suche · Inhaltsverzeichnis für lange Texte.
 
 ## Offene Punkte

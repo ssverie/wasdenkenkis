@@ -1,15 +1,33 @@
+{{- /* Ist ein Menüpunkt für die aktuelle Seite „aktiv“? Auch Steckbrief-, Film-, Serien-, Podcast-Seiten
+       und die zugehörigen Texte zählen zu ihrem Menüpunkt. */ -}}
+{{- define "_partials/menue-aktiv.html" }}
+  {{- $seite := .seite }}{{ $e := .eintrag }}
+  {{- $aktiv := or ($seite.IsMenuCurrent "main" $e) ($seite.HasMenuCurrent "main" $e) }}
+  {{- if and (eq $seite.Kind "term") (eq $e.PageRef (printf "/%s" $seite.Data.Plural)) }}{{ $aktiv = true }}{{ end }}
+  {{- $zuordnung := dict "filmkritiken" "/filme" "serienkritiken" "/serien" "podcast-texte" "/podcasts" }}
+  {{- with index $zuordnung $seite.Section }}{{ if eq $e.PageRef . }}{{ $aktiv = true }}{{ end }}{{ end }}
+  {{- return $aktiv }}
+{{- end }}
 <header class="site-header">
   <div class="wrap{{ if or .IsHome (eq .Kind "taxonomy") }} weit{{ end }} header-inner">
     <a class="brand" href="{{ "/" | relURL }}">Was denken <span>KIs</span></a>
-    <nav class="main-nav">
+    <nav class="main-nav" aria-label="Hauptmenü">
       {{- range site.Menus.main }}
-      {{- $aktiv := or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) }}
-      {{- /* Steckbrief- und Filmseiten gehören zu ihrer Liste; Essays zu „Filme“ */}}
-      {{- if and (eq $.Kind "term") (eq .PageRef (printf "/%s" $.Data.Plural)) }}{{ $aktiv = true }}{{ end }}
-      {{- if and (eq $.Section "filmkritiken") (eq .PageRef "/filme") }}{{ $aktiv = true }}{{ end }}
-      {{- if and (eq $.Section "podcast-texte") (eq .PageRef "/podcasts") }}{{ $aktiv = true }}{{ end }}
-      {{- if and (eq $.Section "serienkritiken") (eq .PageRef "/serien") }}{{ $aktiv = true }}{{ end }}
+        {{- $eintrag := . }}
+        {{- $aktiv := partial "menue-aktiv.html" (dict "seite" $ "eintrag" $eintrag) }}
+        {{- if .HasChildren }}
+          {{- range .Children }}{{ if partial "menue-aktiv.html" (dict "seite" $ "eintrag" .) }}{{ $aktiv = true }}{{ end }}{{ end }}
+      <div class="menue-gruppe">
+        <a href="{{ .URL }}"{{ if $aktiv }} aria-current="page"{{ end }}>{{ .Name }} <span aria-hidden="true">▾</span></a>
+        <div class="untermenue">
+          {{- range .Children }}
+          <a href="{{ .URL }}"{{ if partial "menue-aktiv.html" (dict "seite" $ "eintrag" .) }} aria-current="page"{{ end }}>{{ .Name }}</a>
+          {{- end }}
+        </div>
+      </div>
+        {{- else }}
       <a href="{{ .URL }}"{{ if $aktiv }} aria-current="page"{{ end }}>{{ .Name }}</a>
+        {{- end }}
       {{- end }}
     </nav>
   </div>
