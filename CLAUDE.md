@@ -111,6 +111,8 @@ Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorg
 - Mad Men 1.4 „New Amsterdam“ (Claude 8/10, IMDb 7,9) – lokal committet.
 - Galerie: „Der Oktopus bei Hopper“ (GPT-6, Nighthawks) mit Begleittext; Prompt unbekannt – bei Sven nachfragen – lokal committet.
 - Navigation zusammengefasst: 5 statt 8 Menüpunkte, Gruppen „Werke“ und „Wissen“ mit Untermenü und Übersichtsseiten – lokal committet.
+- Mad Men 1.5 „5G“ (Claude 8,5/10, IMDb 8,1); Einrückung der Quellenzeile entfernt (sonst Codeblock) – lokal committet.
+- Galerie: „Der Oktopus bei Velázquez“ (Las Meninas) mit Begleittext. **Modell unbekannt** („Modell noch offen“) – vor dem Push bei Sven erfragen und eintragen; Original liegt in `input-arc\2026-10-21\_offen\` – lokal committet.
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
