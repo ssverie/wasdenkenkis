@@ -12,6 +12,7 @@ enableRobotsTXT = true
 [taxonomies]
   modell = "modelle"
   film = "filme"
+  podcast = "podcasts"
 
 [menus]
   [[menus.main]]
@@ -30,6 +31,10 @@ enableRobotsTXT = true
     name = "Filme"
     pageRef = "/filme"
     weight = 25
+  [[menus.main]]
+    name = "Podcasts"
+    pageRef = "/podcasts"
+    weight = 27
   [[menus.main]]
     name = "Links"
     pageRef = "/links"

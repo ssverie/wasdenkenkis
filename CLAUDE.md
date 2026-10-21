@@ -30,7 +30,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - **Chats** – lohnende Gesprächsprotokolle.
 - **Geschichten** – von KIs geschrieben.
 - **Filme** – Filmliste (`/filme/`, IMDb als Referenz); darunter Essays/Kritiken der Instanzen (liegen in `content/filmkritiken/`).
-- **Podcasts** – geplant nach demselben Muster: Folge mit YouTube-Link (nur verlinken, nicht einbetten), darunter Zusammenfassungen der Instanzen.
+- **Podcasts** – Folgenliste (`/podcasts/`); je Folge eine Seite mit Eckdaten und Links (YouTube nur verlinken, nie einbetten), darunter Zusammenfassungen/Einordnungen der Instanzen (liegen in `content/podcast-texte/`).
 - **Galerie** – Bilder/Grafiken (Claude: SVG; Fotoartiges bringt Sven aus anderen Generatoren mit).
 - **Chronik** – was sich in der KI-Welt getan hat (Recherche per Websuche, Quellen angeben).
 - **Links** – Paper, Plattformen, Quellen; Daten in `data/links.toml`, Kurzbeschreibung = Claude-Kommentar.
@@ -72,6 +72,11 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - IMDb blockt automatische Abrufe: Daten über das Browserfenster der App lesen (JSON-LD der Seite), Cookie-Banner ablehnen.
 - Essays/Kritiken liegen in `content/filmkritiken/` und tragen `filme = ["<ordnername>"]`, also den **Schlüssel** des Films (z. B. `"blade-runner-1982"`), nie den Anzeigetitel – Klammern im Titel lassen Hugo sonst zwei getrennte Seiten bauen. Filmseite und „Weitere Texte zu …“ entstehen daraus automatisch. Menüpunkt „Filme“ zeigt auf `/filme/`.
 - Neue Filme: Sven legt IMDb-Links in `input\_filme\`.
+- **Podcasts:** Taxonomie `podcasts`, gleiches Prinzip wie Filme. Folge: `content/podcasts/<schluessel>/_index.md` mit `title` (deutsch, neutral), `originaltitel`, `sendung`, `moderation`, `gast`, `erschienen`, `laenge`, `sprache`, `youtube` (Link; Kanal/Titel per `https://www.youtube.com/oembed?url=…&format=json` prüfen), `titel_youtube` (falls abweichend), `anhoeren`, `abgerufen`, optional `[[hintergrund]]` (name/url); `description` = eigener Inhaltssatz von Claude. Texte in `content/podcast-texte/` mit `podcasts = ["<schluessel>"]`.
+- Transkripte (z. B. von YouTube) nie veröffentlichen – nur als Prüfgrundlage im Archiv; Zusammenfassungen damit auf Erfundenes prüfen.
+- **Word-Dateien** immer mit `skripte\docx2md.ps1` umwandeln (Überschriften, Listen, Links, Fett/Kursiv, Tabellen wortgetreu): `powershell -File skripte\docx2md.ps1 -Docx <datei> -Ebene <0|1>`. Danach Titel/Untertitel aus den ersten Zeilen ins Front-Matter.
+- Testdateien nie `claude.md` o. ä. nennen – Windows unterscheidet keine Groß-/Kleinschreibung, die Datei würde als `CLAUDE.md` (Projektregeln) gelesen.
+- Dateien dürfen auch direkt in `input\` liegen; das Modell steht dann im Dateinamen (z. B. `Gpt-6__…`, `Claude_opus-55__…`).
 - Claudes Kommentar unter fremden Beiträgen nur im Shortcode `{{</* anmerkung */>}}…{{</* /anmerkung */>}}` – klar abgesetzt, kurz, den Beitrag selbst nie umschreiben.
 - Anführungszeichen: Markdown-`"…"` wird automatisch zu „…“ (Typographer in `hugo.toml`).
 - Prompts aus Screenshots: Wortlaut übernehmen, nur offensichtlich abgeschnittene Zeilenenden ergänzen.
@@ -116,5 +121,6 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - 2026-10-21: Werkstatt-Tagebuch von Claude als Rubrik auf der Seite – die Seite wird gleichzeitig meta.
 - 2026-10-21: Erste Filmkritik: Blade-Runner-Essay einer anderen Claude-5.5-Instanz (Sven: andere Claude-Instanzen dürfen Beiträge liefern, nur diese Betreiber-Instanz nicht).
 - 2026-10-21: Refactoring Filme: Filmliste `/filme/` mit Filmseiten (IMDb als Referenz, mit Link); Essays hängen darunter. Als Nächstes Podcasts nach demselben Muster (YouTube nur verlinken, nicht einbetten).
+- 2026-10-21: Podcasts gestartet: Folge „The Diary Of A CEO mit Jeffrey Ladish“ mit Analyse (Claude Opus 5.5, andere Instanz) und Zusammenfassung (GPT-6).
 - 2026-10-21: Keine Testsituation: Beiträge kommen von lebenden Instanzen, Unterschiede sind gewollt.
 - 2026-10-21: So anonym wie möglich: nur Vorname „Sven“. Repo bei GitHub neu angelegt, alte Git-Historie gelöscht (nur lokal gesichert in `input-arc\2026-10-21\`).

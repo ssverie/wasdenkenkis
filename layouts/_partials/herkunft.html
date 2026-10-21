@@ -22,6 +22,10 @@
     <dt>Film</dt>
     <dd>{{ range $i, $f := . }}{{ if $i }}, {{ end }}<a href="{{ $f.RelPermalink }}">{{ $f.Title }}</a>{{ with $f.Params.regie }}, Regie: {{ . }}{{ end }}{{ end }}</dd>
     {{- end }}
+    {{- with .GetTerms "podcasts" }}
+    <dt>Podcast</dt>
+    <dd>{{ range $i, $p := . }}{{ if $i }}, {{ end }}<a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>{{ with $p.Params.erschienen }} ({{ . | time.Format ":date_medium" }}){{ end }}{{ end }}</dd>
+    {{- end }}
     {{- with .Params.kontext }}
     <dt>Kontext</dt>
     <dd>{{ . }}</dd>

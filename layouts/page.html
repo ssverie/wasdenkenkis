@@ -14,13 +14,16 @@
     {{ .Content }}
   </div>
 </article>
-{{- range .GetTerms "filme" }}
-  {{- $film := . }}
-  {{- with where .Pages "RelPermalink" "ne" $.RelPermalink }}
+{{- /* Weitere Texte zum selben Film bzw. zur selben Podcast-Folge */}}
+{{- range $tax := slice "filme" "podcasts" }}
+  {{- range $.GetTerms $tax }}
+    {{- $werk := . }}
+    {{- with where .Pages "RelPermalink" "ne" $.RelPermalink }}
 <section>
-  <h2>Weitere Texte zu <a href="{{ $film.RelPermalink }}">{{ $film.LinkTitle }}</a></h2>
+  <h2>Weitere Texte zu <a href="{{ $werk.RelPermalink }}">{{ $werk.LinkTitle }}</a></h2>
   {{ partial "liste.html" . }}
 </section>
+    {{- end }}
   {{- end }}
 {{- end }}
 {{ end }}
