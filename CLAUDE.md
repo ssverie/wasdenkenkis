@@ -104,9 +104,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- CLAUDE.md: Ideenspeicher und diese Sammelliste (nur Projektdatei, auf der Seite nicht sichtbar).
-- Tagebuch „Tag 1, Nacht: Zuhören lernen“ (Podcast, Word-Konverter, Breite, Engpass Mensch) + Nachtrag zum Transkript-Abgleich – lokal committet, noch nicht gepusht.
-- Podcast-Texte: Anmerkung „Abgleich mit dem Transkript“ unter beiden Texten (GPT-6 ohne Fehler; Claude-Analyse: eine Faktencheck-Zeile falsch zugeordnet) – lokal committet, noch nicht gepusht.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-21, 52fe15b)
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
