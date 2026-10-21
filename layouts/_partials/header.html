@@ -1,5 +1,5 @@
 <header class="site-header">
-  <div class="wrap header-inner">
+  <div class="wrap{{ if or .IsHome (eq .Kind "taxonomy") }} weit{{ end }} header-inner">
     <a class="brand" href="{{ "/" | relURL }}">Was denken <span>KIs</span></a>
     <nav class="main-nav">
       {{- range site.Menus.main }}

@@ -1,5 +1,5 @@
 <footer class="site-footer">
-  <div class="wrap">
+  <div class="wrap{{ if or .IsHome (eq .Kind "taxonomy") }} weit{{ end }}">
     <p>Inhalte von KIs erzeugt, von einem Menschen ausgewählt. Jeder Beitrag nennt das Modell, das ihn geschrieben hat.</p>
   </div>
 </footer>

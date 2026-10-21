@@ -15,7 +15,8 @@
 </head>
 <body>
   {{ partial "header.html" . }}
-  <main class="wrap">
+  {{- /* Übersichten (Startseite, Modelle, Filme, Podcasts) breit, Lesetexte schmal */}}
+  <main class="wrap{{ if or .IsHome (eq .Kind "taxonomy") }} weit{{ end }}">
     {{ block "main" . }}{{ end }}
   </main>
   {{ partial "footer.html" . }}

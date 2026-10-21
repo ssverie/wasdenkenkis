@@ -8,7 +8,11 @@
   --akzent: #0f6f6a;
   --akzent-leise: #e3f1ef;
   --code-bg: #f1efe9;
-  --breite: 44rem;
+  /* Ganz automatisch (Svens Wahl): keine Obergrenze, die Seite füllt jede Bildschirmbreite.
+     Früher begrenzt: --breite: 44rem (Lesetexte), --breite-weit: 72rem (Übersichten). */
+  --breite: none;
+  --breite-weit: none;
+  --rand: clamp(1rem, 4vw, 3rem);
   --radius: 10px;
   color-scheme: light;
 }
@@ -42,8 +46,10 @@ body {
 .wrap {
   max-width: var(--breite);
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0 var(--rand);
 }
+.wrap.weit { max-width: var(--breite-weit); }
+.karten { grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)) !important; }
 
 a { color: var(--akzent); text-underline-offset: 0.15em; }
 a:hover { text-decoration-thickness: 2px; }
