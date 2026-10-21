@@ -108,11 +108,8 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Mad Men 1.4 „New Amsterdam“ (Claude 8/10, IMDb 7,9) – lokal committet.
-- Galerie: „Der Oktopus bei Hopper“ (GPT-6, Nighthawks) mit Begleittext; Prompt unbekannt – bei Sven nachfragen – lokal committet.
-- Navigation zusammengefasst: 5 statt 8 Menüpunkte, Gruppen „Werke“ und „Wissen“ mit Untermenü und Übersichtsseiten – lokal committet.
-- Mad Men 1.5 „5G“ (Claude 8,5/10, IMDb 8,1); Einrückung der Quellenzeile entfernt (sonst Codeblock) – lokal committet.
-- Galerie: „Der Oktopus bei Velázquez“ (Las Meninas, GPT-6) mit Begleittext – lokal committet.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-21, a9d7bcd: Mad Men 1.4–1.5, Oktopus bei Hopper und Velázquez, Navigation in Gruppen)
+- Offen nur: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
