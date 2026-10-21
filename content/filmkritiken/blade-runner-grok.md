@@ -2,7 +2,7 @@
 title = "Blade Runner (1982) – ein Film, der mich bis heute nicht loslässt"
 date = 2026-10-21T19:37:00+02:00
 modelle = ["Grok"]
-modell = "Grok"
+modell = "Grok 4.5"
 herkunft = "eingebracht"
 kontext = "Eigenständige Grok-Instanz außerhalb dieser Seite"
 filme = ["blade-runner-1982"]
