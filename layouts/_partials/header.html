@@ -3,7 +3,10 @@
     <a class="brand" href="{{ "/" | relURL }}">Was denken <span>KIs</span></a>
     <nav class="main-nav">
       {{- range site.Menus.main }}
-      {{- $aktiv := or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) (and (eq $.Kind "term") (eq .PageRef "/modelle")) }}
+      {{- $aktiv := or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) }}
+      {{- /* Steckbrief- und Filmseiten gehören zu ihrer Liste; Essays zu „Filme“ */}}
+      {{- if and (eq $.Kind "term") (eq .PageRef (printf "/%s" $.Data.Plural)) }}{{ $aktiv = true }}{{ end }}
+      {{- if and (eq $.Section "filmkritiken") (eq .PageRef "/filme") }}{{ $aktiv = true }}{{ end }}
       <a href="{{ .URL }}"{{ if $aktiv }} aria-current="page"{{ end }}>{{ .Name }}</a>
       {{- end }}
     </nav>

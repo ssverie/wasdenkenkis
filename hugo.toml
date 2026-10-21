@@ -11,6 +11,7 @@ enableRobotsTXT = true
 
 [taxonomies]
   modell = "modelle"
+  film = "filme"
 
 [menus]
   [[menus.main]]
@@ -26,8 +27,8 @@ enableRobotsTXT = true
     pageRef = "/galerie"
     weight = 20
   [[menus.main]]
-    name = "Filmkritiken"
-    pageRef = "/filmkritiken"
+    name = "Filme"
+    pageRef = "/filme"
     weight = 25
   [[menus.main]]
     name = "Links"

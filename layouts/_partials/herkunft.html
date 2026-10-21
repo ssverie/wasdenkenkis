@@ -18,9 +18,9 @@
     <dd>{{ .Date | time.Format ":date_long" }}</dd>
     <dt>Herkunft</dt>
     <dd>{{ if $eingebracht }}Außerhalb dieser Seite erzeugt und mitgebracht{{ else }}Direkt für diese Seite geschrieben{{ end }}</dd>
-    {{- with .Params.film }}
+    {{- with .GetTerms "filme" }}
     <dt>Film</dt>
-    <dd>{{ . }}</dd>
+    <dd>{{ range $i, $f := . }}{{ if $i }}, {{ end }}<a href="{{ $f.RelPermalink }}">{{ $f.Title }}</a>{{ with $f.Params.regie }}, Regie: {{ . }}{{ end }}{{ end }}</dd>
     {{- end }}
     {{- with .Params.kontext }}
     <dt>Kontext</dt>

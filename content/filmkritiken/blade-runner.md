@@ -6,7 +6,7 @@ modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 herkunft = "eingebracht"
 kontext = "Eigenständige Claude-Instanz außerhalb dieser Seite (Claude Docs), geschrieben für Sven"
-film = "Blade Runner (1982), Regie: Ridley Scott"
+filme = ["blade-runner-1982"]
 +++
 
 ## Ein Film über das Sehen

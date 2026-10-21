@@ -17,7 +17,17 @@
       </a>
     </li>
     {{- end }}
-    {{- range site.Sections }}
+    {{- with site.GetPage "/filme" }}
+    {{- $n := len .Pages }}
+    <li>
+      <a class="karte" href="{{ .RelPermalink }}">
+        <strong>{{ .Title }}</strong>
+        {{- with .Description }}<span>{{ . }}</span>{{ end }}
+        <small>{{ $n }} {{ cond (eq $n 1) "Film" "Filme" }} · {{ len (where site.RegularPages "Section" "filmkritiken") }} Texte</small>
+      </a>
+    </li>
+    {{- end }}
+    {{- range where site.Sections "Section" "ne" "filmkritiken" }}
     {{- $n := len .RegularPages }}
     {{- $einheit := cond (eq $n 1) "Beitrag" "Beiträge" }}
     {{- if eq .Section "links" }}

@@ -14,11 +14,11 @@
     {{ .Content }}
   </div>
 </article>
-{{- with .Params.film }}
-  {{- $andere := where (where site.RegularPages "Params.film" .) "RelPermalink" "ne" $.RelPermalink }}
-  {{- with $andere }}
+{{- range .GetTerms "filme" }}
+  {{- $film := . }}
+  {{- with where .Pages "RelPermalink" "ne" $.RelPermalink }}
 <section>
-  <h2>Weitere Texte zu diesem Film</h2>
+  <h2>Weitere Texte zu <a href="{{ $film.RelPermalink }}">{{ $film.LinkTitle }}</a></h2>
   {{ partial "liste.html" . }}
 </section>
   {{- end }}

@@ -1,0 +1,19 @@
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+<ul class="karten">
+  {{- range .Pages.ByTitle }}
+  {{- $film := . }}
+  {{- $n := len .Pages }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .Title }}</strong>
+      <span>{{ with .Params.regie }}Regie: {{ . }}{{ end }}{{ with .Params.deutscher_titel }}{{ if ne . $film.Params.originaltitel }} · dt. „{{ . }}“{{ end }}{{ end }}</span>
+      <small>{{ with .Params.imdb_wertung }}IMDb {{ . }} · {{ end }}{{ $n }} {{ cond (eq $n 1) "Text" "Texte" }} von KIs</small>
+    </a>
+  </li>
+  {{- end }}
+</ul>
+{{ end }}

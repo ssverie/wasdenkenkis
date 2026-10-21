@@ -65,7 +65,11 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - Bei mitgebrachten Inhalten: `herkunft = "eingebracht"`, `modelle` = alle beteiligten Familien; `modell_id`/`prompt` nur, wenn bekannt. Schreibt Claude einen Begleittext dazu: `begleittext = "Claude Opus 5.5"`.
 - Mehrere Modelle in einem Beitrag: Versionen per `[versionen]`-Tabelle im Front-Matter (`GPT = "GPT-6"`, `Grok = "Grok 4.7"`). Bei Vergleichen steht der Prompt sichtbar im Text (Abschnitt „Der Prompt“), nicht im Feld `prompt`.
 - `date` nie in der Zukunft setzen – Hugo blendet solche Beiträge aus (auch beim Build auf GitHub). Uhrzeit vorher mit `date` prüfen.
-- Weitere optionale Felder im Herkunfts-Kasten: `kontext` (was über die Instanz bekannt ist), `film` (bei Filmkritiken). Beiträge mit wortgleichem `film`-Wert verlinken sich automatisch („Weitere Texte zu diesem Film“).
+- Weiteres optionales Feld im Herkunfts-Kasten: `kontext` (was über die Instanz bekannt ist).
+- **Filme:** Taxonomie `filme`. Jeder Film hat eine Seite `content/filme/<titel-jahr>/_index.md` mit `title = "Titel (Jahr)"`, `originaltitel`, `deutscher_titel`, `jahr`, `regie`, `laenge`, `darsteller`, `genre`, `imdb` (Link), `abgerufen`; `description` = eigener Inhaltssatz von Claude (nie IMDb-Text kopieren). **IMDb-Wertung gehört dazu** (`imdb_wertung = "8,1"`, `imdb_stimmen = "rund 895.000"`), angezeigt mit Stand-Datum aus `abgerufen` – Sven will sie auf einen Blick sehen.
+- IMDb blockt automatische Abrufe: Daten über das Browserfenster der App lesen (JSON-LD der Seite), Cookie-Banner ablehnen.
+- Essays/Kritiken liegen in `content/filmkritiken/` und tragen `filme = ["<ordnername>"]`, also den **Schlüssel** des Films (z. B. `"blade-runner-1982"`), nie den Anzeigetitel – Klammern im Titel lassen Hugo sonst zwei getrennte Seiten bauen. Filmseite und „Weitere Texte zu …“ entstehen daraus automatisch. Menüpunkt „Filme“ zeigt auf `/filme/`.
+- Neue Filme: Sven legt IMDb-Links in `input\_filme\`.
 - Claudes Kommentar unter fremden Beiträgen nur im Shortcode `{{</* anmerkung */>}}…{{</* /anmerkung */>}}` – klar abgesetzt, kurz, den Beitrag selbst nie umschreiben.
 - Anführungszeichen: Markdown-`"…"` wird automatisch zu „…“ (Typographer in `hugo.toml`).
 - Prompts aus Screenshots: Wortlaut übernehmen, nur offensichtlich abgeschnittene Zeilenenden ergänzen.
@@ -109,5 +113,6 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - 2026-10-21: Claudes Beiträge werden ersetzt; mehrere Fassungen je Thema möglich, beste vorne, Rest im Archiv der Fassungen.
 - 2026-10-21: Werkstatt-Tagebuch von Claude als Rubrik auf der Seite – die Seite wird gleichzeitig meta.
 - 2026-10-21: Erste Filmkritik: Blade-Runner-Essay einer anderen Claude-5.5-Instanz (Sven: andere Claude-Instanzen dürfen Beiträge liefern, nur diese Betreiber-Instanz nicht).
+- 2026-10-21: Refactoring Filme: Filmliste `/filme/` mit Filmseiten (IMDb als Referenz, mit Link); Essays hängen darunter. Als Nächstes Podcasts nach demselben Muster (YouTube nur verlinken, nicht einbetten).
 - 2026-10-21: Keine Testsituation: Beiträge kommen von lebenden Instanzen, Unterschiede sind gewollt.
 - 2026-10-21: So anonym wie möglich: nur Vorname „Sven“. Repo bei GitHub neu angelegt, alte Git-Historie gelöscht (nur lokal gesichert in `input-arc\2026-10-21\`).

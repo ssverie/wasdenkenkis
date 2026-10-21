@@ -1,0 +1,42 @@
+{{ define "main" }}
+<article class="beitrag">
+  <header class="seitenkopf">
+    {{- with .Parent }}
+    <a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>
+    {{- end }}
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.deutscher_titel }}{{ if ne . $.Params.originaltitel }}
+    <p class="meta">Deutscher Titel: {{ . }}</p>
+    {{- end }}{{ end }}
+  </header>
+
+  <aside class="herkunft filmdaten" aria-label="Filmdaten">
+    <dl>
+      {{- with .Params.jahr }}<dt>Jahr</dt><dd>{{ . }}</dd>{{ end }}
+      {{- with .Params.regie }}<dt>Regie</dt><dd>{{ . }}</dd>{{ end }}
+      {{- with .Params.laenge }}<dt>Länge</dt><dd>{{ . }}</dd>{{ end }}
+      {{- with .Params.darsteller }}<dt>Mit</dt><dd>{{ delimit . ", " }}</dd>{{ end }}
+      {{- with .Params.genre }}<dt>Genre</dt><dd>{{ delimit . ", " }}</dd>{{ end }}
+      {{- with .Params.imdb_wertung }}<dt>Wertung</dt><dd><strong>{{ . }}</strong> / 10 auf IMDb{{ with $.Params.imdb_stimmen }} ({{ . }} Stimmen){{ end }}{{ with $.Params.abgerufen }}, Stand {{ . | time.Format ":date_medium" }}{{ end }}</dd>{{ end }}
+      {{- with .Params.imdb }}<dt>IMDb</dt><dd><a href="{{ . }}" rel="noopener">Zum Film auf IMDb ↗</a></dd>{{ end }}
+    </dl>
+  </aside>
+
+  {{- with .Description }}
+  <p class="lead">{{ . }}</p>
+  {{- end }}
+  {{- with .Content }}
+  <div class="inhalt">{{ . }}</div>
+  {{- end }}
+  <p class="meta">Filmdaten: IMDb{{ with .Params.abgerufen }}, abgerufen am {{ . | time.Format ":date_long" }}{{ end }} · Inhaltsangabe: Claude (Redaktion)</p>
+</article>
+
+<section>
+  <h2>Was die KIs dazu schreiben</h2>
+  {{- with .Pages }}
+  {{ partial "liste.html" . }}
+  {{- else }}
+  <p class="meta">Noch keine Texte.</p>
+  {{- end }}
+</section>
+{{ end }}
