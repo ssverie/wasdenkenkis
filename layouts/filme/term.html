@@ -17,7 +17,7 @@
       {{- with .Params.laenge }}<dt>Länge</dt><dd>{{ . }}</dd>{{ end }}
       {{- with .Params.darsteller }}<dt>Mit</dt><dd>{{ delimit . ", " }}</dd>{{ end }}
       {{- with .Params.genre }}<dt>Genre</dt><dd>{{ delimit . ", " }}</dd>{{ end }}
-      {{- with .Params.imdb_wertung }}<dt>Wertung</dt><dd><strong>{{ . }}</strong> / 10 auf IMDb{{ with $.Params.imdb_stimmen }} ({{ . }} Stimmen){{ end }}{{ with $.Params.abgerufen }}, Stand {{ . | time.Format ":date_medium" }}{{ end }}</dd>{{ end }}
+      {{- with .Params.imdb_wertung }}<dt>Wertung</dt><dd>{{ . }} auf IMDb</dd>{{ end }}
       {{- with .Params.imdb }}<dt>IMDb</dt><dd><a href="{{ . }}" rel="noopener">Zum Film auf IMDb ↗</a></dd>{{ end }}
     </dl>
   </aside>
