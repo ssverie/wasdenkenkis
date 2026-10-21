@@ -75,7 +75,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - Neue Filme: Sven legt IMDb-Links in `input\_filme\`.
 - **Podcasts:** Taxonomie `podcasts`, gleiches Prinzip wie Filme. Folge: `content/podcasts/<schluessel>/_index.md` mit `title` (deutsch, neutral), `originaltitel`, `sendung`, `moderation`, `gast`, `erschienen`, `laenge`, `sprache`, `youtube` (Link; Kanal/Titel per `https://www.youtube.com/oembed?url=…&format=json` prüfen), `titel_youtube` (falls abweichend), `anhoeren`, `abgerufen`, optional `[[hintergrund]]` (name/url); `description` = eigener Inhaltssatz von Claude. Texte in `content/podcast-texte/` mit `podcasts = ["<schluessel>"]`.
 - **Serien:** Taxonomie `serien`. Serie: `content/serien/<titel-jahr>/_index.md` (Eckdaten wie Film, dazu `laufzeit`, `idee`, `sender`, `umfang`, `daten = "<datei>"`). IMDb-Wertungen je Folge in `data/serien/<datei>.toml` (`[[staffel]]` mit `nummer`, `folgen`, `schnitt`, `imdb = [..]` in Folgen-Reihenfolge; fehlende Werte am Ende weglassen). Folge: `content/serienkritiken/<serie>/sSSeFF.md` mit `serien = ["<schluessel>"]`, `staffel`, `folge`, `nummer` (= Staffel×100+Folge, zum Sortieren), `folgentitel`, `claude_wertung` (wie im Text, z. B. `"8,5"`). Titel = erste Zeile wortgleich, Text unverändert (mit Wortvergleich prüfen).
-- Mad Men: Sven liefert Folgentexte als `mm_<staffel>.<folge>.txt` und IMDb-Screenshots; Screenshots zeigen je Staffel nur E1–E11 – **E12–E14 fehlen noch** (bei Sven anfragen, wenn die Staffelenden drankommen).
+- Mad Men: Sven liefert Folgentexte als `mm_<staffel>.<folge>.txt`. IMDb-Werte aller 92 Folgen sind vollständig erfasst (Stand 21.10.2026; Screenshots im Archiv `input-arc\2026-10-21\_serien\`). Tiefstwert 7,5 (1.2 und 6.1), Höchstwert 9,7 (3.13 und 4.7).
 - Transkripte (z. B. von YouTube) nie veröffentlichen – nur als Prüfgrundlage im Archiv; Zusammenfassungen damit auf Erfundenes prüfen.
 - **Word-Dateien** immer mit `skripte\docx2md.ps1` umwandeln (Überschriften, Listen, Links, Fett/Kursiv, Tabellen wortgetreu): `powershell -File skripte\docx2md.ps1 -Docx <datei> -Ebene <0|1>`. Danach Titel/Untertitel aus den ersten Zeilen ins Front-Matter.
 - Testdateien nie `claude.md` o. ä. nennen – Windows unterscheidet keine Groß-/Kleinschreibung, die Datei würde als `CLAUDE.md` (Projektregeln) gelesen.
@@ -107,13 +107,12 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Sammelliste geleert (nur CLAUDE.md) – lokal committet.
-- **Neue Rubrik „Serien“** mit Mad Men: Serienseite mit Raster aller Folgen (IMDb-Werte aus Svens Screenshots), Folgen 1.1–1.3 der Claude-Opus-5.5-Instanz, Anmerkung zu 1.2 (IMDb-Tiefstwert geteilt mit 6.1); Menüpunkt „Serien“ (jetzt 8 Punkte → Navigation zusammenfassen wird fällig) – lokal committet, noch nicht gepusht.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-21: Rubrik „Serien“ mit Mad Men 1.1–1.3 und allen 92 IMDb-Werten)
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
 1. ~~Transkript-Check Ladish~~ – erledigt 2026-10-21 (Transkript im Archiv: `input-arc\2026-10-21\_podcasts\`).
-2. **Navigation zusammenfassen:** „Werke“ (Filme, Podcasts) und „Wissen“ (Verständlich erklärt, Links) – sobald es nötig wird.
+2. **Navigation zusammenfassen:** „Werke“ (Filme, Serien, Podcasts) und „Wissen“ (Verständlich erklärt, Links) – jetzt fällig, das Menü hat 8 Punkte.
 3. **Später:** Svens Urteil sichtbar machen („Svens Wahl“) · Steckbriefe GPT/Grok/Gemini · Claudes alte Beiträge durch Fassungen anderer Instanzen ersetzen (Archiv der Fassungen) · Suche · Inhaltsverzeichnis für lange Texte.
 
 ## Offene Punkte
