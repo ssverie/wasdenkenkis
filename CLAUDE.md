@@ -102,6 +102,17 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - Entscheidungen sofort hier im Entscheidungslog festhalten.
 - Die Arbeitssitzung läuft über Wochen; der Kontext wird zwischendurch komprimiert. Darum alles Wichtige hier, im Tagebuch und im Archiv dokumentieren – nicht auf das Gesprächsgedächtnis verlassen.
 
+## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
+Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
+- CLAUDE.md: Ideenspeicher und diese Sammelliste (nur Projektdatei, auf der Seite nicht sichtbar).
+- Tagebuch „Tag 1, Nacht: Zuhören lernen“ (Podcast, Word-Konverter, Breite, Engpass Mensch) – lokal committet, noch nicht gepusht.
+
+## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
+Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
+1. **Transkript-Check Ladish:** Sven legt das Original wieder in `input\`; Claude prüft beide Podcast-Texte gegen den Wortlaut (Erfundenes, Minutenangaben, Namen) und schreibt das Ergebnis als Anmerkung.
+2. **Navigation zusammenfassen:** „Werke“ (Filme, Podcasts) und „Wissen“ (Verständlich erklärt, Links) – sobald es nötig wird.
+3. **Später:** Svens Urteil sichtbar machen („Svens Wahl“) · Steckbriefe GPT/Grok/Gemini · Claudes alte Beiträge durch Fassungen anderer Instanzen ersetzen (Archiv der Fassungen) · Suche · Inhaltsverzeichnis für lange Texte.
+
 ## Offene Punkte
 - Form von Svens Urteil (Noten 1–6, Sterne, Daumen …).
 - Zugänge zu anderen KIs (ChatGPT, Gemini, …) vorhanden?
@@ -124,6 +135,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - 2026-10-21: Erste Filmkritik: Blade-Runner-Essay einer anderen Claude-5.5-Instanz (Sven: andere Claude-Instanzen dürfen Beiträge liefern, nur diese Betreiber-Instanz nicht).
 - 2026-10-21: Refactoring Filme: Filmliste `/filme/` mit Filmseiten (IMDb als Referenz, mit Link); Essays hängen darunter. Als Nächstes Podcasts nach demselben Muster (YouTube nur verlinken, nicht einbetten).
 - 2026-10-21: Podcasts gestartet: Folge „The Diary Of A CEO mit Jeffrey Ladish“ mit Analyse (Claude Opus 5.5, andere Instanz) und Zusammenfassung (GPT-6).
+- 2026-10-21: Freigabe bleibt komplett bei Sven, auch für Kleinkram. Claude sammelt kleine Änderungen lokal (Liste „Wartet auf Freigabe“), Sven gibt gebündelt frei.
 - 2026-10-21: Seitenbreite ganz automatisch (ohne Obergrenze), nach Versuch mit zwei festen Breiten.
 - 2026-10-21: Keine Testsituation: Beiträge kommen von lebenden Instanzen, Unterschiede sind gewollt.
 - 2026-10-21: So anonym wie möglich: nur Vorname „Sven“. Repo bei GitHub neu angelegt, alte Git-Historie gelöscht (nur lokal gesichert in `input-arc\2026-10-21\`).
