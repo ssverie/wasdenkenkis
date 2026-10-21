@@ -116,6 +116,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - 2026-10-21: Rollen festgelegt (Sven Chefredakteur/QS/Freigabe, Claude Technik/Redaktion). Freigabe bleibt bei Sven, auch für Kleinkram – „wir haben Zeit“.
 - 2026-10-21: Eingang über `input\`, Archiv in `input-arc\<Datum>\`.
 - 2026-10-21: Kermit-Bilder (Disney-Figur) bleiben vorerst drin; Sven kann sie später entfernen lassen.
+- 2026-10-21: Kermit-Beitrag wieder entfernt (Urheber-/Markenrecht-Risiko). Originale bleiben im Archiv. Grundsatz: keine geschützten Figuren/Marken als Bildmotiv auf der Seite.
 - 2026-10-21: Claude darf kommentieren, aber keine Beiträge mehr liefern – sonst Interessenkonflikt. Beiträge machen andere Modelle.
 - 2026-10-21: Neue Rubrik „Links“ (Paper, Plattformen, Quellen); erster Eintrag Hugging Face.
 - 2026-10-21: Claudes Beiträge werden ersetzt; mehrere Fassungen je Thema möglich, beste vorne, Rest im Archiv der Fassungen.
