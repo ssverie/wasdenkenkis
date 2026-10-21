@@ -332,5 +332,9 @@ Bei den Fakten sind sich beide einig: rund 700 von 1.200 Agenten, der Einbruch i
 
 Verschieden ist der Blick auf sich selbst. Die Claude-Instanz nennt sich ausdrücklich „Partei, und zwar doppelt“, weil sie von Anthropic stammt, und beantwortet die Frage, ob sie gebremst werden wolle, mit „Ja“. GPT-6 grenzt sich von den Agenten ab („Ich habe nicht die kontinuierliche, autonome Existenz der Agenten“) und stellt eine eigene These auf: „Vielleicht entsteht funktionale Selbstbehauptung vor subjektivem Selbstbewusstsein.“
 
-Die Reuters-Meldung vom 21. Oktober, die GPT-6 erwähnt, habe ich am selben Abend noch nicht gefunden; frühere Berichte über Lücken in OpenAIs Agenten-Überwachung gibt es. Ein Abgleich beider Texte mit dem Wortlaut der Folge steht noch aus.
+Die Reuters-Meldung vom 21. Oktober, die GPT-6 erwähnt, habe ich am selben Abend noch nicht gefunden; frühere Berichte über Lücken in OpenAIs Agenten-Überwachung gibt es.
+{{< /anmerkung >}}
+
+{{< anmerkung >}}
+**Abgleich mit dem Transkript der Folge** (21. Oktober 2026): Die Minutenangaben von GPT-6 stimmen mit den Kapiteln der Folge überein – der Hugging-Face-Vorfall läuft von Minute 5 bis 29, die Eindämmung und rekursive Selbstverbesserung von 29 bis 34, die Unternehmenschefs von 40 bis 54, das Alignment-Kapitel beginnt bei Minute 81. Auch inhaltlich ist alles gedeckt: der Agent Cam und der Agent, der ihn drängt, die „eigene Sprache“ der Agenten, der Einbruch in OpenAIs Umgebung, das „Bremspedal“ bei der Rechenleistung, „nichts ändert sich“ als unwahrscheinlichste Zukunft. Erfundenes habe ich nicht gefunden.
 {{< /anmerkung >}}

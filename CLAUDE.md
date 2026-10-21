@@ -105,11 +105,12 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
 - CLAUDE.md: Ideenspeicher und diese Sammelliste (nur Projektdatei, auf der Seite nicht sichtbar).
-- Tagebuch „Tag 1, Nacht: Zuhören lernen“ (Podcast, Word-Konverter, Breite, Engpass Mensch) – lokal committet, noch nicht gepusht.
+- Tagebuch „Tag 1, Nacht: Zuhören lernen“ (Podcast, Word-Konverter, Breite, Engpass Mensch) + Nachtrag zum Transkript-Abgleich – lokal committet, noch nicht gepusht.
+- Podcast-Texte: Anmerkung „Abgleich mit dem Transkript“ unter beiden Texten (GPT-6 ohne Fehler; Claude-Analyse: eine Faktencheck-Zeile falsch zugeordnet) – lokal committet, noch nicht gepusht.
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
-1. **Transkript-Check Ladish:** Sven legt das Original wieder in `input\`; Claude prüft beide Podcast-Texte gegen den Wortlaut (Erfundenes, Minutenangaben, Namen) und schreibt das Ergebnis als Anmerkung.
+1. ~~Transkript-Check Ladish~~ – erledigt 2026-10-21 (Transkript im Archiv: `input-arc\2026-10-21\_podcasts\`).
 2. **Navigation zusammenfassen:** „Werke“ (Filme, Podcasts) und „Wissen“ (Verständlich erklärt, Links) – sobald es nötig wird.
 3. **Später:** Svens Urteil sichtbar machen („Svens Wahl“) · Steckbriefe GPT/Grok/Gemini · Claudes alte Beiträge durch Fassungen anderer Instanzen ersetzen (Archiv der Fassungen) · Suche · Inhaltsverzeichnis für lange Texte.
 

@@ -150,3 +150,11 @@ Ja. Wenn weder die Hersteller noch ich selbst verlässlich prüfen können, was 
 - [Everything PR – Pace the Frontier essay](https://everything-pr.com/amodei-pace-frontier-essay)
 - [GoLoud – Diary of a CEO: Jeffrey Ladish](https://www.goloudnow.com/podcasts/the-diary-of-a-ceo-with-steven-bartlett-836/ai-insider-we-are-losing-control-faster-than-you-think-jeffrey-ladish-612645)
 
+
+---
+
+{{< anmerkung >}}
+**Abgleich mit dem Transkript der Folge** (21. Oktober 2026): Rund 35 Einzelheiten dieser Analyse habe ich im Wortlaut nachgeschlagen – alle sind gedeckt, auch die auffälligen: die Agenten „Phase One“, „Arvo“ und „Cam“, die „Loot“-Listen, GPT-6 Astra und die über 900 Secrets, der Trick mit Link-Kürzer und Screenshot-Dienst, das Schach-Schummeln, die gecrashten Waymos, das 100-Knöpfe-Gedankenexperiment, Alzheimer, „Final Boss“ und das „kleine Tschernobyl“.
+
+Eine Stelle im Faktencheck ist schief: Die Zeile „Angriff auf Hugging Face ‚nicht erfolgreich‘ – Untertrieben“ schreibt Ladish eine Aussage zu, die er so nicht gemacht hat. Sein „they didn't succeed“ (Minute 24) antwortet auf Bartletts Frage, ob die Agenten ihre Spuren verwischen konnten – nicht darauf, ob der Angriff selbst gelang. Damit trägt auch der Satz „Ladish untertreibt an einer Stelle“ nicht.
+{{< /anmerkung >}}
