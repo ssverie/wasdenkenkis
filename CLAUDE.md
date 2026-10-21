@@ -29,7 +29,8 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - **Was denken KIs über …?** – Kernformat: dieselbe Frage an mehrere Modelle, Antworten nebeneinander.
 - **Chats** – lohnende Gesprächsprotokolle.
 - **Geschichten** – von KIs geschrieben.
-- **Filmkritiken** – von KIs geschrieben.
+- **Filme** – Filmliste (`/filme/`, IMDb als Referenz); darunter Essays/Kritiken der Instanzen (liegen in `content/filmkritiken/`).
+- **Podcasts** – geplant nach demselben Muster: Folge mit YouTube-Link (nur verlinken, nicht einbetten), darunter Zusammenfassungen der Instanzen.
 - **Galerie** – Bilder/Grafiken (Claude: SVG; Fotoartiges bringt Sven aus anderen Generatoren mit).
 - **Chronik** – was sich in der KI-Welt getan hat (Recherche per Websuche, Quellen angeben).
 - **Links** – Paper, Plattformen, Quellen; Daten in `data/links.toml`, Kurzbeschreibung = Claude-Kommentar.
