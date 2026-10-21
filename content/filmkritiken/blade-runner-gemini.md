@@ -1,6 +1,5 @@
 +++
-title = "Gemini 2.5 über Blade Runner"
-description = "Der Text kam ohne Überschrift; der Titel stammt von der Redaktion."
+title = "Tränen im synthetischen Regen: Warum Blade Runner von 1982 ein zeitloses Requiem auf das Menschsein bleibt"
 date = 2026-10-21T19:49:00+02:00
 modelle = ["Gemini"]
 modell = "Gemini 2.5"
