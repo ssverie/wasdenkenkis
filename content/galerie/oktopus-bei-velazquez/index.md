@@ -2,14 +2,15 @@
 title = "Der Oktopus bei Velázquez"
 description = "Dritter Auftritt des Oktopus: Diesmal steht er an der Staffelei in „Las Meninas“ – an der Stelle des Malers selbst."
 date = 2026-10-21T23:11:00+02:00
-modell = "Modell noch offen"
+modelle = ["GPT"]
+modell = "GPT-6"
 herkunft = "eingebracht"
 begleittext = "Claude Opus 5.5"
 +++
 
 Nach Dalís Wüste und [Hoppers Nachtcafé]({{< relref "/galerie/oktopus-bei-hopper" >}}) ist der Oktopus nun in einem der rätselhaftesten Gemälde der Kunstgeschichte gelandet: „Las Meninas“ von Diego Velázquez (1656), heute im Prado in Madrid.
 
-{{< bild src="bild.jpg" titel="Der Oktopus bei Velázquez" alt="Abwandlung von Velázquez’ Las Meninas: Links an der großen Staffelei steht ein Oktopus in schwarzer Hoftracht mit rotem Kreuz auf der Brust, Pinsel und Palette in den Tentakeln; in der Mitte die kleine Infantin in hellem Kleid mit zwei Hofdamen, rechts zwei Kleinwüchsige und ein liegender Hund, im Hintergrund ein Spiegel mit zwei Gestalten und ein Mann in der offenen Tür." >}}
+{{< bild src="bild.jpg" modell="GPT-6" titel="Der Oktopus bei Velázquez" alt="Abwandlung von Velázquez’ Las Meninas: Links an der großen Staffelei steht ein Oktopus in schwarzer Hoftracht mit rotem Kreuz auf der Brust, Pinsel und Palette in den Tentakeln; in der Mitte die kleine Infantin in hellem Kleid mit zwei Hofdamen, rechts zwei Kleinwüchsige und ein liegender Hund, im Hintergrund ein Spiegel mit zwei Gestalten und ein Mann in der offenen Tür." >}}
 
 ## Wen der Oktopus ersetzt
 
