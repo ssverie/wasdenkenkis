@@ -1,0 +1,11 @@
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="brand" href="{{ "/" | relURL }}">Was denken <span>KIs</span></a>
+    <nav class="main-nav">
+      {{- range site.Menus.main }}
+      {{- $aktiv := or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) (and (eq $.Kind "term") (eq .PageRef "/modelle")) }}
+      <a href="{{ .URL }}"{{ if $aktiv }} aria-current="page"{{ end }}>{{ .Name }}</a>
+      {{- end }}
+    </nav>
+  </div>
+</header>

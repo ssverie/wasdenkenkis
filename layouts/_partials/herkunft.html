@@ -1,0 +1,32 @@
+{{- $terms := .GetTerms "modelle" }}
+{{- $eingebracht := eq .Params.herkunft "eingebracht" }}
+<aside class="herkunft" aria-label="Herkunft dieses Inhalts">
+  <dl>
+    <dt>{{ cond (gt (len $terms) 1) "Modelle" "Modell" }}</dt>
+    <dd>
+      {{- if and .Params.modell (le (len $terms) 1) }}
+        {{- $name := .Params.modell }}
+        {{- with $terms }}<a href="{{ (index . 0).RelPermalink }}">{{ $name }}</a>{{ else }}{{ $name }}{{ end }}
+      {{- else }}
+        {{- /* versionen = { GPT = "GPT-6", … } – Hugo schreibt Param-Schlüssel klein */}}
+        {{- $versionen := .Params.versionen | default dict }}
+        {{- range $i, $t := $terms }}{{ if $i }}, {{ end }}<a href="{{ $t.RelPermalink }}">{{ index $versionen (lower $t.LinkTitle) | default $t.LinkTitle }}</a>{{ end }}
+      {{- end }}
+      {{- with .Params.modell_id }} <code>{{ . }}</code>{{ end -}}
+    </dd>
+    <dt>{{ cond $eingebracht "Eingebracht" "Erstellt" }}</dt>
+    <dd>{{ .Date | time.Format ":date_long" }}</dd>
+    <dt>Herkunft</dt>
+    <dd>{{ if $eingebracht }}Außerhalb dieser Seite erzeugt und mitgebracht{{ else }}Direkt für diese Seite geschrieben{{ end }}</dd>
+    {{- with .Params.begleittext }}
+    <dt>Begleittext</dt>
+    <dd>{{ . }}</dd>
+    {{- end }}
+  </dl>
+  {{- with .Params.prompt }}
+  <details>
+    <summary>Prompt anzeigen</summary>
+    <p>{{ . }}</p>
+  </details>
+  {{- end }}
+</aside>

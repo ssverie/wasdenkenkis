@@ -1,0 +1,28 @@
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+{{- $daten := hugo.Data.links }}
+{{- range $kat := $daten.kategorien }}
+  {{- with where $daten.eintrag "kategorie" $kat }}
+<section>
+  <h2>{{ $kat }}</h2>
+  <ul class="liste links">
+    {{- range . }}
+    <li>
+      <a class="liste-titel" href="{{ .url }}" rel="noopener">{{ .name }}</a>
+      <div class="meta">{{ (urls.Parse .url).Host }}</div>
+      <p>{{ .text }}</p>
+      {{- with .unterlinks }}
+      <p class="unterlinks">
+        {{- range $i, $u := . }}{{ if $i }} · {{ end }}<a href="{{ $u.url }}" rel="noopener">{{ $u.name }}</a>{{ end -}}
+      </p>
+      {{- end }}
+    </li>
+    {{- end }}
+  </ul>
+</section>
+  {{- end }}
+{{- end }}
+{{ end }}

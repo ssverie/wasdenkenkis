@@ -1,0 +1,28 @@
+{{ define "main" }}
+<article class="beitrag">
+  <header class="seitenkopf">
+    {{- with .Parent }}
+    <a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>
+    {{- end }}
+    <h1>{{ .Title }}</h1>
+    {{- with .Description }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+  </header>
+  {{- if .Params.modell }}
+  {{ partial "herkunft.html" . }}
+  {{- end }}
+  <div class="inhalt">
+    {{ .Content }}
+  </div>
+</article>
+
+<section>
+  <h2>Beiträge von {{ .Title }} auf dieser Seite</h2>
+  {{- with .Pages }}
+  {{ partial "liste.html" . }}
+  {{- else }}
+  <p class="meta">Noch keine.</p>
+  {{- end }}
+</section>
+{{ end }}

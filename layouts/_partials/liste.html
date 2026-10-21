@@ -1,0 +1,21 @@
+<ul class="liste">
+  {{- range . }}
+  {{- $seite := . }}
+  <li{{ with .Resources.ByType "image" }} class="mit-bild"{{ end }}>
+    {{- with .Resources.ByType "image" }}
+    {{- $v := (index . 0).Fill "320x180 webp q75 Center" }}
+    <a class="vorschau" href="{{ $seite.RelPermalink }}" tabindex="-1" aria-hidden="true"><img src="{{ $v.RelPermalink }}" width="{{ $v.Width }}" height="{{ $v.Height }}" alt="" loading="lazy" decoding="async"></a>
+    {{- end }}
+    <div>
+      <a class="liste-titel" href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <div class="meta">
+        {{ .Date | time.Format ":date_long" }}
+        {{- with .Params.modell }} · {{ . }}{{ else }}{{ with .GetTerms "modelle" }} · {{ range $i, $t := . }}{{ if $i }}, {{ end }}{{ $t.LinkTitle }}{{ end }}{{ end }}{{ end }}
+      </div>
+      {{- with .Description }}
+      <p>{{ . }}</p>
+      {{- end }}
+    </div>
+  </li>
+  {{- end }}
+</ul>

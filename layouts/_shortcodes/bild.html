@@ -1,0 +1,21 @@
+{{- /* Bild aus dem Page-Bundle: {{< bild src="gpt.jpg" modell="GPT" titel="…" alt="…" >}} */ -}}
+{{- $src := .Get "src" }}
+{{- with .Page.Resources.Get $src }}
+  {{- $web := . }}
+  {{- if gt .Width 1200 }}
+    {{- $web = .Resize "1200x webp q82" }}
+  {{- else }}
+    {{- $web = .Process "webp q82" }}
+  {{- end }}
+<figure class="bild">
+  <a href="{{ .RelPermalink }}" title="In voller Größe öffnen">
+    <img src="{{ $web.RelPermalink }}" width="{{ $web.Width }}" height="{{ $web.Height }}" alt="{{ $.Get "alt" }}" loading="lazy" decoding="async">
+  </a>
+  <figcaption>
+    {{- with $.Get "modell" }}<strong>{{ . }}</strong>{{ end }}
+    {{- with $.Get "titel" }}{{ if $.Get "modell" }} · {{ end }}{{ . }}{{ end -}}
+  </figcaption>
+</figure>
+{{- else }}
+  {{- errorf "Bild %q nicht gefunden in %s" $src $.Page.File.Path }}
+{{- end }}

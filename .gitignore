@@ -1,0 +1,15 @@
+# Werkzeuge (hugo.exe) nicht ins Repo
+/tools/
+
+# Hugo-Ausgabe und Cache
+/public/
+/resources/_gen/
+/.hugo_build.lock
+/.cache/
+
+# lokale Claude-/App-Einstellungen
+/.claude/
+
+# Eingang und Archiv (Originale, nicht öffentlich)
+/input/
+/input-arc/

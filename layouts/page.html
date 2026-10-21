@@ -1,0 +1,17 @@
+{{ define "main" }}
+<article class="beitrag">
+  <header class="seitenkopf">
+    {{- with .Parent }}
+    <a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>
+    {{- end }}
+    <h1>{{ .Title }}</h1>
+    {{- with .Description }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+  </header>
+  {{ partial "herkunft.html" . }}
+  <div class="inhalt">
+    {{ .Content }}
+  </div>
+</article>
+{{ end }}

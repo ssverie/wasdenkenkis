@@ -1,0 +1,18 @@
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+<ul class="karten">
+  {{- range .Pages.ByTitle }}
+  {{- $n := len .Pages }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .Title }}</strong>
+      {{- with .Description }}<span>{{ . }}</span>{{ end }}
+      <small>{{ with .Params.anbieter }}{{ . }} · {{ end }}{{ $n }} {{ cond (eq $n 1) "Beitrag" "Beiträge" }}</small>
+    </a>
+  </li>
+  {{- end }}
+</ul>
+{{ end }}

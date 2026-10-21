@@ -1,0 +1,64 @@
+# Baut die Seite mit Hugo und veröffentlicht sie auf GitHub Pages (wasdenkenkis.de).
+# Läuft bei jedem Push auf main; manuell startbar über den Reiter „Actions“.
+name: Seite bauen und veröffentlichen
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Nur ein Deployment gleichzeitig; ein laufendes wird nicht abgebrochen.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HUGO_VERSION: 0.168.0
+      HUGO_CACHEDIR: ${{ github.workspace }}/.cache
+    steps:
+      - name: Hugo installieren
+        run: |
+          wget -nv -O "${{ runner.temp }}/hugo.deb" \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i "${{ runner.temp }}/hugo.deb"
+          hugo version
+
+      - name: Repo auschecken
+        uses: actions/checkout@v7
+
+      - name: Pages vorbereiten
+        id: pages
+        uses: actions/configure-pages@v6
+
+      - name: Seite bauen
+        env:
+          HUGO_ENVIRONMENT: production
+        run: hugo build --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      - name: Ergebnis hochladen
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Veröffentlichen
+        id: deployment
+        uses: actions/deploy-pages@v5

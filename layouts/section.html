@@ -1,0 +1,7 @@
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+{{ partial "liste.html" .RegularPages }}
+{{ end }}

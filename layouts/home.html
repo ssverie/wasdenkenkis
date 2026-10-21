@@ -1,0 +1,42 @@
+{{ define "main" }}
+<section class="hero">
+  <h1>{{ site.Title }}</h1>
+  {{ .Content }}
+</section>
+
+<section>
+  <h2>Rubriken</h2>
+  <ul class="karten">
+    {{- with site.GetPage "/modelle" }}
+    {{- $n := len .Pages }}
+    <li>
+      <a class="karte" href="{{ .RelPermalink }}">
+        <strong>{{ .Title }}</strong>
+        {{- with .Description }}<span>{{ . }}</span>{{ end }}
+        <small>{{ $n }} {{ cond (eq $n 1) "Modell" "Modelle" }}</small>
+      </a>
+    </li>
+    {{- end }}
+    {{- range site.Sections }}
+    {{- $n := len .RegularPages }}
+    {{- $einheit := cond (eq $n 1) "Beitrag" "Beiträge" }}
+    {{- if eq .Section "links" }}
+      {{- $n = len hugo.Data.links.eintrag }}
+      {{- $einheit = cond (eq $n 1) "Link" "Links" }}
+    {{- end }}
+    <li>
+      <a class="karte" href="{{ .RelPermalink }}">
+        <strong>{{ .Title }}</strong>
+        {{- with .Description }}<span>{{ . }}</span>{{ end }}
+        <small>{{ $n }} {{ $einheit }}</small>
+      </a>
+    </li>
+    {{- end }}
+  </ul>
+</section>
+
+<section>
+  <h2>Neueste Beiträge</h2>
+  {{ partial "liste.html" (first 10 site.RegularPages) }}
+</section>
+{{ end }}

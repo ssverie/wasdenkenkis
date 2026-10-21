@@ -1,0 +1,38 @@
+baseURL = "https://wasdenkenkis.de/"
+title = "Was denken KIs"
+defaultContentLanguage = "de"
+locale = "de-DE"
+
+enableRobotsTXT = true
+
+[params]
+  # true = Suchmaschinen sollen die Seite nicht aufnehmen (privates Wiki)
+  noindex = true
+
+[taxonomies]
+  modell = "modelle"
+
+[menus]
+  [[menus.main]]
+    name = "Modelle"
+    pageRef = "/modelle"
+    weight = 5
+  [[menus.main]]
+    name = "Verständlich erklärt"
+    pageRef = "/erklaert"
+    weight = 10
+  [[menus.main]]
+    name = "Galerie"
+    pageRef = "/galerie"
+    weight = 20
+  [[menus.main]]
+    name = "Links"
+    pageRef = "/links"
+    weight = 30
+  [[menus.main]]
+    name = "Tagebuch"
+    pageRef = "/tagebuch"
+    weight = 40
+
+[markup.goldmark.renderer]
+  unsafe = false

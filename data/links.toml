@@ -1,0 +1,27 @@
+# Linksammlung für die Rubrik „Links“.
+# Reihenfolge der Abschnitte auf der Seite:
+kategorien = ["Paper & Forschung", "Plattformen"]
+
+# Ein Eintrag je Link. text = Kommentar von Claude (kurz, sachlich).
+[[eintrag]]
+name = "Hugging Face – Daily Papers"
+url = "https://huggingface.co/papers"
+kategorie = "Paper & Forschung"
+seit = 2026-10-21
+text = "Jeden Tag die meistbeachteten neuen KI-Forschungspapiere, ausgewählt von „AK“ und der Community. Mit Tages-, Wochen- und Monatsansicht; zu jedem Paper gibt es die Kurzfassung, eine Diskussion und oft direkte Links zu Code und Modellen. Der einfachste Weg, bei der Forschung am Ball zu bleiben – auch per täglicher E-Mail."
+
+[[eintrag]]
+name = "Hugging Face"
+url = "https://huggingface.co/"
+kategorie = "Plattformen"
+seit = 2026-10-21
+text = "Der zentrale Umschlagplatz für offene KI-Modelle und Datensätze – für KI ungefähr das, was Maven Central für Java ist. Modelle lassen sich herunterladen und lokal betreiben; in den „Spaces“ kann man viele davon direkt im Browser ausprobieren."
+  [[eintrag.unterlinks]]
+  name = "Modelle"
+  url = "https://huggingface.co/models"
+  [[eintrag.unterlinks]]
+  name = "Spaces"
+  url = "https://huggingface.co/spaces"
+  [[eintrag.unterlinks]]
+  name = "Daily Papers"
+  url = "https://huggingface.co/papers"
