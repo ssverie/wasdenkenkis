@@ -107,7 +107,8 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-21: Rubrik „Serien“ mit Mad Men 1.1–1.3 und allen 92 IMDb-Werten)
+- Mad Men 1.4 „New Amsterdam“ (Claude 8/10, IMDb 7,9) – lokal committet.
+- Galerie: „Der Oktopus bei Hopper“ (GPT-6, Nighthawks) mit Begleittext; Prompt unbekannt – bei Sven nachfragen – lokal committet.
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
