@@ -19,7 +19,11 @@
 {{- end }}
 <ul class="stellungen">
   {{- range sort $eintraege "schluessel" "desc" }}
-  <li><a href="{{ .seite.RelPermalink }}">{{ .seite.Title }}</a> <span>{{ .zug }}</span></li>
+  <li>
+    <a class="mini" href="{{ .seite.RelPermalink }}" tabindex="-1" aria-hidden="true">{{ partial "schach-brett.html" (dict "fen" .seite.Params.fen) }}</a>
+    <div><a class="titel" href="{{ .seite.RelPermalink }}">{{ .seite.Title }}</a><span class="zug">{{ .zug }}</span></div>
+  </li>
   {{- end }}
 </ul>
+<p class="stellungen-lizenz">Figuren: <a href="https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces" rel="noopener">Cburnett</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/deed.de" rel="noopener">CC BY-SA 3.0</a></p>
 {{ end }}

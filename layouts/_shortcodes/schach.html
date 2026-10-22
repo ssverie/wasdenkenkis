@@ -1,37 +1,12 @@
-{{- /* Schachdiagramm aus einer FEN-Zeile: {{< schach fen="…" >}}
-       Brett aus HTML/CSS, Figuren als SVG (Cburnett), keine Skripte. Ist Schwarz am Zug, steht das Brett aus Sicht von Schwarz.
+{{- /* Schachdiagramm aus einer FEN-Zeile: {{< schach fen="…" >}} – ohne fen gilt die FEN aus dem Front-Matter.
+       Optional brett="blau"|"braun" (sonst params.schachbrett aus hugo.toml). Brett aus HTML/CSS, Figuren als SVG.
        Unter dem Brett nur die Zugnummer im Stil „18.“ (Weiß am Zug) bzw. „18...“ (Schwarz am Zug) und die FEN. */ -}}
 {{- $fen := .Get "fen" | default .Page.Params.fen }}
 {{- $teile := split $fen " " }}
 {{- $schwarz := eq (index $teile 1) "b" }}
 {{- $zug := "" }}{{ if ge (len $teile) 6 }}{{ $zug = index $teile 5 }}{{ end }}
-{{- /* Reihen auf je 8 Zeichen ausschreiben (Ziffern = leere Felder als „.“) */}}
-{{- $zeilen := slice }}
-{{- range split (index $teile 0) "/" }}
-  {{- $z := . }}
-  {{- range seq 8 -1 1 }}{{ $z = replace $z (string .) (strings.Repeat . ".") }}{{ end }}
-  {{- $zeilen = $zeilen | append $z }}
-{{- end }}
-{{- $ordnung := seq 0 7 }}{{ if $schwarz }}{{ $ordnung = seq 7 -1 0 }}{{ end }}
-{{- /* Figuren: SVG-Satz von Cburnett (Wikimedia Commons, CC BY-SA 3.0) in static/schach/figuren/ */}}
-{{- $namen := dict "K" "König" "Q" "Dame" "R" "Turm" "B" "Läufer" "N" "Springer" "P" "Bauer" }}
-{{- /* Brettfarbe: Parameter brett="blau"|"braun", sonst params.schachbrett aus hugo.toml, sonst braun */}}
-{{- $brett := .Get "brett" | default site.Params.schachbrett | default "braun" }}
-<figure class="schach-diagramm brett-{{ $brett }}">
-  <div class="brett" role="img" aria-label="Schachstellung {{ cond $schwarz "aus Sicht von Schwarz" "aus Sicht von Weiß" }}: {{ $fen }}">
-  {{- range $i, $r := $ordnung }}
-    {{- range $j, $c := $ordnung }}
-      {{- $p := substr (index $zeilen $r) $c 1 }}
-    <span class="feld {{ cond (modBool (add $r $c) 2) "hell" "dunkel" }}">
-      {{- if ne $p "." }}
-        {{- $typ := upper $p }}
-        {{- $weiss := eq $p $typ }}
-      <img class="figur" src="{{ printf "schach/figuren/%s%s.svg" (cond $weiss "w" "b") $typ | relURL }}" alt="{{ cond $weiss "Weiß" "Schwarz" }}: {{ index $namen $typ }}" width="45" height="45">
-      {{- end }}
-    </span>
-    {{- end }}
-  {{- end }}
-  </div>
+<figure class="schach-diagramm">
+  {{ partial "schach-brett.html" (dict "fen" $fen "brett" (.Get "brett")) }}
   <figcaption>
     {{- with .Get "titel" }}<strong>{{ . }}</strong> · {{ end }}{{ with $zug }}{{ . }}{{ if $schwarz }}...{{ else }}.{{ end }}{{ end }}
     <code class="fen">{{ $fen }}</code>
