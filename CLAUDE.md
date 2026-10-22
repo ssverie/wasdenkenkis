@@ -9,6 +9,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - **Sven = Chefredakteur:** gibt Themen und Richtung vor, bringt Material anderer KIs mit (über `input\`), fällt das Urteil, macht die QS an der fertigen Seite im Browser (nicht am Quelltext), gibt frei.
 - **Claude = Technik + Redaktion:** Entwicklung, Layout, Build, Deployment; bereitet mitgebrachtes Material auf, **kommentiert** (Begleittexte, Einordnung, Vergleiche), recherchiert Fakten mit Quellen; prüft vorher selbst technisch (Build, Links, Handy, hell/dunkel). Führt diese `CLAUDE.md`.
 - **Keine eigenen Claude-Beiträge mehr** (Interessenkonflikt: Claude betreibt die Seite). Beiträge kommen von anderen Modellen; Claude kommentiert nur.
+- **Ausnahme Code (seit 2026-10-22, Svens Entscheidung):** Keine Essays, Kritiken oder Erklärtexte von Claude – aber Code und Spiele darf Claude bauen. Kennzeichnung `herkunft = "claude"`, Modell „Claude Opus 5.5“, Grundlage (z. B. Fable-Vorlage) im `kontext` nennen.
 - Push auf GitHub (= live) nur nach Svens ausdrücklichem OK – für jede Änderung, auch Kleinkram.
 
 ## Eingang: `input\` → Seite → `input-arc\`
@@ -114,9 +115,9 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-22: Rubrik „Spiele“ mit Schach und 9+)
+- Spiel „Schach 960“ (von Claude Opus 5.5 gebaut, Grundlage Fable-Schach; ohne Computer, Zufalls- und Nummernwahl, 960-Rochade getestet).
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
-- Offen (Spiele): Prompt/Entstehung der Fable-5-Apps? Schach 960 liegt nicht in `input-f5` – woher?
+- Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
@@ -154,6 +155,7 @@ Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, n
 - 2026-10-22: Neue Rubrik „Kolumnen“ – jede Marke bekommt eine eigene Kolumne (Svens Idee); eigener Menüpunkt zwischen Galerie und Wissen. Steckbrief Gemini (Selbstbeschreibung von Gemini 3 Flash, Überschriften normal geschrieben statt VERSALIEN, Wortlaut unverändert). Begriff „Kontextfenster“.
 - 2026-10-22: Steckbrief Grok (Selbstbeschreibung von Grok 4.5 im Aufbau des Claude-Steckbriefs; Kernangaben zu Grok 4.7 per Websuche stichprobenartig bestätigt, Anmerkung mit Quellen).
 - 2026-10-22: Neue Rubrik „Spiele“ (Svens Idee); Spiele laufen im iframe aus `static/apps/`, damit Stil und Skript getrennt bleiben. Erstes Spiel: Schach (Claude Fable 5). Zweites Spiel: 9+ (Kennzeichnung „Idee und Regeln: Sven · Umsetzung: Claude Fable 5“).
+- 2026-10-22: Regel geändert (Sven): Claude schreibt weiterhin keine Essays/Texte als Beiträge, darf aber Code und Spiele bauen. Erstes Beispiel: Schach 960 (Umbau des Fable-Schachs, ohne Engine).
 - 2026-10-21: Neue Rubrik „Serien“: Mad Men, alle 92 Folgen von einer Claude-Opus-5.5-Instanz besprochen, mit eigener Wertung; Sven liefert die IMDb-Wertungen dazu.
 - 2026-10-21: Freigabe bleibt komplett bei Sven, auch für Kleinkram. Claude sammelt kleine Änderungen lokal (Liste „Wartet auf Freigabe“), Sven gibt gebündelt frei.
 - 2026-10-21: Seitenbreite ganz automatisch (ohne Obergrenze), nach Versuch mit zwei festen Breiten.

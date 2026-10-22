@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schach 960</title>
+<!-- Schach 960 für wasdenkenkis.de – Umbau des Schachspiels von Claude Fable 5 durch Claude Opus 5.5:
+     Zufalls-Grundstellung (960 Stellungen, Nummerierung nach Scharnagl), Rochade nach 960-Regeln,
+     reines Brett für zwei Spieler ohne Computer-Gegner. -->
+<style>
+  :root {
+    --bg: #262421; --panel: #312e2b; --text: #e8e6e3; --muted: #9c9791;
+    --light: #eeeed2; --dark: #769656; --sel: #f6f669; --accent: #7fa650;
+    --check: #ff6b6b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, "Segoe UI", sans-serif;
+    background: var(--bg); color: var(--text);
+    display: flex; flex-wrap: wrap; align-items: flex-start;
+    justify-content: center; gap: 24px; padding: 24px;
+    --sq: min(62px, calc((100vw - 56px) / 8));
+  }
+  @media (max-width: 560px) {
+    body { padding: 12px; gap: 16px; --sq: min(62px, calc((100vw - 32px) / 8)); }
+  }
+  .left { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  h1 { font-size: 22px; }
+  .status { font-size: 15px; color: var(--muted); min-height: 22px; text-align: center; }
+  .status b { color: var(--text); }
+  .status.check b { color: var(--check); }
+
+  .board-wrap { position: relative; }
+  .board {
+    display: grid;
+    grid-template: repeat(8, var(--sq)) / repeat(8, var(--sq));
+    border: 4px solid #201d1a; border-radius: 4px;
+    box-shadow: 0 15px 40px rgba(0,0,0,.5);
+  }
+  .sq {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    font-size: calc(var(--sq) * .74); line-height: 1; cursor: pointer; user-select: none;
+  }
+  .sq.light { background: var(--light); }
+  .sq.dark  { background: var(--dark); }
+  .sq.sel   { background: var(--sel) !important; }
+  .sq.check { background: radial-gradient(circle, var(--check), transparent 72%); }
+  .sq .dot {
+    position: absolute; width: 20px; height: 20px; border-radius: 50%;
+    background: rgba(20,20,20,.28); pointer-events: none;
+  }
+  .sq.capture::before {
+    content: ''; position: absolute; inset: 3px; border-radius: 50%;
+    border: 4px solid rgba(20,20,20,.28); pointer-events: none;
+  }
+  .sq.castle::before {
+    content: ''; position: absolute; inset: 3px; border-radius: 6px;
+    border: 4px solid rgba(74,127,214,.7); pointer-events: none;
+  }
+  .coord { position: absolute; font-size: 10px; font-weight: 700; opacity: .6; }
+  .coord.file { bottom: 2px; right: 3px; }
+  .coord.rank { top: 2px; left: 3px; }
+  .sq.light .coord { color: var(--dark); }
+  .sq.dark .coord { color: var(--light); }
+  .piece.w { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.55), 0 0 1px #000; }
+  .piece.b { color: #222; text-shadow: 0 1px 1px rgba(255,255,255,.15); }
+
+  .panel { background: var(--panel); border-radius: 12px; padding: 18px; width: 250px; max-width: 100%; }
+  .panel h3 { font-size: 14px; margin-bottom: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .row { display: flex; gap: 8px; margin-bottom: 14px; }
+  button {
+    flex: 1; background: var(--accent); color: #fff; border: 0; border-radius: 8px;
+    padding: 10px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  button.sec { background: #4a4744; }
+  button:active { transform: scale(.97); }
+  input[type=number] {
+    width: 5.5em; padding: 8px; border-radius: 8px; background: var(--bg); color: var(--text);
+    border: 1px solid #4a4744; font-size: 14px;
+  }
+  .nr { font-size: 15px; margin-bottom: 10px; }
+  .nr b { font-variant-numeric: tabular-nums; }
+  .hint { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+  .captured { min-height: 30px; font-size: 24px; line-height: 1.2; margin-bottom: 8px; }
+  .captured .cap-label { font-size: 11px; color: var(--muted); display: block; text-transform: uppercase; margin-bottom: 2px; }
+  .moves { max-height: 220px; overflow-y: auto; font-size: 13px; font-variant-numeric: tabular-nums; }
+  .moves .m { display: flex; gap: 8px; padding: 2px 0; }
+  .moves .num { color: var(--muted); width: 24px; }
+
+  .overlay {
+    position: absolute; inset: 0; background: rgba(0,0,0,.6); border-radius: 4px;
+    display: none; align-items: center; justify-content: center; flex-direction: column; gap: 12px; z-index: 5;
+  }
+  .overlay.show { display: flex; }
+  .overlay .promo { display: flex; gap: 6px; background: var(--panel); padding: 12px; border-radius: 10px; }
+  .overlay .promo div { font-size: 42px; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+  .overlay .promo div:hover { background: var(--accent); }
+  .overlay .end { font-size: 26px; font-weight: 700; background: var(--panel); padding: 20px 30px; border-radius: 12px; text-align: center; }
+</style>
+</head>
+<body>
+  <div class="left">
+    <h1>Schach 960</h1>
+    <div class="status" id="status">Weiß am Zug</div>
+    <div class="board-wrap">
+      <div class="board" id="board"></div>
+      <div class="overlay" id="overlay"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Grundstellung</h3>
+    <div class="nr">Stellung Nr. <b id="nr"></b> von 0–959</div>
+    <div class="row"><button id="zufall">Zufällige Stellung</button></div>
+    <div class="row">
+      <input type="number" id="nrIn" min="0" max="959" value="518" aria-label="Stellungsnummer von 0 bis 959">
+      <button id="setzen" class="sec">Aufstellen</button>
+    </div>
+    <div class="row">
+      <button id="neu" class="sec">Neu starten</button>
+      <button id="undo" class="sec">Zurück</button>
+    </div>
+    <h3>Rochade</h3>
+    <p class="hint">König auf den eigenen Turm ziehen (blau umrandet). Danach stehen beide wie im normalen Schach: kurz König g, Turm f – lang König c, Turm d.</p>
+    <div class="captured"><span class="cap-label">Weiß geschlagen</span><span id="capW"></span></div>
+    <div class="captured"><span class="cap-label">Schwarz geschlagen</span><span id="capB"></span></div>
+    <h3>Züge</h3>
+    <div class="moves" id="moves"></div>
+  </div>
+
+<script>
+  // ︎: Bauer als Schriftzeichen, nicht als Emoji
+  const GLYPH = {
+    w: { k:'♔', q:'♕', r:'♖', b:'♗', n:'♘', p:'♙' },
+    b: { k:'♚', q:'♛', r:'♜', b:'♝', n:'♞', p:'♟︎' }
+  };
+  const files = 'abcdefgh';
+  const boardEl = document.getElementById('board');
+  const statusEl = document.getElementById('status');
+  const overlay = document.getElementById('overlay');
+
+  let state, selected, legalForSel, history, moveList, startNr;
+
+  // ---------- Grundstellung 0–959 (Nummerierung nach Reinhard Scharnagl, 518 = normale Stellung) ----------
+  function backRank(n) {
+    const row = Array(8).fill(null);
+    const free = () => row.map((p, i) => p ? -1 : i).filter(i => i >= 0);
+    row[2 * (n % 4) + 1] = 'b'; n = Math.floor(n / 4);   // Läufer auf hellem Feld (b, d, f, h)
+    row[2 * (n % 4)] = 'b';     n = Math.floor(n / 4);   // Läufer auf dunklem Feld (a, c, e, g)
+    row[free()[n % 6]] = 'q';   n = Math.floor(n / 6);
+    const KN = [[0,1],[0,2],[0,3],[0,4],[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]];
+    const f = free(); row[f[KN[n][0]]] = 'n'; row[f[KN[n][1]]] = 'n';
+    const g = free(); row[g[0]] = 'r'; row[g[1]] = 'k'; row[g[2]] = 'r';   // König immer zwischen den Türmen
+    return row;
+  }
+
+  function startState(nr) {
+    const back = backRank(nr);
+    const board = Array.from({ length: 8 }, () => Array(8).fill(null));
+    for (let c = 0; c < 8; c++) {
+      board[0][c] = { t: back[c], c: 'b' };
+      board[1][c] = { t: 'p', c: 'b' };
+      board[6][c] = { t: 'p', c: 'w' };
+      board[7][c] = { t: back[c], c: 'w' };
+    }
+    const rooks = back.map((t, i) => t === 'r' ? i : -1).filter(i => i >= 0);
+    return {
+      board, turn: 'w',
+      // Rochaderechte: Linie des jeweiligen Turms, null = verloren
+      castling: { wK: rooks[1], wQ: rooks[0], bK: rooks[1], bQ: rooks[0] },
+      ep: null,
+      capturedByW: [], capturedByB: []
+    };
+  }
+
+  const inside = (r,c) => r>=0 && r<8 && c>=0 && c<8;
+  const clone = s => ({
+    board: s.board.map(row => row.map(p => p ? {t:p.t,c:p.c} : null)),
+    turn: s.turn,
+    castling: {...s.castling},
+    ep: s.ep ? [...s.ep] : null,
+    capturedByW: [...s.capturedByW], capturedByB: [...s.capturedByB]
+  });
+
+  function kingPos(s, color) {
+    for (let r=0;r<8;r++) for (let c=0;c<8;c++) {
+      const p = s.board[r][c];
+      if (p && p.t==='k' && p.c===color) return [r,c];
+    }
+    return null;
+  }
+
+  // Wird Feld (r,c) von Farbe `by` angegriffen?
+  function attacked(s, r, c, by) {
+    const dir = by==='w' ? -1 : 1;
+    for (const dc of [-1,1]) {
+      const pr = r - dir, pc = c + dc;
+      if (inside(pr,pc)) { const p=s.board[pr][pc]; if (p && p.c===by && p.t==='p') return true; }
+    }
+    for (const [dr,dc] of [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]) {
+      const rr=r+dr,cc=c+dc; if(inside(rr,cc)){const p=s.board[rr][cc]; if(p&&p.c===by&&p.t==='n')return true;}
+    }
+    for (let dr=-1;dr<=1;dr++) for (let dc=-1;dc<=1;dc++) {
+      if(!dr&&!dc)continue; const rr=r+dr,cc=c+dc;
+      if(inside(rr,cc)){const p=s.board[rr][cc]; if(p&&p.c===by&&p.t==='k')return true;}
+    }
+    for (const [dr,dc] of [[-1,-1],[-1,1],[1,-1],[1,1]]) {
+      let rr=r+dr,cc=c+dc;
+      while(inside(rr,cc)){const p=s.board[rr][cc]; if(p){if(p.c===by&&(p.t==='b'||p.t==='q'))return true;break;} rr+=dr;cc+=dc;}
+    }
+    for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+      let rr=r+dr,cc=c+dc;
+      while(inside(rr,cc)){const p=s.board[rr][cc]; if(p){if(p.c===by&&(p.t==='r'||p.t==='q'))return true;break;} rr+=dr;cc+=dc;}
+    }
+    return false;
+  }
+
+  function inCheck(s, color) {
+    const k = kingPos(s, color);
+    return k ? attacked(s, k[0], k[1], color==='w'?'b':'w') : false;
+  }
+
+  // Rochade nach 960-Regeln: König und Turm unbewegt, alle Felder zwischen ihren Start- und
+  // Zielfeldern frei (außer König und Turm selbst), König steht nicht im Schach und
+  // überquert kein angegriffenes Feld (Zielfeld eingeschlossen).
+  function castleMoves(s, r, c, color) {
+    const row = color==='w' ? 7 : 0, enemy = color==='w' ? 'b' : 'w';
+    const res = [];
+    if (r !== row || attacked(s, r, c, enemy)) return res;
+    const rights = color==='w' ? [['K', s.castling.wK], ['Q', s.castling.wQ]]
+                               : [['K', s.castling.bK], ['Q', s.castling.bQ]];
+    for (const [side, rf] of rights) {
+      if (rf === null) continue;
+      const rook = s.board[row][rf];
+      if (!rook || rook.t!=='r' || rook.c!==color) continue;
+      const kTo = side==='K' ? 6 : 2, rTo = side==='K' ? 5 : 3;
+      const lo = Math.min(c, rf, kTo, rTo), hi = Math.max(c, rf, kTo, rTo);
+      let ok = true;
+      for (let f = lo; f <= hi && ok; f++) if (f !== c && f !== rf && s.board[row][f]) ok = false;
+      if (ok) {
+        const t = clone(s); t.board[row][c] = null;   // König vom Brett, damit er keine Linie verdeckt
+        for (let f = Math.min(c, kTo); f <= Math.max(c, kTo) && ok; f++) if (attacked(t, row, f, enemy)) ok = false;
+      }
+      if (ok) res.push({ side, rf, kTo, rTo });
+    }
+    return res;
+  }
+
+  // Pseudolegale Züge einer Figur
+  function pieceMoves(s, r, c) {
+    const p = s.board[r][c];
+    if (!p) return [];
+    const moves = [];
+    const enemy = p.c==='w'?'b':'w';
+    const add = (tr,tc,flags={}) => moves.push({ from:[r,c], to:[tr,tc], flags });
+
+    if (p.t==='p') {
+      const dir = p.c==='w'?-1:1, startRow = p.c==='w'?6:1, promoRow = p.c==='w'?0:7;
+      if (inside(r+dir,c) && !s.board[r+dir][c]) {
+        if (r+dir===promoRow) add(r+dir,c,{promo:true}); else add(r+dir,c);
+        if (r===startRow && !s.board[r+2*dir][c]) add(r+2*dir,c,{double:true});
+      }
+      for (const dc of [-1,1]) {
+        const tr=r+dir, tc=c+dc;
+        if (!inside(tr,tc)) continue;
+        const tp=s.board[tr][tc];
+        if (tp && tp.c===enemy) { if (tr===promoRow) add(tr,tc,{promo:true}); else add(tr,tc); }
+        else if (s.ep && s.ep[0]===tr && s.ep[1]===tc) add(tr,tc,{ep:true});
+      }
+    } else if (p.t==='n') {
+      for (const [dr,dc] of [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]) {
+        const tr=r+dr,tc=c+dc;
+        if(inside(tr,tc)&&(!s.board[tr][tc]||s.board[tr][tc].c===enemy)) add(tr,tc);
+      }
+    } else if (p.t==='k') {
+      for (let dr=-1;dr<=1;dr++) for (let dc=-1;dc<=1;dc++) {
+        if(!dr&&!dc)continue; const tr=r+dr,tc=c+dc;
+        if(inside(tr,tc)&&(!s.board[tr][tc]||s.board[tr][tc].c===enemy)) add(tr,tc);
+      }
+      for (const cm of castleMoves(s, r, c, p.c)) {
+        const flags = { castle: cm.side, rf: cm.rf, kTo: cm.kTo, rTo: cm.rTo };
+        add(r, cm.rf, flags);                                   // König auf den eigenen Turm
+        if (cm.kTo !== c && cm.kTo !== cm.rf) add(r, cm.kTo, flags);   // oder direkt aufs Zielfeld
+      }
+    } else {
+      const dirs = p.t==='b' ? [[-1,-1],[-1,1],[1,-1],[1,1]]
+                 : p.t==='r' ? [[-1,0],[1,0],[0,-1],[0,1]]
+                 : [[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]];
+      for (const [dr,dc] of dirs) {
+        let tr=r+dr,tc=c+dc;
+        while(inside(tr,tc)){
+          const tp=s.board[tr][tc];
+          if(!tp) add(tr,tc);
+          else { if(tp.c===enemy) add(tr,tc); break; }
+          tr+=dr;tc+=dc;
+        }
+      }
+    }
+    return moves;
+  }
+
+  // Rochaderecht verlieren, wenn ein Turm sein Startfeld verlässt oder dort geschlagen wird
+  function dropRight(ns, r, c) {
+    if (r===7 && ns.castling.wK===c) ns.castling.wK = null;
+    if (r===7 && ns.castling.wQ===c) ns.castling.wQ = null;
+    if (r===0 && ns.castling.bK===c) ns.castling.bK = null;
+    if (r===0 && ns.castling.bQ===c) ns.castling.bQ = null;
+  }
+
+  function applyMove(s, move, promo='q') {
+    const ns = clone(s);
+    const [fr,fc] = move.from, [tr,tc] = move.to;
+    const p = ns.board[fr][fc];
+
+    if (move.flags.castle) {
+      const rook = ns.board[fr][move.flags.rf];
+      ns.board[fr][fc] = null; ns.board[fr][move.flags.rf] = null;
+      ns.board[fr][move.flags.kTo] = p; ns.board[fr][move.flags.rTo] = rook;
+    } else {
+      let captured = ns.board[tr][tc];
+      if (move.flags.ep) captured = ns.board[fr][tc];
+      if (captured) (p.c==='w' ? ns.capturedByW : ns.capturedByB).push(GLYPH[captured.c][captured.t]);
+      ns.board[tr][tc] = p;
+      ns.board[fr][fc] = null;
+      if (move.flags.ep) ns.board[fr][tc] = null;
+      if (move.flags.promo) ns.board[tr][tc] = { t: promo, c: p.c };
+      dropRight(ns, tr, tc);
+    }
+    if (p.t==='k') { if (p.c==='w') ns.castling.wK = ns.castling.wQ = null; else ns.castling.bK = ns.castling.bQ = null; }
+    if (p.t==='r') dropRight(ns, fr, fc);
+
+    ns.ep = move.flags.double ? [(fr+tr)/2, fc] : null;
+    ns.turn = s.turn==='w'?'b':'w';
+    return ns;
+  }
+
+  function legalMoves(s, color=s.turn) {
+    const res = [];
+    for (let r=0;r<8;r++) for (let c=0;c<8;c++) {
+      const p = s.board[r][c];
+      if (!p || p.c!==color) continue;
+      for (const m of pieceMoves(s,r,c)) if (!inCheck(applyMove(s, m), color)) res.push(m);
+    }
+    return res;
+  }
+
+  // ---------- Darstellung ----------
+  function markTargets(sq, r, c) {
+    const m = legalForSel && legalForSel.find(m => m.to[0]===r && m.to[1]===c);
+    if (!m) return;
+    if (m.flags.castle) sq.classList.add('castle');
+    else if (state.board[r][c] || m.flags.ep) sq.classList.add('capture');
+    else { const d=document.createElement('div'); d.className='dot'; sq.appendChild(d); }
+  }
+
+  function render() {
+    boardEl.innerHTML = '';
+    const chk = inCheck(state, state.turn) ? kingPos(state, state.turn) : null;
+    for (let r=0;r<8;r++) for (let c=0;c<8;c++) {
+      const sq = document.createElement('div');
+      sq.className = 'sq ' + ((r+c)%2===0 ? 'light':'dark');
+      sq.dataset.r=r; sq.dataset.c=c;
+      const p = state.board[r][c];
+      if (p) sq.innerHTML = `<span class="piece ${p.c}"${p.c===state.turn ? ' draggable="true"' : ''}>${GLYPH[p.c][p.t]}</span>`;
+      if (selected && selected[0]===r && selected[1]===c) sq.classList.add('sel');
+      if (chk && chk[0]===r && chk[1]===c) sq.classList.add('check');
+      markTargets(sq, r, c);
+      if (c===0){const co=document.createElement('span');co.className='coord rank';co.textContent=8-r;sq.appendChild(co);}
+      if (r===7){const co=document.createElement('span');co.className='coord file';co.textContent=files[c];sq.appendChild(co);}
+      sq.addEventListener('click', () => onSquareClick(r,c));
+      sq.addEventListener('dragstart', e => onDragStart(e,r,c));
+      sq.addEventListener('dragover', e => e.preventDefault());
+      sq.addEventListener('drop', e => { e.preventDefault(); onDrop(r,c); });
+      boardEl.appendChild(sq);
+    }
+    document.getElementById('capW').textContent = state.capturedByW.join('');
+    document.getElementById('capB').textContent = state.capturedByB.join('');
+    document.getElementById('nr').textContent = startNr;
+    renderMoves();
+  }
+
+  function renderMoves() {
+    const el = document.getElementById('moves');
+    let html = '';
+    for (let i=0; i<moveList.length; i+=2)
+      html += `<div class="m"><span class="num">${i/2+1}.</span><span>${moveList[i]}</span><span>${moveList[i+1]||''}</span></div>`;
+    el.innerHTML = html;
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function updateStatus() {
+    const legal = legalMoves(state);
+    const checked = inCheck(state, state.turn);
+    statusEl.classList.toggle('check', checked);
+    const side = state.turn==='w'?'Weiß':'Schwarz';
+    if (legal.length===0) {
+      showEnd(checked ? (state.turn==='w'?'Schwarz':'Weiß') + ' gewinnt – Schachmatt!' : 'Patt – Remis!');
+      statusEl.innerHTML = 'Spiel beendet';
+      return;
+    }
+    statusEl.innerHTML = `<b>${side}</b> am Zug` + (checked ? ' – <b>Schach!</b>' : '');
+  }
+
+  // ---------- Bedienung ----------
+  function paintHighlights() {
+    document.querySelectorAll('.sq').forEach(sq => {
+      sq.classList.remove('sel','capture','castle');
+      const d = sq.querySelector('.dot'); if (d) d.remove();
+      const r = +sq.dataset.r, c = +sq.dataset.c;
+      if (selected && selected[0]===r && selected[1]===c) sq.classList.add('sel');
+      markTargets(sq, r, c);
+    });
+  }
+
+  function select(r,c) {
+    selected = [r,c];
+    legalForSel = legalMoves(state).filter(m => m.from[0]===r && m.from[1]===c);
+  }
+
+  function onDragStart(e, r, c) {
+    const p = state.board[r][c];
+    if (!p || p.c!==state.turn) { e.preventDefault(); return; }
+    select(r,c);
+    paintHighlights();
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', r+','+c);
+  }
+
+  function onDrop(r,c) {
+    if (!selected || !legalForSel) return;
+    const mv = legalForSel.find(m => m.to[0]===r && m.to[1]===c);
+    if (mv) doMove(mv); else { selected=null; legalForSel=null; render(); }
+  }
+
+  function onSquareClick(r,c) {
+    // Zielfeld eines ausgewählten Zugs? (Vorrang vor Neuauswahl – nötig für „König auf Turm“)
+    if (selected && legalForSel) {
+      const mv = legalForSel.find(m => m.to[0]===r && m.to[1]===c);
+      if (mv) { doMove(mv); return; }
+    }
+    const p = state.board[r][c];
+    if (p && p.c===state.turn && !(selected && selected[0]===r && selected[1]===c)) select(r,c);
+    else { selected = null; legalForSel = null; }
+    render();
+  }
+
+  function doMove(mv) {
+    if (mv.flags.promo) askPromotion(state.turn, promo => finishMove(mv, promo));
+    else finishMove(mv, 'q');
+  }
+
+  function notation(s, mv, promo) {
+    if (mv.flags.castle) return mv.flags.castle==='K' ? 'O-O' : 'O-O-O';
+    const p = s.board[mv.from[0]][mv.from[1]];
+    const cap = s.board[mv.to[0]][mv.to[1]] || mv.flags.ep;
+    const pc = p.t==='p' ? '' : p.t.toUpperCase().replace('N','S').replace('B','L').replace('R','T').replace('Q','D');
+    return pc + files[mv.from[1]] + (8-mv.from[0]) + (cap?'x':'-') + files[mv.to[1]] + (8-mv.to[0])
+         + (mv.flags.promo ? '=' + promo.toUpperCase().replace('N','S').replace('B','L').replace('R','T').replace('Q','D') : '');
+  }
+
+  function finishMove(mv, promo) {
+    history.push(clone(state));
+    moveList.push(notation(state, mv, promo));
+    state = applyMove(state, mv, promo);
+    selected = null; legalForSel = null;
+    render();
+    updateStatus();
+  }
+
+  function askPromotion(color, cb) {
+    overlay.innerHTML = '';
+    const box = document.createElement('div');
+    box.className='promo';
+    for (const t of ['q','r','b','n']) {
+      const d=document.createElement('div');
+      d.innerHTML = `<span class="piece ${color}">${GLYPH[color][t]}</span>`;
+      d.onclick = () => { overlay.classList.remove('show'); cb(t); };
+      box.appendChild(d);
+    }
+    overlay.appendChild(box);
+    overlay.classList.add('show');
+  }
+  function showEnd(text) {
+    overlay.innerHTML = `<div class="end">${text}</div>`;
+    overlay.classList.add('show');
+    setTimeout(()=>overlay.classList.remove('show'), 3500);
+  }
+
+  function newGame(nr) {
+    startNr = nr;
+    document.getElementById('nrIn').value = nr;
+    state = startState(nr);
+    selected = null; legalForSel = null; history = []; moveList = [];
+    overlay.classList.remove('show');
+    render(); updateStatus();
+  }
+
+  document.getElementById('zufall').addEventListener('click', () => newGame(Math.floor(Math.random() * 960)));
+  document.getElementById('setzen').addEventListener('click', () => {
+    const n = Math.round(+document.getElementById('nrIn').value);
+    newGame(n >= 0 && n <= 959 ? n : startNr);
+  });
+  document.getElementById('neu').addEventListener('click', () => newGame(startNr));
+  document.getElementById('undo').addEventListener('click', () => {
+    if (!history.length) return;
+    state = history.pop(); moveList.pop();
+    selected = null; legalForSel = null;
+    overlay.classList.remove('show');
+    render(); updateStatus();
+  });
+
+  newGame(Math.floor(Math.random() * 960));
+</script>
+</body>
+</html>
