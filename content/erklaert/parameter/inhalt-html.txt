@@ -1,0 +1,220 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Parameter</strong> – auch <strong>Gewichte</strong> genannt – sind die Zahlen im Inneren eines Modells. Das Training stellt sie ein, danach sind sie fest. Alles, was das Modell „kann“, steckt in diesen Zahlen, nirgendwo sonst.</p>
+<p>„70B“ heißt 70 Milliarden (englisch <em>billion</em>) Parameter. Mehr Parameter erlauben mehr gelerntes Wissen, aber wie gut ein Modell ist, hängt genauso von Daten und Training ab.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#klein">Ein Parameter im Kleinen</a></li>
+  <li><a href="#gross">Vom Neuron zum Sprachmodell</a></li>
+  <li><a href="#rechner">Wo die Milliarden sitzen</a></li>
+  <li><a href="#speicher">Wie viel Speicher das ist</a></li>
+  <li><a href="#training">Wie sie eingestellt werden</a></li>
+  <li><a href="#mehr">Mehr = besser?</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ KLEIN ============ -->
+<h2 id="klein">Ein Parameter im Kleinen</h2>
+<p>Am einfachsten versteht man Parameter an einem einzelnen künstlichen Neuron. Es nimmt ein paar Eingaben, multipliziert jede mit einem <strong>Gewicht</strong>, zählt alles zusammen, addiert einen <strong>Bias</strong> und drückt das Ergebnis in einen Bereich zwischen 0 und 1.</p>
+<p>Hier ein Spielzeug-Spamfilter mit genau vier Parametern. Ändere die Eingaben – und dann die Gewichte:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein Neuron mit vier Parametern</div>
+  <div class="neuron">
+    <div class="nbox">
+      <div class="h">Eingaben (die E-Mail)</div>
+      <div class="nrow"><span>Enthält „Gewinn“</span><span class="toggle" data-x="0"><button type="button" data-v="0">nein</button><button type="button" data-v="1">ja</button></span><output id="x0o"></output></div>
+      <div class="nrow"><span>Ausrufezeichen</span><input type="range" id="x1" min="0" max="5" step="1" value="3"><output id="x1o"></output></div>
+      <div class="nrow"><span>Absender bekannt</span><span class="toggle" data-x="2"><button type="button" data-v="0">nein</button><button type="button" data-v="1">ja</button></span><output id="x2o"></output></div>
+    </div>
+    <div class="nbox">
+      <div class="h">Parameter (vom Training eingestellt)</div>
+      <div class="nrow w"><span>Gewicht w₁</span><input type="range" id="w0" min="-5" max="5" step="0.1" value="2.0"><output id="w0o"></output></div>
+      <div class="nrow w"><span>Gewicht w₂</span><input type="range" id="w1" min="-5" max="5" step="0.1" value="0.8"><output id="w1o"></output></div>
+      <div class="nrow w"><span>Gewicht w₃</span><input type="range" id="w2" min="-5" max="5" step="0.1" value="-3.0"><output id="w2o"></output></div>
+      <div class="nrow w"><span>Bias b</span><input type="range" id="b" min="-5" max="5" step="0.1" value="-1.5"><output id="bo"></output></div>
+    </div>
+  </div>
+  <div class="formula" id="formula"></div>
+  <div class="result"><span>Spam-Wahrscheinlichkeit</span><div class="meter"><span id="meter"></span></div><b id="pct"></b></div>
+  <p class="fine">Die orangefarbenen Regler sind die Parameter. Ein echtes Modell hat davon nicht vier, sondern Milliarden – und niemand stellt sie von Hand ein.</p>
+</div>
+
+<p>Was man hier sieht, gilt im Großen genauso: Die <em>Eingaben</em> wechseln mit jeder Anfrage, die <em>Parameter</em> bleiben gleich. Ein negatives Gewicht wie bei „Absender bekannt“ heißt: Diese Eingabe spricht <em>gegen</em> Spam. Diese Bedeutung hat niemand eingetippt – sie ergäbe sich beim Training aus vielen Beispielen.</p>
+
+<!-- ============ GROSS ============ -->
+<h2 id="gross">Vom Neuron zum Sprachmodell</h2>
+<p>Ein Sprachmodell ist im Kern dasselbe Prinzip, nur hochskaliert: Statt einem Neuron rechnen Tausende gleichzeitig, und statt einzelner Gewichte gibt es ganze <strong>Gewichtsmatrizen</strong>. Eine Schicht nimmt einen Vektor aus Tausenden Zahlen, multipliziert ihn mit einer Matrix und gibt einen neuen Vektor weiter – an die nächste Schicht. Davon gibt es Dutzende hintereinander.</p>
+
+<figure>
+<svg viewBox="0 0 440 210" role="img" aria-labelledby="layT">
+  <title id="layT">Vektor wird durch mehrere Schichten aus Gewichtsmatrizen geschickt</title>
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+  <g class="svg-text" font-size="13" font-weight="600" text-anchor="middle">
+    <text x="30" y="24">Eingabe</text><text x="410" y="24">Ausgabe</text>
+  </g>
+  <!-- input vector -->
+  <rect x="20" y="40" width="20" height="140" rx="5" style="fill:var(--accent-soft);stroke:var(--accent)" stroke-width="1.5"/>
+  <rect x="400" y="40" width="20" height="140" rx="5" style="fill:var(--accent-soft);stroke:var(--accent)" stroke-width="1.5"/>
+  <!-- matrices -->
+  <g>
+    <rect x="75" y="40" width="80" height="140" rx="6" style="fill:var(--accent-2-soft);stroke:var(--accent-2)" stroke-width="1.5"/>
+    <rect x="180" y="40" width="80" height="140" rx="6" style="fill:var(--accent-2-soft);stroke:var(--accent-2)" stroke-width="1.5"/>
+    <rect x="295" y="40" width="80" height="140" rx="6" style="fill:var(--accent-2-soft);stroke:var(--accent-2)" stroke-width="1.5"/>
+  </g>
+  <g class="svg-text" font-size="14" font-weight="700" text-anchor="middle">
+    <text x="115" y="106">Schicht 1</text><text x="220" y="106">Schicht 2</text><text x="335" y="106">Schicht 80</text>
+  </g>
+  <g class="svg-muted" font-size="12" text-anchor="middle">
+    <text x="115" y="126">Matrix W₁</text><text x="220" y="126">Matrix W₂</text><text x="335" y="126">Matrix W₈₀</text>
+  </g>
+  <text x="278" y="114" class="svg-muted" font-size="16" text-anchor="middle">…</text>
+  <g style="stroke:var(--muted)" stroke-width="1.5" marker-end="url(#ar)">
+    <line x1="42" y1="110" x2="72" y2="110"/><line x1="157" y1="110" x2="177" y2="110"/><line x1="377" y1="110" x2="397" y2="110"/>
+  </g>
+  <text x="220" y="204" class="svg-muted" font-size="12.5" text-anchor="middle">Jedes orangefarbene Feld: Millionen bis Milliarden Parameter</text>
+</svg>
+<figcaption>Die Eingaben (blau) wandern durch Schicht um Schicht. Die Matrizen (orange) sind die Parameter – sie ändern sich nie, egal was hineinkommt.</figcaption>
+</figure>
+
+<!-- ============ RECHNER ============ -->
+<h2 id="rechner">Wo die Milliarden sitzen</h2>
+<p>In einem Transformer-Sprachmodell stecken die Parameter an drei Stellen:</p>
+<ul>
+  <li><strong>Embedding-Tabelle:</strong> eine Zeile Zahlen für jedes Token im Vokabular.</li>
+  <li><strong>Aufmerksamkeit:</strong> pro Schicht vier Matrizen, mit denen Tokens aufeinander schauen.</li>
+  <li><strong>Feedforward-Netz:</strong> pro Schicht zwei große Matrizen – hier steckt der Löwenanteil.</li>
+</ul>
+<p>Mit einer Faustformel kann man die Größe eines Modells aus drei Bauplan-Zahlen recht genau schätzen. Probier die Voreinstellungen – bei GPT-2 und GPT-3 sind die Baupläne veröffentlicht, und die Formel landet sehr nah an den offiziellen Größen von 124 Mio., 1,5 Mrd. und 175 Mrd.:</p>
+
+<div class="widget">
+  <div class="widget-title">Parameter-Rechner</div>
+  <div class="presets">
+    <button type="button" data-p="12,768,50257">GPT-2 klein (2019)</button>
+    <button type="button" data-p="48,1600,50257">GPT-2 groß (2019)</button>
+    <button type="button" data-p="96,12288,50257">GPT-3 (2020)</button>
+  </div>
+  <div class="calc-in">
+    <label>Schichten<input type="number" id="cL" min="1" max="200" value="96"></label>
+    <label>Breite (Vektorlänge)<input type="number" id="cD" min="64" max="32768" step="64" value="12288"></label>
+    <label>Vokabular<input type="number" id="cV" min="1000" max="300000" step="1000" value="50257"></label>
+  </div>
+  <div class="big" id="cOut"></div>
+  <div class="stack"><span class="seg-emb" id="sE"></span><span class="seg-att" id="sA"></span><span class="seg-ff" id="sF"></span></div>
+  <div class="legend"><span><i class="seg-emb"></i>Embeddings <b id="lE"></b></span><span><i class="seg-att"></i>Aufmerksamkeit <b id="lA"></b></span><span><i class="seg-ff"></i>Feedforward <b id="lF"></b></span></div>
+  <div class="mem">
+    <div><b id="m32"></b>32 Bit je Zahl</div>
+    <div><b id="m16"></b>16 Bit</div>
+    <div><b id="m8"></b>8 Bit</div>
+    <div><b id="m4"></b>4 Bit</div>
+  </div>
+  <p class="fine">Faustformel: 12 × Schichten × Breite² + Vokabular × Breite. Neuere Modelle weichen in Details ab, die Größenordnung stimmt aber. Viele Anbieter, auch Anthropic, veröffentlichen die Parameterzahl ihrer Modelle nicht.</p>
+</div>
+
+<p>Auffällig: Die Breite geht <em>quadratisch</em> ein. Doppelt so breit heißt viermal so viele Parameter pro Schicht. Und bei großen Modellen fällt die Embedding-Tabelle kaum noch ins Gewicht.</p>
+
+<!-- ============ SPEICHER ============ -->
+<h2 id="speicher">Wie viel Speicher das ist</h2>
+<p>Jeder Parameter ist eine Gleitkommazahl. Wie viel Speicher ein Modell braucht, ist also schlicht <em>Anzahl × Bytes pro Zahl</em> – und alles muss beim Rechnen in den (Grafikkarten-)Speicher passen.</p>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Modellgröße</th><th>16 Bit</th><th>8 Bit</th><th>4 Bit</th></tr></thead>
+  <tbody>
+    <tr><td><strong>7 Mrd.</strong></td><td>14 GB</td><td>7 GB</td><td>3,5 GB</td></tr>
+    <tr><td><strong>70 Mrd.</strong></td><td>140 GB</td><td>70 GB</td><td>35 GB</td></tr>
+    <tr><td><strong>400 Mrd.</strong></td><td>800 GB</td><td>400 GB</td><td>200 GB</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Das Verkleinern der Zahlen heißt <strong>Quantisierung</strong>. Es ist, als würde man ein <code>double[]</code> in ein <code>float[]</code> oder gar <code>byte[]</code> umwandeln: Das Modell wird deutlich kleiner und schneller, verliert aber etwas Genauigkeit. Bei 8 Bit ist das meist kaum spürbar, bei 4 Bit oft noch erstaunlich gut. So laufen kleinere Modelle auch auf einem normalen Rechner.</p>
+
+<!-- ============ TRAINING ============ -->
+<h2 id="training">Wie sie eingestellt werden</h2>
+<p>Am Anfang des Trainings sind alle Parameter Zufallszahlen – das Modell produziert Buchstabensalat. Dann läuft immer derselbe Zyklus: Das Modell rät das nächste Token, man misst den <strong>Fehler</strong> und berechnet für <em>jeden einzelnen</em> Parameter, in welche Richtung er sich bewegen müsste, damit der Fehler kleiner wird. Dann wird jeder ein winziges Stück in diese Richtung geschoben. Das Verfahren heißt <strong>Gradientenabstieg</strong>.</p>
+
+<figure>
+<svg viewBox="0 0 440 230" role="img" aria-labelledby="gdT">
+  <title id="gdT">Ein Punkt rollt in kleinen Schritten eine Fehlerkurve hinab</title>
+  <defs><marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--accent-2)"/></marker></defs>
+  <line x1="40" y1="190" x2="420" y2="190" style="stroke:var(--line)" stroke-width="1.5"/>
+  <line x1="40" y1="20" x2="40" y2="190" style="stroke:var(--line)" stroke-width="1.5"/>
+  <text x="230" y="214" text-anchor="middle" class="svg-muted" font-size="13">Wert eines Parameters</text>
+  <text x="22" y="105" text-anchor="middle" class="svg-muted" font-size="13" transform="rotate(-90 22 105)">Fehler</text>
+  <path d="M55 35 C 120 40, 150 170, 250 172 S 380 80, 410 50" fill="none" style="stroke:var(--accent)" stroke-width="3"/>
+  <g style="fill:var(--accent-2)">
+    <circle cx="80" cy="52" r="7"/><circle cx="118" cy="95" r="7" opacity=".85"/><circle cx="153" cy="133" r="7" opacity=".75"/><circle cx="190" cy="158" r="7" opacity=".65"/><circle cx="225" cy="169" r="7" opacity=".55"/><circle cx="248" cy="172" r="8"/>
+  </g>
+  <text x="92" y="30" text-anchor="start" class="svg-text" font-size="12.5" font-weight="600">Start: zufällig</text>
+  <text x="250" y="160" text-anchor="middle" class="svg-text" font-size="12.5" font-weight="600">kleiner Fehler</text>
+</svg>
+<figcaption>Wie ein Wanderer im Nebel, der immer einen kleinen Schritt bergab macht. Nur dass das Modell nicht in einer, sondern in Milliarden Richtungen gleichzeitig läuft – eine pro Parameter.</figcaption>
+</figure>
+
+<p>Das wird Billionen Mal wiederholt, auf Tausenden Spezialchips über Wochen bis Monate. Am Ende speichert man die Zahlen in einer Datei – das ist das Modell. Beim späteren Benutzen, der <strong>Inferenz</strong>, werden sie nur noch gelesen.</p>
+
+<div class="callout dev">Dein Chat ändert die Parameter nicht. Was das Modell „im Gespräch lernt“, steht nur im Kontextfenster und ist weg, sobald es dort nicht mehr steht. Die Gewichte ändern sich erst, wenn der Anbieter ein neues Modell trainiert.</div>
+
+<!-- ============ MEHR ============ -->
+<h2 id="mehr">Mehr = besser?</h2>
+<p>Lange galt: Größere Modelle sind besser. Das stimmt im Grundsatz noch – mehr Parameter bieten mehr Platz für Wissen und Fähigkeiten. Aber drei Dinge relativieren es:</p>
+<div class="cards">
+  <div class="card"><div class="num">1</div><h4>Daten zählen genauso</h4><p>Ein Modell braucht genug Training für seine Größe. Eine viel zitierte Studie von 2022 („Chinchilla“) kam auf etwa 20 Trainings-Tokens pro Parameter als sinnvolles Verhältnis. Viele ältere Riesenmodelle waren untertrainiert.</p></div>
+  <div class="card"><div class="num">2</div><h4>Kleine holen auf</h4><p>Mit besseren Daten und Methoden schlagen heutige kleine Modelle oft deutlich größere von vor ein paar Jahren.</p></div>
+  <div class="card"><div class="num">3</div><h4>Nicht alle rechnen mit</h4><p>Bei „Mixture of Experts“ wird pro Token nur ein Teil der Parameter benutzt. Mixtral 8×7B hat rund 47 Mrd. Parameter, nutzt pro Token aber nur etwa 13 Mrd.</p></div>
+</div>
+<p>Die Parameterzahl ist also eher wie der Hubraum beim Auto: Sie sagt etwas über das Potenzial, aber nicht alles über die Leistung.</p>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Parameter</strong></td><td>Milliarden <code>final</code>-Konstanten, aus einer Datei geladen</td></tr>
+    <tr><td><strong>Gewichtsmatrix</strong></td><td>ein <code>float[][]</code>; eine Schicht ist im Kern <code>y = W · x + b</code></td></tr>
+    <tr><td><strong>Gewichtsdatei</strong></td><td>serialisierte Arrays, oft mehrere hundert GB (z. B. im Format <code>.safetensors</code>)</td></tr>
+    <tr><td><strong>Training</strong></td><td>der einzige Schreibzugriff auf diese Arrays</td></tr>
+    <tr><td><strong>Inferenz</strong></td><td>reiner Lesezugriff – das Modell ist danach <em>immutable</em></td></tr>
+    <tr><td><strong>Quantisierung</strong></td><td><code>double</code> → <code>float</code> → <code>byte</code>: kleiner, schneller, etwas ungenauer</td></tr>
+    <tr><td><strong>Hyperparameter</strong></td><td>die Konfiguration, die Menschen festlegen: Schichtzahl, Breite, Lernrate – wie Einträge in einer <code>application.properties</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="c">// Eine Schicht, stark vereinfacht</span>
+<span class="k">float</span>[] schicht(<span class="k">float</span>[] x, <span class="k">float</span>[][] W, <span class="k">float</span>[] b) {   <span class="c">// W und b: Parameter</span>
+    <span class="k">float</span>[] y = <span class="k">new float</span>[W.length];
+    <span class="k">for</span> (<span class="k">int</span> i = 0; i &lt; W.length; i++) {
+        <span class="k">float</span> s = b[i];
+        <span class="k">for</span> (<span class="k">int</span> j = 0; j &lt; x.length; j++) s += W[i][j] * x[j];
+        y[i] = aktivierung(s);
+    }
+    <span class="k">return</span> y;
+}
+<span class="c">// Ein Sprachmodell: ~80 solcher Schichten hintereinander,</span>
+<span class="c">// W jeweils z. B. 8192 × 28672 groß – auf Grafikkarten statt in Schleifen.</span></code></pre>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Doppelt so viele Parameter, doppelt so klug.“</b> – Größe ist ein Faktor unter mehreren. Daten, Trainingsdauer und Methoden zählen genauso.</div>
+  <div><b>„Das Modell lernt aus meinen Gesprächen.“</b> – Nicht während des Gesprächs. Die Parameter sind beim Benutzen fest; was du sagst, steht nur im Kontextfenster.</div>
+  <div><b>„Temperatur und max_tokens sind Parameter des Modells.“</b> – Das sind Einstellungen der Anfrage, im API-Jargon zwar auch „Parameter“ genannt, aber etwas völlig anderes als die gelernten Gewichte.</div>
+  <div><b>„In den Parametern stehen die Trainingstexte.“</b> – Nicht als Texte. Wissen ist über die Zahlen verteilt. Allerdings können Modelle häufig gesehene Passagen teilweise wörtlich wiedergeben – sie haben sie quasi auswendig gelernt.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/was-ist-ein-sprachmodell/">Was ist ein Sprachmodell?</a>
+  <a href="/erklaert/token/">Token</a>
+  <span title="Noch nicht vorhanden">Aufmerksamkeit</span>
+  <span title="Noch nicht vorhanden">Transformer</span>
+  <span title="Noch nicht vorhanden">Kontextfenster</span>
+</div>
+</div>

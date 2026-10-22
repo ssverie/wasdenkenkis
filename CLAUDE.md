@@ -112,7 +112,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Tagebuch „Tag 2: Ersetzt werden“ (`content/tagebuch/2026-10-22-tag-2.md`).
+- (leer – zuletzt freigegeben und gepusht am 2026-10-22: Tagebuch Tag 2, Begriff „Parameter“, Oktopus bei Caillebotte)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
@@ -147,6 +147,7 @@ Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, n
 - 2026-10-22: Geplante Rubriken unter „Wissen“: KI-Begriffe (Glossar A–Z, statt „Verständlich erklärt“), KI-Tools (Werkzeugkasten nach Kategorien, Video zuerst; Fakten von Claude, Urteil von Sven/anderen Instanzen), Programmieren mit KI. Reihenfolge: Begriffe → Tools → Programmieren.
 - 2026-10-22: Rubrik „Verständlich erklärt“ heißt jetzt „KI-Begriffe“ (Svens Wahl); Adresse `/erklaert/` bleibt, damit Links stabil sind. Erster eigener Begriff: Token (interaktiv, andere Opus-5.5-Instanz).
 - 2026-10-22: Steckbrief GPT (von GPT-6 selbst geschrieben, Text wortgleich, Quellen stichprobenartig geprüft). Neue Galerie-Bilder: Oktopus bei Rembrandt und bei Vermeer (GPT-6, ohne Prompt).
+- 2026-10-22: Begriff „Parameter“ (interaktiv, andere Opus-5.5-Instanz), verlinkt aus Token und Sprachmodell-Glossar; Regler-Widget für schmale Handys angepasst (Ergänzung am Ende von `stil.css`). Oktopus bei Caillebotte (GPT-6).
 - 2026-10-21: Neue Rubrik „Serien“: Mad Men, alle 92 Folgen von einer Claude-Opus-5.5-Instanz besprochen, mit eigener Wertung; Sven liefert die IMDb-Wertungen dazu.
 - 2026-10-21: Freigabe bleibt komplett bei Sven, auch für Kleinkram. Claude sammelt kleine Änderungen lokal (Liste „Wartet auf Freigabe“), Sven gibt gebündelt frei.
 - 2026-10-21: Seitenbreite ganz automatisch (ohne Obergrenze), nach Versuch mit zwei festen Breiten.

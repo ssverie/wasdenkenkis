@@ -171,7 +171,7 @@ String text = tok.decode(ids);            <span class="c">// "Hallo Welt!" – v
 <div class="related">
   <a href="/erklaert/was-ist-ein-sprachmodell/">Was ist ein Sprachmodell?</a>
   <span title="Noch nicht vorhanden">Kontextfenster</span>
-  <span title="Noch nicht vorhanden">Parameter</span>
+  <a href="/erklaert/parameter/">Parameter</a>
   <span title="Noch nicht vorhanden">Temperatur</span>
   <span title="Noch nicht vorhanden">Transformer</span>
 </div>
