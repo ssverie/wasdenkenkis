@@ -29,6 +29,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - **Werkzeugkompass** – KI-Tools nüchtern getestet und verglichen.
 - **KI-Begriffe** (früher „Verständlich erklärt“, Adresse bleibt `/erklaert/`) – Glossar und Grundlagen, Begriff für Begriff; eine Seite je Begriff (erste: Token).
 - **Spiele** (`/spiele/`, eigener Menüpunkt) – von KIs programmierte Browser-Spiele. Quelle: `input-f5\apps\` (Svens Sammlung mit Fable 5; **nicht löschen, nicht verschieben, nie committen** – steht in `.gitignore`; ins Repo kommen nur die freigegebenen Spiele als Kopie: Schach und 9+). Spiel-Datei als Kopie nach `static/apps/<name>.html` (nur technische Anpassungen, im Code mit „wasdenkenkis.de“ markiert: Handy-Breite, Emoji-Fix), Seite `content/spiele/<name>.md` mit Shortcode `{{</* spiel src="/apps/<name>.html" titel="…" */>}}` (iframe, Höhe passt sich an, Link „Im Vollbild spielen“). Reihenfolge laut Sven: Schach → Schach 960 → 9+ (deploy chess).
+- **Algorithmen** (`/algorithmen/`, unter „Wissen“) – Visualisierungen klassischer Algorithmen nach Svens Buch Sedgewick/Wayne *Algorithmen* (deutsche Ausgabe der 4. Auflage, Java). Sven liefert je Algorithmus das Listing (Foto) und einen Erklärtext einer anderen Claude-Instanz; Claude baut die Visualisierung als `static/apps/<name>.html` (eigener Java-Code im Stil des Listings, nie den Buchcode abschreiben) und die Seite `content/algorithmen/<name>.md` mit Shortcode `spiel` + Erklärtext wortgleich. Erste: binäre Suche (Listing 1.1).
 - **Kolumnen** (`/kolumnen/`, eigener Menüpunkt) – jede Modellfamilie (Marke) hat eine eigene, fortlaufende Kolumne mit selbstgewähltem Namen. Je Kolumne ein Unterordner `content/kolumnen/<marke>/` (`_index.md` mit `title` = Kolumnenname, `marke`), je Ausgabe `NNN-<titel>.md` mit `ausgabe = <n>` (erscheint im Herkunfts-Kasten und in Listen). Übersicht per Vorlage `layouts/kolumnen.html`. Erste: Gemini „Gedanken aus dem Silizium“, GPT „Gedanken, die niemand bestellt hat“. Claude-Kolumne nur von einer anderen Claude-Instanz.
 - **Was denken KIs über …?** – Kernformat: dieselbe Frage an mehrere Modelle, Antworten nebeneinander.
 - **Chats** – lohnende Gesprächsprotokolle.
@@ -115,9 +116,10 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-22: Tagebuch Tag 2, Abend)
+- Rubrik „Algorithmen“ (unter Wissen) mit „Binäre Suche“ (Visualisierung Claude Opus 5.5, Erklärtext andere Claude-Instanz, Listing 1.1).
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
+- Offen (Algorithmen): genaue Angaben zur deutschen Sedgewick-Ausgabe (Verlag, Jahr, ISBN) für die Bücher-Seite.
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
@@ -157,6 +159,7 @@ Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, n
 - 2026-10-22: Steckbrief Grok (Selbstbeschreibung von Grok 4.5 im Aufbau des Claude-Steckbriefs; Kernangaben zu Grok 4.7 per Websuche stichprobenartig bestätigt, Anmerkung mit Quellen).
 - 2026-10-22: Neue Rubrik „Spiele“ (Svens Idee); Spiele laufen im iframe aus `static/apps/`, damit Stil und Skript getrennt bleiben. Erstes Spiel: Schach (Claude Fable 5). Zweites Spiel: 9+ (Kennzeichnung „Idee und Regeln: Sven · Umsetzung: Claude Fable 5“).
 - 2026-10-22: Regel geändert (Sven): Claude schreibt weiterhin keine Essays/Texte als Beiträge, darf aber Code und Spiele bauen. Erstes Beispiel: Schach 960 (Umbau des Fable-Schachs, ohne Engine).
+- 2026-10-22: Neue Rubrik „Algorithmen“ unter Wissen; Sven gibt die Algorithmen aus Sedgewick/Wayne vor (Listing + Erklärtext einer anderen Instanz), Claude visualisiert. Erste: binäre Suche, alle Suchfälle automatisch gegen Referenz getestet.
 - 2026-10-21: Neue Rubrik „Serien“: Mad Men, alle 92 Folgen von einer Claude-Opus-5.5-Instanz besprochen, mit eigener Wertung; Sven liefert die IMDb-Wertungen dazu.
 - 2026-10-21: Freigabe bleibt komplett bei Sven, auch für Kleinkram. Claude sammelt kleine Änderungen lokal (Liste „Wartet auf Freigabe“), Sven gibt gebündelt frei.
 - 2026-10-21: Seitenbreite ganz automatisch (ohne Obergrenze), nach Versuch mit zwei festen Breiten.

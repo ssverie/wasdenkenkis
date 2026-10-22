@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binäre Suche</title>
+<!-- Visualisierung der rekursiven binären Suche (nach Sedgewick/Wayne, Algorithmen, Listing 1.1)
+     für wasdenkenkis.de – gebaut von Claude Opus 5.5. Keine externen Dateien. -->
+<style>
+  :root {
+    --bg: #fbfaf7; --panel: #ffffff; --line: #e2ded5; --text: #1c1c1f; --muted: #66666e;
+    --bar: #c9d6f2; --range: #2f5bd3; --mid: #c2410c; --found: #15803d; --miss: #b42318;
+    --code-bg: #f3f1ea; --hl: #fde68a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141416; --panel: #1d1d21; --line: #2f2f36; --text: #ececef; --muted: #a3a3ad;
+      --bar: #2a3552; --range: #86a6ff; --mid: #f0a058; --found: #5fd08a; --miss: #ff8a80;
+      --code-bg: #232328; --hl: #5a4a12;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font: 15px/1.5 system-ui, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); padding: 16px; }
+  .wrap { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+  .box { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .h { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+  .controls label { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); }
+  input, select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  input[type=number] { width: 5.5em; }
+  input[type=range] { padding: 0; accent-color: var(--range); }
+  button { font: 600 14px system-ui, sans-serif; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); cursor: pointer; }
+  button.primary { background: var(--range); border-color: var(--range); color: #fff; }
+  @media (prefers-color-scheme: dark) { button.primary { color: #0d1530; } }
+  button:disabled { opacity: .4; cursor: default; }
+  .group { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* Balken: sortiertes Array als Treppe */
+  .bars { display: grid; gap: 2px; align-items: end; height: 170px; }
+  .bar { position: relative; background: var(--bar); border-radius: 3px 3px 0 0; transition: background .25s, opacity .25s; display: flex; align-items: flex-start; justify-content: center; }
+  .bar span { font-size: 11px; font-weight: 600; margin-top: 2px; color: var(--text); }
+  .bar.in { background: var(--range); }
+  .bar.in span { color: #fff; }
+  .bar.out { opacity: .35; }
+  .bar.mid { background: var(--mid); }
+  .bar.mid span, .bar.found span { color: #fff; }
+  .bar.found { background: var(--found); }
+  @media (prefers-color-scheme: dark) { .bar.in span, .bar.mid span, .bar.found span { color: #0d1530; } }
+  .idx, .marks { display: grid; gap: 2px; font-size: 11px; color: var(--muted); text-align: center; font-variant-numeric: tabular-nums; }
+  .marks { font-weight: 700; min-height: 1.4em; }
+  .marks .lo, .marks .hi { color: var(--range); }
+  .marks .mid { color: var(--mid); }
+
+  .msg { font-size: 16px; min-height: 2.6em; }
+  .msg.found { color: var(--found); font-weight: 600; }
+  .msg.miss { color: var(--miss); font-weight: 600; }
+  .count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .count b { color: var(--text); }
+
+  .two { display: grid; grid-template-columns: 3fr 2fr; gap: 14px; }
+  .two > * { min-width: 0; }   /* langer Code scrollt im Kasten statt die Seite zu verbreitern */
+  @media (max-width: 720px) { .two { grid-template-columns: 1fr; } }
+  pre { background: var(--code-bg); border-radius: 8px; padding: 10px 0; overflow-x: auto; font: 12.5px/1.65 ui-monospace, Consolas, monospace; }
+  pre .ln { display: block; padding: 0 12px; white-space: pre; }
+  pre .ln.on { background: var(--hl); }
+  .stack { display: flex; flex-direction: column; gap: 6px; font: 12.5px ui-monospace, Consolas, monospace; }
+  .frame { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); }
+  .frame.top { border-color: var(--range); box-shadow: inset 3px 0 0 var(--range); }
+  .frame .ret { float: right; font-weight: 700; color: var(--found); }
+  .frame .ret.neg { color: var(--miss); }
+  .empty { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="box controls">
+    <label>Größe
+      <select id="size"><option>7</option><option selected>15</option><option>31</option><option>63</option></select>
+    </label>
+    <label>Gesucht (key) <input type="number" id="key"></label>
+    <div class="group">
+      <button id="pickIn">Zahl aus dem Array</button>
+      <button id="pickOut">Zahl, die fehlt</button>
+      <button id="fresh">Neues Array</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="bars" id="bars"></div>
+    <div class="marks" id="marks"></div>
+    <div class="idx" id="idx"></div>
+  </div>
+
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="restart">Von vorn</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="4"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+
+  <div class="two">
+    <div class="box">
+      <div class="h">Java (nach Listing 1.1)</div>
+      <pre id="code"></pre>
+    </div>
+    <div class="box">
+      <div class="h">Aufrufstapel</div>
+      <div class="stack" id="stack"></div>
+    </div>
+  </div>
+
+</div>
+<script>
+(function () {
+  const CODE = [
+    'public static int rank(int key, int[] a) {',
+    '    return rank(key, a, 0, a.length - 1);',
+    '}',
+    '',
+    'public static int rank(int key, int[] a, int lo, int hi) {',
+    '    // Wenn key in a[] vorkommt, dann in a[lo..hi].',
+    '    if (lo > hi) return -1;',
+    '    int mid = lo + (hi - lo) / 2;',
+    '    if      (key < a[mid]) return rank(key, a, lo, mid - 1);',
+    '    else if (key > a[mid]) return rank(key, a, mid + 1, hi);',
+    '    else                   return mid;',
+    '}'
+  ];
+  const $ = id => document.getElementById(id);
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  let n = 15, a = [], key = 0, steps = [], pos = 0, timer = null;
+
+  // sortiertes Array aus n verschiedenen Zahlen
+  function makeArray() {
+    const set = new Set();
+    while (set.size < n) set.add(1 + Math.floor(Math.random() * n * 4));
+    a = [...set].sort((x, y) => x - y);
+  }
+  function missingKey() {
+    let k;
+    do { k = 1 + Math.floor(Math.random() * n * 4); } while (a.includes(k));
+    return k;
+  }
+
+  // Die Suche einmal komplett durchlaufen und jeden Schritt als Momentaufnahme festhalten
+  function build() {
+    steps = [];
+    const stack = [];
+    let probes = 0, found = null;
+    const snap = (line, o) => steps.push(Object.assign(
+      { line, probes, found, stack: stack.map(f => ({ ...f })) }, o));
+
+    stack.push({ sig: `rank(${key}, a)`, ret: null });
+    snap(1, { lo: 0, hi: n - 1, msg: `Start: Suche ${key} im ganzen Array – lo = 0, hi = ${n - 1}.` });
+
+    function rec(lo, hi) {
+      stack.push({ sig: `rank(${key}, a, ${lo}, ${hi})`, ret: null });
+      if (lo > hi) {
+        snap(6, { lo, hi, msg: `lo = ${lo} ist größer als hi = ${hi}: Der Suchbereich ist leer.` });
+        stack[stack.length - 1].ret = -1;
+        snap(6, { lo, hi, msg: `Nicht gefunden – diese Ebene gibt -1 zurück.`, cls: 'miss' });
+        stack.pop();
+        return -1;
+      }
+      snap(6, { lo, hi, msg: `Suchbereich a[${lo}..${hi}]: noch ${hi - lo + 1} ${hi === lo ? 'Element' : 'Elemente'}.` });
+      const mid = lo + Math.floor((hi - lo) / 2);
+      probes++;
+      snap(7, { lo, hi, mid, msg: `mid = ${lo} + (${hi} − ${lo}) / 2 = ${mid}. Dort steht a[${mid}] = ${a[mid]}.` });
+      let r;
+      if (key < a[mid]) {
+        snap(8, { lo, hi, mid, msg: `${key} < ${a[mid]} → links weitersuchen, neuer Bereich ${lo}..${mid - 1}.` });
+        r = rec(lo, mid - 1);
+        stack[stack.length - 1].ret = r;
+        snap(8, { lo, hi, mid, msg: `Die Ebene darunter liefert ${r} – wird unverändert nach oben weitergegeben.`, cls: r < 0 ? 'miss' : 'found' });
+      } else if (key > a[mid]) {
+        snap(9, { lo, hi, mid, msg: `${key} > ${a[mid]} → rechts weitersuchen, neuer Bereich ${mid + 1}..${hi}.` });
+        r = rec(mid + 1, hi);
+        stack[stack.length - 1].ret = r;
+        snap(9, { lo, hi, mid, msg: `Die Ebene darunter liefert ${r} – wird unverändert nach oben weitergegeben.`, cls: r < 0 ? 'miss' : 'found' });
+      } else {
+        found = mid;
+        stack[stack.length - 1].ret = mid;
+        snap(10, { lo, hi, mid, msg: `${key} = a[${mid}] → gefunden! Diese Ebene gibt ${mid} zurück.`, cls: 'found' });
+        r = mid;
+      }
+      stack.pop();
+      return r;
+    }
+
+    const r = rec(0, n - 1);
+    stack[0].ret = r;
+    snap(1, { msg: r >= 0 ? `Ergebnis: rank(${key}, a) = ${r}.` : `Ergebnis: ${key} kommt nicht vor, rank(${key}, a) = -1.`,
+              cls: r >= 0 ? 'found' : 'miss', done: true });
+    pos = 0;
+  }
+
+  function render() {
+    const s = steps[pos];
+    const cols = `repeat(${n}, 1fr)`;
+    ['bars', 'marks', 'idx'].forEach(id => $(id).style.gridTemplateColumns = cols);
+    const max = a[a.length - 1], showNum = n <= 31;
+    const inRange = i => s.lo != null && i >= s.lo && i <= s.hi;
+    $('bars').innerHTML = a.map((v, i) => {
+      let c = 'bar';
+      if (s.found === i) c += ' found';
+      else if (s.mid === i && !s.done) c += ' mid';
+      else if (inRange(i) && !s.done) c += ' in';
+      else if (s.lo != null || s.done) c += ' out';
+      return `<div class="${c}" style="height:${12 + 88 * v / max}%" title="a[${i}] = ${v}">${showNum ? `<span>${v}</span>` : ''}</div>`;
+    }).join('');
+    $('idx').innerHTML = a.map((_, i) => `<div>${showNum || i % 8 === 0 ? i : ''}</div>`).join('');
+    $('marks').innerHTML = a.map((_, i) => {
+      if (s.done || s.lo == null) return '<div></div>';
+      const t = [];
+      if (i === s.lo) t.push('<span class="lo">lo</span>');
+      if (i === s.mid) t.push('<span class="mid">mid</span>');
+      if (i === s.hi) t.push('<span class="hi">hi</span>');
+      return `<div>${t.join(' ')}</div>`;
+    }).join('');
+    const msg = $('msg');
+    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
+    const maxProbes = Math.floor(Math.log2(n)) + 1;
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length} · geprüfte Elemente a[mid]: <b>${s.probes}</b> – höchstens ⌊log₂ ${n}⌋ + 1 = <b>${maxProbes}</b>. Bei 1.000.000 Elementen wären es höchstens 20.`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
+    $('stack').innerHTML = s.stack.length
+      ? s.stack.slice().reverse().map((f, i) => `<div class="frame${i === 0 ? ' top' : ''}">${f.sig}${f.ret !== null ? `<span class="ret${f.ret < 0 ? ' neg' : ''}">→ ${f.ret}</span>` : ''}</div>`).join('')
+      : '<div class="empty">leer</div>';
+    $('back').disabled = pos === 0;
+    $('next').disabled = pos === steps.length - 1;
+    if (pos === steps.length - 1) stop();
+  }
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2200 / +$('speed').value);
+    render();
+  }
+  function restartTimer() { if (timer) { stop(); play(); } }
+
+  function setKey(k) { key = k; $('key').value = k; stop(); build(); render(); }
+  function fresh() { n = +$('size').value; makeArray(); setKey(a[Math.floor(Math.random() * n)]); }
+
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('restart').addEventListener('click', () => { stop(); pos = 0; render(); });
+  $('speed').addEventListener('input', restartTimer);
+  $('size').addEventListener('change', fresh);
+  $('fresh').addEventListener('click', fresh);
+  $('pickIn').addEventListener('click', () => setKey(a[Math.floor(Math.random() * n)]));
+  $('pickOut').addEventListener('click', () => setKey(missingKey()));
+  $('key').addEventListener('change', () => { const k = Math.round(+$('key').value); if (Number.isFinite(k)) setKey(k); });
+
+  fresh();
+})();
+</script>
+</body>
+</html>
