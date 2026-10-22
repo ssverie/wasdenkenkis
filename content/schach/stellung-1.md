@@ -1,6 +1,5 @@
 +++
-title = "Stellung 1"
-description = "Eine Stellung aus Svens ChessBase."
+title = "11.10.2026"
 date = 2026-10-22T20:32:00+02:00
 +++
 
