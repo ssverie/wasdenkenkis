@@ -11,6 +11,7 @@ folge = 1
 nummer = 101
 folgentitel = "Smoke Gets in Your Eyes"
 zweitstimme = true
+wertung = "9,2"
 +++
 
 Die erste Folge von Mad Men beginnt mit einem Mann, der Menschen verstehen will, um sie besser manipulieren zu können. Don Draper sitzt in einer Bar und fragt einen Kellner, warum er eine bestimmte Zigarettenmarke raucht.

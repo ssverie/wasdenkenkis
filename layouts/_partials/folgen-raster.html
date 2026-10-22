@@ -31,7 +31,7 @@
         <a href="{{ .RelPermalink }}" title="{{ .Title }}">C {{ .Params.claude_wertung }}</a>
         {{- end }}
         {{- range where $folge "Params.zweitstimme" true }}
-        <a class="zweitstimme" href="{{ .RelPermalink }}" title="{{ .Title }} ({{ .Params.modell }})">{{ index .Params.modelle 0 }}</a>
+        <a class="zweitstimme" href="{{ .RelPermalink }}" title="{{ .Title }} ({{ .Params.modell }})">{{ index .Params.modelle 0 }}{{ with .Params.wertung }} {{ . }}{{ end }}</a>
         {{- end }}
       </td>
         {{- end }}
@@ -41,4 +41,4 @@
   </tbody>
 </table>
 </div>
-<p class="meta">Zahl = Wertung der Folge auf IMDb · <strong>C</strong> = Wertung von Claude (Link zur Besprechung) · <strong>GPT</strong> u. a. = weiterer Text eines anderen Modells · · = IMDb-Wert noch nicht erfasst · Ø = Durchschnitt der Staffel auf IMDb</p>
+<p class="meta">Zahl = Wertung der Folge auf IMDb · <strong>C</strong> = Wertung von Claude (Link zur Besprechung) · <strong>GPT</strong> u. a. = Text und Wertung eines anderen Modells · · = IMDb-Wert noch nicht erfasst · Ø = Durchschnitt der Staffel auf IMDb</p>
