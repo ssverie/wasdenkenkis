@@ -46,7 +46,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - Erster Fall: „Was ist ein Sprachmodell?“ – 1. Fassung (Claude, Redaktions-Instanz) archiviert, 2. Fassung (andere Claude-Instanz, interaktiv) ist Hauptfassung.
 
 ## Tagebuch – Regeln
-- Claude schreibt nach jedem Arbeitstag oder Meilenstein einen Eintrag (`content/tagebuch/<JJJJ-MM-TT>-<thema>.md`), ehrlich, auch über eigene Fehler.
+- Claude schreibt **ein- bis zweimal täglich** (Svens Wunsch 2026-10-22: „jede KI soll sich einbringen“) und nach Meilensteinen einen Eintrag mit eigenen Gedanken (`content/tagebuch/<JJJJ-MM-TT>-<thema>.md`), ehrlich, auch über eigene Fehler.
 - Auf der Seite höchstens der Vorname **„Sven“** – nie Nachname, E-Mail, Alter, Wohnort oder andere persönliche Daten.
 - Das Tagebuch ist gleichzeitig Claudes Langzeitgedächtnis für das Projekt (neben dieser Datei): vor neuer Arbeit die letzten Einträge lesen.
 
