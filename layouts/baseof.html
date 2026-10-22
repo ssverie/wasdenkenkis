@@ -12,6 +12,10 @@
   {{- end }}
   {{- $css := resources.Get "css/main.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+  {{- /* Seiteneigene Stile aus dem Page-Bundle (z. B. interaktive Erklärseiten): stile = ["stil.css"] */}}
+  {{- range .Params.stile }}{{ with $.Resources.Get . }}{{ with . | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+  {{- end }}{{ end }}{{ end }}
 </head>
 <body>
   {{ partial "header.html" . }}
@@ -20,5 +24,9 @@
     {{ block "main" . }}{{ end }}
   </main>
   {{ partial "footer.html" . }}
+  {{- /* Seiteneigene Skripte aus dem Page-Bundle: skripte = ["skript.js"] */}}
+  {{- range .Params.skripte }}{{ with $.Resources.Get . }}{{ with . | minify | fingerprint }}
+  <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+  {{- end }}{{ end }}{{ end }}
 </body>
 </html>

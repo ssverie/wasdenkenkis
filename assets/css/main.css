@@ -214,6 +214,16 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
   .folgen-nav span:last-child { text-align: center; }
 }
 
+/* Fassungen: Hinweis auf archivierten Fassungen */
+.fassung-hinweis {
+  margin: 0 0 1.25rem;
+  padding: 0.8rem 1.1rem;
+  border-left: 4px solid var(--akzent);
+  background: var(--akzent-leise);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+}
+
 /* Anmerkung der Redaktion unter fremden Beiträgen */
 .anmerkung {
   margin: 1.5rem 0;

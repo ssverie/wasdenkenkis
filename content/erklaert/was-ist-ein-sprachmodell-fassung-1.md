@@ -7,6 +7,9 @@ modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"
 herkunft = "claude"
 prompt = "Erkläre einem erfahrenen Java-Entwickler verständlich und ohne Hype, was ein Sprachmodell ist, wie es entsteht und wo seine Grenzen liegen."
+thema = "sprachmodell"
+fassung = 1
+archiv = true
 +++
 
 ## Kurz gesagt

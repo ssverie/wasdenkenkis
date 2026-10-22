@@ -3,5 +3,5 @@
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>
-{{ partial "liste.html" .RegularPages }}
+{{ partial "liste.html" (where .RegularPages "Params.archiv" "!=" true) }}
 {{ end }}

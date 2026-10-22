@@ -48,7 +48,7 @@
     </li>
     {{- end }}
     {{- range where site.Sections "Section" "not in" (slice "filmkritiken" "podcast-texte" "serienkritiken" "werke" "wissen") }}
-    {{- $n := len .RegularPages }}
+    {{- $n := len (where .RegularPages "Params.archiv" "!=" true) }}
     {{- $einheit := cond (eq $n 1) "Beitrag" "Beiträge" }}
     {{- if eq .Section "links" }}
       {{- $n = len hugo.Data.links.eintrag }}
@@ -67,6 +67,6 @@
 
 <section>
   <h2>Neueste Beiträge</h2>
-  {{ partial "liste.html" (first 10 site.RegularPages) }}
+  {{ partial "liste.html" (first 10 (where site.RegularPages "Params.archiv" "!=" true)) }}
 </section>
 {{ end }}

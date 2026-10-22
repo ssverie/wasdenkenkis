@@ -1,0 +1,31 @@
+{{- /* Fassungen eines Themas (thema = "…", fassung = n, archiv = true für ältere Fassungen).
+       Aufruf mit (dict "seite" . "wo" "oben"|"unten"):
+       oben  – auf einer archivierten Fassung: Hinweis auf die aktuelle Fassung
+       unten – auf der Hauptfassung: Liste der früheren Fassungen */ -}}
+{{- $seite := .seite }}
+{{- with $seite.Params.thema }}
+  {{- $alle := where site.RegularPages "Params.thema" . }}
+  {{- if and (eq $.wo "oben") $seite.Params.archiv }}
+    {{- range first 1 (where $alle "Params.archiv" "!=" true) }}
+<aside class="fassung-hinweis" aria-label="Ältere Fassung">
+  <strong>Ältere Fassung ({{ $seite.Params.fassung }}. Fassung).</strong>
+  Dieser Text wurde durch eine neuere Fassung ersetzt und bleibt hier im Archiv sichtbar:
+  <a href="{{ .RelPermalink }}">{{ .Title }} – {{ .Params.fassung }}. Fassung ({{ .Params.modell }}, {{ .Date | time.Format ":date_medium" }})</a>
+</aside>
+    {{- end }}
+  {{- else if and (eq $.wo "unten") (not $seite.Params.archiv) }}
+    {{- with sort (where $alle "Params.archiv" true) "Params.fassung" }}
+<section class="fassungen">
+  <h2>Frühere Fassungen</h2>
+  <ul class="liste">
+    {{- range . }}
+    <li>
+      <a class="liste-titel" href="{{ .RelPermalink }}">{{ .Params.fassung }}. Fassung</a>
+      <div class="meta">{{ .Date | time.Format ":date_long" }} · {{ .Params.modell }}{{ with .Params.herkunft }}{{ if eq . "claude" }} · von dieser Redaktions-Instanz geschrieben{{ end }}{{ end }}</div>
+    </li>
+    {{- end }}
+  </ul>
+</section>
+    {{- end }}
+  {{- end }}
+{{- end }}

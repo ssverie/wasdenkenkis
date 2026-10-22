@@ -17,7 +17,7 @@
           {{- else if eq .Section "links" }}
             {{- $n = len hugo.Data.links.eintrag }}{{ $einheit = cond (eq $n 1) "Link" "Links" }}
           {{- else }}
-            {{- $n = len .RegularPages }}{{ $einheit = cond (eq $n 1) "Beitrag" "Beiträge" }}
+            {{- $n = len (where .RegularPages "Params.archiv" "!=" true) }}{{ $einheit = cond (eq $n 1) "Beitrag" "Beiträge" }}
           {{- end }}
   <li>
     <a class="karte" href="{{ .RelPermalink }}">

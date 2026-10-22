@@ -1,0 +1,8 @@
+{{- /* Fügt eine HTML-Datei aus dem Page-Bundle unverändert ein (z. B. interaktive Erklärseiten):
+       {{< einbetten "inhalt-html.txt" >}} (Endung .txt, weil Hugo .html im content-Ordner als eigene Seite liest). Nur für Dateien, die Sven geliefert und Claude geprüft hat. */ -}}
+{{- $datei := .Get 0 }}
+{{- with .Page.Resources.Get $datei }}
+  {{- .Content | safeHTML }}
+{{- else }}
+  {{- errorf "einbetten: %q nicht gefunden in %s" $datei $.Page.File.Path }}
+{{- end }}

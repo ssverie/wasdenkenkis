@@ -9,11 +9,13 @@
     <p class="lead">{{ . }}</p>
     {{- end }}
   </header>
+  {{ partial "fassungen.html" (dict "seite" . "wo" "oben") }}
   {{ partial "herkunft.html" . }}
   <div class="inhalt">
     {{ .Content }}
   </div>
 </article>
+{{ partial "fassungen.html" (dict "seite" . "wo" "unten") }}
 {{- /* Serienfolgen: vorige / nächste besprochene Folge */}}
 {{- range .GetTerms "serien" }}
   {{- $serie := . }}

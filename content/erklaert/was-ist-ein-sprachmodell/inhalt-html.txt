@@ -1,0 +1,284 @@
+<div class="erklaert">
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#kurz">Kurz gesagt</a></li>
+  <li><a href="#ausprobieren">Selbst ausprobieren</a></li>
+  <li><a href="#tokens">Tokens: Wortstücke</a></li>
+  <li><a href="#training">Wie es entsteht</a></li>
+  <li><a href="#parameter">Was drinsteckt: Parameter</a></li>
+  <li><a href="#aufmerksamkeit">Blick hinein: Aufmerksamkeit</a></li>
+  <li><a href="#kontext">Das Kontextfenster</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtum">Warum es sich irrt</a></li>
+  <li><a href="#nicht">Was es nicht ist</a></li>
+</ol>
+</nav>
+
+<!-- ============ KURZ GESAGT ============ -->
+<h2 id="kurz">Kurz gesagt</h2>
+<p>Ein Sprachmodell ist ein Programm, das zu einem Text vorhersagt, wie er wahrscheinlich weitergeht. Mehr nicht. Es bekommt einen Text und liefert für <em>jedes</em> mögliche nächste Wortstück eine Wahrscheinlichkeit. Eines davon wird ausgewählt, angehängt – und das Ganze beginnt von vorn, bis die Antwort fertig ist.</p>
+
+<figure>
+<svg viewBox="0 0 440 440" role="img" aria-labelledby="loopT">
+  <title id="loopT">Der Kreislauf: Kontext, Modell, Verteilung, Auswahl, wieder Kontext</title>
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" style="fill:var(--accent)"/>
+    </marker>
+  </defs>
+  <circle cx="220" cy="220" r="150" fill="none" style="stroke:var(--line)" stroke-width="2" stroke-dasharray="4 6"/>
+  <g fill="none" style="stroke:var(--accent)" stroke-width="3" marker-end="url(#ah)">
+    <path d="M306.1 97.1 A150 150 0 0 1 342.9 133.9"/>
+    <path d="M342.9 306.1 A150 150 0 0 1 306.1 342.9"/>
+    <path d="M133.9 342.9 A150 150 0 0 1 97.1 306.1"/>
+    <path d="M97.1 133.9 A150 150 0 0 1 133.9 97.1"/>
+  </g>
+  <!-- nodes -->
+  <g>
+    <rect x="148" y="40" width="144" height="60" rx="12" style="fill:var(--card);stroke:var(--accent)" stroke-width="2"/>
+    <text x="220" y="66" text-anchor="middle" class="svg-text" font-size="16" font-weight="700">① Kontext</text>
+    <text x="220" y="87" text-anchor="middle" class="svg-muted" font-size="12.5">bisheriger Text</text>
+
+    <rect x="292" y="190" width="144" height="60" rx="12" style="fill:var(--accent-soft);stroke:var(--accent)" stroke-width="2"/>
+    <text x="364" y="216" text-anchor="middle" class="svg-text" font-size="16" font-weight="700">② Modell</text>
+    <text x="364" y="237" text-anchor="middle" class="svg-muted" font-size="12.5">rechnet einmal</text>
+
+    <rect x="148" y="340" width="144" height="60" rx="12" style="fill:var(--card);stroke:var(--accent)" stroke-width="2"/>
+    <text x="220" y="366" text-anchor="middle" class="svg-text" font-size="16" font-weight="700">③ Verteilung</text>
+    <text x="220" y="387" text-anchor="middle" class="svg-muted" font-size="12.5">Wahrscheinlichkeiten</text>
+
+    <rect x="4" y="190" width="144" height="60" rx="12" style="fill:var(--accent-2-soft);stroke:var(--accent-2)" stroke-width="2"/>
+    <text x="76" y="216" text-anchor="middle" class="svg-text" font-size="16" font-weight="700">④ Auswahl</text>
+    <text x="76" y="237" text-anchor="middle" class="svg-muted" font-size="12.5">ein Token anhängen</text>
+  </g>
+  <text x="220" y="212" text-anchor="middle" class="svg-text" font-size="15" font-weight="600">Wiederholen,</text>
+  <text x="220" y="234" text-anchor="middle" class="svg-muted" font-size="14">bis die Antwort fertig ist</text>
+</svg>
+<figcaption>Jede Antwort entsteht Stück für Stück in dieser Schleife – bei einem langen Text tausende Male.</figcaption>
+</figure>
+
+<p>Dass dabei Erklärungen, Programmcode oder Gedichte herauskommen, liegt nicht an einem eingebauten Verständnis von Gedichten. Es liegt daran, dass man sehr gut vorhersagen können muss, um gute Texte fortzusetzen – und dass dafür offenbar eine Menge Wissen über die Welt nötig ist. Wer den nächsten Satz einer Physik-Erklärung zuverlässig vorhersagen will, muss Physik in gewissem Sinn „können“.</p>
+
+<!-- ============ WIDGET ============ -->
+<h2 id="ausprobieren">Selbst ausprobieren</h2>
+<p>Hier ein Spielzeug-Modell mit nur einer Handvoll Möglichkeiten pro Schritt. Ziehe Token für Token und dreh an der <strong>Temperatur</strong>: Sie bestimmt, wie mutig gezogen wird.</p>
+
+<div class="widget" id="nt">
+  <div class="widget-title">Nächstes Token vorhersagen</div>
+  <div class="sentence" id="nt-sentence" aria-live="polite"></div>
+  <div class="bars" id="nt-bars"></div>
+  <div class="controls">
+    <button class="primary" id="nt-sample">Token ziehen</button>
+    <button id="nt-greedy">Wahrscheinlichstes nehmen</button>
+    <button id="nt-reset">Von vorn</button>
+  </div>
+  <div class="controls">
+    <label class="temp">Temperatur
+      <input type="range" id="nt-temp" min="0.1" max="2" step="0.05" value="1">
+      <output id="nt-temp-out">1,00 · ausgewogen</output>
+    </label>
+  </div>
+  <p class="fine">Die Zahlen sind ausgedacht. Ein echtes Modell vergibt in jedem Schritt Wahrscheinlichkeiten an sein gesamtes Vokabular – typischerweise einige Zehntausend bis über hunderttausend verschiedene Tokens.</p>
+</div>
+
+<p>Bei niedriger Temperatur gewinnt fast immer der Favorit – die Antwort wird vorhersehbar und bei gleicher Eingabe fast immer gleich. Bei hoher Temperatur kommen auch Außenseiter zum Zug: abwechslungsreicher, aber auch fehleranfälliger. Probier mal Temperatur 2 und warte auf „lila“.</p>
+
+<!-- ============ TOKENS ============ -->
+<h2 id="tokens">Wortstücke statt Wörter: Tokens</h2>
+<p>Das Modell arbeitet nicht mit Buchstaben und nicht ganz mit Wörtern, sondern mit <strong>Tokens</strong>: häufigen Wortstücken. Häufiges bleibt ganz, Seltenes wird zerlegt. Ein deutsches Wort entspricht im Schnitt grob ein bis zwei Tokens.</p>
+
+<figure>
+<div class="tok-examples">
+  <div class="tok-line"><div class="tok-src">der</div><div class="chips"><span class="chip c0">der<small>1412</small></span></div></div>
+  <div class="tok-line"><div class="tok-src">Sprachmodell</div><div class="chips"><span class="chip c0">Sprach<small>40517</small></span><span class="chip c1">modell<small>9286</small></span></div></div>
+  <div class="tok-line"><div class="tok-src">Donaudampfschifffahrt</div><div class="chips"><span class="chip c0">Don<small>8817</small></span><span class="chip c1">au<small>2933</small></span><span class="chip c2">dampf<small>61204</small></span><span class="chip c3">schiff<small>37719</small></span><span class="chip c4">fahrt<small>21660</small></span></div></div>
+  <div class="tok-line"><div class="tok-src">Hallo, Welt!</div><div class="chips"><span class="chip c0">Hallo<small>17093</small></span><span class="chip c1">,<small>11</small></span><span class="chip c2">␣Welt<small>44921</small></span><span class="chip c3">!<small>0</small></span></div></div>
+  <div class="tok-line"><div class="tok-src mono">System.out.println</div><div class="chips"><span class="chip c0">System<small>3400</small></span><span class="chip c1">.out<small>13066</small></span><span class="chip c2">.println<small>20201</small></span></div></div>
+</div>
+<figcaption>Beispielhafte Zerlegung, die kleinen Zahlen sind Token-IDs. Jedes Modell zerlegt etwas anders. Für das Modell ist ein Token nur eine Nummer – das Leerzeichen (␣) gehört meist mit zum Wortstück.</figcaption>
+</figure>
+
+<div class="callout dev">Tokens sind die Einheit, in der abgerechnet wird und in der die Grenzen eines Modells gemessen werden. Und sie erklären manche Schwächen: Ein Modell, das „Erdbeere“ als zwei, drei Stücke sieht, kann nicht ohne Weiteres die einzelnen Buchstaben zählen – es sieht sie schlicht nicht.</div>
+
+<!-- ============ TRAINING ============ -->
+<h2 id="training">Wie es entsteht: Training</h2>
+
+<figure>
+<div class="pipeline">
+  <div class="stage"><b>Rohtext</b>Bücher, Webseiten, Programmcode</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>1 · Vortraining</b>nächstes Token raten, vergleichen, nachjustieren – milliardenfach</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>Basismodell</b>kann Texte fortsetzen</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>2 · Feinabstimmung</b>Beispielantworten und Bewertungen durch Menschen</div>
+  <div class="arrow">→</div>
+  <div class="stage out"><b>Assistent</b>antwortet hilfreich</div>
+</div>
+<figcaption>Zwei Trainingsphasen: erst Sprache und Wissen, dann Umgangsformen.</figcaption>
+</figure>
+
+<h3>1. Vortraining</h3>
+<p>Das Modell liest riesige Mengen Text und übt immer dieselbe Aufgabe. Ein einziger Übungsschritt sieht so aus:</p>
+
+<figure>
+<div class="mini-train">
+  <div><div class="h">Lückentext</div>„Die Katze jagt die ___“</div>
+  <div><div class="h">Modell rät</div>Vogel 31 % · <strong>Maus 24 %</strong> · Ecke 2 %</div>
+  <div><div class="h">Korrektur</div>Richtig war „Maus“ → alle Zahlen ein winziges Stück so verschieben, dass „Maus“ wahrscheinlicher wird.</div>
+</div>
+<figcaption>Raten, vergleichen, nachjustieren. Milliardenfach wiederholt, über Billionen von Tokens.</figcaption>
+</figure>
+
+<p>Danach kann das Modell Texte fortsetzen, ist aber noch kein Gesprächspartner. Es hat ja nur gelernt, wie Texte <em>üblicherweise</em> weitergehen:</p>
+
+<figure>
+<div class="compare">
+  <div class="chat base">
+    <div class="who">Basismodell</div>
+    <div class="bubble q">Wie koche ich Spaghetti?</div>
+    <div class="bubble a">Wie koche ich Reis? Wie lange muss ein Ei kochen? Wie koche ich Kartoffeln ohne Topf?</div>
+  </div>
+  <div class="chat asst">
+    <div class="who">Nach der Feinabstimmung</div>
+    <div class="bubble q">Wie koche ich Spaghetti?</div>
+    <div class="bubble a">Reichlich Wasser aufkochen, gut salzen, Spaghetti rein und nach Packungsangabe garen – meist 8 bis 10 Minuten.</div>
+  </div>
+</div>
+<figcaption>Das Basismodell setzt fort, als stünde die Frage in einer Forenliste. Erst die Feinabstimmung macht daraus eine Antwort.</figcaption>
+</figure>
+
+<h3>2. Feinabstimmung</h3>
+<p>Danach wird das Modell mit Beispielen guter Antworten und mit Bewertungen durch Menschen nachtrainiert. Hier lernt es, hilfreich zu antworten, Anweisungen zu folgen und bestimmte Dinge abzulehnen. Was du im Chat erlebst – Ton, Aufbau, Höflichkeit –, ist vor allem das Ergebnis dieses Schritts.</p>
+
+<!-- ============ PARAMETER ============ -->
+<h2 id="parameter">Was im Modell steckt: Parameter</h2>
+<p>Das fertige Modell besteht aus <strong>Parametern</strong>, auch Gewichte genannt: Milliarden Zahlen, bei großen Modellen Hunderte Milliarden, die beim Training eingestellt wurden. Es gibt darin keine Datenbank mit Fakten und keinen Quelltext, in dem steht, wie man einen Brief schreibt. Alles Gelernte ist über diese Zahlen verteilt.</p>
+
+<figure>
+<div class="pgrid" id="pgrid" aria-hidden="true"></div>
+<div class="stats">
+  <div class="stat"><b>480</b><span>Zahlen in diesem Bild</span></div>
+  <div class="stat"><b>100 000 000 000</b><span>bei einem Modell mit 100 Mrd. Parametern</span></div>
+  <div class="stat"><b>≈ 200 GB</b><span>Speicher dafür, bei 16 Bit je Zahl</span></div>
+</div>
+<figcaption>Ein winziger Ausschnitt aus einer Gewichtsmatrix: Blau steht für negative, Orange für positive Werte. Einzeln bedeutet keine dieser Zahlen etwas.</figcaption>
+</figure>
+
+<div class="classfile">
+  <div class="ico">.class</div>
+  <div><strong>Modell.class</strong> – Quellcode: <em>nicht vorhanden</em>.<br>Ein passender Vergleich aus der Java-Welt: eine Klassendatei, die nie jemand geschrieben hat. Sie wurde aus Beispielen „herausgerechnet“. Man kann sie ausführen und beobachten, was sie tut – aber nicht einfach nachlesen, warum.</div>
+</div>
+
+<!-- ============ AUFMERKSAMKEIT ============ -->
+<h2 id="aufmerksamkeit">Blick hinein: Aufmerksamkeit</h2>
+<p>Wie entscheidet das Modell, welche früheren Wörter für das nächste wichtig sind? Heutige Sprachmodelle sind fast alle <strong>Transformer</strong>, und ihr Kernstück heißt <strong>Aufmerksamkeit</strong> (englisch <em>attention</em>): Jedes Token kann auf alle Tokens davor schauen und gewichtet, wie relevant sie gerade sind. Wähle ein Wort:</p>
+
+<div class="widget">
+  <div class="widget-title">Worauf achtet das Modell?</div>
+  <div class="att-tabs" id="att-tabs"></div>
+  <div class="att-row" id="att-row"></div>
+  <p class="fine">Stark vereinfacht und mit ausgedachten Werten. Echte Modelle haben viele solcher Aufmerksamkeitsköpfe in Dutzenden Schichten, die jeweils auf andere Zusammenhänge achten. Wichtig ist das Prinzip: Ein Wort schaut nur <em>zurück</em>, nie nach vorn – Spätere Wörter (blass) gibt es beim Vorhersagen ja noch nicht.</p>
+</div>
+
+<p>So kann „ist“ über sieben Wörter hinweg erkennen, dass es zum „Kaffee“ gehört – und das Modell weiß, dass als Nächstes eher „kalt“ als „müde“ passt.</p>
+
+<!-- ============ KONTEXT ============ -->
+<h2 id="kontext">Das Arbeitsgedächtnis: Kontextfenster</h2>
+<p>Alles, was das Modell während eines Gesprächs „weiß“, muss in seinem <strong>Kontextfenster</strong> stehen: deine Fragen, seine bisherigen Antworten, angehängte Dateien. Das Fenster ist groß, heute oft Hunderttausende Tokens, aber endlich. Was nicht drinsteht, existiert für das Modell nicht.</p>
+
+<figure>
+<div class="rounds">
+  <div class="round"><div class="lbl">Runde 1</div><div class="seq"><span class="blk f">Frage 1</span><span class="to">→</span><span class="blk out">Antwort 1</span></div></div>
+  <div class="round"><div class="lbl">Runde 2</div><div class="seq"><span class="blk f">Frage 1</span><span class="blk a">Antwort 1</span><span class="blk f">Frage 2</span><span class="to">→</span><span class="blk out">Antwort 2</span></div></div>
+  <div class="round"><div class="lbl">Runde 3</div><div class="seq"><span class="blk f">Frage 1</span><span class="blk a">Antwort 1</span><span class="blk f">Frage 2</span><span class="blk a">Antwort 2</span><span class="blk f">Frage 3</span><span class="to">→</span><span class="blk out">Antwort 3</span></div></div>
+  <div class="round"><div class="lbl">viel später</div><div class="seq"><span class="blk gone">Frage 1</span><span class="blk gone">Antwort 1</span><span class="blk f">…</span><span class="blk a">…</span><span class="blk f">Frage 80</span><span class="to">→</span><span class="blk out">Antwort 80</span></div></div>
+</div>
+<div class="window-bar">Kontextfenster – alles hierin sieht das Modell, alles außerhalb nicht</div>
+<figcaption>Bei jeder Runde wird der <em>gesamte</em> bisherige Verlauf neu übergeben. Wird es zu lang, fällt Altes heraus oder wird zusammengefasst – je nach Anwendung.</figcaption>
+</figure>
+
+<p>Deshalb erinnert sich ein Modell ohne Zusatzfunktionen auch nicht an das Gespräch von gestern: Es hat kein Gedächtnis, es bekommt nur jedes Mal den Text vorgelegt. Funktionen wie „Erinnerungen“ in Chat-Apps schreiben einfach passende Notizen mit ins Kontextfenster.</p>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Modell</strong></td><td>eine reine Funktion: <code>Verteilung naechstesToken(List&lt;Token&gt; kontext)</code></td></tr>
+    <tr><td><strong>Antwort erzeugen</strong></td><td>eine Schleife, die diese Funktion immer wieder aufruft und das Ergebnis anhängt</td></tr>
+    <tr><td><strong>Temperatur</strong></td><td>wie mutig aus der Verteilung gezogen wird: niedrig = vorhersehbar, hoch = abwechslungsreich</td></tr>
+    <tr><td><strong>Kontextfenster</strong></td><td>die maximale Länge der Liste <code>kontext</code></td></tr>
+    <tr><td><strong>Parameter</strong></td><td>die festen Konstanten in der Funktion – beim Training berechnet, danach unveränderlich</td></tr>
+  </tbody>
+</table>
+</div>
+
+<p>Als Code sieht die ganze Antwort-Erzeugung im Kern so aus:</p>
+
+<pre><code><span class="k">List</span>&lt;Token&gt; kontext = tokenizer.zerlege(<span class="s">"Wie koche ich Spaghetti?"</span>);
+
+<span class="k">while</span> (kontext.size() &lt; MAX_KONTEXT) {
+    Verteilung p = modell.naechstesToken(kontext);   <span class="c">// reine Funktion, kein Zustand</span>
+    Token t = p.ziehe(temperatur);                   <span class="c">// hier kommt der Zufall ins Spiel</span>
+    <span class="k">if</span> (t.istEnde()) <span class="k">break</span>;
+    kontext.add(t);                                  <span class="c">// anhängen, nächste Runde</span>
+}
+
+System.out.println(tokenizer.zusammensetzen(kontext));</code></pre>
+
+<p>Die Funktion selbst hat keinen Zustand. Das „Gedächtnis“ im Chat entsteht nur dadurch, dass bei jedem Schritt der gesamte bisherige Verlauf erneut übergeben wird.</p>
+
+<!-- ============ IRRTUM ============ -->
+<h2 id="irrtum">Warum es sich irrt</h2>
+<p>Ein Sprachmodell erzeugt das <strong>Plausible</strong>, nicht zwingend das <strong>Wahre</strong>. Meistens fällt beides zusammen, denn wahre Aussagen sind in den Trainingstexten häufiger als falsche.</p>
+
+<figure>
+<svg viewBox="0 0 440 270" role="img" aria-labelledby="vennT">
+  <title id="vennT">Plausibel und wahr überlappen sich meistens; plausibel, aber falsch ist eine Halluzination</title>
+  <circle cx="170" cy="140" r="115" style="fill:var(--accent-2-soft);stroke:var(--accent-2)" stroke-width="2" opacity=".95"/>
+  <circle cx="270" cy="140" r="115" style="fill:var(--ok-soft);stroke:var(--ok)" stroke-width="2" opacity=".75"/>
+  <text x="120" y="22" text-anchor="middle" class="svg-text" font-size="16" font-weight="700">klingt plausibel</text>
+  <text x="320" y="22" text-anchor="middle" class="svg-text" font-size="16" font-weight="700">ist wahr</text>
+  <text x="220" y="135" text-anchor="middle" class="svg-text" font-size="15" font-weight="700">meistens</text>
+  <text x="220" y="155" text-anchor="middle" class="svg-text" font-size="15" font-weight="700">beides</text>
+  <text x="105" y="133" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--accent-2);font-family:var(--sans)">Halluzi-</text>
+  <text x="105" y="153" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--accent-2);font-family:var(--sans)">nation</text>
+  <text x="336" y="133" text-anchor="middle" class="svg-muted" font-size="13.5">Überraschend</text>
+  <text x="336" y="151" text-anchor="middle" class="svg-muted" font-size="13.5">Wahres, Seltenes,</text>
+  <text x="336" y="169" text-anchor="middle" class="svg-muted" font-size="13.5">Neues</text>
+</svg>
+<figcaption>Das Modell zielt auf die linke Fläche. Wo sie die rechte nicht überdeckt, entstehen Fehler.</figcaption>
+</figure>
+
+<p>Fehlt Wissen – ein seltener Fakt, eine exakte Zahl, ein Ereignis nach dem Trainingsende –, dann liefert das Modell trotzdem etwas, das plausibel klingt. Das nennt man <strong>Halluzination</strong>. Es ist kein Lügen und kein Defekt im üblichen Sinn, sondern die direkte Folge des Prinzips. Daraus folgen drei praktische Regeln:</p>
+
+<div class="cards">
+  <div class="card"><div class="num">1</div><h4>Nachprüfen</h4><p>Bei Fakten, Zahlen und Quellen: selbst prüfen oder das Modell mit Websuche arbeiten lassen.</p></div>
+  <div class="card"><div class="num">2</div><h4>Material mitgeben</h4><p>Je genauer die Frage und je mehr Material im Kontext steht, desto besser die Antwort.</p></div>
+  <div class="card"><div class="num">3</div><h4>Ton ignorieren</h4><p>Selbstsicherer Ton sagt nichts über Richtigkeit. Das Modell klingt immer gleich überzeugt.</p></div>
+</div>
+
+<!-- ============ NICHT ============ -->
+<h2 id="nicht">Was ein Sprachmodell nicht ist</h2>
+<div class="cards">
+  <div class="card no"><div class="num">✕</div><h4>Keine Suchmaschine</h4><p>Es schlägt nichts nach – es sei denn, man gibt ihm ein Suchwerkzeug.</p></div>
+  <div class="card no"><div class="num">✕</div><h4>Keine Datenbank</h4><p>Es kann Fakten wiedergeben, aber nicht garantiert und nicht mit Quellenangabe.</p></div>
+  <div class="card no"><div class="num">✕</div><h4>Kein geschriebenes Programm</h4><p>Sein Verhalten wurde trainiert, nicht programmiert – deshalb manchmal überraschend gut und manchmal überraschend daneben.</p></div>
+</div>
+
+<!-- ============ BEGRIFFE ============ -->
+<h2 id="begriffe">Begriffe aus diesem Beitrag</h2>
+<dl class="glossary">
+  <div><dt>Token</dt><dd>Wortstück, die Grundeinheit, mit der das Modell rechnet.</dd></div>
+  <div><dt>Parameter</dt><dd>Die beim Training eingestellten Zahlen, in denen alles Gelernte steckt.</dd></div>
+  <div><dt>Kontextfenster</dt><dd>Wie viel Text das Modell auf einmal sehen kann.</dd></div>
+  <div><dt>Temperatur</dt><dd>Regler für Zufall beim Auswählen des nächsten Tokens.</dd></div>
+  <div><dt>Aufmerksamkeit</dt><dd>Mechanismus, mit dem jedes Token die relevanten früheren Tokens gewichtet.</dd></div>
+  <div><dt>Halluzination</dt><dd>Plausibel klingende, aber falsche Ausgabe.</dd></div>
+</dl>
+<p class="fine">Jeder dieser Begriffe bekommt später einen eigenen Eintrag in dieser Rubrik.</p>
+</div>
