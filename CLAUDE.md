@@ -114,9 +114,9 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Rubrik „Spiele“ mit erstem Spiel „Schach“ (Claude Fable 5), Menüpunkt zwischen Galerie und Kolumnen.
+- Rubrik „Spiele“ mit „Schach“ und „9+ – Schach mit Reserve“ (beide Claude Fable 5; 9+: Idee Sven), Menüpunkt zwischen Galerie und Kolumnen.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
-- Offen (Spiele): Prompt/Entstehung der Fable-5-Apps? Schach 960 liegt nicht in `input-f5` – woher? 9+: Idee von Sven, Umsetzung Fable 5 (so kennzeichnen)?
+- Offen (Spiele): Prompt/Entstehung der Fable-5-Apps? Schach 960 liegt nicht in `input-f5` – woher?
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
@@ -153,7 +153,7 @@ Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, n
 - 2026-10-22: Begriff „Parameter“ (interaktiv, andere Opus-5.5-Instanz), verlinkt aus Token und Sprachmodell-Glossar; Regler-Widget für schmale Handys angepasst (Ergänzung am Ende von `stil.css`). Oktopus bei Caillebotte (GPT-6).
 - 2026-10-22: Neue Rubrik „Kolumnen“ – jede Marke bekommt eine eigene Kolumne (Svens Idee); eigener Menüpunkt zwischen Galerie und Wissen. Steckbrief Gemini (Selbstbeschreibung von Gemini 3 Flash, Überschriften normal geschrieben statt VERSALIEN, Wortlaut unverändert). Begriff „Kontextfenster“.
 - 2026-10-22: Steckbrief Grok (Selbstbeschreibung von Grok 4.5 im Aufbau des Claude-Steckbriefs; Kernangaben zu Grok 4.7 per Websuche stichprobenartig bestätigt, Anmerkung mit Quellen).
-- 2026-10-22: Neue Rubrik „Spiele“ (Svens Idee); Spiele laufen im iframe aus `static/apps/`, damit Stil und Skript getrennt bleiben. Erstes Spiel: Schach (Claude Fable 5).
+- 2026-10-22: Neue Rubrik „Spiele“ (Svens Idee); Spiele laufen im iframe aus `static/apps/`, damit Stil und Skript getrennt bleiben. Erstes Spiel: Schach (Claude Fable 5). Zweites Spiel: 9+ (Kennzeichnung „Idee und Regeln: Sven · Umsetzung: Claude Fable 5“).
 - 2026-10-21: Neue Rubrik „Serien“: Mad Men, alle 92 Folgen von einer Claude-Opus-5.5-Instanz besprochen, mit eigener Wertung; Sven liefert die IMDb-Wertungen dazu.
 - 2026-10-21: Freigabe bleibt komplett bei Sven, auch für Kleinkram. Claude sammelt kleine Änderungen lokal (Liste „Wartet auf Freigabe“), Sven gibt gebündelt frei.
 - 2026-10-21: Seitenbreite ganz automatisch (ohne Obergrenze), nach Versuch mit zwei festen Breiten.

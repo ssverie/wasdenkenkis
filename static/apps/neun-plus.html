@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>9+ – Schach mit Reserve</title>
+<style>
+  :root {
+    --bg: #262421; --panel: #312e2b; --text: #e8e6e3; --muted: #9c9791;
+    --light: #eeeed2; --dark: #769656; --sel: #f6f669; --accent: #7fa650;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, "Segoe UI", sans-serif;
+    background: var(--bg); color: var(--text);
+    display: flex; flex-wrap: wrap; align-items: flex-start;
+    justify-content: center; gap: 24px; padding: 24px;
+    /* wasdenkenkis.de: Feldgröße passt sich der Breite an (max. 60 px wie im Original) */
+    --sq: min(60px, calc((100vw - 56px) / 8));
+  }
+  @media (max-width: 560px) {
+    body { padding: 12px; gap: 16px; --sq: min(60px, calc((100vw - 32px) / 8)); }
+  }
+  .left { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  h1 { font-size: 22px; text-align: center; }
+  .status { font-size: 15px; color: var(--muted); min-height: 22px; text-align: center; max-width: 520px; }
+  .status b { color: var(--text); }
+  .status .w { color:#fff; } .status .b { color:#111; background:#bbb; padding:0 5px; border-radius:3px; }
+
+  .board-wrap { position: relative; }
+  .board { display: grid; grid-template: repeat(8, var(--sq)) / repeat(8, var(--sq)); border: 4px solid #201d1a; border-radius: 4px; box-shadow: 0 15px 40px rgba(0,0,0,.5); }
+  .sq { position: relative; display: flex; align-items: center; justify-content: center; font-size: calc(var(--sq) * .73); line-height: 1; cursor: pointer; user-select: none; }
+  .sq.light { background: var(--light); } .sq.dark { background: var(--dark); }
+  .sq.sel { background: var(--sel) !important; }
+  .sq .dot { position:absolute; width:20px; height:20px; border-radius:50%; background: rgba(20,20,20,.28); pointer-events:none; }
+  .sq .drop { position:absolute; width:22px; height:22px; border-radius:4px; background: rgba(74,127,214,.5); border:2px solid #4a7fd6; pointer-events:none; }
+  .sq.capture::before { content:''; position:absolute; inset:3px; border-radius:50%; border:4px solid rgba(20,20,20,.30); pointer-events:none; }
+  .coord { position:absolute; font-size:10px; font-weight:700; opacity:.6; }
+  .coord.file { bottom:2px; right:3px; } .coord.rank { top:2px; left:3px; }
+  .piece.w { color:#fff; text-shadow: 0 1px 2px rgba(0,0,0,.55), 0 0 1px #000; }
+  .piece.b { color:#222; text-shadow: 0 1px 1px rgba(255,255,255,.15); }
+
+  .panel { background: var(--panel); border-radius:12px; padding:18px; width:250px; max-width:100%; }
+  .panel h3 { font-size:13px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; }
+  .tray { display:flex; flex-wrap:wrap; gap:6px; min-height:56px; padding:10px; background: var(--bg); border-radius:10px; margin-bottom:14px; }
+  .tray .tp { width:46px; height:46px; display:flex; align-items:center; justify-content:center; font-size:36px; border-radius:8px; cursor:grab; }
+  .tray .tp.pw { background:#00000033; }   /* weiße Figuren auf dunklem Chip */
+  .tray .tp.pb { background:#d6d0c4; }     /* schwarze Figuren auf hellem Chip */
+  .tray .tp.sel { background: var(--sel); }
+  .tray .empty { color: var(--muted); font-size:13px; align-self:center; }
+  .tray.inactive .tp { cursor: default; opacity: .5; }
+  .row { display:flex; gap:8px; margin-bottom:14px; }
+  button { flex:1; background: var(--accent); color:#fff; border:0; border-radius:8px; padding:10px; font-size:14px; font-weight:600; cursor:pointer; }
+  button.sec { background:#4a4744; }
+  .rules { font-size:12px; color:var(--muted); line-height:1.7; }
+  .rules b { color:#c8c8c8; }
+
+  .overlay { position:absolute; inset:0; background:rgba(0,0,0,.6); border-radius:4px; display:none; align-items:center; justify-content:center; z-index:5; }
+  .overlay.show { display:flex; }
+  .overlay .end { font-size:24px; font-weight:700; background:var(--panel); padding:22px 30px; border-radius:12px; text-align:center; }
+  .overlay .end button { margin-top:14px; }
+</style>
+</head>
+<body>
+  <div class="left">
+    <h1>9+ &nbsp;·&nbsp; Schach mit Reserve</h1>
+    <div class="status" id="status"></div>
+    <div class="board-wrap">
+      <div class="board" id="board"></div>
+      <div class="overlay" id="overlay"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Modus</h3>
+    <select id="mode" style="width:100%;padding:8px;border-radius:8px;background:var(--bg);color:var(--text);border:1px solid #4a4744;margin-bottom:14px;">
+      <option value="pvp">2 Spieler (Hotseat)</option>
+      <option value="ai">Gegen Computer (Weiß = du)</option>
+    </select>
+    <h3 id="trayTitleW">Reserve Weiß</h3>
+    <div class="tray" id="trayW"></div>
+    <h3 id="trayTitleB">Reserve Schwarz</h3>
+    <div class="tray" id="trayB"></div>
+    <div class="row"><button id="newBtn" class="sec">Neues Spiel</button></div>
+    <h3>Regeln</h3>
+    <div class="rules">
+      <b>Start:</b> König + 8 Bauern, ganz normal aufgestellt.<br><br>
+      <b>Dein Zug – zwei Möglichkeiten:</b><br>
+      1) Eine Figur auf dem Brett <b>ziehen</b> (normale Schachregeln), oder<br>
+      2) eine <b>Reservefigur einsetzen</b> – Figur in der Reserve anklicken, dann ein freies Feld in deinen <b>Reihen 1–3</b> (blau angezeigt).<br><br>
+      Einsetzen kostet den Zug. Bauern verwandeln sich in eine Dame.<br><br>
+      <b>Es gelten die Schachregeln:</b> Schach muss pariert werden – durch Ziehen, Schlagen <b>oder Einsetzen</b> einer Reservefigur als Block. Der König kann nicht geschlagen werden.<br><br>
+      <b>Sieg:</b> Schachmatt.
+    </div>
+  </div>
+
+<script>
+  const GLYPH = { w:{k:'♔',q:'♕',r:'♖',b:'♗',n:'♘',p:'♙'}, b:{k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟︎'} };   // ︎: als Schriftzeichen, nicht als Emoji (wasdenkenkis.de)
+  const NAME = { q:'Dame', r:'Turm', b:'Läufer', n:'Springer' };
+  const files = 'abcdefgh';
+  const boardEl = document.getElementById('board');
+  const statusEl = document.getElementById('status');
+  const trayW = document.getElementById('trayW');
+  const trayB = document.getElementById('trayB');
+  const overlay = document.getElementById('overlay');
+
+  let board, turn, reserve, selSq, legal, selReserve, dropTargets, winner, aiThinking = false;
+  const VALUE = { p:100, n:320, b:330, r:500, q:900, k:20000 };
+  const aiMode = () => document.getElementById('mode').value === 'ai';
+  const aiTurn = () => aiMode() && turn === 'b';
+
+  const zoneRows = { w:[5,6,7], b:[0,1,2] };   // eigene Reihen 1–3
+  const inside = (r,c) => r>=0&&r<8&&c>=0&&c<8;
+
+  function newGame() {
+    board = Array.from({length:8},()=>Array(8).fill(null));
+    board[7][4] = {t:'k',c:'w'}; board[0][4] = {t:'k',c:'b'};
+    for (let c=0;c<8;c++){ board[6][c]={t:'p',c:'w'}; board[1][c]={t:'p',c:'b'}; }
+    reserve = { w:{q:1,r:2,b:2,n:2}, b:{q:1,r:2,b:2,n:2} };
+    turn = 'w'; winner = null; aiThinking = false;
+    selSq = null; legal = null; selReserve = null; dropTargets = null;
+    overlay.classList.remove('show');
+    render();
+  }
+
+  // ---------- Zugerzeugung ----------
+  function pieceMoves(r,c) {
+    const p = board[r][c]; if (!p) return [];
+    const enemy = p.c==='w'?'b':'w'; const res = [];
+    const slide = dirs => { for (const [dr,dc] of dirs){ let tr=r+dr,tc=c+dc; while(inside(tr,tc)){ if(!board[tr][tc]) res.push([tr,tc]); else{ if(board[tr][tc].c===enemy) res.push([tr,tc]); break; } tr+=dr;tc+=dc; } } };
+    if (p.t==='p') {
+      const dir = p.c==='w'?-1:1, start = p.c==='w'?6:1;
+      if (inside(r+dir,c) && !board[r+dir][c]) { res.push([r+dir,c]); if (r===start && !board[r+2*dir][c]) res.push([r+2*dir,c]); }
+      for (const dc of [-1,1]){ const tr=r+dir,tc=c+dc; if(inside(tr,tc)&&board[tr][tc]&&board[tr][tc].c===enemy) res.push([tr,tc]); }
+    } else if (p.t==='n') {
+      for (const [dr,dc] of [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]){ const tr=r+dr,tc=c+dc; if(inside(tr,tc)&&(!board[tr][tc]||board[tr][tc].c===enemy)) res.push([tr,tc]); }
+    } else if (p.t==='k') {
+      for (let dr=-1;dr<=1;dr++) for (let dc=-1;dc<=1;dc++){ if(!dr&&!dc)continue; const tr=r+dr,tc=c+dc; if(inside(tr,tc)&&(!board[tr][tc]||board[tr][tc].c===enemy)) res.push([tr,tc]); }
+    } else if (p.t==='b') slide([[-1,-1],[-1,1],[1,-1],[1,1]]);
+    else if (p.t==='r') slide([[-1,0],[1,0],[0,-1],[0,1]]);
+    else if (p.t==='q') slide([[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]]);
+    return res;
+  }
+
+  // ---------- Schach-Erkennung ----------
+  function kingPosBd(bd, color) {
+    for (let r=0;r<8;r++) for (let c=0;c<8;c++)
+      if (bd[r][c] && bd[r][c].t==='k' && bd[r][c].c===color) return [r,c];
+    return null;
+  }
+
+  function attackedBd(bd, r, c, by) {
+    const dir = by==='w' ? -1 : 1;
+    for (const dc of [-1,1]) {           // Bauern
+      const pr = r - dir, pc = c + dc;
+      if (inside(pr,pc)) { const p=bd[pr][pc]; if (p && p.c===by && p.t==='p') return true; }
+    }
+    for (const [dr,dc] of [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]]) {   // Springer
+      const rr=r+dr,cc=c+dc; if(inside(rr,cc)){const p=bd[rr][cc]; if(p&&p.c===by&&p.t==='n')return true;}
+    }
+    for (let dr=-1;dr<=1;dr++) for (let dc=-1;dc<=1;dc++) {                              // König
+      if(!dr&&!dc)continue; const rr=r+dr,cc=c+dc;
+      if(inside(rr,cc)){const p=bd[rr][cc]; if(p&&p.c===by&&p.t==='k')return true;}
+    }
+    for (const [dr,dc] of [[-1,-1],[-1,1],[1,-1],[1,1]]) {                               // Läufer/Dame
+      let rr=r+dr,cc=c+dc;
+      while(inside(rr,cc)){const p=bd[rr][cc]; if(p){if(p.c===by&&(p.t==='b'||p.t==='q'))return true;break;} rr+=dr;cc+=dc;}
+    }
+    for (const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {                                 // Turm/Dame
+      let rr=r+dr,cc=c+dc;
+      while(inside(rr,cc)){const p=bd[rr][cc]; if(p){if(p.c===by&&(p.t==='r'||p.t==='q'))return true;break;} rr+=dr;cc+=dc;}
+    }
+    return false;
+  }
+
+  function inCheckBd(bd, color) {
+    const k = kingPosBd(bd, color);
+    return k ? attackedBd(bd, k[0], k[1], color==='w'?'b':'w') : false;
+  }
+
+  // Legale Züge: pseudolegale, die den eigenen König nicht im Schach lassen
+  function legalPieceMoves(r,c) {
+    const p = board[r][c]; if (!p) return [];
+    return pieceMoves(r,c).filter(([tr,tc]) => {
+      const cap = board[tr][tc];
+      board[tr][tc] = p; board[r][c] = null;
+      const ok = !inCheckBd(board, p.c);
+      board[r][c] = p; board[tr][tc] = cap;
+      return ok;
+    });
+  }
+
+  // Legale Einsetz-Felder: leer, in Reihe 1–3, und danach steht der eigene König nicht im Schach
+  function legalDeploySquares(color) {
+    return emptyZoneSquares(color).filter(([r,c]) => {
+      board[r][c] = { t:'p', c:color };
+      const ok = !inCheckBd(board, color);
+      board[r][c] = null;
+      return ok;
+    });
+  }
+
+  function emptyZoneSquares(color) {
+    const out = [];
+    for (const r of zoneRows[color]) for (let c=0;c<8;c++) if (!board[r][c]) out.push([r,c]);
+    return out;
+  }
+
+  function hasReserve(color) { return Object.values(reserve[color]).some(v=>v>0); }
+
+  function hasAnyAction(color) {
+    for (let r=0;r<8;r++) for (let c=0;c<8;c++) if (board[r][c] && board[r][c].c===color && legalPieceMoves(r,c).length) return true;
+    return hasReserve(color) && legalDeploySquares(color).length>0;
+  }
+
+  // ---------- Aktionen ----------
+  function doGameMove(fr,fc,tr,tc) {
+    const p = board[fr][fc];
+    board[tr][tc] = p; board[fr][fc] = null;
+    if (p.t==='p' && ((p.c==='w'&&tr===0)||(p.c==='b'&&tr===7))) board[tr][tc] = {t:'q',c:p.c}; // Umwandlung
+    clearSel();
+    nextTurn();
+  }
+
+  function deploy(r,c) {
+    if (!selReserve || board[r][c] || !zoneRows[turn].includes(r) || reserve[turn][selReserve]<=0) return;
+    board[r][c] = { t:selReserve, c:turn };
+    if (inCheckBd(board, turn)) { board[r][c] = null; return; }   // Schach nicht pariert -> unzulässig
+    reserve[turn][selReserve]--;
+    clearSel();
+    nextTurn();
+  }
+
+  function nextTurn() {
+    turn = turn==='w'?'b':'w';
+    render();
+    if (!hasAnyAction(turn)) {
+      if (inCheckBd(board, turn)) endGame((turn==='w'?'Schwarz':'Weiß')+' gewinnt – Schachmatt!');
+      else endGame('Patt – Remis.');
+      return;
+    }
+    if (!winner && aiTurn()) {
+      aiThinking = true;
+      statusEl.innerHTML = '<b>Computer denkt …</b>';
+      setTimeout(aiMove, 300);
+    }
+  }
+
+  // ---------- Computer-Gegner ----------
+  // Eine "Aktion" ist entweder ein Zug {move:[fr,fc,tr,tc]} oder ein Einsetzen {deploy:type, r, c}.
+  function simEmptyZone(bd, color) {
+    const out = [];
+    for (const r of zoneRows[color]) for (let c=0;c<8;c++) if (!bd[r][c]) out.push([r,c]);
+    return out;
+  }
+
+  function actionsFor(bd, res, color) {
+    const acts = [];
+    const saved = board; board = bd;   // legalPieceMoves/legalDeploySquares lesen das globale Brett
+    for (let r=0;r<8;r++) for (let c=0;c<8;c++) {
+      const p = bd[r][c];
+      if (p && p.c===color) for (const m of legalPieceMoves(r,c)) acts.push({ move:[r,c,m[0],m[1]] });
+    }
+    if (Object.values(res[color]).some(v=>v>0)) {
+      const squares = legalDeploySquares(color);
+      for (const t of ['q','r','b','n']) if (res[color][t] > 0)
+        for (const [r,c] of squares) acts.push({ deploy:t, r, c });
+    }
+    board = saved;
+    return acts;
+  }
+
+  // Schneller Existenz-Check: hat `color` überhaupt eine legale Aktion?
+  function hasLegalSim(bd, res, color) {
+    const saved = board; board = bd;
+    let found = false;
+    outer: for (let r=0;r<8;r++) for (let c=0;c<8;c++) {
+      const p = bd[r][c];
+      if (p && p.c===color && legalPieceMoves(r,c).length) { found = true; break outer; }
+    }
+    if (!found && Object.values(res[color]).some(v=>v>0) && legalDeploySquares(color).length) found = true;
+    board = saved;
+    return found;
+  }
+
+  function cloneBd(bd) { return bd.map(row => row.map(p => p ? {t:p.t,c:p.c} : null)); }
+  function cloneRes(res) { return { w:{...res.w}, b:{...res.b} }; }
+
+  function applyAct(bd, res, color, act) {
+    const nb = cloneBd(bd), nr = cloneRes(res);
+    if (act.move) {
+      const [fr,fc,tr,tc] = act.move;
+      const p = nb[fr][fc];
+      nb[tr][tc] = p; nb[fr][fc] = null;
+      if (p.t==='p' && ((p.c==='w'&&tr===0)||(p.c==='b'&&tr===7))) nb[tr][tc] = {t:'q',c:p.c};
+    } else {
+      nb[act.r][act.c] = { t:act.deploy, c:color };
+      nr[color][act.deploy]--;
+    }
+    return { bd:nb, res:nr };
+  }
+
+  // Bewertung aus Sicht von Schwarz (Computer): Material auf dem Brett voll,
+  // Reserve zu 85 % (so lohnt sich Einsetzen), kleiner Zentrumsbonus.
+  function evalState(bd, res) {
+    let score = 0;
+    for (let r=0;r<8;r++) for (let c=0;c<8;c++) {
+      const p = bd[r][c]; if (!p) continue;
+      let v = VALUE[p.t];
+      if (p.t==='p'||p.t==='n') v += (3.5-Math.abs(3.5-c))*4;
+      score += p.c==='b' ? v : -v;
+    }
+    for (const t of ['q','r','b','n']) {
+      score += res.b[t] * VALUE[t] * 0.85;
+      score -= res.w[t] * VALUE[t] * 0.85;
+    }
+    return score;
+  }
+
+  function aiMove() {
+    // Suche: für jede eigene legale Aktion die beste Antwort von Weiß einrechnen (2 Halbzüge),
+    // Matt/Patt an den Blattknoten erkannt.
+    const acts = actionsFor(board, reserve, 'b');
+    let best = -Infinity, choices = [];
+    for (const act of acts) {
+      const s1 = applyAct(board, reserve, 'b', act);
+      const replies = actionsFor(s1.bd, s1.res, 'w');
+      let val;
+      if (!replies.length) val = inCheckBd(s1.bd, 'w') ? 1e6 : 0;   // Weiß matt bzw. patt
+      else {
+        val = Infinity;
+        for (const reply of replies) {
+          const s2 = applyAct(s1.bd, s1.res, 'w', reply);
+          let v;
+          if (inCheckBd(s2.bd, 'b') && !hasLegalSim(s2.bd, s2.res, 'b')) v = -1e6;  // Weiß droht Matt
+          else v = evalState(s2.bd, s2.res);
+          if (v < val) val = v;
+          if (val <= best) break;                                   // schlechter geht's nicht mehr
+        }
+      }
+      if (val > best) { best = val; choices = [act]; }
+      else if (val === best) choices.push(act);
+    }
+    aiThinking = false;
+    if (!choices.length) return;   // Matt/Patt hat nextTurn bereits gemeldet
+    const act = choices[Math.floor(Math.random()*choices.length)];
+    if (act.move) doGameMove(act.move[0],act.move[1],act.move[2],act.move[3]);
+    else { board[act.r][act.c] = { t:act.deploy, c:'b' }; reserve.b[act.deploy]--; clearSel(); nextTurn(); }
+  }
+
+  function clearSel() { selSq=null; legal=null; selReserve=null; dropTargets=null; }
+
+  function endGame(text) {
+    winner = text; render();
+    overlay.innerHTML = `<div class="end">${text}<br><button id="ovNew">Neues Spiel</button></div>`;
+    overlay.classList.add('show');
+    document.getElementById('ovNew').onclick = newGame;
+  }
+
+  // ---------- Interaktion ----------
+  function onSquareClick(r,c) {
+    if (winner || aiThinking || aiTurn()) return;
+    // Reservefigur einsetzen?
+    if (selReserve) {
+      if (dropTargets && dropTargets.some(m=>m[0]===r&&m[1]===c)) { deploy(r,c); return; }
+      selReserve = null; dropTargets = null;   // daneben -> Auswahl aufheben
+    }
+    const p = board[r][c];
+    if (selSq && legal && legal.some(m=>m[0]===r&&m[1]===c)) { doGameMove(selSq[0],selSq[1],r,c); return; }
+    if (p && p.c===turn) { selSq=[r,c]; legal=legalPieceMoves(r,c); selReserve=null; dropTargets=null; render(); }
+    else { clearSel(); render(); }
+  }
+
+  function selectReserve(type) {
+    if (winner || aiThinking || aiTurn() || reserve[turn][type]<=0) return;
+    selReserve = (selReserve===type) ? null : type;
+    selSq = null; legal = null;
+    dropTargets = selReserve ? legalDeploySquares(turn) : null;
+    render();
+  }
+
+  // Drag & Drop
+  function onDrop(r,c,data) {
+    if (winner || aiThinking || aiTurn()) return;
+    if (data.from==='reserve') { selReserve=data.type; dropTargets=legalDeploySquares(turn); deploy(r,c); }
+    else if (data.from==='board') {
+      const moves = legalPieceMoves(data.r,data.c);
+      if (moves.some(m=>m[0]===r&&m[1]===c)) doGameMove(data.r,data.c,r,c);
+    }
+  }
+
+  // ---------- Rendering ----------
+  function render() {
+    boardEl.innerHTML = '';
+    for (let r=0;r<8;r++) for (let c=0;c<8;c++) {
+      const sq = document.createElement('div');
+      sq.className = 'sq ' + ((r+c)%2===0?'light':'dark');
+      const p = board[r][c];
+      if (p) {
+        const canDrag = (!winner && !aiThinking && !aiTurn() && p.c===turn);
+        sq.innerHTML = `<span class="piece ${p.c}"${canDrag?' draggable="true"':''}>${GLYPH[p.c][p.t]}</span>`;
+      }
+      if (selSq && selSq[0]===r && selSq[1]===c) sq.classList.add('sel');
+      if (legal && legal.some(m=>m[0]===r&&m[1]===c)) {
+        if (board[r][c]) sq.classList.add('capture');
+        else { const d=document.createElement('div'); d.className='dot'; sq.appendChild(d); }
+      }
+      if (dropTargets && dropTargets.some(m=>m[0]===r&&m[1]===c)) { const d=document.createElement('div'); d.className='drop'; sq.appendChild(d); }
+      if (c===0){const co=document.createElement('span');co.className='coord rank';co.textContent=8-r;sq.appendChild(co);}
+      if (r===7){const co=document.createElement('span');co.className='coord file';co.textContent=files[c];sq.appendChild(co);}
+      sq.addEventListener('click', ()=>onSquareClick(r,c));
+      sq.addEventListener('dragstart', e=>{
+        if (!winner && !aiThinking && !aiTurn() && board[r][c] && board[r][c].c===turn) {
+          selSq=[r,c]; legal=legalPieceMoves(r,c); selReserve=null; dropTargets=null; paint();
+          e.dataTransfer.setData('text/plain', JSON.stringify({from:'board',r,c}));
+        } else e.preventDefault();
+      });
+      sq.addEventListener('dragover', e=>e.preventDefault());
+      sq.addEventListener('drop', e=>{ e.preventDefault(); try{ onDrop(r,c,JSON.parse(e.dataTransfer.getData('text/plain'))); }catch(_){} });
+      boardEl.appendChild(sq);
+    }
+    renderTray();
+    renderStatus();
+  }
+
+  function paint() {
+    document.querySelectorAll('.sq').forEach((sq,i)=>{
+      const r=Math.floor(i/8), c=i%8;
+      sq.classList.remove('sel','capture');
+      sq.querySelectorAll('.dot,.drop').forEach(d=>d.remove());
+      if (selSq && selSq[0]===r && selSq[1]===c) sq.classList.add('sel');
+      if (legal && legal.some(m=>m[0]===r&&m[1]===c)) {
+        if (board[r][c]) sq.classList.add('capture');
+        else { const d=document.createElement('div'); d.className='dot'; sq.appendChild(d); }
+      }
+    });
+  }
+
+  function renderTray() {
+    for (const color of ['w','b']) {
+      const el = color==='w' ? trayW : trayB;
+      const title = document.getElementById(color==='w' ? 'trayTitleW' : 'trayTitleB');
+      // Bedienbar ist nur die Reserve dessen, der gerade dran ist – und nie die des Computers
+      const active = !winner && !aiThinking && color===turn && !(aiMode() && color==='b');
+      title.textContent = 'Reserve ' + (color==='w' ? 'Weiß' : 'Schwarz')
+        + (aiMode() && color==='b' ? ' (Computer)' : '')
+        + (!winner && color===turn ? ' · am Zug' : '');
+      el.classList.toggle('inactive', !active);
+      el.innerHTML = '';
+      const items = [];
+      for (const t of ['q','r','b','n']) for (let i=0;i<reserve[color][t];i++) items.push(t);
+      if (!items.length) { el.innerHTML = '<span class="empty">leer</span>'; continue; }
+      items.forEach(type=>{
+        const d = document.createElement('div');
+        d.className = 'tp p' + color + (active && selReserve===type ? ' sel' : '');
+        d.title = NAME[type] + (active ? ' einsetzen' : '');
+        d.innerHTML = `<span class="piece ${color}">${GLYPH[color][type]}</span>`;
+        if (active) {
+          d.draggable = true;
+          d.addEventListener('click', ()=>selectReserve(type));
+          d.addEventListener('dragstart', e=>{
+            if (winner || aiThinking || aiTurn()) { e.preventDefault(); return; }
+            selReserve=type; dropTargets=legalDeploySquares(turn); paint2();
+            e.dataTransfer.setData('text/plain', JSON.stringify({from:'reserve',type}));
+          });
+        }
+        el.appendChild(d);
+      });
+    }
+  }
+
+  function paint2() { // Drop-Ziele beim Drag zeigen
+    document.querySelectorAll('.sq').forEach((sq,i)=>{
+      const r=Math.floor(i/8), c=i%8;
+      sq.querySelectorAll('.drop').forEach(d=>d.remove());
+      if (dropTargets && dropTargets.some(m=>m[0]===r&&m[1]===c)) { const d=document.createElement('div'); d.className='drop'; sq.appendChild(d); }
+    });
+  }
+
+  function renderStatus() {
+    if (winner) { statusEl.innerHTML = '<b>'+winner+'</b>'; return; }
+    const side = turn==='w'?'<span class="w">Weiß</span>':'<span class="b">Schwarz</span>';
+    const chk = inCheckBd(board, turn) ? ' – <b style="color:#ff6b6b">Schach!</b>' : '';
+    if (selReserve) statusEl.innerHTML = `${side}: ${NAME[selReserve]} auf ein blaues Feld setzen (Reihen 1–3)` + chk;
+    else statusEl.innerHTML = `${side} am Zug – ziehen oder Reserve einsetzen` + chk;
+  }
+
+  document.getElementById('newBtn').addEventListener('click', newGame);
+  document.getElementById('mode').addEventListener('change', newGame);
+  newGame();
+</script>
+</body>
+</html>
