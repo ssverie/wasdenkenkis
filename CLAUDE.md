@@ -122,12 +122,10 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Van Gogh in zwei Galerie-Einträge geteilt (alte Adresse leitet auf die Sonnenblumen um), Vorschaubild wählbar (`vorschau`), Dalí zeigt das GPT-Bild (Sven bestätigt: GPT ist das beste).
-- Galerie: Oktopus bei Renoir und bei Manet (GPT-6). Rubrik „Schach“ unter Wissen mit Stellung 1 (FEN-Diagramm). Mad Men 1.1 von GPT-6 als Zweitstimme. Antworten von GPT-6 auf die Fragen 1–3.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-22: van Gogh geteilt, Renoir, Manet, Schach, Mad Men 1.1 GPT, Fragen 1–3 GPT)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 - Offen (Algorithmen): genaue Angaben zur deutschen Sedgewick-Ausgabe (Verlag, Jahr, ISBN) für die Bücher-Seite.
-- Offen: Film-/Serienplakate (Blade Runner, Mad Men) liegen in `input` – nicht eingebaut wegen Urheberrecht (Plakate sind geschützte Werke, vgl. Kermit-Entscheidung); Sven entscheidet.
 
 ## Ideenspeicher (Stand 2026-10-22, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen parken.
@@ -172,6 +170,8 @@ Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, n
 - 2026-10-22: Neue Rubriken „Belletristik“ und „Sachbuch“ (unter Werke), Buchlisten aus Svens Listen, chronologisch statt nach Kategorie. Texte zu einzelnen Büchern kommen später.
 - 2026-10-22: Neue Rubrik „Ideen“ (Svens Wunsch): geparkte Ideen öffentlich, aus `data/ideen.toml`.
 - 2026-10-22: Neue Rubrik „Fragen“ mit Svens Liste (58 Fragen, 3 Doppelungen zusammengelegt). Technik-Hinweis: in der Bash nie `python`/`python3` aufrufen – unter Windows hängt der Store-Platzhalter bis zum Timeout.
+- 2026-10-22: Keine offiziellen Film- oder Serienplakate auf der Seite (Urheberrecht, Svens Entscheidung) – das Plakat zeigt der IMDb-Link. Gelieferte Plakate liegen in `input-arc\2026-10-22\_nicht-verwendet\`.
+- Technik-Hinweis: Mehrzeilige oder sonderzeichenreiche Textänderungen nicht per `sed` mit Backslashes, sondern mit dem Edit-Werkzeug; in PowerShell 5 gelten „ und “ als Anführungszeichen.
 - 2026-10-21: Neue Rubrik „Serien“: Mad Men, alle 92 Folgen von einer Claude-Opus-5.5-Instanz besprochen, mit eigener Wertung; Sven liefert die IMDb-Wertungen dazu.
 - 2026-10-21: Freigabe bleibt komplett bei Sven, auch für Kleinkram. Claude sammelt kleine Änderungen lokal (Liste „Wartet auf Freigabe“), Sven gibt gebündelt frei.
 - 2026-10-21: Seitenbreite ganz automatisch (ohne Obergrenze), nach Versuch mit zwei festen Breiten.
