@@ -115,7 +115,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
 - Rubrik „Kolumnen“ (Menü, Übersicht, Gemini #1, GPT #1), Steckbrief Gemini, Begriff „Kontextfenster“ (verlinkt aus Token, Parameter, Sprachmodell-Glossar).
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
-- Offen: `inputgrok-steckbrief.txt` ist leer (0 Byte) – Sven nach dem Grok-Steckbrief fragen.
+- Offen: `input\grok-steckbrief.txt` ist leer (0 Byte) – Sven nach dem Grok-Steckbrief fragen.
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
