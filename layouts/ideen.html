@@ -1,0 +1,27 @@
+{{- /* Geparkte Ideen aus data/ideen.toml, gruppiert nach status */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+{{- $ideen := hugo.Data.ideen.idee }}
+{{- $gruppen := slice
+      (dict "status" "naechstes" "name" "Als Nächstes")
+      (dict "status" "geparkt" "name" "Geparkt")
+      (dict "status" "erledigt" "name" "Erledigt") }}
+{{- range $gruppen }}
+  {{- $name := .name }}
+  {{- with where $ideen "status" .status }}
+<h2 class="ideen-gruppe">{{ $name }}</h2>
+<ul class="ideen">
+    {{- range . }}
+  <li>
+    <strong>{{ .titel }}</strong>
+    <p>{{ .text }}</p>
+    <small>Idee von {{ .von }} · seit {{ time.Format ":date_long" .seit }}</small>
+  </li>
+    {{- end }}
+</ul>
+  {{- end }}
+{{- end }}
+{{ end }}

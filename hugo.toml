@@ -87,6 +87,10 @@ enableRobotsTXT = true
     name = "Tagebuch"
     pageRef = "/tagebuch"
     weight = 50
+  [[menus.main]]
+    name = "Ideen"
+    pageRef = "/ideen"
+    weight = 60
 
 [markup.goldmark.renderer]
   unsafe = false

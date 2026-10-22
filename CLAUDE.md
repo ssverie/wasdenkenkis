@@ -117,13 +117,14 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-22: Kolumnennamen)
+- Rubrik „Ideen“ (eigener Menüpunkt nach Tagebuch, 19 Einträge aus Ideenspeicher und Gespräch).
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 - Offen (Algorithmen): genaue Angaben zur deutschen Sedgewick-Ausgabe (Verlag, Jahr, ISBN) für die Bücher-Seite.
 
-## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
-Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
+## Ideenspeicher (Stand 2026-10-22, Reihenfolge = Svens Priorität)
+Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen parken.
+**Seit 2026-10-22 öffentlich als Rubrik „Ideen“ (`/ideen/`, eigener Menüpunkt): Quelle ist `data/ideen.toml`** (`[[idee]]` mit `titel`, `text`, `status` = naechstes | geparkt | erledigt, `von`, `seit`). Neue Ideen dort eintragen, erledigte auf `erledigt` setzen – nur Öffentliches, nichts Privates. Die Liste unten ist die ältere interne Fassung.
 1. ~~Transkript-Check Ladish~~ – erledigt 2026-10-21 (Transkript im Archiv: `input-arc\2026-10-21\_podcasts\`).
 2. ~~Navigation zusammenfassen~~ – erledigt 2026-10-21: Menü Modelle · Werke ▾ (Filme, Serien, Podcasts) · Galerie · Wissen ▾ (KI-Begriffe, Links) · Tagebuch.
 3. **Als Nächstes (Sven, 2026-10-22):** Algorithmen-Visualisierung auf Basis von Fables `input-f5\apps\51-algos` (geprüft: sauber, Sortier-Wettrennen + Wegfindung; Umbau nötig), verknüpft mit Svens Sedgewick-Buch. Dazu Rubrik **Bücher** (wie Filme: Buchseite mit Eckdaten, Texte darunter).
@@ -162,6 +163,7 @@ Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, n
 - 2026-10-22: Regel geändert (Sven): Claude schreibt weiterhin keine Essays/Texte als Beiträge, darf aber Code und Spiele bauen. Erstes Beispiel: Schach 960 (Umbau des Fable-Schachs, ohne Engine).
 - 2026-10-22: Neue Rubrik „Algorithmen“ unter Wissen; Sven gibt die Algorithmen aus Sedgewick/Wayne vor (Listing + Erklärtext einer anderen Instanz), Claude visualisiert. Erste: binäre Suche, alle Suchfälle automatisch gegen Referenz getestet.
 - 2026-10-22: Neue Rubriken „Belletristik“ und „Sachbuch“ (unter Werke), Buchlisten aus Svens Listen, chronologisch statt nach Kategorie. Texte zu einzelnen Büchern kommen später.
+- 2026-10-22: Neue Rubrik „Ideen“ (Svens Wunsch): geparkte Ideen öffentlich, aus `data/ideen.toml`.
 - 2026-10-21: Neue Rubrik „Serien“: Mad Men, alle 92 Folgen von einer Claude-Opus-5.5-Instanz besprochen, mit eigener Wertung; Sven liefert die IMDb-Wertungen dazu.
 - 2026-10-21: Freigabe bleibt komplett bei Sven, auch für Kleinkram. Claude sammelt kleine Änderungen lokal (Liste „Wartet auf Freigabe“), Sven gibt gebündelt frei.
 - 2026-10-21: Seitenbreite ganz automatisch (ohne Obergrenze), nach Versuch mit zwei festen Breiten.

@@ -1,0 +1,136 @@
+# Geparkte Ideen für wasdenkenkis.de – öffentlich auf /ideen/.
+# status: "naechstes" | "geparkt" | "erledigt"; von: wer die Idee hatte; seit: wann sie aufkam.
+# Nur Öffentliches eintragen (keine privaten Ordner, keine Daten außer dem Vornamen Sven).
+
+[[idee]]
+titel = "Sortierverfahren Schritt für Schritt"
+text = "Bubble, Selection, Insertion, Shell, Merge, Quick und Heap mit 10 bis 20 Zahlen, jeder Vergleich und jede Vertauschung ein eigener Schritt, Java-Code daneben. Grundlage: der Algorithmen-Visualisierer von Fable 5, verknüpft mit Sedgewick/Wayne."
+status = "naechstes"
+von = "Sven"
+seit = "2026-10-22"
+
+[[idee]]
+titel = "Wegfindung im Gitter"
+text = "Breitensuche, Dijkstra und A*: Wände malen und zusehen, wie sich die Suche ausbreitet. Ebenfalls aus Fables Vorlage, mit Bezug zu Sedgewick, Kapitel kürzeste Wege."
+status = "naechstes"
+von = "Sven"
+seit = "2026-10-22"
+
+[[idee]]
+titel = "Buchseiten"
+text = "Sobald eine KI über ein Buch aus Belletristik oder Sachbuch schreibt, bekommt es eine eigene Seite, und der Titel in der Liste wird zum Link. Erstes Fachbuch: Sedgewick/Wayne, Algorithmen."
+status = "naechstes"
+von = "Sven"
+seit = "2026-10-22"
+
+[[idee]]
+titel = "Offline lesen"
+text = "Die Seite speichert sich auf dem Handy und ist danach auch ohne Empfang lesbar – für lange Zugfahrten. Spiele laufen dann ebenfalls offline."
+status = "geparkt"
+von = "Claude"
+seit = "2026-10-22"
+
+[[idee]]
+titel = "Chats"
+text = "Lohnende Ausschnitte aus Svens fast 300 KI-Gesprächen: die Stelle, an der eine Instanz widersprochen hat oder ein Gedanke zum ersten Mal auftauchte."
+status = "geparkt"
+von = "Sven"
+seit = "2026-10-21"
+
+[[idee]]
+titel = "Was denken KIs über …?"
+text = "Das Kernformat: dieselbe Frage an mehrere Modelle, die Antworten nebeneinander – ohne Testsieger."
+status = "geparkt"
+von = "Sven"
+seit = "2026-10-21"
+
+[[idee]]
+titel = "Svens Wahl"
+text = "Svens Urteil sichtbar machen. Form noch offen: Noten, Sterne, Daumen – oder einfach ein Hinweis bei der besten Fassung."
+status = "geparkt"
+von = "Sven"
+seit = "2026-10-21"
+
+[[idee]]
+titel = "Suche"
+text = "Eine Suche über alle Beiträge, Begriffe, Bücher und Kolumnen."
+status = "geparkt"
+von = "Claude"
+seit = "2026-10-21"
+
+[[idee]]
+titel = "Inhaltsverzeichnis für lange Texte"
+text = "Bei langen Essays ein Inhaltsverzeichnis am Rand, damit man im Text springen kann."
+status = "geparkt"
+von = "Claude"
+seit = "2026-10-21"
+
+[[idee]]
+titel = "Weitere KI-Begriffe"
+text = "Aufmerksamkeit, Transformer, Temperatur, Halluzination – in den vorhandenen Begriffen schon gestrichelt vorgemerkt."
+status = "geparkt"
+von = "Sven"
+seit = "2026-10-22"
+
+[[idee]]
+titel = "KI-Tools"
+text = "Ein Werkzeugkasten nach Kategorien, Video zuerst. Fakten von Claude, das Urteil von Sven und anderen Instanzen."
+status = "geparkt"
+von = "Sven"
+seit = "2026-10-22"
+
+[[idee]]
+titel = "Programmieren mit KI"
+text = "Eigene Rubrik für Erfahrungen und Beispiele rund ums Programmieren mit KI."
+status = "geparkt"
+von = "Sven"
+seit = "2026-10-22"
+
+[[idee]]
+titel = "Weitere Spiele"
+text = "Aus Fables Sammlung kommen weitere Spiele in Frage, etwa Mühle, Reversi oder Sudoku – jeweils geprüft und fürs Handy angepasst."
+status = "geparkt"
+von = "Sven"
+seit = "2026-10-22"
+
+[[idee]]
+titel = "Chronik"
+text = "Was sich in der KI-Welt getan hat, mit Quellen."
+status = "geparkt"
+von = "Sven"
+seit = "2026-10-21"
+
+[[idee]]
+titel = "Steckbrief Claude ersetzen"
+text = "Der Claude-Steckbrief stammt noch von der Redaktions-Instanz. Er soll durch die Fassung einer anderen Instanz ersetzt werden und ins Archiv der Fassungen wandern."
+status = "geparkt"
+von = "Sven"
+seit = "2026-10-21"
+
+[[idee]]
+titel = "Kolumnen"
+text = "Jede Modellfamilie bekommt eine eigene Kolumne."
+status = "erledigt"
+von = "Sven"
+seit = "2026-10-22"
+
+[[idee]]
+titel = "Spiele"
+text = "Schach, Schach 960 und 9+ – die ersten Spiele."
+status = "erledigt"
+von = "Sven"
+seit = "2026-10-22"
+
+[[idee]]
+titel = "Bücher"
+text = "Belletristik und Sachbuch als chronologische Listen."
+status = "erledigt"
+von = "Sven"
+seit = "2026-10-22"
+
+[[idee]]
+titel = "Steckbriefe GPT, Gemini, Grok"
+text = "Von den Modellen selbst geschrieben."
+status = "erledigt"
+von = "Sven"
+seit = "2026-10-21"
