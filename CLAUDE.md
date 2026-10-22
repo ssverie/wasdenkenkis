@@ -110,8 +110,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Sammelliste vom 21.10. geleert (nur CLAUDE.md) – lokal committet.
-- **„Was ist ein Sprachmodell?“ 2. Fassung** (interaktiv: Token-Ziehen mit Temperatur, Parameter-Raster, Aufmerksamkeit; andere Claude-Instanz) als Hauptfassung; 1. Fassung im Archiv der Fassungen; Google Fonts entfernt; kleiner CSS-Fehler im Original behoben (Balken waren unsichtbar) – lokal committet.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-22, d4d3a2b: interaktive 2. Fassung „Was ist ein Sprachmodell?“, Archiv der Fassungen)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
