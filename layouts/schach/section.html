@@ -1,0 +1,25 @@
+{{- /* Schach-Übersicht: neueste Partie zuerst; am selben Tag die niedrigere Zugnummer zuerst.
+       Datum aus `partie`, Zug und Seite am Zug aus `fen` (Front-Matter der Stellung). */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+{{- $eintraege := slice }}
+{{- range .RegularPages }}
+  {{- $teile := split .Params.fen " " }}
+  {{- $zug := 0 }}{{ if ge (len $teile) 6 }}{{ $zug = int (index $teile 5) }}{{ end }}
+  {{- $schwarz := eq (index $teile 1) "b" }}
+  {{- /* Schlüssel absteigend sortiert: Datum zählt zuerst, innerhalb eines Tages gewinnt der niedrigere Zug
+         (Halbzug: Weiß vor Schwarz im selben Zug) */}}
+  {{- $tag := int (time.Format "20060102" .Params.partie) }}
+  {{- $halbzug := add (mul $zug 2) (cond $schwarz 1 0) }}
+  {{- $schluessel := sub (mul $tag 10000) $halbzug }}
+  {{- $eintraege = $eintraege | append (dict "seite" . "schluessel" $schluessel "zug" (printf "%d%s" $zug (cond $schwarz "..." "."))) }}
+{{- end }}
+<ul class="stellungen">
+  {{- range sort $eintraege "schluessel" "desc" }}
+  <li><a href="{{ .seite.RelPermalink }}">{{ .seite.Title }}</a> <span>{{ .zug }}</span></li>
+  {{- end }}
+</ul>
+{{ end }}

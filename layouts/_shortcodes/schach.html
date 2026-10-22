@@ -1,7 +1,7 @@
 {{- /* Schachdiagramm aus einer FEN-Zeile: {{< schach fen="…" >}}
        Brett aus HTML/CSS, Figuren als SVG (Cburnett), keine Skripte. Ist Schwarz am Zug, steht das Brett aus Sicht von Schwarz.
        Unter dem Brett nur die Zugnummer im Stil „18.“ (Weiß am Zug) bzw. „18...“ (Schwarz am Zug) und die FEN. */ -}}
-{{- $fen := .Get "fen" }}
+{{- $fen := .Get "fen" | default .Page.Params.fen }}
 {{- $teile := split $fen " " }}
 {{- $schwarz := eq (index $teile 1) "b" }}
 {{- $zug := "" }}{{ if ge (len $teile) 6 }}{{ $zug = index $teile 5 }}{{ end }}
