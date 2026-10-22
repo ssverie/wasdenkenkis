@@ -15,7 +15,9 @@
 {{- $ordnung := seq 0 7 }}{{ if $schwarz }}{{ $ordnung = seq 7 -1 0 }}{{ end }}
 {{- /* Figuren: SVG-Satz von Cburnett (Wikimedia Commons, CC BY-SA 3.0) in static/schach/figuren/ */}}
 {{- $namen := dict "K" "König" "Q" "Dame" "R" "Turm" "B" "Läufer" "N" "Springer" "P" "Bauer" }}
-<figure class="schach-diagramm">
+{{- /* Brettfarbe: Parameter brett="blau"|"braun", sonst params.schachbrett aus hugo.toml, sonst braun */}}
+{{- $brett := .Get "brett" | default site.Params.schachbrett | default "braun" }}
+<figure class="schach-diagramm brett-{{ $brett }}">
   <div class="brett" role="img" aria-label="Schachstellung {{ cond $schwarz "aus Sicht von Schwarz" "aus Sicht von Weiß" }}: {{ $fen }}">
   {{- range $i, $r := $ordnung }}
     {{- range $j, $c := $ordnung }}

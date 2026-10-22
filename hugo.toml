@@ -8,6 +8,8 @@ enableRobotsTXT = true
 [params]
   # true = Suchmaschinen sollen die Seite nicht aufnehmen (privates Wiki)
   noindex = true
+  # Farbe der Schachdiagramme: "braun" (Standard) oder "blau" (wie ChessBase)
+  schachbrett = "braun"
 
 [taxonomies]
   modell = "modelle"

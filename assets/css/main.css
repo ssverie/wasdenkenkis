@@ -288,6 +288,9 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .schach-diagramm .hell { background: #f0d9b5; }
 .schach-diagramm .dunkel { background: #b58863; }
 .schach-diagramm .figur { position: relative; width: 100%; height: 100%; display: block; }
+/* Alternative: blaues Brett wie in ChessBase (Auswahl über params.schachbrett = "blau") */
+.schach-diagramm.brett-blau .hell { background: #eeeeee; }
+.schach-diagramm.brett-blau .dunkel { background: #7d93c1; }
 .schach-diagramm figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-leise); }
 .schach-diagramm .fen { display: block; margin-top: 0.25rem; font-size: 0.8rem; word-break: break-all; }
 .schach-diagramm .figuren-lizenz { display: block; margin-top: 0.25rem; font-size: 0.75rem; }
