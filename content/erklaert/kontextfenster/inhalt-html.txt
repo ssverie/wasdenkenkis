@@ -1,0 +1,168 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Das <strong>Kontextfenster</strong> ist die maximale Menge an Tokens, die ein Modell auf einmal verarbeiten kann – Systemanweisungen, Gesprächsverlauf, angehängte Dateien <em>und</em> die Antwort, die es gerade schreibt.</p>
+<p>Es ist das einzige Arbeitsgedächtnis des Modells. Heute fassen große Modelle Hunderttausende bis rund eine Million Tokens. Ein Gedächtnis über das Fenster hinaus gibt es nicht – nur Tricks, die passende Inhalte wieder hineinlegen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#inhalt">Was hineinkommt</a></li>
+  <li><a href="#gross">Wie groß ist groß?</a></li>
+  <li><a href="#zustandslos">Kein Gedächtnis</a></li>
+  <li><a href="#grenze">Warum es eine Grenze gibt</a></li>
+  <li><a href="#mitte">Groß heißt nicht perfekt</a></li>
+  <li><a href="#tricks">Wie Anwendungen tricksen</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ INHALT ============ -->
+<h2 id="inhalt">Was hineinkommt</h2>
+<p>Bei jeder Anfrage wird ein einziger langer Text zusammengesetzt und dem Modell übergeben. Darin steht typischerweise:</p>
+<ul>
+  <li><strong>Systemprompt</strong> – Anweisungen des Anbieters oder der App, die du meist nicht siehst.</li>
+  <li><strong>Werkzeuge</strong> – Beschreibungen von Funktionen wie Websuche, falls das Modell sie benutzen darf.</li>
+  <li><strong>Gesprächsverlauf</strong> – alle bisherigen Fragen und Antworten.</li>
+  <li><strong>Dateien und Ergebnisse</strong> – angehängte Dokumente, Suchergebnisse, Code.</li>
+  <li><strong>Platz für die Antwort</strong> – auch die Ausgabe muss ins Fenster passen.</li>
+</ul>
+<p>Füll ein Fenster selbst und schau, was passiert, wenn es voll wird:</p>
+
+<div class="widget">
+  <div class="widget-title">Füll das Kontextfenster</div>
+  <div class="win-sel" id="winSel">Fenstergröße:</div>
+  <div class="ctx-bar" id="ctxBar"></div>
+  <div class="ctx-info"><span>Belegt: <b id="ctxUsed"></b> von <b id="ctxMax"></b> Tokens</span><span id="ctxPct"></span></div>
+  <div class="ctx-add">
+    <button type="button" data-add="msg"><i class="k-msg"></i>+ Nachricht (≈ 400)</button>
+    <button type="button" data-add="doc"><i class="k-doc"></i>+ PDF, 20 Seiten (≈ 14 000)</button>
+    <button type="button" data-add="code"><i class="k-code"></i>+ Quellcode, 5 000 Zeilen (≈ 50 000)</button>
+    <button type="button" data-add="book"><i class="k-book"></i>+ Buch, 200 Seiten (≈ 140 000)</button>
+    <button type="button" id="ctxReset">Leeren</button>
+  </div>
+  <div class="gone-list" id="ctxGone"></div>
+  <p class="fine">Schätzwerte für deutschen Text. Grau gestreift: reservierter Platz für die Antwort (hier 8 000 Tokens). Wird es zu voll, fällt in diesem Beispiel das Älteste heraus – echte Anwendungen machen das unterschiedlich (siehe <a href="#tricks">unten</a>).</p>
+</div>
+
+<!-- ============ GROSS ============ -->
+<h2 id="gross">Wie groß ist groß?</h2>
+<p>Die Fenster sind in den letzten Jahren enorm gewachsen. Zum Einordnen, grob gerechnet mit 700 Tokens pro Seite deutschem Text:</p>
+<div class="tbl-wrap">
+<table class="scale-tbl">
+  <thead><tr><th>Fenster</th><th>entspricht etwa</th><th>Beispiel</th></tr></thead>
+  <tbody>
+    <tr><td><strong>4 000</strong></td><td>6 Seiten</td><td>frühe Chat-Modelle</td></tr>
+    <tr><td><strong>128 000</strong></td><td>180 Seiten</td><td>ein Sachbuch</td></tr>
+    <tr><td><strong>200 000</strong></td><td>285 Seiten</td><td>ein Roman</td></tr>
+    <tr><td><strong>1 000 000</strong></td><td>1 400 Seiten</td><td>mehrere Bücher oder eine mittelgroße Codebasis</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Die genaue Größe hängt vom Modell und oft auch vom Tarif ab. Für die Ausgabe gibt es meist eine eigene, deutlich kleinere Obergrenze – ein Modell kann also ein ganzes Buch lesen, aber nicht unbedingt ein ganzes Buch am Stück schreiben.</p>
+
+<!-- ============ ZUSTANDSLOS ============ -->
+<h2 id="zustandslos">Kein Gedächtnis: jede Anfrage beginnt bei null</h2>
+<p>Das Modell selbst merkt sich nichts zwischen zwei Anfragen. Dass ein Chat trotzdem zusammenhängend wirkt, liegt daran, dass die App bei <em>jeder</em> neuen Nachricht den kompletten bisherigen Verlauf erneut mitschickt. Das hat eine Folge, die man leicht übersieht: Lange Gespräche werden mit jeder Runde teurer.</p>
+
+<figure class="cost">
+<svg viewBox="0 0 520 250" role="img" aria-labelledby="costT" id="costSvg">
+  <title id="costT">Eingabe-Tokens pro Runde wachsen mit jeder Runde an</title>
+</svg>
+<figcaption>Angenommen, jede Frage und jede Antwort hat 500 Tokens. In Runde 10 müssen bereits 9 500 Tokens Eingabe verarbeitet werden – nur um eine Frage zu beantworten. Über alle zehn Runden summiert: <span id="costSum"></span> Eingabe-Tokens.</figcaption>
+</figure>
+
+<p>Anbieter mildern das mit <strong>Prompt-Caching</strong>: Der unveränderte Anfang einer Anfrage wird zwischengespeichert und günstiger berechnet. Am Prinzip ändert das nichts – das Modell bekommt trotzdem jedes Mal alles vorgelegt.</p>
+
+<!-- ============ GRENZE ============ -->
+<h2 id="grenze">Warum es überhaupt eine Grenze gibt</h2>
+<p>Der Grund liegt in der <strong>Aufmerksamkeit</strong>, dem Kernmechanismus der Transformer: Jedes Token wird mit jedem vorherigen Token verglichen. Bei <em>n</em> Tokens sind das rund <em>n² / 2</em> Vergleiche – die Arbeit wächst also quadratisch.</p>
+
+<div class="widget">
+  <div class="widget-title">Wie viele Vergleiche?</div>
+  <div class="tri-wrap">
+    <div class="tri" id="tri"></div>
+    <div>
+      <div class="tri-num" id="triNum"></div>
+      <div class="fine" style="margin:0" id="triTxt"></div>
+      <div class="tri-row"><span>Tokens</span><input type="range" id="triN" min="2" max="16" value="8"><b id="triNv"></b></div>
+    </div>
+  </div>
+  <p class="fine">Jedes blaue Feld: Token in der Zeile schaut auf Token in der Spalte. Nur zurück und auf sich selbst, nie nach vorn – daher das Dreieck.</p>
+</div>
+
+<p>Doppelt so langer Text heißt also etwa viermal so viel Rechenarbeit für die Aufmerksamkeit. Dazu kommt Speicher: Für jedes Token im Fenster hält das Modell Zwischenergebnisse vor (den sogenannten <strong>KV-Cache</strong>), und der wächst mit jedem Token. Moderne Modelle nutzen viele Optimierungen, um beides zu drücken – aber Länge kostet immer Rechenzeit, Speicher und Geld.</p>
+
+<!-- ============ MITTE ============ -->
+<h2 id="mitte">Groß heißt nicht perfekt</h2>
+<p>Dass etwas im Fenster steht, heißt nicht, dass das Modell es gleich gut beachtet. Eine viel zitierte Studie von 2023 („Lost in the Middle“) zeigte: Informationen am Anfang und am Ende eines langen Kontexts wurden deutlich zuverlässiger genutzt als solche in der Mitte.</p>
+
+<figure>
+<div class="lost" id="lost"></div>
+<div class="lost-ax"><span>Anfang des Kontexts</span><span>Mitte</span><span>Ende</span></div>
+<figcaption>Schematisch: Wie zuverlässig eine Information gefunden wird, je nachdem, wo sie steht. Neuere Modelle sind hier deutlich besser geworden, ganz verschwunden ist der Effekt nicht.</figcaption>
+</figure>
+
+<p>Praktische Folgen:</p>
+<ul>
+  <li>Wichtiges gehört an den Anfang oder ans Ende – etwa die eigentliche Frage <em>nach</em> einem langen Dokument.</li>
+  <li>Weniger, aber passendes Material schlägt oft „einfach alles hineinkippen“.</li>
+  <li>In sehr langen Gesprächen lohnt manchmal ein Neustart mit einer kurzen Zusammenfassung.</li>
+</ul>
+
+<!-- ============ TRICKS ============ -->
+<h2 id="tricks">Wie Anwendungen tricksen</h2>
+<p>Weil das Fenster endlich ist und das Modell kein Gedächtnis hat, bauen Anwendungen drumherum. Vier verbreitete Strategien:</p>
+<div class="strat">
+  <div><h4>Abschneiden</h4><div class="seq"><span class="x">F1</span><span class="x">A1</span><span>F2</span><span>A2</span><span>F3</span></div><p>Das Älteste fällt heraus. Einfach, aber frühe Infos sind weg.</p></div>
+  <div><h4>Zusammenfassen</h4><div class="seq"><span class="s">Zusammenfassung F1–A2</span><span>F3</span></div><p>Alter Verlauf wird zu einer kurzen Zusammenfassung verdichtet. Details gehen verloren, der rote Faden bleibt.</p></div>
+  <div><h4>Nachschlagen (RAG)</h4><div class="seq"><span class="r">3 passende Abschnitte</span><span>Frage</span></div><p>Große Dokumentmengen liegen in einer Datenbank; zur Frage werden nur die passenden Stücke gesucht und eingefügt. „Retrieval-Augmented Generation“.</p></div>
+  <div><h4>Erinnerungen</h4><div class="seq"><span class="r">Notizen über dich</span><span>F1</span></div><p>Funktionen wie „Memory“ speichern Notizen aus früheren Gesprächen und legen sie zu Beginn wieder ins Fenster. Das Modell selbst erinnert sich nicht.</p></div>
+</div>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Kontextfenster</strong></td><td>maximale Länge der Eingabeliste – wie ein Puffer fester Größe</td></tr>
+    <tr><td><strong>Zustandslosigkeit</strong></td><td>wie ein stateless REST-Endpunkt: Der Session-State liegt beim Client, nicht beim Server</td></tr>
+    <tr><td><strong>Systemprompt</strong></td><td>Konfiguration, die vor jede Anfrage gehängt wird</td></tr>
+    <tr><td><strong>max_tokens</strong></td><td>Obergrenze für die Antwortlänge; muss zusätzlich ins Fenster passen</td></tr>
+    <tr><td><strong>KV-Cache</strong></td><td>Memoization: schon berechnete Zwischenwerte früherer Tokens werden nicht neu berechnet</td></tr>
+    <tr><td><strong>RAG</strong></td><td>vor dem Aufruf eine Datenbank-Abfrage, deren Treffer in den Prompt eingefügt werden</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="c">// So sieht ein Chat aus Sicht der API aus (Pseudocode)</span>
+List&lt;Nachricht&gt; verlauf = <span class="k">new</span> ArrayList&lt;&gt;();
+
+<span class="k">void</span> frage(String text) {
+    verlauf.add(<span class="k">new</span> Nachricht(<span class="s">"user"</span>, text));
+    String antwort = api.senden(systemprompt, verlauf);   <span class="c">// IMMER der komplette Verlauf</span>
+    verlauf.add(<span class="k">new</span> Nachricht(<span class="s">"assistant"</span>, antwort));
+}
+<span class="c">// Den Zustand hält dein Code – nicht das Modell.</span>
+<span class="c">// Wird verlauf zu lang: abschneiden, zusammenfassen oder Fehler.</span></code></pre>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Das Modell erinnert sich an unser letztes Gespräch.“</b> – Nur, wenn eine Zusatzfunktion Notizen oder den alten Verlauf wieder ins Fenster legt.</div>
+  <div><b>„Großes Fenster = Langzeitgedächtnis.“</b> – Es ist ein großes Arbeitsgedächtnis. Nach der Anfrage ist alles wieder weg.</div>
+  <div><b>„Was im Fenster steht, wird auch beachtet.“</b> – Meistens, aber nicht garantiert. Bei sehr langen Kontexten kann Wichtiges übersehen werden.</div>
+  <div><b>„Kontextfenster und Trainingsdaten sind dasselbe.“</b> – Nein. Training formt die Parameter dauerhaft; das Kontextfenster ist der flüchtige Text der aktuellen Anfrage.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/was-ist-ein-sprachmodell/">Was ist ein Sprachmodell?</a>
+  <a href="/erklaert/token/">Token</a>
+  <span title="Noch nicht vorhanden">Aufmerksamkeit</span>
+  <span title="Noch nicht vorhanden">Halluzination</span>
+  <a href="/erklaert/parameter/">Parameter</a>
+</div>
+</div>

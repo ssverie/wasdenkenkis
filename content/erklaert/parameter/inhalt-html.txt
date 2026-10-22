@@ -215,6 +215,6 @@
   <a href="/erklaert/token/">Token</a>
   <span title="Noch nicht vorhanden">Aufmerksamkeit</span>
   <span title="Noch nicht vorhanden">Transformer</span>
-  <span title="Noch nicht vorhanden">Kontextfenster</span>
+  <a href="/erklaert/kontextfenster/">Kontextfenster</a>
 </div>
 </div>

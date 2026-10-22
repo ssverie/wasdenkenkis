@@ -41,6 +41,10 @@
     <dt>Podcast</dt>
     <dd>{{ range $i, $p := . }}{{ if $i }}, {{ end }}<a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>{{ with $p.Params.erschienen }} ({{ . | time.Format ":date_medium" }}){{ end }}{{ end }}</dd>
     {{- end }}
+    {{- if and (eq .Section "kolumnen") .Params.ausgabe }}
+    <dt>Kolumne</dt>
+    <dd><a href="{{ .Parent.RelPermalink }}">{{ .Parent.Title }}</a>, Ausgabe {{ .Params.ausgabe }}</dd>
+    {{- end }}
     {{- with .Params.kontext }}
     <dt>Kontext</dt>
     <dd>{{ . }}</dd>

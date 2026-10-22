@@ -48,7 +48,7 @@
     </li>
     {{- end }}
     {{- range where site.Sections "Section" "not in" (slice "filmkritiken" "podcast-texte" "serienkritiken" "werke" "wissen") }}
-    {{- $n := len (where .RegularPages "Params.archiv" "!=" true) }}
+    {{- $n := len (where .RegularPagesRecursive "Params.archiv" "!=" true) }}
     {{- $einheit := cond (eq $n 1) "Beitrag" "Beiträge" }}
     {{- if eq .Section "links" }}
       {{- $n = len hugo.Data.links.eintrag }}

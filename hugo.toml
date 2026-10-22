@@ -46,6 +46,10 @@ enableRobotsTXT = true
     pageRef = "/galerie"
     weight = 30
   [[menus.main]]
+    name = "Kolumnen"
+    pageRef = "/kolumnen"
+    weight = 35
+  [[menus.main]]
     name = "Wissen"
     identifier = "wissen"
     pageRef = "/wissen"

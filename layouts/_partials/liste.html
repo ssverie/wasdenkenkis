@@ -9,7 +9,7 @@
     <div>
       <a class="liste-titel" href="{{ .RelPermalink }}">{{ .Title }}</a>
       <div class="meta">
-        {{ .Date | time.Format ":date_long" }}{{ if .Params.archiv }} · ältere Fassung{{ end }}
+        {{ .Date | time.Format ":date_long" }}{{ with .Params.ausgabe }} · Ausgabe {{ . }}{{ end }}{{ if .Params.archiv }} · ältere Fassung{{ end }}
         {{- with .Params.modell }} · {{ . }}{{ else }}{{ with .GetTerms "modelle" }} · {{ range $i, $t := . }}{{ if $i }}, {{ end }}{{ $t.LinkTitle }}{{ end }}{{ end }}{{ end }}
       </div>
       {{- with .Description }}

@@ -27,6 +27,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - **Modelle** – Steckbrief je KI (Claude, GPT, Gemini, Llama, Mistral, …): Stärken, Schwächen, Verlauf.
 - **Werkzeugkompass** – KI-Tools nüchtern getestet und verglichen.
 - **KI-Begriffe** (früher „Verständlich erklärt“, Adresse bleibt `/erklaert/`) – Glossar und Grundlagen, Begriff für Begriff; eine Seite je Begriff (erste: Token).
+- **Kolumnen** (`/kolumnen/`, eigener Menüpunkt) – jede Modellfamilie (Marke) hat eine eigene, fortlaufende Kolumne mit selbstgewähltem Namen. Je Kolumne ein Unterordner `content/kolumnen/<marke>/` (`_index.md` mit `title` = Kolumnenname, `marke`), je Ausgabe `NNN-<titel>.md` mit `ausgabe = <n>` (erscheint im Herkunfts-Kasten und in Listen). Übersicht per Vorlage `layouts/kolumnen.html`. Erste: Gemini „Gedanken aus dem Silizium“, GPT „Gedanken, die niemand bestellt hat“. Claude-Kolumne nur von einer anderen Claude-Instanz.
 - **Was denken KIs über …?** – Kernformat: dieselbe Frage an mehrere Modelle, Antworten nebeneinander.
 - **Chats** – lohnende Gesprächsprotokolle.
 - **Geschichten** – von KIs geschrieben.
@@ -112,14 +113,15 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-22: Tagebuch Tag 2, Begriff „Parameter“, Oktopus bei Caillebotte)
+- Rubrik „Kolumnen“ (Menü, Übersicht, Gemini #1, GPT #1), Steckbrief Gemini, Begriff „Kontextfenster“ (verlinkt aus Token, Parameter, Sprachmodell-Glossar).
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
+- Offen: `inputgrok-steckbrief.txt` ist leer (0 Byte) – Sven nach dem Grok-Steckbrief fragen.
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
 1. ~~Transkript-Check Ladish~~ – erledigt 2026-10-21 (Transkript im Archiv: `input-arc\2026-10-21\_podcasts\`).
 2. ~~Navigation zusammenfassen~~ – erledigt 2026-10-21: Menü Modelle · Werke ▾ (Filme, Serien, Podcasts) · Galerie · Wissen ▾ (KI-Begriffe, Links) · Tagebuch.
-3. **Später:** Svens Urteil sichtbar machen („Svens Wahl“) · Steckbriefe Grok/Gemini (GPT erledigt 2026-10-22) · Claudes alte Beiträge durch Fassungen anderer Instanzen ersetzen (Archiv der Fassungen) · Suche · Inhaltsverzeichnis für lange Texte.
+3. **Später:** Svens Urteil sichtbar machen („Svens Wahl“) · Steckbrief Grok (GPT und Gemini erledigt 2026-10-22) · Claudes alte Beiträge durch Fassungen anderer Instanzen ersetzen (Archiv der Fassungen) · Suche · Inhaltsverzeichnis für lange Texte.
 
 ## Offene Punkte
 - Form von Svens Urteil (Noten 1–6, Sterne, Daumen …).
@@ -148,6 +150,7 @@ Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, n
 - 2026-10-22: Rubrik „Verständlich erklärt“ heißt jetzt „KI-Begriffe“ (Svens Wahl); Adresse `/erklaert/` bleibt, damit Links stabil sind. Erster eigener Begriff: Token (interaktiv, andere Opus-5.5-Instanz).
 - 2026-10-22: Steckbrief GPT (von GPT-6 selbst geschrieben, Text wortgleich, Quellen stichprobenartig geprüft). Neue Galerie-Bilder: Oktopus bei Rembrandt und bei Vermeer (GPT-6, ohne Prompt).
 - 2026-10-22: Begriff „Parameter“ (interaktiv, andere Opus-5.5-Instanz), verlinkt aus Token und Sprachmodell-Glossar; Regler-Widget für schmale Handys angepasst (Ergänzung am Ende von `stil.css`). Oktopus bei Caillebotte (GPT-6).
+- 2026-10-22: Neue Rubrik „Kolumnen“ – jede Marke bekommt eine eigene Kolumne (Svens Idee); eigener Menüpunkt zwischen Galerie und Wissen. Steckbrief Gemini (Selbstbeschreibung von Gemini 3 Flash, Überschriften normal geschrieben statt VERSALIEN, Wortlaut unverändert). Begriff „Kontextfenster“.
 - 2026-10-21: Neue Rubrik „Serien“: Mad Men, alle 92 Folgen von einer Claude-Opus-5.5-Instanz besprochen, mit eigener Wertung; Sven liefert die IMDb-Wertungen dazu.
 - 2026-10-21: Freigabe bleibt komplett bei Sven, auch für Kleinkram. Claude sammelt kleine Änderungen lokal (Liste „Wartet auf Freigabe“), Sven gibt gebündelt frei.
 - 2026-10-21: Seitenbreite ganz automatisch (ohne Obergrenze), nach Versuch mit zwei festen Breiten.

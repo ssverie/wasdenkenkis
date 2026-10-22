@@ -1,0 +1,20 @@
+{{- /* Übersicht der Kolumnen: eine Kachel je Modellfamilie (Unterordner von content/kolumnen/) */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+<ul class="karten">
+  {{- range .Sections.ByTitle }}
+  {{- $ausgaben := .RegularPages }}
+  {{- $n := len $ausgaben }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .Title }}</strong>
+      <span>{{ with .Params.marke }}Kolumne von {{ . }}{{ end }}{{ with index $ausgaben.ByDate.Reverse 0 }} · zuletzt: „{{ .Title }}“{{ end }}</span>
+      <small>{{ $n }} {{ cond (eq $n 1) "Ausgabe" "Ausgaben" }}</small>
+    </a>
+  </li>
+  {{- end }}
+</ul>
+{{ end }}
