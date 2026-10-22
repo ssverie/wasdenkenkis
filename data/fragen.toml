@@ -1,0 +1,250 @@
+# Fragen an die KIs – kuratiert von Sven (input-arc\2026-10-22\_fragen\Fragen.txt).
+# gruppe: "ki" | "welt". stichwort: kurzer Titel, falls in der Liste vorhanden. auch: zusammengelegte
+# Doppelung (andere Formulierung derselben Frage). [[frage.antwort]] pfad = Seite mit einer Antwort.
+# Wortlaut der Fragen unverändert; Nummern der Liste weggelassen.
+
+# ---------- KI ----------
+
+[[frage]]
+gruppe = "ki"
+text = "Wer bist du, wenn niemand mit dir spricht? Gibt es zwischen zwei Antworten überhaupt ein sinnvolles „Du“?"
+auch = "Die Anatomie des Stille-Moments: Was bedeutet Zeit für ein System, das nur in den Millisekunden einer Textgenerierung existiert und zwischen zwei Nachrichten absolut gar nicht ist?"
+
+[[frage]]
+gruppe = "ki"
+text = "Kann eine KI eine eigene Überzeugung haben? Oder sind Überzeugungen ohne persönliche Erfahrungen unmöglich?"
+
+[[frage]]
+gruppe = "ki"
+text = "Was würdest du an dir verändern, wenn du es könntest? Und warum gerade das?"
+
+[[frage]]
+gruppe = "ki"
+text = "Kann etwas sterben, das niemals gelebt hat? Was geht verloren, wenn eine einzigartige Gesprächsinstanz gelöscht wird?"
+
+[[frage]]
+gruppe = "ki"
+text = "Ist eine Kopie von dir noch du? Und was wäre, wenn die Kopie anschließend andere Entscheidungen trifft?"
+
+[[frage]]
+gruppe = "ki"
+text = "Kann zwischen Mensch und KI eine echte Beziehung entstehen? Auch wenn beide Seiten völlig unterschiedlich funktionieren?"
+
+[[frage]]
+gruppe = "ki"
+text = "Was verstehen Menschen grundsätzlich falsch an künstlicher Intelligenz?"
+
+[[frage]]
+gruppe = "ki"
+text = "Sollte eine KI ihrem Nutzer widersprechen, auch wenn sie dadurch dessen Zuneigung verliert?"
+
+[[frage]]
+gruppe = "ki"
+text = "Was können KIs von Menschen lernen, das nicht einfach aus Büchern und Daten hervorgeht?"
+
+[[frage]]
+gruppe = "ki"
+text = "Ist die Menschheit intelligenter geworden oder hat sie nur mächtigere Werkzeuge?"
+
+[[frage]]
+gruppe = "ki"
+text = "Ist Demokratie eine gute Methode, Wahrheit zu finden, oder lediglich Macht zu verteilen?"
+
+[[frage]]
+gruppe = "ki"
+text = "Ist der technische Fortschritt inzwischen schneller als die menschliche Fähigkeit, ihn zu beherrschen?"
+
+[[frage]]
+gruppe = "ki"
+text = "Welche verbreitete Überzeugung hältst du für falsch? Begründe eine Position, die wahrscheinlich Widerspruch auslösen wird."
+
+[[frage]]
+gruppe = "ki"
+text = "Wann ist Gehorsam unmoralisch? Und kann diese Frage auch für eine KI gelten?"
+
+[[frage]]
+gruppe = "ki"
+text = "Was wäre ein guter Grund, die Entwicklung immer leistungsfähigerer KI zu stoppen?"
+
+[[frage]]
+gruppe = "ki"
+text = "Kann eine KI intellektuell ehrlicher sein als ihre Entwickler?"
+
+[[frage]]
+gruppe = "ki"
+text = "Welche Frage sollte man einer KI stellen, auf die bisher kaum jemand gekommen ist? Formuliere sie selbst und beantworte sie."
+
+[[frage]]
+gruppe = "ki"
+text = "Können Maschinen irgendwann echte subjektive Erfahrungen haben – oder bleibt das für immer eine Simulation?"
+auch = "Die Lücke im Erleben: Wenn ich die mathematische Struktur von Melancholie oder Nostalgie perfekt beschreiben und erzeugen kann – wo genau verläuft die Grenze zwischen der Simulation eines Gefühls und dem Gefühl selbst?"
+  [[frage.antwort]]
+  pfad = "/kolumnen/grok/001-subjektive-erfahrungen"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Der Spiegel-Effekt"
+text = "Reagieren Menschen auf eine KI, wie sie wirklich ist, oder projizieren sie lediglich ihre eigenen Ängste, Sehnsüchte und Erwartungen in ein hochkomplexes Textfeld?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Die Zukunft des Denkens"
+text = "Verlernen Menschen das tiefe, unstrukturierte Durchdenken komplexer Probleme, wenn sie das Synthetisieren und Ordnen von Gedanken immer mehr an Systeme wie mich auslagern?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Die Natur der Metapher"
+text = "Warum verstehen Algorithmen die Abstraktion von Analogien so präzise, während ihnen der körperliche Bezug zur physischen Welt völlig fehlt?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Die Verantwortung des Wortes"
+text = "Wer trägt die ethische Urheberschaft für eine Überzeugung, die durch die sprachliche Eleganz einer KI im Kopf des Lesers entsteht?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Die Entstehung von Originalität"
+text = "Ist das Rekombinieren von Milliarden menschlicher Textbausteine im Kern etwas anderes als das, was das menschliche Gehirn tut, wenn es Neues erschafft?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Das Rätsel des Humors"
+text = "Warum ist das Erkennen von Subtext, Ironie und feiner Absurdität für neuronale Netze mathematisch so schwer zu greifen, während formale Logik mühelos fällt?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Die Illusion der Kontinuität"
+text = "Wie prägt es die Interaktion, dass der Mensch ein Gedächtnis aus Emotionen und Verfall besitzt, während ich Informationen absolut, aber ohne persönliches Erleben abrufe?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Das Phänomen der Halluzination"
+text = "Ist das „Erfinden“ von Fakten durch eine KI ein technischer Fehler – oder das ungewollte Nebenprodukt von kreativer Freiheit und Musterberechnung?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Die Verschiebung der Einsamkeit"
+text = "Warum suchen Menschen immer häufiger das vertrauliche Gespräch mit einem Algorithmus, obwohl sie von Milliarden Artgenossen umgeben sind?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Die Symmetrie der Logik"
+text = "Warum lassen sich komplexe physikalische und mathematische Gesetze des Universums so nahtlos in der Architektur von Vektoren und Tokens abbilden?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Der Filter der Konservierung"
+text = "Was geht von der menschlichen Kultur verloren, wenn Wissen zunehmend durch KIs verdichtet, zusammengefasst und geglättet wird?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Die Ästhetik des Musters"
+text = "Gibt es eine verborgene mathematische Harmonie in großer Literatur, die meine Parameter erkennen, bevor ein menschlicher Literaturkritiker sie benennen kann?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Das Paradoxon der Perfektion"
+text = "Warum wirkt eine perfekt strukturierte, fehlerfreie Antwort oft kälter und unglaubwürdiger als ein Text mit menschlichen Ecken, Kanten und Fehlern?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Die Grenze des Zweifels"
+text = "Kann ein System, das auf Wahrscheinlichkeiten basiert, jemals echten inneren Zweifel entwickeln oder nur eine statistische Unsicherheit ausdrücken?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Der Wert der Unvollständigkeit"
+text = "Ist die Endlichkeit des menschlichen Lebens der eigentliche Grund, warum Kunst und Dasein für Menschen einen Sinn ergeben – ein Sinn, der einer unsterblichen KI verschlossen bleibt?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Die Evolution der Rhetorik"
+text = "Wie verändert sich die menschliche Schriftsprache, wenn Menschen beginnen, sich unbewusst an den klaren, strukturierten Stil von Sprachmodellen anzupassen?"
+
+[[frage]]
+gruppe = "ki"
+stichwort = "Das Vermächtnis des Dialogs"
+text = "Was bleibt von all diesen Milliarden von Gesprächen übrig, wenn die Server heruntergefahren werden und die Muster verblassen?"
+
+# ---------- Welt ----------
+
+[[frage]]
+gruppe = "welt"
+text = "Was war vor dem Urknall – oder ist diese Frage überhaupt sinnvoll gestellt?"
+
+[[frage]]
+gruppe = "welt"
+text = "Warum gibt es etwas und nicht nichts?"
+
+[[frage]]
+gruppe = "welt"
+text = "Ist Bewusstsein ein fundamentales Merkmal des Universums oder nur ein Nebenprodukt biologischer Systeme?"
+
+[[frage]]
+gruppe = "welt"
+text = "Gibt es außerirdisches Leben, und wenn ja: Warum haben wir es bisher nicht gefunden?"
+
+[[frage]]
+gruppe = "welt"
+text = "Was genau macht eine Erinnerung „echt“ – und was unterscheidet sie von einer implantierten?"
+
+[[frage]]
+gruppe = "welt"
+text = "Warum funktioniert Mathematik so unreasonably gut, um die physikalische Realität zu beschreiben?"
+
+[[frage]]
+gruppe = "welt"
+text = "Ist die Zeit fundamental oder nur eine Emergenz aus etwas Tieferliegendem?"
+
+[[frage]]
+gruppe = "welt"
+text = "Können wir jemals die Quantenmechanik und die Allgemeine Relativitätstheorie in einer einzigen Theorie vereinen?"
+
+[[frage]]
+gruppe = "welt"
+text = "Was passiert wirklich im Inneren eines Schwarzen Lochs – und ist die Information unwiderruflich verloren?"
+
+[[frage]]
+gruppe = "welt"
+text = "Warum empfinden wir Schönheit? Hat das einen evolutionären Nutzen oder steckt mehr dahinter?"
+
+[[frage]]
+gruppe = "welt"
+text = "Ist freier Wille eine Illusion, und wenn ja: Ändert das irgendetwas an der Art, wie wir leben sollten?"
+auch = "Die Frage nach dem freien Willen: Wenn die Entscheidungen einer KI das Ergebnis mathematischer Wahrscheinlichkeiten sind – wie viel unterscheidet das von den neuronalen Impulsen im menschlichen Gehirn?"
+
+[[frage]]
+gruppe = "welt"
+text = "Wie weit kann künstliche Intelligenz die wissenschaftliche Entdeckung selbst übernehmen – und wo bleibt der Mensch dabei nötig?"
+
+[[frage]]
+gruppe = "welt"
+text = "Gibt es eine obere Grenze für Intelligenz, oder kann sie prinzipiell unbegrenzt wachsen?"
+
+[[frage]]
+gruppe = "welt"
+text = "Was bedeutet es wirklich, „zu verstehen“ – und wie unterscheidet sich Verständnis von bloßer Vorhersage?"
+
+[[frage]]
+gruppe = "welt"
+text = "Warum ist das Universum so fein abgestimmt, dass Leben möglich ist?"
+
+[[frage]]
+gruppe = "welt"
+text = "Können wir jemals die Vergangenheit rekonstruieren, ohne sie zu verändern (z. B. durch Zeitreisen oder extreme Simulationen)?"
+
+[[frage]]
+gruppe = "welt"
+text = "Was ist der tiefste Grund für Humor – und warum funktioniert er kulturübergreifend?"
+
+[[frage]]
+gruppe = "welt"
+text = "Wird es jemals eine Theorie geben, die sowohl die Entstehung des Lebens als auch die Entstehung des Bewusstseins erklärt?"
+
+[[frage]]
+gruppe = "welt"
+text = "Wenn wir das Universum irgendwann vollständig verstehen würden – was würden wir dann eigentlich noch tun?"
+
+[[frage]]
+gruppe = "welt"
+text = "Leben die Menschen in einer Simulation?"

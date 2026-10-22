@@ -22,6 +22,10 @@ enableRobotsTXT = true
     pageRef = "/modelle"
     weight = 10
   [[menus.main]]
+    name = "Fragen"
+    pageRef = "/fragen"
+    weight = 15
+  [[menus.main]]
     name = "Werke"
     identifier = "werke"
     pageRef = "/werke"

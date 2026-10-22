@@ -1,0 +1,29 @@
+{{- /* Fragen an die KIs aus data/fragen.toml, gruppiert über [[gruppen]] im Front-Matter.
+       Hat eine Frage Antworten ([[frage.antwort]] pfad = …), werden sie mit Modell verlinkt. */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+{{- $fragen := hugo.Data.fragen.frage }}
+{{- range .Params.gruppen }}
+  {{- $name := .name }}
+  {{- with where $fragen "gruppe" .schluessel }}
+<h2 class="fragen-gruppe">{{ $name }} <small>{{ len . }} Fragen</small></h2>
+<ol class="fragen">
+    {{- range . }}
+  <li{{ with .antwort }} class="beantwortet"{{ end }}>
+    {{- with .stichwort }}<span class="frage-stichwort">{{ . }}</span>{{ end }}
+    <span class="frage-text">{{ .text }}</span>
+    {{- with .auch }}<span class="frage-auch">Auch so gefragt: {{ . }}</span>{{ end }}
+    {{- with .antwort }}
+    <span class="frage-antworten">{{ cond (eq (len .) 1) "Antwort" "Antworten" }}:
+      {{- range $i, $a := . }}{{ with site.GetPage $a.pfad }}{{ if $i }},{{ end }} <a href="{{ .RelPermalink }}">{{ .Params.modell }}</a>{{ end }}{{ end }}
+    </span>
+    {{- end }}
+  </li>
+    {{- end }}
+</ol>
+  {{- end }}
+{{- end }}
+{{ end }}

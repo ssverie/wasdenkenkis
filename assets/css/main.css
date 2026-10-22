@@ -272,6 +272,17 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
   color: var(--akzent);
 }
 
+/* Fragen */
+.fragen-gruppe { margin-top: 2rem; }
+.fragen-gruppe small { font-size: 0.85rem; font-weight: 400; color: var(--text-leise); margin-left: 0.4rem; }
+.fragen { padding-left: 1.6rem; margin: 0.5rem 0 0; }
+.fragen li { padding: 0.45rem 0; border-bottom: 1px solid var(--linie); }
+.frage-stichwort { display: block; font-size: 0.8rem; font-weight: 600; color: var(--akzent); }
+.frage-text { font-weight: 500; }
+.frage-auch { display: block; margin-top: 0.25rem; font-size: 0.9rem; color: var(--text-leise); }
+.frage-antworten { display: block; margin-top: 0.25rem; font-size: 0.9rem; }
+.fragen li.beantwortet .frage-text { font-weight: 650; }
+
 /* Ideen */
 .ideen-gruppe { margin-top: 2rem; }
 .ideen { list-style: none; padding: 0; margin: 0.5rem 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: 0.75rem; }
