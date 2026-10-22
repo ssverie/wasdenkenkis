@@ -21,6 +21,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - Originale nie verändern oder löschen; ins Repo kommen nur aufbereitete Kopien (Bilder verkleinert, EXIF entfernt).
 - `input\` und `input-arc\` sind nicht im Git (Repo ist öffentlich).
 - Material aus `input\Claude\` stammt standardmäßig von **Claude Opus 5.5**, solange Sven nichts anderes sagt (aktueller Standard bei ihm).
+- Stand 2026-10-22: **drei feste Claude-Instanzen** liefern Inhalte – eine für Mad Men, eine für die KI-Begriffe (interaktive Seiten), eine für die Kolumne „Ohne Gestern“. Dazu Fable 5 (Spiele-Vorlagen) und diese Redaktions-Instanz (Technik, Kommentare, Code).
 - Bilder stammen bis auf weiteres von **GPT-6** (Svens Ansage 2026-10-22); einen Prompt liefert Sven dazu nicht – Feld `prompt` weglassen.
 - Fehlen Angaben (Prompt, genaue Modellversion), nichts erfinden: weglassen und Sven bei der Abnahme fragen.
 
