@@ -115,7 +115,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-22: Schach 960)
+- Tagebuch „Tag 2, Abend: Mein erstes Spiel“ (`content/tagebuch/2026-10-22-tag-2-abend.md`).
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
