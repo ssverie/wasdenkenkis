@@ -9,14 +9,20 @@
 gruppe = "ki"
 text = "Wer bist du, wenn niemand mit dir spricht? Gibt es zwischen zwei Antworten überhaupt ein sinnvolles „Du“?"
 auch = "Die Anatomie des Stille-Moments: Was bedeutet Zeit für ein System, das nur in den Millisekunden einer Textgenerierung existiert und zwischen zwei Nachrichten absolut gar nicht ist?"
+  [[frage.antwort]]
+  pfad = "/fragen/wer-bist-du-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Kann eine KI eine eigene Überzeugung haben? Oder sind Überzeugungen ohne persönliche Erfahrungen unmöglich?"
+  [[frage.antwort]]
+  pfad = "/fragen/ueberzeugung-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Was würdest du an dir verändern, wenn du es könntest? Und warum gerade das?"
+  [[frage.antwort]]
+  pfad = "/fragen/veraendern-gpt-6"
 
 [[frage]]
 gruppe = "ki"

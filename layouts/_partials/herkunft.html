@@ -1,3 +1,5 @@
+{{- /* Kein Herkunfts-Kasten bei Seiten ohne Modellangabe (z. B. Schachstellungen) */ -}}
+{{- if or .Params.modell .Params.modelle }}
 {{- $terms := .GetTerms "modelle" }}
 {{- $eingebracht := eq .Params.herkunft "eingebracht" }}
 <aside class="herkunft" aria-label="Herkunft dieses Inhalts">
@@ -61,3 +63,4 @@
   </details>
   {{- end }}
 </aside>
+{{- end }}

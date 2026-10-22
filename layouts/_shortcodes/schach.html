@@ -1,0 +1,35 @@
+{{- /* Schachdiagramm aus einer FEN-Zeile: {{< schach fen="…" titel="…" >}}
+       Reines HTML/CSS, keine Bilder, keine Skripte. Brett aus Sicht von Weiß. */ -}}
+{{- $fen := .Get "fen" }}
+{{- $teile := split $fen " " }}
+{{- $reihen := split (index $teile 0) "/" }}
+{{- $amZug := cond (eq (index $teile 1) "b") "Schwarz am Zug" "Weiß am Zug" }}
+{{- $zeichen := dict "K" "♔" "Q" "♕" "R" "♖" "B" "♗" "N" "♘" "P" "♙" "k" "♚" "q" "♛" "r" "♜" "b" "♝" "n" "♞" "p" "♟︎" }}
+{{- $linien := slice "a" "b" "c" "d" "e" "f" "g" "h" }}
+<figure class="schach-diagramm">
+  <div class="brett" role="img" aria-label="Schachstellung, {{ $amZug }}: {{ $fen }}">
+  {{- range $r, $reihe := $reihen }}
+    {{- $c := 0 }}
+    {{- range split $reihe "" }}
+      {{- if in "12345678" . }}
+        {{- range seq (int .) }}
+    <span class="feld {{ cond (modBool (add $r $c) 2) "hell" "dunkel" }}">
+      {{- if eq $c 0 }}<i class="rang">{{ sub 8 $r }}</i>{{ end }}{{ if eq $r 7 }}<i class="linie">{{ index $linien $c }}</i>{{ end -}}
+    </span>
+          {{- $c = add $c 1 }}
+        {{- end }}
+      {{- else }}
+    <span class="feld {{ cond (modBool (add $r $c) 2) "hell" "dunkel" }}">
+      {{- if eq $c 0 }}<i class="rang">{{ sub 8 $r }}</i>{{ end }}{{ if eq $r 7 }}<i class="linie">{{ index $linien $c }}</i>{{ end -}}
+      <b class="figur {{ cond (eq . (upper .)) "weiss" "schwarz" }}">{{ index $zeichen . }}</b>
+    </span>
+        {{- $c = add $c 1 }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  </div>
+  <figcaption>
+    {{- with .Get "titel" }}<strong>{{ . }}</strong> · {{ end }}{{ $amZug }}
+    <code class="fen">{{ $fen }}</code>
+  </figcaption>
+</figure>

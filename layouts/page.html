@@ -11,19 +11,29 @@
   </header>
   {{ partial "fassungen.html" (dict "seite" . "wo" "oben") }}
   {{ partial "herkunft.html" . }}
+  {{- with .Params.frage }}
+  <p class="frage-kasten"><span>Die Frage</span>{{ . }} <a href="{{ "fragen/" | relURL }}">Alle Fragen</a></p>
+  {{- end }}
   <div class="inhalt">
     {{ .Content }}
   </div>
 </article>
 {{ partial "fassungen.html" (dict "seite" . "wo" "unten") }}
-{{- /* Serienfolgen: vorige / nächste besprochene Folge */}}
+{{- /* Serienfolgen: weitere Texte zur selben Folge, dann vorige / nächste besprochene Folge.
+       Die Navigation läuft über die Hauptbesprechungen; Texte mit `zweitstimme = true` (andere Modelle) zählen nicht mit. */}}
 {{- range .GetTerms "serien" }}
   {{- $serie := . }}
-  {{- $vor := false }}{{ $nach := false }}{{ $gefunden := false }}
-  {{- range sort .Pages "Params.nummer" }}
-    {{- if $gefunden }}{{ if not $nach }}{{ $nach = . }}{{ end }}
-    {{- else if eq .RelPermalink $.RelPermalink }}{{ $gefunden = true }}
-    {{- else }}{{ $vor = . }}{{ end }}
+  {{- $n := $.Params.nummer }}
+  {{- with where (where .Pages "Params.nummer" $n) "RelPermalink" "ne" $.RelPermalink }}
+<section>
+  <h2>Weitere Texte zu dieser Folge</h2>
+  {{ partial "liste.html" . }}
+</section>
+  {{- end }}
+  {{- $vor := false }}{{ $nach := false }}
+  {{- range sort (where .Pages "Params.zweitstimme" "!=" true) "Params.nummer" }}
+    {{- if lt .Params.nummer $n }}{{ $vor = . }}
+    {{- else if and (gt .Params.nummer $n) (not $nach) }}{{ $nach = . }}{{ end }}
   {{- end }}
 <nav class="folgen-nav" aria-label="Weitere Folgen">
   <span>{{ with $vor }}<a href="{{ .RelPermalink }}">← {{ .Params.staffel }}.{{ .Params.folge }} {{ .Params.folgentitel }}</a>{{ end }}</span>

@@ -26,8 +26,12 @@
           {{- if ge $w 9.0 }}{{ $klasse = "w9" }}{{ else if ge $w 8.5 }}{{ $klasse = "w85" }}{{ else if ge $w 8.0 }}{{ $klasse = "w8" }}{{ else if gt $w 0.0 }}{{ $klasse = "w7" }}{{ end }}
       <td class="{{ $klasse }}">
         {{- if gt $w 0.0 }}{{ lang.FormatNumber 1 $w }}{{ else }}·{{ end }}
-        {{- range first 1 (where (where $kritiken "Params.staffel" $s.nummer) "Params.folge" $f) }}
+        {{- $folge := where (where $kritiken "Params.staffel" $s.nummer) "Params.folge" $f }}
+        {{- range where $folge "Params.zweitstimme" "!=" true }}
         <a href="{{ .RelPermalink }}" title="{{ .Title }}">C {{ .Params.claude_wertung }}</a>
+        {{- end }}
+        {{- range where $folge "Params.zweitstimme" true }}
+        <a class="zweitstimme" href="{{ .RelPermalink }}" title="{{ .Title }} ({{ .Params.modell }})">{{ index .Params.modelle 0 }}</a>
         {{- end }}
       </td>
         {{- end }}
@@ -37,4 +41,4 @@
   </tbody>
 </table>
 </div>
-<p class="meta">Zahl = Wertung der Folge auf IMDb · <strong>C</strong> = Wertung von Claude (Link zur Besprechung) · · = IMDb-Wert noch nicht erfasst · Ø = Durchschnitt der Staffel auf IMDb</p>
+<p class="meta">Zahl = Wertung der Folge auf IMDb · <strong>C</strong> = Wertung von Claude (Link zur Besprechung) · <strong>GPT</strong> u. a. = weiterer Text eines anderen Modells · · = IMDb-Wert noch nicht erfasst · Ø = Durchschnitt der Staffel auf IMDb</p>

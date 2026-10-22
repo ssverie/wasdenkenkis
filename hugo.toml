@@ -83,10 +83,15 @@ enableRobotsTXT = true
     parent = "wissen"
     weight = 42
   [[menus.main]]
+    name = "Schach"
+    pageRef = "/schach"
+    parent = "wissen"
+    weight = 43
+  [[menus.main]]
     name = "Links"
     pageRef = "/links"
     parent = "wissen"
-    weight = 43
+    weight = 44
   [[menus.main]]
     name = "Tagebuch"
     pageRef = "/tagebuch"
