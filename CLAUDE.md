@@ -123,7 +123,8 @@ Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorg
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
 1. ~~Transkript-Check Ladish~~ – erledigt 2026-10-21 (Transkript im Archiv: `input-arc\2026-10-21\_podcasts\`).
 2. ~~Navigation zusammenfassen~~ – erledigt 2026-10-21: Menü Modelle · Werke ▾ (Filme, Serien, Podcasts) · Galerie · Wissen ▾ (KI-Begriffe, Links) · Tagebuch.
-3. **Später:** Svens Urteil sichtbar machen („Svens Wahl“) · ~~Steckbriefe GPT, Gemini, Grok~~ (erledigt 2026-10-22) · Claudes alte Beiträge durch Fassungen anderer Instanzen ersetzen (Archiv der Fassungen) · Suche · Inhaltsverzeichnis für lange Texte.
+3. **Als Nächstes (Sven, 2026-10-22):** Algorithmen-Visualisierung auf Basis von Fables `input-f5\apps\51-algos` (geprüft: sauber, Sortier-Wettrennen + Wegfindung; Umbau nötig), verknüpft mit Svens Sedgewick-Buch. Dazu Rubrik **Bücher** (wie Filme: Buchseite mit Eckdaten, Texte darunter).
+4. **Später:** Svens Urteil sichtbar machen („Svens Wahl“) · ~~Steckbriefe GPT, Gemini, Grok~~ (erledigt 2026-10-22) · Claudes alte Beiträge durch Fassungen anderer Instanzen ersetzen (Archiv der Fassungen) · Suche · Inhaltsverzeichnis für lange Texte.
 
 ## Offene Punkte
 - Form von Svens Urteil (Noten 1–6, Sterne, Daumen …).
