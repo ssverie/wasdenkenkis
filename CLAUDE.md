@@ -111,7 +111,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-22, d4d3a2b: interaktive 2. Fassung „Was ist ein Sprachmodell?“, Archiv der Fassungen)
+- Begriff „Token“ (interaktiv, andere Opus-5.5-Instanz) unter `/erklaert/token/`; im Glossar von „Was ist ein Sprachmodell?“ verlinkt. Verwandte Begriffe ohne eigene Seite stehen gestrichelt und unverlinkt da, bis die Seite existiert.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)

@@ -273,7 +273,7 @@ System.out.println(tokenizer.zusammensetzen(kontext));</code></pre>
 <!-- ============ BEGRIFFE ============ -->
 <h2 id="begriffe">Begriffe aus diesem Beitrag</h2>
 <dl class="glossary">
-  <div><dt>Token</dt><dd>Wortstück, die Grundeinheit, mit der das Modell rechnet.</dd></div>
+  <div><dt><a href="/erklaert/token/">Token</a></dt><dd>Wortstück, die Grundeinheit, mit der das Modell rechnet.</dd></div>
   <div><dt>Parameter</dt><dd>Die beim Training eingestellten Zahlen, in denen alles Gelernte steckt.</dd></div>
   <div><dt>Kontextfenster</dt><dd>Wie viel Text das Modell auf einmal sehen kann.</dd></div>
   <div><dt>Temperatur</dt><dd>Regler für Zufall beim Auswählen des nächsten Tokens.</dd></div>

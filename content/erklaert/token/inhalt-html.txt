@@ -1,0 +1,178 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Token</strong> ist ein häufiges Stück Text – mal ein ganzes Wort, mal eine Silbe, mal ein Satzzeichen. Ein <strong>Tokenizer</strong> zerlegt jeden Text in solche Stücke und ersetzt jedes durch eine feste Nummer. Nur diese Nummern sieht das Modell.</p>
+<p>Tokens sind die Maßeinheit für alles Praktische: Kosten, Länge des Kontextfensters, Geschwindigkeit. Faustregel: Ein deutsches Wort sind grob ein bis zwei Tokens.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#warum">Warum Wortstücke?</a></li>
+  <li><a href="#bpe">Wie das Vokabular entsteht</a></li>
+  <li><a href="#zahlen">Vom Text zur Zahl</a></li>
+  <li><a href="#folgen">Was daraus folgt</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ WARUM ============ -->
+<h2 id="warum">Warum Wortstücke – und nicht Buchstaben oder Wörter?</h2>
+<p>Ein Modell braucht einen festen Satz an Bausteinen, aus denen sich jeder Text zusammensetzen lässt. Dafür gibt es drei naheliegende Kandidaten, und zwei davon taugen nicht:</p>
+
+<figure>
+<div class="three">
+  <div class="opt">
+    <h4>Buchstaben</h4>
+    <div class="chips"><span class="chip c0">U</span><span class="chip c1">n</span><span class="chip c2">g</span><span class="chip c3">l</span><span class="chip c4">a</span><span class="chip c0">u</span><span class="chip c1">b</span><span class="chip c2">l</span><span class="chip c3">i</span><span class="chip c4">c</span><span class="chip c0">h</span></div>
+    <ul><li class="pro">winziges Vokabular</li><li class="con">extrem lange Folgen – 11 Schritte für ein Wort</li><li class="con">jeder Schritt trägt kaum Bedeutung</li></ul>
+  </div>
+  <div class="opt">
+    <h4>Ganze Wörter</h4>
+    <div class="chips"><span class="chip c0">Unglaublich</span></div>
+    <ul><li class="pro">kurze Folgen</li><li class="con">Millionen Wörter, im Deutschen unendlich viele Komposita</li><li class="con">unbekannte Wörter gehen gar nicht</li></ul>
+  </div>
+  <div class="opt win">
+    <h4>Wortstücke (Tokens)</h4>
+    <div class="chips"><span class="chip c0">Un</span><span class="chip c1">glaub</span><span class="chip c2">lich</span></div>
+    <ul><li class="pro">überschaubares Vokabular</li><li class="pro">kurze Folgen</li><li class="pro">auch neue Wörter lassen sich zusammensetzen</li></ul>
+  </div>
+</div>
+<figcaption>Tokens sind der Kompromiss: so wenige Bausteine wie nötig, so lange Stücke wie möglich. Die Zerlegung ist beispielhaft.</figcaption>
+</figure>
+
+<p>Typische Vokabulare haben einige Zehntausend bis über hunderttausend Einträge. Häufiges wie „der“, „und“ oder „␣Haus“ ist ein einzelnes Token; Seltenes wie „Donaudampfschifffahrt“ wird aus mehreren Stücken gebaut. Weil moderne Tokenizer notfalls bis auf einzelne Bytes herunterbrechen können, gibt es <em>kein</em> Wort, das sich nicht darstellen ließe – auch keinen Tippfehler und kein Emoji.</p>
+
+<!-- ============ BPE ============ -->
+<h2 id="bpe">Wie das Vokabular entsteht</h2>
+<p>Niemand legt die Tokens von Hand fest. Das gängigste Verfahren heißt <strong>Byte-Pair-Encoding (BPE)</strong> und ist erstaunlich simpel:</p>
+<ol>
+  <li>Starte mit einzelnen Zeichen.</li>
+  <li>Zähle, welches <em>benachbarte Paar</em> im Trainingstext am häufigsten vorkommt.</li>
+  <li>Verschmelze dieses Paar überall zu einem neuen Token.</li>
+  <li>Wiederhole, bis das Vokabular die gewünschte Größe hat.</li>
+</ol>
+<p>Probier es an einem Mini-Text aus fünf Wörtern aus. Die Zahl links gibt an, wie oft das Wort im „Trainingstext“ vorkommt:</p>
+
+<div class="widget" id="bpe">
+  <div class="widget-title">Byte-Pair-Encoding Schritt für Schritt</div>
+  <div class="bpe-words" id="bpe-words"></div>
+  <div class="bpe-grid">
+    <div class="bpe-box"><div class="h">Häufigste Paare jetzt</div><div id="bpe-pairs"></div></div>
+    <div class="bpe-box"><div class="h">Gelernte Verschmelzungen</div><ol class="merges" id="bpe-merges"></ol><div id="bpe-none" class="fine" style="margin:0">noch keine</div></div>
+  </div>
+  <div class="bpe-stats"><span>Tokens im ganzen Text: <b id="bpe-total"></b></span><span>Vokabulargröße: <b id="bpe-vocab"></b></span></div>
+  <div class="controls">
+    <button class="primary" id="bpe-step">Nächstes Paar verschmelzen</button>
+    <button id="bpe-all">Bis zum Ende</button>
+    <button id="bpe-reset">Von vorn</button>
+  </div>
+</div>
+
+<p>Achte auf die ersten beiden Schritte: Aus „a“, „c“ und „h“ wird zuerst <code>ach</code> – ein Stück, das in allen fünf Wörtern steckt. Genau so entstehen in echten Tokenizern Bausteine wie <code>ung</code>, <code>lich</code>, <code>␣der</code> oder <code>public</code>. Echte Tokenizer machen das auf riesigen Textmengen und lernen zehntausende Verschmelzungen.</p>
+
+<div class="callout dev">Wichtig: Der Tokenizer wird <em>einmal</em> vor dem Modell trainiert und danach eingefroren. Modell und Tokenizer gehören fest zusammen – ein Modell kann mit den Nummern eines fremden Tokenizers nichts anfangen, so wie eine Klasse nicht mit einer anderen <code>enum</code>-Version funktioniert.</div>
+
+<!-- ============ ZAHLEN ============ -->
+<h2 id="zahlen">Vom Text zur Zahl – und zurück</h2>
+<p>Für das Modell existieren weder Buchstaben noch Wörter. Es bekommt eine Liste von Ganzzahlen und gibt am Ende wieder eine Ganzzahl aus.</p>
+
+<figure>
+<div class="flow">
+  <div class="flow-row"><div class="lbl">Text</div><div class="val txt">Hallo Welt!</div></div>
+  <div class="flow-down">↓ Tokenizer: zerlegen</div>
+  <div class="flow-row"><div class="lbl">Tokens</div><div class="val chips"><span class="chip c0">Hallo</span><span class="chip c2">␣Welt</span><span class="chip c3">!</span></div></div>
+  <div class="flow-down">↓ im Vokabular nachschlagen</div>
+  <div class="flow-row"><div class="lbl">Token-IDs</div><div class="val"><span class="idbox">17093</span><span class="idbox">44921</span><span class="idbox">0</span></div></div>
+  <div class="flow-down">↓ Modell rechnet</div>
+  <div class="flow-row"><div class="lbl">Ausgabe</div><div class="val"><span class="idbox">8241</span> → <span class="chip c1">␣Wie</span></div></div>
+</div>
+<figcaption>Hinein gehen Nummern, heraus kommt eine Nummer. Erst der Tokenizer macht daraus wieder Text. Die IDs sind ausgedacht.</figcaption>
+</figure>
+
+<p>Im Modell wird jede ID sofort in einen langen Zahlenvektor übersetzt, ein sogenanntes <strong>Embedding</strong> – damit beginnt die eigentliche Rechnerei. Die ID selbst ist nur ein Index, so wie ein Array-Index nichts über den Inhalt verrät: Dass „Hund“ die Nummer 4711 hat und „Katze“ die 4712, hieße nicht, dass sie verwandt sind.</p>
+
+<!-- ============ FOLGEN ============ -->
+<h2 id="folgen">Was daraus folgt</h2>
+
+<h3>Kosten, Grenzen, Tempo</h3>
+<div class="cards">
+  <div class="card"><div class="num">€</div><h4>Abrechnung</h4><p>APIs rechnen pro Token ab, Eingabe und Ausgabe meist getrennt – Ausgabe-Tokens sind in der Regel teurer.</p></div>
+  <div class="card"><div class="num">⇥</div><h4>Kontextgrenze</h4><p>Das Kontextfenster ist in Tokens bemessen, nicht in Zeichen oder Seiten.</p></div>
+  <div class="card"><div class="num">⏱</div><h4>Tempo</h4><p>Die Antwort entsteht Token für Token. Deshalb „tippt“ der Chat Stück für Stück.</p></div>
+</div>
+
+<h3>Faustregeln für die Länge</h3>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Text</th><th>Grobe Faustregel</th></tr></thead>
+  <tbody>
+    <tr><td>Englisch</td><td>etwa 4 Zeichen pro Token, etwa ¾ Wort pro Token</td></tr>
+    <tr><td>Deutsch</td><td>spürbar mehr Tokens pro Wort, grob 1–2 – lange Komposita und weniger deutscher Trainingstext</td></tr>
+    <tr><td>Programmcode</td><td>Bezeichner werden oft zerlegt; Einrückung und Leerzeichen kosten mit</td></tr>
+    <tr><td>Seltene Schriften, Emojis</td><td>oft mehrere Tokens pro Zeichen</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="fine">Die genauen Werte hängen vom Tokenizer ab. Wer es exakt braucht: Die meisten Anbieter haben Zähl-Funktionen in ihren APIs oder Bibliotheken.</p>
+
+<h3>Typische Schwächen</h3>
+<p>Weil das Modell nie Buchstaben sieht, sind manche für Menschen triviale Aufgaben für es überraschend schwer:</p>
+
+<figure>
+<div class="flow">
+  <div class="flow-row"><div class="lbl">Frage</div><div class="val txt">Wie viele „e“ hat „Erdbeere“?</div></div>
+  <div class="flow-row"><div class="lbl">Das Modell sieht</div><div class="val"><span class="chip c0">␣Erd</span> <span class="chip c1">beere</span> &nbsp;=&nbsp; <span class="idbox">29107</span><span class="idbox">58312</span></div></div>
+</div>
+<figcaption>Die Buchstaben stecken unsichtbar in zwei Nummern. Das Modell muss aus dem Training „wissen“, wie diese Stücke buchstabiert werden.</figcaption>
+</figure>
+
+<ul>
+  <li><strong>Buchstaben zählen, rückwärts schreiben, Anagramme</strong> – das Modell sieht die Buchstaben nicht direkt.</li>
+  <li><strong>Rechnen mit langen Zahlen</strong> – „1234567“ wird in beliebige Stücke wie <code>123</code> · <code>456</code> · <code>7</code> zerlegt, die Stellen liegen nicht sauber untereinander.</li>
+  <li><strong>Reime und Silben</strong> – Klang und Silbengrenzen stimmen oft nicht mit den Token-Grenzen überein.</li>
+</ul>
+<p>Moderne Modelle können das trotzdem oft, weil sie viel darüber gelernt haben oder notfalls ein Werkzeug (z. B. Code) benutzen. Aber hier liegt der Grund, wenn es mal danebengeht.</p>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Tokenizer</strong></td><td>ein Lexer – nur dass die Token-Grenzen nicht aus einer Grammatik stammen, sondern statistisch gelernt wurden</td></tr>
+    <tr><td><strong>Vokabular</strong></td><td>eine feste <code>Map&lt;String, Integer&gt;</code> bzw. ein riesiges <code>enum</code> mit z. B. 100 000 Konstanten</td></tr>
+    <tr><td><strong>Token-ID</strong></td><td>der <code>ordinal()</code>-Wert dieser Konstante – ein bedeutungsloser Index</td></tr>
+    <tr><td><strong>encode / decode</strong></td><td>Serialisieren und Deserialisieren zwischen <code>String</code> und <code>int[]</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="c">// Pseudocode – echte Bibliotheken sehen ähnlich aus</span>
+Tokenizer tok = Tokenizer.fuerModell(<span class="s">"mein-modell"</span>);
+
+<span class="k">int</span>[] ids = tok.encode(<span class="s">"Hallo Welt!"</span>);   <span class="c">// z. B. [17093, 44921, 0]</span>
+<span class="k">int</span> anzahl = ids.length;                  <span class="c">// danach wird abgerechnet</span>
+
+String text = tok.decode(ids);            <span class="c">// "Hallo Welt!" – verlustfrei zurück</span></code></pre>
+
+<p>Der Vergleich mit dem Lexer ist ziemlich genau – das Wort „Token“ stammt sogar aus derselben Tradition. Der Unterschied: Der Java-Lexer liefert <code>IDENTIFIER</code>, <code>LPAREN</code> und Co., also Einheiten mit Bedeutung. Ein LLM-Tokenizer liefert einfach häufige Zeichenfolgen, egal ob sie sprachlich Sinn ergeben.</p>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Ein Token ist ein Wort.“</b> – Nur bei häufigen, kurzen Wörtern. Lange oder seltene Wörter bestehen aus mehreren Tokens, Satzzeichen sind oft eigene.</div>
+  <div><b>„Alle Modelle zählen gleich.“</b> – Jede Modellfamilie hat ihren eigenen Tokenizer. Derselbe Text kann bei verschiedenen Anbietern unterschiedlich viele Tokens ergeben.</div>
+  <div><b>„Das Modell liest Buchstaben.“</b> – Es sieht nur Token-Nummern. Buchstabenwissen muss es indirekt gelernt haben.</div>
+  <div><b>„Leerzeichen sind gratis.“</b> – Leerzeichen hängen meist am folgenden Wort, aber tiefe Einrückungen oder viele Leerzeilen kosten durchaus Tokens.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/was-ist-ein-sprachmodell/">Was ist ein Sprachmodell?</a>
+  <span title="Noch nicht vorhanden">Kontextfenster</span>
+  <span title="Noch nicht vorhanden">Parameter</span>
+  <span title="Noch nicht vorhanden">Temperatur</span>
+  <span title="Noch nicht vorhanden">Transformer</span>
+</div>
+</div>
