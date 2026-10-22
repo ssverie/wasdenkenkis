@@ -1,5 +1,5 @@
 {{- /* Schachdiagramm aus einer FEN-Zeile: {{< schach fen="…" >}}
-       Reines HTML/CSS, keine Bilder, keine Skripte. Ist Schwarz am Zug, steht das Brett aus Sicht von Schwarz.
+       Brett aus HTML/CSS, Figuren als SVG (Cburnett), keine Skripte. Ist Schwarz am Zug, steht das Brett aus Sicht von Schwarz.
        Unter dem Brett nur die Zugnummer im Stil „18.“ (Weiß am Zug) bzw. „18...“ (Schwarz am Zug) und die FEN. */ -}}
 {{- $fen := .Get "fen" }}
 {{- $teile := split $fen " " }}
@@ -13,8 +13,8 @@
   {{- $zeilen = $zeilen | append $z }}
 {{- end }}
 {{- $ordnung := seq 0 7 }}{{ if $schwarz }}{{ $ordnung = seq 7 -1 0 }}{{ end }}
-{{- $umriss := dict "K" "♔" "Q" "♕" "R" "♖" "B" "♗" "N" "♘" "P" "♙" }}
-{{- $voll := dict "K" "♚" "Q" "♛" "R" "♜" "B" "♝" "N" "♞" "P" "♟︎" }}
+{{- /* Figuren: SVG-Satz von Cburnett (Wikimedia Commons, CC BY-SA 3.0) in static/schach/figuren/ */}}
+{{- $namen := dict "K" "König" "Q" "Dame" "R" "Turm" "B" "Läufer" "N" "Springer" "P" "Bauer" }}
 {{- $linien := slice "a" "b" "c" "d" "e" "f" "g" "h" }}
 <figure class="schach-diagramm">
   <div class="brett" role="img" aria-label="Schachstellung {{ cond $schwarz "aus Sicht von Schwarz" "aus Sicht von Weiß" }}: {{ $fen }}">
@@ -25,11 +25,8 @@
       {{- if eq $j 0 }}<i class="rang">{{ sub 8 $r }}</i>{{ end }}{{ if eq $i 7 }}<i class="linie">{{ index $linien $c }}</i>{{ end }}
       {{- if ne $p "." }}
         {{- $typ := upper $p }}
-        {{- if eq $p $typ }}
-      <b class="figur weiss"><span class="fuellung">{{ index $voll $typ }}</span><span>{{ index $umriss $typ }}</span></b>
-        {{- else }}
-      <b class="figur schwarz">{{ index $voll $typ }}</b>
-        {{- end }}
+        {{- $weiss := eq $p $typ }}
+      <img class="figur" src="{{ printf "schach/figuren/%s%s.svg" (cond $weiss "w" "b") $typ | relURL }}" alt="{{ cond $weiss "Weiß" "Schwarz" }}: {{ index $namen $typ }}" width="45" height="45">
       {{- end }}
     </span>
     {{- end }}
@@ -38,5 +35,6 @@
   <figcaption>
     {{- with .Get "titel" }}<strong>{{ . }}</strong> · {{ end }}{{ with $zug }}{{ . }}{{ if $schwarz }}...{{ else }}.{{ end }}{{ end }}
     <code class="fen">{{ $fen }}</code>
+    <small class="figuren-lizenz">Figuren: <a href="https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces" rel="noopener">Cburnett</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/deed.de" rel="noopener">CC BY-SA 3.0</a></small>
   </figcaption>
 </figure>
