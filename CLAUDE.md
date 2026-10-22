@@ -114,7 +114,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Rubrik „Spiele“ mit „Schach“ und „9+ – Schach mit Reserve“ (beide Claude Fable 5; 9+: Idee Sven), Menüpunkt zwischen Galerie und Kolumnen.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-22: Rubrik „Spiele“ mit Schach und 9+)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps? Schach 960 liegt nicht in `input-f5` – woher?
 
