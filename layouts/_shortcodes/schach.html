@@ -1,35 +1,42 @@
-{{- /* Schachdiagramm aus einer FEN-Zeile: {{< schach fen="…" titel="…" >}}
-       Reines HTML/CSS, keine Bilder, keine Skripte. Brett aus Sicht von Weiß. */ -}}
+{{- /* Schachdiagramm aus einer FEN-Zeile: {{< schach fen="…" >}}
+       Reines HTML/CSS, keine Bilder, keine Skripte. Ist Schwarz am Zug, steht das Brett aus Sicht von Schwarz.
+       Unter dem Brett nur die Zugnummer im Stil „18.“ (Weiß am Zug) bzw. „18...“ (Schwarz am Zug) und die FEN. */ -}}
 {{- $fen := .Get "fen" }}
 {{- $teile := split $fen " " }}
-{{- $reihen := split (index $teile 0) "/" }}
-{{- $amZug := cond (eq (index $teile 1) "b") "Schwarz am Zug" "Weiß am Zug" }}
-{{- $zeichen := dict "K" "♔" "Q" "♕" "R" "♖" "B" "♗" "N" "♘" "P" "♙" "k" "♚" "q" "♛" "r" "♜" "b" "♝" "n" "♞" "p" "♟︎" }}
+{{- $schwarz := eq (index $teile 1) "b" }}
+{{- $zug := "" }}{{ if ge (len $teile) 6 }}{{ $zug = index $teile 5 }}{{ end }}
+{{- /* Reihen auf je 8 Zeichen ausschreiben (Ziffern = leere Felder als „.“) */}}
+{{- $zeilen := slice }}
+{{- range split (index $teile 0) "/" }}
+  {{- $z := . }}
+  {{- range seq 8 -1 1 }}{{ $z = replace $z (string .) (strings.Repeat . ".") }}{{ end }}
+  {{- $zeilen = $zeilen | append $z }}
+{{- end }}
+{{- $ordnung := seq 0 7 }}{{ if $schwarz }}{{ $ordnung = seq 7 -1 0 }}{{ end }}
+{{- $umriss := dict "K" "♔" "Q" "♕" "R" "♖" "B" "♗" "N" "♘" "P" "♙" }}
+{{- $voll := dict "K" "♚" "Q" "♛" "R" "♜" "B" "♝" "N" "♞" "P" "♟︎" }}
 {{- $linien := slice "a" "b" "c" "d" "e" "f" "g" "h" }}
 <figure class="schach-diagramm">
-  <div class="brett" role="img" aria-label="Schachstellung, {{ $amZug }}: {{ $fen }}">
-  {{- range $r, $reihe := $reihen }}
-    {{- $c := 0 }}
-    {{- range split $reihe "" }}
-      {{- if in "12345678" . }}
-        {{- range seq (int .) }}
+  <div class="brett" role="img" aria-label="Schachstellung {{ cond $schwarz "aus Sicht von Schwarz" "aus Sicht von Weiß" }}: {{ $fen }}">
+  {{- range $i, $r := $ordnung }}
+    {{- range $j, $c := $ordnung }}
+      {{- $p := substr (index $zeilen $r) $c 1 }}
     <span class="feld {{ cond (modBool (add $r $c) 2) "hell" "dunkel" }}">
-      {{- if eq $c 0 }}<i class="rang">{{ sub 8 $r }}</i>{{ end }}{{ if eq $r 7 }}<i class="linie">{{ index $linien $c }}</i>{{ end -}}
-    </span>
-          {{- $c = add $c 1 }}
+      {{- if eq $j 0 }}<i class="rang">{{ sub 8 $r }}</i>{{ end }}{{ if eq $i 7 }}<i class="linie">{{ index $linien $c }}</i>{{ end }}
+      {{- if ne $p "." }}
+        {{- $typ := upper $p }}
+        {{- if eq $p $typ }}
+      <b class="figur weiss"><span class="fuellung">{{ index $voll $typ }}</span><span>{{ index $umriss $typ }}</span></b>
+        {{- else }}
+      <b class="figur schwarz">{{ index $voll $typ }}</b>
         {{- end }}
-      {{- else }}
-    <span class="feld {{ cond (modBool (add $r $c) 2) "hell" "dunkel" }}">
-      {{- if eq $c 0 }}<i class="rang">{{ sub 8 $r }}</i>{{ end }}{{ if eq $r 7 }}<i class="linie">{{ index $linien $c }}</i>{{ end -}}
-      <b class="figur {{ cond (eq . (upper .)) "weiss" "schwarz" }}">{{ index $zeichen . }}</b>
-    </span>
-        {{- $c = add $c 1 }}
       {{- end }}
+    </span>
     {{- end }}
   {{- end }}
   </div>
   <figcaption>
-    {{- with .Get "titel" }}<strong>{{ . }}</strong> · {{ end }}{{ $amZug }}
+    {{- with .Get "titel" }}<strong>{{ . }}</strong> · {{ end }}{{ with $zug }}{{ . }}{{ if $schwarz }}...{{ else }}.{{ end }}{{ end }}
     <code class="fen">{{ $fen }}</code>
   </figcaption>
 </figure>

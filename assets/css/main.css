@@ -278,17 +278,21 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   aspect-ratio: 1;
-  border: 3px solid #4b4339;
-  border-radius: 4px;
+  border-radius: 3px;
   overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,.25);
 }
+/* Brett im Stil des bekannten braunen Online-Bretts; Figuren klassisch wie im Diagramm:
+   weiße Figuren = weiße Füllung mit schwarzem Umriss, schwarze Figuren = schwarz gefüllt */
 .schach-diagramm .feld { position: relative; display: flex; align-items: center; justify-content: center; container-type: size; }
-.schach-diagramm .hell { background: #eeeed2; }
-.schach-diagramm .dunkel { background: #8aa66b; }
-.schach-diagramm .figur { font-weight: 400; font-size: 78cqh; line-height: 1; }
-.schach-diagramm .figur.weiss { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.6), 0 0 1px #000; }
-.schach-diagramm .figur.schwarz { color: #1e1e1e; }
-.schach-diagramm i { position: absolute; font-style: normal; font-size: 22cqh; font-weight: 700; opacity: .7; color: #3b3b3b; }
+.schach-diagramm .hell { background: #f0d9b5; }
+.schach-diagramm .dunkel { background: #b58863; }
+.schach-diagramm .figur { position: relative; font-weight: 400; font-size: 82cqh; line-height: 1; color: #000; font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", "DejaVu Sans", serif; }
+.schach-diagramm .figur.weiss .fuellung { position: absolute; inset: 0; color: #fff; }
+.schach-diagramm .figur.weiss span:last-child { position: relative; }
+.schach-diagramm i { position: absolute; font-style: normal; font-size: 20cqh; font-weight: 700; }
+.schach-diagramm .hell i { color: #b58863; }
+.schach-diagramm .dunkel i { color: #f0d9b5; }
 .schach-diagramm .rang { top: 3%; left: 5%; }
 .schach-diagramm .linie { bottom: 2%; right: 6%; }
 .schach-diagramm figcaption { margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-leise); }
