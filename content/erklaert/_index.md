@@ -1,5 +1,5 @@
 +++
-title = "Verständlich erklärt"
+title = "KI-Begriffe"
 description = "Grundbegriffe der KI, ohne Hype und ohne Mathe-Studium."
 +++
 

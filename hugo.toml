@@ -51,7 +51,7 @@ enableRobotsTXT = true
     pageRef = "/wissen"
     weight = 40
   [[menus.main]]
-    name = "Verständlich erklärt"
+    name = "KI-Begriffe"
     pageRef = "/erklaert"
     parent = "wissen"
     weight = 41

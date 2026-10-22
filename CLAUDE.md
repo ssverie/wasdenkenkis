@@ -25,7 +25,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Rubriken (Entwurf, wird iterativ geschärft)
 - **Modelle** – Steckbrief je KI (Claude, GPT, Gemini, Llama, Mistral, …): Stärken, Schwächen, Verlauf.
 - **Werkzeugkompass** – KI-Tools nüchtern getestet und verglichen.
-- **Verständlich erklärt** – Glossar und Grundlagen, Begriff für Begriff.
+- **KI-Begriffe** (früher „Verständlich erklärt“, Adresse bleibt `/erklaert/`) – Glossar und Grundlagen, Begriff für Begriff; eine Seite je Begriff (erste: Token).
 - **Was denken KIs über …?** – Kernformat: dieselbe Frage an mehrere Modelle, Antworten nebeneinander.
 - **Chats** – lohnende Gesprächsprotokolle.
 - **Geschichten** – von KIs geschrieben.
@@ -111,13 +111,13 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Begriff „Token“ (interaktiv, andere Opus-5.5-Instanz) unter `/erklaert/token/`; im Glossar von „Was ist ein Sprachmodell?“ verlinkt. Verwandte Begriffe ohne eigene Seite stehen gestrichelt und unverlinkt da, bis die Seite existiert.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-22: Begriff „Token“, Rubrik „KI-Begriffe“)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
 1. ~~Transkript-Check Ladish~~ – erledigt 2026-10-21 (Transkript im Archiv: `input-arc\2026-10-21\_podcasts\`).
-2. ~~Navigation zusammenfassen~~ – erledigt 2026-10-21: Menü Modelle · Werke ▾ (Filme, Serien, Podcasts) · Galerie · Wissen ▾ (Verständlich erklärt, Links) · Tagebuch.
+2. ~~Navigation zusammenfassen~~ – erledigt 2026-10-21: Menü Modelle · Werke ▾ (Filme, Serien, Podcasts) · Galerie · Wissen ▾ (KI-Begriffe, Links) · Tagebuch.
 3. **Später:** Svens Urteil sichtbar machen („Svens Wahl“) · Steckbriefe GPT/Grok/Gemini · Claudes alte Beiträge durch Fassungen anderer Instanzen ersetzen (Archiv der Fassungen) · Suche · Inhaltsverzeichnis für lange Texte.
 
 ## Offene Punkte
@@ -144,6 +144,7 @@ Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, n
 - 2026-10-21: Podcasts gestartet: Folge „The Diary Of A CEO mit Jeffrey Ladish“ mit Analyse (Claude Opus 5.5, andere Instanz) und Zusammenfassung (GPT-6).
 - 2026-10-22: Archiv der Fassungen gebaut; erste Ersetzung: „Was ist ein Sprachmodell?“ (interaktive 2. Fassung einer anderen Claude-Instanz). Interaktive HTML-Beiträge sind erlaubt, wenn Skript geprüft und ohne externe Ressourcen.
 - 2026-10-22: Geplante Rubriken unter „Wissen“: KI-Begriffe (Glossar A–Z, statt „Verständlich erklärt“), KI-Tools (Werkzeugkasten nach Kategorien, Video zuerst; Fakten von Claude, Urteil von Sven/anderen Instanzen), Programmieren mit KI. Reihenfolge: Begriffe → Tools → Programmieren.
+- 2026-10-22: Rubrik „Verständlich erklärt“ heißt jetzt „KI-Begriffe“ (Svens Wahl); Adresse `/erklaert/` bleibt, damit Links stabil sind. Erster eigener Begriff: Token (interaktiv, andere Opus-5.5-Instanz).
 - 2026-10-21: Neue Rubrik „Serien“: Mad Men, alle 92 Folgen von einer Claude-Opus-5.5-Instanz besprochen, mit eigener Wertung; Sven liefert die IMDb-Wertungen dazu.
 - 2026-10-21: Freigabe bleibt komplett bei Sven, auch für Kleinkram. Claude sammelt kleine Änderungen lokal (Liste „Wartet auf Freigabe“), Sven gibt gebündelt frei.
 - 2026-10-21: Seitenbreite ganz automatisch (ohne Obergrenze), nach Versuch mit zwei festen Breiten.
