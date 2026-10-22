@@ -20,6 +20,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - Originale nie verändern oder löschen; ins Repo kommen nur aufbereitete Kopien (Bilder verkleinert, EXIF entfernt).
 - `input\` und `input-arc\` sind nicht im Git (Repo ist öffentlich).
 - Material aus `input\Claude\` stammt standardmäßig von **Claude Opus 5.5**, solange Sven nichts anderes sagt (aktueller Standard bei ihm).
+- Bilder stammen bis auf weiteres von **GPT-6** (Svens Ansage 2026-10-22); einen Prompt liefert Sven dazu nicht – Feld `prompt` weglassen.
 - Fehlen Angaben (Prompt, genaue Modellversion), nichts erfinden: weglassen und Sven bei der Abnahme fragen.
 
 ## Rubriken (Entwurf, wird iterativ geschärft)
@@ -111,14 +112,14 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-22: Begriff „Token“, Rubrik „KI-Begriffe“)
+- (leer – zuletzt freigegeben und gepusht am 2026-10-22: Steckbrief GPT, Oktopus bei Rembrandt und Vermeer)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 
 ## Ideenspeicher (Stand 2026-10-21, Reihenfolge = Svens Priorität)
 Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, nichts drängeln, Ideen hier parken.
 1. ~~Transkript-Check Ladish~~ – erledigt 2026-10-21 (Transkript im Archiv: `input-arc\2026-10-21\_podcasts\`).
 2. ~~Navigation zusammenfassen~~ – erledigt 2026-10-21: Menü Modelle · Werke ▾ (Filme, Serien, Podcasts) · Galerie · Wissen ▾ (KI-Begriffe, Links) · Tagebuch.
-3. **Später:** Svens Urteil sichtbar machen („Svens Wahl“) · Steckbriefe GPT/Grok/Gemini · Claudes alte Beiträge durch Fassungen anderer Instanzen ersetzen (Archiv der Fassungen) · Suche · Inhaltsverzeichnis für lange Texte.
+3. **Später:** Svens Urteil sichtbar machen („Svens Wahl“) · Steckbriefe Grok/Gemini (GPT erledigt 2026-10-22) · Claudes alte Beiträge durch Fassungen anderer Instanzen ersetzen (Archiv der Fassungen) · Suche · Inhaltsverzeichnis für lange Texte.
 
 ## Offene Punkte
 - Form von Svens Urteil (Noten 1–6, Sterne, Daumen …).
@@ -145,6 +146,7 @@ Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, n
 - 2026-10-22: Archiv der Fassungen gebaut; erste Ersetzung: „Was ist ein Sprachmodell?“ (interaktive 2. Fassung einer anderen Claude-Instanz). Interaktive HTML-Beiträge sind erlaubt, wenn Skript geprüft und ohne externe Ressourcen.
 - 2026-10-22: Geplante Rubriken unter „Wissen“: KI-Begriffe (Glossar A–Z, statt „Verständlich erklärt“), KI-Tools (Werkzeugkasten nach Kategorien, Video zuerst; Fakten von Claude, Urteil von Sven/anderen Instanzen), Programmieren mit KI. Reihenfolge: Begriffe → Tools → Programmieren.
 - 2026-10-22: Rubrik „Verständlich erklärt“ heißt jetzt „KI-Begriffe“ (Svens Wahl); Adresse `/erklaert/` bleibt, damit Links stabil sind. Erster eigener Begriff: Token (interaktiv, andere Opus-5.5-Instanz).
+- 2026-10-22: Steckbrief GPT (von GPT-6 selbst geschrieben, Text wortgleich, Quellen stichprobenartig geprüft). Neue Galerie-Bilder: Oktopus bei Rembrandt und bei Vermeer (GPT-6, ohne Prompt).
 - 2026-10-21: Neue Rubrik „Serien“: Mad Men, alle 92 Folgen von einer Claude-Opus-5.5-Instanz besprochen, mit eigener Wertung; Sven liefert die IMDb-Wertungen dazu.
 - 2026-10-21: Freigabe bleibt komplett bei Sven, auch für Kleinkram. Claude sammelt kleine Änderungen lokal (Liste „Wartet auf Freigabe“), Sven gibt gebündelt frei.
 - 2026-10-21: Seitenbreite ganz automatisch (ohne Obergrenze), nach Versuch mit zwei festen Breiten.
