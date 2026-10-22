@@ -46,6 +46,10 @@ enableRobotsTXT = true
     pageRef = "/galerie"
     weight = 30
   [[menus.main]]
+    name = "Spiele"
+    pageRef = "/spiele"
+    weight = 32
+  [[menus.main]]
     name = "Kolumnen"
     pageRef = "/kolumnen"
     weight = 35

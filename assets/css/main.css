@@ -240,6 +240,18 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 }
 .anmerkung p:last-child { margin-bottom: 0; }
 
+/* Spiele im Rahmen (Shortcode „spiel“) */
+.spiel { margin: 1.5rem 0; }
+.spiel-rahmen {
+  display: block;
+  width: 100%;
+  min-height: 420px;
+  border: 0;
+  border-radius: var(--radius);
+  background: #262421;
+}
+.spiel-link { margin: 0.5rem 0 0; font-size: 0.9rem; text-align: right; }
+
 /* Linksammlung */
 .links .liste-titel::after { content: " ↗"; font-weight: 400; }
 .unterlinks { font-size: 0.95rem; }

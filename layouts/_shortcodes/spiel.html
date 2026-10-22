@@ -1,0 +1,20 @@
+{{- /* Spiel aus static/apps/ in einem Rahmen, Höhe passt sich dem Inhalt an:
+       {{< spiel src="/apps/schach.html" titel="Schach" >}}
+       Eigener Rahmen, damit Stil und Skript des Spiels nicht mit der Seite kollidieren. */ -}}
+{{- $src := .Get "src" | relURL }}
+<div class="spiel">
+  <iframe class="spiel-rahmen" src="{{ $src }}" title="{{ .Get "titel" }}"></iframe>
+  <p class="spiel-link"><a href="{{ $src }}">Im Vollbild spielen ↗</a></p>
+</div>
+<script>
+(function (rahmen) {
+  function anpassen() {
+    try { rahmen.style.height = rahmen.contentDocument.documentElement.scrollHeight + "px"; } catch (e) {}
+  }
+  rahmen.addEventListener("load", function () {
+    anpassen();
+    try { new ResizeObserver(anpassen).observe(rahmen.contentDocument.body); } catch (e) {}
+  });
+  window.addEventListener("resize", anpassen);
+})(document.currentScript.previousElementSibling.querySelector("iframe"));
+</script>
