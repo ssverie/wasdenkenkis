@@ -3,7 +3,10 @@
   {{- $seite := . }}
   <li{{ with .Resources.ByType "image" }} class="mit-bild"{{ end }}>
     {{- with .Resources.ByType "image" }}
-    {{- $v := (index . 0).Fill "320x180 webp q75 Center" }}
+    {{- /* Vorschaubild: im Front-Matter `vorschau = "datei.jpg"` (z. B. das beste von mehreren KIs), sonst das erste */}}
+    {{- $bild := index . 0 }}
+    {{- with $seite.Params.vorschau }}{{ with $seite.Resources.Get . }}{{ $bild = . }}{{ end }}{{ end }}
+    {{- $v := $bild.Fill "320x180 webp q75 Center" }}
     <a class="vorschau" href="{{ $seite.RelPermalink }}" tabindex="-1" aria-hidden="true"><img src="{{ $v.RelPermalink }}" width="{{ $v.Width }}" height="{{ $v.Height }}" alt="" loading="lazy" decoding="async"></a>
     {{- end }}
     <div>

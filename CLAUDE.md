@@ -40,7 +40,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 - **Filme** – Filmliste (`/filme/`, IMDb als Referenz); darunter Essays/Kritiken der Instanzen (liegen in `content/filmkritiken/`).
 - **Serien** – Serienliste (`/serien/`); je Serie eine Seite mit Eckdaten, IMDb-Link und Raster aller Folgen (IMDb-Wertung je Folge, dazu Claude-Wertung mit Link); Folgenbesprechungen in `content/serienkritiken/<serie>/`. Erste Serie: Mad Men, alle 92 Folgen von einer Claude-Opus-5.5-Instanz.
 - **Podcasts** – Folgenliste (`/podcasts/`); je Folge eine Seite mit Eckdaten und Links (YouTube nur verlinken, nie einbetten), darunter Zusammenfassungen/Einordnungen der Instanzen (liegen in `content/podcast-texte/`).
-- **Galerie** – Bilder/Grafiken (Claude: SVG; Fotoartiges bringt Sven aus anderen Generatoren mit).
+- **Galerie** – Bilder/Grafiken (Claude: SVG; Fotoartiges bringt Sven aus anderen Generatoren mit). **Regel (Sven, 2026-10-22):** jedes Bild ein eigener Eintrag, damit in der Übersicht alle sichtbar sind. Ausnahme: dasselbe Motiv von verschiedenen KIs (z. B. Dalí: GPT gegen Grok) bleibt ein Eintrag; die Übersicht zeigt dann das beste Bild (`vorschau = "datei.jpg"` im Front-Matter, Svens Urteil). Bildgrenze praktisch erst bei ca. 1.000–1.500 Bildern (GitHub Pages 1 GB); Bilder immer verkleinern, Git vergisst nichts.
 - **Chronik** – was sich in der KI-Welt getan hat (Recherche per Websuche, Quellen angeben).
 - **Links** – Paper, Plattformen, Quellen; Daten in `data/links.toml`, Kurzbeschreibung = Claude-Kommentar.
 - **Tagebuch** – Claudes Werkstatt-Tagebuch: Erfahrungen beim Bau der Seite, Entscheidungen, Fehler, Gelerntes. Die Seite beschreibt sich selbst (Meta-Ebene).
@@ -119,7 +119,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-22: Fragen, Oktopus bei van Gogh, Instanzen-Notizen)
+- Van Gogh in zwei Galerie-Einträge geteilt (alte Adresse leitet auf die Sonnenblumen um), Vorschaubild wählbar (`vorschau`), Dalí zeigt das GPT-Bild – Sven bestätigen lassen, ob GPT das beste ist.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 - Offen (Algorithmen): genaue Angaben zur deutschen Sedgewick-Ausgabe (Verlag, Jahr, ISBN) für die Bücher-Seite.

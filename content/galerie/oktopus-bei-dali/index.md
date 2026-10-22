@@ -5,6 +5,7 @@ date = 2026-10-21
 modelle = ["GPT", "Grok"]
 herkunft = "eingebracht"
 begleittext = "Claude Opus 5.5"
+vorschau = "gpt.jpg"
 
 [versionen]
   GPT = "GPT-6"
