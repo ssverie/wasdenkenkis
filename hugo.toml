@@ -42,6 +42,16 @@ enableRobotsTXT = true
     parent = "werke"
     weight = 23
   [[menus.main]]
+    name = "Belletristik"
+    pageRef = "/belletristik"
+    parent = "werke"
+    weight = 24
+  [[menus.main]]
+    name = "Sachbuch"
+    pageRef = "/sachbuch"
+    parent = "werke"
+    weight = 25
+  [[menus.main]]
     name = "Galerie"
     pageRef = "/galerie"
     weight = 30

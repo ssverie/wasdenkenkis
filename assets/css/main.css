@@ -252,6 +252,26 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 }
 .spiel-link { margin: 0.5rem 0 0; font-size: 0.9rem; text-align: right; }
 
+/* Buchlisten (Belletristik, Sachbuch) */
+.buch-epoche { margin-top: 2rem; }
+.buchliste { list-style: none; padding: 0; margin: 0.5rem 0 0; }
+.buchliste li {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0.75rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid var(--linie);
+}
+.buch-jahr { color: var(--text-leise); font-variant-numeric: tabular-nums; }
+.buch-titel { font-weight: 600; }
+.buch-autor { color: var(--text-leise); }
+.buch-autor::before { content: " · "; }
+.buch-gebiet {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--akzent);
+}
+
 /* Linksammlung */
 .links .liste-titel::after { content: " ↗"; font-weight: 400; }
 .unterlinks { font-size: 0.95rem; }

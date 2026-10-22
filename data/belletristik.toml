@@ -1,0 +1,470 @@
+# belletristik – aus Svens Liste (input-arc\2026-10-22\_buecher\belletristik.txt), Reihenfolge der Anzeige: nach sortjahr
+
+[[buch]]
+titel = "Moby-Dick"
+autor = "Herman Melville"
+jahr = "1851"
+sortjahr = 1851
+schluessel = "moby-dick-1851"
+
+[[buch]]
+titel = "Die Elenden"
+autor = "Victor Hugo"
+jahr = "1862"
+sortjahr = 1862
+schluessel = "die-elenden-1862"
+
+[[buch]]
+titel = "Schuld und Sühne"
+autor = "Fjodor Dostojewski"
+jahr = "1866"
+sortjahr = 1866
+schluessel = "schuld-und-suehne-1866"
+
+[[buch]]
+titel = "Krieg und Frieden"
+autor = "Lew Tolstoi"
+jahr = "1869"
+sortjahr = 1869
+schluessel = "krieg-und-frieden-1869"
+
+[[buch]]
+titel = "Anna Karenina"
+autor = "Lew Tolstoi"
+jahr = "1878"
+sortjahr = 1878
+schluessel = "anna-karenina-1878"
+
+[[buch]]
+titel = "Die Brüder Karamasow"
+autor = "Fjodor Dostojewski"
+jahr = "1880"
+sortjahr = 1880
+schluessel = "die-brueder-karamasow-1880"
+
+[[buch]]
+titel = "Buddenbrooks"
+autor = "Thomas Mann"
+jahr = "1901"
+sortjahr = 1901
+schluessel = "buddenbrooks-1901"
+
+[[buch]]
+titel = "Auf der Suche nach der verlorenen Zeit"
+autor = "Marcel Proust"
+jahr = "1913–27"
+sortjahr = 1913
+schluessel = "auf-der-suche-nach-der-verlorenen-zeit-1913"
+
+[[buch]]
+titel = "Der Process"
+autor = "Franz Kafka"
+jahr = "1925"
+sortjahr = 1925
+schluessel = "der-process-1925"
+
+[[buch]]
+titel = "Der Zauberberg"
+autor = "Thomas Mann"
+jahr = "1924"
+sortjahr = 1924
+schluessel = "der-zauberberg-1924"
+
+[[buch]]
+titel = "Der große Gatsby"
+autor = "F. Scott Fitzgerald"
+jahr = "1925"
+sortjahr = 1925
+schluessel = "der-grosse-gatsby-1925"
+
+[[buch]]
+titel = "Der Steppenwolf"
+autor = "Hermann Hesse"
+jahr = "1927"
+sortjahr = 1927
+schluessel = "der-steppenwolf-1927"
+
+[[buch]]
+titel = "Berlin Alexanderplatz"
+autor = "Alfred Döblin"
+jahr = "1929"
+sortjahr = 1929
+schluessel = "berlin-alexanderplatz-1929"
+
+[[buch]]
+titel = "Im Westen nichts Neues"
+autor = "Erich Maria Remarque"
+jahr = "1929"
+sortjahr = 1929
+schluessel = "im-westen-nichts-neues-1929"
+
+[[buch]]
+titel = "Der Mann ohne Eigenschaften"
+autor = "Robert Musil"
+jahr = "1930–43"
+sortjahr = 1930
+schluessel = "der-mann-ohne-eigenschaften-1930"
+
+[[buch]]
+titel = "Schöne neue Welt"
+autor = "Aldous Huxley"
+jahr = "1932"
+sortjahr = 1932
+schluessel = "schoene-neue-welt-1932"
+
+[[buch]]
+titel = "Früchte des Zorns"
+autor = "John Steinbeck"
+jahr = "1939"
+sortjahr = 1939
+schluessel = "fruechte-des-zorns-1939"
+
+[[buch]]
+titel = "Der Fremde"
+autor = "Albert Camus"
+jahr = "1942"
+sortjahr = 1942
+schluessel = "der-fremde-1942"
+
+[[buch]]
+titel = "1984"
+autor = "George Orwell"
+jahr = "1949"
+sortjahr = 1949
+schluessel = "1984-1949"
+
+[[buch]]
+titel = "Der Fänger im Roggen"
+autor = "J. D. Salinger"
+jahr = "1951"
+sortjahr = 1951
+schluessel = "der-faenger-im-roggen-1951"
+
+[[buch]]
+titel = "Der alte Mann und das Meer"
+autor = "Ernest Hemingway"
+jahr = "1952"
+sortjahr = 1952
+schluessel = "der-alte-mann-und-das-meer-1952"
+
+[[buch]]
+titel = "Lolita"
+autor = "Vladimir Nabokov"
+jahr = "1955"
+sortjahr = 1955
+schluessel = "lolita-1955"
+
+[[buch]]
+titel = "Der Meister und Margarita"
+autor = "Michail Bulgakow"
+jahr = "1966/67"
+sortjahr = 1966
+schluessel = "der-meister-und-margarita-1966"
+
+[[buch]]
+titel = "Der Herr der Ringe"
+autor = "J. R. R. Tolkien"
+jahr = "1954/55"
+sortjahr = 1954
+schluessel = "der-herr-der-ringe-1954"
+
+[[buch]]
+titel = "Die Blechtrommel"
+autor = "Günter Grass"
+jahr = "1959"
+sortjahr = 1959
+schluessel = "die-blechtrommel-1959"
+
+[[buch]]
+titel = "Wer die Nachtigall stört"
+autor = "Harper Lee"
+jahr = "1960"
+sortjahr = 1960
+schluessel = "wer-die-nachtigall-stoert-1960"
+
+[[buch]]
+titel = "Hundert Jahre Einsamkeit"
+autor = "Gabriel García Márquez"
+jahr = "1967"
+sortjahr = 1967
+schluessel = "hundert-jahre-einsamkeit-1967"
+
+[[buch]]
+titel = "Der Leopard"
+autor = "Giuseppe Tomasi di Lampedusa"
+jahr = "1958"
+sortjahr = 1958
+schluessel = "der-leopard-1958"
+
+[[buch]]
+titel = "Alles zerfällt"
+autor = "Chinua Achebe"
+jahr = "1958"
+sortjahr = 1958
+schluessel = "alles-zerfaellt-1958"
+
+[[buch]]
+titel = "Die unerträgliche Leichtigkeit des Seins"
+autor = "Milan Kundera"
+jahr = "1984"
+sortjahr = 1984
+schluessel = "die-unertraegliche-leichtigkeit-des-seins-1984"
+
+[[buch]]
+titel = "Das Parfum"
+autor = "Patrick Süskind"
+jahr = "1985"
+sortjahr = 1985
+schluessel = "das-parfum-1985"
+
+[[buch]]
+titel = "Menschenkind"
+autor = "Toni Morrison"
+jahr = "1987"
+sortjahr = 1987
+schluessel = "menschenkind-1987"
+
+[[buch]]
+titel = "Die Liebe in den Zeiten der Cholera"
+autor = "Gabriel García Márquez"
+jahr = "1985"
+sortjahr = 1985
+schluessel = "die-liebe-in-den-zeiten-der-cholera-1985"
+
+[[buch]]
+titel = "Was vom Tage übrig blieb"
+autor = "Kazuo Ishiguro"
+jahr = "1989"
+sortjahr = 1989
+schluessel = "was-vom-tage-uebrig-blieb-1989"
+
+[[buch]]
+titel = "Die Straße"
+autor = "Cormac McCarthy"
+jahr = "2006"
+sortjahr = 2006
+schluessel = "die-strasse-2006"
+
+[[buch]]
+titel = "Robinson Crusoe"
+autor = "Daniel Defoe"
+jahr = "1719"
+sortjahr = 1719
+schluessel = "robinson-crusoe-1719"
+
+[[buch]]
+titel = "Gefährliche Liebschaften"
+autor = "Choderlos de Laclos"
+jahr = "1782"
+sortjahr = 1782
+schluessel = "gefaehrliche-liebschaften-1782"
+
+[[buch]]
+titel = "Frankenstein"
+autor = "Mary Shelley"
+jahr = "1818"
+sortjahr = 1818
+schluessel = "frankenstein-1818"
+
+[[buch]]
+titel = "Der Graf von Monte Christo"
+autor = "Alexandre Dumas"
+jahr = "1844"
+sortjahr = 1844
+schluessel = "der-graf-von-monte-christo-1844"
+
+[[buch]]
+titel = "Oblomow"
+autor = "Iwan Gontscharow"
+jahr = "1859"
+sortjahr = 1859
+schluessel = "oblomow-1859"
+
+[[buch]]
+titel = "Väter und Söhne"
+autor = "Iwan Turgenjew"
+jahr = "1862"
+sortjahr = 1862
+schluessel = "vaeter-und-soehne-1862"
+
+[[buch]]
+titel = "Der Idiot"
+autor = "Fjodor Dostojewski"
+jahr = "1869"
+sortjahr = 1869
+schluessel = "der-idiot-1869"
+
+[[buch]]
+titel = "Die Abenteuer des Huckleberry Finn"
+autor = "Mark Twain"
+jahr = "1884"
+sortjahr = 1884
+schluessel = "die-abenteuer-des-huckleberry-finn-1884"
+
+[[buch]]
+titel = "Dracula"
+autor = "Bram Stoker"
+jahr = "1897"
+sortjahr = 1897
+schluessel = "dracula-1897"
+
+[[buch]]
+titel = "Herz der Finsternis"
+autor = "Joseph Conrad"
+jahr = "1899"
+sortjahr = 1899
+schluessel = "herz-der-finsternis-1899"
+
+[[buch]]
+titel = "Die Verwandlung"
+autor = "Franz Kafka"
+jahr = "1915"
+sortjahr = 1915
+schluessel = "die-verwandlung-1915"
+
+[[buch]]
+titel = "Der Untertan"
+autor = "Heinrich Mann"
+jahr = "1918"
+sortjahr = 1918
+schluessel = "der-untertan-1918"
+
+[[buch]]
+titel = "Siddhartha"
+autor = "Hermann Hesse"
+jahr = "1922"
+sortjahr = 1922
+schluessel = "siddhartha-1922"
+
+[[buch]]
+titel = "Das Schloss"
+autor = "Franz Kafka"
+jahr = "1926"
+sortjahr = 1926
+schluessel = "das-schloss-1926"
+
+[[buch]]
+titel = "Radetzkymarsch"
+autor = "Joseph Roth"
+jahr = "1932"
+sortjahr = 1932
+schluessel = "radetzkymarsch-1932"
+
+[[buch]]
+titel = "Schachnovelle"
+autor = "Stefan Zweig"
+jahr = "1942"
+sortjahr = 1942
+schluessel = "schachnovelle-1942"
+
+[[buch]]
+titel = "Das Glasperlenspiel"
+autor = "Hermann Hesse"
+jahr = "1943"
+sortjahr = 1943
+schluessel = "das-glasperlenspiel-1943"
+
+[[buch]]
+titel = "Fiktionen"
+autor = "Jorge Luis Borges"
+jahr = "1944"
+sortjahr = 1944
+schluessel = "fiktionen-1944"
+
+[[buch]]
+titel = "Die Pest"
+autor = "Albert Camus"
+jahr = "1947"
+sortjahr = 1947
+schluessel = "die-pest-1947"
+
+[[buch]]
+titel = "Fahrenheit 451"
+autor = "Ray Bradbury"
+jahr = "1953"
+sortjahr = 1953
+schluessel = "fahrenheit-451-1953"
+
+[[buch]]
+titel = "Herr der Fliegen"
+autor = "William Golding"
+jahr = "1954"
+sortjahr = 1954
+schluessel = "herr-der-fliegen-1954"
+
+[[buch]]
+titel = "Unterwegs"
+autor = "Jack Kerouac"
+jahr = "1957"
+sortjahr = 1957
+schluessel = "unterwegs-1957"
+
+[[buch]]
+titel = "Doktor Schiwago"
+autor = "Boris Pasternak"
+jahr = "1957"
+sortjahr = 1957
+schluessel = "doktor-schiwago-1957"
+
+[[buch]]
+titel = "Catch-22"
+autor = "Joseph Heller"
+jahr = "1961"
+sortjahr = 1961
+schluessel = "catch-22-1961"
+
+[[buch]]
+titel = "Der Name der Rose"
+autor = "Umberto Eco"
+jahr = "1980"
+sortjahr = 1980
+schluessel = "der-name-der-rose-1980"
+
+[[buch]]
+titel = "Mitternachtskinder"
+autor = "Salman Rushdie"
+jahr = "1981"
+sortjahr = 1981
+schluessel = "mitternachtskinder-1981"
+
+[[buch]]
+titel = "Der Report der Magd"
+autor = "Margaret Atwood"
+jahr = "1985"
+sortjahr = 1985
+schluessel = "der-report-der-magd-1985"
+
+[[buch]]
+titel = "Die Abendröte im Westen (Blood Meridian)"
+autor = "Cormac McCarthy"
+jahr = "1985"
+sortjahr = 1985
+schluessel = "die-abendroete-im-westen-blood-meridian-1985"
+
+[[buch]]
+titel = "Der Vorleser"
+autor = "Bernhard Schlink"
+jahr = "1995"
+sortjahr = 1995
+schluessel = "der-vorleser-1995"
+
+[[buch]]
+titel = "Unendlicher Spaß"
+autor = "David Foster Wallace"
+jahr = "1996"
+sortjahr = 1996
+schluessel = "unendlicher-spass-1996"
+
+[[buch]]
+titel = "Die Korrekturen"
+autor = "Jonathan Franzen"
+jahr = "2001"
+sortjahr = 2001
+schluessel = "die-korrekturen-2001"
+
+[[buch]]
+titel = "Alles, was wir geben mussten"
+autor = "Kazuo Ishiguro"
+jahr = "2005"
+sortjahr = 2005
+schluessel = "alles-was-wir-geben-mussten-2005"

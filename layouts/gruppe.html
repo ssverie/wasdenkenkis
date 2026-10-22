@@ -14,6 +14,8 @@
             {{- $einheiten := dict "filme" (slice "Film" "Filme") "serien" (slice "Serie" "Serien") "podcasts" (slice "Folge" "Folgen") "modelle" (slice "Modell" "Modelle") }}
             {{- $paar := index $einheiten .Data.Plural | default (slice "Eintrag" "Einträge") }}
             {{- $n = len .Pages }}{{ $einheit = cond (eq $n 1) (index $paar 0) (index $paar 1) }}
+          {{- else if .Params.daten }}
+            {{- $n = len (index hugo.Data .Params.daten).buch }}{{ $einheit = cond (eq $n 1) "Buch" "Bücher" }}
           {{- else if eq .Section "links" }}
             {{- $n = len hugo.Data.links.eintrag }}{{ $einheit = cond (eq $n 1) "Link" "Links" }}
           {{- else }}

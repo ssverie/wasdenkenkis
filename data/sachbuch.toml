@@ -1,0 +1,209 @@
+# sachbuch – aus Svens Liste (input-arc\2026-10-22\_buecher\sachbuch.txt), Reihenfolge der Anzeige: nach sortjahr
+
+[[buch]]
+titel = "Selbstbetrachtungen"
+autor = "Mark Aurel"
+jahr = "ca. 170"
+sortjahr = 170
+gebiet = "Philosophie"
+schluessel = "selbstbetrachtungen-170"
+
+[[buch]]
+titel = "Der Fürst"
+autor = "Niccolò Machiavelli"
+jahr = "1532"
+sortjahr = 1532
+gebiet = "Philosophie"
+schluessel = "der-fuerst-1532"
+
+[[buch]]
+titel = "Essais"
+autor = "Michel de Montaigne"
+jahr = "1580"
+sortjahr = 1580
+gebiet = "Philosophie"
+schluessel = "essais-1580"
+
+[[buch]]
+titel = "Der Mythos des Sisyphos"
+autor = "Albert Camus"
+jahr = "1942"
+sortjahr = 1942
+gebiet = "Philosophie"
+schluessel = "der-mythos-des-sisyphos-1942"
+
+[[buch]]
+titel = "Anmerkungen zu Hitler"
+autor = "Sebastian Haffner"
+jahr = "1978"
+sortjahr = 1978
+gebiet = "Geschichte"
+schluessel = "anmerkungen-zu-hitler-1978"
+
+[[buch]]
+titel = "Arm und Reich"
+autor = "Jared Diamond"
+jahr = "1997"
+sortjahr = 1997
+gebiet = "Geschichte"
+schluessel = "arm-und-reich-1997"
+
+[[buch]]
+titel = "Geschichte Europas von 1945 bis zur Gegenwart"
+autor = "Tony Judt"
+jahr = "2005"
+sortjahr = 2005
+gebiet = "Geschichte"
+schluessel = "geschichte-europas-von-1945-bis-zur-gegenwart-2005"
+
+[[buch]]
+titel = "Bloodlands"
+autor = "Timothy Snyder"
+jahr = "2010"
+sortjahr = 2010
+gebiet = "Geschichte"
+schluessel = "bloodlands-2010"
+
+[[buch]]
+titel = "Eine kurze Geschichte der Menschheit"
+autor = "Yuval Noah Harari"
+jahr = "2011"
+sortjahr = 2011
+gebiet = "Geschichte"
+schluessel = "eine-kurze-geschichte-der-menschheit-2011"
+
+[[buch]]
+titel = "Die Schlafwandler"
+autor = "Christopher Clark"
+jahr = "2012"
+sortjahr = 2012
+gebiet = "Geschichte"
+schluessel = "die-schlafwandler-2012"
+
+[[buch]]
+titel = "Was ist Leben?"
+autor = "Erwin Schrödinger"
+jahr = "1944"
+sortjahr = 1944
+gebiet = "Naturwissenschaft"
+schluessel = "was-ist-leben-1944"
+
+[[buch]]
+titel = "Gödel, Escher, Bach"
+autor = "Douglas R. Hofstadter"
+jahr = "1979"
+sortjahr = 1979
+gebiet = "Naturwissenschaft"
+schluessel = "goedel-escher-bach-1979"
+
+[[buch]]
+titel = "Unser Kosmos"
+autor = "Carl Sagan"
+jahr = "1980"
+sortjahr = 1980
+gebiet = "Naturwissenschaft"
+schluessel = "unser-kosmos-1980"
+
+[[buch]]
+titel = "Sie belieben wohl zu scherzen, Mr. Feynman!"
+autor = "Richard P. Feynman"
+jahr = "1985"
+sortjahr = 1985
+gebiet = "Naturwissenschaft"
+schluessel = "sie-belieben-wohl-zu-scherzen-mr-feynman-1985"
+
+[[buch]]
+titel = "Eine kurze Geschichte der Zeit"
+autor = "Stephen Hawking"
+jahr = "1988"
+sortjahr = 1988
+gebiet = "Naturwissenschaft"
+schluessel = "eine-kurze-geschichte-der-zeit-1988"
+
+[[buch]]
+titel = "Eine kurze Geschichte von fast allem"
+autor = "Bill Bryson"
+jahr = "2003"
+sortjahr = 2003
+gebiet = "Naturwissenschaft"
+schluessel = "eine-kurze-geschichte-von-fast-allem-2003"
+
+[[buch]]
+titel = "Der König aller Krankheiten"
+autor = "Siddhartha Mukherjee"
+jahr = "2010"
+sortjahr = 2010
+gebiet = "Naturwissenschaft"
+schluessel = "der-koenig-aller-krankheiten-2010"
+
+[[buch]]
+titel = "… trotzdem Ja zum Leben sagen"
+autor = "Viktor E. Frankl"
+jahr = "1946"
+sortjahr = 1946
+gebiet = "Psychologie, Kultur & der Mensch"
+schluessel = "trotzdem-ja-zum-leben-sagen-1946"
+
+[[buch]]
+titel = "Schnelles Denken, langsames Denken"
+autor = "Daniel Kahneman"
+jahr = "2011"
+sortjahr = 2011
+gebiet = "Psychologie, Kultur & der Mensch"
+schluessel = "schnelles-denken-langsames-denken-2011"
+
+[[buch]]
+titel = "Die Welt von Gestern"
+autor = "Stefan Zweig"
+jahr = "1942"
+sortjahr = 1942
+gebiet = "Autobiografie, Zeugnis & Reportage"
+schluessel = "die-welt-von-gestern-1942"
+
+[[buch]]
+titel = "Das Tagebuch der Anne Frank"
+autor = "Anne Frank"
+jahr = "1947"
+sortjahr = 1947
+gebiet = "Autobiografie, Zeugnis & Reportage"
+schluessel = "das-tagebuch-der-anne-frank-1947"
+
+[[buch]]
+titel = "Ist das ein Mensch?"
+autor = "Primo Levi"
+jahr = "1947"
+sortjahr = 1947
+gebiet = "Autobiografie, Zeugnis & Reportage"
+schluessel = "ist-das-ein-mensch-1947"
+
+[[buch]]
+titel = "LTI – Notizbuch eines Philologen"
+autor = "Victor Klemperer"
+jahr = "1947"
+sortjahr = 1947
+gebiet = "Autobiografie, Zeugnis & Reportage"
+schluessel = "lti-notizbuch-eines-philologen-1947"
+
+[[buch]]
+titel = "Nach der Flut das Feuer"
+autor = "James Baldwin"
+jahr = "1963"
+sortjahr = 1963
+gebiet = "Autobiografie, Zeugnis & Reportage"
+schluessel = "nach-der-flut-das-feuer-1963"
+
+[[buch]]
+titel = "Die Autobiographie von Malcolm X"
+autor = "Malcolm X & Alex Haley"
+jahr = "1965"
+sortjahr = 1965
+gebiet = "Autobiografie, Zeugnis & Reportage"
+schluessel = "die-autobiographie-von-malcolm-x-1965"
+
+[[buch]]
+titel = "Kaltblütig"
+autor = "Truman Capote"
+jahr = "1966"
+sortjahr = 1966
+gebiet = "Autobiografie, Zeugnis & Reportage"
+schluessel = "kaltbluetig-1966"

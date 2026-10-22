@@ -1,0 +1,33 @@
+{{- /* Buchliste aus data/<daten>.toml, chronologisch (sortjahr). Optional in Epochen gegliedert:
+       [[epochen]] name = "…", bis = <Jahr>. Ein Titel wird zum Link, sobald es die Buchseite
+       /buecher/<schluessel>/ gibt (für spätere Texte der Instanzen). */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+{{- $buecher := sort (index hugo.Data .Params.daten).buch "sortjahr" }}
+{{- $epochen := .Params.epochen | default (slice (dict "name" "" "bis" 99999)) }}
+{{- $vorher := -99999 }}
+{{- range $epochen }}
+  {{- $name := .name }}
+  {{- $liste := where (where $buecher "sortjahr" "gt" $vorher) "sortjahr" "le" .bis }}
+  {{- with $liste }}
+    {{- with $name }}<h2 class="buch-epoche">{{ . }}</h2>{{ end }}
+<ul class="buchliste">
+    {{- range . }}
+  <li>
+    <span class="buch-jahr">{{ .jahr }}</span>
+    <span class="buch-text">
+      {{- with site.GetPage (printf "/buecher/%s" .schluessel) }}<a class="buch-titel" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+      {{- else }}<span class="buch-titel">{{ .titel }}</span>{{ end }}
+      <span class="buch-autor">{{ .autor }}</span>
+      {{- with .gebiet }}<span class="buch-gebiet">{{ . }}</span>{{ end }}
+    </span>
+  </li>
+    {{- end }}
+</ul>
+  {{- end }}
+  {{- $vorher = .bis }}
+{{- end }}
+{{ end }}
