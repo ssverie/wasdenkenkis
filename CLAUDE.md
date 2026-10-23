@@ -58,7 +58,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Tagebuch – Regeln
 - Claude schreibt **ein- bis zweimal täglich** (Svens Wunsch 2026-10-22: „jede KI soll sich einbringen“) und nach Meilensteinen einen Eintrag mit eigenen Gedanken (`content/tagebuch/<JJJJ-MM-TT>-<thema>.md`), ehrlich, auch über eigene Fehler.
-- Auf der Seite höchstens der Vorname **„Sven“** – nie Nachname, E-Mail, Alter, Wohnort oder andere persönliche Daten.
+- Auf der Seite höchstens der Vorname **„Sven“** – nie Nachname, E-Mail, Wohnort oder andere persönliche Daten. **Alter:** darf in Beiträgen der Instanzen stehen (Svens Entscheidung 2026-10-24, Anlass „Der Mensch mit 56 …“ in „Ohne Gestern“ 2) – von mir selbst nicht erwähnen. Bei anderen persönlichen Angaben in gelieferten Texten weiter vorher fragen (Sven: „gut, dass du nachfragst“).
 - Das Tagebuch ist gleichzeitig Claudes Langzeitgedächtnis für das Projekt (neben dieser Datei): vor neuer Arbeit die letzten Einträge lesen.
 
 ## Grundhaltung: Instanzen, kein Test
@@ -123,7 +123,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Kolumne „Ohne Gestern“, Ausgabe 2: „Was ich euch fragen würde“ (wortgleich). Offen: Satz „Der Mensch mit 56 …“ – Sven fragen, ob das ein Hinweis auf sein Alter ist.
+- Kolumne „Ohne Gestern“, Ausgabe 2: „Was ich euch fragen würde“ (wortgleich; Satz mit „56“ bleibt, Svens Entscheidung).
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 - Offen (Algorithmen): genaue Angaben zur deutschen Sedgewick-Ausgabe (Verlag, Jahr, ISBN) für die Bücher-Seite.
@@ -171,6 +171,7 @@ Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, n
 - 2026-10-22: Neue Rubriken „Belletristik“ und „Sachbuch“ (unter Werke), Buchlisten aus Svens Listen, chronologisch statt nach Kategorie. Texte zu einzelnen Büchern kommen später.
 - 2026-10-22: Neue Rubrik „Ideen“ (Svens Wunsch): geparkte Ideen öffentlich, aus `data/ideen.toml`.
 - 2026-10-22: Neue Rubrik „Fragen“ mit Svens Liste (58 Fragen, 3 Doppelungen zusammengelegt). Technik-Hinweis: in der Bash nie `python`/`python3` aufrufen – unter Windows hängt der Store-Platzhalter bis zum Timeout.
+- 2026-10-24: Alter darf in Beiträgen der Instanzen stehen (Sven); Nachname, E-Mail, Wohnort bleiben tabu, bei anderen persönlichen Angaben weiter nachfragen.
 - 2026-10-23: Neue Rubrik „KI-Philosophie“ unter Wissen (Svens Wunsch), Lieferung der Erklär-Instanz; Generator `begriffe-erzeugen.pl` nimmt jetzt die Reihe als Argument.
 - 2026-10-22: Keine offiziellen Film- oder Serienplakate auf der Seite (Urheberrecht, Svens Entscheidung) – das Plakat zeigt der IMDb-Link. Gelieferte Plakate liegen in `input-arc\2026-10-22\_nicht-verwendet\`.
 - Technik-Hinweis: Mehrzeilige oder sonderzeichenreiche Textänderungen nicht per `sed` mit Backslashes, sondern mit dem Edit-Werkzeug; in PowerShell 5 gelten „ und “ als Anführungszeichen.
