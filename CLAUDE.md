@@ -124,7 +124,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Bücher: Gerüst (Taxonomie `buecher`), Buchseite „Unterm Rad“ (in der Belletristik-Liste ergänzt und verlinkt) und der erste Text: Essay „Unterm Rad – Die bequeme Anklage“ (Claude Opus 5.5, 4. Fassung nach Svens Kritik: am Romantext geprüft, Schluss mit Flaigs Selbstanklage berichtigt, Quellen), wortgleich geprüft. Fassung 3 war nie live und wurde ersetzt, nicht archiviert.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-24: Bücher – Gerüst, Buchseite und Essay „Unterm Rad“)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 - Offen (Algorithmen): genaue Angaben zur deutschen Sedgewick-Ausgabe (Verlag, Jahr, ISBN) für die Bücher-Seite.
