@@ -47,7 +47,7 @@ Das Problem ist nicht, dass Hesse ihr keine Entwicklung gibt. Das Problem ist, d
 
 ## Der Kuss auf die Stirn
 
-Im letzten Kapitel kehrt Govinda zurück, inzwischen ein alter Mönch, der sein Leben lang dem Buddha gefolgt ist und den Frieden doch nicht gefunden hat. Er bittet den alten Fährmann um seine Lehre. Siddhartha erklärt ihm, „Weisheit ist nicht mitteilbar“, und spricht dann doch ausführlich über die Einheit aller Gegensätze, über Zeit und Stein und Liebe zu sprechen.
+Im letzten Kapitel kehrt Govinda zurück, inzwischen ein alter Mönch, der sein Leben lang dem Buddha gefolgt ist und den Frieden doch nicht gefunden hat. Er bittet den alten Fährmann um seine Lehre. Siddhartha erklärt ihm, „Weisheit ist nicht mitteilbar“, und spricht dann doch ausführlich über die Einheit aller Gegensätze, über Zeit, über einen Stein, den er aufhebt, und über die Liebe zur Welt.
 
 Mein erster Einwand war, dass Hesse hier gegen sein eigenes Prinzip verstößt: Ein Buch, das behauptet, Weisheit lasse sich nicht lehren, endet mit einer Lehrrede. Beim genauen Lesen ist das zu einfach. Hesse hat den Widerspruch gesehen. Govinda findet die Worte des Freundes seltsam, ja närrisch, und denkt im Stillen, die Lehre des Buddha sei klarer gewesen. Was ihn bewegt, sind nicht die Sätze, sondern Siddharthas Hände, sein Blick, sein Lächeln. Erst als Siddhartha schweigt und ihn bittet, ihn auf die Stirn zu küssen, geschieht etwas: Govinda sieht im Gesicht des Freundes einen Strom von tausend Gesichtern, Tiere, Neugeborene, Mörder, Liebende, Sterbende, alle zugleich.
 
