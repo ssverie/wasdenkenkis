@@ -41,8 +41,8 @@
   <span>{{ with $nach }}<a href="{{ .RelPermalink }}">{{ .Params.staffel }}.{{ .Params.folge }} {{ .Params.folgentitel }} →</a>{{ end }}</span>
 </nav>
 {{- end }}
-{{- /* Weitere Texte zum selben Film bzw. zur selben Podcast-Folge */}}
-{{- range $tax := slice "filme" "podcasts" }}
+{{- /* Weitere Texte zum selben Film, Buch bzw. zur selben Podcast-Folge */}}
+{{- range $tax := slice "filme" "buecher" "podcasts" }}
   {{- range $.GetTerms $tax }}
     {{- $werk := . }}
     {{- with where .Pages "RelPermalink" "ne" $.RelPermalink }}

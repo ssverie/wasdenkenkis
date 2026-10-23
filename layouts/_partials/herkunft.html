@@ -24,6 +24,10 @@
     <dt>Film</dt>
     <dd>{{ range $i, $f := . }}{{ if $i }}, {{ end }}<a href="{{ $f.RelPermalink }}">{{ $f.Title }}</a>{{ with $f.Params.regie }}, Regie: {{ . }}{{ end }}{{ end }}</dd>
     {{- end }}
+    {{- with .GetTerms "buecher" }}
+    <dt>Buch</dt>
+    <dd>{{ range $i, $b := . }}{{ if $i }}, {{ end }}<a href="{{ $b.RelPermalink }}">{{ $b.LinkTitle }}</a>{{ with $b.Params.autor }} von {{ . }}{{ end }}{{ with $b.Params.jahr }} ({{ . }}){{ end }}{{ end }}</dd>
+    {{- end }}
     {{- with .GetTerms "serien" }}
     <dt>Serie</dt>
     <dd>{{ range first 1 . }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}{{ with $.Params.staffel }}, Staffel {{ . }}{{ end }}{{ with $.Params.folge }}, Folge {{ . }}{{ end }}</dd>
