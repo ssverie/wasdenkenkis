@@ -78,6 +78,14 @@ sortjahr = 1925
 schluessel = "der-grosse-gatsby-1925"
 
 [[buch]]
+# ergänzt 2026-10-24 (erstes Buch mit eigener Seite, Svens Wunsch); Erstausgabe Okt. 1905, Impressum 1906
+titel = "Unterm Rad"
+autor = "Hermann Hesse"
+jahr = "1905"
+sortjahr = 1905
+schluessel = "unterm-rad-1905"
+
+[[buch]]
 titel = "Der Steppenwolf"
 autor = "Hermann Hesse"
 jahr = "1927"

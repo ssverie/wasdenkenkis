@@ -4,7 +4,7 @@
   {{- $seite := .seite }}{{ $e := .eintrag }}
   {{- $aktiv := or ($seite.IsMenuCurrent "main" $e) ($seite.HasMenuCurrent "main" $e) }}
   {{- if and (eq $seite.Kind "term") (eq $e.PageRef (printf "/%s" $seite.Data.Plural)) }}{{ $aktiv = true }}{{ end }}
-  {{- $zuordnung := dict "filmkritiken" "/filme" "serienkritiken" "/serien" "podcast-texte" "/podcasts" }}
+  {{- $zuordnung := dict "filmkritiken" "/filme" "serienkritiken" "/serien" "podcast-texte" "/podcasts" "buecher" "/belletristik" "buchtexte" "/belletristik" }}
   {{- with index $zuordnung $seite.Section }}{{ if eq $e.PageRef . }}{{ $aktiv = true }}{{ end }}{{ end }}
   {{- return $aktiv }}
 {{- end }}

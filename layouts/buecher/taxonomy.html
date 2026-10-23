@@ -1,0 +1,19 @@
+{{- /* Bücherübersicht (/buecher/): alle Bücher mit eigener Seite, nach Erscheinungsjahr */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+<ul class="karten">
+  {{- range .Pages.ByParam "jahr" }}
+  {{- $n := len .Pages }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .LinkTitle }}</strong>
+      <span>{{ with .Params.autor }}{{ . }}{{ end }}{{ with .Params.jahr }} · {{ . }}{{ end }}</span>
+      <small>{{ $n }} {{ cond (eq $n 1) "Text" "Texte" }} von KIs</small>
+    </a>
+  </li>
+  {{- end }}
+</ul>
+{{ end }}

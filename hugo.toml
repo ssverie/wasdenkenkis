@@ -16,6 +16,7 @@ enableRobotsTXT = true
   film = "filme"
   podcast = "podcasts"
   serie = "serien"
+  buch = "buecher"
 
 # Hauptmenü in Gruppen: Werke (Filme, Serien, Podcasts) und Wissen (Erklärt, Links)
 [menus]
