@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minesweeper</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: #b8bcc4; color: #222;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; gap: 14px; padding: 20px;
+  }
+  h1 { font-size: 20px; color: #3a3f4a; letter-spacing: 2px; }
+  .frame {
+    background: #c0c4cc;
+    border: 4px solid; border-color: #fff #7a7e88 #7a7e88 #fff;
+    padding: 10px;
+  }
+  .hud {
+    display: flex; justify-content: space-between; align-items: center;
+    background: #c0c4cc; border: 3px solid; border-color: #7a7e88 #fff #fff #7a7e88;
+    padding: 6px 10px; margin-bottom: 10px; gap: 10px;
+  }
+  .lcd {
+    font-family: Consolas, monospace; font-size: 24px; font-weight: 700;
+    background: #000; color: #f00; padding: 2px 8px; min-width: 74px; text-align: center;
+    border: 2px solid; border-color: #7a7e88 #fff #fff #7a7e88;
+  }
+  #face {
+    font-size: 26px; background: #c0c4cc; cursor: pointer;
+    border: 3px solid; border-color: #fff #7a7e88 #7a7e88 #fff;
+    width: 46px; height: 46px; line-height: 1;
+  }
+  #face:active { border-color: #7a7e88 #fff #fff #7a7e88; }
+  .board { display: grid; gap: 0; user-select: none; }
+  .cell {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: Consolas, monospace; font-weight: 700; font-size: 17px;
+    background: #c0c4cc;
+    border: 3px solid; border-color: #fff #7a7e88 #7a7e88 #fff;
+    cursor: pointer;
+  }
+  .cell.open {
+    border: 1px solid #9a9ea8;
+    background: #c8ccd4;
+    cursor: default;
+  }
+  .cell.mine-hit { background: #e33; }
+  .cell.wrong { background: #e9a; }
+  .n1{color:#0000f0} .n2{color:#007a00} .n3{color:#e00000} .n4{color:#000080}
+  .n5{color:#800000} .n6{color:#008080} .n7{color:#000} .n8{color:#666}
+  .bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center; }
+  select, .bar button {
+    font-size: 14px; padding: 8px 12px; border-radius: 6px;
+    border: 1px solid #8a8e98; background: #e8eaf0; cursor: pointer; font-weight: 600;
+  }
+  .best { font-size: 13px; color: #4a4f5a; }
+  .hint { font-size: 12px; color: #5a5f6a; text-align: center; line-height: 1.6; }
+  /* wasdenkenkis.de: Feldgröße passt sich der Breite an (max. 28 px wie im Original), sehr breite Felder lassen sich seitlich schieben */
+  .cell { width: var(--cell, 28px); height: var(--cell, 28px); font-size: calc(var(--cell, 28px) * .6); }
+  .frame { max-width: 100%; overflow-x: auto; }
+  #flagBtn[aria-pressed="true"] { background: #f6d36b; border-color: #b08a1a; }
+  @media (max-width: 520px) { body { padding: 10px; } }
+</style>
+</head>
+<body>
+  <h1>💣 MINESWEEPER</h1>
+  <div class="bar">
+    <select id="diff">
+      <option value="9,9,10">Anfänger (9×9, 10 Minen)</option>
+      <option value="16,16,40" selected>Fortgeschritten (16×16, 40)</option>
+      <option value="30,16,99">Experte (30×16, 99)</option>
+    </select>
+    <!-- wasdenkenkis.de: Fahnen-Modus für Touch-Geräte ohne Rechtsklick -->
+    <button id="flagBtn" aria-pressed="false">🚩 Fahnen-Modus: aus</button>
+    <span class="best" id="best"></span>
+  </div>
+  <div class="frame">
+    <div class="hud">
+      <div class="lcd" id="mineLcd">040</div>
+      <button id="face">🙂</button>
+      <div class="lcd" id="timeLcd">000</div>
+    </div>
+    <div class="board" id="board"></div>
+  </div>
+  <div class="hint">
+    <b>Linksklick</b> aufdecken · <b>Rechtsklick</b> Fahne setzen · Klick auf eine <b>fertige Zahl</b>
+    (alle Fahnen gesetzt) deckt die restlichen Nachbarn auf · erster Klick ist immer sicher<br>
+    <b>Handy:</b> „Fahnen-Modus“ einschalten, dann setzt Antippen eine Fahne
+  </div>
+
+<script>
+  let COLS, ROWS, MINES;
+  let mine, num, open, flag, started, over, won, timer, seconds, openCount;
+
+  const boardEl = document.getElementById('board');
+  const idx = (x,y) => y*COLS + x;
+  const inside = (x,y) => x>=0 && x<COLS && y>=0 && y<ROWS;
+  const neighbors = (x,y) => {
+    const out = [];
+    for (let dy=-1;dy<=1;dy++) for (let dx=-1;dx<=1;dx++) {
+      if (!dx && !dy) continue;
+      if (inside(x+dx,y+dy)) out.push([x+dx,y+dy]);
+    }
+    return out;
+  };
+
+  function newGame() {
+    const [c,r,m] = document.getElementById('diff').value.split(',').map(Number);
+    COLS=c; ROWS=r; MINES=m;
+    mine = new Uint8Array(COLS*ROWS);
+    num  = new Uint8Array(COLS*ROWS);
+    open = new Uint8Array(COLS*ROWS);
+    flag = new Uint8Array(COLS*ROWS);
+    started = false; over = false; won = false; seconds = 0; openCount = 0;
+    clearInterval(timer);
+    document.getElementById('timeLcd').textContent = '000';
+    document.getElementById('face').textContent = '🙂';
+    buildDom();
+    updateMineLcd();
+    showBest();
+  }
+
+  // Minen erst nach dem ersten Klick legen – Klickfeld + Nachbarn bleiben frei
+  function placeMines(sx, sy) {
+    const forbidden = new Set([idx(sx,sy), ...neighbors(sx,sy).map(([x,y])=>idx(x,y))]);
+    let placed = 0;
+    while (placed < MINES) {
+      const i = Math.floor(Math.random()*COLS*ROWS);
+      if (mine[i] || forbidden.has(i)) continue;
+      mine[i] = 1; placed++;
+    }
+    for (let y=0;y<ROWS;y++) for (let x=0;x<COLS;x++) {
+      if (mine[idx(x,y)]) continue;
+      num[idx(x,y)] = neighbors(x,y).filter(([a,b])=>mine[idx(a,b)]).length;
+    }
+  }
+
+  function buildDom() {
+    // wasdenkenkis.de: Feldgröße aus der verfügbaren Breite (16–28 px)
+    const cell = Math.max(16, Math.min(28, Math.floor((window.innerWidth - 56) / COLS)));
+    boardEl.style.setProperty('--cell', cell + 'px');
+    boardEl.style.gridTemplateColumns = `repeat(${COLS}, ${cell}px)`;
+    boardEl.innerHTML = '';
+    for (let y=0;y<ROWS;y++) for (let x=0;x<COLS;x++) {
+      const d = document.createElement('div');
+      d.className = 'cell';
+      d.dataset.x = x; d.dataset.y = y;
+      d.addEventListener('click', () => onLeft(x,y));
+      d.addEventListener('contextmenu', e => { e.preventDefault(); onRight(x,y); });
+      boardEl.appendChild(d);
+    }
+  }
+
+  const cellEl = (x,y) => boardEl.children[idx(x,y)];
+
+  function startTimer() {
+    timer = setInterval(() => {
+      seconds = Math.min(999, seconds+1);
+      document.getElementById('timeLcd').textContent = String(seconds).padStart(3,'0');
+    }, 1000);
+  }
+
+  function onLeft(x,y) {
+    if (over) return;
+    if (flagMode) { onRight(x,y); return; }   // wasdenkenkis.de: Fahnen-Modus
+    if (!started) { placeMines(x,y); started = true; startTimer(); }
+    const i = idx(x,y);
+    if (flag[i]) return;
+    if (open[i]) { chord(x,y); return; }
+    if (mine[i]) { lose(x,y); return; }
+    reveal(x,y);
+    checkWin();
+  }
+
+  function onRight(x,y) {
+    if (over) return;
+    const i = idx(x,y);
+    if (open[i]) return;
+    flag[i] = flag[i] ? 0 : 1;
+    cellEl(x,y).textContent = flag[i] ? '🚩' : '';
+    updateMineLcd();
+  }
+
+  // Flood-Fill ohne Rekursionstiefe-Risiko
+  function reveal(sx, sy) {
+    const stack = [[sx,sy]];
+    while (stack.length) {
+      const [x,y] = stack.pop();
+      const i = idx(x,y);
+      if (open[i] || flag[i] || mine[i]) continue;
+      open[i] = 1; openCount++;
+      const el = cellEl(x,y);
+      el.classList.add('open');
+      if (num[i] > 0) { el.textContent = num[i]; el.classList.add('n'+num[i]); }
+      else for (const [a,b] of neighbors(x,y)) if (!open[idx(a,b)]) stack.push([a,b]);
+    }
+  }
+
+  // Chording: Zahl mit passend vielen Fahnen -> restliche Nachbarn aufdecken
+  function chord(x,y) {
+    const i = idx(x,y);
+    if (!num[i]) return;
+    const nb = neighbors(x,y);
+    const flags = nb.filter(([a,b])=>flag[idx(a,b)]).length;
+    if (flags !== num[i]) return;
+    for (const [a,b] of nb) {
+      const j = idx(a,b);
+      if (flag[j] || open[j]) continue;
+      if (mine[j]) { lose(a,b); return; }
+      reveal(a,b);
+    }
+    checkWin();
+  }
+
+  function updateMineLcd() {
+    let f = 0;
+    for (let i=0;i<flag.length;i++) f += flag[i];
+    const left = MINES - f;
+    document.getElementById('mineLcd').textContent =
+      (left<0?'-':'') + String(Math.abs(left)).padStart(left<0?2:3,'0');
+  }
+
+  function lose(hx, hy) {
+    over = true;
+    clearInterval(timer);
+    document.getElementById('face').textContent = '😵';
+    for (let y=0;y<ROWS;y++) for (let x=0;x<COLS;x++) {
+      const i = idx(x,y), el = cellEl(x,y);
+      if (mine[i] && !flag[i]) { el.classList.add('open'); el.textContent = '💣'; }
+      if (!mine[i] && flag[i]) { el.classList.add('wrong'); el.textContent = '❌'; }
+    }
+    cellEl(hx,hy).classList.add('mine-hit');
+    cellEl(hx,hy).textContent = '💥';
+  }
+
+  function checkWin() {
+    if (openCount !== COLS*ROWS - MINES) return;
+    over = true; won = true;
+    clearInterval(timer);
+    document.getElementById('face').textContent = '😎';
+    // restliche Minen automatisch beflaggen
+    for (let y=0;y<ROWS;y++) for (let x=0;x<COLS;x++) {
+      const i = idx(x,y);
+      if (mine[i] && !flag[i]) { flag[i]=1; cellEl(x,y).textContent = '🚩'; }
+    }
+    updateMineLcd();
+    // Bestzeit
+    const key = 'msBest-' + COLS + 'x' + ROWS;
+    const best = +(localStorage.getItem(key) || 9999);
+    if (seconds < best) localStorage.setItem(key, seconds);
+    showBest();
+  }
+
+  function showBest() {
+    const key = 'msBest-' + COLS + 'x' + ROWS;
+    const best = localStorage.getItem(key);
+    document.getElementById('best').textContent = best ? ('Bestzeit: ' + best + ' s') : '';
+  }
+
+  document.getElementById('face').addEventListener('click', newGame);
+  document.getElementById('diff').addEventListener('change', newGame);
+
+  // wasdenkenkis.de: Fahnen-Modus umschalten; auf schmalen Bildschirmen mit „Anfänger“ beginnen
+  let flagMode = false;
+  const flagBtn = document.getElementById('flagBtn');
+  flagBtn.addEventListener('click', () => {
+    flagMode = !flagMode;
+    flagBtn.setAttribute('aria-pressed', flagMode);
+    flagBtn.textContent = '🚩 Fahnen-Modus: ' + (flagMode ? 'an' : 'aus');
+  });
+  if (window.innerWidth < 520) document.getElementById('diff').value = '9,9,10';
+  newGame();
+</script>
+</body>
+</html>

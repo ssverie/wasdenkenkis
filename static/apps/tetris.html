@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tetris</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: #12121c; color: #e8e8f0;
+    min-height: 100vh; display: flex; align-items: flex-start; justify-content: center;
+    gap: 24px; padding: 24px; flex-wrap: wrap;
+  }
+  h1 { letter-spacing: 4px; font-size: 22px; margin-bottom: 12px; text-align: center; }
+  .stage { position: relative; }
+  canvas#board { background: #0a0a12; border: 3px solid #2a2a44; border-radius: 6px; box-shadow: 0 0 30px #0004; }
+  .side { width: 180px; display: flex; flex-direction: column; gap: 16px; }
+  .box { background: #1c1c2e; border: 1px solid #2a2a44; border-radius: 10px; padding: 14px; }
+  .box h3 { font-size: 12px; color: #8888aa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .box .val { font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  canvas#next { display: block; margin: 0 auto; background: #0a0a12; border-radius: 6px; }
+  button { width: 100%; background: #3a3a6a; color: #fff; border: 0; border-radius: 8px; padding: 10px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  button:hover { background: #4a4a8a; }
+  .keys { font-size: 12px; color: #8888aa; line-height: 1.8; }
+  .keys b { color: #c8c8e8; }
+  .overlay {
+    position: absolute; inset: 0; background: rgba(10,10,20,.85);
+    display: none; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    border-radius: 6px; text-align: center;
+  }
+  .overlay.show { display: flex; }
+  .overlay .big { font-size: 28px; font-weight: 700; }
+  /* wasdenkenkis.de: Spielfeld schrumpft auf schmalen Bildschirmen, Tasten zum Antippen auf Touch-Geräten */
+  canvas#board { max-width: calc(100vw - 32px); height: auto; }
+  @media (max-width: 520px) { body { padding: 10px; gap: 14px; } .side { width: 100%; max-width: 306px; } }
+  .touch { display: none; gap: 8px; margin-top: 12px; }
+  .touch button { flex: 1; font-size: 22px; padding: 14px 0; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+  @media (pointer: coarse) { .touch { display: flex; } .keys { display: none; }
+    canvas#board { max-width: min(260px, calc(100vw - 32px)); }   /* Feld + Tasten passen zusammen auf den Handy-Bildschirm */
+    .stage + .touch { max-width: min(266px, calc(100vw - 26px)); margin-left: auto; margin-right: auto; } }
+</style>
+</head>
+<body>
+  <div>
+    <h1>T E T R I S</h1>
+    <div class="stage">
+      <canvas id="board" width="300" height="600"></canvas>
+      <div class="overlay" id="overlay">
+        <div class="big" id="ovText">Bereit?</div>
+        <button id="ovBtn" style="width:auto;padding:10px 24px;">Start</button>
+      </div>
+    </div>
+    <!-- wasdenkenkis.de: Steuerung zum Antippen (nur auf Touch-Geräten sichtbar) -->
+    <div class="touch" id="touch">
+      <button data-a="left" aria-label="nach links">◀</button>
+      <button data-a="rot" aria-label="drehen">⟳</button>
+      <button data-a="right" aria-label="nach rechts">▶</button>
+      <button data-a="down" aria-label="schneller fallen">▼</button>
+      <button data-a="drop" aria-label="sofort fallen">⤓</button>
+    </div>
+  </div>
+
+  <div class="side">
+    <div class="box"><h3>Nächster Stein</h3><canvas id="next" width="120" height="120"></canvas></div>
+    <div class="box"><h3>Punkte</h3><div class="val" id="score">0</div></div>
+    <div class="box"><h3>Reihen</h3><div class="val" id="lines">0</div></div>
+    <div class="box"><h3>Level</h3><div class="val" id="level">1</div></div>
+    <button id="pauseBtn">Pause</button>
+    <div class="box keys">
+      <b>←</b> / <b>→</b> bewegen<br>
+      <b>↑</b> drehen<br>
+      <b>↓</b> schneller fallen<br>
+      <b>Leertaste</b> sofort fallen<br>
+      <b>P</b> Pause
+    </div>
+  </div>
+
+<script>
+  const COLS = 10, ROWS = 20, CELL = 30;
+  const bctx = document.getElementById('board').getContext('2d');
+  const nctx = document.getElementById('next').getContext('2d');
+
+  // Tetrominos als Matrizen + Farbe
+  const SHAPES = {
+    I: { color: '#31c7ef', m: [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]] },
+    O: { color: '#f7d308', m: [[1,1],[1,1]] },
+    T: { color: '#ad4d9c', m: [[0,1,0],[1,1,1],[0,0,0]] },
+    S: { color: '#42b642', m: [[0,1,1],[1,1,0],[0,0,0]] },
+    Z: { color: '#ef2029', m: [[1,1,0],[0,1,1],[0,0,0]] },
+    J: { color: '#5a65ad', m: [[1,0,0],[1,1,1],[0,0,0]] },
+    L: { color: '#ef7921', m: [[0,0,1],[1,1,1],[0,0,0]] }
+  };
+  const TYPES = Object.keys(SHAPES);
+
+  let grid, current, nextType, pos, score, lines, level, dropTimer, dropInterval, running, paused, gameOver;
+
+  function emptyGrid() { return Array.from({length: ROWS}, () => Array(COLS).fill(null)); }
+
+  function rotate(m) {
+    const N = m.length;
+    const r = Array.from({length: N}, () => Array(N).fill(0));
+    for (let y=0;y<N;y++) for (let x=0;x<N;x++) r[x][N-1-y] = m[y][x];
+    return r;
+  }
+
+  function randType() { return TYPES[Math.floor(Math.random()*TYPES.length)]; }
+
+  function spawn() {
+    const type = nextType || randType();
+    nextType = randType();
+    current = { type, m: SHAPES[type].m.map(r=>r.slice()), color: SHAPES[type].color };
+    pos = { x: Math.floor((COLS - current.m.length)/2), y: type==='I' ? -1 : 0 };
+    drawNext();
+    if (collides(current.m, pos.x, pos.y)) endGame();
+  }
+
+  function collides(m, px, py) {
+    for (let y=0;y<m.length;y++) for (let x=0;x<m[y].length;x++) {
+      if (!m[y][x]) continue;
+      const gx = px+x, gy = py+y;
+      if (gx < 0 || gx >= COLS || gy >= ROWS) return true;
+      if (gy >= 0 && grid[gy][gx]) return true;
+    }
+    return false;
+  }
+
+  function merge() {
+    current.m.forEach((row, y) => row.forEach((v, x) => {
+      if (v && pos.y+y >= 0) grid[pos.y+y][pos.x+x] = current.color;
+    }));
+  }
+
+  function clearLines() {
+    let cleared = 0;
+    for (let y=ROWS-1;y>=0;y--) {
+      if (grid[y].every(c => c)) {
+        grid.splice(y,1);
+        grid.unshift(Array(COLS).fill(null));
+        cleared++; y++;
+      }
+    }
+    if (cleared) {
+      const pts = [0, 40, 100, 300, 1200][cleared] * level;
+      score += pts; lines += cleared;
+      level = Math.floor(lines/10) + 1;
+      dropInterval = Math.max(80, 800 - (level-1)*70);
+      updateHud();
+    }
+  }
+
+  function lockAndNext() {
+    merge();
+    clearLines();
+    spawn();
+  }
+
+  function move(dx) {
+    if (!collides(current.m, pos.x+dx, pos.y)) { pos.x += dx; draw(); }
+  }
+
+  function softDrop() {
+    if (!collides(current.m, pos.x, pos.y+1)) { pos.y++; score += 1; updateHud(); }
+    else lockAndNext();
+    draw();
+  }
+
+  function hardDrop() {
+    let d = 0;
+    while (!collides(current.m, pos.x, pos.y+1)) { pos.y++; d++; }
+    score += d*2; updateHud();
+    lockAndNext();
+    draw();
+  }
+
+  function rotateCurrent() {
+    const r = rotate(current.m);
+    // einfache Wall-Kicks: an Ort, dann seitlich versetzt probieren
+    for (const dx of [0,-1,1,-2,2]) {
+      if (!collides(r, pos.x+dx, pos.y)) { current.m = r; pos.x += dx; draw(); return; }
+    }
+  }
+
+  // ---- Rendering ----
+  function drawCell(ctx, x, y, color, size=CELL) {
+    ctx.fillStyle = color;
+    ctx.fillRect(x*size, y*size, size, size);
+    ctx.fillStyle = 'rgba(255,255,255,.18)';
+    ctx.fillRect(x*size, y*size, size, 4);
+    ctx.strokeStyle = 'rgba(0,0,0,.35)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(x*size+.5, y*size+.5, size-1, size-1);
+  }
+
+  function draw() {
+    bctx.fillStyle = '#0a0a12';
+    bctx.fillRect(0,0,COLS*CELL,ROWS*CELL);
+    // Gitterlinien
+    bctx.strokeStyle = 'rgba(255,255,255,.04)';
+    for (let x=1;x<COLS;x++){bctx.beginPath();bctx.moveTo(x*CELL,0);bctx.lineTo(x*CELL,ROWS*CELL);bctx.stroke();}
+    for (let y=1;y<ROWS;y++){bctx.beginPath();bctx.moveTo(0,y*CELL);bctx.lineTo(COLS*CELL,y*CELL);bctx.stroke();}
+    // gelegte Blöcke
+    for (let y=0;y<ROWS;y++) for (let x=0;x<COLS;x++) if (grid[y][x]) drawCell(bctx,x,y,grid[y][x]);
+    // Geisterbild (Landeposition)
+    if (current && running && !gameOver) {
+      let gy = pos.y;
+      while (!collides(current.m, pos.x, gy+1)) gy++;
+      current.m.forEach((row,y)=>row.forEach((v,x)=>{
+        if (v && gy+y>=0) { bctx.fillStyle='rgba(255,255,255,.12)'; bctx.fillRect((pos.x+x)*CELL,(gy+y)*CELL,CELL,CELL); }
+      }));
+      // aktueller Stein
+      current.m.forEach((row,y)=>row.forEach((v,x)=>{ if (v && pos.y+y>=0) drawCell(bctx,pos.x+x,pos.y+y,current.color); }));
+    }
+  }
+
+  function drawNext() {
+    nctx.clearRect(0,0,120,120);
+    const m = SHAPES[nextType].m, color = SHAPES[nextType].color, size = 24;
+    const off = (4 - m.length)/2;
+    m.forEach((row,y)=>row.forEach((v,x)=>{ if (v) drawCell(nctx, x+off+ (m.length<4?0.5:0), y+off, color, size); }));
+  }
+
+  function updateHud() {
+    document.getElementById('score').textContent = score;
+    document.getElementById('lines').textContent = lines;
+    document.getElementById('level').textContent = level;
+  }
+
+  // ---- Loop ----
+  let lastTime = 0, acc = 0;
+  function loop(t) {
+    requestAnimationFrame(loop);
+    if (!running || paused || gameOver) { lastTime = t; return; }
+    acc += t - lastTime; lastTime = t;
+    if (acc >= dropInterval) { acc = 0; step(); }
+  }
+  function step() {
+    if (!collides(current.m, pos.x, pos.y+1)) pos.y++;
+    else lockAndNext();
+    draw();
+  }
+
+  function newGame() {
+    grid = emptyGrid();
+    score = 0; lines = 0; level = 1; dropInterval = 800;
+    running = true; paused = false; gameOver = false;
+    nextType = randType();
+    updateHud();
+    spawn();
+    document.getElementById('overlay').classList.remove('show');
+    draw();
+  }
+
+  function endGame() {
+    gameOver = true; running = false;
+    document.getElementById('ovText').textContent = 'Game Over – ' + score + ' Punkte';
+    document.getElementById('ovBtn').textContent = 'Nochmal';
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  // ---- Steuerung ----
+  document.addEventListener('keydown', e => {
+    if (!running || gameOver) return;
+    if (e.key === 'p' || e.key === 'P') { paused = !paused; return; }
+    if (paused) return;
+    switch (e.key) {
+      case 'ArrowLeft':  move(-1); e.preventDefault(); break;
+      case 'ArrowRight': move(1);  e.preventDefault(); break;
+      case 'ArrowDown':  softDrop(); e.preventDefault(); break;
+      case 'ArrowUp':    rotateCurrent(); e.preventDefault(); break;
+      case ' ':          hardDrop(); e.preventDefault(); break;
+    }
+  });
+  // wasdenkenkis.de: Fokus abgeben, sonst löst die Leertaste (sofort fallen) zusätzlich den Pause-Knopf aus
+  document.getElementById('pauseBtn').addEventListener('click', e => { e.currentTarget.blur(); if (running && !gameOver) paused = !paused; });
+
+  // wasdenkenkis.de: Touch-Steuerung – Antippen wie Tastendruck, Halten wiederholt (links, rechts, runter)
+  const touchAct = { left: () => move(-1), right: () => move(1), rot: rotateCurrent, down: softDrop, drop: hardDrop };
+  let repeat = null;
+  const stopRepeat = () => { clearTimeout(repeat); clearInterval(repeat); repeat = null; };
+  document.querySelectorAll('#touch button').forEach(b => {
+    b.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      if (!running || gameOver || paused) return;
+      const a = b.dataset.a; touchAct[a]();
+      if (a === 'left' || a === 'right' || a === 'down') {
+        stopRepeat();
+        repeat = setTimeout(() => { repeat = setInterval(() => { if (running && !gameOver && !paused) touchAct[a](); }, 90); }, 260);
+      }
+    });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(t => b.addEventListener(t, stopRepeat));
+    b.addEventListener('contextmenu', e => e.preventDefault());
+  });
+  document.getElementById('ovBtn').addEventListener('click', newGame);
+
+  // Startbildschirm
+  document.getElementById('overlay').classList.add('show');
+  requestAnimationFrame(loop);
+</script>
+</body>
+</html>
