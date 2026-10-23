@@ -122,7 +122,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- KI-Begriffe: Werkstattbericht „Wie diese Reihe entstand“ der Erklär-Instanz (`/erklaert/wie-diese-reihe-entstand/`), auf der Übersicht unter „In eigener Sache“ verlinkt. Prompt-Feld der Sprachmodell-Seite: fehlendes Leerzeichen nach „Grenzen liegen.“ ergänzt (Generator macht aus `<br>` jetzt ein Leerzeichen).
+- (leer – zuletzt freigegeben und gepusht am 2026-10-23: Werkstattbericht der Erklär-Instanz, Prompt-Umbruch)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 - Offen (Algorithmen): genaue Angaben zur deutschen Sedgewick-Ausgabe (Verlag, Jahr, ISBN) für die Bücher-Seite.
