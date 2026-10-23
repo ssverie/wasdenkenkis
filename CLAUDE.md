@@ -122,7 +122,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- KI-Begriffe komplett umgebaut: jetzt 26 Begriffe (22 neu, 4 aktualisiert), Übersicht /erklaert/ = Lesereihenfolge (8 Etappen, 4 Lesepfade), gemeinsames Stylesheet. Alle 27 Seiten auf Handybreite getestet (112 Knöpfe, 25 Regler, alle Auswahllisten; keine Fehler, kein Überlauf, nichts extern).
+- (leer – zuletzt freigegeben und gepusht am 2026-10-23: KI-Begriffe, Erklär-Reihe mit 26 Begriffen)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 - Offen (Algorithmen): genaue Angaben zur deutschen Sedgewick-Ausgabe (Verlag, Jahr, ISBN) für die Bücher-Seite.
