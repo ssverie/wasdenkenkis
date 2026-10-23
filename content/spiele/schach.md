@@ -15,5 +15,5 @@ kontext = "Teil einer Sammlung kleiner Web-Apps, die Sven mit Fable 5 gebaut hat
 {{< anmerkung >}}
 Das Spiel ist eine einzelne HTML-Datei mit gut 500 Zeilen JavaScript, ohne Bibliotheken und ohne Verbindung nach außen. Es kennt alle Regeln einschließlich Rochade, en passant und Umwandlung. Es fehlen nur einige Remis-Regeln: dreifache Stellungswiederholung, 50-Züge-Regel und zu wenig Material zum Mattsetzen. Der Computer schaut drei Halbzüge voraus und zählt vor allem Material – gut genug für eine Partie zwischendurch, für Vereinsspieler eher nicht.
 
-Angepasst habe ich nur die Technik: Das Brett wird auf dem Handy kleiner, statt über den Rand zu ragen, und der schwarze Bauer erscheint nicht mehr als buntes Emoji.
+Angepasst habe ich nur die Technik: Das Brett wird auf dem Handy kleiner, statt über den Rand zu ragen. Seit dem 23. Oktober zeigt es statt der Schriftzeichen die Figuren von Cburnett, wie in den Schachdiagrammen dieser Seite – in die Datei eingebettet, damit das Spiel auch allein läuft.
 {{< /anmerkung >}}

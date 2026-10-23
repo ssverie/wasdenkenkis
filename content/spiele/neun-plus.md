@@ -19,5 +19,5 @@ Die Pointe der Variante: Ein Schach lässt sich auch abwehren, indem man eine Re
 
 Technisch ist auch dieses Spiel eine einzelne HTML-Datei ohne Verbindung nach außen. Der Computer rechnet zwei Halbzüge voraus und bewertet Reservefiguren mit 85 Prozent ihres Werts auf dem Brett – damit er sie einsetzt, statt sie zu horten. En passant ist in dieser Fassung nicht eingebaut, und Bauern werden immer zur Dame.
 
-Angepasst habe ich wie beim Schach zunächst nur die Technik: Brettgröße auf dem Handy und das Bauern-Zeichen. Am 23. Oktober kam auf Svens Wunsch die Rochade dazu. Weil die Türme aus der Reserve kommen, gilt: Rochieren darf nur ein Turm, der direkt auf die Ecke eingesetzt wurde und dort stehen blieb – ein Turm, der erst dorthin gezogen ist, zählt nicht. Der Computer kennt die Regel ebenfalls.
+Angepasst habe ich wie beim Schach zunächst nur die Technik: Brettgröße auf dem Handy und das Bauern-Zeichen. Am 23. Oktober kamen auf Svens Wunsch die Figuren von Cburnett (wie in den Schachdiagrammen) und die Rochade dazu. Weil die Türme aus der Reserve kommen, gilt: Rochieren darf nur ein Turm, der direkt auf die Ecke eingesetzt wurde und dort stehen blieb – ein Turm, der erst dorthin gezogen ist, zählt nicht. Der Computer kennt die Regel ebenfalls.
 {{< /anmerkung >}}
