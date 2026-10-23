@@ -1,0 +1,126 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Inferenz</strong> heißt: ein fertig trainiertes Modell benutzen. Die <a href="/erklaert/parameter/">Parameter</a> stehen fest, es wird nur noch gerechnet – Eingabe rein, Ausgabe raus. Das passiert bei jeder einzelnen Chat-Nachricht.</p>
+<p>Bei Sprachmodellen läuft das in zwei Phasen: Erst wird die ganze Eingabe auf einmal verarbeitet (<strong>Prefill</strong>), dann entsteht die Antwort Token für Token (<strong>Decode</strong>). Für jedes einzelne Token müssen dabei praktisch alle Parameter aus dem Speicher gelesen werden – deshalb bestimmt die <strong>Speicherbandbreite</strong> der Hardware, wie schnell ein Modell schreibt.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#training-vs">Training und Inferenz</a></li>
+  <li><a href="#phasen">Zwei Phasen: Prefill und Decode</a></li>
+  <li><a href="#tempo">Wie schnell ist schnell?</a></li>
+  <li><a href="#bandbreite">Warum Speicherbandbreite entscheidet</a></li>
+  <li><a href="#batching">Viele Nutzer auf einmal</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="training-vs">Training und Inferenz</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th></th><th>Training</th><th>Inferenz</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Was passiert</strong></td><td>Parameter werden angepasst</td><td>Parameter werden nur gelesen</td></tr>
+    <tr><td><strong>Wie oft</strong></td><td>einmal pro Modellversion</td><td>bei jeder Anfrage, millionenfach am Tag</td></tr>
+    <tr><td><strong>Dauer</strong></td><td>Wochen bis Monate</td><td>Sekunden bis Minuten</td></tr>
+    <tr><td><strong>Hardware</strong></td><td>riesige Rechner-Verbünde</td><td>von großen Rechenzentren bis zum eigenen Laptop</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Einzeln ist eine Inferenz billig. Weil sie aber ständig passiert, verbrauchen Anbieter insgesamt viel Rechenleistung dafür – inzwischen oft mehr als für das Training.</p>
+
+<h2 id="phasen">Zwei Phasen: Prefill und Decode</h2>
+<figure>
+<div class="phases">
+  <div><h4>① Prefill – lesen</h4>
+    <svg viewBox="0 0 260 70" aria-hidden="true"><g style="fill:var(--accent)">
+      <rect x="10" y="15" width="22" height="40" rx="3"/><rect x="36" y="15" width="22" height="40" rx="3"/><rect x="62" y="15" width="22" height="40" rx="3"/><rect x="88" y="15" width="22" height="40" rx="3"/><rect x="114" y="15" width="22" height="40" rx="3"/><rect x="140" y="15" width="22" height="40" rx="3"/><rect x="166" y="15" width="22" height="40" rx="3"/><rect x="192" y="15" width="22" height="40" rx="3"/><rect x="218" y="15" width="22" height="40" rx="3"/></g>
+      <text x="130" y="68" text-anchor="middle" class="svg-muted" font-size="10">alle Eingabe-Tokens gleichzeitig</text></svg>
+    <p>Die gesamte Eingabe – Systemprompt, Verlauf, Frage – wird in einem Rutsch verarbeitet. Das ist gut parallelisierbar und schnell, dauert bei sehr langen Eingaben aber spürbar. Daraus ergibt sich die Wartezeit bis zum ersten Wort.</p></div>
+  <div><h4>② Decode – schreiben</h4>
+    <svg viewBox="0 0 260 70" aria-hidden="true"><g style="fill:var(--ok)">
+      <rect x="10" y="15" width="22" height="40" rx="3"/><rect x="48" y="15" width="22" height="40" rx="3" opacity=".85"/><rect x="86" y="15" width="22" height="40" rx="3" opacity=".7"/><rect x="124" y="15" width="22" height="40" rx="3" opacity=".55"/><rect x="162" y="15" width="22" height="40" rx="3" opacity=".4"/></g>
+      <g style="stroke:var(--muted)" stroke-width="1.5"><line x1="33" y1="35" x2="46" y2="35"/><line x1="71" y1="35" x2="84" y2="35"/><line x1="109" y1="35" x2="122" y2="35"/><line x1="147" y1="35" x2="160" y2="35"/></g>
+      <text x="205" y="40" class="svg-muted" font-size="16">…</text>
+      <text x="130" y="68" text-anchor="middle" class="svg-muted" font-size="10">ein Token nach dem anderen</text></svg>
+    <p>Jetzt entsteht die Antwort, streng nacheinander: Jedes Token hängt vom vorigen ab. Pro Token ein kompletter Durchgang durchs Modell. Das bestimmt, wie schnell der Text erscheint.</p></div>
+</div>
+<figcaption>Darum sieht man im Chat erst eine kurze Pause und dann fließenden Text.</figcaption>
+</figure>
+
+<p>Damit beim Schreiben nicht jedes Mal die ganze Eingabe neu berechnet werden muss, merkt sich das Modell die Zwischenergebnisse jedes bisherigen Tokens im <strong>KV-Cache</strong> (siehe <a href="/erklaert/kontextfenster/">Kontextfenster</a>). Pro neuem Token kommt nur noch ein Eintrag dazu.</p>
+
+<h2 id="tempo">Wie schnell ist schnell?</h2>
+<p>Zwei Zahlen bestimmen das Gefühl beim Benutzen: die Zeit bis zum ersten Token und die Tokens pro Sekunde danach. Probier aus, wie sich das anfühlt:</p>
+
+<div class="widget">
+  <div class="widget-title">Antwort-Geschwindigkeit</div>
+  <label class="sl"><span>Wartezeit bis Start</span><input type="range" id="ttft" min="0.1" max="5" step="0.1" value="0.8"><output id="ttftO"></output></label>
+  <label class="sl"><span>Tokens pro Sekunde</span><input type="range" id="tps" min="5" max="200" step="5" value="60"><output id="tpsO"></output></label>
+  <div class="controls"><button class="primary" id="go">Antwort abspielen</button></div>
+  <div class="stream" id="stream"></div>
+  <div class="st-info" id="sinfo"></div>
+  <p class="fine">Zum Vergleich: Menschen lesen etwa 4 bis 8 Tokens pro Sekunde. Ab ungefähr 30 Tokens pro Sekunde schreibt ein Modell schneller, als man mitlesen kann. Je nach Modell, Anbieter und Last sind heute grob 30 bis über 200 Tokens pro Sekunde üblich.</p>
+</div>
+
+<h2 id="bandbreite">Warum Speicherbandbreite entscheidet</h2>
+<p>Beim Schreiben steckt die meiste Zeit nicht im Rechnen, sondern im <strong>Lesen</strong>: Für jedes einzelne Token müssen die Gewichte aus dem Grafikspeicher zu den Recheneinheiten wandern. Bei einem Modell mit 140 GB Gewichten sind das 140 GB – pro Token. Daraus folgt eine einfache Obergrenze:</p>
+<pre><code>Tokens pro Sekunde  ≲  Speicherbandbreite / Größe der Gewichte</code></pre>
+
+<div class="widget">
+  <div class="widget-title">Wie schnell kann es höchstens sein?</div>
+  <label class="sl"><span>Modellgröße</span><input type="range" id="cP" min="1" max="400" step="1" value="70"><output id="cPo"></output></label>
+  <label class="sl"><span>Genauigkeit</span><select id="cB"><option value="2">16 Bit</option><option value="1">8 Bit</option><option value="0.5" selected>4 Bit</option></select><output id="cBo"></output></label>
+  <label class="sl"><span>Hardware</span><select id="cH"></select><output id="cHo"></output></label>
+  <div class="calc-out">
+    <div><b id="oSize"></b>Gewichte</div>
+    <div><b id="oTps"></b>Tokens/s höchstens</div>
+    <div><b id="oMem"></b>Speicher der Hardware</div>
+  </div>
+  <div class="fit" id="oFit"></div>
+  <p class="fine">Grobe Obergrenze für eine einzelne Anfrage, ohne Feinheiten wie KV-Cache oder Rechenaufwand. Bandbreiten und Speichergrößen sind gerundete Herstellerangaben. Bei <a href="/erklaert/mixture-of-experts/">Mixture of Experts</a> zählen für das Tempo nur die aktiven Parameter.</p>
+</div>
+
+<h2 id="batching">Viele Nutzer auf einmal</h2>
+<p>Wenn das Lesen der Gewichte der Engpass ist, liegt ein Trick nahe: Einmal gelesene Gewichte gleich für viele Anfragen verwenden. Genau das machen Anbieter mit <strong>Batching</strong> – die Grafikkarte erzeugt das nächste Token für Dutzende Gespräche gleichzeitig. Für den Einzelnen wird es kaum langsamer, die Kosten pro Token sinken aber drastisch.</p>
+<div class="cards">
+  <div class="card"><div class="num">⇄</div><h4>Eingabe ist billiger</h4><p>Eingabe-Tokens werden im Prefill parallel verarbeitet, Ausgabe-Tokens einzeln nacheinander. Deshalb kosten Ausgabe-Tokens bei APIs meist ein Mehrfaches.</p></div>
+  <div class="card"><div class="num">♻</div><h4>Caching</h4><p>Bleibt der Anfang einer Anfrage gleich – etwa ein langer Systemprompt –, können Anbieter das Prefill zwischenspeichern. Solche Tokens werden dann deutlich günstiger berechnet.</p></div>
+  <div class="card"><div class="num">⚡</div><h4>Spekulatives Dekodieren</h4><p>Ein kleines Modell rät mehrere Tokens voraus, das große prüft sie in einem Durchgang. Stimmen sie, spart man Zeit – am Ergebnis ändert sich nichts.</p></div>
+</div>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Inferenz</strong></td><td>der Produktivbetrieb – im Gegensatz zum Build</td></tr>
+    <tr><td><strong>Prefill</strong></td><td>eine Batch-Verarbeitung über alle Eingaben</td></tr>
+    <tr><td><strong>Decode</strong></td><td>eine Schleife mit Abhängigkeit von der vorigen Iteration – nicht parallelisierbar</td></tr>
+    <tr><td><strong>Speichergebunden</strong></td><td>wie das Durchlaufen eines riesigen Arrays: Die CPU wartet auf den RAM, nicht auf die Rechenwerke</td></tr>
+    <tr><td><strong>Batching</strong></td><td>mehrere Requests bündeln, um eine teure Ressource besser auszulasten – wie Batch-Inserts in eine Datenbank</td></tr>
+    <tr><td><strong>Streaming</strong></td><td>Server-Sent Events: Die API schickt jedes Token, sobald es fertig ist</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Das Modell tippt absichtlich langsam, damit es menschlich wirkt.“</b> – Nein, es entsteht tatsächlich Token für Token. Die Anzeige zeigt nur, was schon fertig ist.</div>
+  <div><b>„Ein schnelleres Modell ist ein schlechteres.“</b> – Nicht unbedingt. Tempo hängt von Hardware, Auslastung, Optimierung und Bauweise ab, nicht nur von der Größe.</div>
+  <div><b>„Beim Benutzen lernt das Modell.“</b> – Bei der Inferenz werden die Parameter nur gelesen, nie verändert.</div>
+  <div><b>„Für ein großes Modell braucht man vor allem schnelle Prozessoren.“</b> – Vor allem braucht man viel und schnellen Speicher. Deshalb sind Grafikkarten mit großem, sehr schnellem Speicher so begehrt.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/kontextfenster/">Kontextfenster</a>
+  <a href="/erklaert/open-weights/">Open Weights</a>
+  <a href="/erklaert/mixture-of-experts/">Mixture of Experts</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

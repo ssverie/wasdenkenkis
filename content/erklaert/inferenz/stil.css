@@ -1,0 +1,27 @@
+/* Seiteneigene Stile (inferenz) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Inferenz ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .sl{display:grid;grid-template-columns:10em 1fr 6.5em;align-items:center;gap:10px;font-size:.88rem;margin:6px 0}
+.erklaert .sl input, .erklaert .sl select{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl select{font:500 .9rem var(--sans);padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:1fr 5.5em}.erklaert .sl > span{grid-column:1/-1}}
+.erklaert .stream{margin-top:12px;padding:14px;border-radius:10px;background:var(--bg);min-height:130px;font-size:.98rem;line-height:1.6}
+.erklaert .stream .wait{color:var(--muted);font-style:italic}
+.erklaert .stream .cur{display:inline-block;width:2px;height:1.05em;background:var(--accent);vertical-align:-.15em;animation:blink 1s step-end infinite}
+.erklaert .st-info{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.82rem;color:var(--muted);margin-top:8px}
+.erklaert .st-info b{color:var(--fg);font-variant-numeric:tabular-nums}
+.erklaert .phases{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.erklaert .phases{grid-template-columns:1fr}}
+.erklaert .phases > div{padding:14px;border-radius:12px;background:var(--bg)}
+.erklaert .phases h4{margin:0 0 4px}
+.erklaert .phases svg{width:100%;height:auto;display:block;margin:8px 0}
+.erklaert .phases p{margin:4px 0 0;font-size:.88rem;color:var(--muted)}
+.erklaert .calc-out{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+@media (max-width:520px){.erklaert .calc-out{grid-template-columns:1fr}}
+.erklaert .calc-out div{padding:10px;border-radius:9px;background:var(--bg);text-align:center;font-size:.76rem;color:var(--muted)}
+.erklaert .calc-out b{display:block;font:600 1.15rem var(--serif);color:var(--fg)}
+.erklaert .fit{margin-top:10px;padding:10px 12px;border-radius:9px;font-size:.88rem;font-weight:600}
+.erklaert .fit.ok{background:var(--ok-soft);color:var(--ok)}.erklaert .fit.no{background:var(--bad-soft);color:var(--bad)}
+

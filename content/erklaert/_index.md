@@ -1,6 +1,6 @@
 +++
 title = "KI-Begriffe"
-description = "Fünfzehn Begriffe, die zusammen erklären, wie heutige Sprachmodelle funktionieren – in einer Reihenfolge, in der jeder Eintrag auf den vorigen aufbaut."
+description = "26 Einträge, die zusammen erklären, wie heutige KI und vor allem Sprachmodelle funktionieren – in einer Reihenfolge, in der jeder Eintrag auf den vorigen aufbaut."
 date = 2026-10-23T11:23:00+02:00
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"

@@ -1,0 +1,111 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Die Begriffe sind wie <strong>ineinander geschachtelte Kreise</strong>: <strong>Künstliche Intelligenz</strong> ist das ganze Feld – alles, was Computer Aufgaben lösen lässt, die Intelligenz zu erfordern scheinen. <strong>Maschinelles Lernen</strong> ist der Teil, bei dem das Verhalten aus Daten gelernt statt programmiert wird. <strong>Deep Learning</strong> ist maschinelles Lernen mit tiefen <a href="/erklaert/neuronales-netz/">neuronalen Netzen</a>.</p>
+<p><strong>Generative KI</strong> erzeugt neue Inhalte – Text, Bilder, Musik. <strong>Sprachmodelle</strong> wie Claude oder ChatGPT sind generative KI für Text, gebaut mit Deep Learning. Jedes Sprachmodell ist also KI – aber nicht jede KI ist ein Sprachmodell.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#kreise">Die Kreise</a></li>
+  <li><a href="#regeln">Programmieren oder lernen?</a></li>
+  <li><a href="#arten">Drei Arten zu lernen</a></li>
+  <li><a href="#generativ">Unterscheiden oder erzeugen?</a></li>
+  <li><a href="#geschichte">Kurze Geschichte</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="kreise">Die Kreise</h2>
+<p>Klick auf einen Kreis:</p>
+<div class="widget">
+  <div class="widget-title">Was steckt in was?</div>
+  <div class="nest">
+    <svg viewBox="0 0 420 330" id="nestSvg" role="img" aria-label="Geschachtelte Kreise von KI bis Sprachmodell"></svg>
+    <div class="nest-info" id="nestInfo"></div>
+  </div>
+  <p class="fine">Die Größen sind nicht maßstabsgetreu. Generative KI liegt nicht ganz innerhalb von Deep Learning: Es gibt auch ältere erzeugende Verfahren – heute arbeitet aber praktisch alle generative KI mit tiefen Netzen.</p>
+</div>
+
+<h2 id="regeln">Programmieren oder lernen?</h2>
+<p>Der wichtigste Unterschied steckt zwischen dem äußeren Kreis und dem zweiten: Wird das Verhalten von Menschen <em>geschrieben</em> oder aus Beispielen <em>gelernt</em>?</p>
+<figure>
+<div class="rules">
+  <div><h4>Klassische KI: Regeln</h4>
+<pre><code><span class="k">boolean</span> istSpam(Mail m) {
+    <span class="k">int</span> p = 0;
+    <span class="k">if</span> (m.text().contains(<span class="s">"Gewinn"</span>)) p += 3;
+    <span class="k">if</span> (m.ausrufezeichen() &gt; 3) p += 2;
+    <span class="k">if</span> (m.absenderBekannt())   p -= 5;
+    <span class="k">return</span> p &gt; 2;
+}</code></pre>
+<p>Ein Mensch denkt sich die Regeln aus. Nachvollziehbar – aber jede neue Spam-Masche braucht eine neue Regel.</p></div>
+  <div><h4>Maschinelles Lernen: Beispiele</h4>
+<pre><code><span class="c">// 100 000 Mails, von Menschen markiert</span>
+List&lt;Beispiel&gt; daten = ladeMarkierteMails();
+
+Modell m = Modell.trainiere(daten);
+
+<span class="k">boolean</span> istSpam(Mail mail) {
+    <span class="k">return</span> m.vorhersage(mail) &gt; 0.5;
+}</code></pre>
+<p>Die „Regeln“ stecken als gelernte Zahlen im Modell. Passt sich an neue Muster an, wenn man neu trainiert – lässt sich aber schwer nachlesen.</p></div>
+</div>
+<figcaption>Beide Varianten sind KI im weiten Sinn. Die heutige Welle beruht fast vollständig auf der rechten.</figcaption>
+</figure>
+
+<h2 id="arten">Drei Arten zu lernen</h2>
+<p>Innerhalb des maschinellen Lernens unterscheidet man nach der Art der Rückmeldung:</p>
+<div class="kinds">
+  <div><h4>Überwacht</h4><p>Beispiele mit richtiger Antwort: „Diese Mail ist Spam.“ Das Modell lernt die Zuordnung. Klassischer Fall: Bilderkennung, Spamfilter.</p></div>
+  <div><h4>Unüberwacht / selbstüberwacht</h4><p>Keine Antworten, nur Daten. Das Modell findet selbst Struktur – oder stellt sich die Aufgabe selbst, etwa „sag das nächste Wort voraus“. So entsteht das Vortraining von Sprachmodellen.</p></div>
+  <div><h4>Bestärkend</h4><p>Das Modell handelt und bekommt Belohnung oder Strafe. So lernten Programme Go und Schach – und so werden Sprachmodelle verfeinert (siehe <a href="/erklaert/training/">Training</a>).</p></div>
+</div>
+
+<h2 id="generativ">Unterscheiden oder erzeugen?</h2>
+<p>Lange war KI vor allem <strong>diskriminativ</strong>: Sie ordnet etwas ein. Ist das eine Katze? Ist das Spam? Wie hoch ist das Kreditrisiko? Die Antwort ist eine Kategorie oder Zahl.</p>
+<p><strong>Generative KI</strong> erzeugt dagegen etwas Neues, das es so vorher nicht gab: einen Text, ein Bild, ein Musikstück, Programmcode. Dafür gibt es verschiedene Bauweisen – Sprachmodelle setzen Text Token für Token fort, Bildgeneratoren entrauschen Schritt für Schritt (siehe <a href="/erklaert/diffusion/">Diffusionsmodelle</a>). Gemeinsam ist ihnen: Sie haben gelernt, wie die Daten typischerweise aussehen, und erzeugen neue Beispiele, die dazu passen.</p>
+
+<h2 id="geschichte">Kurze Geschichte</h2>
+<div class="timeline">
+  <div><b>1956</b> Auf einer Konferenz in Dartmouth wird der Begriff „Artificial Intelligence“ geprägt.</div>
+  <div><b>1970er–80er</b> Expertensysteme: KI aus vielen von Hand geschriebenen Regeln. Erfolgreich in Nischen, aber schwer zu pflegen.</div>
+  <div><b>1990er–2000er</b> Maschinelles Lernen setzt sich durch – Spamfilter, Empfehlungen, Spracherkennung.</div>
+  <div><b>2012</b> Deep Learning gewinnt deutlich in der Bilderkennung. Beginn des heutigen Booms.</div>
+  <div><b>2017</b> Der <a href="/erklaert/transformer/">Transformer</a> wird vorgestellt.</div>
+  <div><b>2022</b> Bildgeneratoren und ChatGPT machen generative KI allgemein bekannt.</div>
+</div>
+<p>Zwischendurch gab es zwei „KI-Winter“ – Phasen, in denen große Versprechen nicht eingelöst wurden und Forschungsgeld versiegte. Der Begriff KI hat dadurch mehrfach seine Bedeutung im Alltag gewechselt: Was gerade funktioniert, nennt man oft nicht mehr KI, sondern einfach „Software“.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>KI</strong></td><td>der Oberbegriff, wie „Software“ – sagt wenig über die Technik</td></tr>
+    <tr><td><strong>Klassische KI</strong></td><td>Geschäftsregeln, Regel-Engines, Suchalgorithmen</td></tr>
+    <tr><td><strong>Maschinelles Lernen</strong></td><td>Verhalten, das aus Testdaten abgeleitet wird statt aus Code</td></tr>
+    <tr><td><strong>Deep Learning</strong></td><td>ML mit vielen Schichten neuronaler Netze</td></tr>
+    <tr><td><strong>Sprachmodell</strong></td><td>ein konkretes Deep-Learning-Modell für Text – eine Funktion <code>naechstesToken(kontext)</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„KI ist dasselbe wie ChatGPT.“</b> – ChatGPT, Claude und Co. sind ein kleiner, wenn auch gerade sehr sichtbarer Teil. KI steckt auch in Navigation, Spamfiltern, Übersetzung, Bildbearbeitung und Betrugserkennung.</div>
+  <div><b>„KI ist eine neue Erfindung.“</b> – Das Feld ist rund 70 Jahre alt. Neu sind die Fähigkeiten heutiger generativer Modelle.</div>
+  <div><b>„Maschinelles Lernen heißt, die Maschine lernt ständig weiter.“</b> – Meist wird einmal trainiert und dann eingefroren. Lernen findet im Training statt, nicht beim Benutzen.</div>
+  <div><b>„KI meint eine allgemeine Intelligenz wie im Film.“</b> – Fachleute nennen das „AGI“ (Artificial General Intelligence). Ob und wann es so etwas geben wird, ist umstritten. Was heute „KI“ heißt, ist meist deutlich spezieller.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/was-ist-ein-sprachmodell/">Was ist ein Sprachmodell?</a>
+  <a href="/erklaert/neuronales-netz/">Neuronales Netz</a>
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/diffusion/">Diffusionsmodelle</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

@@ -166,6 +166,7 @@ List&lt;Nachricht&gt; verlauf = <span class="k">new</span> ArrayList&lt;&gt;();
   <a href="/erklaert/parameter/">Parameter</a>
   <a href="/erklaert/rag/">RAG</a>
   <a href="/erklaert/prompt/">Prompt</a>
+  <a href="/erklaert/inferenz/">Inferenz</a>
   <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
 </div>
 </div>

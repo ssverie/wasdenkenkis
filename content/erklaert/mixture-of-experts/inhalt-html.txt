@@ -1,0 +1,103 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Bei <strong>Mixture of Experts</strong> (MoE, „Mischung aus Experten“) wird der Feedforward-Teil jedes <a href="/erklaert/transformer/">Transformer</a>-Blocks durch viele parallele Teilnetze ersetzt, die <strong>Experten</strong>. Ein kleiner <strong>Router</strong> entscheidet für jedes Token, welche wenigen Experten es bearbeiten – die übrigen bleiben untätig.</p>
+<p>So hat ein Modell sehr viele <a href="/erklaert/parameter/">Parameter</a> (viel Platz für Wissen), rechnet pro Token aber nur mit einem Bruchteil davon (schnell und günstig). Der Haken: Gespeichert werden müssen trotzdem alle.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#router">Der Router entscheidet</a></li>
+  <li><a href="#warum">Warum das funktioniert</a></li>
+  <li><a href="#experten">Was ist ein „Experte“?</a></li>
+  <li><a href="#haken">Die Haken</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="router">Der Router entscheidet</h2>
+<p>Klick auf ein Token und sieh, welche Experten der Router auswählt. Mit den Reglern kannst du den Aufbau verändern:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein MoE-Block</div>
+  <div class="toks" id="toks"></div>
+  <div class="moe">
+    <svg viewBox="0 0 440 300" id="moeSvg" role="img" aria-label="Router verteilt ein Token auf wenige von vielen Experten"></svg>
+    <div>
+      <label class="sl">Experten<input type="range" id="nE" min="4" max="16" step="2" value="8"><output id="nEo"></output></label>
+      <label class="sl">davon aktiv<input type="range" id="nK" min="1" max="4" step="1" value="2"><output id="nKo"></output></label>
+      <div class="stat"><b id="sTot"></b>Parameter gesamt</div>
+      <div class="stat hl"><b id="sAct"></b>davon aktiv pro Token</div>
+      <div class="stat"><b id="sRat"></b>Rechenaufwand gegenüber gleich großem dichtem Modell</div>
+    </div>
+  </div>
+  <p class="fine">Spielzeug-Zahlen: Jeder Experte hat hier 5 Mrd. Parameter, der gemeinsame Rest (Aufmerksamkeit, Embeddings) 2 Mrd. Welche Experten ein Token bekommt, ist ausgedacht – in echten Modellen entscheidet ein gelernter Router.</p>
+</div>
+
+<h2 id="warum">Warum das funktioniert</h2>
+<p>Ein normales („dichtes“) Modell schickt jedes Token durch alle Parameter. Das ist verschwenderisch: Für das Wort „und“ braucht es kaum das gesammelte Wissen über Quantenphysik. MoE nutzt das aus. Weil die Rechenzeit vor allem von den <em>aktiven</em> Parametern abhängt, lässt sich das Modell vergrößern, ohne dass jede Antwort teurer wird.</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Modell</th><th>Gesamt</th><th>Aktiv pro Token</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Mixtral 8×7B</strong> (Mistral, 2023)</td><td>ca. 47 Mrd.</td><td>ca. 13 Mrd.</td></tr>
+    <tr><td><strong>DeepSeek-V3</strong> (2024)</td><td>671 Mrd.</td><td>37 Mrd.</td></tr>
+    <tr><td><strong>gpt-oss-120b</strong> (OpenAI, 2025)</td><td>ca. 117 Mrd.</td><td>ca. 5 Mrd.</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Alle drei sind Modelle mit offenen Gewichten, bei denen die Zahlen veröffentlicht sind. Viele geschlossene Modelle nutzen nach allgemeiner Einschätzung ebenfalls MoE; die Anbieter legen ihre Bauweise aber meist nicht offen.</p>
+
+<h2 id="experten">Was ist ein „Experte“?</h2>
+<p>Der Name weckt falsche Vorstellungen. Experten sind keine Fachleute für „Medizin“, „Recht“ oder „Java“, die man gezielt ansprechen könnte. Sie spezialisieren sich beim Training von selbst – und meist auf Dinge, die für Menschen wenig anschaulich sind: Satzzeichen, bestimmte Wortformen, Zahlen, Code-Syntax. Dasselbe Wort kann in verschiedenen Schichten an ganz verschiedene Experten gehen.</p>
+<div class="callout dev">Treffender als „Fachabteilungen“ ist vielleicht: ein großer Pool von Worker-Threads, und ein Load-Balancer, der gelernt hat, welche Worker für welche Art von Paket am besten geeignet sind.</div>
+
+<h2 id="haken">Die Haken</h2>
+<div class="cards">
+  <div class="card"><div class="num">💾</div><h4>Speicher</h4><p>Auch wenn nur 2 von 8 Experten rechnen – alle 8 müssen im Speicher liegen, denn das nächste Token braucht vielleicht andere. Ein MoE-Modell ist schnell, aber nicht klein.</p></div>
+  <div class="card"><div class="num">⚖</div><h4>Lastverteilung</h4><p>Ohne Gegenmaßnahmen schickt der Router fast alles an wenige Lieblingsexperten. Beim Training muss man ausgleichen, damit alle etwas lernen.</p></div>
+  <div class="card"><div class="num">⚙</div><h4>Aufwendiger Betrieb</h4><p>Experten liegen oft auf verschiedenen Grafikkarten. Die Tokens müssen dorthin verschickt werden – das braucht schnelle Verbindungen.</p></div>
+</div>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Experte</strong></td><td>eine von vielen Implementierungen desselben Interface</td></tr>
+    <tr><td><strong>Router</strong></td><td>eine gelernte Strategy-Auswahl bzw. ein Dispatcher</td></tr>
+    <tr><td><strong>Top-k</strong></td><td>pro Aufruf werden nur k Implementierungen ausgeführt und ihre Ergebnisse gewichtet addiert</td></tr>
+    <tr><td><strong>Gesamt vs. aktiv</strong></td><td>alle Beans sind geladen, aber pro Request werden nur wenige aufgerufen</td></tr>
+  </tbody>
+</table>
+</div>
+<pre><code><span class="k">float</span>[] moeBlock(<span class="k">float</span>[] x) {
+    <span class="k">double</span>[] punkte = router.bewerte(x);               <span class="c">// eine Zahl pro Experte</span>
+    <span class="k">int</span>[] auswahl = topK(punkte, 2);                    <span class="c">// nur die besten zwei</span>
+    <span class="k">double</span>[] gewichte = softmax(punkte, auswahl);
+
+    <span class="k">float</span>[] y = <span class="k">new float</span>[x.length];
+    <span class="k">for</span> (<span class="k">int</span> i = 0; i &lt; auswahl.length; i++)
+        addiere(y, experten[auswahl[i]].rechne(x), gewichte[i]);   <span class="c">// die anderen schlafen</span>
+    <span class="k">return</span> y;
+}</code></pre>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Jeder Experte ist für ein Fachgebiet zuständig.“</b> – Die Spezialisierung ergibt sich von selbst und ist meist kleinteilig und schwer deutbar.</div>
+  <div><b>„Ein MoE-Modell mit 5 Mrd. aktiven Parametern ist so gut wie ein dichtes 5-Mrd.-Modell.“</b> – Meist deutlich besser, weil es insgesamt viel mehr Wissen speichern kann. Aber auch nicht so gut wie ein dichtes Modell mit der vollen Gesamtgröße.</div>
+  <div><b>„MoE braucht weniger Speicher.“</b> – Es braucht weniger Rechenleistung pro Token, aber Speicher für alle Experten.</div>
+  <div><b>„MoE sind mehrere Modelle, die sich absprechen.“</b> – Es ist ein einziges Modell; die Experten sitzen innerhalb jedes Blocks und werden gemeinsam trainiert.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/transformer/">Transformer</a>
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/inferenz/">Inferenz</a>
+  <a href="/erklaert/open-weights/">Open Weights</a>
+  <a href="/erklaert/destillation/">Destillation</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

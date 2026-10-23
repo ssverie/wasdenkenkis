@@ -218,6 +218,9 @@
   <a href="/erklaert/kontextfenster/">Kontextfenster</a>
   <a href="/erklaert/neuronales-netz/">Neuronales Netz</a>
   <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/inferenz/">Inferenz</a>
+  <a href="/erklaert/open-weights/">Open Weights</a>
+  <a href="/erklaert/mixture-of-experts/">Mixture of Experts</a>
   <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
 </div>
 </div>

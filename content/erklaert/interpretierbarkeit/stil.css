@@ -1,0 +1,27 @@
+/* Seiteneigene Stile (interpretierbarkeit) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Interpretierbarkeit ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .ip-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .ip-tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .ip-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:620px){.erklaert .ip-cols{grid-template-columns:1fr}}
+.erklaert .ip-cols > div{padding:12px 14px;border-radius:10px;background:var(--bg)}
+.erklaert .ip-cols .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.erklaert .act{display:grid;grid-template-columns:8.5em 1fr 2.6em;gap:8px;align-items:center;font-size:.84rem;margin:5px 0}
+.erklaert .act .tr{height:14px;border-radius:4px;background:var(--line);overflow:hidden}
+.erklaert .act .fl{height:100%;border-radius:4px;transition:width .35s}
+.erklaert .act .v{text-align:right;font:600 .76rem var(--mono)}
+.erklaert .ip-note{margin-top:10px;font-size:.86rem;color:var(--muted)}
+.erklaert .steer{display:grid;grid-template-columns:1fr;gap:10px}
+.erklaert .sl{display:grid;grid-template-columns:9em 1fr 3.5em;align-items:center;gap:10px;font-size:.88rem}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent-2)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+.erklaert .chatout{padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.94rem;min-height:4.5em}
+.erklaert .chatout .q{color:var(--muted);font-size:.84rem;margin-bottom:4px}
+.erklaert .trace{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:.9rem}
+.erklaert .trace .n{padding:8px 12px;border-radius:9px;background:var(--bg);border:1px solid var(--line)}
+.erklaert .trace .n.f{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+.erklaert .trace .n.o{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);font-weight:700}
+.erklaert .trace .a{color:var(--muted)}
+

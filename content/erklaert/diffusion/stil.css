@@ -1,0 +1,20 @@
+/* Seiteneigene Stile (diffusion) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Diffusionsmodelle ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .df{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+@media (max-width:640px){.erklaert .df{grid-template-columns:1fr}}
+.erklaert .df canvas{width:100%;max-width:300px;aspect-ratio:1;border-radius:10px;display:block;margin:0 auto;image-rendering:pixelated;border:1px solid var(--line)}
+.erklaert .ptabs{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.erklaert .ptabs button{text-align:left;font-weight:500}
+.erklaert .ptabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .sl{display:grid;grid-template-columns:6em 1fr 5em;align-items:center;gap:10px;font-size:.88rem;margin:8px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent-2)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+.erklaert .seed{font-size:.82rem;color:var(--muted);margin-top:4px}
+.erklaert .strip{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.erklaert .strip canvas{width:100%;aspect-ratio:1;border-radius:6px;image-rendering:pixelated;display:block}
+.erklaert .strip-lbl{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;font-size:.72rem;color:var(--muted);text-align:center;margin-top:4px}
+.erklaert .dir{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;font-weight:600;margin:10px 0 2px}
+.erklaert .dir .f{color:var(--accent-2)}.erklaert .dir .b{color:var(--ok)}
+

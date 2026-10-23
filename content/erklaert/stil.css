@@ -30,7 +30,7 @@
 .erklaert .item.done .num{background:var(--ok-soft);color:var(--ok)}
 @media (max-width:520px){.erklaert .item{grid-template-columns:36px 1fr;}.erklaert .item .num{width:34px;height:34px;font-size:.9rem}.erklaert .item .chk{grid-column:2;flex-direction:row;justify-self:start;padding-top:0}}
 
-.erklaert .paths{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.erklaert .paths{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}
 @media (max-width:680px){.erklaert .paths{grid-template-columns:1fr}}
 .erklaert .paths > div{padding:14px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:.9rem}
 .erklaert .paths h4{margin:0 0 4px;font-size:1rem}

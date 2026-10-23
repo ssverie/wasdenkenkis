@@ -173,6 +173,8 @@ Comparator&lt;Antwort&gt; belohnung = trainiere(vergleiche);   <span class="c">/
   <a href="/erklaert/reasoning/">Reasoning</a>
   <a href="/erklaert/rag/">RAG</a>
   <a href="/erklaert/halluzination/">Halluzination</a>
+  <a href="/erklaert/alignment/">Alignment</a>
+  <a href="/erklaert/destillation/">Destillation</a>
   <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
 </div>
 </div>

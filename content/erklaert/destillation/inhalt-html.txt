@@ -1,0 +1,93 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Bei der <strong>Destillation</strong> (englisch <em>knowledge distillation</em>) lernt ein kleines Modell, der <strong>Schüler</strong>, von einem großen, dem <strong>Lehrer</strong>. Statt nur aus Texten mit „richtigen“ Antworten lernt der Schüler aus dem, was der Lehrer vorhersagt – im besten Fall aus seiner ganzen Wahrscheinlichkeitsverteilung.</p>
+<p>Das funktioniert erstaunlich gut: Der Schüler wird deutlich besser, als er mit derselben Größe auf normalem Weg geworden wäre. So entstehen viele kleine, schnelle und günstige Modelle. Auch Denkfähigkeiten großer <a href="/erklaert/reasoning/">Reasoning</a>-Modelle lassen sich auf diese Weise auf kleinere übertragen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#weich">Mehr als „richtig“ und „falsch“</a></li>
+  <li><a href="#wege">Zwei Wege</a></li>
+  <li><a href="#wozu">Wozu das Ganze</a></li>
+  <li><a href="#streit">Streitfragen</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="weich">Mehr als „richtig“ und „falsch“</h2>
+<p>Beim normalen Training lernt ein Modell an einem Beispielsatz nur: An dieser Stelle stand <em>dieses</em> Wort. Der Lehrer kann viel mehr verraten – nämlich wie plausibel <em>jedes</em> andere Wort gewesen wäre. Vergleiche:</p>
+
+<div class="widget">
+  <div class="widget-title">Harte Lösung oder weiche Verteilung?</div>
+  <div class="sent">Der Hund jagt die ___</div>
+  <div class="ds">
+    <div><div class="h">Normales Training: nur die Lösung</div><div id="hard"></div></div>
+    <div><div class="h">Destillation: was der Lehrer denkt</div><div id="soft"></div></div>
+  </div>
+  <label class="sl">Temperatur des Lehrers<input type="range" id="dT" min="0.5" max="4" step="0.1" value="1"><output id="dTo"></output></label>
+  <div class="learn" id="learn"></div>
+  <p class="fine">Ausgedachte Werte. Bei der Destillation wird die Verteilung des Lehrers oft mit einer erhöhten <a href="/erklaert/temperatur/">Temperatur</a> „weicher“ gemacht, damit auch die kleinen Wahrscheinlichkeiten deutlich sichtbar werden.</p>
+</div>
+
+<p>Geoffrey Hinton, der das Verfahren 2015 bekannt machte, nannte diese Zusatzinformation „dunkles Wissen“: Dass „Maus“ und „Ente“ als Fortsetzung nicht ganz falsch, „Steuer“ aber völlig abwegig wäre, steht nirgends im Trainingstext – nur im Kopf des Lehrers. Mit jedem Beispiel bekommt der Schüler so viel mehr Rückmeldung.</p>
+
+<h2 id="wege">Zwei Wege</h2>
+<div class="ways">
+  <div><h4>Mit Wahrscheinlichkeiten</h4><p>Der Schüler lernt die komplette Verteilung des Lehrers für jedes Token nachzubilden. Am wirksamsten – braucht aber Zugriff auf das Innere des Lehrers, also meist ein eigenes Modell oder eines mit <a href="/erklaert/open-weights/">offenen Gewichten</a>.</p></div>
+  <div><h4>Mit Beispieltexten</h4><p>Der Lehrer schreibt Antworten auf viele Fragen, und der Schüler wird darauf feinabgestimmt. Geht auch, wenn man den Lehrer nur über eine API erreicht. So wurden etwa Anfang 2025 die Denkfähigkeiten von DeepSeek-R1 auf deutlich kleinere Modelle übertragen.</p></div>
+</div>
+
+<h2 id="wozu">Wozu das Ganze</h2>
+<p>Große Modelle sind teuer im Betrieb (siehe <a href="/erklaert/inferenz/">Inferenz</a>). Für viele Aufgaben reicht ein kleineres – wenn es gut genug ist. Destillation schließt diese Lücke:</p>
+<div class="cards">
+  <div class="card"><div class="num">⚡</div><h4>Schnell und günstig</h4><p>Viele Anbieter haben neben großen auch kleine, schnelle Modelle im Angebot. Wie genau sie entstehen, legen sie selten offen; Destillation gilt als ein üblicher Baustein.</p></div>
+  <div class="card"><div class="num">📱</div><h4>Auf dem Gerät</h4><p>Modelle, die auf Smartphone oder Laptop laufen sollen, müssen klein sein. Destillation holt aus wenigen Parametern mehr heraus.</p></div>
+  <div class="card"><div class="num">🎯</div><h4>Spezialisiert</h4><p>Ein kleines Modell kann gezielt von einem großen für genau eine Aufgabe lernen – etwa Tickets einordnen – und dort fast so gut werden.</p></div>
+</div>
+<p>Ein frühes, viel zitiertes Beispiel ist DistilBERT (2019): rund 40 % kleiner und 60 % schneller als das Original, bei etwa 97 % von dessen Sprachverständnis-Leistung.</p>
+
+<h2 id="streit">Streitfragen</h2>
+<p>Destillation lässt sich auch mit fremden Modellen versuchen: einfach massenhaft Antworten eines Konkurrenten abrufen und darauf trainieren. Viele Anbieter verbieten das in ihren Nutzungsbedingungen ausdrücklich, und es gab öffentliche Vorwürfe zwischen Firmen, dass genau das passiert sei. Wie solche Fälle rechtlich zu bewerten sind, ist bislang weitgehend ungeklärt.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Lehrer / Schüler</strong></td><td>Senior und Junior – nur dass der Senior nicht bloß „falsch“ sagt, sondern „fast richtig, dieser Ansatz wäre auch gegangen“</td></tr>
+    <tr><td><strong>Harte Lösung</strong></td><td>ein boolesches Testergebnis</td></tr>
+    <tr><td><strong>Weiche Verteilung</strong></td><td>eine ausführliche Code-Review mit Abstufungen</td></tr>
+    <tr><td><strong>Destilliertes Modell</strong></td><td>eine schlanke, optimierte Version eines großen Systems – wie ein zugeschnittener Microservice statt des Monolithen</td></tr>
+  </tbody>
+</table>
+</div>
+<pre><code><span class="c">// Ein Lernschritt der Destillation, stark vereinfacht</span>
+<span class="k">double</span>[] lehrer  = softmax(grossesModell.logits(kontext), T);   <span class="c">// weiche Ziele</span>
+<span class="k">double</span>[] schueler = softmax(kleinesModell.logits(kontext), T);
+
+<span class="k">double</span> verlust = 0;
+<span class="k">for</span> (<span class="k">int</span> i = 0; i &lt; lehrer.length; i++)
+    <span class="k">if</span> (lehrer[i] &gt; 0) verlust += lehrer[i] * Math.log(lehrer[i] / schueler[i]);   <span class="c">// KL-Divergenz</span>
+
+kleinesModell.korrigiere(verlust);   <span class="c">// nur der Schüler lernt, der Lehrer bleibt unverändert</span></code></pre>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Der Schüler wird so gut wie der Lehrer.“</b> – Meist nicht ganz. Er wird viel besser als ohne Lehrer, aber ein kleineres Modell hat schlicht weniger Platz für Wissen.</div>
+  <div><b>„Destillation ist Abkupfern.“</b> – Mit eigenen Modellen ist es ein ganz normales, verbreitetes Trainingsverfahren. Strittig ist es nur, wenn fremde Modelle ohne Erlaubnis als Lehrer dienen.</div>
+  <div><b>„Destillation ist dasselbe wie Quantisierung.“</b> – Quantisierung macht dieselben Parameter ungenauer und damit kleiner (siehe <a href="/erklaert/parameter/">Parameter</a>). Destillation trainiert ein neues, kleineres Modell. Beides lässt sich kombinieren.</div>
+  <div><b>„Der Schüler übernimmt nur das Gute.“</b> – Er übernimmt auch Fehler und Eigenheiten des Lehrers – bis hin zu dessen Halluzinationen.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/temperatur/">Temperatur</a>
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/open-weights/">Open Weights</a>
+  <a href="/erklaert/mixture-of-experts/">Mixture of Experts</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

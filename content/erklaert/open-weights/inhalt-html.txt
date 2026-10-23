@@ -1,0 +1,132 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Bei <strong>geschlossenen Modellen</strong> bekommt man nur Zugang über eine App oder API – die <a href="/erklaert/parameter/">Parameter</a> bleiben beim Anbieter. Bei <strong>Open Weights</strong> (offene Gewichte) kann man die Parameter herunterladen und das Modell auf eigener Hardware betreiben, ohne Internet und ohne dass Daten das Haus verlassen.</p>
+<p>„Offen“ heißt dabei meist nur: Die fertigen Gewichte sind verfügbar. Trainingsdaten und Trainingscode sind es oft nicht, und die Lizenz kann die Nutzung einschränken. Echte <strong>Open Source</strong> im strengen Sinn – alles offen – ist bei großen Modellen selten.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#spektrum">Wie offen ist offen?</a></li>
+  <li><a href="#lokal">Läuft das bei mir?</a></li>
+  <li><a href="#werkzeuge">Werkzeuge</a></li>
+  <li><a href="#abwaegen">Wann lohnt sich das?</a></li>
+  <li><a href="#debatte">Die Debatte um Offenheit</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="spektrum">Wie offen ist offen?</h2>
+<figure>
+<div class="spec">
+  <div class="spec-bar">
+    <div class="s1"><b>Geschlossen</b>Nur über App oder API nutzbar.<small>z. B. die großen Modelle von Anthropic, Google, OpenAI</small></div>
+    <div class="s2"><b>Offene Gewichte, eigene Lizenz</b>Download erlaubt, aber mit Bedingungen.<small>z. B. Llama (Meta)</small></div>
+    <div class="s3"><b>Offene Gewichte, freie Lizenz</b>Etwa Apache 2.0 oder MIT – auch kommerziell frei.<small>z. B. manche Modelle von Mistral, Qwen, DeepSeek, gpt-oss</small></div>
+    <div class="s4"><b>Vollständig offen</b>Gewichte, Code und Trainingsdaten veröffentlicht.<small>z. B. OLMo (Allen Institute for AI)</small></div>
+  </div>
+  <div class="spec-axis"><span>← weniger Einblick</span><span>mehr Einblick →</span></div>
+</div>
+<figcaption>Beispiele zur Orientierung, Stand 2026. Lizenzen ändern sich und unterscheiden sich teils von Modell zu Modell desselben Anbieters – vor dem Einsatz immer die konkrete Lizenz lesen.</figcaption>
+</figure>
+
+<div class="tbl-wrap">
+<table class="what">
+  <thead><tr><th>Was ist verfügbar?</th><th>Geschlossen</th><th>Open Weights</th><th>Voll offen</th></tr></thead>
+  <tbody>
+    <tr><td>Modell benutzen</td><td class="y">✓</td><td class="y">✓</td><td class="y">✓</td></tr>
+    <tr><td>Selbst betreiben, offline</td><td class="n">–</td><td class="y">✓</td><td class="y">✓</td></tr>
+    <tr><td>Selbst weitertrainieren</td><td class="n">meist nur eingeschränkt</td><td class="y">✓</td><td class="y">✓</td></tr>
+    <tr><td>Trainingscode einsehen</td><td class="n">–</td><td class="n">selten</td><td class="y">✓</td></tr>
+    <tr><td>Trainingsdaten einsehen</td><td class="n">–</td><td class="n">fast nie</td><td class="y">✓</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="callout dev">Ein Vergleich aus der Java-Welt: Open Weights ist wie eine <code>.jar</code>-Datei ohne Quellcode, die man frei einbinden darf. Voll offen ist das ganze Repository samt Build-Skripten. Und geschlossen ist ein externer Webservice.</div>
+
+<h2 id="lokal">Läuft das bei mir?</h2>
+<p>Die wichtigste Frage beim lokalen Betrieb: Passen die Gewichte in den Speicher? Wähl deine Hardware und die Genauigkeit (siehe Quantisierung bei <a href="/erklaert/parameter/">Parameter</a>):</p>
+
+<div class="widget">
+  <div class="widget-title">Welche Modellgröße passt?</div>
+  <div class="hw" id="hw"></div>
+  <div class="bits" id="bits"></div>
+  <div id="models"></div>
+  <p class="fine">Schwarzer Strich: nutzbarer Speicher (etwa 75 % des Gesamtspeichers, der Rest braucht das System und der KV-Cache). Grob gerechnet: Parameter × Bytes pro Zahl. Bei Grafikkarten zählt der Grafikspeicher, bei Macs der gemeinsame Arbeitsspeicher. „Knapp“ heißt: läuft vermutlich, aber mit kurzem Kontext.</p>
+</div>
+
+<p>Faustregel: Modelle mit wenigen Milliarden Parametern laufen auf jedem modernen Laptop und sind für einfache Aufgaben erstaunlich brauchbar. Modelle in der Größenordnung von 30 bis 70 Milliarden brauchen eine starke Grafikkarte oder einen Rechner mit viel gemeinsamem Speicher. Die größten offenen Modelle mit Hunderten Milliarden Parametern sind eher etwas für Server.</p>
+
+<h2 id="werkzeuge">Werkzeuge</h2>
+<p>Man muss dafür kein KI-Spezialist sein. Verbreitete Werkzeuge erledigen Download, Quantisierung und Betrieb:</p>
+<div class="cards">
+  <div class="card"><div class="num">▶</div><h4>Ollama</h4><p>Kommandozeile und lokaler Server. <code>ollama run &lt;modell&gt;</code> lädt ein Modell und startet einen Chat; nebenbei läuft eine HTTP-API.</p></div>
+  <div class="card"><div class="num">⚙</div><h4>llama.cpp</h4><p>Die schlanke Laufzeitumgebung, auf der viele andere Werkzeuge aufbauen. Modelle liegen meist im Format GGUF.</p></div>
+  <div class="card"><div class="num">▣</div><h4>LM Studio</h4><p>Grafische Oberfläche zum Suchen, Laden und Ausprobieren von Modellen, ebenfalls mit lokaler API.</p></div>
+</div>
+
+<pre><code><span class="c">// Ein lokales Modell über die Ollama-API aus Java ansprechen</span>
+HttpClient http = HttpClient.newHttpClient();
+String body = <span class="s">"""
+    {"model": "%s", "prompt": "%s", "stream": false}
+    """</span>.formatted(modellName, frage);              <span class="c">// in echt: sauber als JSON escapen</span>
+
+HttpRequest req = HttpRequest.newBuilder(URI.create(<span class="s">"http://localhost:11434/api/generate"</span>))
+    .POST(HttpRequest.BodyPublishers.ofString(body))
+    .header(<span class="s">"Content-Type"</span>, <span class="s">"application/json"</span>)
+    .build();
+
+String json = http.send(req, HttpResponse.BodyHandlers.ofString()).body();
+<span class="c">// Feld "response" enthält die Antwort. Bequemer: LangChain4j oder Spring AI,</span>
+<span class="c">// die lokale und Cloud-Modelle über dieselbe Schnittstelle ansprechen.</span></code></pre>
+
+<h2 id="abwaegen">Wann lohnt sich das?</h2>
+<div class="pc">
+  <div><h4 class="pro">Für lokale Modelle spricht</h4><ul>
+    <li>Daten verlassen nie das eigene Haus – wichtig bei Kundendaten, Gesundheit, Geheimnissen</li>
+    <li>Keine Kosten pro Anfrage, keine Abhängigkeit von einem Anbieter</li>
+    <li>Läuft offline</li>
+    <li>Volle Kontrolle: Version bleibt stabil, eigenes Weitertrainieren möglich</li></ul></div>
+  <div><h4 class="con">Dagegen spricht</h4><ul>
+    <li>Die stärksten Modelle sind meist geschlossen; lokal läuft in der Regel etwas Kleineres</li>
+    <li>Hardware kostet Geld und Strom</li>
+    <li>Betrieb, Updates und Absicherung liegen bei einem selbst</li>
+    <li>Lizenzbedingungen müssen geprüft werden</li></ul></div>
+</div>
+
+<h2 id="debatte">Die Debatte um Offenheit</h2>
+<p>Ob große Modelle offen veröffentlicht werden sollten, ist umstritten. <strong>Befürworter</strong> verweisen auf Forschung, Transparenz, Wettbewerb und darauf, dass Wissen nicht bei wenigen Firmen konzentriert sein sollte. <strong>Kritiker</strong> geben zu bedenken, dass sich ein veröffentlichtes Modell nicht zurückrufen lässt und eingebaute Sicherheitsvorkehrungen durch Weitertrainieren entfernt werden können – bei sehr leistungsfähigen Modellen ein ernstes Risiko. Viele Anbieter entscheiden deshalb je nach Modell und Fähigkeiten unterschiedlich.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Geschlossenes Modell</strong></td><td>ein externer SaaS-Dienst mit API-Schlüssel</td></tr>
+    <tr><td><strong>Open Weights</strong></td><td>ein Binär-Artefakt zum Selbsthosten – wie eine <code>.jar</code> ohne Quellen</td></tr>
+    <tr><td><strong>Gewichtsdatei (GGUF, safetensors)</strong></td><td>serialisierte Arrays, oft mehrere Dutzend GB</td></tr>
+    <tr><td><strong>Ollama, llama.cpp</strong></td><td>die Laufzeitumgebung – vergleichbar mit einer JVM für Modelle</td></tr>
+    <tr><td><strong>Modell-Lizenz</strong></td><td>wie bei Bibliotheken: Apache 2.0 ist unkompliziert, eigene Lizenzen genau lesen</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Open Weights ist Open Source.“</b> – Meist nicht im strengen Sinn: Die Gewichte sind offen, Daten und Trainingscode oft nicht, und manche Lizenzen schränken die Nutzung ein.</div>
+  <div><b>„Lokal läuft dasselbe wie in der Cloud.“</b> – Die größten Modelle der großen Anbieter gibt es meist nicht zum Download. Lokal läuft in der Regel ein kleineres, oft quantisiertes Modell.</div>
+  <div><b>„Ein lokales Modell schickt trotzdem Daten nach Hause.“</b> – Das Modell selbst ist nur eine Datei voller Zahlen und kann nichts senden. Ob die Software drumherum das tut, hängt von ihr ab – bei den gängigen Werkzeugen lässt sich das prüfen und abschalten.</div>
+  <div><b>„Kleine Modelle taugen nichts.“</b> – Für klar umrissene Aufgaben wie Zusammenfassen, Einordnen oder Daten extrahieren sind sie oft völlig ausreichend – und schnell.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/inferenz/">Inferenz</a>
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/mixture-of-experts/">Mixture of Experts</a>
+  <a href="/erklaert/destillation/">Destillation</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

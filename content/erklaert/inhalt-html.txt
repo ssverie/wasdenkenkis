@@ -1,21 +1,25 @@
 <div class="erklaert">
 <div class="tldr">
-<p>Gedacht für alle, die Sprachmodelle wirklich verstehen wollen – geschrieben mit Blick auf Leser aus der Softwareentwicklung, aber ohne Vorwissen über KI. Jeder Eintrag steht für sich, lässt sich also auch einzeln nachschlagen. Wer alles der Reihe nach liest, braucht insgesamt etwa <strong>zwei Stunden</strong>, mit Ausprobieren der Mitmach-Elemente etwas mehr.</p>
+<p>Gedacht für alle, die Sprachmodelle wirklich verstehen wollen – geschrieben mit Blick auf Leser aus der Softwareentwicklung, aber ohne Vorwissen über KI. Jeder Eintrag steht für sich, lässt sich also auch einzeln nachschlagen. Wer alles der Reihe nach liest, braucht insgesamt etwa <strong>dreieinhalb Stunden</strong>, mit Ausprobieren der Mitmach-Elemente etwas mehr. Die Etappen 1 bis 5 bilden den Kern; 6 und 7 vertiefen Praxis, Bilder und Verantwortung.</p>
 </div>
 
 <nav class="map" aria-label="Etappen">
+  <a href="#e0"><b>Etappe 0</b>Begriffe klären</a>
   <a href="#e1"><b>Etappe 1</b>Das große Bild</a>
   <a href="#e2"><b>Etappe 2</b>Grundbausteine</a>
   <a href="#e3"><b>Etappe 3</b>Das Innenleben</a>
   <a href="#e4"><b>Etappe 4</b>Im Gebrauch</a>
   <a href="#e5"><b>Etappe 5</b>Darüber hinaus</a>
+  <a href="#e6"><b>Etappe 6</b>In der Praxis</a>
+  <a href="#e6b"><b>Etappe 6b</b>Bilder</a>
+  <a href="#e7"><b>Etappe 7</b>Tiefer und verantwortlich</a>
 </nav>
 <div class="progress" id="prog"><span id="progT"></span><div class="bar"><span id="progB"></span></div><button type="button" id="progR">zurücksetzen</button></div>
 
 <div id="stages"></div>
 
 <h2 id="kurzwege">Kurzwege</h2>
-<p>Nicht jeder braucht alles. Drei Abkürzungen für typische Fragen:</p>
+<p>Nicht jeder braucht alles. Vier Abkürzungen für typische Fragen:</p>
 <div class="paths" id="paths"></div>
 
 <h2 id="hinweise">Zum Lesen</h2>

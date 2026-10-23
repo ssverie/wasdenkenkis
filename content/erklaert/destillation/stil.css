@@ -1,0 +1,23 @@
+/* Seiteneigene Stile (destillation) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Destillation ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .ds{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:620px){.erklaert .ds{grid-template-columns:1fr}}
+.erklaert .ds > div{padding:12px 14px;border-radius:10px;background:var(--bg);min-width:0}
+.erklaert .ds .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.erklaert .brow{display:grid;grid-template-columns:5.2em 1fr 3.3em;gap:8px;align-items:center;font-size:.84rem;margin:4px 0}
+.erklaert .brow .tr{height:13px;border-radius:4px;background:var(--line);overflow:hidden}
+.erklaert .brow .fl{height:100%;border-radius:4px;transition:width .3s}
+.erklaert .brow .v{text-align:right;font:600 .74rem var(--mono)}
+.erklaert .sent{font-family:var(--serif);font-size:1.15rem;padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line);margin-bottom:12px}
+.erklaert .sl{display:grid;grid-template-columns:11em 1fr 3.5em;align-items:center;gap:10px;font-size:.88rem;margin:12px 0 4px}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+.erklaert .learn{margin-top:10px;padding:10px 12px;border-radius:9px;background:var(--accent-soft);font-size:.9rem}
+.erklaert .ways{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.erklaert .ways{grid-template-columns:1fr}}
+.erklaert .ways > div{padding:14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:.9rem}
+.erklaert .ways h4{margin:0 0 6px}
+.erklaert .ways p{margin:4px 0 0;color:var(--muted)}
+

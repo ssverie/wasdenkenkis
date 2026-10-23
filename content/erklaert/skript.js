@@ -15,25 +15,45 @@
     "prompt": ["Prompt", "Was ein Modell als Eingabe bekommt, was der Systemprompt ist und wie man gut fragt.", 7, 1],
     "reasoning": ["Reasoning", "Warum Modelle klüger antworten, wenn sie vorher Zwischenschritte aufschreiben.", 8, 2],
     "rag": ["RAG", "Nachschlagen statt erinnern: wie man einem Modell eigene Dokumente zugänglich macht.", 7, 1],
-    "agenten": ["Agenten", "Modell plus Werkzeuge plus Schleife: wenn ein Sprachmodell nicht nur antwortet, sondern handelt.", 10, 2]
+    "agenten": ["Agenten", "Modell plus Werkzeuge plus Schleife: wenn ein Sprachmodell nicht nur antwortet, sondern handelt.", 10, 2],
+    "ki-ml-deep-learning": ["KI, ML, Deep Learning", "Was ist was? Die geschachtelten Begriffe von Künstlicher Intelligenz bis Sprachmodell.", 6, 1],
+    "inferenz": ["Inferenz", "Was beim Benutzen passiert: Prefill und Decode, Tokens pro Sekunde, warum Speicherbandbreite zählt.", 8, 2],
+    "open-weights": ["Open Weights", "Was „offen“ bei Modellen heißt – und welches Modell auf welchem Rechner läuft.", 7, 1],
+    "multimodal": ["Multimodal", "Wie ein Modell Bilder und Sprache verarbeitet: Kacheln, die zu Tokens werden.", 6, 1],
+    "wissensstichtag": ["Wissensstichtag", "Warum ein Modell die letzten Monate nicht kennt und ohne Hilfe nicht weiß, welcher Tag ist.", 6, 1],
+    "benchmarks": ["Benchmarks", "Wie man Modelle vergleicht, warum Ranglisten täuschen und wie eigene Tests aussehen.", 6, 1],
+    "diffusion": ["Diffusionsmodelle", "Wie Bildgeneratoren aus Rauschen Schritt für Schritt ein Bild machen.", 7, 1],
+    "mixture-of-experts": ["Mixture of Experts", "Riesige Modelle, von denen pro Token nur ein kleiner Teil rechnet.", 5, 1],
+    "destillation": ["Destillation", "Wie ein großes Modell ein kleines unterrichtet – mit mehr als nur richtigen Antworten.", 6, 1],
+    "interpretierbarkeit": ["Interpretierbarkeit", "In ein Modell hineinschauen: Merkmale, Schaltkreise und das Golden-Gate-Experiment.", 8, 2],
+    "alignment": ["Alignment", "Wie ein System tut, was wir wollen – nicht nur, was wir gemessen haben. Die Brücke zur Philosophie.", 7, 1]
   };
   const NEEDS = {
     "parameter":["neuronales-netz"], "embedding":["token"], "aufmerksamkeit":["embedding"], "transformer":["aufmerksamkeit"],
     "training":["neuronales-netz","parameter"], "kontextfenster":["token"], "temperatur":["was-ist-ein-sprachmodell"],
     "halluzination":["temperatur"], "prompt":["kontextfenster"], "reasoning":["training","kontextfenster"],
-    "rag":["embedding","kontextfenster"], "agenten":["prompt","kontextfenster"]
+    "rag":["embedding","kontextfenster"], "agenten":["prompt","kontextfenster"],
+    "inferenz":["parameter","transformer"], "open-weights":["parameter","inferenz"], "multimodal":["token","embedding"],
+    "wissensstichtag":["training"], "benchmarks":["training"], "diffusion":["neuronales-netz","embedding"],
+    "mixture-of-experts":["transformer","inferenz"], "destillation":["training","temperatur"],
+    "interpretierbarkeit":["neuronales-netz","embedding"], "alignment":["training"]
   };
   const STAGES = [
+    ["e0","Etappe 0","Begriffe klären","Bevor es losgeht: Wie hängen KI, maschinelles Lernen, Deep Learning und Sprachmodelle zusammen?",["ki-ml-deep-learning"]],
     ["e1","Etappe 1","Das große Bild","Erst einmal verstehen, was ein Sprachmodell grundsätzlich tut. Alles Weitere ist Vertiefung.",["was-ist-ein-sprachmodell"]],
     ["e2","Etappe 2","Grundbausteine","Woraus ein Modell besteht und womit es rechnet: Netz, Zahlen, Wortstücke, Bedeutungsvektoren.",["neuronales-netz","parameter","token","embedding"]],
     ["e3","Etappe 3","Das Innenleben","Wie die Bausteine zusammenspielen und wie das Ganze trainiert wird.",["aufmerksamkeit","transformer","training"]],
     ["e4","Etappe 4","Im Gebrauch","Was man beim Benutzen erlebt – und warum: Gedächtnis, Zufall, Fehler, Fragen.",["kontextfenster","temperatur","halluzination","prompt"]],
-    ["e5","Etappe 5","Darüber hinaus","Wie aus dem Modell mehr wird: Nachdenken, Nachschlagen, Handeln.",["reasoning","rag","agenten"]]
+    ["e5","Etappe 5","Darüber hinaus","Wie aus dem Modell mehr wird: Nachdenken, Nachschlagen, Handeln.",["reasoning","rag","agenten"]],
+    ["e6","Etappe 6","In der Praxis","Was man für den echten Einsatz wissen sollte: Tempo, Betrieb, Bilder als Eingabe, Aktualität, Vergleichbarkeit.",["inferenz","open-weights","multimodal","wissensstichtag","benchmarks"]],
+    ["e6b","Etappe 6b","Bilder","Ein Seitenblick: Wie KI-Bilder entstehen – auf ganz anderem Weg als Text.",["diffusion"]],
+    ["e7","Etappe 7","Tiefer und verantwortlich","Zwei Bauweisen für Fortgeschrittene, dann die Fragen: Was passiert innen – und tut das Modell, was es soll?",["mixture-of-experts","destillation","interpretierbarkeit","alignment"]]
   ];
   const PATHS = [
-    ["Nur das Wichtigste","etwa 35 Minuten",["was-ist-ein-sprachmodell","token","kontextfenster","halluzination"]],
-    ["KI in eigene Software einbauen","etwa 55 Minuten",["was-ist-ein-sprachmodell","token","kontextfenster","prompt","rag","agenten"]],
-    ["Wie es innen funktioniert","etwa 60 Minuten",["neuronales-netz","parameter","embedding","aufmerksamkeit","transformer","training"]]
+    ["Nur das Wichtigste","etwa 45 Minuten",["ki-ml-deep-learning","was-ist-ein-sprachmodell","token","kontextfenster","halluzination"]],
+    ["KI in eigene Software einbauen","etwa 60 Minuten",["was-ist-ein-sprachmodell","token","kontextfenster","prompt","rag","agenten","open-weights"]],
+    ["Wie es innen funktioniert","etwa 60 Minuten",["neuronales-netz","parameter","embedding","aufmerksamkeit","transformer","training","mixture-of-experts"]],
+    ["Grenzen und Verantwortung","etwa 35 Minuten",["halluzination","wissensstichtag","benchmarks","interpretierbarkeit","alignment"]]
   ];
   const order = STAGES.flatMap(s => s[4]);
   const url = k => "/erklaert/" + k + "/";

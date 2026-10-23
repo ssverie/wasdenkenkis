@@ -170,6 +170,7 @@ String antworte(String frage, Benutzer user) {
   <a href="/erklaert/halluzination/">Halluzination</a>
   <a href="/erklaert/agenten/">Agenten</a>
   <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/wissensstichtag/">Wissensstichtag</a>
   <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
 </div>
 </div>

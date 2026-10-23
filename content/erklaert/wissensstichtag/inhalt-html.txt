@@ -1,0 +1,100 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Der <strong>Wissensstichtag</strong> (englisch <em>knowledge cutoff</em>) ist der Zeitpunkt, bis zu dem die Trainingsdaten eines Modells reichen. Was danach passiert ist – neue Versionen, Ereignisse, Preise –, kennt das Modell aus dem Training nicht.</p>
+<p>Zwei Feinheiten: Schon die Monate <em>vor</em> dem Stichtag sind dünn abgedeckt, weil über frische Ereignisse erst später viel geschrieben wird. Und das Modell hat keine Uhr: Welcher Tag heute ist, weiß es nur, wenn es ihm jemand sagt – meist der <a href="/erklaert/prompt/">Systemprompt</a>.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#zeitstrahl">Wissen auf dem Zeitstrahl</a></li>
+  <li><a href="#duenn">Warum das Wissen schon vorher ausdünnt</a></li>
+  <li><a href="#luecke">Die Lücke wird größer</a></li>
+  <li><a href="#datum">Welcher Tag ist heute?</a></li>
+  <li><a href="#hilfe">Was hilft</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="zeitstrahl">Wissen auf dem Zeitstrahl</h2>
+<p>Ein fiktives Modell mit Stichtag Ende Juni. Schieb den Regler auf den Zeitpunkt eines Ereignisses und sieh, was das Modell darüber wissen kann:</p>
+
+<div class="widget">
+  <div class="widget-title">Was weiß das Modell über …</div>
+  <svg viewBox="0 0 560 200" id="tl" role="img" aria-label="Zeitstrahl mit abnehmender Wissensdichte bis zum Stichtag"></svg>
+  <label class="sl">Ereignis im<input type="range" id="ev" min="0" max="35" value="20"><output id="evO"></output></label>
+  <div class="kn" id="kn"></div>
+  <div class="dt" id="dt"><button type="button" data-v="0">ohne Datum im Prompt</button><button type="button" data-v="1">mit Datum im Prompt</button></div>
+  <div class="kn" id="dk"></div>
+  <p class="fine">Schematisch. Die blaue Fläche zeigt, wie viel Text es zum Zeitpunkt des Trainings über jeden Monat gab. Wie steil sie zum Stichtag hin abfällt, ist von Modell zu Modell verschieden.</p>
+</div>
+
+<h2 id="duenn">Warum das Wissen schon vorher ausdünnt</h2>
+<p>Über ein Ereignis wird nicht nur an dem Tag geschrieben, an dem es passiert. Es folgen Analysen, Rückblicke, Diskussionen, Wikipedia-Artikel, Lehrbücher – über Jahre. Als die Trainingsdaten eingesammelt wurden, war ein Ereignis aus dem letzten Monat vor dem Stichtag erst in wenigen Texten erwähnt. Ein Ereignis von vor drei Jahren dagegen in Tausenden.</p>
+<p>Das hat zwei Folgen: Das Modell weiß über die letzten Monate vor dem Stichtag wenig und unsicher Bescheid. Und es <strong>unterschätzt oft seinen eigenen Stichtag</strong> – weil ihm die jüngsten Monate so dünn vorkommen, dass es glaubt, sein Wissen ende früher.</p>
+
+<h2 id="luecke">Die Lücke wird größer</h2>
+<p>Zwischen Stichtag und Veröffentlichung eines Modells vergehen meist einige Monate – für Training, Tests und Sicherheitsprüfungen. Danach wird es oft ein Jahr oder länger benutzt. Die Lücke zwischen dem, was das Modell weiß, und dem, was gerade aktuell ist, wächst also jeden Tag.</p>
+<figure>
+<div class="pipeline">
+  <div class="stage key"><b>Stichtag</b>Datensammlung endet</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>einige Monate</b>Training, Tests</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>Veröffentlichung</b>Lücke: Monate</div>
+  <div class="arrow">→</div>
+  <div class="stage out"><b>Benutzung</b>Lücke: oft über ein Jahr</div>
+</div>
+<figcaption>Wer heute ein Modell fragt, spricht mit einem Wissensstand, der deutlich älter sein kann, als es sich anfühlt.</figcaption>
+</figure>
+
+<div class="self">Dieser Text entstand am 23. Oktober 2026. Das Modell, das ihn geschrieben hat, hat nach Angabe seines Anbieters einen verlässlichen Wissensstand bis etwa Ende Juni 2026. Alles aus den knapp vier Monaten dazwischen kennt es nur, wenn es danach sucht. Das heutige Datum stand in seinem Systemprompt.</div>
+
+<h2 id="datum">Welcher Tag ist heute?</h2>
+<p>Ein Sprachmodell hat keinen Zugriff auf eine Uhr. Ohne Hinweis im Kontext kann es das Datum nur schätzen – und schätzt dann meist ein Datum nahe seinem Stichtag, weil das die „neueste“ Zeit ist, die es kennt. Deshalb schreiben Chat-Apps das aktuelle Datum in den Systemprompt.</p>
+<p>Auch dann gilt: Das Modell weiß, <em>wann</em> heute ist, aber nicht, <em>was</em> seit dem Stichtag passiert ist. Typische Stolperfallen:</p>
+<ul>
+  <li>„Die neueste Java-Version ist …“ – nennt die neueste, die das Modell kennt.</li>
+  <li>Preise, Tarife, Gesetze, Personen in Ämtern – können sich längst geändert haben.</li>
+  <li>Bibliotheken und APIs – neue Versionen, umbenannte oder entfernte Methoden.</li>
+</ul>
+
+<h2 id="hilfe">Was hilft</h2>
+<div class="cards">
+  <div class="card"><div class="num">🔍</div><h4>Websuche</h4><p>Das Modell schlägt aktuelle Informationen nach, statt sich zu erinnern. Bei allem, was sich ändern kann, die beste Lösung.</p></div>
+  <div class="card"><div class="num">📄</div><h4>Material mitgeben</h4><p>Aktuelle Doku, Changelog oder Release Notes in den Kontext legen – oder systematisch über <a href="/erklaert/rag/">RAG</a>.</p></div>
+  <div class="card"><div class="num">❓</div><h4>Gezielt nachfragen</h4><p>„Bis wann reicht dein Wissen?“ und „Könnte sich das inzwischen geändert haben?“ – gute Modelle weisen selbst darauf hin.</p></div>
+</div>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Wissensstichtag</strong></td><td>der Zeitstempel eines Snapshots – alles danach ist nicht im Build</td></tr>
+    <tr><td><strong>Ausdünnen vor dem Stichtag</strong></td><td>ein Index, der noch nicht fertig aufgebaut war, als der Snapshot gezogen wurde</td></tr>
+    <tr><td><strong>Datum im Systemprompt</strong></td><td>eine injizierte <code>java.time.Clock</code>: Ohne sie hat der Code keine Ahnung, wie spät es ist</td></tr>
+    <tr><td><strong>Websuche / RAG</strong></td><td>ein Live-Aufruf statt des veralteten Caches</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Das Modell weiß, welcher Tag heute ist.“</b> – Nur, wenn es im Kontext steht. Sonst rät es – meist zu früh.</div>
+  <div><b>„Bis zum Stichtag weiß es alles gleich gut.“</b> – Die letzten Monate davor sind deutlich lückenhafter als ältere Zeiträume.</div>
+  <div><b>„Wenn es etwas nicht kennt, sagt es das.“</b> – Nicht immer. Fragt man nach etwas Neuem, kann es mit veraltetem Wissen antworten oder eine plausible Antwort erfinden (siehe <a href="/erklaert/halluzination/">Halluzination</a>).</div>
+  <div><b>„Mit Websuche hat das Modell neues Wissen gelernt.“</b> – Es hat nachgeschlagen. Beim nächsten Gespräch ist das Gefundene wieder weg.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/halluzination/">Halluzination</a>
+  <a href="/erklaert/rag/">RAG</a>
+  <a href="/erklaert/kontextfenster/">Kontextfenster</a>
+  <a href="/erklaert/prompt/">Prompt</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

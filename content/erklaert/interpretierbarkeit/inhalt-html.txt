@@ -1,0 +1,106 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Interpretierbarkeit</strong> (englisch <em>interpretability</em>) ist das Forschungsgebiet, das verstehen will, was in einem <a href="/erklaert/neuronales-netz/">neuronalen Netz</a> tatsächlich vorgeht – nicht nur, <em>was</em> es ausgibt, sondern <em>wie</em> und <em>warum</em>.</p>
+<p>Das ist schwer, weil das Gelernte über Milliarden <a href="/erklaert/parameter/">Parameter</a> verteilt ist und einzelne Neuronen meist für viele, nicht zusammenhängende Dinge zuständig sind. In den letzten Jahren gab es aber echte Fortschritte: Forscher können in großen Modellen Millionen erkennbarer „Merkmale“ finden – Begriffe wie „Golden Gate Bridge“ oder „Fehler im Code“ – und Rechenwege nachverfolgen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#warum">Warum man hineinschauen will</a></li>
+  <li><a href="#neuronen">Das Problem: Neuronen sind unordentlich</a></li>
+  <li><a href="#merkmale">Merkmale finden</a></li>
+  <li><a href="#schaltkreise">Gedankengänge nachverfolgen</a></li>
+  <li><a href="#grenzen">Wie weit ist man?</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="warum">Warum man hineinschauen will</h2>
+<div class="cards">
+  <div class="card"><div class="num">🔒</div><h4>Sicherheit</h4><p>Wenn ein Modell täuscht oder gefährliches Wissen nutzt, möchte man das erkennen können – nicht nur an der Ausgabe, sondern an der Ursache.</p></div>
+  <div class="card"><div class="num">🐞</div><h4>Fehlersuche</h4><p>Warum <a href="/erklaert/halluzination/">halluziniert</a> es gerade hier? Wo kommt eine Voreingenommenheit her?</p></div>
+  <div class="card"><div class="num">🔬</div><h4>Wissenschaft</h4><p>Wie lösen diese Systeme Aufgaben, die niemand ihnen erklärt hat? Was haben sie gelernt, das wir nicht wissen?</p></div>
+</div>
+
+<h2 id="neuronen">Das Problem: Neuronen sind unordentlich</h2>
+<p>Die naheliegende Idee wäre: einzelne Neuronen anschauen und herausfinden, wofür jedes zuständig ist. In kleinen Bildnetzen klappt das manchmal. In Sprachmodellen reagieren einzelne Neuronen aber meist auf eine wilde Mischung – ein Neuron feuert etwa bei Katzen, bei Autos <em>und</em> bei Gedichten auf Französisch. Man nennt das <strong>polysemantisch</strong>.</p>
+<p>Der Grund heißt <strong>Superposition</strong>: Das Modell will viel mehr Begriffe darstellen, als es Neuronen hat. Also legt es Begriffe als <em>Richtungen</em> im Raum ab, die quer über viele Neuronen verteilt sind – ähnlich wie bei <a href="/erklaert/embedding/">Embeddings</a>. Jeder Begriff nutzt viele Neuronen, jedes Neuron dient vielen Begriffen.</p>
+
+<div class="widget">
+  <div class="widget-title">Neuronen oder Merkmale?</div>
+  <div class="ip-tabs" id="itabs"></div>
+  <div class="ip-cols">
+    <div><div class="h">Drei einzelne Neuronen</div><div id="neur"></div></div>
+    <div><div class="h">Drei gefundene Merkmale</div><div id="feat"></div></div>
+  </div>
+  <div class="ip-note" id="inote"></div>
+  <p class="fine">Ausgedachte Werte, die das typische Bild zeigen: Neuronen reagieren durcheinander, Merkmale sauber auf ein Thema. In echten Modellen gibt es Millionen solcher Merkmale.</p>
+</div>
+
+<h2 id="merkmale">Merkmale finden</h2>
+<p>Ein Durchbruch der letzten Jahre: Mit einem zweiten, speziell trainierten Netz („Sparse Autoencoder“ oder Wörterbuch-Lernen) lassen sich die durcheinandergemischten Neuronen-Aktivierungen in viele einzelne, gut deutbare <strong>Merkmale</strong> zerlegen. 2024 veröffentlichte Anthropic – die Firma, die auch das Modell hinter dieser Seite entwickelt –, dass sich so in einem großen Produktionsmodell Millionen Merkmale finden ließen – für konkrete Dinge wie Städte oder Personen, aber auch für abstrakte wie „Sicherheitslücke im Code“, „Schmeichelei“ oder „innerer Konflikt“. Viele davon reagieren sprachübergreifend und sogar auf Bilder desselben Begriffs.</p>
+
+<h3>Das Golden-Gate-Experiment</h3>
+<p>Merkmale lassen sich nicht nur beobachten, sondern auch <strong>verstärken</strong>. In einer öffentlichen Demonstration drehten Forscher das Merkmal für die Golden Gate Bridge künstlich hoch – und das Modell brachte die Brücke in jede Antwort ein, bis es sich zeitweise sogar selbst für die Brücke hielt. Probier es nachgestellt aus:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein Merkmal hochdrehen</div>
+  <div class="steer">
+    <label class="sl">Merkmal „Brücke“<input type="range" id="gg" min="0" max="4" step="1" value="0"><output id="ggO"></output></label>
+    <div class="chatout" id="ggOut"></div>
+  </div>
+  <p class="fine">Nachgestellte Antworten, angelehnt an das veröffentlichte Experiment. Es zeigt: Das gefundene Merkmal ist nicht nur ein Etikett, es hat tatsächlich Einfluss darauf, was das Modell denkt und schreibt.</p>
+</div>
+
+<h2 id="schaltkreise">Gedankengänge nachverfolgen</h2>
+<p>Der nächste Schritt: nicht nur einzelne Merkmale, sondern ganze <strong>Schaltkreise</strong> – wie Merkmale über die Schichten zusammenwirken. 2025 veröffentlichte Anthropic Untersuchungen, in denen sich solche Wege im Modell nachzeichnen ließen. Zwei Befunde:</p>
+<figure>
+<div class="trace">
+  <span class="n">„Die Hauptstadt des Bundesstaats, in dem Dallas liegt, ist …“</span><span class="a">→</span>
+  <span class="n f">Merkmal: Texas</span><span class="a">→</span>
+  <span class="n f">Merkmal: Hauptstadt</span><span class="a">→</span>
+  <span class="n o">Austin</span>
+</div>
+<figcaption>Das Modell springt nicht direkt zur Antwort, sondern bildet intern einen Zwischenschritt („Texas“), der nirgends im Text steht – ein mehrstufiger Gedankengang innerhalb eines einzigen Durchgangs.</figcaption>
+</figure>
+<p>Ein zweiter Befund betraf Reime: Beim Schreiben eines gereimten Zweizeilers wählte das Modell das Reimwort der zweiten Zeile offenbar <em>schon vorher</em> und schrieb die Zeile dann darauf hin – es plante also voraus, obwohl es Token für Token schreibt. Solche Ergebnisse zeigen auch, dass der sichtbare Denktext bei <a href="/erklaert/reasoning/">Reasoning</a> nicht immer der tatsächlichen Rechnung entspricht.</p>
+
+<h2 id="grenzen">Wie weit ist man?</h2>
+<p>Ehrlich gesagt: am Anfang. Die Methoden erklären bisher nur einen Teil dessen, was in einem Modell passiert, sind aufwendig und funktionieren bei manchen Fragen besser als bei anderen. Viele Merkmale bleiben schwer deutbar. Aber das Feld wächst schnell, und es gilt als einer der vielversprechendsten Wege, um künftig prüfen zu können, ob ein Modell wirklich tut, was es soll – siehe <a href="/erklaert/alignment/">Alignment</a>.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Interpretierbarkeit</strong></td><td>Reverse Engineering einer Binärdatei, für die es nie Quellcode gab</td></tr>
+    <tr><td><strong>Polysemantisches Neuron</strong></td><td>eine Variable, die je nach Kontext für ganz verschiedene Dinge benutzt wird</td></tr>
+    <tr><td><strong>Superposition</strong></td><td>Bit-Packing: mehr Werte als Felder, platzsparend überlagert</td></tr>
+    <tr><td><strong>Merkmal</strong></td><td>ein dekompilierter, sprechender Variablenname</td></tr>
+    <tr><td><strong>Merkmal verstärken</strong></td><td>im Debugger einen Wert zur Laufzeit ändern und schauen, was passiert</td></tr>
+    <tr><td><strong>Schaltkreis</strong></td><td>ein rekonstruierter Aufrufgraph</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Niemand kann wissen, was in einem Modell vorgeht.“</b> – Vollständig nicht, aber erste Teile lassen sich inzwischen sichtbar machen, gezielt verändern und überprüfen.</div>
+  <div><b>„Jedes Neuron steht für einen Begriff.“</b> – In Sprachmodellen meist nicht. Begriffe sind über viele Neuronen verteilt; erst Zerlegungsverfahren machen sie sichtbar.</div>
+  <div><b>„Das Modell kann einfach sagen, wie es zu seiner Antwort kam.“</b> – Seine eigene Erklärung ist erzeugter Text und muss nicht mit dem inneren Rechenweg übereinstimmen. Genau das prüft die Interpretierbarkeitsforschung von außen.</div>
+  <div><b>„Ein gefundenes Merkmal beweist Verständnis.“</b> – Es zeigt, dass das Modell einen Begriff intern darstellt und nutzt. Ob das „Verstehen“ im menschlichen Sinn ist, ist eine philosophische Frage.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/neuronales-netz/">Neuronales Netz</a>
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/embedding/">Embedding</a>
+  <a href="/erklaert/aufmerksamkeit/">Aufmerksamkeit</a>
+  <a href="/erklaert/alignment/">Alignment</a>
+  <a href="/erklaert/reasoning/">Reasoning</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

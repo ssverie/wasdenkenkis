@@ -182,6 +182,8 @@ List&lt;Dokument&gt; treffer = dokumente.stream()
   <a href="/erklaert/transformer/">Transformer</a>
   <a href="/erklaert/kontextfenster/">Kontextfenster</a>
   <a href="/erklaert/rag/">RAG</a>
+  <a href="/erklaert/multimodal/">Multimodal</a>
+  <a href="/erklaert/interpretierbarkeit/">Interpretierbarkeit</a>
   <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
 </div>
 </div>

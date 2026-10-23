@@ -6,14 +6,16 @@ use open qw(:std :encoding(UTF-8));
 
 my $quelle = 'input/erklaert';
 my $ziel   = 'content/erklaert';
-# Datum = wann der Beitrag auf die Seite kam: vorhandene Seiten behalten ihr Datum
-my %datum = (
-  'was-ist-ein-sprachmodell' => '2026-10-22T11:50:00+02:00',
-  'token'                    => '2026-10-22T14:14:00+02:00',
-  'parameter'                => '2026-10-22T15:40:00+02:00',
-  'kontextfenster'           => '2026-10-22T15:47:00+02:00',
-);
-my $neu = '2026-10-23T11:23:00+02:00';
+# Datum = wann der Beitrag auf die Seite kam: vorhandene Seiten behalten ihr Datum (aus ihrer index.md),
+# neue bekommen die Dateizeit der gelieferten index.html.
+sub altesDatum {
+  my $f = shift; return undef unless -f $f;
+  my $t = lesen($f); return $t =~ /^date = (\S+)$/m ? $1 : undef;
+}
+sub dateizeit {
+  my @t = localtime((stat(shift))[9]);
+  return sprintf('%04d-%02d-%02dT%02d:%02d:%02d+02:00', $t[5]+1900, $t[4]+1, $t[3], $t[2], $t[1], $t[0]);
+}
 
 sub lesen { my $f = shift; open(my $h, '<', $f) or die "$f: $!"; local $/; my $t = <$h>; close $h; return $t; }
 sub schreiben { my ($f, $t) = @_; open(my $h, '>', $f) or die "$f: $!"; print $h $t; close $h; }
@@ -46,7 +48,8 @@ for my $b (@begriffe) {
   my $fm = "+++\n";
   $fm .= "title = \"" . toml($istUebersicht ? 'KI-Begriffe' : text($titel)) . "\"\n";
   $fm .= "description = \"" . toml(text($lead)) . "\"\n";
-  $fm .= "date = " . ($datum{$b} // $neu) . "\n";
+  my $mdDatei = $istUebersicht ? "$dir/_index.md" : "$dir/index.md";
+  $fm .= "date = " . (altesDatum($mdDatei) // dateizeit("$quelle/$b/index.html")) . "\n";
   $fm .= "modelle = [\"Claude\"]\nmodell = \"Claude Opus 5.5\"\nmodell_id = \"claude-opus-5-5\"\nherkunft = \"eingebracht\"\n";
   $fm .= "kontext = \"" . toml(text($kontext)) . "\"\n" if $kontext;
   $fm .= "prompt = \"" . toml(text($prompt)) . "\"\n" if $prompt;

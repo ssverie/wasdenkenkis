@@ -1,0 +1,109 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Benchmark</strong> ist ein standardisierter Test: eine feste Sammlung von Aufgaben mit bekannten Lösungen, auf der man verschiedene Modelle vergleicht. Es gibt Benchmarks für Wissen, Programmieren, Mathematik, Schlussfolgern, Agenten-Aufgaben und mehr.</p>
+<p>Sie sind nützlich, aber mit Vorsicht zu lesen: Jeder misst nur einen Ausschnitt, viele sind nach kurzer Zeit „ausgereizt“, Testaufgaben geraten manchmal in die Trainingsdaten, und Anbieter optimieren gezielt auf bekannte Tests. Für eigene Anwendungen zählt am Ende, wie ein Modell bei <em>den eigenen</em> Aufgaben abschneidet.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#rangliste">Wer ist der Beste?</a></li>
+  <li><a href="#arten">Was gemessen wird</a></li>
+  <li><a href="#saettigung">Warum Benchmarks veralten</a></li>
+  <li><a href="#fallen">Die Fallen</a></li>
+  <li><a href="#eigene">Eigene Tests: Evals</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="rangliste">Wer ist der Beste?</h2>
+<p>Vier erfundene Modelle, fünf Arten von Tests. Schalte zwischen den Benchmarks um:</p>
+<div class="widget">
+  <div class="widget-title">Die Rangliste hängt vom Test ab</div>
+  <div class="btabs" id="btabs"></div>
+  <p class="bdesc" id="bdesc"></p>
+  <div class="rank" id="rank"></div>
+  <p class="fine">Erfundene Modelle und Werte. Das Muster ist aber typisch: Ein Modell glänzt beim Programmieren, ein anderes bei Mathe, ein kleines günstiges ist überraschend gut im Alltag. „Das beste Modell“ gibt es nur für eine bestimmte Aufgabe.</p>
+</div>
+
+<h2 id="arten">Was gemessen wird</h2>
+<p>Ein paar der bekanntesten Benchmarks, damit man die Namen in Ankündigungen einordnen kann:</p>
+<div class="tbl-wrap">
+<table class="tbl-b">
+  <thead><tr><th>Name</th><th>Misst</th><th>Art der Aufgaben</th></tr></thead>
+  <tbody>
+    <tr><td><strong>MMLU</strong></td><td>Allgemeinwissen</td><td>Multiple-Choice-Fragen aus 57 Fächern, von Jura bis Medizin. Inzwischen weitgehend ausgereizt.</td></tr>
+    <tr><td><strong>GPQA</strong></td><td>Expertenwissen</td><td>Sehr schwere Fragen aus Biologie, Chemie, Physik, die sich nicht einfach ergoogeln lassen.</td></tr>
+    <tr><td><strong>AIME</strong></td><td>Mathematik</td><td>Aufgaben aus einem US-Mathematikwettbewerb für Schüler – mit exakt prüfbaren Lösungen.</td></tr>
+    <tr><td><strong>HumanEval</strong></td><td>Programmieren</td><td>Kurze Funktionen nach Beschreibung schreiben, geprüft mit Tests. Ebenfalls weitgehend ausgereizt.</td></tr>
+    <tr><td><strong>SWE-bench</strong></td><td>Software-Entwicklung</td><td>Echte Fehlerberichte aus Open-Source-Projekten beheben – der Agent muss das Repository verstehen und Tests bestehen lassen.</td></tr>
+    <tr><td><strong>Humanity’s Last Exam</strong></td><td>Grenzen des Wissens</td><td>Fragen von Fachleuten weltweit, bewusst so schwer, dass Modelle sie anfangs kaum lösten.</td></tr>
+    <tr><td><strong>LMArena</strong></td><td>Beliebtheit</td><td>Menschen vergleichen zwei anonyme Antworten und wählen die bessere. Daraus entsteht eine Rangliste wie beim Schach.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="saettigung">Warum Benchmarks veralten</h2>
+<p>Ein neuer Benchmark wird meist entworfen, weil die alten nichts mehr unterscheiden. Dann holen die Modelle auf – oft schneller als erwartet –, bis auch der neue nahe 100 % liegt. Man spricht von <strong>Sättigung</strong>.</p>
+<figure>
+<svg viewBox="0 0 560 220" id="satSvg" role="img" aria-label="Schematische Kurven: Benchmark-Ergebnisse steigen nach Einführung schnell auf nahe 100 Prozent"></svg>
+<figcaption>Schematisch. Jede Kurve: ein Benchmark, gemessen am jeweils besten Modell. Der Zeitraum, bis ein neuer Test ausgereizt ist, ist in den letzten Jahren kürzer geworden.</figcaption>
+</figure>
+
+<h2 id="fallen">Die Fallen</h2>
+<div class="cards">
+  <div class="card no"><div class="num">!</div><h4>Kontamination</h4><p>Benchmark-Aufgaben stehen im Internet. Geraten sie in die Trainingsdaten, hat das Modell die Lösungen womöglich gesehen – dann misst der Test Gedächtnis statt Können.</p></div>
+  <div class="card no"><div class="num">!</div><h4>Auf den Test optimiert</h4><p>„Wird ein Maß zum Ziel, hört es auf, ein gutes Maß zu sein“ (Goodharts Gesetz). Wer gezielt auf bekannte Tests hin trainiert, verbessert die Zahl mehr als die Fähigkeit.</p></div>
+  <div class="card no"><div class="num">!</div><h4>Unterschiedliche Bedingungen</h4><p>Mit wie viel Nachdenkzeit, wie vielen Versuchen, welchen Werkzeugen? Kleine Unterschiede im Testaufbau verändern Ergebnisse deutlich – Zahlen verschiedener Anbieter sind oft nicht direkt vergleichbar.</p></div>
+</div>
+<p>Arena-Ranglisten haben eigene Schwächen: Menschen bevorzugen gern längere, selbstbewusstere und schön formatierte Antworten – unabhängig davon, ob sie richtig sind.</p>
+
+<h2 id="eigene">Eigene Tests: Evals</h2>
+<p>Für den Einsatz in eigener Software ist die zuverlässigste Methode ein eigener kleiner Benchmark – im Fachjargon <strong>Evals</strong>. Man sammelt 50 bis 200 typische Aufgaben aus dem echten Anwendungsfall, legt fest, was eine gute Antwort ist, und lässt verschiedene Modelle oder Prompt-Varianten dagegen laufen. Für Entwickler ist das vertrautes Terrain:</p>
+<pre><code><span class="c">// Evals sind im Kern Unit-Tests mit Toleranz</span>
+<span class="k">record</span> Fall(String eingabe, Predicate&lt;String&gt; istGut) {}
+
+List&lt;Fall&gt; faelle = List.of(
+    <span class="k">new</span> Fall(<span class="s">"Ticket: 'Login wirft 500er'"</span>,   a -&gt; a.strip().equals(<span class="s">"BUG"</span>)),
+    <span class="k">new</span> Fall(<span class="s">"Ticket: 'Dark Mode bitte'"</span>,     a -&gt; a.strip().equals(<span class="s">"FEATURE"</span>))
+    <span class="c">// … 100 weitere echte Beispiele</span>
+);
+
+<span class="k">for</span> (Modell m : kandidaten) {
+    <span class="k">long</span> ok = faelle.stream().filter(f -&gt; f.istGut().test(m.frage(prompt + f.eingabe()))).count();
+    System.out.printf(<span class="s">"%s: %d/%d%n"</span>, m.name(), ok, faelle.size());
+}</code></pre>
+<p>Für offene Aufgaben wie Zusammenfassungen, bei denen es keine exakte Lösung gibt, lässt man oft ein zweites Modell nach festen Kriterien bewerten („LLM als Richter“) – und prüft stichprobenartig selbst nach.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Benchmark</strong></td><td>eine öffentliche Test-Suite mit Punktzahl</td></tr>
+    <tr><td><strong>Eval</strong></td><td>die eigene Test-Suite für den eigenen Anwendungsfall</td></tr>
+    <tr><td><strong>Kontamination</strong></td><td>Tests, deren erwartete Ergebnisse im Code fest verdrahtet sind – grün, aber wertlos</td></tr>
+    <tr><td><strong>Sättigung</strong></td><td>eine Test-Suite, die alle bestehen – sie unterscheidet nichts mehr</td></tr>
+    <tr><td><strong>Arena</strong></td><td>A/B-Test mit echten Nutzern</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Das Modell mit der höchsten Punktzahl ist das beste.“</b> – Für diesen Test, unter diesen Bedingungen. Für die eigene Aufgabe kann ein anderes besser sein – oder ein günstigeres genauso gut.</div>
+  <div><b>„90 % im Benchmark heißt 90 % richtige Antworten bei mir.“</b> – Benchmarks sind sauber formulierte Aufgaben. Echte Anfragen sind unordentlicher, und der Kontext ist ein anderer.</div>
+  <div><b>„Benchmarks messen Intelligenz.“</b> – Sie messen, wie gut ein Modell bestimmte Aufgabentypen löst. Was das über allgemeine Fähigkeiten aussagt, ist umstritten.</div>
+  <div><b>„Wenn ein Modell einen Test besteht, kann es das sicher.“</b> – Leicht umformulierte Aufgaben zeigen manchmal, dass Muster gelernt wurden statt des Prinzips.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/halluzination/">Halluzination</a>
+  <a href="/erklaert/agenten/">Agenten</a>
+  <a href="/erklaert/reasoning/">Reasoning</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

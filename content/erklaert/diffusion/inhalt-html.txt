@@ -1,0 +1,117 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Diffusionsmodell</strong> hat gelernt, aus einem verrauschten Bild ein etwas weniger verrauschtes zu machen. Zum Erzeugen startet es mit reinem Zufallsrauschen und wendet diesen Schritt zwanzig- bis fünfzigmal an – bis ein klares Bild entstanden ist.</p>
+<p>Gelenkt wird das durch eine <strong>Textbeschreibung</strong> (den Prompt): Bei jedem Schritt entscheidet das Modell, welches Entrauschen am besten zu „Leuchtturm bei Sonnenuntergang“ passt. Das ist ein grundlegend anderer Weg als bei Sprachmodellen, die Text Token für Token anhängen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#probier">Ein Bild aus dem Rauschen</a></li>
+  <li><a href="#training">Wie es lernt</a></li>
+  <li><a href="#text">Wie der Text mitlenkt</a></li>
+  <li><a href="#unterschied">Anders als Sprachmodelle</a></li>
+  <li><a href="#schwaechen">Typische Schwächen</a></li>
+  <li><a href="#fragen">Offene Fragen</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="probier">Ein Bild aus dem Rauschen</h2>
+<p>Wähl eine Beschreibung und schieb den Regler – oder lass es ablaufen. Achte darauf, dass alle Bilder aus <em>demselben</em> Startrauschen entstehen:</p>
+
+<div class="widget">
+  <div class="widget-title">Entrauschen Schritt für Schritt</div>
+  <div class="df">
+    <canvas id="cv" width="120" height="120" aria-label="Bild entsteht aus Rauschen"></canvas>
+    <div>
+      <div class="ptabs" id="ptabs"></div>
+      <label class="sl">Schritt<input type="range" id="st" min="0" max="40" value="0"><output id="stO"></output></label>
+      <div class="controls"><button class="primary" id="play">Abspielen</button><button id="seed">Neues Startrauschen</button></div>
+      <div class="seed" id="seedT"></div>
+    </div>
+  </div>
+  <p class="fine">Nachgestellt: Das Zielbild ist hier vorgezeichnet und wird nur überblendet. Ein echtes Modell kennt das Ziel nicht – es „errät“ bei jedem Schritt, wie ein passendes Bild aussehen müsste, und darum hängen Einzelheiten wie die Position der Sonne vom Startrauschen ab.</p>
+</div>
+
+<h2 id="training">Wie es lernt</h2>
+<p>Das Training ist überraschend einfach. Man nimmt echte Bilder und macht sie in vielen kleinen Schritten kaputt, indem man immer mehr Rauschen hinzufügt. Das Modell – ein <a href="/erklaert/neuronales-netz/">neuronales Netz</a> – bekommt ein verrauschtes Bild und soll vorhersagen, <em>welches Rauschen</em> darin steckt. Weil man das Rauschen selbst hinzugefügt hat, kennt man die richtige Antwort und kann den Fehler messen.</p>
+
+<figure>
+<div class="dir"><span class="f">→ Training: Rauschen hinzufügen</span></div>
+<div class="strip" id="strip"></div>
+<div class="strip-lbl"><span>Bild</span><span>leicht</span><span>mittel</span><span>stark</span><span>fast nur Rauschen</span><span>reines Rauschen</span></div>
+<div class="dir" style="justify-content:flex-end"><span class="b">← Erzeugen: Rauschen entfernen</span></div>
+<figcaption>Vorwärts ist trivial – Rauschen hinzufügen kann jeder. Rückwärts zu gehen ist das, was das Modell lernen muss. Wer bei jedem Grad von Verrauschung das Rauschen erkennt, kann es auch Schritt für Schritt entfernen.</figcaption>
+</figure>
+
+<p>Nach Training auf Hunderten Millionen Bildern mit Beschreibungen hat das Modell ein sehr gutes Gespür dafür entwickelt, wie Bilder typischerweise aussehen: wie Licht fällt, wie Fell aussieht, wie Perspektive funktioniert.</p>
+
+<h2 id="text">Wie der Text mitlenkt</h2>
+<p>Damit nicht irgendein Bild entsteht, bekommt das Modell bei jedem Schritt die Beschreibung mit – als <a href="/erklaert/embedding/">Embedding</a> aus einem Textmodell. Über <a href="/erklaert/aufmerksamkeit/">Aufmerksamkeit</a> kann jede Bildregion auf die Wörter achten, die für sie wichtig sind.</p>
+<div class="cards">
+  <div class="card"><div class="num">T</div><h4>Text-Encoder</h4><p>Ein Sprachmodell-Teil, der die Beschreibung in Vektoren übersetzt.</p></div>
+  <div class="card"><div class="num">G</div><h4>Guidance</h4><p>Ein Regler dafür, wie streng sich das Bild an den Text halten soll. Zu wenig: beliebig. Zu viel: übersättigt und unnatürlich.</p></div>
+  <div class="card"><div class="num">L</div><h4>Latenter Raum</h4><p>Gerechnet wird meist nicht auf den Pixeln, sondern auf einer stark komprimierten Darstellung. Erst am Ende wird daraus das große Bild. Das macht es viel schneller.</p></div>
+</div>
+
+<h2 id="unterschied">Anders als Sprachmodelle</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th></th><th>Sprachmodell</th><th>Diffusionsmodell</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Erzeugt</strong></td><td>Token für Token, von links nach rechts</td><td>das ganze Bild gleichzeitig, immer schärfer</td></tr>
+    <tr><td><strong>Ein Schritt ist</strong></td><td>das nächste Wortstück</td><td>ein etwas weniger verrauschtes Gesamtbild</td></tr>
+    <tr><td><strong>Zufall steckt in</strong></td><td>der Auswahl jedes Tokens (<a href="/erklaert/temperatur/">Temperatur</a>)</td><td>dem Startrauschen</td></tr>
+    <tr><td><strong>Korrektur</strong></td><td>einmal geschrieben, bleibt es stehen</td><td>jeder Schritt kann das ganze Bild noch verändern</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Die Grenzen verschwimmen inzwischen: Manche neueren Systeme erzeugen Bilder auch Token für Token in einem multimodalen Sprachmodell (siehe <a href="/erklaert/multimodal/">Multimodal</a>), und es wird erforscht, Text per Diffusion zu erzeugen. Für Video wird das Diffusionsprinzip auf viele Bilder gleichzeitig ausgeweitet.</p>
+
+<h2 id="schwaechen">Typische Schwächen</h2>
+<p>Lange waren <strong>Hände</strong> und <strong>Schrift im Bild</strong> berüchtigt: sechs Finger, Buchstabensalat auf Schildern. Der Grund: Das Modell lernt, wie Dinge <em>ungefähr</em> aussehen – Hände sehen aus vielen Winkeln sehr unterschiedlich aus, und Buchstaben müssen exakt stimmen. Neuere Modelle sind darin viel besser geworden. Schwierig bleiben genaues Zählen („genau sieben Vögel“), komplexe räumliche Anordnungen und dieselbe Figur über viele Bilder hinweg gleich aussehen zu lassen.</p>
+
+<h2 id="fragen">Offene Fragen</h2>
+<p>Bildgeneratoren lernen aus riesigen Mengen Bilder aus dem Internet, darunter Werke von Künstlern, die nicht gefragt wurden. Ob und wann das rechtlich zulässig ist, wird in mehreren Ländern vor Gericht verhandelt. Dazu kommen Fragen nach Fälschungen echter Personen und der Kennzeichnung von KI-Bildern – etwa über unsichtbare Wasserzeichen oder Herkunftsangaben in den Bilddateien. Beispiele für KI-erzeugte Bilder zeigt die <a href="/galerie/">Galerie</a> dieser Seite.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Diffusionsmodell</strong></td><td>eine Funktion <code>float[] entrausche(float[] bild, int schritt, float[] text)</code>, die in einer Schleife aufgerufen wird</td></tr>
+    <tr><td><strong>Startrauschen / Seed</strong></td><td><code>new Random(seed)</code> – gleicher Seed, gleiche Beschreibung, gleiches Bild</td></tr>
+    <tr><td><strong>Schritte</strong></td><td>Iterationen eines Näherungsverfahrens: mehr ist genauer, aber langsamer</td></tr>
+    <tr><td><strong>Latenter Raum</strong></td><td>eine komprimierte Zwischendarstellung, wie ein verlustbehaftetes Format, in dem gerechnet und erst am Ende dekodiert wird</td></tr>
+  </tbody>
+</table>
+</div>
+<pre><code><span class="k">float</span>[] x = rauschen(<span class="k">new</span> Random(seed), groesse);     <span class="c">// Start: reiner Zufall</span>
+<span class="k">float</span>[] t = textEncoder.embed(<span class="s">"Leuchtturm bei Sonnenuntergang"</span>);
+
+<span class="k">for</span> (<span class="k">int</span> s = SCHRITTE; s &gt; 0; s--) {
+    <span class="k">float</span>[] geschaetztesRauschen = modell.vorhersage(x, s, t);
+    x = entferneEinStueck(x, geschaetztesRauschen, s);  <span class="c">// etwas klarer</span>
+}
+Bild ergebnis = decoder.zuPixeln(x);</code></pre>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Das Bild ist eine Collage aus Trainingsbildern.“</b> – Es wird nichts ausgeschnitten und zusammengeklebt. Das Modell erzeugt jeden Pixel neu aus dem, was es über Bilder allgemein gelernt hat. Sehr häufige Motive können allerdings fast identisch nachgebildet werden.</div>
+  <div><b>„Das Modell sucht passende Bilder in einer Datenbank.“</b> – Es gibt keine Bilddatenbank im Modell, nur gelernte Parameter.</div>
+  <div><b>„Gleicher Prompt, gleiches Bild.“</b> – Nur mit gleichem Startrauschen. Mit neuem Seed entsteht eine neue Variante.</div>
+  <div><b>„Chat-Modelle malen selbst.“</b> – Oft beauftragt das Sprachmodell im Hintergrund ein eigenes Bildmodell. Manche neuen Modelle können Bilder aber tatsächlich selbst erzeugen.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/ki-ml-deep-learning/">KI, ML, Deep Learning</a>
+  <a href="/erklaert/neuronales-netz/">Neuronales Netz</a>
+  <a href="/erklaert/multimodal/">Multimodal</a>
+  <a href="/erklaert/embedding/">Embedding</a>
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

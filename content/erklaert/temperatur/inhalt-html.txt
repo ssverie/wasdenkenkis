@@ -178,6 +178,7 @@ pᵢ  =  ─────────────────────
   <a href="/erklaert/halluzination/">Halluzination</a>
   <a href="/erklaert/parameter/">Parameter</a>
   <a href="/erklaert/reasoning/">Reasoning</a>
+  <a href="/erklaert/destillation/">Destillation</a>
   <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
 </div>
 </div>

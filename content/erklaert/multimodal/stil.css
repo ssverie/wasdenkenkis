@@ -1,0 +1,27 @@
+/* Seiteneigene Stile (multimodal) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Multimodal ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .mm{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+@media (max-width:640px){.erklaert .mm{grid-template-columns:1fr}}
+.erklaert .mm canvas{width:100%;max-width:300px;aspect-ratio:1;border-radius:10px;display:block;margin:0 auto;cursor:crosshair;border:1px solid var(--line)}
+.erklaert .sl{display:grid;grid-template-columns:7em 1fr 4.5em;align-items:center;gap:10px;font-size:.88rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+.erklaert .big{font-family:var(--serif);font-size:2rem;color:var(--accent);margin:8px 0 0;font-variant-numeric:tabular-nums}
+.erklaert .patchinfo{margin-top:10px;padding:10px 12px;border-radius:9px;background:var(--bg);font-size:.86rem;min-height:4.6em}
+.erklaert .patchinfo code{font-size:.78rem}
+.erklaert .modes{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.erklaert .modes{grid-template-columns:1fr}}
+.erklaert .modes > div{padding:14px;border-radius:12px;background:var(--bg);font-size:.9rem}
+.erklaert .modes h4{margin:0 0 6px}
+.erklaert .modes .pipeline{flex-direction:column;margin-top:8px}
+.erklaert .modes .pipeline .arrow{width:auto;height:16px;flex-basis:16px;transform:rotate(90deg)}
+.erklaert .sw{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.erklaert .sw{grid-template-columns:1fr}}
+.erklaert .sw > div{padding:14px;border-radius:12px;font-size:.9rem}
+.erklaert .sw .g{background:var(--ok-soft)}.erklaert .sw .b{background:var(--bad-soft)}
+.erklaert .sw h4{margin:0 0 6px}
+.erklaert .sw ul{margin:0;padding-left:1.1em}
+.erklaert .sw li{margin:3px 0}
+

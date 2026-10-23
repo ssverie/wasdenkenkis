@@ -128,6 +128,7 @@
   <a href="/erklaert/kontextfenster/">Kontextfenster</a>
   <a href="/erklaert/halluzination/">Halluzination</a>
   <a href="/erklaert/agenten/">Agenten</a>
+  <a href="/erklaert/interpretierbarkeit/">Interpretierbarkeit</a>
   <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
 </div>
 </div>

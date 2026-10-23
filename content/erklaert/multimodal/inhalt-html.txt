@@ -1,0 +1,115 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Multimodal</strong> heißt: Ein Modell versteht oder erzeugt mehr als eine Art von Daten – Text, Bilder, Audio, Video. Man kann einem multimodalen Sprachmodell also ein Foto, einen Screenshot oder eine Sprachnachricht geben und dazu Fragen stellen.</p>
+<p>Der Trick: Ein Bild wird in kleine <strong>Kacheln</strong> zerlegt, jede Kachel wird zu einem Vektor – genau wie ein Wort-<a href="/erklaert/token/">Token</a> zu einem <a href="/erklaert/embedding/">Embedding</a> wird. Danach sind Bildstücke und Wortstücke für den <a href="/erklaert/transformer/">Transformer</a> einfach Einträge in derselben Folge.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#kacheln">Vom Bild zu Tokens</a></li>
+  <li><a href="#audio">Sprache und Audio</a></li>
+  <li><a href="#ausgabe">Und in die andere Richtung?</a></li>
+  <li><a href="#staerken">Was gut geht – und was nicht</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="kacheln">Vom Bild zu Tokens</h2>
+<p>Ein Bild hat Millionen Pixel – viel zu viele, um jedes einzeln zu verarbeiten. Deshalb wird es in ein Raster aus gleich großen Kacheln (<em>Patches</em>) zerlegt. Ein eigener Bildteil des Modells, der <strong>Vision-Encoder</strong>, macht aus jeder Kachel einen Vektor. Fahr mit der Maus über das Bild:</p>
+
+<div class="widget">
+  <div class="widget-title">Bild in Kacheln</div>
+  <div class="mm">
+    <canvas id="cv" width="300" height="300" aria-label="Gezeichnete Landschaft mit Kachelraster"></canvas>
+    <div>
+      <label class="sl">Kachelgröße<input type="range" id="ps" min="0" max="3" step="1" value="1"><output id="psO"></output></label>
+      <label class="sl">Auflösung<input type="range" id="res" min="0" max="3" step="1" value="1"><output id="resO"></output></label>
+      <div class="big" id="tok"></div>
+      <div class="fine" style="margin:0" id="tokT"></div>
+      <div class="patchinfo" id="pinfo">Zeig auf eine Kachel.</div>
+    </div>
+  </div>
+  <p class="fine">Vereinfacht. Echte Modelle verkleinern große Bilder vorher, fassen benachbarte Kacheln oft noch zusammen und nutzen typischerweise Kacheln von etwa 14 bis 16 Pixeln Kantenlänge. Wie viele Tokens ein Bild kostet, hängt vom Modell ab – meist einige Hundert bis über tausend.</p>
+</div>
+
+<p>Entscheidend ist der letzte Schritt: Die Bild-Vektoren werden in <em>denselben</em> Raum übersetzt, in dem auch die Wort-Embeddings liegen. Für das Sprachmodell steht dann im Kontext etwa: „[Kachel 1] [Kachel 2] … [Kachel 196] Was steht auf dem Schild?“ – und die <a href="/erklaert/aufmerksamkeit/">Aufmerksamkeit</a> kann zwischen den Fragewörtern und den passenden Bildkacheln Verbindungen ziehen.</p>
+
+<figure>
+<div class="pipeline">
+  <div class="stage"><b>Bild</b>Pixel</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>Kacheln</b>z. B. 16 × 16 Pixel</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>Vision-Encoder</b>jede Kachel → Vektor</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>Projektion</b>in den Wort-Raum</div>
+  <div class="arrow">→</div>
+  <div class="stage out"><b>Sprachmodell</b>Bild- und Text-Tokens gemischt</div>
+</div>
+<figcaption>Gelernt wird dieser Zusammenhang aus riesigen Mengen Bilder mit Beschreibungen. So erfährt das Modell, dass bestimmte Kachelmuster zu „Katze“, „Diagramm“ oder „NullPointerException“ passen.</figcaption>
+</figure>
+
+<h2 id="audio">Sprache und Audio</h2>
+<p>Bei Audio funktioniert es ähnlich. Ein Tonsignal wird meist zuerst in ein <strong>Spektrogramm</strong> verwandelt – ein Bild, das zeigt, welche Tonhöhen wann wie laut sind. Das wird dann in kurze Zeitabschnitte zerlegt und zu Tokens. Dabei gibt es zwei grundsätzliche Bauweisen:</p>
+<div class="modes">
+  <div><h4>Hintereinander geschaltet</h4>Drei getrennte Modelle:
+    <div class="pipeline"><div class="stage">Sprache → Text</div><div class="arrow">→</div><div class="stage key">Sprachmodell</div><div class="arrow">→</div><div class="stage">Text → Sprache</div></div>
+    <p class="fine">Einfach zu bauen, aber Tonfall, Lachen oder Zögern gehen beim Umwandeln in Text verloren.</p></div>
+  <div><h4>Nativ multimodal</h4>Ein einziges Modell:
+    <div class="pipeline"><div class="stage">Audio-Tokens</div><div class="arrow">→</div><div class="stage key">Sprachmodell</div><div class="arrow">→</div><div class="stage">Audio-Tokens</div></div>
+    <p class="fine">Hört Betonung und Gefühlslage mit und kann selbst mit Ausdruck sprechen. Schneller, weil keine Zwischenschritte nötig sind.</p></div>
+</div>
+
+<h2 id="ausgabe">Und in die andere Richtung?</h2>
+<p>Multimodal kann auch die Ausgabe sein. Für Bilder gibt es zwei Ansätze: <a href="/erklaert/diffusion/">Diffusionsmodelle</a>, die ein Bild schrittweise aus Rauschen herausarbeiten, und Modelle, die Bild-Tokens genauso nacheinander erzeugen wie Text-Tokens. Viele Anwendungen kombinieren ein Sprachmodell, das versteht, was gewünscht ist, mit einem Bildmodell, das es zeichnet.</p>
+
+<h2 id="staerken">Was gut geht – und was nicht</h2>
+<div class="sw">
+  <div class="g"><h4>Gut</h4><ul>
+    <li>Screenshots von Fehlermeldungen und Stacktraces lesen</li>
+    <li>Diagramme, Tabellen und Folien erklären</li>
+    <li>Aus einer UI-Skizze HTML oder Code machen</li>
+    <li>Handschrift und Fotos von Dokumenten lesen</li>
+    <li>Beschreiben, was auf einem Foto passiert</li></ul></div>
+  <div class="b"><h4>Schwieriger</h4><ul>
+    <li>Viele gleichartige Dinge genau zählen</li>
+    <li>Sehr kleine Schrift oder Details in großen Bildern</li>
+    <li>Exakte räumliche Beziehungen und Maße</li>
+    <li>Analoge Uhren und Messgeräte ablesen</li>
+    <li>Gesichter wiedererkennen – oft auch bewusst nicht erlaubt</li></ul></div>
+</div>
+<p>Viele Schwächen folgen direkt aus den Kacheln: Was kleiner ist als eine Kachel oder über Kachelgrenzen verteilt liegt, ist schwerer zu erfassen. Hilfreich ist, wichtige Bildausschnitte zu vergrößern oder das Bild zuzuschneiden.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Patch / Kachel</strong></td><td>ein Ausschnitt des Pixel-Arrays, etwa <code>int[16][16][3]</code></td></tr>
+    <tr><td><strong>Vision-Encoder</strong></td><td>ein Adapter: wandelt Bildausschnitte in dasselbe Format wie Wort-Embeddings</td></tr>
+    <tr><td><strong>Multimodaler Kontext</strong></td><td>eine <code>List&lt;Token&gt;</code>, in der Text- und Bild-Tokens gemischt vorkommen</td></tr>
+    <tr><td><strong>Bild in der API</strong></td><td>meist Base64-kodiert oder als URL im Request – und es kostet Tokens wie Text</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Das Modell sieht das Bild so wie ich.“</b> – Es verarbeitet ein Raster aus Kachel-Vektoren. Manches erkennt es besser als Menschen, an manchem scheitert es, was für uns trivial ist.</div>
+  <div><b>„Das Bild wird erst in Text beschrieben und dann gelesen.“</b> – Bei heutigen multimodalen Modellen nicht: Die Bildinformation geht als Vektoren direkt ins Modell. Ältere Systeme haben tatsächlich so gearbeitet.</div>
+  <div><b>„Ein Bild kostet nichts extra.“</b> – Es belegt Hunderte bis Tausende Tokens im Kontextfenster und wird entsprechend berechnet.</div>
+  <div><b>„Was das Modell im Bild beschreibt, ist sicher drin.“</b> – Auch hier gibt es <a href="/erklaert/halluzination/">Halluzinationen</a>: plausible Details, die gar nicht im Bild sind.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/token/">Token</a>
+  <a href="/erklaert/embedding/">Embedding</a>
+  <a href="/erklaert/transformer/">Transformer</a>
+  <a href="/erklaert/diffusion/">Diffusionsmodelle</a>
+  <a href="/erklaert/kontextfenster/">Kontextfenster</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

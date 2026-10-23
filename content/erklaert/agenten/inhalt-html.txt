@@ -224,6 +224,7 @@ List&lt;Nachricht&gt; kontext = <span class="k">new</span> ArrayList&lt;&gt;(Lis
   <a href="/erklaert/prompt/">Prompt</a>
   <a href="/erklaert/rag/">RAG</a>
   <a href="/erklaert/reasoning/">Reasoning</a>
+  <a href="/erklaert/alignment/">Alignment</a>
   <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
 </div>
 </div>

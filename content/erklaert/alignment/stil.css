@@ -1,0 +1,23 @@
+/* Seiteneigene Stile (alignment) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Alignment ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .rw-tabs{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.erklaert .rw-tabs button{text-align:left;font-weight:500}
+.erklaert .rw-tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .rw{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:640px){.erklaert .rw{grid-template-columns:1fr}}
+.erklaert .rw > div{padding:12px 14px;border-radius:10px;font-size:.9rem;min-height:110px}
+.erklaert .rw .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.erklaert .rw .want{background:var(--ok-soft)}.erklaert .rw .want .h{color:var(--ok)}
+.erklaert .rw .meas{background:var(--accent-soft)}.erklaert .rw .meas .h{color:var(--accent)}
+.erklaert .rw .got{background:var(--bad-soft)}.erklaert .rw .got .h{color:var(--bad)}
+.erklaert .rw .got.better{background:var(--accent-2-soft)}.erklaert .rw .got.better .h{color:var(--accent-2)}
+.erklaert .robot{font-size:2rem;text-align:center;margin:10px 0 0;letter-spacing:.2em}
+.erklaert .views{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.erklaert .views{grid-template-columns:1fr}}
+.erklaert .views > div{padding:14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:.9rem}
+.erklaert .views h4{margin:0 0 6px}
+.erklaert .self{margin:22px 0;padding:16px 18px;border-radius:12px;border:1px dashed var(--accent-2);background:var(--accent-2-soft);font-size:.93rem}
+.erklaert .self::before{content:"In eigener Sache";display:block;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);margin-bottom:4px}
+

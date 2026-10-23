@@ -193,6 +193,7 @@ String einwohner = modell.ergaenze(<span class="s">"Kleinkleckersdorf hat "</spa
   <a href="/erklaert/rag/">RAG</a>
   <a href="/erklaert/prompt/">Prompt</a>
   <a href="/erklaert/reasoning/">Reasoning</a>
+  <a href="/erklaert/wissensstichtag/">Wissensstichtag</a>
   <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
 </div>
 </div>

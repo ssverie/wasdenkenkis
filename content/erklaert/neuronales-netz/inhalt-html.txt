@@ -209,6 +209,8 @@
   <a href="/erklaert/parameter/">Parameter</a>
   <a href="/erklaert/training/">Training</a>
   <a href="/erklaert/transformer/">Transformer</a>
+  <a href="/erklaert/ki-ml-deep-learning/">KI, ML, Deep Learning</a>
+  <a href="/erklaert/interpretierbarkeit/">Interpretierbarkeit</a>
   <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
 </div>
 </div>

@@ -1,0 +1,37 @@
+/* Seiteneigene Stile (open-weights) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Open Weights ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .spec{display:flex;flex-direction:column;gap:0;margin:8px 0}
+.erklaert .spec-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.erklaert .spec-bar div{padding:12px 10px;border-radius:10px;font-size:.84rem;background:var(--bg);border:1px solid var(--line);min-width:0}
+.erklaert .spec-bar div b{display:block;font-size:.92rem;margin-bottom:3px}
+.erklaert .spec-bar div small{display:block;color:var(--muted);margin-top:6px;font-size:.76rem}
+.erklaert .spec-bar .s1{border-top:4px solid #6b7280}.erklaert .spec-bar .s2{border-top:4px solid var(--accent-2)}.erklaert .spec-bar .s3{border-top:4px solid var(--accent)}.erklaert .spec-bar .s4{border-top:4px solid var(--ok)}
+.erklaert .spec-axis{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted);margin-top:6px}
+@media (max-width:640px){.erklaert .spec-bar{grid-template-columns:1fr 1fr}}
+.erklaert .what{width:100%;border-collapse:collapse;font-size:.86rem}
+.erklaert .what th, .erklaert .what td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:center}
+.erklaert .what th:first-child, .erklaert .what td:first-child{text-align:left}
+.erklaert .y{color:var(--ok);font-weight:700}.erklaert .n{color:var(--muted)}
+.erklaert .hw{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.erklaert .hw button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .bits{display:inline-flex;gap:4px;margin-bottom:12px}
+.erklaert .bits button[aria-pressed="true"]{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+.erklaert .mrow{display:grid;grid-template-columns:7.5em 1fr 7em;gap:10px;align-items:center;font-size:.86rem;margin:5px 0}
+.erklaert .mrow .lbl{font-weight:600}
+.erklaert .mrow .lbl small{display:block;font-weight:400;color:var(--muted);font-size:.72rem}
+.erklaert .mrow .tr{height:16px;border-radius:5px;background:var(--bg);position:relative;overflow:hidden}
+.erklaert .mrow .fl{height:100%;border-radius:5px}
+.erklaert .mrow .lim{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--fg)}
+.erklaert .mrow .st{font-size:.78rem;font-weight:600;text-align:right}
+.erklaert .mrow.ok .fl{background:var(--ok)}.erklaert .mrow.ok .st{color:var(--ok)}
+.erklaert .mrow.tight .fl{background:var(--accent-2)}.erklaert .mrow.tight .st{color:var(--accent-2)}
+.erklaert .mrow.no .fl{background:var(--bad)}.erklaert .mrow.no .st{color:var(--bad)}
+.erklaert .pc{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.erklaert .pc{grid-template-columns:1fr}}
+.erklaert .pc > div{padding:14px;border-radius:12px;background:var(--bg);font-size:.9rem}
+.erklaert .pc h4{margin:0 0 6px}
+.erklaert .pc ul{margin:0;padding-left:1.1em}
+.erklaert .pc li{margin:3px 0}
+

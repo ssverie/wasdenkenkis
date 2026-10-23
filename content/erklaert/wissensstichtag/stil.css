@@ -1,0 +1,16 @@
+/* Seiteneigene Stile (wissensstichtag) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Wissensstichtag ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert #tl{width:100%;height:auto;display:block}
+.erklaert .sl{display:grid;grid-template-columns:8em 1fr 7em;align-items:center;gap:10px;font-size:.88rem;margin:8px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent-2)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+.erklaert .kn{margin-top:10px;padding:12px 14px;border-radius:10px;font-size:.92rem}
+.erklaert .kn.ok{background:var(--ok-soft)}.erklaert .kn.mid{background:var(--accent-2-soft)}.erklaert .kn.no{background:var(--bad-soft)}
+.erklaert .kn b{display:block;margin-bottom:2px}
+.erklaert .dt{display:inline-flex;gap:4px;margin:12px 0 8px}
+.erklaert .dt button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .self{margin:22px 0;padding:16px 18px;border-radius:12px;border:1px dashed var(--accent-2);background:var(--accent-2-soft);font-size:.93rem}
+.erklaert .self::before{content:"Am Beispiel dieser Seite";display:block;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);margin-bottom:4px}
+

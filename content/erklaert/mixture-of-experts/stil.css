@@ -1,0 +1,17 @@
+/* Seiteneigene Stile (mixture-of-experts) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Mixture of Experts ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .moe{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:18px;align-items:start}
+@media (max-width:660px){.erklaert .moe{grid-template-columns:1fr}}
+.erklaert #moeSvg{width:100%;height:auto;display:block}
+.erklaert .toks{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.erklaert .toks button{font-family:var(--mono);font-size:.82rem;padding:5px 10px}
+.erklaert .toks button[aria-pressed="true"]{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+.erklaert .sl{display:grid;grid-template-columns:8em 1fr 3em;align-items:center;gap:10px;font-size:.86rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+.erklaert .stat{padding:10px;border-radius:9px;background:var(--bg);text-align:center;font-size:.76rem;color:var(--muted);margin-top:8px}
+.erklaert .stat b{display:block;font:600 1.2rem var(--serif);color:var(--fg)}
+.erklaert .stat.hl b{color:var(--accent)}
+

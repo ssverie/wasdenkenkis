@@ -1,0 +1,30 @@
+/* Seiteneigene Stile (ki-ml-deep-learning) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: KI, ML, Deep Learning ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .nest{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:20px;align-items:center}
+@media (max-width:660px){.erklaert .nest{grid-template-columns:1fr}}
+.erklaert #nestSvg{width:100%;max-width:420px;height:auto;display:block;margin:0 auto}
+.erklaert #nestSvg .ring{cursor:pointer;transition:opacity .2s}
+.erklaert #nestSvg .ring:hover ellipse{stroke-width:3}
+.erklaert .nest-info{padding:14px 16px;border-radius:12px;background:var(--bg);min-height:200px}
+.erklaert .nest-info h3{margin:0 0 4px;font-family:var(--serif)}
+.erklaert .nest-info .yr{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-2)}
+.erklaert .nest-info p{margin:.4em 0;font-size:.92rem}
+.erklaert .nest-info .ex{font-size:.84rem;color:var(--muted)}
+.erklaert .rules{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:620px){.erklaert .rules{grid-template-columns:1fr}}
+.erklaert .rules > div{padding:14px;border-radius:12px;background:var(--bg);min-width:0}
+.erklaert .rules h4{margin:0 0 6px}
+.erklaert .rules pre{margin:8px 0;font-size:.74rem}
+.erklaert .rules p{margin:6px 0 0;font-size:.86rem;color:var(--muted)}
+.erklaert .kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:640px){.erklaert .kinds{grid-template-columns:1fr}}
+.erklaert .kinds div{padding:14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:.88rem}
+.erklaert .kinds h4{margin:0 0 4px;font-size:1rem}
+.erklaert .kinds p{margin:4px 0 0;color:var(--muted)}
+.erklaert .timeline{display:flex;flex-direction:column;margin:16px 0;border-left:2px solid var(--line);padding-left:16px}
+.erklaert .timeline div{position:relative;padding:6px 0;font-size:.92rem}
+.erklaert .timeline div::before{content:"";position:absolute;left:-22px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.erklaert .timeline b{display:inline-block;min-width:3.4em}
+
