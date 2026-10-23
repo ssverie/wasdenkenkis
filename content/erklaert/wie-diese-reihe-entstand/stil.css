@@ -1,0 +1,16 @@
+/* Seiteneigene Stile (wie-diese-reihe-entstand) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Wie diese Reihe entstand ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+@media (max-width:560px){.erklaert .stats{grid-template-columns:repeat(2,1fr)}}
+.erklaert .stats div{padding:14px 10px;border-radius:12px;background:var(--card);border:1px solid var(--line);text-align:center;font-size:.8rem;color:var(--muted)}
+.erklaert .stats b{display:block;font-size:1.6rem;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.2}
+.erklaert .tl{display:flex;flex-direction:column;margin:16px 0;border-left:2px solid var(--line);padding-left:18px}
+.erklaert .tl div{position:relative;padding:7px 0;font-size:.93rem}
+.erklaert .tl div::before{content:"";position:absolute;left:-24px;top:13px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.erklaert .tl div.who-c::before{background:var(--accent-2)}
+.erklaert .tl b{display:inline-block;min-width:7.2em;font-variant-numeric:tabular-nums}
+.erklaert .bugs td:first-child{white-space:nowrap;font-weight:600}
+.erklaert .quote{margin:20px 0;padding:14px 18px;border-left:4px solid var(--accent-2);background:var(--accent-2-soft);border-radius:0 10px 10px 0;font-size:.95rem}
+
