@@ -2,10 +2,12 @@
    auf .erklaert begrenzt, ohne externe Schriften. Seiteneigene Zusätze liegen als stil.css im jeweiligen Bundle. */
 .erklaert {
   --bg: #fbfaf7; --fg: #1c1c1f; --muted: #5f5f66; --card: #ffffff; --line: #e5e1d8;
-  --accent: #2f5bd3; --accent-soft: #e8eefc; --accent-2: #b4540a; --accent-2-soft: #fcefe3;
+  /* Akzent = Petrol der Seite (main.css --akzent/--akzent-leise), statt des gelieferten Blaus */
+  --accent: #0f6f6a; --accent-soft: #e3f1ef; --accent-2: #b4540a; --accent-2-soft: #fcefe3;
   --ok: #15803d; --ok-soft: #e4f3e9; --bad: #b42318; --bad-soft: #fdecea;
   --code-bg: #f2f0ea; --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.05);
-  --serif: Georgia, "Times New Roman", serif;
+  /* Überschriften in der Seitenschrift (geliefert war Georgia) */
+  --serif: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
   color: var(--fg);
@@ -15,7 +17,7 @@
 @media (prefers-color-scheme: dark) {
   .erklaert {
     --bg: #141416; --fg: #ececef; --muted: #a3a3ad; --card: #1d1d21; --line: #2e2e35;
-    --accent: #86a6ff; --accent-soft: #1f2a47; --accent-2: #f0a058; --accent-2-soft: #3a2615;
+    --accent: #5cc3b9; --accent-soft: #1d3533; --accent-2: #f0a058; --accent-2-soft: #3a2615;
     --ok: #5fd08a; --ok-soft: #14301f; --bad: #ff8a80; --bad-soft: #3a1715;
     --code-bg: #232328; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.3);
   }
@@ -190,3 +192,8 @@
 
 /* Anpassung (Claude): Balken, die als <span> gebaut sind, brauchen display:block, damit Höhe/Breite greifen */
 .erklaert .pair-row .pf { display: block; }
+
+/* wasdenkenkis.de: Etappen-Leiste der Lesereihenfolge mit gleich breiten Kacheln (geliefert: flex 1 1 110px,
+   dadurch wurde die letzte Reihe breiter). Hier statt in content/erklaert/stil.css, damit neue Lieferungen es nicht überschreiben. */
+.erklaert nav.map { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+.erklaert nav.map a { flex: none; }

@@ -34,15 +34,16 @@ for my $b (@begriffe) {
   $artikel =~ s{^.*?<dl class="meta">.*?</dl>\s*}{}s or die "$b: kein Meta-Kasten";
   $artikel =~ s{^<details class="prompt">.*?</details>\s*}{}s;
   $artikel =~ s{\s*<p class="foot">.*?</p>\s*$}{\n}s or die "$b: keine Fußzeile";
+  # Ohne seiteneigene Stile keine stil.css: eine Datei nur aus Kommentaren wird beim Minifizieren leer,
+  # Hugo rechnet den SRI-Hash dann über den leeren Inhalt und der Browser blockt die ausgelieferte Datei.
   my ($css) = $html =~ m{(/\* ---- Seitenspezifisch.*?)</style>}s;
-  $css //= "/* keine seiteneigenen Stile – alles steht im gemeinsamen Stylesheet */\n";
   my ($js)  = $html =~ m{<script>\n?(.*?)</script>}s or die "$b: kein Skript";
 
   my $istUebersicht = ($b eq 'lesereihenfolge');
   my $dir = $istUebersicht ? $ziel : "$ziel/$b";
   mkdir $dir unless -d $dir;
   schreiben("$dir/inhalt-html.txt", "<div class=\"erklaert\">\n$artikel</div>\n");
-  schreiben("$dir/stil-roh.css", $css);
+  if (defined $css) { schreiben("$dir/stil-roh.css", $css); } else { unlink "$dir/stil.css"; }
   schreiben("$dir/skript.js", $js);
 
   my $fm = "+++\n";
@@ -55,7 +56,8 @@ for my $b (@begriffe) {
   $fm .= "prompt = \"" . toml(text($prompt)) . "\"\n" if $prompt;
   if ($b eq 'was-ist-ein-sprachmodell') { $fm .= "thema = \"sprachmodell\"\nfassung = 2\n"; }
   if ($istUebersicht) { $fm .= "aliases = [\"/erklaert/lesereihenfolge/\"]\nlayout = \"begriffe-uebersicht\"\n"; }
-  $fm .= "stile = [\"stil.css\"]\nskripte = [\"skript.js\"]\n\n";
+  $fm .= "stile = [\"stil.css\"]\n" if defined $css;
+  $fm .= "skripte = [\"skript.js\"]\n\n";
   $fm .= "# Nur die tatsächlich verwendeten (fingerprinteten) Dateien veröffentlichen\n[build]\n  publishResources = false\n+++\n\n";
   $fm .= "{{< einbetten \"inhalt-html.txt\" >}}\n";
   schreiben($istUebersicht ? "$dir/_index.md" : "$dir/index.md", $fm);
