@@ -1,0 +1,147 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Prompt</strong> ist der Text, den ein Sprachmodell als Eingabe bekommt und fortsetzt. Im Alltag meint man damit meist die eigene Frage oder Anweisung. Technisch gehört alles dazu, was im <a href="/erklaert/kontextfenster/">Kontextfenster</a> steht.</p>
+<p>Der <strong>Systemprompt</strong> ist ein besonderer Teil davon: Anweisungen, die der Anbieter oder die App vor jedes Gespräch setzt – Rolle, Regeln, Ton. Man sieht ihn als Nutzer meist nicht. Gute Prompts sind vor allem <strong>klar</strong>: Kontext, Ziel und gewünschtes Format sagen, statt auf Zauberformeln zu hoffen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#anatomie">Woraus eine Anfrage besteht</a></li>
+  <li><a href="#besser">Ein Prompt wird besser</a></li>
+  <li><a href="#regeln">Was wirklich hilft</a></li>
+  <li><a href="#beispiele">Mit Beispielen zeigen</a></li>
+  <li><a href="#system">Der Systemprompt</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ ANATOMIE ============ -->
+<h2 id="anatomie">Woraus eine Anfrage besteht</h2>
+<p>Was du im Chat eintippst, ist nur der letzte Teil. Bei jeder Anfrage wird ein ganzer Stapel zusammengesetzt:</p>
+<figure>
+<div class="anat">
+  <div class="layer sys"><div><div class="who">Anbieter / App</div><b>Systemprompt</b></div><div>Rolle, Verhaltensregeln, heutiges Datum, Formatvorgaben – oft mehrere Seiten lang.</div></div>
+  <div class="layer tools"><div><div class="who">App</div><b>Werkzeuge</b></div><div>Beschreibungen von Funktionen wie Websuche oder Dateizugriff, falls erlaubt (siehe <a href="/erklaert/agenten/">Agenten</a>).</div></div>
+  <div class="layer hist"><div><div class="who">Bisheriges Gespräch</div><b>Verlauf</b></div><div>Alle früheren Fragen und Antworten dieses Chats, eventuell Erinnerungen aus früheren Chats.</div></div>
+  <div class="layer you"><div><div class="who">Du</div><b>Deine Nachricht</b></div><div>Frage oder Auftrag, dazu angehängtes Material: Texte, Code, Dateien, Bilder.</div></div>
+</div>
+<figcaption>Von oben nach unten so, wie es im Kontextfenster steht. Das Modell setzt diesen gesamten Text fort – seine Antwort ist der nächste Abschnitt.</figcaption>
+</figure>
+
+<!-- ============ BESSER ============ -->
+<h2 id="besser">Ein Prompt wird besser</h2>
+<p>Dieselbe Frage, Stufe für Stufe ergänzt. Achte darauf, wie jede zusätzliche Information die Antwort verändert:</p>
+
+<div class="widget">
+  <div class="widget-title">Prompt-Baukasten</div>
+  <div class="lvl-tabs" id="lvl"></div>
+  <div class="pb">
+    <div class="box"><div class="h">Prompt</div><div class="ptext" id="pt"></div></div>
+    <div class="box"><div class="h">Antwort (gekürzt)</div><div class="atext" id="at"></div></div>
+  </div>
+  <div class="gain" id="gain"></div>
+  <p class="fine">Nachgestellte Antworten. Grün markiert ist, was in der jeweiligen Stufe neu hinzukommt.</p>
+</div>
+
+<p>Keine dieser Ergänzungen ist ein Trick. Es sind genau die Informationen, die auch ein menschlicher Kollege bräuchte, um eine wirklich passende Antwort zu geben.</p>
+
+<!-- ============ REGELN ============ -->
+<h2 id="regeln">Was wirklich hilft</h2>
+<div class="rules">
+  <div><b>Kontext geben</b>Wer fragt, mit welchem Vorwissen, in welcher Situation? Das Modell kann es nicht erraten.</div>
+  <div><b>Ziel nennen</b>Nicht nur <em>was</em>, sondern <em>wofür</em>: „… damit ich entscheiden kann, ob …“</div>
+  <div><b>Format sagen</b>Länge, Struktur, Sprache, Code oder Prosa. „Höchstens fünf Stichpunkte“ wirkt.</div>
+  <div><b>Material mitgeben</b>Code, Fehlermeldung, Dokument direkt einfügen, statt es zu beschreiben – und klar abgrenzen, etwa mit Überschriften oder Markierungen wie <code>&lt;code&gt;…&lt;/code&gt;</code>.</div>
+  <div><b>Beispiele zeigen</b>Ein, zwei Beispiele für die gewünschte Ausgabe sind oft wirksamer als lange Beschreibungen.</div>
+  <div><b>Unsicherheit erlauben</b>„Wenn du es nicht sicher weißt, sag das.“ Das senkt <a href="/erklaert/halluzination/">Halluzinationen</a> spürbar.</div>
+  <div><b>Bei langem Material: Frage ans Ende</b>Erst das Dokument, dann die Aufgabe – so steht sie dort, wo das Modell am aufmerksamsten ist.</div>
+  <div><b>Nachbessern statt neu anfangen</b>„Kürzer“, „mehr auf Performance eingehen“, „ohne Spring“ – im Gespräch weiterarbeiten ist normal.</div>
+</div>
+
+<!-- ============ BEISPIELE ============ -->
+<h2 id="beispiele">Mit Beispielen zeigen</h2>
+<p>Gibt man keine Beispiele, heißt das <strong>Zero-Shot</strong>. Mit ein paar Beispielen im Prompt spricht man von <strong>Few-Shot</strong>. Besonders bei festen Formaten macht das einen großen Unterschied:</p>
+<figure>
+<div class="shot">
+  <div><h4>Zero-Shot</h4>
+<pre><code>Ordne das Ticket ein: Bug, Feature oder Frage.
+
+Ticket: "Export nach Excel wäre super"</code></pre>
+<p>→ „Das Ticket ist eine Feature-Anfrage, da der Nutzer sich eine neue Funktion wünscht, nämlich …“</p></div>
+  <div><h4>Few-Shot</h4>
+<pre><code>Ticket: "Login wirft 500er" → BUG
+Ticket: "Wie ändere ich mein Passwort?" → FRAGE
+Ticket: "Dark Mode bitte!" → FEATURE
+
+Ticket: "Export nach Excel wäre super" →</code></pre>
+<p>→ „FEATURE“</p></div>
+</div>
+<figcaption>Die Beispiele legen das Format fest, ohne dass man es beschreiben muss – ein Wort, in Großbuchstaben, ohne Begründung. Ideal, wenn das Ergebnis maschinell weiterverarbeitet wird.</figcaption>
+</figure>
+
+<!-- ============ SYSTEM ============ -->
+<h2 id="system">Der Systemprompt</h2>
+<p>Bevor du überhaupt etwas schreibst, hat das Modell schon Text bekommen: den Systemprompt. Den schreibt, wer das Modell in ein Produkt einbaut – der Anbieter einer Chat-App, eine Firma für ihren Kundenservice-Bot, du selbst in deiner Anwendung über die API.</p>
+<div class="cards">
+  <div class="card"><div class="num">◎</div><h4>Rolle</h4><p>„Du bist der Support-Assistent der Musterbau GmbH. Du hilfst bei Fragen zu Bestellungen.“</p></div>
+  <div class="card"><div class="num">§</div><h4>Regeln</h4><p>„Keine Rechtsberatung. Bei Beschwerden an das Service-Team verweisen.“</p></div>
+  <div class="card"><div class="num">ⓘ</div><h4>Fakten</h4><p>Heutiges Datum, Name des Nutzers, verfügbare Werkzeuge, Öffnungszeiten.</p></div>
+</div>
+<p>Modelle werden darauf trainiert, Systemprompt-Anweisungen höher zu gewichten als Anweisungen in Nutzernachrichten – und beide höher als Text in gelesenen Dokumenten oder Webseiten. Eine absolute Grenze ist das aber nicht:</p>
+<div class="callout warn">Ein Systemprompt ist <strong>keine Sicherheitsgrenze</strong>. Er kann sich manchmal durch geschickte Fragen herauslocken lassen, und Anweisungen darin können umgangen werden. Passwörter, Schlüssel oder vertrauliche Daten gehören nie hinein. Was wirklich verboten sein muss, wird im Programm drumherum durchgesetzt, nicht im Text.</div>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Prompt</strong></td><td>der Methodenaufruf samt Argumenten – nur in natürlicher Sprache und ohne Compiler, der fehlende Parameter meldet</td></tr>
+    <tr><td><strong>Systemprompt</strong></td><td>Konfiguration und Richtlinien, die vor jeden Aufruf gesetzt werden</td></tr>
+    <tr><td><strong>Few-Shot-Beispiele</strong></td><td>Beispiele in der Javadoc, die zeigen, was rein- und rausgeht</td></tr>
+    <tr><td><strong>Abgrenzungen wie <code>&lt;code&gt;</code></strong></td><td>der Versuch, Daten und Anweisungen zu trennen – wie bei SQL, nur ohne garantiertes <code>PreparedStatement</code></td></tr>
+    <tr><td><strong>Prompt Injection</strong></td><td>das Gegenstück zur SQL-Injection: Daten, die sich als Anweisung ausgeben</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="c">// Prompt in einer Anwendung zusammenbauen</span>
+String system = <span class="s">"""
+    Du bist ein Code-Reviewer für Java 21.
+    Antworte auf Deutsch, höchstens 5 Punkte, wichtigster zuerst.
+    Erfinde keine APIs. Wenn du unsicher bist, sag es.
+    """</span>;
+
+String user = <span class="s">"""
+    Prüfe diese Methode auf Fehler und Lesbarkeit.
+
+    &lt;code&gt;
+    %s
+    &lt;/code&gt;
+
+    Ziel: Sie soll in einem Hochlast-Service laufen.
+    """</span>.formatted(quelltext);                     <span class="c">// Material abgegrenzt, Frage danach</span>
+
+Antwort a = client.senden(system, List.of(<span class="k">new</span> Nachricht(<span class="s">"user"</span>, user)));</code></pre>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Es gibt magische Formeln.“</b> – Sätze wie „Du bist ein Weltklasse-Experte“ oder angebotenes Trinkgeld haben bei älteren Modellen manchmal messbar geholfen. Bei heutigen Modellen bringen klare Informationen über Aufgabe, Ziel und Format weit mehr.</div>
+  <div><b>„Je länger der Prompt, desto besser.“</b> – Relevante Informationen helfen, Füllstoff nicht. Widersprüchliche oder überflüssige Anweisungen können die Antwort sogar verschlechtern.</div>
+  <div><b>„Der Systemprompt ist geheim und sicher.“</b> – Er ist nur Text im Kontext. Nichts hineinschreiben, was nicht öffentlich werden darf.</div>
+  <div><b>„Prompt Engineering wird bald überflüssig.“</b> – Die Tricks werden überflüssig, weil Modelle besser verstehen, was gemeint ist. Klar zu sagen, was man will und wofür, bleibt – wie bei jeder Zusammenarbeit.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/kontextfenster/">Kontextfenster</a>
+  <a href="/erklaert/halluzination/">Halluzination</a>
+  <a href="/erklaert/agenten/">Agenten</a>
+  <a href="/erklaert/rag/">RAG</a>
+  <a href="/erklaert/reasoning/">Reasoning</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

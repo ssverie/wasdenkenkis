@@ -1,0 +1,62 @@
+/* Seiteneigene Stile (agenten) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Agenten ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+.erklaert .loop svg{max-width:520px}
+
+/* Agent-Simulation */
+.erklaert .sim{display:grid;grid-template-columns:1fr 200px;gap:18px}
+@media (max-width:680px){.erklaert .sim{grid-template-columns:1fr}}
+.erklaert .log{display:flex;flex-direction:column;gap:8px;max-height:460px;overflow-y:auto;padding-right:4px;scroll-behavior:smooth}
+.erklaert .ev{border-radius:10px;padding:10px 12px;font-size:.88rem;border:1px solid var(--line);background:var(--bg)}
+.erklaert .ev.cur{animation:evin .35s ease}
+@keyframes evin{from{opacity:0;transform:translateY(6px)}}
+.erklaert .ev .who{display:flex;align-items:center;gap:8px;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
+.erklaert .ev .who i{font-style:normal;padding:1px 7px;border-radius:999px;font-size:.66rem}
+.erklaert .ev pre{margin:4px 0 0;padding:8px 10px;font-size:.76rem;border-radius:8px;white-space:pre-wrap;word-break:break-word}
+.erklaert .ev.user{background:var(--card)}
+.erklaert .ev.user .who{color:var(--fg)}
+.erklaert .ev.think .who{color:var(--accent)}
+.erklaert .ev.think{border-color:var(--accent-soft);font-style:italic}
+.erklaert .ev.call{border-color:var(--accent)}
+.erklaert .ev.call .who{color:var(--accent)}
+.erklaert .ev.result{border-color:var(--accent-2)}
+.erklaert .ev.result .who{color:var(--accent-2)}
+.erklaert .ev.final{border-color:var(--ok);background:var(--ok-soft)}
+.erklaert .ev.final .who{color:var(--ok)}
+.erklaert .ev.cur{box-shadow:0 0 0 3px var(--accent-2-soft)}
+.erklaert .who i.m{background:var(--accent-soft);color:var(--accent)}
+.erklaert .who i.h{background:var(--accent-2-soft);color:var(--accent-2)}
+.erklaert .who i.u{background:var(--code-bg);color:var(--fg)}
+.erklaert .side{display:flex;flex-direction:column;gap:12px}
+.erklaert .side .card{padding:12px}
+.erklaert .side .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.erklaert .ctxv{height:140px;width:46px;border:2px solid var(--accent);border-radius:8px;display:flex;flex-direction:column-reverse;overflow:hidden;margin:4px auto}
+.erklaert .ctxv span{display:block;transition:height .3s}
+.erklaert .ctxn{text-align:center;font:600 .8rem var(--mono);font-variant-numeric:tabular-nums}
+.erklaert .tools{display:flex;flex-direction:column;gap:4px;font:.76rem var(--mono)}
+.erklaert .tools span{padding:3px 7px;border-radius:5px;background:var(--bg);transition:background .2s}
+.erklaert .tools span.on{background:var(--accent);color:#fff}
+
+.erklaert .rules{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}
+@media (max-width:600px){.erklaert .rules{grid-template-columns:1fr}}
+/* Fehlerakkumulation */
+.erklaert .acc{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px}
+@media (max-width:600px){.erklaert .acc{grid-template-columns:1fr}}
+.erklaert .sl{display:grid;grid-template-columns:8em 1fr 4.5em;align-items:center;gap:10px;font-size:.88rem}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+.erklaert .acc-big{font-family:var(--serif);font-size:2rem;margin:12px 0 0;font-variant-numeric:tabular-nums}
+.erklaert #accSvg{width:100%;height:auto;display:block;margin-top:8px}
+
+.erklaert .levels{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+.erklaert .lvl{display:grid;grid-template-columns:46px 1fr;gap:12px;align-items:center;padding:12px 14px;border-radius:12px;background:var(--card);border:1px solid var(--line)}
+.erklaert .lvl .n{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;background:var(--accent)}
+.erklaert .lvl:nth-child(1) .n{opacity:.45}.erklaert .lvl:nth-child(2) .n{opacity:.65}.erklaert .lvl:nth-child(3) .n{opacity:.85}
+.erklaert .lvl h4{margin:0;font-size:1rem}
+.erklaert .lvl p{margin:2px 0 0;font-size:.88rem;color:var(--muted)}
+
+.erklaert .inject{display:grid;grid-template-columns:1fr;gap:10px}
+.erklaert .inject .page{padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.88rem;border:1px solid var(--line)}
+.erklaert .inject .page .hid{color:var(--bad);background:var(--bad-soft);padding:1px 4px;border-radius:4px;font-family:var(--mono);font-size:.8rem}
+.erklaert .self{margin:22px 0;padding:16px 18px;border-radius:12px;border:1px dashed var(--accent-2);background:var(--accent-2-soft);font-size:.93rem}
+.erklaert .self::before{content:"Übrigens";display:block;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);margin-bottom:4px}

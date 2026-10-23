@@ -1,0 +1,29 @@
+/* Seiteneigene Stile (halluzination) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Halluzination ---- */
+.erklaert .q-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.erklaert .q-tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .answer{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--bg);font-family:var(--serif);font-size:1.12rem;min-height:2.6em}
+.erklaert .answer .tok{color:var(--accent-2);font-weight:700}
+.erklaert .verdict{margin-top:8px;font-size:.88rem;font-weight:600;min-height:1.3em}
+.erklaert .verdict.ok{color:var(--ok)}.erklaert .verdict.bad{color:var(--bad)}
+.erklaert .entropy{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:.85rem;color:var(--muted)}
+.erklaert .entropy .meter{flex:1;height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.erklaert .entropy .meter span{display:block;height:100%;background:linear-gradient(90deg,var(--ok),var(--accent-2),var(--bad));transition:width .3s}
+.erklaert .bar-row.truth .bar-label{color:var(--ok);font-weight:600}
+.erklaert .bar-row.truth .bar-fill{background:var(--ok)}
+
+.erklaert .kinds{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}
+@media (max-width:600px){.erklaert .kinds{grid-template-columns:1fr}}
+.erklaert .kind{padding:14px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:.9rem}
+.erklaert .kind h4{margin:0 0 6px;font-size:1rem}
+.erklaert .kind .ex{margin:8px 0 0;padding:8px 10px;border-radius:8px;background:var(--bg);font-size:.85rem}
+.erklaert .kind .ex code{background:none;padding:0}
+.erklaert .kind .ex .wrong{color:var(--bad);text-decoration:underline wavy;text-decoration-thickness:1px;text-underline-offset:3px}
+
+.erklaert .tree svg{max-width:600px}
+.erklaert .check{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}
+@media (max-width:600px){.erklaert .check{grid-template-columns:1fr}}
+.erklaert .check div{display:flex;gap:10px;padding:12px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:.9rem}
+.erklaert .check div::before{content:"✓";flex:0 0 22px;height:22px;border-radius:50%;background:var(--ok-soft);color:var(--ok);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem}
+.erklaert .premise{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.erklaert .premise{grid-template-columns:1fr}}

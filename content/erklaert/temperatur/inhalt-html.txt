@@ -1,0 +1,183 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein Sprachmodell liefert bei jedem Schritt eine Liste möglicher nächster Tokens mit Wahrscheinlichkeiten. Die <strong>Temperatur</strong> verformt diese Liste, bevor gezogen wird: <strong>niedrig</strong> macht den Favoriten noch dominanter – vorhersehbar, sachlich. <strong>Hoch</strong> ebnet die Unterschiede ein – abwechslungsreich, aber fehleranfälliger.</p>
+<p>Die Temperatur ändert nichts am Wissen des Modells, nur an der Auswahl. Verwandte Regler sind <strong>Top-p</strong> und <strong>Top-k</strong>, die unwahrscheinliche Kandidaten ganz abschneiden.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#auswahl">Wo die Temperatur ansetzt</a></li>
+  <li><a href="#regler">Selbst drehen</a></li>
+  <li><a href="#formel">Was mathematisch passiert</a></li>
+  <li><a href="#topp">Top-p und Top-k</a></li>
+  <li><a href="#wirkung">Wirkung auf ganze Texte</a></li>
+  <li><a href="#wann">Welche Einstellung wofür?</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ AUSWAHL ============ -->
+<h2 id="auswahl">Wo die Temperatur ansetzt</h2>
+<p>Das Modell selbst entscheidet nichts. Es rechnet nur aus, wie gut jedes Token aus seinem Vokabular als Nächstes passen würde. Danach kommt ein separater, sehr einfacher Schritt: das <strong>Sampling</strong> – eines der Tokens wird ausgewählt. Genau dort, und nur dort, wirkt die Temperatur.</p>
+
+<figure>
+<div class="pipeline">
+  <div class="stage"><b>Kontext</b>bisheriger Text</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>Modell</b>rechnet Punktzahlen (Logits)</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>Temperatur</b>Punktzahlen verformen</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>Top-p / Top-k</b>Unwahrscheinliches streichen</div>
+  <div class="arrow">→</div>
+  <div class="stage out"><b>Ziehen</b>ein Token, per Zufall</div>
+</div>
+<figcaption>Die blauen Schritte gehören nicht zum Modell, sondern zur Auswahl danach. Sie kosten praktisch keine Rechenzeit.</figcaption>
+</figure>
+
+<!-- ============ REGLER ============ -->
+<h2 id="regler">Selbst drehen</h2>
+<p>Das Modell soll den Satz ergänzen. Die Balken zeigen die Wahrscheinlichkeit jedes Kandidaten nach Temperatur und Top-p. Zieh 20 Mal und sieh dir an, was herauskommt:</p>
+
+<div class="widget">
+  <div class="widget-title">Temperatur und Top-p</div>
+  <div class="prompt-line">Zum Frühstück esse ich am liebsten <span class="gap" id="gap">___</span></div>
+  <div class="sliders">
+    <label class="sl">Temperatur<input type="range" id="T" min="0" max="2" step="0.05" value="1"><output id="To"></output></label>
+    <label class="sl tp">Top-p<input type="range" id="P" min="0.1" max="1" step="0.05" value="1"><output id="Po"></output></label>
+  </div>
+  <div class="bars" id="tbars"></div>
+  <div class="controls">
+    <button class="primary" id="s1">1× ziehen</button>
+    <button id="s20">20× ziehen</button>
+    <button id="sclr">Leeren</button>
+  </div>
+  <div class="samples" id="samples"></div>
+  <div class="tally" id="tally"></div>
+  <p class="fine">Die Werte sind ausgedacht. Die kleine graue Zahl neben jedem Wort ist der rohe <em>Logit</em> – die Punktzahl, die das Modell vergibt. Probier Temperatur 0 (immer „Brötchen“), dann 2 (sogar „Pizza“ und „Beton“ tauchen auf), und dann Top-p 0,9 bei hoher Temperatur.</p>
+</div>
+
+<!-- ============ FORMEL ============ -->
+<h2 id="formel">Was mathematisch passiert</h2>
+<p>Das Modell gibt für jedes Token eine rohe Punktzahl aus, einen <strong>Logit</strong>. Aus diesen Punktzahlen werden mit der <strong>Softmax</strong>-Funktion Wahrscheinlichkeiten. Die Temperatur <em>T</em> teilt die Punktzahlen vorher:</p>
+
+<pre><code>                exp(zᵢ / T)
+pᵢ  =  ─────────────────────
+        Σⱼ exp(zⱼ / T)</code></pre>
+
+<p>Was das bewirkt, sieht man an drei Fällen:</p>
+<figure>
+<div class="curves">
+  <div class="curve"><h4>T klein (0,3)</h4><div class="mini" id="mc0"></div><p>Abstände werden vergrößert. Der Favorit nimmt fast alles.</p></div>
+  <div class="curve"><h4>T = 1</h4><div class="mini" id="mc1"></div><p>Die Verteilung, wie das Modell sie gelernt hat.</p></div>
+  <div class="curve"><h4>T groß (2)</h4><div class="mini" id="mc2"></div><p>Abstände schrumpfen. Alles wird ähnlich wahrscheinlich.</p></div>
+</div>
+<figcaption>Dieselben fünf Logits, durch verschiedene Temperaturen geschickt. Die Reihenfolge ändert sich nie – nur die Abstände.</figcaption>
+</figure>
+
+<p>Zwei Grenzfälle: Bei <strong>T → 0</strong> wird immer das wahrscheinlichste Token gewählt („greedy decoding“); in der Praxis wird T = 0 genau so umgesetzt, statt durch null zu teilen. Bei <strong>sehr hohem T</strong> nähert sich die Auswahl reinem Zufall über das ganze Vokabular – der Text zerfällt zu Wortsalat.</p>
+
+<div class="callout dev">Der Name kommt aus der Physik: In der Boltzmann-Verteilung bestimmt die Temperatur, wie gleichmäßig sich Teilchen auf Energiezustände verteilen. Heiß = viel Unordnung, kalt = alles im günstigsten Zustand. Die Formel ist tatsächlich dieselbe.</div>
+
+<!-- ============ TOP-P ============ -->
+<h2 id="topp">Top-p und Top-k: den Schwanz abschneiden</h2>
+<p>Ein Problem der Temperatur: Ein echtes Vokabular hat zehntausende Tokens, die meisten davon völlig unpassend. Einzeln sind sie winzig wahrscheinlich, aber zusammen können sie bei höherer Temperatur einen spürbaren Anteil ausmachen – und dann landet irgendwann Unsinn im Text. Deshalb wird zusätzlich abgeschnitten:</p>
+<div class="cards">
+  <div class="card"><div class="num">k</div><h4>Top-k</h4><p>Nur die <em>k</em> wahrscheinlichsten Tokens bleiben, z. B. die besten 40. Einfach, aber starr: Mal sind 40 zu viele, mal zu wenige.</p></div>
+  <div class="card"><div class="num">p</div><h4>Top-p (Nucleus)</h4><p>Es bleiben so viele der besten Tokens, bis zusammen <em>p</em> erreicht ist, z. B. 90 %. Bei klarer Lage nur wenige, bei offener Lage viele. Am weitesten verbreitet.</p></div>
+  <div class="card"><div class="num">↻</div><h4>Danach</h4><p>Die übrigen Wahrscheinlichkeiten werden wieder auf 100 % hochgerechnet, dann wird gezogen.</p></div>
+</div>
+<p>Im Widget oben kannst du das sehen: Bei Top-p 0,9 werden die Außenseiter durchgestrichen und können nicht mehr gezogen werden – egal wie hoch die Temperatur ist.</p>
+
+<!-- ============ WIRKUNG ============ -->
+<h2 id="wirkung">Wirkung auf ganze Texte</h2>
+<p>Weil eine Antwort aus Hunderten solcher Ziehungen besteht, summieren sich kleine Unterschiede. Eine Abweichung früh im Text führt das Modell auf einen ganz anderen Weg. So könnte die Bitte „Beschreib einen Herbstmorgen in einem Satz“ dreimal hintereinander ausfallen:</p>
+
+<figure>
+<div class="gen">
+  <div class="gen-col"><div class="h">Temperatur 0 – dreimal dasselbe</div><ol>
+    <li>Nebel liegt über den Feldern, und die Blätter leuchten in Rot und Gold.</li>
+    <li>Nebel liegt über den Feldern, und die Blätter leuchten in Rot und Gold.</li>
+    <li>Nebel liegt über den Feldern, und die Blätter leuchten in Rot und Gold.</li></ol></div>
+  <div class="gen-col"><div class="h">Temperatur 1 – Variationen</div><ol>
+    <li>Nebel liegt über den Feldern, und die Blätter leuchten in Rot und Gold.</li>
+    <li>Der Atem dampft in der kühlen Luft, während die Sonne sich durch den Dunst kämpft.</li>
+    <li>Kaffeeduft, nasses Laub vor der Tür und ein Himmel, der sich noch nicht entschieden hat.</li></ol></div>
+  <div class="gen-col"><div class="h">Temperatur 2 – es zerfällt</div><ol>
+    <li>Nebel tanzt Kastanien quer durch Morgenröhren, golden verschluckt.</li>
+    <li>Der Herbst klirrt leise Teekannenlaub, oktoberig verschwommen wolle.</li>
+    <li>Blätterfrost summend, Laterne Uhrzeiger Igelmorgen.</li></ol></div>
+</div>
+<figcaption>Illustrative Beispiele, nicht von einem echten Lauf. Das Muster ist aber typisch: zu kalt wiederholt sich, zu heiß verliert den Faden.</figcaption>
+</figure>
+
+<!-- ============ WANN ============ -->
+<h2 id="wann">Welche Einstellung wofür?</h2>
+<div class="tbl-wrap">
+<table class="use-tbl">
+  <thead><tr><th>Temperatur</th><th>geeignet für</th></tr></thead>
+  <tbody>
+    <tr><td><strong>0 – 0,3</strong></td><td>Code, Datenextraktion, Klassifizieren, Fakten – überall, wo es eine richtige Antwort gibt und Reproduzierbarkeit zählt</td></tr>
+    <tr><td><strong>0,5 – 1</strong></td><td>normale Gespräche, Erklärungen, Zusammenfassungen – der übliche Standard</td></tr>
+    <tr><td><strong>1 – 1,3</strong></td><td>Brainstorming, Ideen, Geschichten, Varianten – wenn Abwechslung wichtiger ist als Präzision</td></tr>
+    <tr><td><strong>darüber</strong></td><td>selten sinnvoll; der Text wird schnell unzusammenhängend</td></tr>
+  </tbody>
+</table>
+</div>
+<p>In Chat-Apps kann man die Temperatur meist nicht einstellen; der Anbieter hat sie festgelegt. Über die API geht es, der erlaubte Bereich ist je nach Anbieter verschieden (oft 0 bis 1 oder 0 bis 2). Manche neueren Modelle, die vor der Antwort „nachdenken“, erlauben gar keine eigene Temperatur oder nur eingeschränkt.</p>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Logits</strong></td><td>ein <code>float[]</code> mit einer Punktzahl pro Token im Vokabular – die eigentliche Ausgabe des Modells</td></tr>
+    <tr><td><strong>Sampling</strong></td><td>gewichtete Zufallsauswahl aus einem Array, wie ein Glücksrad mit unterschiedlich großen Feldern</td></tr>
+    <tr><td><strong>Temperatur</strong></td><td>ein Skalierungsfaktor für die Feldgrößen, bevor gedreht wird</td></tr>
+    <tr><td><strong>T = 0</strong></td><td><code>argmax</code> – kein Zufall mehr</td></tr>
+    <tr><td><strong>Seed</strong></td><td>wie <code>new Random(42)</code>: gleicher Startwert, gleiche Zufallsfolge (wenn der Anbieter das unterstützt)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="k">int</span> ziehe(<span class="k">float</span>[] logits, <span class="k">float</span> T, Random rnd) {
+    <span class="k">if</span> (T == 0) <span class="k">return</span> argmax(logits);                  <span class="c">// greedy</span>
+
+    <span class="k">double</span>[] p = <span class="k">new double</span>[logits.length];
+    <span class="k">double</span> max = max(logits), sum = 0;
+    <span class="k">for</span> (<span class="k">int</span> i = 0; i &lt; p.length; i++) {
+        p[i] = Math.exp((logits[i] - max) / T);         <span class="c">// "- max" nur gegen Überlauf</span>
+        sum += p[i];
+    }
+    <span class="k">double</span> r = rnd.nextDouble() * sum;                  <span class="c">// Glücksrad drehen</span>
+    <span class="k">for</span> (<span class="k">int</span> i = 0; i &lt; p.length; i++) {
+        r -= p[i];
+        <span class="k">if</span> (r &lt;= 0) <span class="k">return</span> i;
+    }
+    <span class="k">return</span> p.length - 1;
+}</code></pre>
+
+<p>Das ist im Prinzip der komplette Mechanismus – ein paar Zeilen nach Milliarden Rechenschritten im Modell.</p>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Höhere Temperatur macht das Modell kreativer.“</b> – Es macht die Auswahl zufälliger. Das wirkt anfangs kreativ, aber das Modell kennt dadurch keine neuen Ideen – es greift nur häufiger zu weniger passenden Wörtern.</div>
+  <div><b>„Temperatur 0 heißt immer exakt gleiche Antwort.“</b> – Fast. Durch Rechenungenauigkeiten auf Grafikkarten und die Art, wie Anfragen gebündelt werden, kann es trotzdem kleine Abweichungen geben.</div>
+  <div><b>„Niedrige Temperatur verhindert Halluzinationen.“</b> – Sie verhindert Ausreißer beim Ziehen. Wenn das Modell aber etwas Falsches für am wahrscheinlichsten hält, sagt es das bei T = 0 umso zuverlässiger.</div>
+  <div><b>„Die Temperatur ist ein Parameter des Modells.“</b> – Sie ist eine Einstellung der Anfrage. Mit den gelernten Parametern (Gewichten) hat sie nichts zu tun.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/was-ist-ein-sprachmodell/">Was ist ein Sprachmodell?</a>
+  <a href="/erklaert/token/">Token</a>
+  <a href="/erklaert/halluzination/">Halluzination</a>
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/reasoning/">Reasoning</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

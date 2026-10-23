@@ -12,6 +12,10 @@
   {{- end }}
   {{- $css := resources.Get "css/main.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+  {{- /* KI-Begriffe: gemeinsames Stylesheet für alle interaktiven Erklärseiten (und die Lesereihenfolge) */}}
+  {{- if and (eq .Section "erklaert") .Params.stile }}{{ with resources.Get "css/erklaert.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+  {{- end }}{{ end }}
   {{- /* Seiteneigene Stile aus dem Page-Bundle (z. B. interaktive Erklärseiten): stile = ["stil.css"] */}}
   {{- range .Params.stile }}{{ with $.Resources.Get . }}{{ with . | minify | fingerprint }}
   <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">

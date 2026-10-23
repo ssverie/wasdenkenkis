@@ -1,0 +1,27 @@
+/* Seiteneigene Stile (training) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Training ---- */
+.erklaert .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.erklaert .tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .stage-tabs button[aria-pressed="true"]{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+.erklaert .lbl{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px}
+.erklaert .conv{padding:14px;border-radius:12px;background:var(--bg);min-height:150px}
+.erklaert .conv .bubble{max-width:96%}
+.erklaert .conv .bubble.a{background:var(--card);border:1px solid var(--line);white-space:pre-line}
+.erklaert .conv .note{margin-top:8px;font-size:.84rem;color:var(--muted)}
+
+.erklaert .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:600px){.erklaert .pair{grid-template-columns:1fr}}
+.erklaert .opt{padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:var(--card);font-size:.9rem;cursor:pointer;text-align:left;font-weight:400;line-height:1.5;white-space:pre-line}
+.erklaert .opt:hover{border-color:var(--accent)}
+.erklaert .opt.chosen{border-color:var(--ok);background:var(--ok-soft)}
+.erklaert .opt.other{opacity:.5}
+.erklaert .q{font-family:var(--serif);font-size:1.08rem;margin:0 0 10px}
+.erklaert .prog{display:flex;gap:6px;margin-bottom:10px}
+.erklaert .prog span{flex:1;height:6px;border-radius:3px;background:var(--line)}
+.erklaert .prog span.done{background:var(--accent)}
+.erklaert .summary{padding:14px 16px;border-radius:12px;background:var(--accent-soft);font-size:.92rem}
+.erklaert .summary ul{margin:6px 0 0;padding-left:1.2em}
+
+.erklaert .data-mix{display:flex;height:34px;border-radius:9px;overflow:hidden;margin:8px 0}
+.erklaert .data-mix span{display:flex;align-items:center;justify-content:center;color:#fff;font-size:.72rem;font-weight:600;white-space:nowrap;overflow:hidden}
+.erklaert .phase-tbl td:first-child{white-space:nowrap}

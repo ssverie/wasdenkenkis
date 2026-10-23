@@ -1,0 +1,32 @@
+/* Seiteneigene Stile (reasoning) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Reasoning ---- */
+.erklaert .tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.erklaert .tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .mode{display:inline-flex;gap:4px;margin:2px 0 12px}
+.erklaert .mode button[aria-pressed="true"]{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+.erklaert .task{font-family:var(--serif);font-size:1.12rem;padding:10px 14px;border-radius:10px;background:var(--bg);margin-bottom:12px}
+.erklaert .task code{font-size:.85em}
+.erklaert .think{font:.84rem/1.65 var(--mono);padding:12px 14px;border-radius:10px;border:1px dashed var(--accent);background:var(--accent-soft);color:var(--fg);white-space:pre-wrap;min-height:2.2em}
+.erklaert .think .lbl{display:block;font:700 .68rem var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.erklaert .think .fix{color:var(--accent-2);font-weight:600}
+.erklaert .ans{margin-top:10px;padding:12px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:1rem;min-height:2.6em}
+.erklaert .ans .lbl{display:block;font:700 .68rem var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.erklaert .ans.ok{border-color:var(--ok);background:var(--ok-soft)}
+.erklaert .ans.bad{border-color:var(--bad);background:var(--bad-soft)}
+.erklaert .meta-row{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:8px;font-size:.82rem;color:var(--muted)}
+.erklaert .meta-row b{color:var(--fg);font-variant-numeric:tabular-nums}
+
+.erklaert .compute svg{max-width:560px}
+.erklaert .sl{display:grid;grid-template-columns:8em 1fr 6em;align-items:center;gap:10px;font-size:.88rem}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+.erklaert #budSvg{width:100%;height:auto;display:block;margin-top:10px}
+.erklaert .bud-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.erklaert .bud-stats div{padding:8px;border-radius:8px;background:var(--bg);text-align:center;font-size:.74rem;color:var(--muted)}
+.erklaert .bud-stats b{display:block;font:600 1rem var(--mono);color:var(--fg)}
+.erklaert .use{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.erklaert .use{grid-template-columns:1fr}}
+.erklaert .use div{padding:14px;border-radius:12px;font-size:.9rem}
+.erklaert .use .y{background:var(--ok-soft)}.erklaert .use .n{background:var(--bg)}
+.erklaert .use h4{margin:0 0 6px}
+.erklaert .use ul{margin:0;padding-left:1.1em}

@@ -1,0 +1,42 @@
+/* Seiteneigene Stile (rag) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: RAG ---- */
+.erklaert .two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:640px){.erklaert .two{grid-template-columns:1fr}}
+.erklaert .two .col{padding:14px;border-radius:12px;background:var(--bg)}
+.erklaert .two .col h4{margin:0 0 8px;font-size:.95rem}
+.erklaert .two .pipeline{flex-direction:column}
+.erklaert .two .pipeline .arrow{width:auto;height:18px;flex-basis:18px;transform:rotate(90deg)}
+
+.erklaert .qsel{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.erklaert .qsel button{text-align:left;font-weight:500}
+.erklaert .qsel button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .mode{display:inline-flex;gap:4px;margin:4px 0 12px}
+.erklaert .mode button[aria-pressed="true"]{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+.erklaert .steps{display:flex;flex-direction:column;gap:12px}
+.erklaert .step{padding:12px 14px;border-radius:10px;background:var(--bg)}
+.erklaert .step .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.erklaert .chunk{display:grid;grid-template-columns:2.2em minmax(0,1fr) 78px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:.85rem}
+.erklaert .chunk:last-child{border-bottom:0}
+.erklaert .chunk .id{font:600 .75rem var(--mono);color:var(--muted)}
+.erklaert .chunk .sc{display:flex;align-items:center;gap:6px;font:600 .75rem var(--mono);font-variant-numeric:tabular-nums}
+.erklaert .chunk .sc i{display:block;height:8px;border-radius:3px;background:var(--accent)}
+.erklaert .chunk.top{background:var(--accent-soft);border-radius:6px;padding-left:6px;padding-right:6px}
+.erklaert .chunk.top .id{color:var(--accent)}
+.erklaert .chunk.low{opacity:.5}
+.erklaert .prompt-box{font:.76rem/1.55 var(--mono);white-space:pre-wrap;background:var(--code-bg);padding:10px 12px;border-radius:8px;max-height:220px;overflow:auto}
+.erklaert .prompt-box .ins{background:var(--accent-soft);color:var(--accent)}
+.erklaert .answer{font-size:.95rem;line-height:1.6}
+.erklaert .answer sup{color:var(--accent);font-weight:700}
+.erklaert .answer.bad{color:var(--bad)}
+.erklaert .verdict{margin-top:8px;font-size:.85rem;font-weight:600}
+.erklaert .verdict.ok{color:var(--ok)}.erklaert .verdict.bad{color:var(--bad)}
+
+.erklaert .chunks-demo{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:640px){.erklaert .chunks-demo{grid-template-columns:1fr}}
+.erklaert .chunks-demo div{padding:12px;border-radius:10px;background:var(--bg);font-size:.86rem}
+.erklaert .chunks-demo h4{margin:0 0 6px;font-size:.92rem}
+.erklaert .chunks-demo .doc{display:flex;flex-direction:column;gap:3px;margin:8px 0}
+.erklaert .chunks-demo .doc span{height:10px;border-radius:3px;background:var(--line)}
+.erklaert .chunks-demo .doc span.c{background:var(--accent)}
+.erklaert .chunks-demo .doc span.c2{background:var(--accent-2)}
+.erklaert .cmp-tbl td{vertical-align:top}

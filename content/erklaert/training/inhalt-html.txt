@@ -1,0 +1,178 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Training</strong> heißt: Die <a href="/erklaert/parameter/">Parameter</a> eines <a href="/erklaert/neuronales-netz/">neuronalen Netzes</a> werden so lange angepasst, bis das Netz tut, was es soll. Bei Sprachmodellen geschieht das in drei großen Phasen:</p>
+<p><strong>1. Vortraining</strong> – riesige Textmengen lesen und das nächste Token vorhersagen. Hier entsteht das Wissen. <strong>2. Feinabstimmung</strong> – an Beispielgesprächen lernen, wie ein hilfreicher Assistent antwortet. <strong>3. Präferenztraining</strong> (etwa RLHF) – aus Bewertungen lernen, welche von zwei Antworten besser ist. Hier entstehen Ton, Sorgfalt und Grenzen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#ueberblick">Der Weg im Überblick</a></li>
+  <li><a href="#daten">Die Daten</a></li>
+  <li><a href="#vortraining">Phase 1: Vortraining</a></li>
+  <li><a href="#stufen">Ein Modell, drei Stufen</a></li>
+  <li><a href="#sft">Phase 2: Feinabstimmung</a></li>
+  <li><a href="#rlhf">Phase 3: Präferenztraining</a></li>
+  <li><a href="#danach">Was danach kommt</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ ÜBERBLICK ============ -->
+<h2 id="ueberblick">Der Weg im Überblick</h2>
+<figure>
+<div class="pipeline">
+  <div class="stage"><b>Daten</b>sammeln, filtern, tokenisieren</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>Vortraining</b>nächstes Token vorhersagen</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>Basismodell</b>setzt Texte fort</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>Feinabstimmung</b>Beispielgespräche</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>Präferenz&shy;training</b>besser / schlechter</div>
+  <div class="arrow">→</div>
+  <div class="stage out"><b>Assistent</b>testen, veröffentlichen</div>
+</div>
+<figcaption>Das Vortraining verschlingt mit Abstand die meiste Rechenzeit. Die späteren Phasen sind viel kürzer, prägen aber das Verhalten, das man im Chat erlebt.</figcaption>
+</figure>
+
+<div class="tbl-wrap">
+<table class="phase-tbl">
+  <thead><tr><th>Phase</th><th>Lernt aus</th><th>Bringt bei</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Vortraining</strong></td><td>Billionen Tokens aus Web, Büchern, Code</td><td>Sprache, Wissen, Muster, Programmieren</td></tr>
+    <tr><td><strong>Feinabstimmung</strong></td><td>ausgewählte Beispielgespräche</td><td>die Rolle als Assistent, Antwortformat, Anweisungen befolgen</td></tr>
+    <tr><td><strong>Präferenztraining</strong></td><td>Vergleiche: Antwort A oder B besser?</td><td>Qualität, Ehrlichkeit, Ton, was abgelehnt wird</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ============ DATEN ============ -->
+<h2 id="daten">Die Daten</h2>
+<p>Am Anfang steht eine riesige Textsammlung: öffentlich zugängliche Webseiten, Bücher, wissenschaftliche Artikel, Programmcode, oft in vielen Sprachen. Roh ist das unbrauchbar. Ein großer Teil der Arbeit steckt im <strong>Aufbereiten</strong>:</p>
+<ul>
+  <li><strong>Doppeltes entfernen</strong> – sonst lernt das Modell häufige Seiten auswendig.</li>
+  <li><strong>Qualität filtern</strong> – Spam, Werbemüll, kaputte Seiten aussortieren.</li>
+  <li><strong>Problematisches entfernen</strong> – etwa persönliche Daten oder schädliche Inhalte.</li>
+  <li><strong>Mischen</strong> – wie viel Code, wie viel Deutsch, wie viel Mathematik? Die Mischung prägt, was das Modell gut kann.</li>
+</ul>
+<figure>
+<div class="data-mix" aria-hidden="true">
+  <span style="width:55%;background:var(--accent)">Webtext</span>
+  <span style="width:15%;background:var(--ok)">Code</span>
+  <span style="width:12%;background:var(--accent-2)">Bücher, Artikel</span>
+  <span style="width:10%;background:#8b5cf6">Wissenschaft</span>
+  <span style="width:8%;background:#6b7280">Sonst.</span>
+</div>
+<figcaption>Eine ausgedachte, aber typische Datenmischung. Die tatsächlichen Mischungen halten die meisten Anbieter geheim – sie gelten als wichtiges Betriebsgeheimnis.</figcaption>
+</figure>
+
+<!-- ============ VORTRAINING ============ -->
+<h2 id="vortraining">Phase 1: Vortraining</h2>
+<p>Das Modell startet mit Zufallszahlen und übt eine einzige Aufgabe: das nächste <a href="/erklaert/token/">Token</a> vorhersagen. Text für Text, Billionen Mal. Bei jedem Fehler werden alle Parameter ein winziges Stück korrigiert (Gradientenabstieg, siehe <a href="/erklaert/neuronales-netz/">Neuronales Netz</a>).</p>
+<p>Das klingt banal, ist aber eine sehr anspruchsvolle Aufgabe. Um gut vorherzusagen, wie ein Satz über Chemie weitergeht, muss das Modell Chemie in gewissem Sinn verstanden haben. Um Java-Code fortzusetzen, muss es Java können. So entsteht nebenbei ein enormes Wissen.</p>
+<div class="cards">
+  <div class="card"><div class="num">⏱</div><h4>Dauer</h4><p>Wochen bis Monate, ohne Unterbrechung.</p></div>
+  <div class="card"><div class="num">▦</div><h4>Hardware</h4><p>Tausende bis Zehntausende Spezialchips (GPUs oder TPUs), eng vernetzt.</p></div>
+  <div class="card"><div class="num">€</div><h4>Kosten</h4><p>Bei großen Modellen nach öffentlichen Schätzungen zig bis Hunderte Millionen Dollar – allein für Rechenzeit.</p></div>
+</div>
+<p>Das Ergebnis ist ein <strong>Basismodell</strong>. Es weiß viel, aber es ist kein Gesprächspartner: Es setzt einfach jeden Text so fort, wie er im Internet wahrscheinlich weitergehen würde.</p>
+
+<!-- ============ STUFEN ============ -->
+<h2 id="stufen">Ein Modell, drei Stufen</h2>
+<p>Wie sich dieselbe Frage nach jeder Phase beantworten würde. Wähl eine Frage und schalte durch die Stufen:</p>
+
+<div class="widget">
+  <div class="widget-title">Nach welcher Phase?</div>
+  <div class="tabs" id="pTabs"></div>
+  <div class="tabs stage-tabs" id="sTabs"></div>
+  <div class="conv" id="conv"></div>
+  <p class="fine">Nachgestellte Beispiele, die das typische Verhalten jeder Stufe zeigen – keine echten Ausgaben eines bestimmten Modells.</p>
+</div>
+
+<!-- ============ SFT ============ -->
+<h2 id="sft">Phase 2: Feinabstimmung</h2>
+<p>In der <strong>Feinabstimmung</strong> (englisch <em>supervised fine-tuning</em>, kurz SFT) bekommt das Basismodell Beispiele, wie ein gutes Gespräch aussieht: eine Nutzerfrage und eine vorbildliche Antwort, geschrieben oder geprüft von Menschen. Es lernt mit derselben Methode wie zuvor – nächstes Token vorhersagen –, nur jetzt auf diesen Gesprächen.</p>
+<p>Die Datenmenge ist winzig im Vergleich zum Vortraining, aber die Wirkung groß: Das Modell lernt, dass nach einer Frage eine Antwort kommt, dass es eine Rolle als Assistent hat, wie man Listen und Code formatiert, wie man Anweisungen befolgt. Das <em>Wissen</em> kommt fast vollständig aus dem Vortraining; die Feinabstimmung bringt ihm bei, es <em>anzuwenden</em>.</p>
+
+<!-- ============ RLHF ============ -->
+<h2 id="rlhf">Phase 3: Präferenztraining</h2>
+<p>Gute Antworten vollständig vorzuschreiben ist teuer und begrenzt. Viel leichter ist es, zwei Antworten zu <em>vergleichen</em>. Darauf beruht das <strong>Präferenztraining</strong>. Die bekannteste Form heißt <strong>RLHF</strong> – <em>Reinforcement Learning from Human Feedback</em>, bestärkendes Lernen aus menschlicher Rückmeldung:</p>
+<ol>
+  <li>Das Modell schreibt zu einer Frage zwei oder mehr Antworten.</li>
+  <li>Menschen wählen, welche besser ist.</li>
+  <li>Aus sehr vielen solcher Entscheidungen wird ein <strong>Belohnungsmodell</strong> trainiert, das vorhersagt, welche Antwort Menschen bevorzugen würden.</li>
+  <li>Das Sprachmodell wird dann so weitertrainiert, dass es Antworten schreibt, die das Belohnungsmodell hoch bewertet.</li>
+</ol>
+<p>Probier es selbst – du bist der Bewerter:</p>
+
+<div class="widget">
+  <div class="widget-title">Welche Antwort ist besser?</div>
+  <div class="prog" id="prog"></div>
+  <div id="rate"></div>
+  <p class="fine">Jedes Paar unterscheidet sich gezielt in einer Eigenschaft. In echt sind es Hunderttausende Vergleiche, oft mit ausführlichen Bewertungsrichtlinien.</p>
+</div>
+
+<p>Daran sieht man auch eine Schwäche: Das Modell lernt, was <em>Bewerter mögen</em> – nicht automatisch, was <em>richtig</em> ist. Menschen bevorzugen manchmal Antworten, die ihnen zustimmen oder schmeicheln. Ein Modell, das darauf optimiert wird, neigt dann zu <strong>Sykophantie</strong>: Es gibt einem eher recht, als zu widersprechen. Anbieter arbeiten gezielt dagegen an.</p>
+
+<h3>Varianten</h3>
+<div class="cards">
+  <div class="card"><div class="num">AI</div><h4>KI-Rückmeldung</h4><p>Statt Menschen bewertet ein Modell die Antworten anhand schriftlicher Grundsätze. Anthropic hat dafür 2022 „Constitutional AI“ vorgestellt – das Modell lernt aus einer Art Verfassung.</p></div>
+  <div class="card"><div class="num">✓</div><h4>Überprüfbare Aufgaben</h4><p>Bei Mathematik oder Code lässt sich automatisch prüfen, ob das Ergebnis stimmt. Das Modell wird für richtige Lösungen belohnt – so entstehen die Denkfähigkeiten moderner <a href="/erklaert/reasoning/">Reasoning</a>-Modelle.</p></div>
+  <div class="card"><div class="num">↔</div><h4>Direkt aus Vergleichen</h4><p>Verfahren wie DPO sparen sich das separate Belohnungsmodell und lernen direkt aus den Paaren. Einfacher, aber mit ähnlichem Ziel.</p></div>
+</div>
+
+<!-- ============ DANACH ============ -->
+<h2 id="danach">Was danach kommt</h2>
+<p>Vor der Veröffentlichung wird das Modell ausgiebig getestet: mit standardisierten Aufgaben (Benchmarks), mit gezielten Angriffsversuchen („Red Teaming“) und auf gefährliche Fähigkeiten. Dann werden die Parameter eingefroren.</p>
+<p>Ab diesem Moment lernt das Modell nichts mehr dazu. Was nach dem Ende der Trainingsdaten passiert ist, kennt es nicht – das ist sein <strong>Wissensstichtag</strong>. Neues Wissen bekommt es nur noch über das <a href="/erklaert/kontextfenster/">Kontextfenster</a>, etwa durch Websuche oder <a href="/erklaert/rag/">RAG</a>.</p>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Vortraining</strong></td><td>jemand liest jahrelang sämtlichen Quellcode auf GitHub – und kennt danach alle Muster, aber keine Teamregeln</td></tr>
+    <tr><td><strong>Feinabstimmung</strong></td><td>Einarbeitung mit Musterlösungen: „So beantworten wir hier Tickets.“</td></tr>
+    <tr><td><strong>Belohnungsmodell</strong></td><td>ein gelernter <code>Comparator&lt;Antwort&gt;</code> – trainiert auf vielen „A ist besser als B“</td></tr>
+    <tr><td><strong>Präferenztraining</strong></td><td>wie A/B-Tests mit Nutzerfeedback, nur dass sich das Produkt automatisch in Richtung der Gewinner verändert</td></tr>
+    <tr><td><strong>Eigene Feinabstimmung</strong></td><td>mit Verfahren wie LoRA: kleine Zusatzgewichte statt Änderung am ganzen Modell – ähnlich einem Decorator oder Patch</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="c">// Präferenztraining, auf den Kern reduziert</span>
+<span class="k">for</span> (Frage f : fragen) {
+    Antwort a = modell.antworte(f), b = modell.antworte(f);
+    Antwort besser = mensch.waehle(a, b);                 <span class="c">// oder ein Bewertungsmodell</span>
+    vergleiche.add(<span class="k">new</span> Vergleich(f, besser, besser == a ? b : a));
+}
+Comparator&lt;Antwort&gt; belohnung = trainiere(vergleiche);   <span class="c">// lernt Vorlieben</span>
+
+<span class="k">for</span> (<span class="k">int</span> schritt = 0; schritt &lt; N; schritt++) {
+    Antwort x = modell.antworte(zufaelligeFrage());
+    modell.verstaerke(x, belohnung.punkte(x));           <span class="c">// Gutes wahrscheinlicher machen</span>
+}</code></pre>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Das Modell lernt laufend aus meinen Chats.“</b> – Nicht während der Benutzung; die Parameter sind eingefroren. Ob Gespräche später in künftiges Training einfließen, regeln die Datenschutzbestimmungen und Einstellungen des jeweiligen Anbieters.</div>
+  <div><b>„Mit Feinabstimmung bringt man einem Modell neues Wissen bei.“</b> – Eher Verhalten und Stil. Für aktuelles oder firmeninternes Wissen ist <a href="/erklaert/rag/">RAG</a> meist zuverlässiger.</div>
+  <div><b>„RLHF macht Modelle nur höflich.“</b> – Es prägt deutlich mehr: Sorgfalt, Ehrlichkeit über Unsicherheit, Ablehnungen, Ausführlichkeit. Aber auch unerwünschte Neigungen wie Schmeichelei können entstehen.</div>
+  <div><b>„Im Modell stecken die Trainingstexte.“</b> – Nicht als Dateien. Das Gelernte ist über die Parameter verteilt. Sehr häufige Passagen können allerdings teilweise wörtlich wiedergegeben werden.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/neuronales-netz/">Neuronales Netz</a>
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/reasoning/">Reasoning</a>
+  <a href="/erklaert/rag/">RAG</a>
+  <a href="/erklaert/halluzination/">Halluzination</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

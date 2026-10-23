@@ -1,0 +1,33 @@
+/* Seiteneigene Stile (temperatur) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Temperatur ---- */
+.erklaert .prompt-line{font-family:var(--serif);font-size:1.25rem;padding:10px 14px;background:var(--bg);border-radius:10px;margin-bottom:12px}
+.erklaert .prompt-line .gap{display:inline-block;min-width:3.5em;border-bottom:2px dashed var(--accent);color:var(--accent-2);font-weight:600}
+.erklaert .sliders{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;margin:4px 0 14px}
+@media (max-width:600px){.erklaert .sliders{grid-template-columns:1fr}}
+.erklaert .sl{display:grid;grid-template-columns:5.2em 1fr 5.5em;align-items:center;gap:10px;font-size:.88rem}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono);font-variant-numeric:tabular-nums}
+.erklaert .sl.tp input{accent-color:var(--accent-2)}
+.erklaert .bars .bar-row{grid-template-columns:110px 1fr 58px}
+.erklaert .bar-row.cut .bar-fill{background:var(--line)}
+.erklaert .bar-row.cut .bar-label, .erklaert .bar-row.cut .bar-pct{opacity:.45;text-decoration:line-through}
+.erklaert .logit{font:.72rem var(--mono);color:var(--muted)}
+.erklaert .samples{display:flex;flex-wrap:wrap;gap:5px;min-height:2em;margin-top:10px}
+.erklaert .samples span{font:600 .8rem var(--mono);padding:3px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent);animation:pop .3s ease}
+.erklaert .tally{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.82rem;color:var(--muted);margin-top:8px}
+.erklaert .tally b{color:var(--fg)}
+
+.erklaert .curves{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:600px){.erklaert .curves{grid-template-columns:1fr}}
+.erklaert .curve{padding:12px;border-radius:10px;background:var(--bg);text-align:center}
+.erklaert .curve h4{margin:0 0 6px;font-size:.92rem}
+.erklaert .curve .mini{display:flex;align-items:flex-end;gap:4px;height:80px;margin:6px auto;max-width:180px}
+.erklaert .curve .mini span{flex:1;background:var(--accent);border-radius:3px 3px 0 0}
+.erklaert .curve p{margin:6px 0 0;font-size:.82rem;color:var(--muted)}
+
+.erklaert .gen{display:flex;flex-direction:column;gap:8px}
+.erklaert .gen-col{padding:12px 14px;border-radius:10px;background:var(--bg)}
+.erklaert .gen-col .h{font-weight:700;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.erklaert .gen-col ol{margin:0;padding-left:1.4em;font-family:var(--serif);font-size:1.02rem}
+.erklaert .gen-col li{margin:3px 0}
+.erklaert .use-tbl td:first-child{white-space:nowrap}

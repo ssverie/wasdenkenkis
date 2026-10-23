@@ -1,0 +1,152 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Aufmerksamkeit</strong> (englisch <em>attention</em>) ist der Kernmechanismus heutiger Sprachmodelle. Jedes Token fragt: <em>Welche der Tokens vor mir sind gerade wichtig für mich?</em> Es gewichtet sie und mischt deren Informationen in sich hinein.</p>
+<p>Technisch passiert das mit drei Vektoren pro Token: <strong>Query</strong> (was suche ich?), <strong>Key</strong> (was biete ich an?) und <strong>Value</strong> (was gebe ich weiter?). Man kann es sich als unscharfe <code>Map</code> vorstellen, die nicht einen Treffer liefert, sondern eine gewichtete Mischung aller Einträge.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#problem">Das Problem: Wörter brauchen Kontext</a></li>
+  <li><a href="#qkv">Query, Key, Value</a></li>
+  <li><a href="#rechnen">Selbst rechnen</a></li>
+  <li><a href="#koepfe">Viele Köpfe, viele Schichten</a></li>
+  <li><a href="#zurueck">Nur nach hinten schauen</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ PROBLEM ============ -->
+<h2 id="problem">Das Problem: Wörter brauchen Kontext</h2>
+<p>Am Anfang bekommt jedes Token einen festen Zahlenvektor aus einer Tabelle, sein <strong>Embedding</strong>. „Bank“ hat dort immer denselben Vektor – egal ob Geldinstitut oder Parkbank. Damit das Modell den Unterschied erkennt, muss „Bank“ auf seine Nachbarn schauen. Genau das leistet Aufmerksamkeit.</p>
+
+<div class="widget">
+  <div class="widget-title">Welche „Bank“ ist gemeint?</div>
+  <div class="s-tabs" id="btabs"></div>
+  <div class="bank-grid">
+    <div>
+      <div class="att-row" id="brow"></div>
+      <p class="fine" id="bnote"></p>
+    </div>
+    <svg viewBox="0 0 240 200" id="bsvg" role="img" aria-label="Bedeutungsraum: Bank verschiebt sich je nach Kontext Richtung Geld oder Park"></svg>
+  </div>
+  <p class="fine">Links: wie stark „Bank“ auf die anderen Wörter achtet (ausgedachte Werte). Rechts: ein stark vereinfachter Bedeutungsraum. Grau ist der Ausgangsvektor aus der Tabelle; der farbige Pfeil zeigt, wohin er nach der Aufmerksamkeit verschoben wird.</p>
+</div>
+
+<!-- ============ QKV ============ -->
+<h2 id="qkv">Query, Key, Value</h2>
+<p>Wie entscheidet ein Token, worauf es achtet? Jedes Token erzeugt aus seinem Vektor drei neue, jeweils mit einer eigenen gelernten Matrix:</p>
+<div class="role">
+  <div class="q"><b>Query</b>„Was suche ich?“<p>„Bank“ sucht etwa nach Hinweisen auf Geld oder Natur.</p></div>
+  <div class="k"><b>Key</b>„Wofür bin ich ein Treffer?“<p>„Geld“ signalisiert etwa: Ich bin ein Finanz-Hinweis.</p></div>
+  <div class="v"><b>Value</b>„Was gebe ich weiter, wenn man mich auswählt?“<p>Der Inhalt, der tatsächlich übernommen wird.</p></div>
+</div>
+<p>Dann läuft für jedes Token dasselbe Verfahren:</p>
+<ol>
+  <li>Seine <strong>Query</strong> wird mit dem <strong>Key</strong> jedes anderen Tokens verglichen – per Skalarprodukt: Je ähnlicher die Richtung, desto höher die Punktzahl.</li>
+  <li>Die Punktzahlen werden mit Softmax in Gewichte umgewandelt, die zusammen 100 % ergeben.</li>
+  <li>Die <strong>Values</strong> aller Tokens werden mit diesen Gewichten gemischt. Das Ergebnis ist der neue, kontextbewusste Vektor.</li>
+</ol>
+
+<div class="callout dev">Wie eine Suchmaschine: Die Query ist deine Suchanfrage, die Keys sind die Schlagworte der Dokumente, die Values deren Inhalt. Nur bekommst du nicht das beste Dokument zurück, sondern eine Mischung aller – je passender, desto größer der Anteil.</div>
+
+<!-- ============ RECHNEN ============ -->
+<h2 id="rechnen">Selbst rechnen</h2>
+<p>Hier mit zweidimensionalen Vektoren, damit man es zeichnen kann. Drei Tokens haben je einen Key (orange). Dreh die Query (blau) und sieh, wie sich Punktzahlen und Gewichte verändern:</p>
+
+<div class="widget">
+  <div class="widget-title">Query trifft Keys</div>
+  <div class="qkv">
+    <div>
+      <svg viewBox="-120 -120 240 240" id="qsvg" role="img" aria-label="Query-Vektor und drei Key-Vektoren"></svg>
+      <label class="sl">Richtung der Query<input type="range" id="qang" min="0" max="359" value="40"></label>
+    </div>
+    <div>
+      <table class="qkv-tbl">
+        <thead><tr><th>Token</th><th>Q·K</th><th>Gewicht</th></tr></thead>
+        <tbody id="qtb"></tbody>
+      </table>
+      <div class="qkv-out" id="qout"></div>
+    </div>
+  </div>
+  <p class="fine">Echte Modelle machen genau das – nur mit Vektoren aus 64 bis 128 Zahlen pro Kopf, für jedes Token gleichzeitig, als eine einzige Matrixmultiplikation. Die Punktzahl wird dabei noch durch die Wurzel der Vektorlänge geteilt, damit die Softmax nicht zu spitz wird.</p>
+</div>
+
+<p>In einer Formel zusammengefasst – das ist die berühmteste Zeile der modernen KI:</p>
+<pre><code>Attention(Q, K, V) = softmax( Q · Kᵀ / √d ) · V</code></pre>
+<p>Q, K und V sind hier Matrizen mit einer Zeile pro Token. Die Matrizen, mit denen sie erzeugt werden, sind <a href="/erklaert/parameter/">Parameter</a> – im Training gelernt. Niemand legt fest, dass „Bank“ nach „Geld“ suchen soll; das ergibt sich.</p>
+
+<!-- ============ KÖPFE ============ -->
+<h2 id="koepfe">Viele Köpfe, viele Schichten</h2>
+<p>Ein Token muss auf vieles gleichzeitig achten: Wer ist das Subjekt? Worauf bezieht sich „es“? Welches Wort stand direkt davor? Deshalb gibt es nicht eine Aufmerksamkeit, sondern viele parallel, sogenannte <strong>Köpfe</strong> (<em>heads</em>) – typisch sind Dutzende pro Schicht. Jeder hat eigene Q-, K- und V-Matrizen und lernt, auf etwas anderes zu achten.</p>
+
+<figure>
+<div class="heads" id="heads"></div>
+<figcaption>Drei Köpfe schauen vom selben Wort „er“ aus auf den Satz – mit ausgedachten, aber typischen Mustern. Forscher haben solche spezialisierten Köpfe in echten Modellen tatsächlich gefunden; viele andere sind schwerer zu deuten.</figcaption>
+</figure>
+
+<p>Und das Ganze wiederholt sich in jeder <strong>Schicht</strong> – große Modelle haben Dutzende davon hintereinander. Frühe Schichten erfassen eher Grammatik und Wortnachbarschaft, spätere eher Bedeutung und Zusammenhänge über weite Strecken. Am Ende trägt jedes Token Informationen aus dem gesamten Text vor ihm.</p>
+
+<!-- ============ ZURÜCK ============ -->
+<h2 id="zurueck">Nur nach hinten schauen</h2>
+<p>In Sprachmodellen, die Text erzeugen, darf jedes Token nur auf sich selbst und auf <em>frühere</em> Tokens achten, nie auf spätere – die gibt es beim Schreiben ja noch nicht. Das nennt man <strong>kausale Maske</strong>.</p>
+
+<div class="widget">
+  <div class="widget-title">Die Aufmerksamkeits-Matrix</div>
+  <div class="tbl-wrap" style="margin:0"><table id="mask" style="font-size:.8rem"></table></div>
+  <p class="fine">Zeile: Token, das schaut. Spalte: Token, auf das geschaut wird. Je dunkler, desto mehr Aufmerksamkeit (ausgedachte Werte, jede Zeile ergibt 100 %). Rechts oben bleibt alles leer – das ist die Maske. Weil jedes Token mit jedem früheren verglichen wird, wächst der Aufwand quadratisch mit der Textlänge (siehe <a href="/erklaert/kontextfenster/">Kontextfenster</a>).</p>
+</div>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Aufmerksamkeit</strong></td><td>eine unscharfe <code>Map.get()</code>: Statt eines exakten Treffers kommt eine gewichtete Mischung aller Werte</td></tr>
+    <tr><td><strong>Query</strong></td><td>der Suchschlüssel</td></tr>
+    <tr><td><strong>Key</strong></td><td>die Schlüssel der Einträge – verglichen wird per Ähnlichkeit, nicht per <code>equals()</code></td></tr>
+    <tr><td><strong>Value</strong></td><td>die Werte der Einträge</td></tr>
+    <tr><td><strong>Kopf</strong></td><td>eine von vielen solchen Maps parallel, jede mit eigener Vorstellung von „ähnlich“</td></tr>
+    <tr><td><strong>Kausale Maske</strong></td><td>die Map enthält nur Einträge mit kleinerem oder gleichem Index</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="c">// Aufmerksamkeit für EIN Token, als unscharfe Map</span>
+<span class="k">float</span>[] attention(<span class="k">float</span>[] query, <span class="k">float</span>[][] keys, <span class="k">float</span>[][] values) {
+    <span class="k">int</span> n = keys.length;
+    <span class="k">double</span>[] w = <span class="k">new double</span>[n];
+    <span class="k">for</span> (<span class="k">int</span> i = 0; i &lt; n; i++)
+        w[i] = dot(query, keys[i]) / Math.sqrt(query.length);   <span class="c">// wie gut passt Eintrag i?</span>
+    softmaxInPlace(w);                                            <span class="c">// → Gewichte, Summe = 1</span>
+
+    <span class="k">float</span>[] out = <span class="k">new float</span>[values[0].length];
+    <span class="k">for</span> (<span class="k">int</span> i = 0; i &lt; n; i++)
+        <span class="k">for</span> (<span class="k">int</span> j = 0; j &lt; out.length; j++)
+            out[j] += w[i] * values[i][j];                        <span class="c">// gewichtete Mischung</span>
+    <span class="k">return</span> out;
+}
+<span class="c">// keys/values enthalten nur Tokens 0..aktuell → kausale Maske</span></code></pre>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Das ist Aufmerksamkeit wie beim Menschen.“</b> – Der Name ist eine Metapher. Technisch ist es gewichtetes Mischen von Vektoren; mit bewusstem Hinschauen hat es wenig zu tun.</div>
+  <div><b>„An den Gewichten sieht man, warum das Modell etwas sagt.“</b> – Nur teilweise. Es gibt viele Köpfe in vielen Schichten, die zusammenwirken. Ein einzelnes Gewichtsmuster ist ein Hinweis, keine Erklärung.</div>
+  <div><b>„Jeder Kopf hat eine klare Aufgabe.“</b> – Manche schon, etwa „schau aufs vorige Wort“. Viele aber erledigen Mischungen von Aufgaben, die sich nicht sauber benennen lassen.</div>
+  <div><b>„Aufmerksamkeit ist das ganze Modell.“</b> – Sie ist ein Baustein. Zwischen den Aufmerksamkeits-Schritten liegen Feedforward-Netze, in denen ein Großteil der Parameter und vermutlich viel gespeichertes Wissen steckt (siehe <a href="/erklaert/transformer/">Transformer</a>).</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/was-ist-ein-sprachmodell/">Was ist ein Sprachmodell?</a>
+  <a href="/erklaert/transformer/">Transformer</a>
+  <a href="/erklaert/kontextfenster/">Kontextfenster</a>
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/token/">Token</a>
+  <a href="/erklaert/embedding/">Embedding</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

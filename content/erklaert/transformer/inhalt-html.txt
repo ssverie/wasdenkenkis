@@ -1,0 +1,223 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Der <strong>Transformer</strong> ist eine Architektur für neuronale Netze, 2017 von Forschern bei Google im Paper „Attention Is All You Need“ vorgestellt. Er besteht aus einem Stapel gleich gebauter <strong>Blöcke</strong>; jeder Block hat zwei Teile: <a href="/erklaert/aufmerksamkeit/">Aufmerksamkeit</a> (Tokens tauschen Informationen aus) und ein <strong>Feedforward-Netz</strong> (jedes Token wird für sich weiterverarbeitet).</p>
+<p>Sein großer Vorteil: Er verarbeitet alle Tokens eines Textes gleichzeitig statt nacheinander. Dadurch lässt er sich auf Grafikkarten extrem effizient trainieren – die Voraussetzung für die heutigen Riesenmodelle.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#vorher">Was es vorher gab</a></li>
+  <li><a href="#reise">Die Reise eines Tokens</a></li>
+  <li><a href="#position">Woher kennt er die Reihenfolge?</a></li>
+  <li><a href="#strom">Der Datenstrom durch die Blöcke</a></li>
+  <li><a href="#familie">Drei Varianten</a></li>
+  <li><a href="#geschichte">Kurze Geschichte</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ VORHER ============ -->
+<h2 id="vorher">Was es vorher gab</h2>
+<p>Vor 2017 verarbeiteten Sprachmodelle Text meist mit <strong>rekurrenten Netzen</strong> (RNN, LSTM): Wort für Wort, wobei ein interner Zustand von Schritt zu Schritt weitergereicht wurde – wie ein Staffelstab. Das hatte zwei große Nachteile:</p>
+
+<figure>
+<div class="vs">
+  <div class="side">
+    <h4>Rekurrentes Netz</h4>
+    <svg viewBox="0 0 300 90" role="img" aria-label="Kette: jedes Wort reicht einen Zustand an das nächste weiter">
+      <defs><marker id="ra" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+      <g font-size="12" text-anchor="middle" class="svg-text">
+        <rect x="5" y="30" width="58" height="30" rx="6" style="fill:var(--card);stroke:var(--line)"/><text x="34" y="50">Die</text>
+        <rect x="80" y="30" width="58" height="30" rx="6" style="fill:var(--card);stroke:var(--line)"/><text x="109" y="50">Katze</text>
+        <rect x="155" y="30" width="58" height="30" rx="6" style="fill:var(--card);stroke:var(--line)"/><text x="184" y="50">jagt</text>
+        <rect x="230" y="30" width="65" height="30" rx="6" style="fill:var(--card);stroke:var(--line)"/><text x="262" y="50">Mäuse</text>
+      </g>
+      <g style="stroke:var(--muted)" stroke-width="1.5" marker-end="url(#ra)"><line x1="63" y1="45" x2="78" y2="45"/><line x1="138" y1="45" x2="153" y2="45"/><line x1="213" y1="45" x2="228" y2="45"/></g>
+      <text x="150" y="82" text-anchor="middle" class="svg-muted" font-size="11">Schritt 1 → 2 → 3 → 4, strikt nacheinander</text>
+    </svg>
+    <ul><li class="con">Kann nicht parallel rechnen – langsam im Training</li><li class="con">Frühe Wörter verblassen über lange Strecken</li></ul>
+  </div>
+  <div class="side">
+    <h4>Transformer</h4>
+    <svg viewBox="0 0 300 90" role="img" aria-label="Jedes Wort ist direkt mit jedem früheren verbunden">
+      <g style="stroke:var(--accent)" stroke-width="1.4" fill="none" opacity=".7">
+        <path d="M109 30 Q 71 4 34 30"/><path d="M184 30 Q 146 4 109 30"/><path d="M184 30 Q 109 -14 34 30"/>
+        <path d="M262 30 Q 223 4 184 30"/><path d="M262 30 Q 185 -14 109 30"/><path d="M262 30 Q 148 -30 34 30"/>
+      </g>
+      <g font-size="12" text-anchor="middle" class="svg-text">
+        <rect x="5" y="30" width="58" height="30" rx="6" style="fill:var(--accent-soft);stroke:var(--accent)"/><text x="34" y="50">Die</text>
+        <rect x="80" y="30" width="58" height="30" rx="6" style="fill:var(--accent-soft);stroke:var(--accent)"/><text x="109" y="50">Katze</text>
+        <rect x="155" y="30" width="58" height="30" rx="6" style="fill:var(--accent-soft);stroke:var(--accent)"/><text x="184" y="50">jagt</text>
+        <rect x="230" y="30" width="65" height="30" rx="6" style="fill:var(--accent-soft);stroke:var(--accent)"/><text x="262" y="50">Mäuse</text>
+      </g>
+      <text x="150" y="82" text-anchor="middle" class="svg-muted" font-size="11">alle gleichzeitig, jedes sieht jedes frühere direkt</text>
+    </svg>
+    <ul><li class="pro">Im Training voll parallel – ideal für Grafikkarten</li><li class="pro">Direkter Draht über beliebige Entfernungen</li></ul>
+  </div>
+</div>
+<figcaption>Der entscheidende Schritt 2017: die Kette durch direkte Verbindungen ersetzen. Genau das macht die Aufmerksamkeit.</figcaption>
+</figure>
+
+<!-- ============ REISE ============ -->
+<h2 id="reise">Die Reise eines Tokens</h2>
+<p>Der ganze Transformer auf einen Blick. Geh Schritt für Schritt hindurch oder klick direkt auf einen Baustein:</p>
+
+<div class="widget">
+  <div class="widget-title">Einmal durch den Transformer</div>
+  <div class="journey">
+    <div class="arch" id="arch">
+      <div class="box" data-i="0"><b>Text</b><small>„Die Katze jagt“</small></div>
+      <div class="down">↓</div>
+      <div class="box" data-i="1"><b>Tokenizer</b><small>Text → Token-IDs</small></div>
+      <div class="down">↓</div>
+      <div class="box" data-i="2"><b>Embedding + Position</b><small>IDs → Vektoren</small></div>
+      <div class="down">↓</div>
+      <div class="block" data-n="N">
+        <div class="box att" data-i="3"><b>Aufmerksamkeit</b><small>Tokens tauschen sich aus</small></div>
+        <div class="down">↓</div>
+        <div class="box add" data-i="4">+ addieren &amp; normalisieren</div>
+        <div class="down">↓</div>
+        <div class="box ff" data-i="5"><b>Feedforward</b><small>jedes Token für sich</small></div>
+        <div class="down">↓</div>
+        <div class="box add" data-i="6">+ addieren &amp; normalisieren</div>
+      </div>
+      <div class="down">↓</div>
+      <div class="box" data-i="7"><b>Ausgabeschicht</b><small>Vektor → Punktzahl je Token</small></div>
+      <div class="down">↓</div>
+      <div class="box" data-i="8"><b>Nächstes Token</b><small>„␣Mäuse“</small></div>
+    </div>
+    <div>
+      <div class="j-panel" id="jp"></div>
+      <div class="controls"><button id="jprev">← Zurück</button><button class="primary" id="jnext">Weiter →</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ POSITION ============ -->
+<h2 id="position">Woher kennt er die Reihenfolge?</h2>
+<p>Eine überraschende Eigenschaft: Die Aufmerksamkeit selbst ist <em>blind für die Reihenfolge</em>. Sie vergleicht Vektoren miteinander, und dabei ist egal, an welcher Stelle sie stehen. Für sie wären „Hund beißt Mann“ und „Mann beißt Hund“ dasselbe – ein Sack voller Wörter. Deshalb bekommt jedes Token zusätzlich eine <strong>Positionsinformation</strong> mit.</p>
+
+<div class="widget">
+  <div class="widget-title">Mit und ohne Position</div>
+  <div class="switch" id="posSw"><button type="button" data-v="0">ohne Position</button><button type="button" data-v="1">mit Position</button></div>
+  <div class="order" id="order"></div>
+  <div class="order-res" id="orderRes"></div>
+  <p class="fine">Heute wird die Position meist nicht einfach angehängt, sondern in die Query- und Key-Vektoren hineingedreht („Rotary Position Embedding“, kurz RoPE). Dann hängt die Aufmerksamkeit davon ab, wie weit zwei Tokens auseinanderliegen.</p>
+</div>
+
+<!-- ============ STROM ============ -->
+<h2 id="strom">Der Datenstrom durch die Blöcke</h2>
+<p>Ein wichtiges Detail steckt in den unscheinbaren „+ addieren“-Schritten. Kein Block ersetzt den Vektor eines Tokens – jeder <em>addiert</em> nur etwas hinzu. Man spricht vom <strong>Residual Stream</strong>: einem Datenstrom, der von unten nach oben durch alle Blöcke fließt und in den jeder Block liest und schreibt.</p>
+
+<figure>
+<svg viewBox="0 0 560 170" role="img" aria-labelledby="rsT" style="max-width:560px">
+  <title id="rsT">Ein waagrechter Datenstrom, aus dem Blöcke lesen und in den sie zurückschreiben</title>
+  <defs>
+    <marker id="rs1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--accent)"/></marker>
+    <marker id="rs2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker>
+  </defs>
+  <line x1="20" y1="110" x2="540" y2="110" style="stroke:var(--accent)" stroke-width="8" stroke-linecap="round" opacity=".25"/>
+  <line x1="20" y1="110" x2="540" y2="110" style="stroke:var(--accent)" stroke-width="2.5" marker-end="url(#rs1)"/>
+  <text x="20" y="140" class="svg-muted" font-size="12">Embedding</text>
+  <text x="540" y="140" text-anchor="end" class="svg-muted" font-size="12">→ Ausgabe</text>
+  <g font-size="12" text-anchor="middle" class="svg-text" font-weight="600">
+    <rect x="80" y="22" width="80" height="38" rx="8" style="fill:var(--accent-soft);stroke:var(--accent)"/><text x="120" y="45">Aufmerks. 1</text>
+    <rect x="190" y="22" width="80" height="38" rx="8" style="fill:var(--ok-soft);stroke:var(--ok)"/><text x="230" y="45">Feedfw. 1</text>
+    <rect x="300" y="22" width="80" height="38" rx="8" style="fill:var(--accent-soft);stroke:var(--accent)"/><text x="340" y="45">Aufmerks. 2</text>
+    <rect x="410" y="22" width="80" height="38" rx="8" style="fill:var(--ok-soft);stroke:var(--ok)"/><text x="450" y="45">Feedfw. 2</text>
+  </g>
+  <g style="stroke:var(--muted)" stroke-width="1.5" fill="none" marker-end="url(#rs2)">
+    <path d="M95 106 L95 62"/><path d="M145 62 L145 104"/>
+    <path d="M215 106 L215 62"/><path d="M255 62 L255 104"/>
+    <path d="M315 106 L315 62"/><path d="M365 62 L365 104"/>
+    <path d="M425 106 L425 62"/><path d="M475 62 L475 104"/>
+  </g>
+  <g class="svg-muted" font-size="10.5"><text x="90" y="88" text-anchor="end">lesen</text><text x="150" y="88">+ schreiben</text></g>
+  <text x="520" y="45" class="svg-muted" font-size="16">…</text>
+</svg>
+<figcaption>Jeder Baustein liest den aktuellen Stand, berechnet einen Beitrag und addiert ihn. Das Original bleibt immer erhalten.</figcaption>
+</figure>
+
+<p>Das hat zwei Vorteile: Informationen gehen nicht verloren, auch durch 100 Blöcke hindurch. Und das Training funktioniert überhaupt erst bei so vielen Schichten, weil die Fehlersignale über diesen direkten Weg zurückfließen können.</p>
+
+<div class="cards">
+  <div class="card"><div class="num" style="background:var(--accent-soft);color:var(--accent)">A</div><h4>Aufmerksamkeit</h4><p>Holt Informationen <em>von anderen Tokens</em>. Der einzige Ort, an dem Tokens miteinander reden.</p></div>
+  <div class="card"><div class="num" style="background:var(--ok-soft);color:var(--ok)">F</div><h4>Feedforward</h4><p>Verarbeitet <em>jedes Token einzeln</em> weiter. Hier steckt rund zwei Drittel der Parameter – und nach heutiger Forschung ein guter Teil des gespeicherten Faktenwissens.</p></div>
+  <div class="card"><div class="num">N</div><h4>Normalisierung</h4><p>Hält die Zahlen in einem vernünftigen Bereich, damit sie über viele Schichten nicht explodieren oder verschwinden.</p></div>
+</div>
+
+<!-- ============ FAMILIE ============ -->
+<h2 id="familie">Drei Varianten</h2>
+<p>Der Original-Transformer von 2017 war für Übersetzung gebaut und hatte zwei Hälften: einen <strong>Encoder</strong>, der den Ausgangstext liest, und einen <strong>Decoder</strong>, der die Übersetzung schreibt. Daraus sind drei Familien entstanden:</p>
+<div class="family">
+  <div><span class="tag">nur Decoder</span><h4>Textgeneratoren</h4><p>Schauen nur nach hinten, erzeugen Text Token für Token. Das ist die Bauweise der heutigen Chat-Modelle, etwa der GPT- und Llama-Familien.</p></div>
+  <div><span class="tag">nur Encoder</span><h4>Textversteher</h4><p>Sehen den ganzen Text in beide Richtungen, erzeugen aber keinen. Gut zum Klassifizieren und für Suchmaschinen. Bekanntestes Beispiel: BERT.</p></div>
+  <div><span class="tag">Encoder + Decoder</span><h4>Übersetzer</h4><p>Das Original-Design. Noch üblich für Übersetzung und manche Spracherkennung, z. B. T5 oder Whisper.</p></div>
+</div>
+
+<!-- ============ GESCHICHTE ============ -->
+<h2 id="geschichte">Kurze Geschichte</h2>
+<div class="timeline">
+  <div><b>2017</b> „Attention Is All You Need“ – der Transformer für maschinelle Übersetzung.</div>
+  <div><b>2018</b> BERT (Encoder) und GPT (Decoder) zeigen: Vortraining auf viel Text, dann anpassen.</div>
+  <div><b>2020</b> GPT-3 mit 175 Mrd. Parametern – Größe allein bringt überraschende Fähigkeiten.</div>
+  <div><b>2022</b> ChatGPT macht Transformer-Sprachmodelle einem breiten Publikum bekannt.</div>
+  <div><b>seitdem</b> Viele Verfeinerungen – längere Kontexte, Mixture of Experts, effizientere Aufmerksamkeit –, aber der Grundbauplan ist derselbe geblieben.</div>
+</div>
+<p>Es wird auch an Alternativen geforscht, etwa an sogenannten State-Space-Modellen, die lange Texte günstiger verarbeiten sollen, und an Mischformen aus beidem. Bisher hat aber keine den Transformer bei den großen Sprachmodellen verdrängt.</p>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Transformer</strong></td><td>eine Pipeline aus N identischen Filtern, wie eine Filter-Chain</td></tr>
+    <tr><td><strong>Block</strong></td><td>ein Filter mit zwei Stufen: erst Austausch zwischen allen Elementen, dann Verarbeitung jedes Elements einzeln</td></tr>
+    <tr><td><strong>Residual Stream</strong></td><td><code>x = x + f(x)</code> statt <code>x = f(x)</code> – jeder Filter ergänzt, keiner ersetzt</td></tr>
+    <tr><td><strong>Aufmerksamkeit</strong></td><td>der einzige Schritt mit Zugriff auf die anderen Elemente der Liste</td></tr>
+    <tr><td><strong>Feedforward</strong></td><td>ein <code>map()</code> über die Liste – jedes Element unabhängig</td></tr>
+    <tr><td><strong>Training vs. Erzeugen</strong></td><td>Training: ganzer Text als Batch, parallel. Erzeugen: Token für Token in einer Schleife.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="c">// Ein kompletter Transformer-Durchlauf, stark vereinfacht</span>
+<span class="k">float</span>[] naechstesToken(<span class="k">int</span>[] tokenIds) {
+    <span class="k">float</span>[][] x = embedding(tokenIds);           <span class="c">// ein Vektor pro Token</span>
+    x = plusPosition(x);
+
+    <span class="k">for</span> (Block b : bloecke) {                       <span class="c">// z. B. 80 Stück</span>
+        x = add(x, b.aufmerksamkeit(norm(x)));      <span class="c">// Tokens tauschen sich aus</span>
+        x = add(x, b.feedforward(norm(x)));         <span class="c">// jedes Token für sich</span>
+    }
+
+    <span class="k">float</span>[] letzter = norm(x[x.length - 1]);
+    <span class="k">return</span> ausgabeschicht(letzter);                <span class="c">// ein Logit pro Vokabular-Eintrag</span>
+}</code></pre>
+<p>Das ist tatsächlich die ganze Struktur. Die Komplexität steckt nicht im Code, sondern in den Milliarden <a href="/erklaert/parameter/">Parametern</a> in <code>embedding</code>, den Blöcken und der Ausgabeschicht.</p>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Transformer heißt ChatGPT.“</b> – ChatGPT ist ein Produkt, der Transformer eine Bauweise. Sie steckt auch in Übersetzern, Suchmaschinen, Spracherkennung und Bildmodellen.</div>
+  <div><b>„Jedes neue Modell hat eine neue Architektur.“</b> – Meist nicht. Die großen Fortschritte kamen vor allem durch mehr Daten, mehr Rechenleistung und besseres Training – der Bauplan blieb im Kern gleich.</div>
+  <div><b>„Der Transformer versteht die Wortreihenfolge von selbst.“</b> – Nein, die muss ihm über Positionsinformationen eigens mitgegeben werden.</div>
+  <div><b>„Das Wissen steckt in der Aufmerksamkeit.“</b> – Die Aufmerksamkeit verteilt Informationen zwischen Tokens. Ein großer Teil der Parameter und vermutlich viel Faktenwissen liegt in den Feedforward-Netzen.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/was-ist-ein-sprachmodell/">Was ist ein Sprachmodell?</a>
+  <a href="/erklaert/aufmerksamkeit/">Aufmerksamkeit</a>
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/token/">Token</a>
+  <a href="/erklaert/kontextfenster/">Kontextfenster</a>
+  <a href="/erklaert/neuronales-netz/">Neuronales Netz</a>
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/embedding/">Embedding</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

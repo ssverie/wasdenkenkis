@@ -213,8 +213,11 @@
 <div class="related">
   <a href="/erklaert/was-ist-ein-sprachmodell/">Was ist ein Sprachmodell?</a>
   <a href="/erklaert/token/">Token</a>
-  <span title="Noch nicht vorhanden">Aufmerksamkeit</span>
-  <span title="Noch nicht vorhanden">Transformer</span>
+  <a href="/erklaert/aufmerksamkeit/">Aufmerksamkeit</a>
+  <a href="/erklaert/transformer/">Transformer</a>
   <a href="/erklaert/kontextfenster/">Kontextfenster</a>
+  <a href="/erklaert/neuronales-netz/">Neuronales Netz</a>
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
 </div>
 </div>

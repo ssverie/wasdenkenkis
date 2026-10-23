@@ -1,0 +1,50 @@
+/* Seiteneigene Stile (transformer) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Transformer ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+.erklaert .journey{display:grid;grid-template-columns:260px 1fr;gap:22px;align-items:start}
+@media (max-width:640px){.erklaert .journey{grid-template-columns:1fr}}
+.erklaert .arch{display:flex;flex-direction:column;align-items:stretch;gap:0}
+.erklaert .arch .box{padding:8px 10px;border-radius:9px;border:1.5px solid var(--line);background:var(--bg);font-size:.82rem;text-align:center;transition:all .25s;cursor:pointer}
+.erklaert .arch .box b{display:block;font-size:.88rem}
+.erklaert .arch .box small{color:var(--muted)}
+.erklaert .arch .box.on{border-color:var(--accent-2);background:var(--accent-2-soft);box-shadow:0 0 0 3px var(--accent-2-soft)}
+.erklaert .arch .down{height:14px;display:flex;justify-content:center;color:var(--muted);font-size:.75rem;line-height:14px}
+.erklaert .arch .block{position:relative;padding:22px 10px 10px;border-radius:12px;border:2px dashed var(--accent);display:flex;flex-direction:column;gap:0}
+.erklaert .arch .block::before{content:"Block – " attr(data-n) "× wiederholt";position:absolute;top:4px;left:10px;font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--accent)}
+.erklaert .arch .box.att{border-color:var(--accent)}
+.erklaert .arch .box.ff{border-color:var(--ok)}
+.erklaert .arch .box.add{padding:4px;font-size:.74rem}
+.erklaert .j-panel{padding:16px 18px;border-radius:12px;background:var(--bg);min-height:220px}
+.erklaert .j-step{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-2)}
+.erklaert .j-panel h3{margin:.2em 0 .4em;font-family:var(--serif);font-size:1.25rem}
+.erklaert .j-panel p{margin:.5em 0;font-size:.95rem}
+.erklaert .j-data{margin-top:10px;padding:8px 10px;border-radius:8px;background:var(--code-bg);font:.78rem/1.6 var(--mono);overflow-x:auto;white-space:pre}
+
+.erklaert .vs{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.erklaert .vs{grid-template-columns:1fr}}
+.erklaert .vs .side{padding:14px;border-radius:12px;background:var(--bg)}
+.erklaert .vs h4{margin:0 0 4px;font-size:1rem}
+.erklaert .vs svg{width:100%;height:auto;display:block;margin:8px 0}
+.erklaert .vs ul{margin:6px 0 0;padding-left:1.1em;font-size:.86rem}
+
+.erklaert .order{display:flex;flex-direction:column;gap:10px}
+.erklaert .order-row{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:center}
+@media (max-width:520px){.erklaert .order-row{grid-template-columns:1fr}}
+.erklaert .order-row .s{font-family:var(--serif);font-size:1.1rem}
+.erklaert .order-row .chips .chip small{font-size:.62rem}
+.erklaert .order-res{margin-top:10px;padding:10px 12px;border-radius:9px;font-weight:600;font-size:.9rem}
+.erklaert .order-res.same{background:var(--bad-soft);color:var(--bad)}
+.erklaert .order-res.diff{background:var(--ok-soft);color:var(--ok)}
+.erklaert .switch{display:inline-flex;gap:4px;margin-bottom:10px}
+.erklaert .switch button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+
+.erklaert .family{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:640px){.erklaert .family{grid-template-columns:1fr}}
+.erklaert .family div{padding:14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:.88rem}
+.erklaert .family h4{margin:0 0 4px;font-size:1rem}
+.erklaert .family .tag{display:inline-block;font:600 .7rem var(--mono);padding:2px 7px;border-radius:5px;background:var(--accent-soft);color:var(--accent);margin-bottom:6px}
+.erklaert .family p{margin:4px 0 0;color:var(--muted)}
+.erklaert .timeline{display:flex;flex-direction:column;gap:0;margin:16px 0;border-left:2px solid var(--line);padding-left:16px}
+.erklaert .timeline div{position:relative;padding:6px 0;font-size:.92rem}
+.erklaert .timeline div::before{content:"";position:absolute;left:-22px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.erklaert .timeline b{display:inline-block;min-width:3.4em;font-variant-numeric:tabular-nums}

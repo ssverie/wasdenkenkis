@@ -1,0 +1,28 @@
+/* Seiteneigene Stile (neuronales-netz) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Neuronales Netz ---- */
+.erklaert .pg{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start}
+@media (max-width:660px){.erklaert .pg{grid-template-columns:1fr}}
+.erklaert .pg canvas{width:100%;max-width:300px;aspect-ratio:1;border-radius:10px;display:block;margin:0 auto;border:1px solid var(--line)}
+.erklaert .pg-opts{display:flex;flex-direction:column;gap:12px;font-size:.88rem}
+.erklaert .pg-opts .grp .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:5px}
+.erklaert .seg button{font-size:.8rem;padding:5px 10px}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .pg-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.erklaert .pg-stats div{padding:8px;border-radius:8px;background:var(--bg);text-align:center;font-size:.72rem;color:var(--muted)}
+.erklaert .pg-stats b{display:block;font:600 1rem var(--mono);color:var(--fg);font-variant-numeric:tabular-nums}
+.erklaert #netSvg{width:100%;height:auto;display:block;max-width:360px}
+.erklaert .pg-msg{padding:8px 12px;border-radius:8px;font-size:.85rem;min-height:2.4em}
+.erklaert .pg-msg.ok{background:var(--ok-soft);color:var(--ok)}
+.erklaert .pg-msg.warn{background:var(--accent-2-soft);color:var(--accent-2)}
+
+.erklaert .layers svg{max-width:560px}
+.erklaert .timeline{display:flex;flex-direction:column;gap:0;margin:16px 0;border-left:2px solid var(--line);padding-left:16px}
+.erklaert .timeline div{position:relative;padding:6px 0;font-size:.92rem}
+.erklaert .timeline div::before{content:"";position:absolute;left:-22px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.erklaert .timeline b{display:inline-block;min-width:3.4em;font-variant-numeric:tabular-nums}
+.erklaert .lin{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.erklaert .lin{grid-template-columns:1fr}}
+.erklaert .lin div{padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.9rem}
+.erklaert .lin h4{margin:0 0 4px;font-size:.95rem}
+.erklaert .lin svg{width:100%;max-width:200px;display:block;margin:8px auto 0}

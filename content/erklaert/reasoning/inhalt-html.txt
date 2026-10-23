@@ -1,0 +1,133 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Reasoning</strong> (Schlussfolgern) heißt bei Sprachmodellen: Vor der eigentlichen Antwort schreibt das Modell eine Kette von Zwischenschritten – Ansatz, Rechnung, Prüfung, Korrektur. Erst dann antwortet es. Man spricht auch von <em>Chain of Thought</em> (Gedankenkette) oder einfach vom „Nachdenken“.</p>
+<p>Das hilft, weil jedes erzeugte Token dem Modell einen weiteren Rechendurchgang verschafft und aufgeschriebene Zwischenergebnisse als Notizzettel dienen. Moderne Reasoning-Modelle wurden gezielt darauf trainiert. Der Preis: mehr Tokens, also mehr Zeit und Kosten.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#probier">Schnell oder gründlich</a></li>
+  <li><a href="#warum">Warum Aufschreiben hilft</a></li>
+  <li><a href="#training">Wie Modelle es gelernt haben</a></li>
+  <li><a href="#budget">Das Denkbudget</a></li>
+  <li><a href="#wann">Wann es sich lohnt</a></li>
+  <li><a href="#echt">Zeigt das Denken, was wirklich passiert?</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ PROBIER ============ -->
+<h2 id="probier">Schnell oder gründlich</h2>
+<p>Drei Aufgaben, bei denen die spontane Antwort naheliegt – und falsch ist. Vergleiche „direkt antworten“ mit „erst nachdenken“:</p>
+
+<div class="widget">
+  <div class="widget-title">Mit und ohne Nachdenken</div>
+  <div class="tabs" id="tTabs"></div>
+  <div class="task" id="task"></div>
+  <div class="mode" id="mode"><button type="button" data-m="0">direkt antworten</button><button type="button" data-m="1">erst nachdenken</button></div>
+  <div id="out"></div>
+  <div class="meta-row" id="mrow"></div>
+  <p class="fine">Nachgestellt. Heutige große Modelle lösen gerade diese Klassiker oft auch direkt richtig, weil sie sie aus dem Training kennen. Das Muster – intuitive Antwort falsch, schrittweise richtig – zeigt sich aber bei neuen, schwierigeren Aufgaben genauso.</p>
+</div>
+
+<!-- ============ WARUM ============ -->
+<h2 id="warum">Warum Aufschreiben hilft</h2>
+<p>Ein <a href="/erklaert/transformer/">Transformer</a> hat für jedes Token einen <em>festen</em> Rechenaufwand: einmal durch alle Schichten, dann kommt das nächste Token. Mehr Rechenschritte als Schichten kann er für ein einzelnes Token nicht machen. Eine schwierige Aufgabe in einem einzigen Token zu lösen – etwa „Die Antwort ist <strong>0,05</strong>“ – ist deshalb so, als müsste man sie in einem Sekundenbruchteil im Kopf lösen.</p>
+
+<figure class="compute">
+<svg viewBox="0 0 560 210" role="img" aria-labelledby="cT">
+  <title id="cT">Direkte Antwort nutzt einen Rechendurchgang, schrittweise Antwort viele</title>
+  <text x="10" y="22" class="svg-text" font-size="13" font-weight="700">Direkt</text>
+  <g id="cDirect"></g>
+  <text x="10" y="112" class="svg-text" font-size="13" font-weight="700">Mit Zwischenschritten</text>
+  <g id="cThink"></g>
+  <text x="280" y="204" text-anchor="middle" class="svg-muted" font-size="12">1 Balken = 1 Token = 1 Durchgang durchs Netz · blau: Denken · grün: Antwort</text>
+</svg>
+<figcaption>Zwischenschritte geben dem Modell mehr Rechendurchgänge – und einen Notizzettel, auf dem es nachlesen kann, was es schon herausgefunden hat.</figcaption>
+</figure>
+
+<p>Zwei Effekte kommen zusammen:</p>
+<div class="cards">
+  <div class="card"><div class="num">∑</div><h4>Mehr Rechenzeit</h4><p>Jedes Zwischentoken ist ein weiterer Durchgang durch das ganze Netz. 500 Zwischentokens heißt 500-mal so viel Rechenarbeit.</p></div>
+  <div class="card"><div class="num">✎</div><h4>Notizzettel</h4><p>Was aufgeschrieben ist, steht im <a href="/erklaert/kontextfenster/">Kontextfenster</a> und kann per <a href="/erklaert/aufmerksamkeit/">Aufmerksamkeit</a> wieder gelesen werden. Zwischenergebnisse gehen nicht verloren.</p></div>
+  <div class="card"><div class="num">↺</div><h4>Selbstkorrektur</h4><p>Trainierte Modelle prüfen ihre Zwischenschritte und schreiben Dinge wie „Moment, das stimmt nicht“ – und rechnen neu.</p></div>
+</div>
+
+<!-- ============ TRAINING ============ -->
+<h2 id="training">Wie Modelle es gelernt haben</h2>
+<p>Anfangs war es ein Trick: 2022 zeigten Forscher, dass Sprachmodelle bei Rechen- und Logikaufgaben deutlich besser werden, wenn man ihnen Beispiele mit Rechenweg zeigt oder einfach „Denke Schritt für Schritt“ dazuschreibt.</p>
+<p>Seit 2024 gibt es Modelle, die das von sich aus und viel gründlicher tun. Sie wurden mit <strong>bestärkendem Lernen auf überprüfbaren Aufgaben</strong> trainiert (siehe <a href="/erklaert/training/">Training</a>): Mathematikaufgaben mit bekannter Lösung, Programmieraufgaben mit Tests. Das Modell probiert, und Lösungswege, die zum richtigen Ergebnis führen, werden verstärkt. Niemand gibt dabei vor, <em>wie</em> es denken soll. Verhaltensweisen wie Nachprüfen, Zurückgehen und einen anderen Ansatz versuchen sind dabei von selbst entstanden – weil sie häufiger zum Ziel führen.</p>
+
+<!-- ============ BUDGET ============ -->
+<h2 id="budget">Das Denkbudget</h2>
+<p>Bei vielen Modellen lässt sich einstellen, wie viel nachgedacht werden darf – als Stufe („niedrig / mittel / hoch“) oder als Höchstzahl an Denk-Tokens. Mehr Budget hilft bei schweren Aufgaben, aber mit abnehmendem Nutzen:</p>
+
+<div class="widget">
+  <div class="widget-title">Was Nachdenken kostet und bringt</div>
+  <label class="sl">Denk-Tokens<input type="range" id="bud" min="0" max="100" value="40"><output id="budO"></output></label>
+  <svg viewBox="0 0 520 170" id="budSvg" role="img" aria-label="Kurve: Erfolgsquote steigt mit dem Denkbudget, flacht aber ab"></svg>
+  <div class="bud-stats">
+    <div><b id="bA"></b>gelöst (schwere Aufgaben)</div>
+    <div><b id="bT"></b>Wartezeit</div>
+    <div><b id="bC"></b>Kosten relativ</div>
+  </div>
+  <p class="fine">Schematisch, keine Messwerte eines bestimmten Modells. Typisch ist die Form: erst steiler Anstieg, dann flacher. Wartezeit und Kosten steigen dagegen ungefähr linear mit den Denk-Tokens.</p>
+</div>
+
+<!-- ============ WANN ============ -->
+<h2 id="wann">Wann es sich lohnt</h2>
+<div class="use">
+  <div class="y"><h4>Lohnt sich</h4><ul><li>Mathematik, Rechnen, Logik</li><li>Programmieren, Fehlersuche, Code-Review</li><li>mehrstufige Planung</li><li>Analysen mit vielen Faktoren</li><li>Aufgaben, bei denen man selbst Papier nehmen würde</li></ul></div>
+  <div class="n"><h4>Lohnt sich kaum</h4><ul><li>einfache Fakten („Hauptstadt von …“)</li><li>Übersetzen, Umformulieren</li><li>Smalltalk</li><li>kreatives Schreiben (teils sogar schlechter)</li><li>wenn Antwortzeit wichtiger ist als Gründlichkeit</li></ul></div>
+</div>
+
+<!-- ============ ECHT ============ -->
+<h2 id="echt">Zeigt das Denken, was wirklich passiert?</h2>
+<p>Nur bedingt. Der Denktext ist selbst erzeugter Text – er <em>hilft</em> dem Modell, ist aber kein Protokoll seiner inneren Berechnung. Untersuchungen haben gezeigt, dass Modelle Faktoren, die ihre Antwort beeinflusst haben, im Denktext manchmal nicht erwähnen, oder einen Lösungsweg aufschreiben, der nachträglich zur Antwort passt.</p>
+<p>Der Denktext ist also nützlich zum Nachvollziehen und Prüfen, aber kein Beweis dafür, wie das Modell intern zu seinem Ergebnis kam. Manche Anbieter zeigen außerdem nur eine Zusammenfassung des Denkens, nicht den vollständigen Text.</p>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Direkte Antwort</strong></td><td>ein verschachtelter Einzeiler – geht oft gut, ist aber schwer richtig zu bekommen</td></tr>
+    <tr><td><strong>Reasoning</strong></td><td>Zwischenvariablen mit sprechenden Namen: jeder Schritt klein und prüfbar</td></tr>
+    <tr><td><strong>Selbstkorrektur</strong></td><td>Assertions zwischendurch, und bei Fehlschlag ein anderer Ansatz</td></tr>
+    <tr><td><strong>Denkbudget</strong></td><td>ein Iterations- oder Zeitlimit</td></tr>
+    <tr><td><strong>Denk-Tokens</strong></td><td>Debug-Ausgaben, die man mitbezahlt – auch wenn der Nutzer sie nicht sieht</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="c">// Direkt: alles in einem Ausdruck</span>
+<span class="k">double</span> ball = 1.10 - 1.00;                         <span class="c">// 0.10 – falsch</span>
+
+<span class="c">// Mit Zwischenschritten: Annahme hinschreiben und prüfen</span>
+<span class="c">// ball + schlaeger = 1.10  und  schlaeger = ball + 1.00</span>
+<span class="c">// → ball + ball + 1.00 = 1.10  →  2·ball = 0.10</span>
+<span class="k">double</span> ball2 = 0.10 / 2;                            <span class="c">// 0.05</span>
+<span class="k">assert</span> Math.abs(ball2 + (ball2 + 1.00) - 1.10) &lt; 1e-9;   <span class="c">// Probe</span></code></pre>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Reasoning-Modelle funktionieren grundsätzlich anders.“</b> – Nein. Auch sie sagen Token für Token das nächste voraus. Sie wurden nur darauf trainiert, vor der Antwort viele nützliche Zwischentokens zu erzeugen.</div>
+  <div><b>„Der Denktext zeigt genau, wie das Modell entschieden hat.“</b> – Er ist hilfreich, aber nicht unbedingt vollständig oder ehrlich im Sinne eines Protokolls.</div>
+  <div><b>„Mehr Nachdenken ist immer besser.“</b> – Bei einfachen Aufgaben kostet es nur Zeit und Geld, und gelegentlich „zerdenkt“ ein Modell eine einfache Frage.</div>
+  <div><b>„Das Modell denkt dabei wie ein Mensch.“</b> – Der Text liest sich so, weil er aus menschlicher Sprache gelernt ist. Ob und wie weit der Vorgang dahinter menschlichem Denken ähnelt, ist offen.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/transformer/">Transformer</a>
+  <a href="/erklaert/kontextfenster/">Kontextfenster</a>
+  <a href="/erklaert/halluzination/">Halluzination</a>
+  <a href="/erklaert/agenten/">Agenten</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

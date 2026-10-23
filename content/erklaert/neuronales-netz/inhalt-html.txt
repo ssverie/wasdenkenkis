@@ -1,0 +1,214 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>neuronales Netz</strong> ist eine Funktion, die aus vielen kleinen Bausteinen zusammengesetzt ist, den <strong>künstlichen Neuronen</strong>. Jedes Neuron rechnet nur: Eingaben gewichten, aufsummieren, durch eine einfache Kurve schicken. Viele davon in <strong>Schichten</strong> hintereinander können aber erstaunlich komplizierte Zusammenhänge abbilden.</p>
+<p>Die Gewichte – die <a href="/erklaert/parameter/">Parameter</a> – werden nicht programmiert, sondern <strong>gelernt</strong>: Man zeigt dem Netz Beispiele, misst den Fehler und stellt alle Gewichte ein kleines Stück besser ein. Tausendfach, millionenfach. Ein Sprachmodell ist nichts anderes als ein sehr großes neuronales Netz.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#neuron">Das künstliche Neuron</a></li>
+  <li><a href="#schichten">Schichten</a></li>
+  <li><a href="#kurve">Warum die Kurve so wichtig ist</a></li>
+  <li><a href="#live">Ein Netz lernt – live</a></li>
+  <li><a href="#lernen">Wie Lernen funktioniert</a></li>
+  <li><a href="#gross">Vom Mini-Netz zum Sprachmodell</a></li>
+  <li><a href="#geschichte">Kurze Geschichte</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ NEURON ============ -->
+<h2 id="neuron">Das künstliche Neuron</h2>
+<p>Das Vorbild ist die Nervenzelle: Sie empfängt Signale von anderen Zellen, und wenn genug zusammenkommt, „feuert“ sie. Das künstliche Neuron ist davon allerdings nur sehr lose inspiriert. Mathematisch macht es drei Dinge:</p>
+
+<figure>
+<svg viewBox="0 0 560 200" role="img" aria-labelledby="nT">
+  <title id="nT">Drei Eingaben werden gewichtet, summiert, durch eine Aktivierungsfunktion geschickt und ergeben eine Ausgabe</title>
+  <defs><marker id="na" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+  <g class="svg-text" font-size="13" text-anchor="middle">
+    <circle cx="40" cy="40" r="20" style="fill:var(--accent-soft);stroke:var(--accent)" stroke-width="1.5"/><text x="40" y="45">x₁</text>
+    <circle cx="40" cy="100" r="20" style="fill:var(--accent-soft);stroke:var(--accent)" stroke-width="1.5"/><text x="40" y="105">x₂</text>
+    <circle cx="40" cy="160" r="20" style="fill:var(--accent-soft);stroke:var(--accent)" stroke-width="1.5"/><text x="40" y="165">x₃</text>
+  </g>
+  <g style="stroke:var(--accent-2)" stroke-width="2.5" fill="none">
+    <line x1="60" y1="44" x2="232" y2="92"/><line x1="60" y1="100" x2="230" y2="100"/><line x1="60" y1="156" x2="232" y2="108"/>
+  </g>
+  <g class="svg-text" font-size="12.5" font-weight="700" style="fill:var(--accent-2)">
+    <text x="130" y="58" style="fill:var(--accent-2)">· w₁</text><text x="130" y="94" style="fill:var(--accent-2)">· w₂</text><text x="130" y="150" style="fill:var(--accent-2)">· w₃</text>
+  </g>
+  <circle cx="260" cy="100" r="30" style="fill:var(--card);stroke:var(--fg)" stroke-width="2"/>
+  <text x="260" y="108" text-anchor="middle" class="svg-text" font-size="24">Σ</text>
+  <text x="260" y="152" text-anchor="middle" class="svg-muted" font-size="12">① gewichtet</text>
+  <text x="260" y="167" text-anchor="middle" class="svg-muted" font-size="12">summieren + b</text>
+  <line x1="290" y1="100" x2="348" y2="100" style="stroke:var(--muted)" stroke-width="2" marker-end="url(#na)"/>
+  <rect x="352" y="70" width="80" height="60" rx="10" style="fill:var(--card);stroke:var(--fg)" stroke-width="2"/>
+  <path d="M362 118 C 385 118, 385 82, 422 82" fill="none" style="stroke:var(--accent)" stroke-width="2.5"/>
+  <text x="392" y="152" text-anchor="middle" class="svg-muted" font-size="12">② durch eine</text>
+  <text x="392" y="167" text-anchor="middle" class="svg-muted" font-size="12">Kurve schicken</text>
+  <line x1="432" y1="100" x2="490" y2="100" style="stroke:var(--muted)" stroke-width="2" marker-end="url(#na)"/>
+  <circle cx="515" cy="100" r="20" style="fill:var(--ok-soft);stroke:var(--ok)" stroke-width="1.5"/>
+  <text x="515" y="105" text-anchor="middle" class="svg-text" font-size="13">y</text>
+  <text x="515" y="152" text-anchor="middle" class="svg-muted" font-size="12">③ ausgeben</text>
+</svg>
+<figcaption>Die Gewichte w und der Bias b sind die Parameter. Ein einzelnes Neuron zum Selbst-Einstellen gibt es im Eintrag <a href="/erklaert/parameter/">Parameter</a>.</figcaption>
+</figure>
+
+<pre><code>y = f( w₁·x₁ + w₂·x₂ + w₃·x₃ + b )</code></pre>
+<p>Die Funktion <em>f</em> heißt <strong>Aktivierungsfunktion</strong>. Typische Kandidaten sind <em>tanh</em> (S-Kurve zwischen −1 und 1), die <em>Sigmoid</em>-Funktion (zwischen 0 und 1) oder <em>ReLU</em> (negativ wird 0, positiv bleibt, wie es ist).</p>
+
+<!-- ============ SCHICHTEN ============ -->
+<h2 id="schichten">Schichten</h2>
+<p>Allein kann ein Neuron wenig. Stark wird es im Verbund: Viele Neuronen bilden eine <strong>Schicht</strong>, und die Ausgaben einer Schicht sind die Eingaben der nächsten.</p>
+
+<figure class="layers">
+<svg viewBox="0 0 560 230" role="img" aria-labelledby="lT" id="layerSvg">
+  <title id="lT">Eingabeschicht, zwei verborgene Schichten und Ausgabeschicht, jedes Neuron mit jedem der nächsten Schicht verbunden</title>
+</svg>
+<figcaption>Eingabe → verborgene Schichten → Ausgabe. „Verborgen“ heißen die mittleren Schichten nur, weil man ihre Werte von außen nicht sieht. Jede Linie ist ein Gewicht.</figcaption>
+</figure>
+
+<p>Ein Netz mit vielen verborgenen Schichten nennt man <strong>tief</strong> – daher der Begriff <strong>Deep Learning</strong>. Die Intuition: Frühe Schichten erkennen einfache Muster, spätere kombinieren sie zu komplexeren. In einem Bilderkennungsnetz etwa erst Kanten, dann Formen, dann Gesichter.</p>
+
+<!-- ============ KURVE ============ -->
+<h2 id="kurve">Warum die Kurve so wichtig ist</h2>
+<p>Ohne Aktivierungsfunktion wäre jede Schicht nur eine Matrixmultiplikation. Und mehrere Matrixmultiplikationen hintereinander ergeben – wieder eine Matrixmultiplikation. Hundert Schichten wären dann nicht mächtiger als eine. Das Netz könnte nur <strong>gerade Linien</strong> ziehen.</p>
+<div class="lin">
+  <div><h4>Ohne Kurve: nur gerade Trennlinien</h4>
+    <svg viewBox="0 0 200 140" role="img" aria-label="Eine gerade Linie kann einen Kreis nicht abtrennen">
+      <rect width="200" height="140" rx="8" style="fill:var(--card)"/>
+      <g style="fill:var(--accent)"><circle cx="100" cy="70" r="4"/><circle cx="88" cy="62" r="4"/><circle cx="112" cy="78" r="4"/><circle cx="96" cy="84" r="4"/><circle cx="108" cy="58" r="4"/></g>
+      <g style="fill:var(--accent-2)"><circle cx="40" cy="30" r="4"/><circle cx="160" cy="30" r="4"/><circle cx="40" cy="110" r="4"/><circle cx="160" cy="110" r="4"/><circle cx="100" cy="18" r="4"/><circle cx="100" cy="122" r="4"/><circle cx="25" cy="70" r="4"/><circle cx="175" cy="70" r="4"/></g>
+      <line x1="20" y1="130" x2="180" y2="10" style="stroke:var(--bad)" stroke-width="2" stroke-dasharray="5 4"/>
+    </svg></div>
+  <div><h4>Mit Kurve: beliebige Formen</h4>
+    <svg viewBox="0 0 200 140" role="img" aria-label="Eine geschwungene Grenze umschließt den inneren Kreis">
+      <rect width="200" height="140" rx="8" style="fill:var(--card)"/>
+      <g style="fill:var(--accent)"><circle cx="100" cy="70" r="4"/><circle cx="88" cy="62" r="4"/><circle cx="112" cy="78" r="4"/><circle cx="96" cy="84" r="4"/><circle cx="108" cy="58" r="4"/></g>
+      <g style="fill:var(--accent-2)"><circle cx="40" cy="30" r="4"/><circle cx="160" cy="30" r="4"/><circle cx="40" cy="110" r="4"/><circle cx="160" cy="110" r="4"/><circle cx="100" cy="18" r="4"/><circle cx="100" cy="122" r="4"/><circle cx="25" cy="70" r="4"/><circle cx="175" cy="70" r="4"/></g>
+      <ellipse cx="100" cy="71" rx="34" ry="28" fill="none" style="stroke:var(--ok)" stroke-width="2.5"/>
+    </svg></div>
+</div>
+<p>Erst die nichtlineare Kurve nach jedem Neuron macht ein Netz wirklich mächtig. Man kann sogar beweisen: Schon eine einzige ausreichend breite verborgene Schicht kann jede vernünftige Funktion beliebig genau annähern. Tiefe Netze schaffen das in der Praxis aber mit viel weniger Neuronen.</p>
+
+<!-- ============ LIVE ============ -->
+<h2 id="live">Ein Netz lernt – live</h2>
+<p>Hier trainiert ein echtes, winziges neuronales Netz direkt in deinem Browser. Es soll lernen, blaue und orange Punkte zu trennen. Die Hintergrundfarbe zeigt, was das Netz an jeder Stelle vorhersagen würde. Probier den Kreis erst <em>ohne</em> verborgene Neuronen – und dann mit vier:</p>
+
+<div class="widget">
+  <div class="widget-title">Mini-Netz zum Zuschauen</div>
+  <div class="pg">
+    <canvas id="cv" width="300" height="300" aria-label="Datenpunkte und Entscheidungsfläche des Netzes"></canvas>
+    <div class="pg-opts">
+      <div class="grp"><div class="h">Daten</div><div class="seg" id="sData"></div></div>
+      <div class="grp"><div class="h">Verborgene Neuronen</div><div class="seg" id="sHid"></div></div>
+      <div class="pg-stats">
+        <div><b id="stE">0</b>Durchläufe</div>
+        <div><b id="stL">–</b>Fehler</div>
+        <div><b id="stA">–</b>richtig</div>
+      </div>
+      <svg viewBox="0 0 360 150" id="netSvg" role="img" aria-label="Aufbau des Netzes, Liniendicke zeigt Gewichtsgröße"></svg>
+      <div class="pg-msg" id="msg"></div>
+    </div>
+  </div>
+  <div class="controls">
+    <button class="primary" id="bRun">Trainieren</button>
+    <button id="bStep">1 Durchlauf</button>
+    <button id="bReset">Neu würfeln</button>
+  </div>
+  <p class="fine">Echtes Training mit Gradientenabstieg: tanh in der verborgenen Schicht, Sigmoid am Ausgang, Kreuzentropie als Fehlermaß. Im Netzbild steht Blau für positive, Orange für negative Gewichte; je dicker, desto größer. Dieses Netz hat je nach Einstellung 3 bis 33 Parameter.</p>
+</div>
+
+<p>Was man dabei beobachten kann: Ohne verborgene Neuronen bleibt die Grenze eine gerade Linie – bei „Getrennt“ reicht das, beim Kreis und bei XOR nie. Mit verborgenen Neuronen biegt sich die Grenze, bis sie passt. Und niemand hat dem Netz gesagt, dass es einen Kreis suchen soll.</p>
+
+<!-- ============ LERNEN ============ -->
+<h2 id="lernen">Wie Lernen funktioniert</h2>
+<p>Das Training läuft in einer Schleife, die bei dem Mini-Netz oben genauso aussieht wie bei einem Sprachmodell:</p>
+<div class="cards">
+  <div class="card"><div class="num">1</div><h4>Vorhersagen</h4><p>Ein Beispiel durchs Netz schicken – der <em>Vorwärtsdurchlauf</em>.</p></div>
+  <div class="card"><div class="num">2</div><h4>Fehler messen</h4><p>Vergleichen mit der richtigen Antwort. Eine <em>Verlustfunktion</em> macht daraus eine einzige Zahl.</p></div>
+  <div class="card"><div class="num">3</div><h4>Rückwärts verteilen</h4><p>Für jedes Gewicht ausrechnen, wie viel es zum Fehler beigetragen hat – und es ein Stück in die bessere Richtung schieben.</p></div>
+</div>
+<p>Schritt 3 heißt <strong>Backpropagation</strong> (Fehlerrückführung). Mit der Kettenregel aus der Analysis wird der Fehler von hinten nach vorn durchs Netz gereicht: Die Ausgabeschicht erfährt, wie falsch sie lag; daraus lässt sich berechnen, wie falsch die Schicht davor lag; und so weiter. Am Ende kennt jedes Gewicht seine Richtung. Das Verschieben selbst heißt <strong>Gradientenabstieg</strong> – im Eintrag <a href="/erklaert/parameter/">Parameter</a> als Wanderer im Nebel gezeichnet.</p>
+<div class="callout dev">Heute schreibt niemand die Ableitungen mehr von Hand. Frameworks wie PyTorch oder JAX zeichnen beim Vorwärtsdurchlauf jede Rechenoperation auf und leiten danach automatisch ab („Autograd“). Man schreibt nur den Vorwärtsweg; der Rückweg entsteht von selbst.</div>
+
+<!-- ============ GROSS ============ -->
+<h2 id="gross">Vom Mini-Netz zum Sprachmodell</h2>
+<p>Das Prinzip bleibt gleich, nur die Größenordnungen ändern sich gewaltig:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th></th><th>Mini-Netz oben</th><th>Großes Sprachmodell</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Eingabe</strong></td><td>2 Zahlen (x, y)</td><td>Tausende Zahlen pro Token, für Tausende Tokens</td></tr>
+    <tr><td><strong>Schichten</strong></td><td>1 verborgene</td><td>Dutzende bis über hundert Blöcke</td></tr>
+    <tr><td><strong>Parameter</strong></td><td>bis 33</td><td>Milliarden bis Hunderte Milliarden</td></tr>
+    <tr><td><strong>Aufgabe</strong></td><td>blau oder orange?</td><td>welches Token kommt als Nächstes?</td></tr>
+    <tr><td><strong>Training</strong></td><td>Sekunden im Browser</td><td>Wochen bis Monate auf Tausenden Spezialchips</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Dazu kommt eine besondere Bauweise, der <a href="/erklaert/transformer/">Transformer</a>, mit der <a href="/erklaert/aufmerksamkeit/">Aufmerksamkeit</a> als zentralem Baustein. Im Kern stecken aber auch dort Neuronen mit Gewichten und Aktivierungsfunktionen – im sogenannten Feedforward-Teil jedes Blocks fast genau so wie oben.</p>
+
+<!-- ============ GESCHICHTE ============ -->
+<h2 id="geschichte">Kurze Geschichte</h2>
+<div class="timeline">
+  <div><b>1943</b> McCulloch und Pitts beschreiben ein mathematisches Modell des Neurons.</div>
+  <div><b>1958</b> Frank Rosenblatt baut das Perzeptron – ein lernfähiges Netz aus einer Schicht.</div>
+  <div><b>1969</b> Minsky und Papert zeigen dessen Grenzen, etwa bei XOR. Das Interesse bricht ein.</div>
+  <div><b>1986</b> Rumelhart, Hinton und Williams machen Backpropagation für mehrschichtige Netze bekannt.</div>
+  <div><b>2012</b> AlexNet gewinnt einen großen Bilderkennungs-Wettbewerb deutlich – trainiert auf Grafikkarten. Der Beginn des Deep-Learning-Booms.</div>
+  <div><b>2017</b> Der <a href="/erklaert/transformer/">Transformer</a> – die Grundlage heutiger Sprachmodelle.</div>
+</div>
+<p>Die Ideen sind also alt. Was sich geändert hat, sind vor allem Datenmengen und Rechenleistung – und damit, wie groß man Netze tatsächlich trainieren kann.</p>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Neuron</strong></td><td>eine Methode: Skalarprodukt plus Bias, dann <code>Math.tanh()</code></td></tr>
+    <tr><td><strong>Schicht</strong></td><td>eine Matrixmultiplikation <code>W · x + b</code>, danach die Aktivierung elementweise</td></tr>
+    <tr><td><strong>Netz</strong></td><td>Funktionskomposition: <code>ausgabe(schicht2(schicht1(x)))</code></td></tr>
+    <tr><td><strong>Training</strong></td><td>eine Schleife, die die Gewichts-Arrays so lange anpasst, bis die Testfälle möglichst gut stimmen</td></tr>
+    <tr><td><strong>Backpropagation</strong></td><td>automatisches Ableiten über den Aufrufbaum – wie ein Stacktrace, nur für „wer ist schuld am Fehler“</td></tr>
+    <tr><td><strong>Trainingsdaten</strong></td><td>die Testfälle – mit dem Unterschied, dass hier der Code aus den Tests entsteht, nicht umgekehrt</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="c">// Ein Neuron, und ein einziger Lernschritt dafür (Sigmoid, Kreuzentropie)</span>
+<span class="k">double</span>[] w = {0.1, -0.2};  <span class="k">double</span> b = 0;
+
+<span class="k">double</span> vorhersage(<span class="k">double</span>[] x) {
+    <span class="k">double</span> z = w[0]*x[0] + w[1]*x[1] + b;
+    <span class="k">return</span> 1 / (1 + Math.exp(-z));                 <span class="c">// zwischen 0 und 1</span>
+}
+
+<span class="k">void</span> lerne(<span class="k">double</span>[] x, <span class="k">double</span> soll, <span class="k">double</span> lernrate) {
+    <span class="k">double</span> fehler = vorhersage(x) - soll;          <span class="c">// Ableitung des Verlusts nach z</span>
+    w[0] -= lernrate * fehler * x[0];                <span class="c">// jedes Gewicht in seine Richtung</span>
+    w[1] -= lernrate * fehler * x[1];
+    b    -= lernrate * fehler;
+}
+<span class="c">// Tausendfach mit allen Beispielen aufrufen – das ist Training.</span></code></pre>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Ein neuronales Netz funktioniert wie ein Gehirn.“</b> – Das Gehirn war die Inspiration, mehr nicht. Echte Nervenzellen sind weit komplexer, arbeiten mit zeitlichen Impulsen und lernen nicht per Backpropagation.</div>
+  <div><b>„Man kann nachlesen, was das Netz gelernt hat.“</b> – Das Gelernte steckt verteilt in den Gewichten. Es herauszulesen ist ein eigenes, schwieriges Forschungsgebiet (Interpretierbarkeit).</div>
+  <div><b>„Mehr Neuronen sind immer besser.“</b> – Ein zu großes Netz für zu wenig Daten lernt die Beispiele auswendig, statt das Muster zu verstehen, und versagt bei neuen Fällen. Das heißt <strong>Überanpassung</strong>.</div>
+  <div><b>„Neuronale Netze sind eine neue Erfindung.“</b> – Die Grundideen stammen aus den 1940er- bis 1980er-Jahren. Neu sind Daten, Rechenleistung und Größe.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/was-ist-ein-sprachmodell/">Was ist ein Sprachmodell?</a>
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/transformer/">Transformer</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

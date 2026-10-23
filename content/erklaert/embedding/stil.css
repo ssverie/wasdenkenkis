@@ -1,0 +1,49 @@
+/* Seiteneigene Stile (embedding) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Embedding ---- */
+.erklaert .map-wrap{display:grid;grid-template-columns:1fr 210px;gap:18px;align-items:start}
+@media (max-width:640px){.erklaert .map-wrap{grid-template-columns:1fr}}
+.erklaert #map{width:100%;height:auto;display:block;border-radius:10px;background:var(--bg);touch-action:manipulation}
+.erklaert #map .pt{cursor:pointer}
+.erklaert #map .pt text{font-family:var(--sans);font-size:12px;fill:var(--fg)}
+.erklaert #map .pt.sel circle{stroke:var(--fg);stroke-width:2.5}
+.erklaert #map .pt.sel text{font-weight:700}
+.erklaert .nn{font-size:.88rem}
+.erklaert .nn .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.erklaert .nn ol{margin:0;padding-left:1.4em}
+.erklaert .nn li{margin:4px 0}
+.erklaert .sim{font:600 .78rem var(--mono);color:var(--muted);margin-left:6px}
+.erklaert .legend2{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted);margin-top:8px}
+.erklaert .legend2 i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+
+/* Arithmetik */
+.erklaert .eq{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:1.05rem;margin-bottom:12px}
+.erklaert .eq select{font:600 .95rem var(--sans);padding:7px 9px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.erklaert .eq .op{font-family:var(--mono);font-weight:700;color:var(--muted);font-size:1.2rem}
+.erklaert .vtbl{width:100%;border-collapse:collapse;font-size:.85rem}
+.erklaert .vtbl th, .erklaert .vtbl td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:center}
+.erklaert .vtbl th:first-child, .erklaert .vtbl td:first-child{text-align:left}
+.erklaert .vtbl td.n{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.erklaert .vtbl tr.res td{font-weight:700;background:var(--accent-soft)}
+.erklaert .vtbl tr.hit td{font-weight:700;background:var(--ok-soft)}
+.erklaert .cell{display:inline-block;width:42px;height:16px;border-radius:4px;vertical-align:middle}
+.erklaert .result-line{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--ok-soft);color:var(--ok);font-weight:600}
+.erklaert .result-line small{display:block;font-weight:400;color:var(--muted);margin-top:4px}
+
+/* Kosinus */
+.erklaert .cos{display:grid;grid-template-columns:240px 1fr;gap:18px;align-items:center}
+@media (max-width:600px){.erklaert .cos{grid-template-columns:1fr}}
+.erklaert .cos svg{width:100%;max-width:240px;display:block;margin:0 auto}
+.erklaert .sl{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;font-size:.88rem;margin-top:8px}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .cos-big{font-family:var(--serif);font-size:1.8rem;color:var(--accent);font-variant-numeric:tabular-nums}
+
+/* Suche */
+.erklaert .search{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.erklaert .search{grid-template-columns:1fr}}
+.erklaert .search .col{padding:12px 14px;border-radius:10px;background:var(--bg)}
+.erklaert .search .h{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.erklaert .search ol{margin:0;padding-left:1.3em;font-size:.88rem}
+.erklaert .search li{margin:5px 0}
+.erklaert .search li.good{color:var(--ok);font-weight:600}
+.erklaert .search li.bad{color:var(--muted)}
+.erklaert .query{font-family:var(--serif);font-size:1.15rem;padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line);margin-bottom:12px}

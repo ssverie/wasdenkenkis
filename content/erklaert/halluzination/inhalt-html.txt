@@ -1,0 +1,198 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Eine <strong>Halluzination</strong> ist eine Ausgabe, die überzeugend klingt, aber nicht stimmt: ein erfundenes Zitat, eine falsche Zahl, eine Java-Methode, die es nicht gibt.</p>
+<p>Sie entsteht, weil ein Sprachmodell darauf trainiert ist, <em>plausiblen</em> Text zu erzeugen – nicht <em>wahren</em>. Fehlt ihm das Wissen, liefert es trotzdem die plausibelste Fortsetzung. Das Modell lügt dabei nicht; es hat schlicht keinen eingebauten Unterschied zwischen „wissen“ und „raten“.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#wie">Wie sie entsteht</a></li>
+  <li><a href="#probier">Selbst ausprobieren</a></li>
+  <li><a href="#arten">Typische Formen</a></li>
+  <li><a href="#lawine">Der Lawineneffekt</a></li>
+  <li><a href="#praemisse">Falsche Voraussetzungen</a></li>
+  <li><a href="#gegen">Was hilft</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ WIE ============ -->
+<h2 id="wie">Wie sie entsteht</h2>
+<p>Ein Sprachmodell sagt bei jedem Schritt eine Wahrscheinlichkeitsverteilung für das nächste Token voraus. Bei einer Frage, deren Antwort es tausendfach im Training gesehen hat, ist diese Verteilung <strong>spitz</strong>: Ein Kandidat dominiert, und der ist richtig. Bei einer Frage, zu der es wenig oder nichts weiß, ist sie <strong>flach</strong>: viele Kandidaten, keiner überzeugend.</p>
+<p>Der entscheidende Punkt: In beiden Fällen wird am Ende <em>ein</em> Token gezogen und als Text ausgegeben. Die flache Verteilung, also die Unsicherheit, ist im fertigen Satz nicht mehr zu sehen. Er klingt genauso selbstsicher.</p>
+
+<figure>
+<svg viewBox="0 0 520 220" role="img" aria-labelledby="pkT">
+  <title id="pkT">Spitze Verteilung bei bekanntem Wissen, flache Verteilung bei Wissenslücke, beide führen zu gleich selbstsicherem Text</title>
+  <g>
+    <text x="120" y="20" text-anchor="middle" class="svg-text" font-size="14" font-weight="700">Modell weiß es</text>
+    <text x="400" y="20" text-anchor="middle" class="svg-text" font-size="14" font-weight="700">Modell weiß es nicht</text>
+    <line x1="30" y1="140" x2="210" y2="140" style="stroke:var(--line)" stroke-width="1.5"/>
+    <line x1="310" y1="140" x2="490" y2="140" style="stroke:var(--line)" stroke-width="1.5"/>
+  </g>
+  <g style="fill:var(--ok)">
+    <rect x="40" y="132" width="22" height="8" rx="2" opacity=".4"/><rect x="68" y="128" width="22" height="12" rx="2" opacity=".4"/>
+    <rect x="96" y="35" width="22" height="105" rx="2"/>
+    <rect x="124" y="130" width="22" height="10" rx="2" opacity=".4"/><rect x="152" y="134" width="22" height="6" rx="2" opacity=".4"/><rect x="180" y="136" width="22" height="4" rx="2" opacity=".4"/>
+  </g>
+  <g style="fill:var(--accent-2)">
+    <rect x="320" y="104" width="22" height="36" rx="2" opacity=".55"/><rect x="348" y="96" width="22" height="44" rx="2"/>
+    <rect x="376" y="100" width="22" height="40" rx="2" opacity=".55"/><rect x="404" y="108" width="22" height="32" rx="2" opacity=".55"/>
+    <rect x="432" y="102" width="22" height="38" rx="2" opacity=".55"/><rect x="460" y="110" width="22" height="30" rx="2" opacity=".55"/>
+  </g>
+  <g class="svg-muted" font-size="12" text-anchor="middle">
+    <text x="120" y="158">spitz: ein klarer Favorit</text>
+    <text x="400" y="158">flach: viele ähnlich gute Kandidaten</text>
+  </g>
+  <g>
+    <rect x="30" y="172" width="180" height="36" rx="8" style="fill:var(--ok-soft)"/>
+    <text x="120" y="195" text-anchor="middle" class="svg-text" font-size="13">„… ist Paris.“</text>
+    <rect x="310" y="172" width="180" height="36" rx="8" style="fill:var(--accent-2-soft)"/>
+    <text x="400" y="195" text-anchor="middle" class="svg-text" font-size="13">„… ist 1 247.“</text>
+  </g>
+  <text x="260" y="195" text-anchor="middle" class="svg-muted" font-size="12">klingt gleich</text>
+</svg>
+<figcaption>Die Unsicherheit steckt in der Verteilung, nicht im Satz. Am ausgegebenen Text sieht man keinen Unterschied.</figcaption>
+</figure>
+
+<!-- ============ PROBIER ============ -->
+<h2 id="probier">Selbst ausprobieren</h2>
+<p>Stell dem Spielzeug-Modell eine Frage und lass es antworten. Grün markiert ist die richtige Antwort, die Leiste darunter zeigt, wie unsicher das Modell innerlich ist:</p>
+
+<div class="widget">
+  <div class="widget-title">Wissen oder raten?</div>
+  <div class="q-tabs" id="qtabs"></div>
+  <div class="bars" id="hbars"></div>
+  <div class="entropy"><span>innere Unsicherheit</span><div class="meter"><span id="ent"></span></div><span id="entTxt"></span></div>
+  <div class="answer" id="ans"></div>
+  <div class="verdict" id="verdict"></div>
+  <div class="controls"><button class="primary" id="ask">Antworten lassen</button><button id="ask10">10× antworten</button></div>
+  <p class="fine">Ausgedachte Verteilungen. Achte darauf, dass die <em>Antwort</em> immer gleich formuliert ist – egal, ob die Verteilung darüber spitz oder flach ist. Das kleine Dorf ist erfunden; ein Modell ohne Websuche würde trotzdem eine Zahl nennen.</p>
+</div>
+
+<!-- ============ ARTEN ============ -->
+<h2 id="arten">Typische Formen</h2>
+<p>Halluzinationen treten dort auf, wo das Modell wenig verlässliche Muster gelernt hat, aber die <em>Form</em> der Antwort sehr gut kennt:</p>
+<div class="kinds">
+  <div class="kind"><h4>Erfundene Quellen</h4>Literaturangaben, URLs, Gerichtsurteile. Das Modell kennt das Format perfekt – Autor, Jahr, Titel, Seitenzahl – und füllt es plausibel aus.<div class="ex">Müller, K. (2019): <span class="wrong">„Neuronale Netze im Mittelstand“</span>, Springer, S. 112.</div></div>
+  <div class="kind"><h4>Nicht existierende APIs</h4>Für Entwickler der Klassiker: Methoden, die es geben <em>könnte</em>, weil sie zum Namensschema passen.<div class="ex"><code>list.stream().<span class="wrong">filterNotNull()</span>.toList();</code><br><span style="color:var(--muted)">gibt es in Kotlin, nicht in Java</span></div></div>
+  <div class="kind"><h4>Falsche Details</h4>Exakte Zahlen, Daten, Versionsnummern, Namen von Nebenfiguren. Die Größenordnung stimmt oft, das Detail nicht.<div class="ex">„Spring Boot 3.0 erschien im <span class="wrong">März</span> 2022.“ <span style="color:var(--muted)">(tatsächlich: November 2022)</span></div></div>
+  <div class="kind"><h4>Zusammengewürfelte Personen</h4>Bei wenig bekannten Menschen verschmelzen Fakten mehrerer Personen gleichen Namens zu einer.<div class="ex">„Dr. Anna Weber, Physikerin <span class="wrong">und Autorin von drei Kinderbüchern</span> …“</div></div>
+</div>
+<p>Je bekannter und häufiger ein Fakt im Trainingstext vorkommt, desto zuverlässiger. Je seltener, spezieller und genauer, desto riskanter. Ereignisse nach dem <strong>Wissensstichtag</strong> des Trainings kennt das Modell gar nicht.</p>
+
+<!-- ============ LAWINE ============ -->
+<h2 id="lawine">Der Lawineneffekt</h2>
+<p>Ein Sprachmodell schreibt Token für Token und kann nicht zurück. Ist einmal ein falsches Token gewählt, wird alles Folgende <em>dazu passend</em> fortgesetzt – denn das ist ja seine Aufgabe. Ein kleiner Fehler am Anfang erzeugt so eine ganze, in sich stimmige Fehlgeschichte.</p>
+
+<figure class="tree">
+<svg viewBox="0 0 600 230" role="img" aria-labelledby="trT">
+  <title id="trT">Verzweigung: nach einer falschen Jahreszahl folgen dazu passende, falsche Details</title>
+  <defs><marker id="ar3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--muted)"/></marker></defs>
+  <rect x="10" y="95" width="130" height="40" rx="8" style="fill:var(--card);stroke:var(--line)" stroke-width="1.5"/>
+  <text x="75" y="120" text-anchor="middle" class="svg-text" font-size="13">„Java erschien</text>
+  <g style="stroke:var(--muted)" stroke-width="1.5" fill="none" marker-end="url(#ar3)">
+    <path d="M140 108 C 170 108, 170 55, 195 55"/>
+    <path d="M140 122 C 170 122, 170 175, 195 175"/>
+    <path d="M285 55 L 315 55"/><path d="M445 55 L 470 55"/>
+    <path d="M285 175 L 315 175"/><path d="M445 175 L 470 175"/>
+  </g>
+  <text x="165" y="70" class="svg-muted" font-size="11" text-anchor="middle">62 %</text>
+  <text x="165" y="165" class="svg-muted" font-size="11" text-anchor="middle">38 %</text>
+  <!-- richtig -->
+  <rect x="198" y="35" width="87" height="40" rx="8" style="fill:var(--ok-soft);stroke:var(--ok)" stroke-width="1.5"/>
+  <text x="241" y="60" text-anchor="middle" class="svg-text" font-size="13" font-weight="700">1996</text>
+  <rect x="318" y="35" width="127" height="40" rx="8" style="fill:var(--ok-soft)"/>
+  <text x="381" y="60" text-anchor="middle" class="svg-text" font-size="12.5">bei Sun Microsystems</text>
+  <rect x="473" y="35" width="117" height="40" rx="8" style="fill:var(--ok-soft)"/>
+  <text x="531" y="60" text-anchor="middle" class="svg-text" font-size="12.5">als Version 1.0“</text>
+  <!-- falsch -->
+  <rect x="198" y="155" width="87" height="40" rx="8" style="fill:var(--bad-soft);stroke:var(--bad)" stroke-width="1.5"/>
+  <text x="241" y="180" text-anchor="middle" class="svg-text" font-size="13" font-weight="700">1991</text>
+  <rect x="318" y="155" width="127" height="40" rx="8" style="fill:var(--bad-soft)"/>
+  <text x="381" y="180" text-anchor="middle" class="svg-text" font-size="12.5">kurz nach dem Fall</text>
+  <rect x="473" y="155" width="117" height="40" rx="8" style="fill:var(--bad-soft)"/>
+  <text x="531" y="180" text-anchor="middle" class="svg-text" font-size="12.5">der Mauer, als …“</text>
+  <text x="380" y="218" text-anchor="middle" class="svg-muted" font-size="12">Nach „1991“ ist „kurz nach dem Mauerfall“ eine sehr plausible Fortsetzung – und völlig falsch.</text>
+</svg>
+<figcaption>1991 ist nicht absurd – da begann die Entwicklung. Gezogen mit 38 % Wahrscheinlichkeit, und schon baut das Modell eine passende, aber falsche Geschichte darum.</figcaption>
+</figure>
+
+<p>Modelle, die vor der Antwort „nachdenken“ dürfen, können solche Fehler teilweise selbst bemerken und korrigieren – weil sie ihre Zwischenergebnisse noch einmal lesen, bevor die eigentliche Antwort kommt.</p>
+
+<!-- ============ PRÄMISSE ============ -->
+<h2 id="praemisse">Falsche Voraussetzungen</h2>
+<p>Eine besonders tückische Quelle ist die Frage selbst. Enthält sie eine falsche Annahme, ist die plausibelste Fortsetzung oft, darauf einzugehen – denn in Trainingstexten werden Fragen meist beantwortet, nicht korrigiert.</p>
+<figure>
+<div class="premise">
+  <div class="chat base">
+    <div class="who">Anfällig</div>
+    <div class="bubble q">Warum wurde <code>Optional</code> in Java 6 eingeführt?</div>
+    <div class="bubble a">Optional wurde in Java 6 eingeführt, um NullPointerExceptions zu vermeiden …</div>
+  </div>
+  <div class="chat asst">
+    <div class="who">Besser</div>
+    <div class="bubble q">Warum wurde <code>Optional</code> in Java 6 eingeführt?</div>
+    <div class="bubble a">Kleine Korrektur: <code>Optional</code> kam erst mit Java 8 (2014). Eingeführt wurde es, um …</div>
+  </div>
+</div>
+<figcaption>Moderne Modelle sind darauf trainiert, falsche Voraussetzungen zu widersprechen. Ganz zuverlässig klappt das nicht – vor allem bei Details, die das Modell selbst nicht sicher weiß.</figcaption>
+</figure>
+
+<!-- ============ GEGEN ============ -->
+<h2 id="gegen">Was hilft</h2>
+<p>Ganz abschalten lässt sich das Halluzinieren nicht, es gehört zum Prinzip. Aber man kann es stark eindämmen:</p>
+<div class="check">
+  <div><span><strong>Material mitgeben.</strong> Steht die Antwort im Kontext – Dokument, Code, Handbuch –, muss das Modell nicht aus dem Gedächtnis schöpfen.</span></div>
+  <div><span><strong>Websuche oder RAG nutzen.</strong> Dann wird nachgeschlagen statt erinnert, und Quellen lassen sich prüfen.</span></div>
+  <div><span><strong>Unsicherheit erlauben.</strong> „Wenn du es nicht sicher weißt, sag das“ wirkt tatsächlich – das Modell braucht die Erlaubnis.</span></div>
+  <div><span><strong>Nach Belegen fragen.</strong> „Zitiere die Stelle im Dokument, auf die du dich stützt“ – erfundene Zitate fallen beim Prüfen auf.</span></div>
+  <div><span><strong>Code ausführen und testen.</strong> Der Compiler findet die erfundene Methode in Sekunden. Gerade bei Code ist das der stärkste Schutz.</span></div>
+  <div><span><strong>Kritische Fakten gegenprüfen.</strong> Zahlen, Daten, Namen, Rechtsfragen: immer an einer verlässlichen Quelle.</span></div>
+</div>
+<p>Die Anbieter arbeiten ebenfalls daran: Modelle werden gezielt darauf trainiert, Wissenslücken zuzugeben, statt zu raten. Neuere Modelle halluzinieren deutlich seltener als frühere – aber nie gar nicht.</p>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Halluzination</strong></td><td>ein <code>get()</code>, das nie <code>null</code> liefert und nie eine Exception wirft, sondern bei fehlendem Schlüssel einen plausiblen Wert erfindet</td></tr>
+    <tr><td><strong>Wissen im Modell</strong></td><td>ein verlustbehaft komprimierter Cache – Häufiges ist gut erhalten, Seltenes verwaschen</td></tr>
+    <tr><td><strong>Material im Kontext</strong></td><td>die Daten als Parameter übergeben statt aus dem Cache zu lesen</td></tr>
+    <tr><td><strong>Lawineneffekt</strong></td><td>ein früher falscher Zustand, mit dem alle folgenden Methoden konsistent weiterrechnen</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="c">// So verhält sich ein Datenspeicher, den man erwartet:</span>
+String einwohner = lexikon.get(<span class="s">"Kleinkleckersdorf"</span>);   <span class="c">// null → klar: unbekannt</span>
+
+<span class="c">// So verhält sich ein Sprachmodell ohne Hilfsmittel:</span>
+String einwohner = modell.ergaenze(<span class="s">"Kleinkleckersdorf hat "</span>);
+<span class="c">// → "1 247 Einwohner"  – immer ein Wert, nie null, kein Hinweis aufs Raten</span></code></pre>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Das Modell lügt.“</b> – Lügen setzt voraus, die Wahrheit zu kennen und absichtlich etwas anderes zu sagen. Bei einer Halluzination fehlt das Wissen schlicht; das Modell erzeugt die plausibelste Fortsetzung.</div>
+  <div><b>„Wenn es sehr sicher klingt, stimmt es.“</b> – Der Ton sagt nichts über die Richtigkeit. Ein Modell formuliert geratene und gewusste Antworten oft gleich überzeugt.</div>
+  <div><b>„Temperatur 0 verhindert Halluzinationen.“</b> – Sie verhindert zufällige Ausreißer. Hält das Modell etwas Falsches für am wahrscheinlichsten, sagt es das bei Temperatur 0 umso beständiger.</div>
+  <div><b>„Das wird bald komplett behoben sein.“</b> – Es wird seltener. Aber solange ein Modell plausiblen Text aus gelernten Mustern erzeugt, bleibt ein Restrisiko – genau wie bei Menschen, die sich falsch erinnern.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/was-ist-ein-sprachmodell/">Was ist ein Sprachmodell?</a>
+  <a href="/erklaert/temperatur/">Temperatur</a>
+  <a href="/erklaert/kontextfenster/">Kontextfenster</a>
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/rag/">RAG</a>
+  <a href="/erklaert/prompt/">Prompt</a>
+  <a href="/erklaert/reasoning/">Reasoning</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

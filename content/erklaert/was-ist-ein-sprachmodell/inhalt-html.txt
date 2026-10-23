@@ -273,12 +273,20 @@ System.out.println(tokenizer.zusammensetzen(kontext));</code></pre>
 <!-- ============ BEGRIFFE ============ -->
 <h2 id="begriffe">Begriffe aus diesem Beitrag</h2>
 <dl class="glossary">
-  <div><dt><a href="/erklaert/token/">Token</a></dt><dd>Wortstück, die Grundeinheit, mit der das Modell rechnet.</dd></div>
+  <div><dt><a href="/erklaert/neuronales-netz/">Neuronales Netz</a></dt><dd>Viele einfache Recheneinheiten in Schichten, die aus Beispielen lernen.</dd></div>
   <div><dt><a href="/erklaert/parameter/">Parameter</a></dt><dd>Die beim Training eingestellten Zahlen, in denen alles Gelernte steckt.</dd></div>
+  <div><dt><a href="/erklaert/token/">Token</a></dt><dd>Wortstück, die Grundeinheit, mit der das Modell rechnet.</dd></div>
+  <div><dt><a href="/erklaert/embedding/">Embedding</a></dt><dd>Zahlenvektor, der Bedeutung darstellt – Ähnliches liegt nah beieinander.</dd></div>
+  <div><dt><a href="/erklaert/aufmerksamkeit/">Aufmerksamkeit</a></dt><dd>Mechanismus, mit dem jedes Token die relevanten früheren Tokens gewichtet.</dd></div>
+  <div><dt><a href="/erklaert/transformer/">Transformer</a></dt><dd>Die Bauweise heutiger Sprachmodelle aus vielen gleichen Blöcken.</dd></div>
+  <div><dt><a href="/erklaert/training/">Training</a></dt><dd>Vortraining, Feinabstimmung und Präferenztraining.</dd></div>
   <div><dt><a href="/erklaert/kontextfenster/">Kontextfenster</a></dt><dd>Wie viel Text das Modell auf einmal sehen kann.</dd></div>
-  <div><dt>Temperatur</dt><dd>Regler für Zufall beim Auswählen des nächsten Tokens.</dd></div>
-  <div><dt>Aufmerksamkeit</dt><dd>Mechanismus, mit dem jedes Token die relevanten früheren Tokens gewichtet.</dd></div>
-  <div><dt>Halluzination</dt><dd>Plausibel klingende, aber falsche Ausgabe.</dd></div>
+  <div><dt><a href="/erklaert/temperatur/">Temperatur</a></dt><dd>Regler für Zufall beim Auswählen des nächsten Tokens.</dd></div>
+  <div><dt><a href="/erklaert/halluzination/">Halluzination</a></dt><dd>Plausibel klingende, aber falsche Ausgabe.</dd></div>
+  <div><dt><a href="/erklaert/prompt/">Prompt</a></dt><dd>Alles, was das Modell als Eingabe bekommt – inklusive Systemprompt.</dd></div>
+  <div><dt><a href="/erklaert/reasoning/">Reasoning</a></dt><dd>Zwischenschritte aufschreiben, bevor geantwortet wird.</dd></div>
+  <div><dt><a href="/erklaert/rag/">RAG</a></dt><dd>Passende Dokumente nachschlagen und dem Modell mitgeben.</dd></div>
+  <div><dt><a href="/erklaert/agenten/">Agenten</a></dt><dd>Modell plus Werkzeuge plus Schleife – es handelt, statt nur zu antworten.</dd></div>
 </dl>
-<p class="fine">Jeder dieser Begriffe bekommt später einen eigenen Eintrag in dieser Rubrik.</p>
+<p>Alle Begriffe in empfohlener Reihenfolge: <a href="/erklaert/lesereihenfolge/">Lesereihenfolge →</a></p>
 </div>

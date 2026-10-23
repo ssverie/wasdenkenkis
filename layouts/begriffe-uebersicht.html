@@ -1,0 +1,15 @@
+{{- /* KI-Begriffe (/erklaert/): Übersicht in Lesereihenfolge – gelieferte Seite der Erklär-Reihe, eingebettet wie die Begriffe */ -}}
+{{ define "main" }}
+<article class="beitrag">
+  <header class="seitenkopf">
+    <h1>{{ .Title }}</h1>
+    {{- with .Description }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+  </header>
+  {{ partial "herkunft.html" . }}
+  <div class="inhalt">
+    {{ .Content }}
+  </div>
+</article>
+{{ end }}

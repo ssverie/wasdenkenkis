@@ -1,231 +1,41 @@
-/* Stile des Begriffs „Parameter“ – übernommen aus der gelieferten Seite (gleiche Basis wie
-   „Was ist ein Sprachmodell?“), auf den Artikel (.erklaert) begrenzt, ohne externe Schriften. */
-.erklaert {
-  --bg: #fbfaf7; --fg: #1c1c1f; --muted: #5f5f66; --card: #ffffff; --line: #e5e1d8;
-  --accent: #2f5bd3; --accent-soft: #e8eefc; --accent-2: #b4540a; --accent-2-soft: #fcefe3;
-  --ok: #15803d; --ok-soft: #e4f3e9; --bad: #b42318; --bad-soft: #fdecea;
-  --code-bg: #f2f0ea; --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.05);
-  --serif: Georgia, "Times New Roman", serif;
-  --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
-  color: var(--fg);
-  font-family: var(--sans);
-  line-height: 1.65;
-}
-@media (prefers-color-scheme: dark) {
-  .erklaert {
-    --bg: #141416; --fg: #ececef; --muted: #a3a3ad; --card: #1d1d21; --line: #2e2e35;
-    --accent: #86a6ff; --accent-soft: #1f2a47; --accent-2: #f0a058; --accent-2-soft: #3a2615;
-    --ok: #5fd08a; --ok-soft: #14301f; --bad: #ff8a80; --bad-soft: #3a1715;
-    --code-bg: #232328; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 4px 16px rgba(0,0,0,.3);
-  }
-}
-.erklaert h2, .erklaert h3 { font-family: var(--serif); line-height: 1.2; letter-spacing: -.01em; }
-.erklaert h2 { font-size: clamp(1.45rem, 4.2vw, 1.8rem); margin: 2.4em 0 .5em; padding-top: .4em; border-top: 1px solid var(--line); }
-.erklaert h3 { font-size: 1.15rem; margin: 1.6em 0 .4em; }
-.erklaert p { margin: .7em 0; }
-.erklaert a { color: var(--accent); }
-.erklaert code, .erklaert .mono { font-family: var(--mono); font-size: .88em; }
-.erklaert p code, .erklaert li code, .erklaert td code { background: var(--code-bg); padding: .1em .35em; border-radius: 5px; }
-.erklaert strong { font-weight: 650; }
-
-/* Inhaltsverzeichnis */
-.erklaert .toc { margin: 28px 0; padding: 16px 18px; border: 1px dashed var(--line); border-radius: 12px; font-size: .92rem; }
-.erklaert .toc ol { margin: 6px 0 0; padding-left: 1.3em; columns: 2; column-gap: 28px; }
-.erklaert .toc li { break-inside: avoid; margin: 2px 0; }
-@media (max-width: 520px) { .erklaert .toc ol { columns: 1; } }
-
-/* Abbildungen */
-.erklaert figure { margin: 28px 0; padding: 20px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
-.erklaert figcaption { margin-top: 12px; font-size: .85rem; color: var(--muted); text-align: center; }
-.erklaert figure svg { display: block; width: 100%; height: auto; max-width: 520px; margin: 0 auto; }
-.erklaert .svg-text { font-family: var(--sans); fill: var(--fg); }
-.erklaert .svg-muted { font-family: var(--sans); fill: var(--muted); }
-
-.erklaert .callout { margin: 22px 0; padding: 14px 18px; border-radius: 12px; background: var(--accent-soft); border-left: 4px solid var(--accent); }
-.erklaert .callout.dev::before { content: "Für Entwickler"; display: block; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
-.erklaert .callout.warn { background: var(--accent-2-soft); border-left-color: var(--accent-2); }
-
-/* Mitmach-Kasten: nächstes Token */
-.erklaert .widget { margin: 28px 0; padding: 20px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); }
-.erklaert .widget-title { font-weight: 700; font-size: .8rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-.erklaert .sentence { font-family: var(--serif); font-size: 1.35rem; line-height: 1.5; padding: 12px 14px; background: var(--bg); border-radius: 10px; min-height: 3.2em; }
-.erklaert .sentence .new { background: var(--accent-soft); color: var(--accent); border-radius: 4px; padding: 0 1px; animation: e-pop .35s ease; }
-.erklaert .sentence .cursor { display: inline-block; width: 2px; height: 1.1em; background: var(--accent); vertical-align: -.15em; margin-left: 2px; animation: e-blink 1s step-end infinite; }
-@keyframes e-blink { 50% { opacity: 0; } }
-@keyframes e-pop { from { background: var(--accent); color: #fff; } }
-.erklaert .bars { margin: 16px 0 8px; display: flex; flex-direction: column; gap: 6px; }
-.erklaert .bar-row { display: grid; grid-template-columns: 110px 1fr 52px; align-items: center; gap: 10px; font-size: .92rem; }
-.erklaert .bar-label { font-family: var(--mono); font-size: .85rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.erklaert .bar-track { height: 20px; background: var(--bg); border-radius: 6px; overflow: hidden; }
-.erklaert .bar-fill { display: block; height: 100%; background: var(--accent); border-radius: 6px; transition: width .35s ease; }
-.erklaert .bar-row.picked .bar-fill { background: var(--accent-2); }
-.erklaert .bar-row.picked .bar-label { color: var(--accent-2); font-weight: 600; }
-.erklaert .bar-pct { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
-.erklaert .end-note { padding: 12px; border-radius: 8px; background: var(--ok-soft); color: var(--ok); font-weight: 500; }
-.erklaert .controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
-.erklaert button { font: 600 .9rem var(--sans); padding: 9px 14px; border-radius: 9px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
-.erklaert button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-@media (prefers-color-scheme: dark) { .erklaert button.primary { color: #0d1530; } }
-.erklaert button:disabled { opacity: .4; cursor: not-allowed; }
-.erklaert .temp { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; flex: 1 1 240px; min-width: 0; font-size: .88rem; }
-.erklaert .temp input { flex: 1 1 140px; min-width: 0; accent-color: var(--accent); }
-.erklaert .temp output { font-variant-numeric: tabular-nums; color: var(--muted); }
-.erklaert .fine { font-size: .8rem; color: var(--muted); margin-top: 12px; }
-
-/* Tokens */
-.erklaert .tok-examples { display: flex; flex-direction: column; gap: 14px; }
-.erklaert .tok-line { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px 10px; }
-.erklaert .tok-src { min-width: 190px; font-family: var(--serif); font-size: 1.05rem; padding-top: 4px; }
-.erklaert .chips { display: flex; flex-wrap: wrap; gap: 4px; }
-.erklaert .chip { display: inline-flex; flex-direction: column; align-items: center; font-family: var(--mono); font-size: .9rem; padding: 4px 8px 3px; border-radius: 7px; border: 1px solid transparent; }
-.erklaert .chip small { font-size: .65rem; opacity: .7; margin-top: 1px; }
-.erklaert .c0 { background: #e8eefc; color: #1f3f99; } .erklaert .c1 { background: #fcefe3; color: #8a3e06; } .erklaert .c2 { background: #e4f3e9; color: #11622f; } .erklaert .c3 { background: #f3e8fb; color: #6b2a92; } .erklaert .c4 { background: #fdf6d8; color: #6e5600; }
-@media (prefers-color-scheme: dark) {
-  .erklaert .c0 { background: #1f2a47; color: #a9c0ff; } .erklaert .c1 { background: #3a2615; color: #f5b77c; } .erklaert .c2 { background: #14301f; color: #7fdca1; } .erklaert .c3 { background: #2e1c3a; color: #d6a8f5; } .erklaert .c4 { background: #332b0c; color: #ecd36b; }
-}
-
-/* Trainings-Ablauf */
-.erklaert .pipeline { display: flex; align-items: stretch; gap: 0; flex-wrap: nowrap; }
-.erklaert .stage { flex: 1; padding: 12px 10px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); font-size: .82rem; line-height: 1.4; text-align: center; }
-.erklaert .stage b { display: block; font-size: .92rem; margin-bottom: 3px; }
-.erklaert .stage.key { background: var(--accent-soft); border-color: var(--accent); }
-.erklaert .stage.key b { color: var(--accent); }
-.erklaert .stage.out { background: var(--ok-soft); border-color: var(--ok); }
-.erklaert .stage.out b { color: var(--ok); }
-.erklaert .arrow { display: flex; align-items: center; justify-content: center; width: 22px; flex: 0 0 22px; color: var(--muted); font-size: 1.1rem; }
-@media (max-width: 640px) {
-  .erklaert .pipeline { flex-direction: column; }
-  .erklaert .arrow { width: auto; height: 22px; flex-basis: 22px; transform: rotate(90deg); }
-}
-.erklaert .mini-train { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 6px; }
-.erklaert .mini-train div { padding: 12px; border-radius: 10px; background: var(--bg); font-size: .88rem; }
-.erklaert .mini-train .h { font-weight: 700; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
-@media (max-width: 560px) { .erklaert .mini-train { grid-template-columns: 1fr; } }
-
-.erklaert .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-@media (max-width: 560px) { .erklaert .compare { grid-template-columns: 1fr; } }
-.erklaert .chat { padding: 14px; border-radius: 12px; background: var(--bg); font-size: .9rem; }
-.erklaert .chat .who { font-weight: 700; font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 8px; }
-.erklaert .bubble { padding: 8px 12px; border-radius: 12px; margin: 6px 0; max-width: 92%; }
-.erklaert .bubble.q { background: var(--card); border: 1px solid var(--line); margin-left: auto; border-bottom-right-radius: 4px; }
-.erklaert .bubble.a { border-bottom-left-radius: 4px; }
-.erklaert .chat.base .bubble.a { background: var(--accent-2-soft); color: var(--fg); }
-.erklaert .chat.base .who { color: var(--accent-2); }
-.erklaert .chat.asst .bubble.a { background: var(--ok-soft); }
-.erklaert .chat.asst .who { color: var(--ok); }
-
-/* Parameter-Raster */
-.erklaert .pgrid { display: grid; grid-template-columns: repeat(40, 1fr); gap: 2px; max-width: 560px; margin: 0 auto; }
-.erklaert .pgrid span { aspect-ratio: 1; border-radius: 2px; }
-.erklaert .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 16px; }
-.erklaert .stat { padding: 12px; border-radius: 10px; background: var(--bg); text-align: center; }
-.erklaert .stat b { display: block; font-family: var(--serif); font-size: 1.35rem; color: var(--accent); }
-.erklaert .stat span { font-size: .8rem; color: var(--muted); }
-.erklaert .classfile { display: flex; gap: 14px; align-items: center; padding: 14px 16px; border-radius: 12px; border: 1px dashed var(--line); margin-top: 16px; font-size: .9rem; }
-.erklaert .classfile .ico { flex: 0 0 46px; height: 56px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); display: flex; align-items: flex-end; justify-content: center; font: 700 .65rem var(--mono); padding-bottom: 7px; position: relative; }
-.erklaert .classfile .ico::before { content: ""; position: absolute; top: 0; right: 0; border-width: 0 14px 14px 0; border-style: solid; border-color: var(--bg) var(--bg) var(--line) var(--line); }
-
-/* Aufmerksamkeit */
-.erklaert .att-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-.erklaert .att-tabs button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
-.erklaert .att-row { display: flex; flex-wrap: wrap; gap: 6px 4px; align-items: flex-end; }
-.erklaert .att-tok { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 34px; }
-.erklaert .att-tok .w { font-family: var(--serif); font-size: 1.1rem; padding: 3px 7px; border-radius: 7px; transition: background .3s, opacity .3s; }
-.erklaert .att-tok .p { font-size: .7rem; color: var(--muted); font-variant-numeric: tabular-nums; height: 1em; }
-.erklaert .att-tok.focus .w { outline: 2px solid var(--accent-2); outline-offset: 1px; font-weight: 700; }
-.erklaert .att-tok.future .w { opacity: .28; }
-
-/* Kontext-Runden */
-.erklaert .rounds { display: flex; flex-direction: column; gap: 10px; }
-.erklaert .round { display: grid; grid-template-columns: 72px 1fr; gap: 10px; align-items: center; }
-.erklaert .round .lbl { font-size: .78rem; font-weight: 600; color: var(--muted); }
-.erklaert .round .seq { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
-.erklaert .blk { font: 600 .78rem var(--mono); padding: 5px 8px; border-radius: 6px; }
-.erklaert .blk.f { background: var(--accent-soft); color: var(--accent); }
-.erklaert .blk.a { background: var(--ok-soft); color: var(--ok); }
-.erklaert .blk.out { background: transparent; border: 1.5px dashed var(--ok); color: var(--ok); }
-.erklaert .blk.gone { background: transparent; border: 1.5px dashed var(--line); color: var(--muted); text-decoration: line-through; }
-.erklaert .seq .to { color: var(--muted); margin: 0 4px; }
-.erklaert .window-bar { position: relative; margin-top: 14px; padding: 6px 10px; border: 2px solid var(--accent); border-radius: 8px; font-size: .78rem; color: var(--accent); font-weight: 600; }
-
-/* Tabelle und Code */
-.erklaert .tbl-wrap { overflow-x: auto; margin: 20px 0; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
-.erklaert table { display: table; border-collapse: collapse; width: 100%; margin: 0; font-size: .92rem; }
-.erklaert th, .erklaert td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
-.erklaert th { border-bottom-width: 1px; font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
-.erklaert tr:last-child td { border-bottom: 0; }
-.erklaert pre { margin: 20px 0; padding: 16px 18px; background: var(--code-bg); border-radius: 12px; overflow-x: auto; font: .84rem/1.6 var(--mono); }
-.erklaert pre code { background: none; padding: 0; font-size: 1em; }
-.erklaert pre .k { color: var(--accent); } .erklaert pre .c { color: var(--muted); font-style: italic; } .erklaert pre .s { color: var(--accent-2); }
-
-/* Karten */
-.erklaert .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 18px 0; }
-@media (max-width: 640px) { .erklaert .cards { grid-template-columns: 1fr; } }
-.erklaert .card { padding: 16px; border-radius: 12px; background: var(--card); border: 1px solid var(--line); font-size: .9rem; }
-.erklaert .card .num { display: inline-flex; width: 28px; height: 28px; border-radius: 50%; align-items: center; justify-content: center; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: .85rem; margin-bottom: 8px; }
-.erklaert .card h4 { margin: 0 0 4px; font-size: 1rem; }
-.erklaert .card p { margin: 0; color: var(--muted); }
-.erklaert .card.no .num { background: var(--bad-soft); color: var(--bad); }
-
-/* Begriffe */
-.erklaert .glossary { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin: 16px 0; }
-.erklaert .glossary div { padding: 12px 14px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); font-size: .88rem; }
-.erklaert .glossary dt { font-weight: 700; font-family: var(--serif); font-size: 1.02rem; }
-.erklaert .glossary dd { margin: 3px 0 0; color: var(--muted); }
-
-/* ---- Gemeinsam für Begriffs-Einträge ---- */
-.erklaert .tldr { margin: 24px 0; padding: 16px 20px; border-radius: 12px; background: var(--accent-soft); border-left: 4px solid var(--accent); }
-.erklaert .tldr::before { content: "Kurz gesagt"; display: block; font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
-.erklaert .tldr p { margin: .3em 0; }
-.erklaert .myth { display: grid; grid-template-columns: 1fr; gap: 10px; margin: 16px 0; }
-.erklaert .myth div { padding: 12px 16px; border-radius: 10px; background: var(--card); border: 1px solid var(--line); font-size: .92rem; }
-.erklaert .myth b { color: var(--bad); }
-.erklaert .related { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
-.erklaert .related a, .erklaert .related span { display: inline-block; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); text-decoration: none; font-size: .9rem; }
-.erklaert .related a:hover { border-color: var(--accent); }
-/* Begriffe ohne eigene Seite (noch): sichtbar, aber nicht verlinkt */
-.erklaert .related span { border-style: dashed; color: var(--muted); }
-
+/* Seiteneigene Stile (parameter) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
 /* ---- Seitenspezifisch: Parameter ---- */
 /* Neuron */
-.erklaert .neuron { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-@media (max-width: 600px) { .erklaert .neuron { grid-template-columns: 1fr; } }
-.erklaert .nbox { padding: 12px 14px; border-radius: 10px; background: var(--bg); font-size: .88rem; }
-.erklaert .nbox .h { font-weight: 700; font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-.erklaert .nrow { display: grid; grid-template-columns: 1fr 92px 3.2em; gap: 8px; align-items: center; margin: 6px 0; }
-.erklaert .nrow input[type=range] { width: 100%; accent-color: var(--accent); }
-.erklaert .nrow output { text-align: right; font: 600 .85rem var(--mono); font-variant-numeric: tabular-nums; }
-.erklaert .nrow.w output { color: var(--accent-2); }
-.erklaert .nrow.w input { accent-color: var(--accent-2); }
-.erklaert .toggle { display: flex; gap: 4px; }
-.erklaert .toggle button { padding: 4px 10px; font-size: .8rem; }
-.erklaert .toggle button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
-@media (prefers-color-scheme: dark) { .erklaert .toggle button[aria-pressed="true"] { color: #0d1530; } }
-.erklaert .formula { margin-top: 14px; padding: 10px 14px; border-radius: 10px; background: var(--code-bg); font: .82rem/1.7 var(--mono); overflow-x: auto; white-space: nowrap; }
-.erklaert .formula .w { color: var(--accent-2); font-weight: 600; }
-.erklaert .result { display: flex; align-items: center; gap: 14px; margin-top: 14px; }
-.erklaert .meter { flex: 1; height: 22px; border-radius: 8px; background: var(--bg); overflow: hidden; border: 1px solid var(--line); }
-.erklaert .meter span { display: block; height: 100%; background: var(--accent); transition: width .25s; }
-.erklaert .result b { font-family: var(--serif); font-size: 1.4rem; min-width: 4.2em; text-align: right; font-variant-numeric: tabular-nums; }
+.erklaert .neuron{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:600px){.erklaert .neuron{grid-template-columns:1fr}}
+.erklaert .nbox{padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.88rem}
+.erklaert .nbox .h{font-weight:700;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.erklaert .nrow{display:grid;grid-template-columns:1fr 92px 3.2em;gap:8px;align-items:center;margin:6px 0}
+.erklaert .nrow input[type=range]{width:100%;accent-color:var(--accent)}
+.erklaert .nrow output{text-align:right;font:600 .85rem var(--mono);font-variant-numeric:tabular-nums}
+.erklaert .nrow.w output{color:var(--accent-2)}
+.erklaert .nrow.w input{accent-color:var(--accent-2)}
+.erklaert .toggle{display:flex;gap:4px}
+.erklaert .toggle button{padding:4px 10px;font-size:.8rem}
+.erklaert .toggle button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .formula{margin-top:14px;padding:10px 14px;border-radius:10px;background:var(--code-bg);font:.82rem/1.7 var(--mono);overflow-x:auto;white-space:nowrap}
+.erklaert .formula .w{color:var(--accent-2);font-weight:600}
+.erklaert .result{display:flex;align-items:center;gap:14px;margin-top:14px}
+.erklaert .meter{flex:1;height:22px;border-radius:8px;background:var(--bg);overflow:hidden;border:1px solid var(--line)}
+.erklaert .meter span{display:block;height:100%;background:var(--accent);transition:width .25s}
+.erklaert .result b{font-family:var(--serif);font-size:1.4rem;min-width:4.2em;text-align:right;font-variant-numeric:tabular-nums}
 
 /* Rechner */
-.erklaert .calc-in { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-@media (max-width: 600px) { .erklaert .calc-in { grid-template-columns: 1fr; } }
-.erklaert .calc-in label { display: flex; flex-direction: column; gap: 4px; font-size: .8rem; font-weight: 600; color: var(--muted); }
-.erklaert .calc-in select, .erklaert .calc-in input { font: 500 .95rem var(--sans); padding: 7px 9px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
-.erklaert .presets { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
-.erklaert .presets button { font-size: .8rem; padding: 6px 11px; }
-.erklaert .big { font-family: var(--serif); font-size: clamp(1.8rem, 7vw, 2.4rem); color: var(--accent); margin: 14px 0 2px; font-variant-numeric: tabular-nums; }
-.erklaert .stack { display: flex; height: 26px; border-radius: 8px; overflow: hidden; margin: 10px 0 6px; border: 1px solid var(--line); }
-.erklaert .stack span { height: 100%; transition: width .3s; }
-.erklaert .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .82rem; color: var(--muted); }
-.erklaert .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
-.erklaert .seg-emb { background: var(--accent-2); } .erklaert .seg-att { background: var(--accent); } .erklaert .seg-ff { background: var(--ok); }
-.erklaert .mem { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin-top: 14px; }
-.erklaert .mem div { padding: 10px; border-radius: 9px; background: var(--bg); text-align: center; font-size: .78rem; color: var(--muted); }
-.erklaert .mem b { display: block; font-size: 1.05rem; color: var(--fg); font-variant-numeric: tabular-nums; }
-
+.erklaert .calc-in{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:600px){.erklaert .calc-in{grid-template-columns:1fr}}
+.erklaert .calc-in label{display:flex;flex-direction:column;gap:4px;font-size:.8rem;font-weight:600;color:var(--muted)}
+.erklaert .calc-in select, .erklaert .calc-in input{font:500 .95rem var(--sans);padding:7px 9px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.erklaert .presets{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.erklaert .presets button{font-size:.8rem;padding:6px 11px}
+.erklaert .big{font-family:var(--serif);font-size:clamp(1.8rem,7vw,2.4rem);color:var(--accent);margin:14px 0 2px;font-variant-numeric:tabular-nums}
+.erklaert .stack{display:flex;height:26px;border-radius:8px;overflow:hidden;margin:10px 0 6px;border:1px solid var(--line)}
+.erklaert .stack span{height:100%;transition:width .3s}
+.erklaert .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--muted)}
+.erklaert .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.erklaert .seg-emb{background:var(--accent-2)}.erklaert .seg-att{background:var(--accent)}.erklaert .seg-ff{background:var(--ok)}
+.erklaert .mem{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:14px}
+.erklaert .mem div{padding:10px;border-radius:9px;background:var(--bg);text-align:center;font-size:.78rem;color:var(--muted)}
+.erklaert .mem b{display:block;font-size:1.05rem;color:var(--fg);font-variant-numeric:tabular-nums}
 /* Anpassung für schmale Bildschirme (Claude): Regler und Ergebnis dürfen nicht über den Rand ragen */
 .erklaert .neuron > *, .erklaert .calc-in > * { min-width: 0; }
 .erklaert .nrow { grid-template-columns: minmax(0, 1fr) minmax(56px, 92px) 3.2em; }

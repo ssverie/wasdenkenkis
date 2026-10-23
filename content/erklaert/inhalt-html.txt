@@ -1,0 +1,28 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Gedacht für alle, die Sprachmodelle wirklich verstehen wollen – geschrieben mit Blick auf Leser aus der Softwareentwicklung, aber ohne Vorwissen über KI. Jeder Eintrag steht für sich, lässt sich also auch einzeln nachschlagen. Wer alles der Reihe nach liest, braucht insgesamt etwa <strong>zwei Stunden</strong>, mit Ausprobieren der Mitmach-Elemente etwas mehr.</p>
+</div>
+
+<nav class="map" aria-label="Etappen">
+  <a href="#e1"><b>Etappe 1</b>Das große Bild</a>
+  <a href="#e2"><b>Etappe 2</b>Grundbausteine</a>
+  <a href="#e3"><b>Etappe 3</b>Das Innenleben</a>
+  <a href="#e4"><b>Etappe 4</b>Im Gebrauch</a>
+  <a href="#e5"><b>Etappe 5</b>Darüber hinaus</a>
+</nav>
+<div class="progress" id="prog"><span id="progT"></span><div class="bar"><span id="progB"></span></div><button type="button" id="progR">zurücksetzen</button></div>
+
+<div id="stages"></div>
+
+<h2 id="kurzwege">Kurzwege</h2>
+<p>Nicht jeder braucht alles. Drei Abkürzungen für typische Fragen:</p>
+<div class="paths" id="paths"></div>
+
+<h2 id="hinweise">Zum Lesen</h2>
+<ul>
+  <li>Jeder Eintrag beginnt mit einem Kasten <strong>„Kurz gesagt“</strong>. Wer nur nachschlagen will, kann danach aufhören.</li>
+  <li>Die Abschnitte <strong>„Für Entwickler übersetzt“</strong> übertragen jeden Begriff in bekannte Konzepte aus Java – Tabellen, Methoden, Schleifen.</li>
+  <li>Die <strong>Mitmach-Elemente</strong> rechnen echt im Browser oder zeigen nachgestellte Beispiele; was davon was ist, steht jeweils darunter.</li>
+  <li>Ein Häkchen bei „gelesen“ merkt sich dein Browser, sonst niemand.</li>
+</ul>
+</div>

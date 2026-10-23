@@ -1,0 +1,30 @@
+/* Seiteneigene Stile (aufmerksamkeit) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Aufmerksamkeit ---- */
+.erklaert .s-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.erklaert .s-tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .bank-grid{display:grid;grid-template-columns:1fr 240px;gap:18px;align-items:center}
+@media (max-width:600px){.erklaert .bank-grid{grid-template-columns:1fr}}
+.erklaert .bank-grid svg{width:100%;max-width:260px;margin:0 auto;display:block}
+
+.erklaert .qkv{display:grid;grid-template-columns:260px 1fr;gap:20px;align-items:start}
+@media (max-width:640px){.erklaert .qkv{grid-template-columns:1fr}}
+.erklaert .qkv svg{width:100%;max-width:280px;display:block;margin:0 auto}
+.erklaert .qkv-tbl{width:100%;font-size:.86rem;border-collapse:collapse}
+.erklaert .qkv-tbl th, .erklaert .qkv-tbl td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}
+.erklaert .qkv-tbl th{font-size:.7rem}
+.erklaert .qkv-tbl td.num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.erklaert .qkv-tbl .wbar{display:inline-block;height:10px;border-radius:3px;background:var(--accent-2);vertical-align:middle;margin-right:6px;transition:width .2s}
+.erklaert .qkv-out{margin-top:10px;padding:10px 12px;border-radius:9px;background:var(--bg);font-size:.88rem}
+.erklaert .sl{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;font-size:.88rem;margin-top:12px}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+
+.erklaert .heads{display:flex;flex-direction:column;gap:14px}
+.erklaert .head-row .h{font-weight:700;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.erklaert .head-row svg{width:100%;height:auto;display:block}
+
+.erklaert .role{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:600px){.erklaert .role{grid-template-columns:1fr}}
+.erklaert .role div{padding:14px;border-radius:12px;background:var(--bg);font-size:.88rem}
+.erklaert .role b{display:block;font-family:var(--serif);font-size:1.25rem;margin-bottom:2px}
+.erklaert .role .q b{color:var(--accent)}.erklaert .role .k b{color:var(--accent-2)}.erklaert .role .v b{color:var(--ok)}
+.erklaert .role p{margin:4px 0 0;color:var(--muted)}

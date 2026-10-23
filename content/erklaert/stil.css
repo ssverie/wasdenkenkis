@@ -1,0 +1,39 @@
+/* Seiteneigene Stile (Lesereihenfolge) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Lesereihenfolge ---- */
+.erklaert .map{display:flex;gap:6px;margin:22px 0 8px;flex-wrap:wrap}
+.erklaert .map a{flex:1 1 110px;text-decoration:none;color:var(--fg);padding:10px 12px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:.82rem;line-height:1.35}
+.erklaert .map a b{display:block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:2px}
+.erklaert .map a:hover{border-color:var(--accent)}
+.erklaert .progress{display:flex;align-items:center;gap:12px;margin:14px 0 4px;font-size:.88rem;color:var(--muted)}
+.erklaert .progress .bar{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.erklaert .progress .bar span{display:block;height:100%;background:var(--ok);transition:width .3s}
+.erklaert .progress button{font-size:.75rem;padding:4px 9px}
+
+.erklaert .stage-h{display:flex;align-items:baseline;gap:12px;margin:2.2em 0 .3em;padding-top:.4em;border-top:1px solid var(--line)}
+.erklaert .stage-h .n{font:700 .75rem var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);white-space:nowrap}
+.erklaert .stage-h h2{margin:0;padding:0;border:0}
+.erklaert .stage-intro{color:var(--muted);margin:.3em 0 1em}
+.erklaert .list{display:flex;flex-direction:column;gap:10px}
+.erklaert .item{display:grid;grid-template-columns:44px 1fr auto;gap:14px;align-items:start;padding:14px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line);transition:border-color .2s,opacity .2s}
+.erklaert .item:hover{border-color:var(--accent)}
+.erklaert .item .num{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:700 1rem var(--serif);background:var(--accent-soft);color:var(--accent)}
+.erklaert .item h3{margin:0 0 3px;font-size:1.12rem}
+.erklaert .item h3 a{color:var(--fg);text-decoration:none}
+.erklaert .item h3 a:hover{color:var(--accent);text-decoration:underline}
+.erklaert .item p{margin:0;font-size:.9rem;color:var(--muted)}
+.erklaert .item .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.erklaert .item .tags span{font-size:.72rem;padding:2px 8px;border-radius:999px;background:var(--bg);color:var(--muted)}
+.erklaert .item .tags span.w{background:var(--accent-2-soft);color:var(--accent-2)}
+.erklaert .item .chk{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.68rem;color:var(--muted);cursor:pointer;user-select:none;padding-top:4px}
+.erklaert .item .chk input{width:20px;height:20px;accent-color:var(--ok);cursor:pointer}
+.erklaert .item.done{opacity:.62}
+.erklaert .item.done .num{background:var(--ok-soft);color:var(--ok)}
+@media (max-width:520px){.erklaert .item{grid-template-columns:36px 1fr;}.erklaert .item .num{width:34px;height:34px;font-size:.9rem}.erklaert .item .chk{grid-column:2;flex-direction:row;justify-self:start;padding-top:0}}
+
+.erklaert .paths{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:680px){.erklaert .paths{grid-template-columns:1fr}}
+.erklaert .paths > div{padding:14px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:.9rem}
+.erklaert .paths h4{margin:0 0 4px;font-size:1rem}
+.erklaert .paths .t{font-size:.78rem;color:var(--muted)}
+.erklaert .paths ol{margin:8px 0 0;padding-left:1.3em}
+.erklaert .paths li{margin:2px 0}

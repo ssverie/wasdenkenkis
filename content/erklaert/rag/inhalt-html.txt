@@ -1,0 +1,175 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>RAG</strong> steht für <em>Retrieval-Augmented Generation</em>, also etwa „durch Nachschlagen ergänztes Erzeugen“. Vor der Antwort werden zur Frage passende Textstücke aus einer Dokumentensammlung gesucht und dem Modell ins <a href="/erklaert/kontextfenster/">Kontextfenster</a> gelegt. Das Modell antwortet dann auf Grundlage dieser Texte.</p>
+<p>So kann es Fragen zu Firmenhandbüchern, Verträgen, Code oder aktuellen Daten beantworten, die es nie im Training gesehen hat – mit Quellenangabe und deutlich weniger <a href="/erklaert/halluzination/">Halluzinationen</a>. Das Modell selbst wird dabei nicht verändert.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#problem">Das Problem</a></li>
+  <li><a href="#ablauf">Zwei Phasen</a></li>
+  <li><a href="#demo">Mini-RAG zum Ausprobieren</a></li>
+  <li><a href="#stellschrauben">Worauf es ankommt</a></li>
+  <li><a href="#vergleich">RAG, Feinabstimmung oder langer Kontext?</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ PROBLEM ============ -->
+<h2 id="problem">Das Problem</h2>
+<p>Ein Sprachmodell weiß nur, was in seinen Trainingsdaten stand. Drei Arten von Wissen fehlen ihm deshalb grundsätzlich:</p>
+<div class="cards">
+  <div class="card"><div class="num">🔒</div><h4>Internes</h4><p>Firmenhandbücher, Kundenakten, eigener Quellcode – nie öffentlich, also nie im Training.</p></div>
+  <div class="card"><div class="num">📅</div><h4>Aktuelles</h4><p>Alles nach dem Wissensstichtag: neue Preise, neue Versionen, Nachrichten.</p></div>
+  <div class="card"><div class="num">🔍</div><h4>Seltenes</h4><p>Details, die im Training kaum vorkamen und deshalb nur verschwommen gespeichert sind.</p></div>
+</div>
+<p>Fragt man trotzdem, bekommt man im schlechtesten Fall eine plausible Erfindung. Die Lösung von RAG ist so einfach wie wirkungsvoll – sie macht aus einer Gedächtnisprüfung eine <strong>Prüfung mit offenem Buch</strong>.</p>
+
+<!-- ============ ABLAUF ============ -->
+<h2 id="ablauf">Zwei Phasen</h2>
+<p>Ein RAG-System hat zwei getrennte Abläufe: einen, der die Dokumente vorbereitet, und einen, der bei jeder Frage läuft.</p>
+<figure>
+<div class="two">
+  <div class="col">
+    <h4>① Vorbereiten (einmalig, bei Änderungen)</h4>
+    <div class="pipeline">
+      <div class="stage"><b>Dokumente</b>PDFs, Wiki, Code, E-Mails</div>
+      <div class="arrow">→</div>
+      <div class="stage"><b>Zerteilen</b>in Abschnitte („Chunks“)</div>
+      <div class="arrow">→</div>
+      <div class="stage key"><b>Einbetten</b>jeder Abschnitt → <a href="/erklaert/embedding/">Embedding</a></div>
+      <div class="arrow">→</div>
+      <div class="stage"><b>Speichern</b>in einer Vektordatenbank</div>
+    </div>
+  </div>
+  <div class="col">
+    <h4>② Fragen (bei jeder Anfrage)</h4>
+    <div class="pipeline">
+      <div class="stage"><b>Frage</b>„Wie viele Urlaubstage …?“</div>
+      <div class="arrow">→</div>
+      <div class="stage key"><b>Suchen</b>ähnlichste Abschnitte finden</div>
+      <div class="arrow">→</div>
+      <div class="stage"><b>Prompt bauen</b>Frage + Fundstellen</div>
+      <div class="arrow">→</div>
+      <div class="stage out"><b>Antworten</b>mit Quellenangabe</div>
+    </div>
+  </div>
+</div>
+<figcaption>Das Sprachmodell taucht erst im allerletzten Schritt auf. Alles davor ist klassische Software – Suchen, Filtern, Text zusammenbauen.</figcaption>
+</figure>
+
+<!-- ============ DEMO ============ -->
+<h2 id="demo">Mini-RAG zum Ausprobieren</h2>
+<p>Ein erfundenes Firmenhandbuch, in acht Abschnitte zerlegt. Wähl eine Frage und vergleiche die Antwort mit und ohne Nachschlagen:</p>
+
+<div class="widget">
+  <div class="widget-title">Frag das Firmenhandbuch</div>
+  <div class="qsel" id="qsel"></div>
+  <div class="mode" id="mode"><button type="button" data-m="1">mit RAG</button><button type="button" data-m="0">ohne RAG</button></div>
+  <div class="steps" id="steps"></div>
+  <p class="fine">Ähnlichkeitswerte und Antworten sind nachgestellt. Die Firma und ihr Handbuch sind erfunden. Die drei Abschnitte mit den höchsten Werten über 0,5 werden verwendet.</p>
+</div>
+
+<!-- ============ STELLSCHRAUBEN ============ -->
+<h2 id="stellschrauben">Worauf es ankommt</h2>
+<p>Das Prinzip ist einfach, gute Ergebnisse sind es nicht. Die meisten RAG-Probleme sind Suchprobleme: Wird der richtige Abschnitt nicht gefunden, kann auch das beste Modell nicht richtig antworten.</p>
+
+<h3>Wie groß sind die Abschnitte?</h3>
+<figure>
+<div class="chunks-demo">
+  <div><h4>Zu klein</h4><div class="doc"><span class="c"></span><span></span><span></span><span></span><span></span></div><p style="margin:0;color:var(--muted)">„… beträgt 30 Tage.“ – Was beträgt 30 Tage? Der Zusammenhang fehlt.</p></div>
+  <div><h4>Passend</h4><div class="doc"><span class="c"></span><span class="c"></span><span></span><span></span><span></span></div><p style="margin:0;color:var(--muted)">Ein Absatz oder Abschnitt mit eigener Überschrift – vollständig, aber fokussiert.</p></div>
+  <div><h4>Zu groß</h4><div class="doc"><span class="c"></span><span class="c"></span><span class="c"></span><span class="c"></span><span class="c"></span></div><p style="margin:0;color:var(--muted)">Das ganze Kapitel: Das Embedding wird ein unscharfer Mittelwert, und es kostet viel Platz im Kontext.</p></div>
+</div>
+<figcaption>Oft lässt man benachbarte Abschnitte etwas überlappen und hängt Überschrift und Dokumenttitel an jeden Abschnitt an.</figcaption>
+</figure>
+
+<h3>Weitere Stellschrauben</h3>
+<div class="cards">
+  <div class="card"><div class="num">⊕</div><h4>Hybride Suche</h4><p>Embedding-Suche findet Bedeutung, versagt aber bei Artikelnummern oder Fachbegriffen. Kombiniert mit klassischer Stichwortsuche wird es deutlich besser.</p></div>
+  <div class="card"><div class="num">↕</div><h4>Nachsortieren</h4><p>Erst grob 50 Kandidaten holen, dann mit einem genaueren Modell („Reranker“) die besten 5 auswählen.</p></div>
+  <div class="card"><div class="num">🔑</div><h4>Berechtigungen</h4><p>Wer etwas nicht lesen darf, darf es auch nicht über RAG erfahren. Die Rechte müssen schon bei der Suche gefiltert werden.</p></div>
+</div>
+
+<div class="callout">Eine Weiterentwicklung ist <strong>agentisches RAG</strong>: Statt einmal fest zu suchen, entscheidet ein <a href="/erklaert/agenten/">Agent</a> selbst, ob, wonach und wie oft er sucht – formuliert die Suchanfrage um, wenn nichts Passendes kommt, und liest gezielt nach.</div>
+
+<!-- ============ VERGLEICH ============ -->
+<h2 id="vergleich">RAG, Feinabstimmung oder langer Kontext?</h2>
+<p>Es gibt drei Wege, einem Modell eigenes Wissen mitzugeben. Sie schließen sich nicht aus:</p>
+<div class="tbl-wrap">
+<table class="cmp-tbl">
+  <thead><tr><th></th><th>RAG</th><th>Feinabstimmung</th><th>Alles in den Kontext</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Prinzip</strong></td><td>passende Stücke nachschlagen</td><td>Modell weitertrainieren</td><td>komplette Dokumente mitschicken</td></tr>
+    <tr><td><strong>Aktualität</strong></td><td>sofort, Index neu bauen genügt</td><td>erst nach neuem Training</td><td>sofort</td></tr>
+    <tr><td><strong>Datenmenge</strong></td><td>praktisch unbegrenzt</td><td>groß</td><td>bis zur Größe des Kontextfensters</td></tr>
+    <tr><td><strong>Quellenangabe</strong></td><td>ja</td><td>nein</td><td>ja</td></tr>
+    <tr><td><strong>Gut für</strong></td><td>Wissen, Fakten, Dokumentation</td><td>Stil, Format, Verhalten</td><td>wenige Dokumente, genaue Analyse</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Faustregel: Wenn ein Modell <em>etwas wissen</em> soll, ist RAG meist der richtige Weg. Wenn es sich <em>anders verhalten</em> soll, eher <a href="/erklaert/training/">Feinabstimmung</a>. Und wenn die Dokumente klein genug sind, ist alles in den Kontext zu legen oft am einfachsten.</p>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>RAG</strong></td><td>ein Cache-Lookup vor dem Methodenaufruf, dessen Treffer als Parameter mitgegeben werden</td></tr>
+    <tr><td><strong>Chunk</strong></td><td>ein Datensatz in der Suchtabelle – Text plus Metadaten (Quelle, Seite, Berechtigung)</td></tr>
+    <tr><td><strong>Vektordatenbank</strong></td><td>ein Index für Ähnlichkeit, z. B. <em>pgvector</em> in PostgreSQL oder ein eigener Dienst</td></tr>
+    <tr><td><strong>Top-k</strong></td><td><code>ORDER BY aehnlichkeit DESC LIMIT k</code></td></tr>
+    <tr><td><strong>Prompt-Vorlage</strong></td><td>ein Template mit Platzhaltern für Frage und Fundstellen</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="c">// RAG im Kern – Bibliotheken wie Spring AI oder LangChain4j kapseln genau das</span>
+String antworte(String frage, Benutzer user) {
+    <span class="k">float</span>[] q = embedder.embed(frage);
+
+    List&lt;Chunk&gt; treffer = vektorDb.suche(q, <span class="c">/* topK */</span> 5)
+        .stream()
+        .filter(c -&gt; user.darfLesen(c.quelle()))          <span class="c">// Rechte nicht vergessen!</span>
+        .filter(c -&gt; c.score() &gt; 0.5)
+        .toList();
+
+    String kontext = treffer.stream()
+        .map(c -&gt; <span class="s">"[%s] %s"</span>.formatted(c.quelle(), c.text()))
+        .collect(Collectors.joining(<span class="s">"\n\n"</span>));
+
+    String prompt = <span class="s">"""
+        Beantworte die Frage nur anhand der folgenden Auszüge.
+        Nenne die Quelle in eckigen Klammern. Steht die Antwort
+        nicht darin, sag das ehrlich.
+
+        %s
+
+        Frage: %s
+        """</span>.formatted(kontext, frage);
+
+    <span class="k">return</span> llm.complete(prompt);
+}</code></pre>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Mit RAG lernt das Modell meine Dokumente.“</b> – Es lernt nichts. Es bekommt bei jeder Frage einige Auszüge vorgelegt und vergisst sie danach wieder.</div>
+  <div><b>„RAG verhindert Halluzinationen.“</b> – Es reduziert sie stark. Das Modell kann Auszüge aber falsch zusammenfassen oder Lücken mit eigenem Wissen füllen – deshalb Quellen anzeigen und die Anweisung geben, bei fehlender Information ehrlich abzulehnen.</div>
+  <div><b>„Man braucht dafür eine Vektordatenbank.“</b> – Für den Anfang reicht oft eine normale Datenbank mit Vektorerweiterung oder sogar eine klassische Volltextsuche. Das „R“ heißt nur „nachschlagen“, nicht „Vektoren“.</div>
+  <div><b>„Mit großen Kontextfenstern ist RAG überflüssig.“</b> – Für kleine Dokumentmengen ja. Bei Tausenden Dokumenten, Berechtigungen und Kosten pro Anfrage bleibt gezieltes Nachschlagen sinnvoll.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/embedding/">Embedding</a>
+  <a href="/erklaert/kontextfenster/">Kontextfenster</a>
+  <a href="/erklaert/halluzination/">Halluzination</a>
+  <a href="/erklaert/agenten/">Agenten</a>
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

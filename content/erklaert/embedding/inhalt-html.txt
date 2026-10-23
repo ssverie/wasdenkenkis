@@ -1,0 +1,187 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Embedding</strong> ist ein Vektor – eine Liste von Hunderten bis Tausenden Zahlen –, der die Bedeutung eines Tokens, Wortes oder ganzen Textes darstellt. Die Zahlen sind so gelernt, dass <strong>ähnliche Bedeutungen nah beieinanderliegen</strong>: „Hund“ liegt nahe bei „Katze“, weit weg von „Steuererklärung“.</p>
+<p>Embeddings sind der erste Schritt in jedem Sprachmodell (Token-ID → Vektor). Außerdem sind sie die Grundlage für <strong>semantische Suche</strong>: Texte nach Bedeutung finden statt nach gleichen Wörtern.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#raum">Ein Raum der Bedeutungen</a></li>
+  <li><a href="#herkunft">Woher die Zahlen kommen</a></li>
+  <li><a href="#rechnen">Rechnen mit Bedeutung</a></li>
+  <li><a href="#aehnlich">Wie man Nähe misst</a></li>
+  <li><a href="#kontext">Statisch und im Kontext</a></li>
+  <li><a href="#suche">Semantische Suche</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<!-- ============ RAUM ============ -->
+<h2 id="raum">Ein Raum der Bedeutungen</h2>
+<p>Eine <a href="/erklaert/token/">Token-ID</a> ist nur eine Nummer; sie sagt nichts über die Bedeutung. Das Modell schlägt deshalb zu jeder ID einen Vektor nach. Man kann sich jeden Vektor als Punkt in einem Raum vorstellen – nur dass dieser Raum nicht zwei oder drei, sondern Tausende Dimensionen hat.</p>
+<p>Zum Anschauen hier stark vereinfacht auf zwei Dimensionen. Klick ein Wort an:</p>
+
+<div class="widget">
+  <div class="widget-title">Bedeutungskarte</div>
+  <div class="map-wrap">
+    <svg viewBox="0 0 440 320" id="map" role="img" aria-label="Wörter als Punkte, ähnliche Wörter bilden Gruppen"></svg>
+    <div class="nn" id="nn"></div>
+  </div>
+  <div class="legend2" id="legend"></div>
+  <p class="fine">Ausgedachte Positionen, die zeigen, wie echte Embeddings aussehen, wenn man sie auf zwei Dimensionen herunterprojiziert. Achte auf die Grenzgänger: „Java“ liegt zwischen Programmiersprachen und Inseln, „Maus“ zwischen Tieren und Computerzubehör.</p>
+</div>
+
+<!-- ============ HERKUNFT ============ -->
+<h2 id="herkunft">Woher die Zahlen kommen</h2>
+<p>Niemand legt fest, wo „Hund“ liegt. Die Embedding-Tabelle gehört zu den <a href="/erklaert/parameter/">Parametern</a> und wird beim Training mitgelernt. Anfangs sind alle Vektoren Zufall. Weil das Modell aber ständig das nächste Wort vorhersagen muss, werden Wörter, die in ähnlichen Zusammenhängen vorkommen, nach und nach ähnlich dargestellt – das hilft bei der Vorhersage.</p>
+
+<figure>
+<div class="flow" style="display:flex;flex-direction:column;gap:6px;font-family:var(--serif);font-size:1.05rem">
+  <div>Der <strong style="color:var(--accent)">Hund</strong> schläft auf dem Sofa.</div>
+  <div>Der <strong style="color:var(--accent)">Kater</strong> schläft auf dem Sofa.</div>
+  <div>Ich muss mit dem <strong style="color:var(--accent)">Hund</strong> zum Tierarzt.</div>
+  <div>Ich muss mit dem <strong style="color:var(--accent)">Kater</strong> zum Tierarzt.</div>
+</div>
+<figcaption>„Hund“ und „Kater“ tauchen in sehr ähnlichen Umgebungen auf. Also landen ihre Vektoren nah beieinander – ohne dass das Modell je eine Definition gelesen hat.</figcaption>
+</figure>
+
+<div class="callout">Der Sprachwissenschaftler John Rupert Firth hat das 1957 so zusammengefasst: <em>„You shall know a word by the company it keeps.“</em> – Man erkennt ein Wort an der Gesellschaft, in der es sich aufhält. Embeddings sind die mathematische Umsetzung dieses Gedankens.</div>
+
+<!-- ============ RECHNEN ============ -->
+<h2 id="rechnen">Rechnen mit Bedeutung</h2>
+<p>2013 stellten Forscher bei Google mit <strong>word2vec</strong> ein Verfahren vor, dessen Ergebnis berühmt wurde: In den gelernten Vektoren stecken nicht nur Ähnlichkeiten, sondern auch <em>Beziehungen</em> als Richtungen. Der Abstand von „Mann“ zu „Frau“ zeigt ungefähr in dieselbe Richtung wie der von „König“ zu „Königin“. Deshalb kann man rechnen:</p>
+
+<div class="widget">
+  <div class="widget-title">Vektor-Arithmetik</div>
+  <div class="eq">
+    <select id="eA"></select><span class="op">−</span><select id="eB"></select><span class="op">+</span><select id="eC"></select><span class="op">≈</span><strong id="eR">?</strong>
+  </div>
+  <div class="tbl-wrap" style="margin:0"><table class="vtbl" id="vtbl"></table></div>
+  <div class="result-line" id="eRes"></div>
+  <p class="fine">Spielzeug-Vektoren mit nur vier Dimensionen, die hier sogar Namen haben, damit man das Prinzip sieht. In echten Embeddings sind die Achsen nicht benannt und nicht so sauber – die Beziehung „männlich ↔ weiblich“ ist über viele Dimensionen verteilt. Probier auch Onkel − Mann + Frau oder Prinzessin − Mädchen + Junge.</p>
+</div>
+
+<p>In echten Modellen klappt das nicht immer so glatt, und berühmte Beispiele sind teilweise sorgfältig ausgewählt. Das Grundprinzip – Beziehungen als Richtungen im Raum – ist aber gut belegt und steckt auch in heutigen Sprachmodellen.</p>
+
+<!-- ============ ÄHNLICH ============ -->
+<h2 id="aehnlich">Wie man Nähe misst</h2>
+<p>Für die Ähnlichkeit zweier Embeddings nimmt man fast immer die <strong>Kosinus-Ähnlichkeit</strong>: Sie misst den Winkel zwischen den Vektoren, nicht deren Länge. Zeigen beide in dieselbe Richtung, ist sie 1; stehen sie senkrecht, 0; zeigen sie entgegengesetzt, −1.</p>
+
+<div class="widget">
+  <div class="widget-title">Kosinus-Ähnlichkeit</div>
+  <div class="cos">
+    <svg viewBox="-110 -110 220 220" id="cosSvg" role="img" aria-label="Zwei Vektoren und der Winkel zwischen ihnen"></svg>
+    <div>
+      <div class="cos-big" id="cosV"></div>
+      <div class="fine" style="margin:0" id="cosT"></div>
+      <label class="sl">Winkel<input type="range" id="cosA" min="0" max="180" value="35"></label>
+    </div>
+  </div>
+</div>
+
+<pre><code>                    a · b              Σ aᵢ·bᵢ
+cos(a, b)  =  ─────────────  =  ─────────────────────
+               |a| · |b|        √Σ aᵢ²  ·  √Σ bᵢ²</code></pre>
+<p>Das Schöne daran: Es funktioniert in zwei Dimensionen genauso wie in 3 072 – nur zeichnen kann man es nicht mehr.</p>
+
+<!-- ============ KONTEXT ============ -->
+<h2 id="kontext">Statisch und im Kontext</h2>
+<p>Bei word2vec hat jedes Wort genau <em>einen</em> Vektor. „Bank“ ist dann ein unscharfer Mittelwert aus Geldinstitut und Sitzgelegenheit. In einem Transformer ist das nur der Anfang:</p>
+
+<figure>
+<div class="pipeline">
+  <div class="stage"><b>Token-ID</b>„Bank“ = 30411</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>Statisches Embedding</b>immer derselbe Vektor, aus der Tabelle</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>Schicht für Schicht</b>Aufmerksamkeit mischt den Kontext hinein</div>
+  <div class="arrow">→</div>
+  <div class="stage out"><b>Kontextuelles Embedding</b>„Bank im Park“ ≠ „Bank mit Geld“</div>
+</div>
+<figcaption>Am Eingang hat jedes Token seinen festen Vektor. Nach den Schichten des <a href="/erklaert/transformer/">Transformers</a> trägt es die Bedeutung, die es in <em>diesem</em> Satz hat – mehr dazu bei <a href="/erklaert/aufmerksamkeit/">Aufmerksamkeit</a>.</figcaption>
+</figure>
+
+<!-- ============ SUCHE ============ -->
+<h2 id="suche">Semantische Suche</h2>
+<p>Embeddings gibt es nicht nur für einzelne Tokens, sondern auch für ganze Sätze und Dokumente. Dafür gibt es eigene, kleinere <strong>Embedding-Modelle</strong>: Text rein, ein Vektor raus. Damit lässt sich nach Bedeutung suchen statt nach Schlagworten:</p>
+
+<figure>
+<div class="query">Suchanfrage: „Ich komme nicht mehr in mein Konto“</div>
+<div class="search">
+  <div class="col">
+    <div class="h">Stichwortsuche</div>
+    <ol>
+      <li class="bad">„Konto eröffnen in drei Schritten“</li>
+      <li class="bad">„Kontoauszüge herunterladen“</li>
+      <li class="bad">„Mein Konto: Einstellungen“</li>
+    </ol>
+  </div>
+  <div class="col">
+    <div class="h">Embedding-Suche</div>
+    <ol>
+      <li class="good">„Passwort vergessen – so setzen Sie es zurück“ <span class="sim">0,82</span></li>
+      <li class="good">„Anmeldung schlägt fehl: Hilfe“ <span class="sim">0,79</span></li>
+      <li>„Konto gesperrt nach Fehlversuchen“ <span class="sim">0,77</span></li>
+    </ol>
+  </div>
+</div>
+<figcaption>Die besten Treffer rechts enthalten das Wort „Konto“ teilweise gar nicht – sie meinen aber dasselbe. Ähnlichkeitswerte ausgedacht.</figcaption>
+</figure>
+
+<p>Das Vorgehen ist immer gleich: Alle Dokumente einmal in Embeddings umrechnen und speichern. Bei einer Anfrage die Frage ebenfalls umrechnen und die nächsten Nachbarn suchen. Dafür gibt es <strong>Vektordatenbanken</strong> oder Erweiterungen wie <em>pgvector</em> für PostgreSQL. Genau das ist der „Nachschlagen“-Schritt bei <strong>RAG</strong>, mit dem Anwendungen einem Sprachmodell passende Dokumente ins <a href="/erklaert/kontextfenster/">Kontextfenster</a> legen.</p>
+
+<!-- ============ JAVA ============ -->
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Embedding</strong></td><td>ein <code>float[]</code> mit fester Länge, z. B. 1 024 oder 3 072</td></tr>
+    <tr><td><strong>Embedding-Tabelle</strong></td><td>ein <code>float[vokabular][dimensionen]</code> – Token-ID ist der Zeilenindex</td></tr>
+    <tr><td><strong>Ähnlichkeit</strong></td><td>Kosinus statt <code>equals()</code>: kein Ja/Nein, sondern eine Zahl zwischen −1 und 1</td></tr>
+    <tr><td><strong>Embedding-Modell</strong></td><td>eine Funktion <code>float[] embed(String text)</code>, meist als API oder lokale Bibliothek</td></tr>
+    <tr><td><strong>Vektordatenbank</strong></td><td>ein Index für „finde die nächsten Nachbarn“ – wie ein B-Baum, nur für Ähnlichkeit statt Sortierung (gängig: HNSW-Graphen)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<pre><code><span class="k">static double</span> kosinus(<span class="k">float</span>[] a, <span class="k">float</span>[] b) {
+    <span class="k">double</span> dot = 0, na = 0, nb = 0;
+    <span class="k">for</span> (<span class="k">int</span> i = 0; i &lt; a.length; i++) {
+        dot += a[i] * b[i];
+        na  += a[i] * a[i];
+        nb  += b[i] * b[i];
+    }
+    <span class="k">return</span> dot / (Math.sqrt(na) * Math.sqrt(nb));
+}
+
+<span class="c">// Semantische Suche, naiv (ohne Index)</span>
+<span class="k">float</span>[] frage = embedder.embed(<span class="s">"Ich komme nicht mehr in mein Konto"</span>);
+List&lt;Dokument&gt; treffer = dokumente.stream()
+    .sorted(Comparator.comparingDouble((Dokument d) -&gt; kosinus(frage, d.embedding())).reversed())
+    .limit(3)
+    .toList();</code></pre>
+<p>Für Java gibt es dafür fertige Bausteine, etwa in Spring AI oder LangChain4j, die Embedding-Modelle und Vektordatenbanken einheitlich ansprechen.</p>
+
+<!-- ============ IRRTÜMER ============ -->
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Jede Dimension steht für eine Eigenschaft.“</b> – Fast nie. Eigenschaften wie „Geschlecht“ oder „Größe“ sind über viele Dimensionen verteilt; einzelne Zahlen lassen sich meist nicht deuten.</div>
+  <div><b>„Embedding und Token-ID sind dasselbe.“</b> – Die ID ist ein bedeutungsloser Index, das Embedding der dazugehörige Vektor mit Bedeutung.</div>
+  <div><b>„Embeddings bilden Bedeutung neutral ab.“</b> – Sie bilden ab, wie Wörter in den Trainingstexten benutzt werden – samt Vorurteilen. Ein bekannter Befund aus der word2vec-Zeit: Arzt − Mann + Frau landete in der Nähe von „Krankenschwester“.</div>
+  <div><b>„Ähnlich heißt gleichbedeutend.“</b> – Gegenteile liegen oft nah beieinander, weil sie in ähnlichen Zusammenhängen vorkommen: „heiß“ und „kalt“, „kaufen“ und „verkaufen“.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/was-ist-ein-sprachmodell/">Was ist ein Sprachmodell?</a>
+  <a href="/erklaert/token/">Token</a>
+  <a href="/erklaert/aufmerksamkeit/">Aufmerksamkeit</a>
+  <a href="/erklaert/transformer/">Transformer</a>
+  <a href="/erklaert/kontextfenster/">Kontextfenster</a>
+  <a href="/erklaert/rag/">RAG</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

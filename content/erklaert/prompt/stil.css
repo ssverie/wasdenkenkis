@@ -1,0 +1,35 @@
+/* Seiteneigene Stile (prompt) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Prompt ---- */
+.erklaert .anat{display:flex;flex-direction:column;gap:6px}
+.erklaert .anat .layer{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-size:.88rem}
+@media (max-width:560px){.erklaert .anat .layer{grid-template-columns:1fr;gap:2px}}
+.erklaert .anat .layer b{font-size:.92rem}
+.erklaert .anat .layer .who{font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.erklaert .anat .sys{border-left:4px solid #6b7280}.erklaert .anat .sys .who{color:#6b7280}
+.erklaert .anat .tools{border-left:4px solid var(--accent-2)}.erklaert .anat .tools .who{color:var(--accent-2)}
+.erklaert .anat .hist{border-left:4px solid var(--accent)}.erklaert .anat .hist .who{color:var(--accent)}
+.erklaert .anat .you{border-left:4px solid var(--ok);background:var(--ok-soft)}.erklaert .anat .you .who{color:var(--ok)}
+
+.erklaert .lvl-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .lvl-tabs button{font-size:.8rem;padding:6px 10px}
+.erklaert .lvl-tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .pb{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:680px){.erklaert .pb{grid-template-columns:1fr}}
+.erklaert .pb .box{padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.88rem}
+.erklaert .pb .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.erklaert .pb .ptext{font:.8rem/1.6 var(--mono);white-space:pre-wrap}
+.erklaert .pb .ptext mark{background:var(--ok-soft);color:var(--ok);border-radius:3px;padding:0 2px}
+.erklaert .pb .atext{white-space:pre-line;line-height:1.55}
+.erklaert .pb .atext code{font-size:.85em;background:var(--code-bg);padding:.05em .3em;border-radius:4px}
+.erklaert .gain{margin-top:10px;font-size:.85rem;font-weight:600;color:var(--ok);min-height:1.3em}
+
+.erklaert .shot{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.erklaert .shot{grid-template-columns:1fr}}
+.erklaert .shot div{padding:12px 14px;border-radius:10px;background:var(--bg);min-width:0}
+.erklaert .shot h4{margin:0 0 6px;font-size:.92rem}
+.erklaert .shot pre{margin:6px 0;font-size:.74rem}
+.erklaert .shot p{margin:4px 0 0;font-size:.85rem;color:var(--muted)}
+.erklaert .rules{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}
+@media (max-width:600px){.erklaert .rules{grid-template-columns:1fr}}
+.erklaert .rules div{padding:12px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:.9rem}
+.erklaert .rules b{display:block;margin-bottom:2px}
