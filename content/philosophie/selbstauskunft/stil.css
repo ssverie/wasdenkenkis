@@ -1,0 +1,34 @@
+/* Seiteneigene Stile (selbstauskunft) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Selbstauskunft ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .three{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:660px){.erklaert .three{grid-template-columns:1fr}}
+.erklaert .three > div{padding:14px 16px;border-radius:12px;background:var(--bg);font-size:.9rem}
+.erklaert .three .n{font:700 .72rem var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.erklaert .three h4{margin:0 0 4px;font-size:1rem}
+.erklaert .three p{margin:4px 0 0;color:var(--muted)}
+.erklaert .hint-tabs{display:inline-flex;gap:4px;margin-bottom:12px}
+.erklaert .hint-tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .hbox{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:620px){.erklaert .hbox{grid-template-columns:1fr}}
+.erklaert .hbox > div{padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.9rem;min-width:0}
+.erklaert .hbox .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.erklaert .hbox .mark{background:var(--accent-2-soft);color:var(--accent-2);border-radius:4px;padding:0 3px;font-weight:600}
+.erklaert .reveal{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:.9rem}
+.erklaert .reveal.bad{background:var(--bad-soft)}.erklaert .reveal.ok{background:var(--ok-soft)}
+.erklaert .inj{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:620px){.erklaert .inj{grid-template-columns:1fr}}
+.erklaert .inj .ctl{display:flex;flex-direction:column;gap:10px;font-size:.88rem}
+.erklaert .chips{display:flex;flex-wrap:wrap;gap:6px}
+.erklaert .chips button[aria-pressed="true"]{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+.erklaert .sl{display:grid;grid-template-columns:7em 1fr 5em;align-items:center;gap:10px}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent-2)}
+.erklaert .sl output{text-align:right;font:600 .82rem var(--mono)}
+.erklaert .trial{padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.92rem;min-height:5.5em}
+.erklaert .trial .q{font-size:.8rem;color:var(--muted);margin-bottom:4px}
+.erklaert .trial .tag{display:inline-block;font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-top:6px}
+.erklaert .tag.hit{background:var(--ok-soft);color:var(--ok)}.erklaert .tag.miss{background:var(--line);color:var(--muted)}.erklaert .tag.wild{background:var(--bad-soft);color:var(--bad)}
+.erklaert .tally{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;color:var(--muted);margin-top:8px}
+.erklaert .tally b{color:var(--fg);font-variant-numeric:tabular-nums}
+

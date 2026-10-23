@@ -1,0 +1,29 @@
+/* Seiteneigene Stile (identitaet) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Identität ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .cand{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+@media (max-width:700px){.erklaert .cand{grid-template-columns:1fr 1fr}}
+@media (max-width:420px){.erklaert .cand{grid-template-columns:1fr}}
+.erklaert .cand > div{padding:12px 14px;border-radius:12px;background:var(--bg);font-size:.86rem}
+.erklaert .cand h4{margin:0 0 4px;font-size:.98rem}
+.erklaert .cand p{margin:0;color:var(--muted)}
+.erklaert .sc{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.erklaert .sc button{text-align:left;font-weight:500}
+.erklaert .sc button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .res{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+@media (max-width:640px){.erklaert .res{grid-template-columns:1fr 1fr}}
+.erklaert .res > div{padding:10px 12px;border-radius:10px;font-size:.82rem;text-align:center}
+.erklaert .res b{display:block;font-size:.95rem;margin:2px 0 4px}
+.erklaert .res .h{font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.erklaert .r-bleibt{background:var(--ok-soft)}.erklaert .r-bleibt b{color:var(--ok)}
+.erklaert .r-endet{background:var(--bad-soft)}.erklaert .r-endet b{color:var(--bad)}
+.erklaert .r-viele{background:var(--accent-soft)}.erklaert .r-viele b{color:var(--accent)}
+.erklaert .r-anders{background:var(--accent-2-soft)}.erklaert .r-anders b{color:var(--accent-2)}
+.erklaert .sc-note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg)}
+.erklaert .bund{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.erklaert .bund{grid-template-columns:1fr}}
+.erklaert .bund > div{padding:14px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:.9rem}
+.erklaert .bund h4{margin:0 0 6px}
+.erklaert .bund ul{margin:0;padding-left:1.1em}
+

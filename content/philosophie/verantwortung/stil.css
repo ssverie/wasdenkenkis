@@ -1,0 +1,23 @@
+/* Seiteneigene Stile (verantwortung) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Verantwortung ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .who-tabs{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.erklaert .who-tabs button{text-align:left;font-weight:500}
+.erklaert .who-tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .share{display:flex;flex-direction:column;gap:8px}
+.erklaert .share-row{display:grid;grid-template-columns:8em 1fr 2.8em;gap:10px;align-items:center;font-size:.88rem}
+.erklaert .share-row .tr{height:16px;border-radius:5px;background:var(--bg);overflow:hidden}
+.erklaert .share-row .fl{height:100%;border-radius:5px;transition:width .35s}
+.erklaert .share-row .v{text-align:right;font:600 .78rem var(--mono)}
+.erklaert .why-box{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.9rem}
+.erklaert .four{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+@media (max-width:700px){.erklaert .four{grid-template-columns:1fr 1fr}}
+@media (max-width:420px){.erklaert .four{grid-template-columns:1fr}}
+.erklaert .four > div{padding:12px 14px;border-radius:12px;background:var(--bg);font-size:.86rem}
+.erklaert .four h4{margin:0 0 4px;font-size:.98rem}
+.erklaert .four p{margin:0;color:var(--muted)}
+.erklaert .law{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+.erklaert .law div{padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:.92rem}
+.erklaert .law b{display:inline-block;min-width:8.5em}
+

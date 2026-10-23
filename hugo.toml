@@ -80,20 +80,25 @@ enableRobotsTXT = true
     parent = "wissen"
     weight = 41
   [[menus.main]]
+    name = "KI-Philosophie"
+    pageRef = "/philosophie"
+    parent = "wissen"
+    weight = 42
+  [[menus.main]]
     name = "Algorithmen"
     pageRef = "/algorithmen"
     parent = "wissen"
-    weight = 42
+    weight = 43
   [[menus.main]]
     name = "Schach"
     pageRef = "/schach"
     parent = "wissen"
-    weight = 43
+    weight = 44
   [[menus.main]]
     name = "Links"
     pageRef = "/links"
     parent = "wissen"
-    weight = 44
+    weight = 45
   [[menus.main]]
     name = "Tagebuch"
     pageRef = "/tagebuch"

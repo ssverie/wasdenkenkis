@@ -197,3 +197,24 @@
    dadurch wurde die letzte Reihe breiter). Hier statt in content/erklaert/stil.css, damit neue Lieferungen es nicht überschreiben. */
 .erklaert nav.map { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
 .erklaert nav.map a { flex: none; }
+
+/* KI-Philosophie (gleiche Instanz, gleiche Reihe): gemeinsame Bausteine aus der gelieferten Seite, auf .erklaert begrenzt.
+   Der orange Kasten .selbst („Was das Modell selbst dazu sagt“) bleibt bewusst in --accent-2 abgesetzt (Wunsch der Instanz). */
+/* ---- Gemeinsam für KI-Philosophie ---- */
+.erklaert .question{font-family:var(--serif);font-size:1.3rem;line-height:1.45;margin:22px 0;padding:16px 20px;border-radius:12px;background:var(--card);border:1px solid var(--line);text-align:center}
+.erklaert .positions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:680px){.erklaert .positions{grid-template-columns:1fr}}
+.erklaert .positions > div{padding:14px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line);border-top:4px solid var(--accent);font-size:.9rem}
+.erklaert .positions > div:nth-child(2){border-top-color:var(--accent-2)}
+.erklaert .positions > div:nth-child(3){border-top-color:var(--ok)}
+.erklaert .positions h4{margin:0 0 4px;font-size:1rem}
+.erklaert .positions .who{font-size:.76rem;color:var(--muted);margin-bottom:6px}
+.erklaert .positions p{margin:4px 0 0}
+.erklaert .selbst{margin:30px 0;padding:20px 22px;border-radius:14px;background:var(--bg);border:2px solid var(--accent-2);position:relative}
+.erklaert .selbst::before{content:"Was das Modell selbst dazu sagt";display:block;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);margin-bottom:6px}
+.erklaert .selbst p{margin:.6em 0}
+.erklaert .selbst .vorbehalt{font-size:.82rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:8px;margin-top:12px}
+.erklaert .thought{margin:22px 0;padding:16px 18px;border-radius:12px;background:var(--accent-soft);border-left:4px solid var(--accent)}
+.erklaert .thought::before{content:"Gedankenexperiment";display:block;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.erklaert .lit{font-size:.84rem;color:var(--muted)}
+.erklaert .lit li{margin:3px 0}

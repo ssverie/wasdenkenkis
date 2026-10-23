@@ -1,0 +1,28 @@
+/* Seiteneigene Stile (vermenschlichung) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Vermenschlichung ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .hs{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:18px;align-items:start}
+@media (max-width:640px){.erklaert .hs{grid-template-columns:1fr}}
+.erklaert #hsSvg{width:100%;height:auto;display:block;border-radius:10px;background:var(--bg);border:1px solid var(--line)}
+.erklaert .hs-q{display:flex;flex-direction:column;gap:6px}
+.erklaert .hs-q button{text-align:left;font-weight:500;font-size:.88rem}
+.erklaert .hs-out{margin-top:10px;padding:12px 14px;border-radius:10px;background:var(--accent-soft);font-size:.9rem;display:none}
+.erklaert .eliza{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.erklaert .eliza .log{height:240px;overflow-y:auto;padding:12px;background:var(--bg);display:flex;flex-direction:column;gap:6px;font-size:.92rem}
+.erklaert .eliza .m{max-width:85%;padding:7px 11px;border-radius:12px;line-height:1.45}
+.erklaert .eliza .m.e{background:var(--card);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+.erklaert .eliza .m.u{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.erklaert .eliza form{display:flex;gap:8px;padding:10px;background:var(--card);border-top:1px solid var(--line)}
+.erklaert .eliza input{flex:1;min-width:0;font:inherit;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.erklaert .rulebox{display:none;margin-top:10px}
+.erklaert .rulebox pre{font-size:.76rem;margin:0}
+.erklaert .why{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:640px){.erklaert .why{grid-template-columns:1fr}}
+.erklaert .why > div{padding:14px 16px;border-radius:12px;background:var(--bg);font-size:.9rem}
+.erklaert .why h4{margin:0 0 4px}
+.erklaert .why p{margin:0;color:var(--muted)}
+.erklaert .tips{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}
+@media (max-width:600px){.erklaert .tips{grid-template-columns:1fr}}
+.erklaert .tips div{padding:12px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:.9rem}
+

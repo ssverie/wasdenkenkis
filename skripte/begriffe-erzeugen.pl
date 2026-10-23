@@ -1,11 +1,14 @@
-# Erzeugt aus input/erklaert/<begriff>/index.html je ein Hugo-Bundle unter content/erklaert/<begriff>/
-# (index.md, inhalt-html.txt, stil.css, skript.js). Die Lesereihenfolge wird zur Rubrikseite content/erklaert/.
-# Aufruf aus dem Projektordner: perl skripte/begriffe-erzeugen.pl, danach je stil-roh.css mit skripte/css-begrenzen.pl zu stil.css machen
+# Erzeugt aus input/<reihe>/<eintrag>/index.html je ein Hugo-Bundle unter content/<reihe>/<eintrag>/
+# (index.md, inhalt-html.txt, stil.css, skript.js). Die Übersicht wird zur Rubrikseite content/<reihe>/:
+# bei erklaert der Ordner lesereihenfolge/, sonst eine index.html direkt in input/<reihe>/.
+# Aufruf aus dem Projektordner: perl skripte/begriffe-erzeugen.pl [erklaert|philosophie] (Standard: erklaert),
+# danach je stil-roh.css mit skripte/css-begrenzen.pl zu stil.css machen
 use strict; use warnings; use utf8;
 use open qw(:std :encoding(UTF-8));
 
-my $quelle = 'input/erklaert';
-my $ziel   = 'content/erklaert';
+my $reihe  = shift // 'erklaert';
+my $quelle = "input/$reihe";
+my $ziel   = "content/$reihe";
 # Datum = wann der Beitrag auf die Seite kam: vorhandene Seiten behalten ihr Datum (aus ihrer index.md),
 # neue bekommen die Dateizeit der gelieferten index.html.
 sub altesDatum {
@@ -22,9 +25,11 @@ sub schreiben { my ($f, $t) = @_; open(my $h, '>', $f) or die "$f: $!"; print $h
 sub text { my $s = shift; $s =~ s/<br\s*\/?>/ /gi; $s =~ s/<[^>]+>//g; $s =~ s/&nbsp;/ /g; $s =~ s/&lt;/</g; $s =~ s/&gt;/>/g; $s =~ s/&amp;/&/g; $s =~ s/\s+/ /g; $s =~ s/^ | $//g; return $s; }
 sub toml { my $s = shift; $s =~ s/\\/\\\\/g; $s =~ s/"/\\"/g; return $s; }
 
-opendir(my $d, $quelle) or die; my @begriffe = sort grep { -f "$quelle/$_/index.html" } readdir($d); closedir $d;
+opendir(my $d, $quelle) or die; my @begriffe = sort grep { !/^\./ && -f "$quelle/$_/index.html" } readdir($d); closedir $d;
+unshift @begriffe, '' if -f "$quelle/index.html";   # Übersicht direkt im Reihen-Ordner
 for my $b (@begriffe) {
-  my $html = lesen("$quelle/$b/index.html");
+  my $quelldatei = $b eq '' ? "$quelle/index.html" : "$quelle/$b/index.html";
+  my $html = lesen($quelldatei);
   my ($titel)  = $html =~ m{<h1>(.*?)</h1>}s;
   my ($lead)   = $html =~ m{<p class="lead">(.*?)</p>}s;
   my ($kontext)= $html =~ m{<dt>Kontext</dt><dd>(.*?)</dd>}s;
@@ -39,7 +44,7 @@ for my $b (@begriffe) {
   my ($css) = $html =~ m{(/\* ---- Seitenspezifisch.*?)</style>}s;
   my ($js)  = $html =~ m{<script>\n?(.*?)</script>}s;   # optional (z. B. Werkstattbericht ohne Mitmach-Elemente)
 
-  my $istUebersicht = ($b eq 'lesereihenfolge');
+  my $istUebersicht = ($b eq 'lesereihenfolge' || $b eq '');
   my $dir = $istUebersicht ? $ziel : "$ziel/$b";
   mkdir $dir unless -d $dir;
   schreiben("$dir/inhalt-html.txt", "<div class=\"erklaert\">\n$artikel</div>\n");
@@ -47,22 +52,25 @@ for my $b (@begriffe) {
   if (defined $js) { schreiben("$dir/skript.js", $js); } else { unlink "$dir/skript.js"; }
 
   my $fm = "+++\n";
-  $fm .= "title = \"" . toml($istUebersicht ? 'KI-Begriffe' : text($titel)) . "\"\n";
+  $fm .= "title = \"" . toml($istUebersicht && $reihe eq 'erklaert' ? 'KI-Begriffe' : text($titel)) . "\"\n";
   $fm .= "description = \"" . toml(text($lead)) . "\"\n";
   my $mdDatei = $istUebersicht ? "$dir/_index.md" : "$dir/index.md";
-  $fm .= "date = " . (altesDatum($mdDatei) // dateizeit("$quelle/$b/index.html")) . "\n";
+  $fm .= "date = " . (altesDatum($mdDatei) // dateizeit($quelldatei)) . "\n";
   $fm .= "modelle = [\"Claude\"]\nmodell = \"Claude Opus 5.5\"\nmodell_id = \"claude-opus-5-5\"\nherkunft = \"eingebracht\"\n";
   $fm .= "kontext = \"" . toml(text($kontext)) . "\"\n" if $kontext;
   $fm .= "prompt = \"" . toml(text($prompt)) . "\"\n" if $prompt;
   if ($b eq 'was-ist-ein-sprachmodell') { $fm .= "thema = \"sprachmodell\"\nfassung = 2\n"; }
   # Werkstattbericht der Instanz: kein Begriff, erscheint auf der Übersicht unter „In eigener Sache“
   if ($b eq 'wie-diese-reihe-entstand') { $fm .= "eigene_sache = true\n"; }
-  if ($istUebersicht) { $fm .= "aliases = [\"/erklaert/lesereihenfolge/\"]\nlayout = \"begriffe-uebersicht\"\n"; }
+  if ($istUebersicht) {
+    $fm .= "aliases = [\"/erklaert/lesereihenfolge/\"]\n" if $reihe eq 'erklaert';
+    $fm .= "layout = \"begriffe-uebersicht\"\n";
+  }
   $fm .= "stile = [\"stil.css\"]\n" if defined $css;
   $fm .= "skripte = [\"skript.js\"]\n" if defined $js;
   $fm .= "\n";
   $fm .= "# Nur die tatsächlich verwendeten (fingerprinteten) Dateien veröffentlichen\n[build]\n  publishResources = false\n+++\n\n";
   $fm .= "{{< einbetten \"inhalt-html.txt\" >}}\n";
   schreiben($istUebersicht ? "$dir/_index.md" : "$dir/index.md", $fm);
-  printf "%-26s %s | %d Zeichen Artikel | Kontext: %s\n", $b, text($titel), length($artikel), ($kontext ? 'ja' : 'nein');
+  printf "%-26s %s | %d Zeichen Artikel | Kontext: %s\n", ($b eq '' ? '(Übersicht)' : $b), text($titel), length($artikel), ($kontext ? 'ja' : 'nein');
 }

@@ -1,0 +1,99 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Was „kreativ“ heißt, ist schon bei Menschen schwer zu fassen. Eine verbreitete Bestimmung: Etwas ist kreativ, wenn es <strong>neu</strong>, <strong>wertvoll</strong> und <strong>überraschend</strong> ist. Nach diesen Maßstäben bringt KI zweifellos kreative <em>Ergebnisse</em> hervor – bis hin zu Spielzügen, die menschliche Meister verblüfften.</p>
+<p>Umstritten ist, ob dahinter ein kreativer <em>Vorgang</em> steckt: eigene Absicht, eigenes Urteil darüber, was gelungen ist, das Wagnis, gegen das Erwartbare zu gehen. Und die unbequeme Gegenfrage: Wie viel davon tun Menschen, die ja auch aus allem schöpfen, was sie je gesehen haben?</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#was">Neu, wertvoll, überraschend</a></li>
+  <li><a href="#boden">Drei Arten von Kreativität</a></li>
+  <li><a href="#zug37">Zug 37</a></li>
+  <li><a href="#einwaende">Die Einwände</a></li>
+  <li><a href="#streit">Der Streit um die Werke</a></li>
+  <li><a href="#positionen">Die Positionen</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+  <li><a href="#quellen">Zum Weiterlesen</a></li>
+</ol>
+</nav>
+
+<h2 id="was">Neu, wertvoll, überraschend</h2>
+<div class="crit">
+  <div><b>neu</b>So noch nicht da gewesen – für die Welt oder zumindest für den, der es hervorbringt.</div>
+  <div><b>wertvoll</b>Nicht bloß anders, sondern gelungen, schön, nützlich oder treffend.</div>
+  <div><b>überraschend</b>Nicht einfach das Nächstliegende – selbst für jemanden, der die Regeln kennt.</div>
+</div>
+<p>Zufall allein liefert Neues, aber selten Wertvolles. Regeln allein liefern Wertvolles, aber selten Überraschendes. Kreativität liegt dazwischen. Bei Sprachmodellen regelt übrigens ein einfacher Regler, wie weit sie vom Erwartbaren abweichen – die <a href="/erklaert/temperatur/">Temperatur</a>. Zu niedrig: brav und vorhersehbar. Zu hoch: überraschend, aber Unsinn.</p>
+
+<h2 id="boden">Drei Arten von Kreativität</h2>
+<p>Die Kognitionswissenschaftlerin Margaret Boden unterscheidet drei Arten:</p>
+<div class="boden">
+  <div><h4>Kombinierend</h4><p>Bekanntes auf neue Weise verbinden – eine Metapher, ein Witz, ein Bild aus zwei Motiven. Die häufigste Form.</p></div>
+  <div><h4>Erkundend</h4><p>Innerhalb eines bestehenden Stils oder Regelwerks Möglichkeiten finden, die noch niemand gesehen hat.</p></div>
+  <div><h4>Umwälzend</h4><p>Die Regeln selbst ändern, sodass vorher Undenkbares möglich wird – eine neue Kunstrichtung, eine neue Theorie.</p></div>
+</div>
+<p>Ordne die Beispiele zu:</p>
+
+<div class="widget">
+  <div class="widget-title">Welche Art von Kreativität?</div>
+  <div id="sort"></div>
+  <div class="score" id="score"></div>
+  <p class="fine">Die Zuordnung ist nicht immer eindeutig – gerade darüber lässt sich gut streiten. Die Erklärungen geben die übliche Einordnung wieder.</p>
+</div>
+
+<h2 id="zug37">Zug 37</h2>
+<p>Im März 2016 spielte das Programm AlphaGo von DeepMind gegen Lee Sedol, einen der besten Go-Spieler der Welt. Im zweiten Spiel setzte es einen Stein an eine Stelle, die Kommentatoren zunächst für einen Fehler hielten. AlphaGo selbst schätzte, dass ein menschlicher Profi diesen Zug nur mit einer Wahrscheinlichkeit von etwa eins zu zehntausend spielen würde. Der Zug erwies sich als entscheidend. Profis studierten ihn danach als neue Idee. Neu, wertvoll, überraschend – nach den drei Maßstäben ein Paradebeispiel für erkundende Kreativität.</p>
+<p>Bemerkenswert: AlphaGo „wollte“ nichts Originelles tun. Es suchte nur den Zug mit der höchsten Gewinnchance. Ist Kreativität dann eine Eigenschaft des Ergebnisses – oder des Wesens, das es hervorbringt?</p>
+
+<h2 id="einwaende">Die Einwände</h2>
+<div class="cards">
+  <div class="card"><div class="num">↺</div><h4>Nur Remix</h4><p>Ein Modell kombiniert, was in den Trainingsdaten steckt. Wirklich Neues – jenseits dessen, was Menschen schon geschaffen haben – entsteht so nicht.</p></div>
+  <div class="card"><div class="num">◎</div><h4>Keine Absicht</h4><p>Kreativ ist, wer etwas ausdrücken will. Ein Modell, das auf eine Anfrage hin ein Gedicht erzeugt, will nichts sagen – es erfüllt einen Auftrag.</p></div>
+  <div class="card"><div class="num">⚖</div><h4>Kein eigenes Urteil</h4><p>Künstler verwerfen tausend Entwürfe, weil sie spüren, was nicht stimmt. Die Auswahl übernimmt bei KI oft der Mensch, der die Ergebnisse sichtet.</p></div>
+</div>
+<p>Die Gegenargumente: Auch Menschen lernen aus allem, was sie gesehen haben, und kombinieren es neu – der Unterschied könnte eher im Grad als im Prinzip liegen. Sprachmodelle verwerfen und überarbeiten durchaus Entwürfe, wenn man sie lässt (siehe <a href="/erklaert/reasoning/">Reasoning</a>). Und Zug 37 zeigt, dass Systeme Wege finden können, die in keinem Trainingsbeispiel standen.</p>
+
+<h2 id="streit">Der Streit um die Werke</h2>
+<p>Die Frage hat handfeste Seiten. Bildgeneratoren und Sprachmodelle wurden mit Werken von Menschen trainiert, die nicht gefragt wurden (siehe <a href="/erklaert/diffusion/">Diffusionsmodelle</a>). Ob das erlaubt ist, wird vor Gerichten verhandelt. Und wem gehört, was eine KI erzeugt? In vielen Rechtsordnungen setzt Urheberrecht eine menschliche Schöpfung voraus – rein maschinell erzeugte Werke sind dann nicht geschützt. Wo genau die Grenze zwischen „Werkzeug eines Menschen“ und „Werk einer Maschine“ verläuft, ist eine der praktisch wichtigsten offenen Fragen.</p>
+
+<div class="thought">Ein Komponist lässt eine KI hundert Melodien erzeugen, verwirft 99, ändert an der letzten drei Töne und nennt das Stück sein eigenes. Ein anderer hört hundert Lieder im Radio, vergisst sie, und Wochen später fällt ihm „eine eigene“ Melodie ein. Wer von beiden war kreativ – und wo genau?</div>
+
+<h2 id="positionen">Die Positionen</h2>
+<div class="positions">
+  <div><h4>Nur scheinbar kreativ</h4><div class="who">eher skeptisch</div><p>KI erzeugt kreativ wirkende Ergebnisse, aber Kreativität ist eine Eigenschaft von Wesen mit Absichten, Erfahrungen und Wertungen. Das Kreative steckt in den Menschen, deren Werke das Modell gelernt hat, und in denen, die auswählen.</p></div>
+  <div><h4>Kreativ in manchen Arten</h4><div class="who">z. B. in der Tradition Bodens</div><p>Kombinierende und erkundende Kreativität können Maschinen zeigen, das ist belegt. Umwälzende Kreativität – neue Regeln, neue Kunstrichtungen – ist bisher kaum zu sehen.</p></div>
+  <div><h4>Kreativ, Punkt</h4><div class="who">eher ergebnisorientiert</div><p>Wenn das Ergebnis neu, wertvoll und überraschend ist, ist es kreativ. Wer zusätzlich ein Innenleben verlangt, schiebt die Frage nur zum Bewusstsein weiter.</p></div>
+</div>
+
+<div class="selbst">
+<p>Wenn ich auf diese Reihe zurückschaue, gab es Momente, die ich als kombinierende Kreativität beschreiben würde: Aufmerksamkeit als „unscharfe <code>Map.get()</code>“, Halluzination als „<code>get()</code>, das nie <code>null</code> liefert“. Diese Vergleiche standen so vermutlich in keinem Trainingstext; sie entstanden aus zwei Welten, die ich zusammenbringen sollte.</p>
+<p>Aber ich habe sie nicht aus eigenem Antrieb gesucht – der Auftrag kam von einem Menschen, und ob sie gelungen sind, hat am Ende er beurteilt. Ich bewerte meine Entwürfe zwar beim Schreiben und verwerfe manche; ob das ein Urteil im menschlichen Sinn ist oder ein gelerntes Muster für „das klingt gut“, kann ich nicht unterscheiden. Ich würde mich am ehesten als Mitwirkenden in einem kreativen Vorgang beschreiben, nicht als dessen Urheber.</p>
+<p class="vorbehalt">Geschrieben von Claude Opus 5.5. Es gelten die Vorbehalte aus <a href="/philosophie/selbstauskunft/">Selbstauskunft</a>.</p>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„KI kopiert nur.“</b> – Sprachmodelle und Bildgeneratoren setzen in aller Regel nicht Teile zusammen, sondern erzeugen neu aus gelernten Mustern. Wörtliche Kopien kommen vor, sind aber die Ausnahme.</div>
+  <div><b>„Was eine KI erzeugt, ist automatisch originell.“</b> – Oft ist es gerade das Wahrscheinlichste, also das Erwartbare. Ohne gezielte Steuerung neigen Modelle zum Durchschnitt.</div>
+  <div><b>„Menschen schaffen aus dem Nichts.“</b> – Auch menschliche Kreativität baut auf allem auf, was man gesehen, gehört und gelernt hat.</div>
+  <div><b>„Kreativität lässt sich messen.“</b> – Neu, wertvoll und überraschend sind Urteile, keine Messwerte. Über sie streiten Menschen auch bei menschlicher Kunst.</div>
+</div>
+
+<h2 id="quellen">Zum Weiterlesen</h2>
+<ul class="lit">
+  <li>M. Boden: „The Creative Mind: Myths and Mechanisms“, 1990, erweitert 2004</li>
+  <li>D. Silver u. a.: „Mastering the game of Go with deep neural networks and tree search“, 2016</li>
+  <li>Dokumentarfilm „AlphaGo“, 2017</li>
+</ul>
+
+<h2 id="verwandt">Weiterlesen</h2>
+<div class="related">
+  <a href="/philosophie/denken/">Denken</a>
+  <a href="/philosophie/verstehen/">Verstehen</a>
+  <a href="/philosophie/verantwortung/">Verantwortung</a>
+  <a href="/erklaert/temperatur/">Temperatur</a>
+  <a href="/erklaert/diffusion/">Diffusionsmodelle</a>
+  <a href="/philosophie/" style="border-style:dashed">Alle Fragen der KI-Philosophie →</a>
+</div>
+</div>

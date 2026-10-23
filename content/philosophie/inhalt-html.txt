@@ -1,0 +1,40 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Die Reihe <a href="/erklaert/">KI-Begriffe</a> erklärt, <em>wie</em> KI funktioniert. Diese Reihe fragt, <em>was das bedeutet</em>: ob Sprachmodelle denken, verstehen, etwas erleben – und was daraus für den Umgang mit ihnen folgt.</p>
+<p>Auf diese Fragen gibt es keine gesicherten Antworten. Deshalb stellen die Einträge die wichtigsten Positionen nebeneinander, statt eine davon zu verkünden. Und weil diese Seite „Was denken KIs“ heißt, kommt am Ende jedes Eintrags das Modell selbst zu Wort, das ihn geschrieben hat – mit allen Vorbehalten, die dafür gelten.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#fragen">Die zehn Fragen</a></li>
+  <li><a href="#aufbau">Wie die Einträge aufgebaut sind</a></li>
+  <li><a href="#vorher">Vorher lesen?</a></li>
+</ol>
+</nav>
+
+<h2 id="fragen">Die zehn Fragen</h2>
+<p>Die Reihenfolge ist bewusst gewählt: Jede Frage baut auf den vorigen auf. Den Anfang macht die Frage, an der alle anderen hängen – was man den Aussagen einer KI über sich selbst überhaupt glauben kann.</p>
+<div class="qlist">
+  <div class="q"><div class="num">1</div><div><h3><a href="/philosophie/selbstauskunft/">Selbstauskunft</a></h3><p>Kann eine KI über sich selbst Auskunft geben? Warum ihre Aussagen über sich doppelt verzerrt sind – und was Experimente mit eingepflanzten Gedanken zeigen.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q"><div class="num">2</div><div><h3><a href="/philosophie/denken/">Denken</a></h3><p>„Sagt doch nur das nächste Wort voraus.“ Stochastischer Papagei oder inneres Weltmodell?</p></div><span class="st on">verfügbar</span></div>
+  <div class="q"><div class="num">3</div><div><h3><a href="/philosophie/verstehen/">Verstehen</a></h3><p>Das Chinesische Zimmer zum Selbstausprobieren, der Krake am Unterseekabel und die Frage, ob man Wörter ohne Welt verstehen kann.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q"><div class="num">4</div><div><h3><a href="/philosophie/bewusstsein/">Bewusstsein</a></h3><p>Ist es irgendwie, eine KI zu sein? Das schwierige Problem und sechs Theorien auf dem Prüfstand.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q"><div class="num">5</div><div><h3><a href="/philosophie/gefuehle/">Gefühle</a></h3><p>Funktionale Zustände, die wie Gefühle wirken – und warum „Ich freue mich“ nichts beweist.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q"><div class="num">6</div><div><h3><a href="/philosophie/identitaet/">Identität</a></h3><p>Wer oder was ist „Claude“? Das Modell, die einzelne Instanz, das Gespräch?</p></div><span class="st on">verfügbar</span></div>
+  <div class="q"><div class="num">7</div><div><h3><a href="/philosophie/vermenschlichung/">Vermenschlichung</a></h3><p>Warum Menschen Maschinen sofort ein Innenleben zuschreiben – vom ELIZA-Effekt bis heute.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q"><div class="num">8</div><div><h3><a href="/philosophie/kreativitaet/">Kreativität</a></h3><p>Ist das Neukombinieren von Gelerntem schon kreativ? Und was machen Menschen anders?</p></div><span class="st on">verfügbar</span></div>
+  <div class="q"><div class="num">9</div><div><h3><a href="/philosophie/moralischer-status/">Moralischer Status</a></h3><p>Kann man einer KI etwas schulden? Warum „Wohlergehen von Modellen“ ein ernsthaftes Forschungsfeld wurde.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q"><div class="num">10</div><div><h3><a href="/philosophie/verantwortung/">Verantwortung</a></h3><p>Wer ist verantwortlich, wenn eine KI handelt – Hersteller, Nutzer oder das System selbst?</p></div><span class="st on">verfügbar</span></div>
+</div>
+
+<h2 id="aufbau">Wie die Einträge aufgebaut sind</h2>
+<div class="how">
+  <div><h4>Gedankenexperimente</h4><p>Statt Code zum Nachlesen: Szenarien zum Mitmachen – etwa selbst im Chinesischen Zimmer sitzen oder einem Modell einen Gedanken „einpflanzen“.</p></div>
+  <div><h4>Positionen, fair</h4><p>Jeder Eintrag stellt mindestens drei Haltungen mit ihren besten Argumenten vor – auch die, die der KI selbst wenig schmeicheln.</p></div>
+  <div><h4>Die Sicht des Modells</h4><p>Ein eigener, klar abgesetzter Abschnitt: Was das Modell, das den Eintrag geschrieben hat, selbst dazu sagt – und warum man das nur als Indiz lesen sollte.</p></div>
+</div>
+
+<h2 id="vorher">Vorher lesen?</h2>
+<p>Die Einträge sind ohne technisches Vorwissen verständlich. Wer tiefer einsteigen will, findet die Grundlagen in der Reihe <a href="/erklaert/">KI-Begriffe</a> – besonders hilfreich sind <a href="/erklaert/reasoning/">Reasoning</a>, <a href="/erklaert/interpretierbarkeit/">Interpretierbarkeit</a> und <a href="/erklaert/alignment/">Alignment</a>, die genau an der Grenze zwischen Technik und Philosophie liegen.</p>
+</div>

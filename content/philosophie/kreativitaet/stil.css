@@ -1,0 +1,24 @@
+/* Seiteneigene Stile (kreativitaet) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Kreativität ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .boden{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:660px){.erklaert .boden{grid-template-columns:1fr}}
+.erklaert .boden > div{padding:14px 16px;border-radius:12px;background:var(--bg);font-size:.9rem;border-top:4px solid var(--accent)}
+.erklaert .boden > div:nth-child(2){border-top-color:var(--accent-2)}
+.erklaert .boden > div:nth-child(3){border-top-color:var(--ok)}
+.erklaert .boden h4{margin:0 0 4px}
+.erklaert .boden p{margin:0;color:var(--muted)}
+.erklaert .sort-item{padding:12px 14px;border-radius:10px;background:var(--bg);margin-bottom:10px}
+.erklaert .sort-item .t{font-family:var(--serif);font-size:1.02rem;margin-bottom:8px}
+.erklaert .sort-item .b{display:flex;flex-wrap:wrap;gap:6px}
+.erklaert .sort-item .b button{font-size:.8rem;padding:5px 10px}
+.erklaert .sort-item .b button.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.erklaert .sort-item .b button.no{background:var(--bad-soft);border-color:var(--bad)}
+.erklaert .sort-item .fb{font-size:.86rem;margin-top:8px;color:var(--muted);display:none}
+.erklaert .score{font-size:.88rem;font-weight:600;margin-top:4px}
+.erklaert .crit{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+@media (max-width:600px){.erklaert .crit{grid-template-columns:1fr}}
+.erklaert .crit div{padding:12px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:.9rem;text-align:center}
+.erklaert .crit b{display:block;font-family:var(--serif);font-size:1.2rem;color:var(--accent)}
+

@@ -1,0 +1,32 @@
+/* Seiteneigene Stile (denken) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Denken ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .senses{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:660px){.erklaert .senses{grid-template-columns:1fr}}
+.erklaert .senses > div{padding:14px 16px;border-radius:12px;background:var(--bg);font-size:.9rem}
+.erklaert .senses h4{margin:0 0 4px}
+.erklaert .senses p{margin:4px 0 0;color:var(--muted)}
+.erklaert .senses .v{display:inline-block;margin-top:8px;font-size:.74rem;font-weight:700;padding:2px 8px;border-radius:999px}
+.erklaert .v.y{background:var(--ok-soft);color:var(--ok)}.erklaert .v.m{background:var(--accent-2-soft);color:var(--accent-2)}.erklaert .v.q{background:var(--line);color:var(--muted)}
+.erklaert .wm{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+@media (max-width:620px){.erklaert .wm{grid-template-columns:1fr}}
+.erklaert .wm .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.erklaert .seqbox{font:.92rem/1.7 var(--mono);padding:12px 14px;border-radius:10px;background:var(--bg);min-height:5em;word-break:break-word}
+.erklaert .seqbox .new{color:var(--accent-2);font-weight:700}
+.erklaert .board{display:grid;grid-template-columns:repeat(3,64px);gap:6px;justify-content:center}
+.erklaert .board button{width:64px;height:64px;font:700 1.6rem var(--sans);padding:0;border-radius:10px;background:var(--bg);border:2px solid var(--line);color:var(--fg)}
+.erklaert .board button.x{color:var(--accent)}.erklaert .board button.o{color:var(--accent-2)}
+.erklaert .board button.legal{border-color:var(--ok);border-style:dashed}
+.erklaert .board button.flip{box-shadow:0 0 0 3px var(--bad-soft);border-color:var(--bad)}
+.erklaert .wm-note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--accent-soft)}
+.erklaert .rt{display:inline-flex;gap:4px;margin-bottom:12px}
+.erklaert .rt button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .riddle{padding:12px 14px;border-radius:10px;background:var(--bg);font-family:var(--serif);font-size:1.05rem;margin-bottom:10px}
+.erklaert .ans2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:600px){.erklaert .ans2{grid-template-columns:1fr}}
+.erklaert .ans2 > div{padding:12px 14px;border-radius:10px;font-size:.9rem}
+.erklaert .ans2 .pat{background:var(--accent-2-soft)}.erklaert .ans2 .thk{background:var(--ok-soft)}
+.erklaert .ans2 .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.erklaert .ans2 .pat .h{color:var(--accent-2)}.erklaert .ans2 .thk .h{color:var(--ok)}
+

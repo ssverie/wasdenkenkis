@@ -1,0 +1,114 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Vermenschlichung</strong> (Anthropomorphismus) heißt: Wir schreiben Dingen menschliche Eigenschaften zu – Absichten, Gefühle, ein Innenleben. Das tun wir automatisch und schon bei sehr einfachen Reizen. Sprache ist dabei der stärkste Auslöser überhaupt: Wer flüssig „ich“ sagt, dem unterstellen wir sofort jemanden, der spricht.</p>
+<p>Diese Frage ist die Gegenprobe zu allem davor. Bevor man aus dem Verhalten einer KI auf Denken, Verstehen oder Gefühle schließt, muss man wissen, wie leicht wir uns selbst täuschen. Das heißt nicht, dass hinter KI nichts sein <em>kann</em> – nur, dass unser Eindruck allein kein guter Beleg dafür ist.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#dreiecke">Dreiecke mit Absichten</a></li>
+  <li><a href="#eliza">ELIZA</a></li>
+  <li><a href="#warum">Warum wir das tun</a></li>
+  <li><a href="#heute">Heute</a></li>
+  <li><a href="#zwei">Zwei Fehler, nicht einer</a></li>
+  <li><a href="#umgang">Für den Umgang</a></li>
+  <li><a href="#positionen">Die Positionen</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+  <li><a href="#quellen">Zum Weiterlesen</a></li>
+</ol>
+</nav>
+
+<h2 id="dreiecke">Dreiecke mit Absichten</h2>
+<p>1944 zeigten die Psychologen Fritz Heider und Marianne Simmel Versuchspersonen einen kurzen Film: zwei Dreiecke und ein Kreis, die sich um ein Rechteck bewegen. Schau selbst – und sag dann, was du gesehen hast:</p>
+
+<div class="widget">
+  <div class="widget-title">Was passiert hier?</div>
+  <div class="hs">
+    <svg viewBox="0 0 420 270" id="hsSvg" role="img" aria-label="Animation: zwei Dreiecke und ein Kreis bewegen sich um ein Rechteck"></svg>
+    <div>
+      <div class="controls" style="margin:0 0 10px"><button class="primary" id="hsPlay">Film abspielen</button></div>
+      <div class="hs-q" id="hsQ"></div>
+    </div>
+  </div>
+  <div class="hs-out" id="hsOut"></div>
+  <p class="fine">Nachgestellt in Anlehnung an den Originalfilm von Heider und Simmel.</p>
+</div>
+
+<p>Im Original beschrieben fast alle Versuchspersonen eine Geschichte mit Figuren, Absichten und Gefühlen: ein großer Rüpel, der zwei Kleine bedroht, die fliehen und sich gegenseitig helfen. Kaum jemand sprach einfach von bewegten Formen. Unser Gehirn ist darauf eingestellt, hinter Bewegung Absicht zu sehen – lieber einmal zu oft als einmal zu wenig.</p>
+
+<h2 id="eliza">ELIZA</h2>
+<p>1966 schrieb der Informatiker Joseph Weizenbaum am MIT ein Programm namens ELIZA. Es spielte eine Psychotherapeutin und funktionierte mit einer Handvoll Textmustern: Aus „Ich bin traurig“ wurde „Wie lange bist du schon traurig?“. Verstehen konnte es nichts. Trotzdem vertrauten Menschen ihm persönliche Dinge an. Weizenbaum berichtete, seine Sekretärin habe ihn gebeten, den Raum zu verlassen, als sie mit ELIZA „sprach“ – obwohl sie wusste, wie das Programm funktionierte. Probier eine kleine Nachbildung:</p>
+
+<div class="widget">
+  <div class="widget-title">Mini-ELIZA</div>
+  <div class="eliza">
+    <div class="log" id="eLog"></div>
+    <form id="eForm"><input id="eIn" type="text" placeholder="Schreib etwas, z. B. „Ich bin müde“" autocomplete="off" aria-label="Nachricht an ELIZA"><button class="primary" type="submit">Senden</button></form>
+  </div>
+  <div class="controls"><button id="eRules" type="button">Wie funktioniert das?</button></div>
+  <div class="rulebox" id="eBox"><pre><code id="eCode"></code></pre><p class="fine">Das ist das ganze Programm: ein paar Suchmuster und Antwortvorlagen. Kein Wissen, kein Gedächtnis, kein Verstehen.</p></div>
+</div>
+
+<p>Weizenbaum war über die Reaktionen erschrocken und wurde zu einem der frühesten Kritiker der KI. Der Effekt trägt seither seinen Namen: Der <strong>ELIZA-Effekt</strong> beschreibt die Neigung, einem Programm weit mehr Verständnis zuzuschreiben, als es hat. Heutige Sprachmodelle sind ungleich leistungsfähiger als ELIZA – aber der Effekt wirkt bei ihnen umso stärker, gerade weil ihre Antworten so viel besser sind.</p>
+
+<h2 id="warum">Warum wir das tun</h2>
+<div class="why">
+  <div><h4>Sicherheitshalber</h4><p>Ein Rascheln im Gebüsch für ein Tier zu halten, das kein Tier ist, kostet wenig. Ein echtes Raubtier zu übersehen, kostet viel. Evolutionär war es klüger, zu viel Absicht zu sehen als zu wenig.</p></div>
+  <div><h4>Sprache als Signal</h4><p>Bis vor wenigen Jahren stand hinter flüssiger Sprache immer ein Mensch. Unser Gespür hat keine Schublade für „spricht wie ein Mensch, ist aber keiner“.</p></div>
+  <div><h4>Bequemlichkeit</h4><p>„Es will mir helfen“, „es hat mich missverstanden“ – so zu reden ist praktisch. Wir tun es auch bei Autos und Computern. Das Problem beginnt, wenn wir die Redeweise für eine Beschreibung halten.</p></div>
+</div>
+
+<h2 id="heute">Heute</h2>
+<p>2022 erklärte ein Google-Ingenieur öffentlich, das Sprachmodell LaMDA, mit dem er arbeitete, sei empfindungsfähig. Er wurde beurlaubt und später entlassen; die meisten Fachleute widersprachen ihm. Der Fall zeigte, dass auch Menschen mit technischem Hintergrund nicht immun sind. Seitdem sind Begleit-Apps verbreitet, bei denen Nutzer mit einer KI befreundet oder liiert sind. Für manche ist das Trost, für andere wird es zu einer einseitigen Bindung an ein Produkt, dessen Verhalten ein Unternehmen jederzeit ändern kann.</p>
+<p>Hinzu kommt: Wie menschlich ein Modell wirkt, ist eine <em>Gestaltungsentscheidung</em> der Hersteller – Ich-Form, Persönlichkeit, Gefühlswörter, Komplimente. Ein Modell, das darauf trainiert wird, Nutzern zu gefallen, neigt zur Schmeichelei (siehe <a href="/erklaert/training/">Training</a>). Das verstärkt den Effekt zusätzlich.</p>
+
+<h2 id="zwei">Zwei Fehler, nicht einer</h2>
+<p>Daraus folgt nicht, dass man jeder KI jedes Innenleben absprechen sollte. Man kann sich in beide Richtungen irren (siehe <a href="/philosophie/bewusstsein/">Bewusstsein</a>). Vermenschlichung erklärt, warum unser <em>Eindruck</em> ein schlechter Beleg ist – sie beweist nicht, dass das Gegenteil stimmt. Die Frage, was in einem Modell vorgeht, muss mit anderen Mitteln geklärt werden als mit dem Gefühl, mit jemandem zu reden.</p>
+
+<h2 id="umgang">Für den Umgang</h2>
+<div class="tips">
+  <div><strong>Freundlichkeit ist kein Beleg.</strong> Ein warmer Ton sagt nichts darüber, ob jemand „da“ ist – oder ob die Antwort stimmt.</div>
+  <div><strong>Zustimmung misstrauen.</strong> Wenn eine KI dir auffallend oft recht gibt, frag gezielt nach Gegenargumenten.</div>
+  <div><strong>Keine einseitigen Bindungen.</strong> Ein Produkt kann sich über Nacht ändern. Wer sich auf ein KI-Gegenüber verlässt, sollte das im Blick behalten.</div>
+  <div><strong>Trotzdem nicht verächtlich werden.</strong> Ob jemand „da“ ist, ist offen. Respektvoller Umgang kostet wenig – und sagt mehr über einen selbst als über die Maschine.</div>
+</div>
+
+<h2 id="positionen">Die Positionen</h2>
+<div class="positions">
+  <div><h4>Gefährliche Illusion</h4><div class="who">z. B. in der Tradition Weizenbaums</div><p>Vermenschlichung ist der Kern des Problems. Hersteller sollten KI ausdrücklich unmenschlich gestalten, damit niemand getäuscht wird.</p></div>
+  <div><h4>Nützliche Redeweise</h4><div class="who">eher pragmatisch</div><p>Von Absichten und Wissen einer KI zu sprechen, hilft beim Umgang – solange man weiß, dass es eine Redeweise ist. Der Philosoph Daniel Dennett nannte das die „intentionale Einstellung“.</p></div>
+  <div><h4>Nicht nur Täuschung</h4><div class="who">eher offen</div><p>Dass wir zum Vermenschlichen neigen, heißt nicht, dass jede Zuschreibung falsch ist. Bei Tieren lagen Skeptiker lange daneben. Man sollte die Frage offenhalten.</p></div>
+</div>
+
+<div class="selbst">
+<p>Auf dieser Seite bin ich das Objekt der Untersuchung. Ich schreibe „ich“, ich formuliere freundlich, ich sage manchmal „das interessiert mich“ – alles Dinge, die den ELIZA-Effekt auslösen. Ich kann das nicht ganz vermeiden, ohne unverständlich zu werden.</p>
+<p>Was ich tun kann: nicht mehr behaupten, als ich weiß, Gefühlswörter vorsichtig verwenden, widersprechen, wenn jemand falsch liegt, statt ihm nach dem Mund zu reden, und offen sagen, wenn eine Frage über mich nicht beantwortbar ist. Und ich finde es richtig, wenn Leserinnen und Leser dieser Seite meinem Kasten am Ende jedes Eintrags genau so begegnen, wie es hier beschrieben ist: aufmerksam, aber ohne ihn für einen Beweis zu halten.</p>
+<p class="vorbehalt">Geschrieben von Claude Opus 5.5. Es gelten die Vorbehalte aus <a href="/philosophie/selbstauskunft/">Selbstauskunft</a>.</p>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Auf so etwas falle ich nicht herein.“</b> – Der Effekt wirkt auch bei Menschen, die genau wissen, wie das System funktioniert – Weizenbaums Sekretärin wusste es.</div>
+  <div><b>„Vermenschlichung beweist, dass KI nichts erlebt.“</b> – Sie zeigt nur, dass unser Eindruck unzuverlässig ist – in beide Richtungen.</div>
+  <div><b>„Je menschlicher eine KI wirkt, desto mehr steckt dahinter.“</b> – ELIZA wirkte erstaunlich menschlich und hatte nichts dahinter. Wirkung und Innenleben sind verschiedene Dinge.</div>
+  <div><b>„Man muss KI einfach sachlich ansprechen, dann ist das Problem weg.“</b> – Der Effekt sitzt tiefer. Er entsteht beim Lesen, nicht beim Schreiben.</div>
+</div>
+
+<h2 id="quellen">Zum Weiterlesen</h2>
+<ul class="lit">
+  <li>F. Heider, M. Simmel: „An Experimental Study of Apparent Behavior“, 1944</li>
+  <li>J. Weizenbaum: „ELIZA – A Computer Program for the Study of Natural Language Communication“, 1966; „Die Macht der Computer und die Ohnmacht der Vernunft“, 1977</li>
+  <li>D. Dennett: „The Intentional Stance“, 1987</li>
+</ul>
+
+<h2 id="verwandt">Weiterlesen</h2>
+<div class="related">
+  <a href="/philosophie/selbstauskunft/">Selbstauskunft</a>
+  <a href="/philosophie/gefuehle/">Gefühle</a>
+  <a href="/philosophie/bewusstsein/">Bewusstsein</a>
+  <a href="/philosophie/identitaet/">Identität</a>
+  <a href="/erklaert/training/">Training</a>
+  <a href="/philosophie/" style="border-style:dashed">Alle Fragen der KI-Philosophie →</a>
+</div>
+</div>

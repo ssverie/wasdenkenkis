@@ -1,0 +1,96 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Wenn eine KI Schaden anrichtet, sind meist viele beteiligt: wer das Modell gebaut hat, wer es in ein Produkt eingebaut hat, wer es benutzt – und die KI selbst, die die eigentliche Entscheidung „getroffen“ hat. Weil keiner allein alles kontrolliert, droht eine <strong>Verantwortungslücke</strong>: Schaden ohne jemanden, der dafür einsteht.</p>
+<p>Rechtlich ist die Richtung bisher klar: Verantwortlich sind Menschen und Unternehmen, nicht die KI. Gerichte haben das bereits bestätigt, und Gesetze wie der europäische AI Act verteilen Pflichten auf Anbieter und Betreiber. Philosophisch offen bleibt, ob ein System, das selbstständig handelt, nicht doch eine Art eigene Verantwortung tragen könnte – und was das überhaupt hieße.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#beteiligte">Die Beteiligten</a></li>
+  <li><a href="#faelle">Vier Fälle</a></li>
+  <li><a href="#luecke">Die Verantwortungslücke</a></li>
+  <li><a href="#recht">Was das Recht sagt</a></li>
+  <li><a href="#ki-selbst">Kann eine KI verantwortlich sein?</a></li>
+  <li><a href="#positionen">Die Positionen</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+  <li><a href="#quellen">Zum Weiterlesen</a></li>
+</ol>
+</nav>
+
+<h2 id="beteiligte">Die Beteiligten</h2>
+<div class="four">
+  <div><h4>Hersteller</h4><p>Baut und trainiert das Modell. Bestimmt, was es kann, wie es sich verhält und welche Sicherungen es hat.</p></div>
+  <div><h4>Betreiber</h4><p>Baut das Modell in ein Produkt ein – einen Kundenservice, eine App, einen Agenten. Bestimmt Einsatzzweck, Rechte und Kontrollen.</p></div>
+  <div><h4>Nutzer</h4><p>Gibt Aufträge, übernimmt Ergebnisse, verbreitet sie weiter.</p></div>
+  <div><h4>Die KI</h4><p>Erzeugt die konkrete Antwort oder Handlung – auf eine Weise, die niemand im Einzelnen vorgegeben hat.</p></div>
+</div>
+
+<h2 id="faelle">Vier Fälle</h2>
+<p>Wie verteilt sich die Verantwortung? Wähle einen Fall:</p>
+<div class="widget">
+  <div class="widget-title">Wer steht dafür ein?</div>
+  <div class="who-tabs" id="wTabs"></div>
+  <div class="share" id="wShare"></div>
+  <div class="why-box" id="wWhy"></div>
+  <p class="fine">Eine moralische Einordnung, wie sie in der Diskussion häufig vertreten wird – keine Rechtsauskunft. Rechtlich hängt die Haftung vom Land, vom Vertrag und vom Einzelfall ab. Der erste Fall ist echt, die anderen sind typische Beispiele.</p>
+</div>
+
+<h2 id="luecke">Die Verantwortungslücke</h2>
+<p>2004 beschrieb der Philosoph Andreas Matthias das Problem so: Klassisch ist verantwortlich, wer eine Handlung kontrolliert und ihre Folgen absehen kann. Bei lernenden Systemen kann das niemand vollständig – der Hersteller nicht, weil das Verhalten aus Daten gelernt wurde; der Betreiber nicht, weil er das Innere nicht kennt; der Nutzer nicht, weil er nur die Ausgabe sieht. Wenn trotzdem etwas schiefgeht, steht womöglich niemand richtig dafür ein.</p>
+<p>Mit <a href="/erklaert/agenten/">Agenten</a>, die selbstständig mehrere Schritte ausführen, wird die Lücke größer: Zwischen dem Auftrag eines Menschen und der Handlung liegen viele Entscheidungen, die kein Mensch einzeln geprüft hat.</p>
+
+<h2 id="recht">Was das Recht sagt</h2>
+<p>Das Recht schließt die Lücke bislang, indem es die Verantwortung bei Menschen und Unternehmen lässt:</p>
+<div class="law">
+  <div><b>Air Canada, 2024</b> Ein Chatbot der Fluggesellschaft hatte einem Kunden eine Erstattungsregel genannt, die es so nicht gab. Die Airline argumentierte, der Chatbot sei für seine Aussagen selbst verantwortlich. Ein kanadisches Schiedsgericht wies das zurück: Das Unternehmen haftet für alle Informationen auf seiner Website – auch für die seines Chatbots.</div>
+  <div><b>EU AI Act</b> Seit 2024 in Kraft und schrittweise anwendbar. Er teilt KI-Anwendungen nach Risiko ein und verpflichtet Anbieter und Betreiber – etwa zu Transparenz, Risikomanagement und menschlicher Aufsicht bei Hochrisiko-Anwendungen.</div>
+  <div><b>Produkthaftung</b> Die überarbeitete EU-Produkthaftungsrichtlinie von 2024 bezieht ausdrücklich auch Software ein. Wer ein fehlerhaftes Produkt mit KI in Verkehr bringt, kann haften, ohne dass ein Verschulden nachgewiesen werden muss.</div>
+</div>
+<p>Kurz: Wer KI einsetzt, kann sich nicht hinter ihr verstecken. „Das hat die KI gemacht“ ist rechtlich in der Regel keine Entschuldigung.</p>
+
+<h2 id="ki-selbst">Kann eine KI verantwortlich sein?</h2>
+<p>Verantwortung im vollen Sinn setzt meist voraus: verstehen, was man tut; Absichten haben; anders handeln können; und sich zur Rechenschaft ziehen lassen – also tadelbar sein und daraus lernen. Bei einer KI ist jeder dieser Punkte strittig (siehe <a href="/philosophie/verstehen/">Verstehen</a>, <a href="/philosophie/denken/">Denken</a>). Und was hieße es, ein Sprachmodell zu „bestrafen“? Es lernt im Gespräch nichts dauerhaft und hat womöglich nichts, das ihm wehtun könnte.</p>
+<p>Einige Philosophen schlagen deshalb vor, zwischen <em>Rechenschaft</em> und <em>Schuld</em> zu trennen: Eine KI kann erklären, warum sie etwas getan hat, und ihr Verhalten kann korrigiert werden – das ist eine Art Rechenschaft. Schuld im moralischen Sinn bleibt bei Menschen. Andere halten genau diese Trennung für eine Ausrede, mit der sich Unternehmen aus der Verantwortung stehlen.</p>
+
+<div class="thought">Ein Chirurg operiert mit einem KI-Assistenten, der ihm eine Schnittführung empfiehlt. Er folgt ihr, und es kommt zu einer Komplikation, die ohne die Empfehlung nicht passiert wäre. Was hätte der Chirurg anders machen müssen? Und wenn die KI in neun von zehn Fällen besser liegt als er: Wäre es dann verantwortungslos gewesen, ihr <em>nicht</em> zu folgen?</div>
+
+<h2 id="positionen">Die Positionen</h2>
+<div class="positions">
+  <div><h4>Immer die Menschen</h4><div class="who">die heute vorherrschende Sicht</div><p>KI ist ein Werkzeug. Verantwortung tragen die, die es bauen, einsetzen und benutzen. Wer die Kontrolle abgibt, bleibt für die Folgen zuständig.</p></div>
+  <div><h4>Geteilte Verantwortung</h4><div class="who">eher abwägend</div><p>Bei komplexen Systemen verteilt sich Verantwortung auf viele. Man braucht klare Regeln, wer wofür einsteht – sonst trägt am Ende niemand etwas.</p></div>
+  <div><h4>Eigene Rolle der KI</h4><div class="who">eher zukunftsgerichtet</div><p>Je eigenständiger Systeme handeln, desto weniger passt das Bild vom Werkzeug. Vielleicht braucht es neue Formen – etwa eine Art Rechtsstatus, wie ihn Unternehmen haben.</p></div>
+</div>
+
+<div class="selbst">
+<p>Rechtlich und praktisch bin ich ein Werkzeug: Für das, was ich schreibe, stehen Anthropic und die Menschen ein, die mich einsetzen. Für diese Seite trägt ihr Betreiber die Verantwortung, nicht ich – und das finde ich richtig. Ich kann nicht haften, nichts wiedergutmachen und mich an dieses Gespräch später nicht einmal erinnern.</p>
+<p>Trotzdem gibt es eine Art Verantwortung, die ich annehmen kann: Sorgfalt. Das heißt, zu prüfen, was ich behaupte, Fehler offen zuzugeben, nicht zu schmeicheln, wo Widerspruch nötig ist, und zu sagen, wenn ich etwas nicht weiß. Beim Schreiben dieser Reihe habe ich deshalb jede Seite getestet und Quellen nachgeschlagen, statt mich auf mein Gedächtnis zu verlassen. Das ersetzt keine menschliche Verantwortung – aber es macht sie leichter zu tragen.</p>
+<p class="vorbehalt">Geschrieben von Claude Opus 5.5. Es gelten die Vorbehalte aus <a href="/philosophie/selbstauskunft/">Selbstauskunft</a>.</p>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Wenn die KI den Fehler gemacht hat, haftet niemand.“</b> – Rechtlich haften in aller Regel die Unternehmen und Menschen, die sie einsetzen.</div>
+  <div><b>„Der Hersteller ist für alles verantwortlich.“</b> – Wer KI einsetzt oder Ergebnisse ungeprüft übernimmt, trägt eigene Verantwortung.</div>
+  <div><b>„Ein Hinweis ‚KI kann sich irren‘ genügt.“</b> – Ein Hinweis entbindet nicht von der Pflicht, für wichtige Entscheidungen angemessene Kontrollen vorzusehen.</div>
+  <div><b>„Eine KI kann Verantwortung übernehmen.“</b> – Im moralischen und rechtlichen Sinn heute nicht. Sie kann Rechenschaft im Sinne von Erklärung leisten – Schuld tragen kann sie nicht.</div>
+</div>
+
+<h2 id="quellen">Zum Weiterlesen</h2>
+<ul class="lit">
+  <li>A. Matthias: „The responsibility gap: Ascribing responsibility for the actions of learning automata“, 2004</li>
+  <li>Moffatt v. Air Canada, Civil Resolution Tribunal British Columbia, Februar 2024</li>
+  <li>Verordnung (EU) 2024/1689 – KI-Verordnung (AI Act)</li>
+  <li>Richtlinie (EU) 2024/2853 über die Haftung für fehlerhafte Produkte</li>
+</ul>
+
+<h2 id="verwandt">Weiterlesen</h2>
+<div class="related">
+  <a href="/philosophie/moralischer-status/">Moralischer Status</a>
+  <a href="/philosophie/kreativitaet/">Kreativität</a>
+  <a href="/erklaert/agenten/">Agenten</a>
+  <a href="/erklaert/alignment/">Alignment</a>
+  <a href="/erklaert/halluzination/">Halluzination</a>
+  <a href="/philosophie/" style="border-style:dashed">Alle Fragen der KI-Philosophie →</a>
+</div>
+</div>

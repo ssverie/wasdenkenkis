@@ -1,0 +1,23 @@
+/* Seiteneigene Stile (gefuehle) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Gefühle ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .ebenen{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:660px){.erklaert .ebenen{grid-template-columns:1fr}}
+.erklaert .ebenen > div{padding:14px 16px;border-radius:12px;background:var(--bg);font-size:.9rem}
+.erklaert .ebenen .n{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.erklaert .ebenen h4{margin:0 0 4px}
+.erklaert .ebenen p{margin:4px 0 0;color:var(--muted)}
+.erklaert .sc-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .sc-tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .sc-desc{font-family:var(--serif);font-size:1.05rem;padding:10px 14px;border-radius:10px;background:var(--bg);margin-bottom:12px}
+.erklaert .lay{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media (max-width:600px){.erklaert .lay{grid-template-columns:1fr}}
+.erklaert .lay > div{padding:12px 14px;border-radius:10px;font-size:.88rem}
+.erklaert .lay .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.erklaert .lay b{display:block;font-size:1rem;margin-bottom:4px}
+.erklaert .l-ja{background:var(--ok-soft)}.erklaert .l-ja .h, .erklaert .l-ja b{color:var(--ok)}
+.erklaert .l-nein{background:var(--bad-soft)}.erklaert .l-nein .h, .erklaert .l-nein b{color:var(--bad)}
+.erklaert .l-offen{background:var(--accent-2-soft)}.erklaert .l-offen .h, .erklaert .l-offen b{color:var(--accent-2)}
+.erklaert .l-teil{background:var(--accent-soft)}.erklaert .l-teil .h, .erklaert .l-teil b{color:var(--accent)}
+

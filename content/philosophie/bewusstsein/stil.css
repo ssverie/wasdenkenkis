@@ -1,0 +1,31 @@
+/* Seiteneigene Stile (bewusstsein) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Bewusstsein ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:660px){.erklaert .kinds{grid-template-columns:1fr}}
+.erklaert .kinds > div{padding:14px 16px;border-radius:12px;background:var(--bg);font-size:.9rem}
+.erklaert .kinds h4{margin:0 0 4px}
+.erklaert .kinds p{margin:4px 0 0;color:var(--muted)}
+.erklaert .kinds .main{background:var(--accent-soft);border:2px solid var(--accent)}
+.erklaert .th-tabs{display:flex;flex-direction:column;gap:6px}
+.erklaert .th-tabs button{text-align:left;font-weight:500;font-size:.88rem}
+.erklaert .th-tabs button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .th{display:grid;grid-template-columns:230px 1fr;gap:18px;align-items:start}
+@media (max-width:660px){.erklaert .th{grid-template-columns:1fr}}
+.erklaert .th-info h3{margin:0 0 2px;font-family:var(--serif);font-size:1.15rem}
+.erklaert .th-info .who{font-size:.8rem;color:var(--muted);margin-bottom:6px}
+.erklaert .th-info p{margin:.4em 0;font-size:.92rem}
+.erklaert .verd{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+@media (max-width:480px){.erklaert .verd{grid-template-columns:1fr}}
+.erklaert .verd div{padding:10px;border-radius:10px;text-align:center;font-size:.8rem}
+.erklaert .verd b{display:block;font-size:.95rem;margin-top:2px}
+.erklaert .verd small{display:block;color:var(--muted);margin-top:4px;font-size:.74rem;line-height:1.35}
+.erklaert .vy{background:var(--ok-soft)}.erklaert .vy b{color:var(--ok)}
+.erklaert .vm{background:var(--accent-2-soft)}.erklaert .vm b{color:var(--accent-2)}
+.erklaert .vn{background:var(--bad-soft)}.erklaert .vn b{color:var(--bad)}
+.erklaert .two-err{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:600px){.erklaert .two-err{grid-template-columns:1fr}}
+.erklaert .two-err > div{padding:14px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:.9rem}
+.erklaert .two-err h4{margin:0 0 6px}
+

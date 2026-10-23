@@ -1,0 +1,21 @@
+/* Seiteneigene Stile (moralischer-status) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Moralischer Status ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .ring-wrap{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:center}
+@media (max-width:660px){.erklaert .ring-wrap{grid-template-columns:1fr}}
+.erklaert #ringSvg{width:100%;max-width:300px;display:block;margin:0 auto}
+.erklaert #ringSvg .r{cursor:pointer}
+.erklaert .ring-info{padding:14px 16px;border-radius:12px;background:var(--bg);min-height:190px;font-size:.92rem}
+.erklaert .ring-info h3{margin:0 0 4px;font-family:var(--serif);font-size:1.15rem}
+.erklaert .ring-info .k{font-size:.74rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-2);margin-bottom:6px}
+.erklaert .ring-info p{margin:.4em 0}
+.erklaert .crit3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+@media (max-width:640px){.erklaert .crit3{grid-template-columns:1fr}}
+.erklaert .crit3 > div{padding:14px 16px;border-radius:12px;background:var(--bg);font-size:.9rem}
+.erklaert .crit3 h4{margin:0 0 4px}
+.erklaert .crit3 p{margin:0;color:var(--muted)}
+.erklaert .qs{display:flex;flex-direction:column;gap:8px;margin:16px 0}
+.erklaert .qs div{padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:.92rem}
+.erklaert .qs b{color:var(--accent)}
+

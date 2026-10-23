@@ -1,0 +1,29 @@
+/* Seiteneigene Stile (verstehen) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Verstehen ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .room{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.erklaert .room > div{min-width:0}
+@media (max-width:640px){.erklaert .room{grid-template-columns:1fr}}
+.erklaert .room .h{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.erklaert .slot{padding:14px;border-radius:10px;background:var(--bg);border:2px dashed var(--line);text-align:center;font-size:1.7rem;letter-spacing:.06em;min-height:2.2em}
+.erklaert .rules{display:flex;flex-direction:column;gap:6px;font-size:.86rem}
+.erklaert .rule{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;padding:6px 10px;border-radius:8px;background:var(--bg)}
+.erklaert .rule .z{font-size:1.1rem;letter-spacing:.04em;text-align:center;min-width:0;overflow-wrap:anywhere}
+.erklaert .rule .ar{color:var(--muted)}
+.erklaert .pick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.erklaert .pick button{font-size:1.15rem;letter-spacing:.04em;padding:10px 6px;font-weight:500;min-width:0;overflow-wrap:anywhere}
+.erklaert .pick button.right{background:var(--ok-soft);border-color:var(--ok)}
+.erklaert .pick button.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.erklaert .outside{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--accent-soft);font-size:.92rem;min-height:3em}
+.erklaert .revtbl{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:10px}
+.erklaert .revtbl td{padding:6px 8px;border-bottom:1px solid var(--line)}
+.erklaert .revtbl td{font-size:1.05rem;vertical-align:top}
+.erklaert .repl{display:flex;flex-direction:column;gap:10px;margin:16px 0}
+.erklaert .repl > div{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 16px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:.9rem}
+@media (max-width:600px){.erklaert .repl > div{grid-template-columns:1fr}}
+.erklaert .repl h4{margin:0 0 4px;font-size:.98rem}
+.erklaert .repl .s{color:var(--muted)}
+.erklaert .repl .s b{color:var(--fg)}
+.erklaert .octo svg{max-width:560px}
+
