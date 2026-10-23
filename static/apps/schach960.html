@@ -10,7 +10,8 @@
 <style>
   :root {
     --bg: #262421; --panel: #312e2b; --text: #e8e6e3; --muted: #9c9791;
-    --light: #eeeed2; --dark: #769656; --sel: #f6f669; --accent: #7fa650;
+    --light: #f0d9b5; --dark: #b58863; --sel: #f6f669; --accent: #0f6f6a;
+    /* wasdenkenkis.de: braunes Brett wie die Schachdiagramme der Seite (Lichess-Farben), Knöpfe in Petrol */
     --check: #ff6b6b;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -387,8 +388,7 @@
       if (selected && selected[0]===r && selected[1]===c) sq.classList.add('sel');
       if (chk && chk[0]===r && chk[1]===c) sq.classList.add('check');
       markTargets(sq, r, c);
-      if (c===0){const co=document.createElement('span');co.className='coord rank';co.textContent=8-r;sq.appendChild(co);}
-      if (r===7){const co=document.createElement('span');co.className='coord file';co.textContent=files[c];sq.appendChild(co);}
+      // Koordinaten (a–h, 1–8) entfernt – Svens Wunsch (wasdenkenkis.de)
       sq.addEventListener('click', () => onSquareClick(r,c));
       sq.addEventListener('dragstart', e => onDragStart(e,r,c));
       sq.addEventListener('dragover', e => e.preventDefault());
