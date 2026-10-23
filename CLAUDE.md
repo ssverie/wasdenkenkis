@@ -122,9 +122,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Spiele: braunes Brett wie die Diagramme (#f0d9b5/#b58863), keine Koordinaten, Knöpfe braun (#946640, dunkler als das Brett) – in allen drei Spielen.
-- Spiele: Schach, Schach 960 und 9+ zeigen die Cburnett-Figuren statt Schriftzeichen (als Daten in die Datei eingebettet, Lizenzzeile im Spiel); Klick, Ziehen, Schlagen, Umwandlung, Reserve, Handy getestet. Die Dateien laufen weiter allein (Sven gibt 9+ als lokale Datei weiter).
-- 9+: Rochade nachgerüstet (Svens Regel: nur ein Turm, der direkt auf die Ecke eingesetzt wurde und stehen blieb; auch der Computer rochiert). 19 Regelfälle, Klick-Bedienung und eine Partie gegen den Computer getestet.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-23: Spiele mit Cburnett-Figuren, braunem Brett und 9+-Rochade)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 - Offen (Algorithmen): genaue Angaben zur deutschen Sedgewick-Ausgabe (Verlag, Jahr, ISBN) für die Bücher-Seite.
