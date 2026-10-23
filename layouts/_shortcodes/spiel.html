@@ -1,10 +1,10 @@
 {{- /* Spiel aus static/apps/ in einem Rahmen, Höhe passt sich dem Inhalt an:
-       {{< spiel src="/apps/schach.html" titel="Schach" >}}
+       {{< spiel src="/apps/schach.html" titel="Schach" >}}  – optional link="Im Vollbild öffnen" (Text unter dem Rahmen)
        Eigener Rahmen, damit Stil und Skript des Spiels nicht mit der Seite kollidieren. */ -}}
 {{- $src := .Get "src" | relURL }}
 <div class="spiel">
   <iframe class="spiel-rahmen" src="{{ $src }}" title="{{ .Get "titel" }}"></iframe>
-  <p class="spiel-link"><a href="{{ $src }}">Im Vollbild spielen ↗</a></p>
+  <p class="spiel-link"><a href="{{ $src }}">{{ .Get "link" | default "Im Vollbild spielen" }} ↗</a></p>
 </div>
 <script>
 (function (rahmen) {

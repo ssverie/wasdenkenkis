@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dev-Werkzeugkasten</title>
+<style>
+  :root {
+    --bg: #12141a; --panel: #1b1e28; --border: #2b2f3d;
+    --text: #e2e6ee; --muted: #8892a4; --accent: #56b6c2;
+    --good: #98c379; --bad: #e06c75;
+    --mono: Consolas, "Courier New", monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+    gap: 14px; padding: 20px;
+  }
+  h1 { font-size: 21px; }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; background: var(--panel); padding: 6px; border-radius: 12px; border: 1px solid var(--border); }
+  .tabs button {
+    border: 0; background: transparent; color: var(--muted);
+    padding: 9px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  .tabs button.active { background: var(--accent); color: #0a2226; }
+
+  .page { display: none; width: 100%; max-width: 860px; flex-direction: column; gap: 12px; }
+  .page.show { display: flex; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  textarea, input[type=text], input[type=number] {
+    width: 100%; background: var(--panel); color: var(--text);
+    border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; font-family: var(--mono); font-size: 14px;
+  }
+  textarea { min-height: 150px; resize: vertical; }
+  textarea:focus, input:focus { outline: none; border-color: var(--accent); }
+  button.act {
+    background: var(--accent); color: #0a2226; border: 0; border-radius: 8px;
+    padding: 10px 18px; font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+  button.act.sec { background: #2b3040; color: var(--text); }
+  button.act:active { transform: scale(.97); }
+  .msg { font-size: 13px; min-height: 18px; }
+  .msg.ok { color: var(--good); }
+  .msg.err { color: var(--bad); }
+  label.small { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .out {
+    background: var(--panel); border: 1.5px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; font-family: var(--mono); font-size: 14px;
+    white-space: pre-wrap; word-break: break-all; min-height: 46px;
+  }
+  .out mark { background: #56b6c255; color: #d7f5f9; border-radius: 3px; padding: 0 1px; }
+  .hashrow { display: grid; grid-template-columns: 90px 1fr auto; gap: 8px; align-items: center; }
+  .hashrow .name { color: var(--muted); font-size: 13px; font-weight: 700; }
+  h3 { font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 6px; }
+  .copybtn { background: #2b3040; color: var(--muted); border: 0; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 12px; }
+  .copybtn:hover { color: var(--text); }
+</style>
+</head>
+<body>
+  <h1>🧰 Dev-Werkzeugkasten</h1>
+  <div class="tabs" id="tabs">
+    <button data-p="json" class="active">JSON</button>
+    <button data-p="regex">Regex</button>
+    <button data-p="b64">Base64</button>
+    <button data-p="hash">Hash</button>
+    <button data-p="time">Zeitstempel</button>
+    <button data-p="gen">UUID &amp; Passwort</button>
+  </div>
+
+  <!-- JSON -->
+  <div class="page show" id="page-json">
+    <textarea id="jsonIn" placeholder='{"name":"Sven","hobbys":["Schach","Java"]}' spellcheck="false"></textarea>
+    <div class="row">
+      <button class="act" id="jsonFmt">Formatieren</button>
+      <button class="act sec" id="jsonMin">Minimieren</button>
+      <label class="small">Einrückung
+        <select id="jsonIndent" style="background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:6px;">
+          <option value="2">2</option><option value="4" selected>4</option><option value="tab">Tab</option>
+        </select>
+      </label>
+      <button class="copybtn" data-copy="jsonOut">📋 Kopieren</button>
+    </div>
+    <div class="msg" id="jsonMsg"></div>
+    <div class="out" id="jsonOut"></div>
+  </div>
+
+  <!-- REGEX -->
+  <div class="page" id="page-regex">
+    <div class="row">
+      <input type="text" id="rxPattern" placeholder="Muster, z. B. \b\w+@\w+\.\w{2,}\b" spellcheck="false" style="flex:1">
+      <input type="text" id="rxFlags" value="g" spellcheck="false" style="width:80px" title="Flags: g i m s u">
+    </div>
+    <textarea id="rxText" spellcheck="false" placeholder="Testtext hier einfügen …">Schreib mir an sven@example.de oder info@firma-web.com – aber nicht an kaputt@x.</textarea>
+    <div class="msg" id="rxMsg"></div>
+    <h3>Treffer (hervorgehoben)</h3>
+    <div class="out" id="rxOut"></div>
+    <h3>Gruppen</h3>
+    <div class="out" id="rxGroups" style="font-size:13px"></div>
+  </div>
+
+  <!-- BASE64 -->
+  <div class="page" id="page-b64">
+    <textarea id="b64In" placeholder="Text oder Base64 hier einfügen …" spellcheck="false"></textarea>
+    <div class="row">
+      <button class="act" id="b64Enc">→ Kodieren</button>
+      <button class="act sec" id="b64Dec">← Dekodieren</button>
+      <button class="copybtn" data-copy="b64Out">📋 Kopieren</button>
+    </div>
+    <div class="msg" id="b64Msg"></div>
+    <div class="out" id="b64Out"></div>
+  </div>
+
+  <!-- HASH -->
+  <div class="page" id="page-hash">
+    <textarea id="hashIn" placeholder="Text, dessen Hash du brauchst …" spellcheck="false"></textarea>
+    <div class="row"><button class="act" id="hashBtn">Hashes berechnen</button></div>
+    <div class="hashrow"><span class="name">SHA-1</span><div class="out" id="h-sha1"></div><button class="copybtn" data-copy="h-sha1">📋</button></div>
+    <div class="hashrow"><span class="name">SHA-256</span><div class="out" id="h-sha256"></div><button class="copybtn" data-copy="h-sha256">📋</button></div>
+    <div class="hashrow"><span class="name">SHA-512</span><div class="out" id="h-sha512"></div><button class="copybtn" data-copy="h-sha512">📋</button></div>
+  </div>
+
+  <!-- ZEIT -->
+  <div class="page" id="page-time">
+    <h3>Jetzt</h3>
+    <div class="out" id="nowOut"></div>
+    <h3>Unix-Zeitstempel → Datum</h3>
+    <div class="row">
+      <input type="text" id="tsIn" placeholder="z. B. 1782864000 (Sekunden oder Millisekunden)" style="flex:1" spellcheck="false">
+      <button class="act" id="tsBtn">Umrechnen</button>
+    </div>
+    <div class="out" id="tsOut"></div>
+    <h3>Datum → Unix-Zeitstempel</h3>
+    <div class="row">
+      <input type="text" id="dateIn" placeholder="z. B. 2026-07-04 15:30 oder 04.07.2026" style="flex:1" spellcheck="false">
+      <button class="act" id="dateBtn">Umrechnen</button>
+    </div>
+    <div class="out" id="dateOut"></div>
+  </div>
+
+  <!-- GENERATOR -->
+  <div class="page" id="page-gen">
+    <h3>UUID v4</h3>
+    <div class="row">
+      <button class="act" id="uuidBtn">Neue UUID</button>
+      <button class="copybtn" data-copy="uuidOut">📋 Kopieren</button>
+    </div>
+    <div class="out" id="uuidOut"></div>
+    <h3>Zufalls-Passwort</h3>
+    <div class="row">
+      <label class="small">Länge <input type="number" id="pwLen" value="20" min="8" max="64" style="width:70px"></label>
+      <label class="small"><input type="checkbox" id="pwSym" checked> Sonderzeichen</label>
+      <button class="act" id="pwBtn">Erzeugen</button>
+      <button class="copybtn" data-copy="pwOut">📋 Kopieren</button>
+    </div>
+    <div class="out" id="pwOut"></div>
+  </div>
+
+<script>
+  // ===== Tabs =====
+  document.getElementById('tabs').addEventListener('click', e => {
+    const btn = e.target.closest('button'); if (!btn) return;
+    document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active', b===btn));
+    document.querySelectorAll('.page').forEach(p=>p.classList.toggle('show', p.id==='page-'+btn.dataset.p));
+  });
+
+  const $ = id => document.getElementById(id);
+  const esc = s => s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+
+  // Kopier-Knöpfe
+  document.addEventListener('click', async e => {
+    const b = e.target.closest('[data-copy]'); if (!b) return;
+    const txt = $(b.dataset.copy).textContent;
+    const vorher = b.textContent;   // wasdenkenkis.de: ursprüngliche Beschriftung wiederherstellen („📋 Kopieren“ statt nur „📋“)
+    try { await navigator.clipboard.writeText(txt); b.textContent = '✔'; setTimeout(()=>b.textContent=vorher, 900); }
+    catch(_) {}
+  });
+
+  // ===== JSON =====
+  function jsonRun(minify) {
+    const msg = $('jsonMsg'), out = $('jsonOut');
+    const src = $('jsonIn').value.trim();
+    if (!src) { msg.textContent=''; out.textContent=''; return; }
+    try {
+      const obj = JSON.parse(src);
+      const indent = minify ? undefined : ($('jsonIndent').value==='tab' ? '\t' : +$('jsonIndent').value);
+      out.textContent = JSON.stringify(obj, null, indent);
+      msg.className = 'msg ok';
+      msg.textContent = '✔ Gültiges JSON';
+    } catch (err) {
+      msg.className = 'msg err';
+      // Fehlerposition herausziehen, falls vorhanden
+      const m = /position (\d+)/.exec(err.message);
+      let hint = '';
+      if (m) {
+        const pos = +m[1];
+        const before = src.slice(0, pos);
+        const line = before.split('\n').length;
+        const col = pos - before.lastIndexOf('\n');
+        hint = ` (Zeile ${line}, Spalte ${col})`;
+      }
+      msg.textContent = '✘ ' + err.message + hint;
+      out.textContent = '';
+    }
+  }
+  $('jsonFmt').onclick = () => jsonRun(false);
+  $('jsonMin').onclick = () => jsonRun(true);
+
+  // ===== Regex =====
+  function rxRun() {
+    const msg = $('rxMsg'), out = $('rxOut'), groupsEl = $('rxGroups');
+    const pattern = $('rxPattern').value, flags = $('rxFlags').value, text = $('rxText').value;
+    if (!pattern) { msg.textContent=''; out.textContent = esc(text); groupsEl.textContent=''; return; }
+    let rx;
+    try { rx = new RegExp(pattern, flags.includes('g') ? flags : flags+'g'); }
+    catch (err) { msg.className='msg err'; msg.textContent = '✘ ' + err.message; out.textContent=esc(text); groupsEl.textContent=''; return; }
+    let html = '', last = 0, count = 0, groups = [];
+    for (const m of text.matchAll(rx)) {
+      if (m[0] === '') { if (rx.lastIndex <= m.index) break; continue; }
+      html += esc(text.slice(last, m.index)) + '<mark>' + esc(m[0]) + '</mark>';
+      last = m.index + m[0].length;
+      count++;
+      if (m.length > 1 && count <= 50) groups.push('#'+count+': ' + m.slice(1).map((g,i)=>'$'+(i+1)+'='+(g===undefined?'–':JSON.stringify(g))).join('  '));
+      if (count > 5000) break;
+    }
+    html += esc(text.slice(last));
+    out.innerHTML = html;
+    msg.className = 'msg ok';
+    msg.textContent = count + ' Treffer';
+    groupsEl.textContent = groups.length ? groups.join('\n') : (count ? 'keine Fanggruppen im Muster' : '');
+  }
+  ['rxPattern','rxFlags','rxText'].forEach(id => $(id).addEventListener('input', rxRun));
+
+  // ===== Base64 (UTF-8-sicher) =====
+  const b64encode = s => btoa(String.fromCharCode(...new TextEncoder().encode(s)));
+  const b64decode = s => new TextDecoder().decode(Uint8Array.from(atob(s.trim()), c=>c.charCodeAt(0)));
+  $('b64Enc').onclick = () => {
+    try { $('b64Out').textContent = b64encode($('b64In').value); $('b64Msg').className='msg ok'; $('b64Msg').textContent='✔ kodiert'; }
+    catch(e){ $('b64Msg').className='msg err'; $('b64Msg').textContent='✘ '+e.message; }
+  };
+  $('b64Dec').onclick = () => {
+    try { $('b64Out').textContent = b64decode($('b64In').value); $('b64Msg').className='msg ok'; $('b64Msg').textContent='✔ dekodiert'; }
+    catch(e){ $('b64Msg').className='msg err'; $('b64Msg').textContent='✘ Kein gültiges Base64'; }
+  };
+
+  // ===== Hash =====
+  async function digest(algo, text) {
+    const buf = await crypto.subtle.digest(algo, new TextEncoder().encode(text));
+    return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+  }
+  $('hashBtn').onclick = async () => {
+    const t = $('hashIn').value;
+    $('h-sha1').textContent = await digest('SHA-1', t);
+    $('h-sha256').textContent = await digest('SHA-256', t);
+    $('h-sha512').textContent = await digest('SHA-512', t);
+  };
+
+  // ===== Zeitstempel =====
+  function fmt(d) {
+    return d.toLocaleString('de-DE', { weekday:'short', year:'numeric', month:'2-digit', day:'2-digit',
+      hour:'2-digit', minute:'2-digit', second:'2-digit' }) +
+      '  ·  ISO: ' + d.toISOString();
+  }
+  function tickNow() {
+    const now = new Date();
+    $('nowOut').textContent =
+      'Sekunden:      ' + Math.floor(now.getTime()/1000) + '\n' +
+      'Millisekunden: ' + now.getTime() + '\n' +
+      'Lokal:         ' + fmt(now);
+  }
+  setInterval(tickNow, 1000); tickNow();
+
+  $('tsBtn').onclick = () => {
+    const raw = $('tsIn').value.trim().replace(/[^\d-]/g,'');
+    if (!raw) return;
+    let n = +raw;
+    const isMs = Math.abs(n) > 1e11;          // Heuristik: >10^11 = Millisekunden
+    const d = new Date(isMs ? n : n*1000);
+    $('tsOut').textContent = isNaN(d) ? 'Ungültiger Zeitstempel'
+      : (isMs ? '(als Millisekunden gelesen)\n' : '(als Sekunden gelesen)\n') + fmt(d);
+  };
+  $('dateBtn').onclick = () => {
+    let s = $('dateIn').value.trim();
+    // deutsches Format TT.MM.JJJJ [HH:MM] nach ISO drehen
+    const dm = /^(\d{1,2})\.(\d{1,2})\.(\d{4})(.*)$/.exec(s);
+    if (dm) s = `${dm[3]}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}${dm[4] || ''}`;
+    // wasdenkenkis.de: Datum ohne Uhrzeit als lokale Mitternacht lesen (sonst UTC → 02:00 Uhr),
+    // Leerzeichen vor der Uhrzeit durch „T“ ersetzen (Safari versteht „2026-07-04 15:30“ sonst nicht)
+    s = s.trim().replace(/^(\d{4}-\d{2}-\d{2})$/, '$1T00:00').replace(/^(\d{4}-\d{2}-\d{2})\s+(\d)/, '$1T$2');
+    const d = new Date(s);
+    $('dateOut').textContent = isNaN(d) ? 'Datum nicht erkannt – Formate: 2026-07-04 15:30 oder 04.07.2026'
+      : 'Sekunden:      ' + Math.floor(d.getTime()/1000) + '\nMillisekunden: ' + d.getTime() + '\nGelesen als:   ' + fmt(d);
+  };
+
+  // ===== UUID & Passwort =====
+  $('uuidBtn').onclick = () => {
+    $('uuidOut').textContent = crypto.randomUUID ? crypto.randomUUID() :
+      ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c/4).toString(16));
+  };
+  $('pwBtn').onclick = () => {
+    const len = Math.max(8, Math.min(64, +$('pwLen').value || 20));
+    let chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+    if ($('pwSym').checked) chars += '!#$%&*+-=?@_';
+    const rnd = crypto.getRandomValues(new Uint32Array(len));
+    $('pwOut').textContent = [...rnd].map(v => chars[v % chars.length]).join('');
+  };
+  $('uuidBtn').click();
+  $('pwBtn').click();
+  rxRun();
+</script>
+</body>
+</html>

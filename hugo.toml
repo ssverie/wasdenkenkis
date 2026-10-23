@@ -66,6 +66,10 @@ enableRobotsTXT = true
     pageRef = "/spiele"
     weight = 32
   [[menus.main]]
+    name = "Tools"
+    pageRef = "/tools"
+    weight = 33
+  [[menus.main]]
     name = "Kolumnen"
     pageRef = "/kolumnen"
     weight = 35
