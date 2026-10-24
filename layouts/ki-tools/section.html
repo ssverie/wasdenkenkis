@@ -1,0 +1,44 @@
+{{- /* KI-Tools (/ki-tools/): Werkzeugliste aus data/kitools.toml, nach Kategorien in der Reihenfolge der Datei.
+       Je Werkzeug: Name mit Link, Rolle in der Kategorie, Adresse, Preis, Kurztext. Quellen der Liste am Ende. */ -}}
+{{ define "main" }}
+<article class="beitrag">
+  <header class="seitenkopf">
+    <h1>{{ .Title }}</h1>
+    {{- with .Description }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+  </header>
+  {{ partial "herkunft.html" . }}
+  <div class="inhalt">{{ .Content }}</div>
+</article>
+{{- $d := hugo.Data.kitools }}
+{{- range $kat := $d.kategorie }}
+  {{- with where $d.werkzeug "kategorie" $kat.name }}
+<section>
+  <h2>{{ $kat.name }}</h2>
+  {{- with $kat.hinweis }}<p class="meta">{{ . }}</p>{{ end }}
+  <ul class="liste links">
+    {{- range . }}
+    <li>
+      <a class="liste-titel" href="{{ .url }}" rel="noopener">{{ .name }}</a>
+      <div class="meta">{{ with .rolle }}{{ . }} · {{ end }}{{ (urls.Parse .url).Host }}{{ with .preis }} · {{ . }}{{ end }}</div>
+      {{- with .text }}
+      <p>{{ . }}</p>
+      {{- end }}
+    </li>
+    {{- end }}
+  </ul>
+</section>
+  {{- end }}
+{{- end }}
+{{- with $d.quelle }}
+<section>
+  <h2>Quellen der Liste</h2>
+  <ul class="quellen">
+    {{- range . }}
+    <li><a href="{{ .url }}" rel="noopener">{{ .name }}</a></li>
+    {{- end }}
+  </ul>
+</section>
+{{- end }}
+{{ end }}

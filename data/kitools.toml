@@ -1,0 +1,264 @@
+# KI-Tools – Werkzeugliste nach Kategorien (Rubrik /ki-tools/).
+# Quelle: Liste einer Claude-Opus-5.5-Instanz, Stand Oktober 2026 (input-arc\2026-10-24\Claude\ki-tools.txt).
+# Texte und Preise aus der Liste übernommen, Adressen von der Redaktion ergänzt und geprüft (24.10.2026).
+# rolle = Platz in der Kategorie laut Liste; preis optional.
+
+[[kategorie]]
+name = "Bildgenerierung"
+
+[[kategorie]]
+name = "Bildbearbeitung und Upscaling"
+
+[[kategorie]]
+name = "Videogenerierung"
+hinweis = "Die Rangfolge wechselt hier fast monatlich."
+
+[[kategorie]]
+name = "Videoschnitt"
+
+[[kategorie]]
+name = "Avatar-Videos und Dubbing"
+
+[[kategorie]]
+name = "Stimme"
+
+[[kategorie]]
+name = "Musik"
+
+[[kategorie]]
+name = "Recherche mit eigenen Quellen"
+
+[[kategorie]]
+name = "Übersetzung"
+
+[[kategorie]]
+name = "Diktieren"
+
+[[kategorie]]
+name = "Aggregatoren"
+hinweis = "Bei Bild, Video und Musik gibt es keinen festen Dauersieger. Da lohnt sich ein Aggregator, der mehrere Modelle unter einem Abo bündelt, statt auf ein Pferd zu setzen."
+
+# ---- Bildgenerierung
+[[werkzeug]]
+name = "GPT Image 2 (in ChatGPT)"
+url = "https://chatgpt.com/"
+kategorie = "Bildgenerierung"
+rolle = "Sieger allround"
+text = "OpenAI hat ChatGPT Images 2.0 mit dem Modell gpt-image-2 am 21. April 2026 veröffentlicht, und es setzte sich sofort an die Spitze der Rangliste."
+
+[[werkzeug]]
+name = "Midjourney"
+url = "https://www.midjourney.com/"
+kategorie = "Bildgenerierung"
+rolle = "Ästhetik und Kunst"
+preis = "ca. 10–120 $/Monat"
+
+[[werkzeug]]
+name = "FLUX.2"
+url = "https://bfl.ai/"
+kategorie = "Bildgenerierung"
+rolle = "Fotorealismus"
+text = "Von Black Forest Labs aus Deutschland. Gilt als Fotorealismus-Führer 2026 und ist das einzige Spitzenmodell mit offenen Gewichten – läuft also auch lokal."
+
+# ---- Bildbearbeitung und Upscaling
+[[werkzeug]]
+name = "Topaz Gigapixel"
+url = "https://www.topazlabs.com/topaz-gigapixel"
+kategorie = "Bildbearbeitung und Upscaling"
+rolle = "Echte Fotos"
+preis = "149 $/Jahr"
+text = "Topaz hat Einmallizenzen im September 2025 abgeschafft."
+
+[[werkzeug]]
+name = "Magnific"
+url = "https://www.magnific.com/"
+kategorie = "Bildbearbeitung und Upscaling"
+rolle = "KI-Bilder"
+preis = "ab etwa 20 $/Monat"
+text = "Seit dem Rebranding im April 2026 läuft es über das Credit-System der Plattform, die früher Freepik hieß."
+
+[[werkzeug]]
+name = "Upscayl"
+url = "https://upscayl.org/"
+kategorie = "Bildbearbeitung und Upscaling"
+rolle = "Kostenlos"
+
+# ---- Videogenerierung
+[[werkzeug]]
+name = "Seedance 2.0 (ByteDance)"
+url = "https://seed.bytedance.com/en/seedance"
+kategorie = "Videogenerierung"
+rolle = "Sieger"
+text = "Führt aktuell in der Artificial Analysis Arena bei Text-zu-Video mit Ton."
+
+[[werkzeug]]
+name = "Kling 3.0"
+url = "https://kling.ai/"
+kategorie = "Videogenerierung"
+rolle = "Alternative"
+text = "Stark bei Bewegung und Menschen."
+
+[[werkzeug]]
+name = "Runway Gen-4.5"
+url = "https://runway.com/"
+kategorie = "Videogenerierung"
+rolle = "Alternative"
+text = "Die meiste Kontrolle für Filmer."
+
+# ---- Videoschnitt
+[[werkzeug]]
+name = "Descript"
+url = "https://www.descript.com/"
+kategorie = "Videoschnitt"
+rolle = "Sieger"
+preis = "ab 16 $/Monat bei Jahreszahlung"
+text = "Schnitt per Bearbeitung des Transkripts."
+
+[[werkzeug]]
+name = "CapCut"
+url = "https://www.capcut.com/"
+kategorie = "Videoschnitt"
+rolle = "Gratis"
+text = "Achtung: CapCut hat im Januar 2026 den Jahrespreis für Pro fast verdoppelt, von rund 77 $ auf 179,99 $."
+
+# ---- Avatar-Videos und Dubbing
+[[werkzeug]]
+name = "HeyGen"
+url = "https://www.heygen.com/"
+kategorie = "Avatar-Videos und Dubbing"
+rolle = "Sieger"
+text = "Führt 2026 bei Avatar-Realismus mit der lebensechtesten Lippensynchronisation und Mimik."
+
+[[werkzeug]]
+name = "Synthesia"
+url = "https://www.synthesia.io/"
+kategorie = "Avatar-Videos und Dubbing"
+rolle = "Alternative"
+text = "Eher für Firmenschulungen."
+
+# ---- Stimme
+[[werkzeug]]
+name = "ElevenLabs"
+url = "https://elevenlabs.io/"
+kategorie = "Stimme"
+rolle = "Sieger"
+text = "Deckt Sprachausgabe, Klonen, Dubbing und Soundeffekte ab."
+
+[[werkzeug]]
+name = "Hume"
+url = "https://www.hume.ai/"
+kategorie = "Stimme"
+rolle = "Alternative"
+text = "Emotionale Stimmen."
+
+[[werkzeug]]
+name = "Cartesia"
+url = "https://www.cartesia.ai/"
+kategorie = "Stimme"
+rolle = "Alternative"
+text = "Echtzeit."
+
+# ---- Musik
+[[werkzeug]]
+name = "Suno"
+url = "https://suno.com/"
+kategorie = "Musik"
+rolle = "Sieger"
+text = "Das aktuelle Flaggschiff v5.5 kam am 26. März 2026. Natürlichere Vocals als Udio."
+
+[[werkzeug]]
+name = "Udio"
+url = "https://www.udio.com/"
+kategorie = "Musik"
+rolle = "Alternative"
+text = "Bessere Klangtreue bei Elektronik, Orchester und Jazz."
+
+# ---- Recherche mit eigenen Quellen
+[[werkzeug]]
+name = "NotebookLM"
+url = "https://notebooklm.google/"
+kategorie = "Recherche mit eigenen Quellen"
+preis = "Grundfunktionen gratis"
+text = "Seit Juni 2026 läuft es auf Gemini 3.5 und kann Code ausführen und selbst Quellen suchen. Diese neuen Agenten-Funktionen gibt es vorerst nur im Bezahlabo."
+
+# ---- Übersetzung
+[[werkzeug]]
+name = "DeepL"
+url = "https://www.deepl.com/"
+kategorie = "Übersetzung"
+preis = "kostenlos 50.000 Zeichen/Monat; Individual 8,74 $/Monat bei Jahreszahlung mit 300.000 Zeichen"
+
+# ---- Diktieren
+[[werkzeug]]
+name = "Wispr Flow"
+url = "https://wisprflow.ai/"
+kategorie = "Diktieren"
+preis = "Pro 15 $/Monat (12 $ bei Jahreszahlung)"
+text = "Der Gratis-Tarif ist auf 2.000 Wörter pro Woche begrenzt. Haken: Die Audioverarbeitung läuft ausschließlich in der Cloud."
+
+[[werkzeug]]
+name = "VoiceInk"
+url = "https://tryvoiceink.com/"
+kategorie = "Diktieren"
+rolle = "Arbeitet lokal"
+
+[[werkzeug]]
+name = "Superwhisper"
+url = "https://superwhisper.com/"
+kategorie = "Diktieren"
+rolle = "Arbeitet lokal"
+
+# ---- Aggregatoren
+[[werkzeug]]
+name = "Magnific (früher Freepik)"
+url = "https://www.magnific.com/"
+kategorie = "Aggregatoren"
+text = "In der Liste noch als Freepik geführt; die Plattform heißt inzwischen selbst Magnific."
+
+[[werkzeug]]
+name = "Krea"
+url = "https://www.krea.ai/"
+kategorie = "Aggregatoren"
+
+[[werkzeug]]
+name = "Higgsfield"
+url = "https://higgsfield.ai/"
+kategorie = "Aggregatoren"
+
+# ---- Quellen der Liste (wie geliefert)
+[[quelle]]
+name = "Dupple – Best AI Image Generators 2026"
+url = "https://dupple.com/learn/best-ai-image-generators"
+[[quelle]]
+name = "Krea – Best AI Image Upscalers 2026"
+url = "https://www.krea.ai/blog/best-ai-image-upscalers-in-2026"
+[[quelle]]
+name = "Artificial Analysis – Text to Video Leaderboard"
+url = "https://artificialanalysis.ai/video/leaderboard/text-to-video"
+[[quelle]]
+name = "Dupple – Best AI Video Editors"
+url = "https://dupple.com/learn/best-ai-video-editors"
+[[quelle]]
+name = "Dupple – Best AI for Video Editing"
+url = "https://dupple.com/learn/best-ai-for-video-editing"
+[[quelle]]
+name = "Venture Harbour – Best AI Avatar Software"
+url = "https://ventureharbour.com/best-ai-avatar-software/"
+[[quelle]]
+name = "Dubspot – Best AI Music Generators 2026"
+url = "https://blog.dubspot.com/best-ai-music-generators-2026"
+[[quelle]]
+name = "Listir – Suno vs Udio"
+url = "https://listir.is/compare/suno-vs-udio"
+[[quelle]]
+name = "Medium – NotebookLM Upgrade"
+url = "https://medium.com/@mubashirburfat4/notebooklm-just-got-its-biggest-upgrade-ever-heres-what-s-actually-worth-your-time-1997aa4d7dda"
+[[quelle]]
+name = "eesel – DeepL-Preise 2026"
+url = "https://www.eesel.ai/de/blog/deepl-preise"
+[[quelle]]
+name = "BuildBetter – Wispr Flow Alternatives"
+url = "https://blog.buildbetter.ai/best-wispr-flow-alternatives-2026-ai-dictation-tools-mac/"
+[[quelle]]
+name = "Spokenly – Wispr Flow Review"
+url = "https://spokenly.app/blog/wispr-flow-review"
