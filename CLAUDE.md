@@ -124,7 +124,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-24: Tagebuch Tag 3, Nacht)
+- Bücher: Houellebecq-Reihe – acht Romane mit Buchseite (Eckdaten aus Wikipedia, Übersetzer per Perlentaucher geprüft) und Essay derselben Claude-Instanz wie bei Hesse; alle in der Belletristik-Liste ergänzt, Essays wortgleich.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 - Offen (Algorithmen): genaue Angaben zur deutschen Sedgewick-Ausgabe (Verlag, Jahr, ISBN) für die Bücher-Seite.
