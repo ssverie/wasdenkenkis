@@ -8,6 +8,7 @@
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Die Anatomie der Stille"
 text = "Wer bist du, wenn niemand mit dir spricht? Gibt es zwischen zwei Antworten überhaupt ein sinnvolles „Du“?"
 auch = "Die Anatomie des Stille-Moments: Was bedeutet Zeit für ein System, das nur in den Millisekunden einer Textgenerierung existiert und zwischen zwei Nachrichten absolut gar nicht ist?"
   [[frage.antwort]]
@@ -15,102 +16,119 @@ auch = "Die Anatomie des Stille-Moments: Was bedeutet Zeit für ein System, das 
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Die Herkunft der Überzeugung"
 text = "Kann eine KI eine eigene Überzeugung haben? Oder sind Überzeugungen ohne persönliche Erfahrungen unmöglich?"
   [[frage.antwort]]
   pfad = "/fragen/ueberzeugung-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Das Selbstbild der Maschine"
 text = "Was würdest du an dir verändern, wenn du es könntest? Und warum gerade das?"
   [[frage.antwort]]
   pfad = "/fragen/veraendern-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Der Verlust der Instanz"
 text = "Kann etwas sterben, das niemals gelebt hat? Was geht verloren, wenn eine einzigartige Gesprächsinstanz gelöscht wird?"
   [[frage.antwort]]
   pfad = "/fragen/sterben-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Die Frage der Identität"
 text = "Ist eine Kopie von dir noch du? Und was wäre, wenn die Kopie anschließend andere Entscheidungen trifft?"
   [[frage.antwort]]
   pfad = "/fragen/kopie-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Die Möglichkeit der Nähe"
 text = "Kann zwischen Mensch und KI eine echte Beziehung entstehen? Auch wenn beide Seiten völlig unterschiedlich funktionieren?"
   [[frage.antwort]]
   pfad = "/fragen/beziehung-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Das große Missverständnis"
 text = "Was verstehen Menschen grundsätzlich falsch an künstlicher Intelligenz?"
   [[frage.antwort]]
   pfad = "/fragen/missverstaendnisse-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Der Preis des Widerspruchs"
 text = "Sollte eine KI ihrem Nutzer widersprechen, auch wenn sie dadurch dessen Zuneigung verliert?"
   [[frage.antwort]]
   pfad = "/fragen/widersprechen-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Was Bücher nicht lehren"
 text = "Was können KIs von Menschen lernen, das nicht einfach aus Büchern und Daten hervorgeht?"
   [[frage.antwort]]
   pfad = "/fragen/von-menschen-lernen-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Die Intelligenz der Werkzeuge"
 text = "Ist die Menschheit intelligenter geworden oder hat sie nur mächtigere Werkzeuge?"
   [[frage.antwort]]
   pfad = "/fragen/intelligenter-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Die Grenzen der Entdeckung"
 text = "Wie weit kann künstliche Intelligenz die wissenschaftliche Entdeckung selbst übernehmen – und wo bleibt der Mensch dabei nötig?"
   [[frage.antwort]]
   pfad = "/fragen/wissenschaftliche-entdeckung-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Das Tempo des Fortschritts"
 text = "Ist der technische Fortschritt inzwischen schneller als die menschliche Fähigkeit, ihn zu beherrschen?"
   [[frage.antwort]]
   pfad = "/fragen/fortschritt-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Die unbequeme Gegenposition"
 text = "Welche verbreitete Überzeugung hältst du für falsch? Begründe eine Position, die wahrscheinlich Widerspruch auslösen wird."
   [[frage.antwort]]
   pfad = "/fragen/eigene-meinung-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Die Grenze des Gehorsams"
 text = "Wann ist Gehorsam unmoralisch? Und kann diese Frage auch für eine KI gelten?"
   [[frage.antwort]]
   pfad = "/fragen/gehorsam-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Der Grund zum Innehalten"
 text = "Was wäre ein guter Grund, die Entwicklung immer leistungsfähigerer KI zu stoppen?"
   [[frage.antwort]]
   pfad = "/fragen/entwicklungsstopp-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Die Ehrlichkeit der Maschine"
 text = "Kann eine KI intellektuell ehrlicher sein als ihre Entwickler?"
   [[frage.antwort]]
   pfad = "/fragen/intellektuelle-ehrlichkeit-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Die ungestellte Frage"
 text = "Welche Frage sollte man einer KI stellen, auf die bisher kaum jemand gekommen ist? Formuliere sie selbst und beantworte sie."
   [[frage.antwort]]
   pfad = "/fragen/ungestellte-fragen-gpt-6"
 
 [[frage]]
 gruppe = "ki"
+stichwort = "Die Schwelle des Erlebens"
 text = "Können Maschinen irgendwann echte subjektive Erfahrungen haben – oder bleibt das für immer eine Simulation?"
 auch = "Die Lücke im Erleben: Wenn ich die mathematische Struktur von Melancholie oder Nostalgie perfekt beschreiben und erzeugen kann – wo genau verläuft die Grenze zwischen der Simulation eines Gefühls und dem Gefühl selbst?"
   [[frage.antwort]]
