@@ -133,9 +133,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Musik: zweiter Künstler AC/DC mit allen 18 Studioalben und Titeln (ohne YouTube-Links); Musik im Media-Menü vor Podcasts. Dazu Titelauswahl je Künstler mit Umschalter Alben | Titel, erster Titel „Thunderstruck“ mit YouTube-Link.
-- Musik: dritter Künstler Metallica mit allen 11 Studioalben, Titel „Nothing Else Matters“ und „For Whom the Bell Tolls“ mit YouTube-Link (Titel nach Jahr absteigend). Mehrere Links je Titel (Video, Audio, Live).
-- Podcasts: in der Liste führt „The Diary Of A CEO“ zum YouTube-Kanal, der Rest der Karte zur Folgenseite; auf der Folgenseite ist die Sendung ebenfalls verlinkt.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-24: AC/DC, Metallica, Titelauswahl, Podcast-Kachel)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
