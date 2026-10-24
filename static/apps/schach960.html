@@ -88,6 +88,14 @@
   .moves { max-height: 220px; overflow-y: auto; font-size: 13px; font-variant-numeric: tabular-nums; }
   .moves .m { display: flex; gap: 8px; padding: 2px 0; }
   .moves .num { color: var(--muted); width: 24px; }
+  /* Zugliste zum Blättern: aktueller Zug hervorgehoben, spätere Züge blass, bis ein neuer Zug sie ersetzt */
+  .moves .z { cursor: pointer; padding: 0 4px; border-radius: 4px; }
+  .moves .z:hover { background: rgba(255,255,255,.08); }
+  .moves .z.akt { background: var(--accent); color: #fff; }
+  .moves .z.zukunft { opacity: .45; }
+  .row.nav { gap: 6px; }
+  .row.nav button { padding: 8px 0; font-size: 15px; }
+  .navhint { font-size: 11px; color: var(--muted); margin: -6px 0 14px; line-height: 1.5; }
 
   .overlay {
     position: absolute; inset: 0; background: rgba(0,0,0,.6); border-radius: 4px;
@@ -125,8 +133,14 @@
     </div>
     <div class="row">
       <button id="neu" class="sec">Neu starten</button>
-      <button id="undo" class="sec">Zurück</button>
     </div>
+    <div class="row nav">
+      <button id="anfang" class="sec" title="Zur Ausgangsstellung" aria-label="Zur Ausgangsstellung">|◀</button>
+      <button id="zurueck" class="sec" title="Einen Zug zurück (Pfeil links)" aria-label="Einen Zug zurück">◀</button>
+      <button id="vor" class="sec" title="Einen Zug vor (Pfeil rechts)" aria-label="Einen Zug vor">▶</button>
+      <button id="ende" class="sec" title="Zum letzten Zug" aria-label="Zum letzten Zug">▶|</button>
+    </div>
+    <p class="navhint">Züge lassen sich zurück- und vorblättern oder in der Liste anklicken. Erst ein neuer Zug ersetzt die folgenden.</p>
     <h3>Rochade</h3>
     <p class="hint">König auf den eigenen Turm ziehen (blau umrandet). Danach stehen beide wie im normalen Schach: kurz König g, Turm f – lang König c, Turm d.</p>
     <div class="captured"><span class="cap-label">Weiß geschlagen</span><span id="capW"></span></div>
@@ -162,7 +176,9 @@
   const statusEl = document.getElementById('status');
   const overlay = document.getElementById('overlay');
 
-  let state, selected, legalForSel, history, moveList, startNr;
+  // positions[k] = Stellung nach k Halbzügen, moveList[k] = Notation des Zugs von positions[k] nach positions[k+1],
+  // cur = angezeigte Stellung. Blättern ändert nur cur; erst ein neuer Zug schneidet die späteren ab.
+  let state, selected, legalForSel, positions, moveList, cur, startNr;
 
   // ---------- Grundstellung 0–959 (Nummerierung nach Reinhard Scharnagl, 518 = normale Stellung) ----------
   function backRank(n) {
@@ -404,20 +420,29 @@
   function renderMoves() {
     const el = document.getElementById('moves');
     let html = '';
-    for (let i=0; i<moveList.length; i+=2)
-      html += `<div class="m"><span class="num">${i/2+1}.</span><span>${moveList[i]}</span><span>${moveList[i+1]||''}</span></div>`;
+    for (let i = 0; i < moveList.length; i += 2) {
+      html += `<div class="m"><span class="num">${i/2+1}.</span>`;
+      for (const k of [i, i+1]) if (k < moveList.length)
+        html += `<span class="z${k === cur-1 ? ' akt' : ''}${k >= cur ? ' zukunft' : ''}" data-k="${k}">${moveList[k]}</span>`;
+      html += '</div>';
+    }
     el.innerHTML = html;
-    el.scrollTop = el.scrollHeight;
+    const akt = el.querySelector('.akt');
+    if (akt) akt.scrollIntoView({ block: 'nearest' }); else if (cur === moveList.length) el.scrollTop = el.scrollHeight;
+    document.getElementById('anfang').disabled = document.getElementById('zurueck').disabled = cur === 0;
+    document.getElementById('vor').disabled = document.getElementById('ende').disabled = cur === moveList.length;
   }
 
-  function updateStatus() {
+  // still = beim Blättern: Spielende nur in der Statuszeile melden, nicht als großes Fenster
+  function updateStatus(still) {
     const legal = legalMoves(state);
     const checked = inCheck(state, state.turn);
     statusEl.classList.toggle('check', checked);
     const side = state.turn==='w'?'Weiß':'Schwarz';
     if (legal.length===0) {
-      showEnd(checked ? (state.turn==='w'?'Schwarz':'Weiß') + ' gewinnt – Schachmatt!' : 'Patt – Remis!');
-      statusEl.innerHTML = 'Spiel beendet';
+      const text = checked ? (state.turn==='w'?'Schwarz':'Weiß') + ' gewinnt – Schachmatt!' : 'Patt – Remis!';
+      if (!still) showEnd(text);
+      statusEl.innerHTML = still ? text : 'Spiel beendet';
       return;
     }
     statusEl.innerHTML = `<b>${side}</b> am Zug` + (checked ? ' – <b>Schach!</b>' : '');
@@ -480,13 +505,28 @@
          + (mv.flags.promo ? '=' + promo.toUpperCase().replace('N','S').replace('B','L').replace('R','T').replace('Q','D') : '');
   }
 
+  // Zug in die Partie eintragen: Steht man nicht am Ende, fallen die späteren Züge weg
   function finishMove(mv, promo) {
-    history.push(clone(state));
+    positions.length = cur + 1;
+    moveList.length = cur;
     moveList.push(notation(state, mv, promo));
     state = applyMove(state, mv, promo);
+    positions.push(clone(state));
+    cur++;
     selected = null; legalForSel = null;
     render();
     updateStatus();
+  }
+
+  // Zu Stellung k blättern (0 = Ausgangsstellung, moveList.length = letzter Zug)
+  function zeige(k) {
+    if (k < 0 || k > moveList.length) return;
+    cur = k;
+    state = clone(positions[k]);
+    selected = null; legalForSel = null;
+    overlay.classList.remove('show');
+    render();
+    updateStatus(true);
   }
 
   function askPromotion(color, cb) {
@@ -512,7 +552,8 @@
     startNr = nr;
     document.getElementById('nrIn').value = nr;
     state = startState(nr);
-    selected = null; legalForSel = null; history = []; moveList = [];
+    selected = null; legalForSel = null;
+    positions = [clone(state)]; moveList = []; cur = 0;
     overlay.classList.remove('show');
     render(); updateStatus();
   }
@@ -523,12 +564,18 @@
     newGame(n >= 0 && n <= 959 ? n : startNr);
   });
   document.getElementById('neu').addEventListener('click', () => newGame(startNr));
-  document.getElementById('undo').addEventListener('click', () => {
-    if (!history.length) return;
-    state = history.pop(); moveList.pop();
-    selected = null; legalForSel = null;
-    overlay.classList.remove('show');
-    render(); updateStatus();
+  // Blättern: Knöpfe, Klick in die Zugliste, Pfeiltasten
+  document.getElementById('anfang').addEventListener('click', () => zeige(0));
+  document.getElementById('zurueck').addEventListener('click', () => zeige(cur - 1));
+  document.getElementById('vor').addEventListener('click', () => zeige(cur + 1));
+  document.getElementById('ende').addEventListener('click', () => zeige(moveList.length));
+  document.getElementById('moves').addEventListener('click', e => {
+    const z = e.target.closest('.z'); if (z) zeige(+z.dataset.k + 1);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.target.closest && e.target.closest('input, select, textarea')) return;
+    if (e.key === 'ArrowLeft') { zeige(cur - 1); e.preventDefault(); }
+    if (e.key === 'ArrowRight') { zeige(cur + 1); e.preventDefault(); }
   });
 
   newGame(Math.floor(Math.random() * 960));

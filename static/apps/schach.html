@@ -74,6 +74,14 @@
   .moves { max-height: 220px; overflow-y: auto; font-size: 13px; font-variant-numeric: tabular-nums; }
   .moves .m { display: flex; gap: 8px; padding: 2px 0; }
   .moves .num { color: var(--muted); width: 24px; }
+  /* Zugliste zum Blättern (wasdenkenkis.de): aktueller Zug hervorgehoben, spätere Züge blass, bis ein neuer Zug sie ersetzt */
+  .moves .z { cursor: pointer; padding: 0 4px; border-radius: 4px; }
+  .moves .z:hover { background: rgba(255,255,255,.08); }
+  .moves .z.akt { background: var(--accent); color: #fff; }
+  .moves .z.zukunft { opacity: .45; }
+  .row.nav { gap: 6px; }
+  .row.nav button { padding: 8px 0; font-size: 15px; }
+  .navhint { font-size: 11px; color: var(--muted); margin: -6px 0 14px; line-height: 1.5; }
 
   .overlay {
     position: absolute; inset: 0; background: rgba(0,0,0,.6); border-radius: 4px;
@@ -109,8 +117,15 @@
     </select>
     <div class="row">
       <button id="newGame">Neues Spiel</button>
-      <button id="undo" class="sec">Zurück</button>
     </div>
+    <!-- Blättern durch die Partie (wasdenkenkis.de): ersetzt den alten Knopf „Zurück“ -->
+    <div class="row nav">
+      <button id="anfang" class="sec" title="Zur Ausgangsstellung" aria-label="Zur Ausgangsstellung">|◀</button>
+      <button id="zurueck" class="sec" title="Einen Zug zurück (Pfeil links)" aria-label="Einen Zug zurück">◀</button>
+      <button id="vor" class="sec" title="Einen Zug vor (Pfeil rechts)" aria-label="Einen Zug vor">▶</button>
+      <button id="ende" class="sec" title="Zum letzten Zug" aria-label="Zum letzten Zug">▶|</button>
+    </div>
+    <p class="navhint">Züge lassen sich zurück- und vorblättern oder in der Liste anklicken. Erst ein neuer Zug ersetzt die folgenden.</p>
     <div class="captured"><span class="cap-label">Weiß geschlagen</span><span id="capW"></span></div>
     <div class="captured"><span class="cap-label">Schwarz geschlagen</span><span id="capB"></span></div>
     <h3>Züge</h3>
@@ -144,7 +159,9 @@
   const statusEl = document.getElementById('status');
   const overlay = document.getElementById('overlay');
 
-  let state, selected, legalForSel, history, aiThinking;
+  // positions[k] = Stellung nach k Halbzügen, moves[k] = Notation des Zugs von positions[k] nach positions[k+1],
+  // cur = angezeigte Stellung. Blättern ändert nur cur; erst ein neuer Zug schneidet die späteren ab (wasdenkenkis.de).
+  let state, selected, legalForSel, positions, moves, cur, aiThinking;
 
   function startState() {
     const back = ['r','n','b','q','k','b','n','r'];
@@ -369,18 +386,21 @@
     document.getElementById('capB').innerHTML = state.capturedByB.join('');
   }
 
-  function updateStatus(extra) {
+  // still = beim Blättern: Spielende nur in der Statuszeile melden, nicht als großes Fenster
+  function updateStatus(extra, still) {
     const legal = legalMoves(state);
     const checked = inCheck(state, state.turn);
     statusEl.classList.toggle('check', checked);
     const side = state.turn==='w'?'Weiß':'Schwarz';
     if (legal.length===0) {
-      if (checked) showEnd((state.turn==='w'?'Schwarz':'Weiß') + ' gewinnt – Schachmatt!');
-      else showEnd('Patt – Remis!');
-      statusEl.innerHTML = 'Spiel beendet';
+      const text = checked ? (state.turn==='w'?'Schwarz':'Weiß') + ' gewinnt – Schachmatt!' : 'Patt – Remis!';
+      if (!still) showEnd(text);
+      statusEl.innerHTML = still ? text : 'Spiel beendet';
       return true;
     }
-    statusEl.innerHTML = (extra||'') + `<b>${side}</b> am Zug` + (checked ? ' – <b>Schach!</b>' : '');
+    const computer = aiModus() && state.turn==='b' && cur < moves.length;
+    statusEl.innerHTML = (extra||'') + `<b>${side}</b> am Zug` + (checked ? ' – <b>Schach!</b>' : '')
+      + (computer ? ' <span style="opacity:.7">(Computer – weiterblättern mit ▶)</span>' : '');
     return false;
   }
 
@@ -402,8 +422,11 @@
     });
   }
 
+  // Gegen den Computer zieht der Mensch nur Weiß (auch beim Blättern in eine Stellung mit Schwarz am Zug)
+  const darfZiehen = () => !aiThinking && !(aiModus() && state.turn==='b');
+
   function onDragStart(e, r, c) {
-    if (aiThinking) { e.preventDefault(); return; }
+    if (!darfZiehen()) { e.preventDefault(); return; }
     const p = state.board[r][c];
     if (!p || p.c!==state.turn) { e.preventDefault(); return; }
     selected = [r,c];
@@ -421,7 +444,7 @@
   }
 
   function onSquareClick(r,c) {
-    if (aiThinking) return;
+    if (!darfZiehen()) return;
     const p = state.board[r][c];
     // Zielzug?
     if (selected && legalForSel) {
@@ -448,48 +471,67 @@
   }
 
   function finishMove(mv, promo) {
-    history.push(clone(state));
-    recordMove(mv, promo);
-    state = applyMove(state, mv, promo);
-    selected = null; legalForSel = null;
-    render();
+    zugAusfuehren(mv, promo);
     const ended = updateStatus();
-    if (!ended && document.getElementById('mode').value==='ai' && state.turn==='b') {
+    if (!ended && aiModus() && state.turn==='b') {
       aiThinking = true;
       statusEl.innerHTML = '<b>Computer denkt …</b>';
       setTimeout(aiMove, 250);
     }
   }
 
-  function humanColor() {
-    return document.getElementById('mode').value==='ai' ? 'w' : state.turn;
+  // Zug in die Partie eintragen: Steht man nicht am Ende, fallen die späteren Züge weg (wasdenkenkis.de)
+  function zugAusfuehren(mv, promo) {
+    positions.length = cur + 1;
+    moves.length = cur;
+    moves.push(notation(state, mv, promo));
+    state = applyMove(state, mv, promo);
+    positions.push(clone(state));
+    cur++;
+    selected = null; legalForSel = null;
+    render(); renderMoves();
   }
 
-  let moveCount = 1;
-  function recordMove(mv, promo) {
-    const p = state.board[mv.from[0]][mv.from[1]];
-    const cap = state.board[mv.to[0]][mv.to[1]] || mv.flags.ep;
-    let txt;
-    if (mv.flags.castle==='K') txt='O-O';
-    else if (mv.flags.castle==='Q') txt='O-O-O';
-    else {
-      const pc = p.t==='p' ? '' : p.t.toUpperCase();
-      const to = files[mv.to[1]] + (8-mv.to[0]);
-      const from = files[mv.from[1]] + (8-mv.from[0]);
-      txt = pc + from + (cap?'x':'-') + to + (mv.flags.promo?'='+promo.toUpperCase():'');
+  function aiModus() { return document.getElementById('mode').value==='ai'; }
+  function humanColor() { return aiModus() ? 'w' : state.turn; }
+
+  // Notation mit deutschen Figurenbuchstaben wie in Schach 960: K D T L S (wasdenkenkis.de)
+  const DEUTSCH = { k:'K', q:'D', r:'T', b:'L', n:'S' };
+  function notation(s, mv, promo) {
+    if (mv.flags.castle) return mv.flags.castle==='K' ? 'O-O' : 'O-O-O';
+    const p = s.board[mv.from[0]][mv.from[1]];
+    const cap = s.board[mv.to[0]][mv.to[1]] || mv.flags.ep;
+    const pc = p.t==='p' ? '' : DEUTSCH[p.t];
+    return pc + files[mv.from[1]] + (8-mv.from[0]) + (cap?'x':'-') + files[mv.to[1]] + (8-mv.to[0])
+         + (mv.flags.promo ? '=' + DEUTSCH[promo] : '');
+  }
+
+  // Zugliste aus moves[] neu aufbauen: Nummern ergeben sich immer aus der Position in der Liste
+  function renderMoves() {
+    const el = document.getElementById('moves');
+    let html = '';
+    for (let i = 0; i < moves.length; i += 2) {
+      html += `<div class="m"><span class="num">${i/2+1}.</span>`;
+      for (const k of [i, i+1]) if (k < moves.length)
+        html += `<span class="z${k === cur-1 ? ' akt' : ''}${k >= cur ? ' zukunft' : ''}" data-k="${k}">${moves[k]}</span>`;
+      html += '</div>';
     }
-    const movesEl = document.getElementById('moves');
-    if (p.c==='w') {
-      const div = document.createElement('div');
-      div.className='m'; div.dataset.num=moveCount;
-      div.innerHTML = `<span class="num">${moveCount}.</span><span>${txt}</span>`;
-      movesEl.appendChild(div);
-    } else {
-      const last = movesEl.lastElementChild;
-      if (last) last.innerHTML += `<span>${txt}</span>`;
-      moveCount++;
-    }
-    movesEl.scrollTop = movesEl.scrollHeight;
+    el.innerHTML = html;
+    const akt = el.querySelector('.akt');
+    if (akt) akt.scrollIntoView({ block: 'nearest' }); else if (cur === moves.length) el.scrollTop = el.scrollHeight;
+    document.getElementById('anfang').disabled = document.getElementById('zurueck').disabled = cur === 0;
+    document.getElementById('vor').disabled = document.getElementById('ende').disabled = cur === moves.length;
+  }
+
+  // Zu Stellung k blättern (0 = Ausgangsstellung, moves.length = letzter Zug)
+  function zeige(k) {
+    if (aiThinking || k < 0 || k > moves.length) return;
+    cur = k;
+    state = clone(positions[k]);
+    selected = null; legalForSel = null;
+    overlay.classList.remove('show');
+    render(); renderMoves();
+    updateStatus('', true);
   }
 
   // ---------- Computer-Gegner (Minimax + Alpha-Beta, Tiefe 3) ----------
@@ -543,10 +585,7 @@
     }
     const mv = choices[Math.floor(Math.random()*choices.length)];
     aiThinking = false;
-    history.push(clone(state));
-    recordMove(mv, 'q');
-    state = applyMove(state, mv, 'q');
-    render();
+    zugAusfuehren(mv, 'q');
     updateStatus();
   }
 
@@ -573,24 +612,25 @@
   // ---------- Steuerung ----------
   function newGame() {
     state = startState();
-    selected=null; legalForSel=null; history=[]; aiThinking=false; moveCount=1;
-    document.getElementById('moves').innerHTML='';
+    selected=null; legalForSel=null; aiThinking=false;
+    positions = [clone(state)]; moves = []; cur = 0;
     overlay.classList.remove('show');
-    render(); updateStatus();
+    render(); renderMoves(); updateStatus();
   }
   document.getElementById('newGame').addEventListener('click', newGame);
   document.getElementById('mode').addEventListener('change', newGame);
-  document.getElementById('undo').addEventListener('click', () => {
-    if (aiThinking || !history.length) return;
-    // Im KI-Modus zwei Halbzüge zurück (deinen + den des Computers)
-    const steps = document.getElementById('mode').value==='ai' ? Math.min(2, history.length) : 1;
-    for (let i=0;i<steps;i++) state = history.pop();
-    selected=null; legalForSel=null;
-    // Zug-Log grob kürzen
-    const movesEl = document.getElementById('moves');
-    if (movesEl.lastElementChild) movesEl.lastElementChild.remove();
-    moveCount = Math.max(1, movesEl.children.length + 1);
-    render(); updateStatus();
+  // Blättern: Knöpfe, Klick in die Zugliste, Pfeiltasten (wasdenkenkis.de)
+  document.getElementById('anfang').addEventListener('click', () => zeige(0));
+  document.getElementById('zurueck').addEventListener('click', () => zeige(cur - 1));
+  document.getElementById('vor').addEventListener('click', () => zeige(cur + 1));
+  document.getElementById('ende').addEventListener('click', () => zeige(moves.length));
+  document.getElementById('moves').addEventListener('click', e => {
+    const z = e.target.closest('.z'); if (z) zeige(+z.dataset.k + 1);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.target.closest && e.target.closest('input, select, textarea')) return;
+    if (e.key === 'ArrowLeft') { zeige(cur - 1); e.preventDefault(); }
+    if (e.key === 'ArrowRight') { zeige(cur + 1); e.preventDefault(); }
   });
 
   newGame();
