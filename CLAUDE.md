@@ -132,8 +132,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- GPT-6-Antworten 32–35 (wortgleich, 4.502 Wörter) – damit alle 35 KI-Fragen beantwortet.
-- Svens Frage: Albumtitel „The Dark Side of the Moon“ korrekt geschrieben (Sven).
+- (leer – zuletzt freigegeben und gepusht am 2026-10-24: GPT-Antworten 32–35, erster Fragenblock komplett)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
