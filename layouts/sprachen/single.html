@@ -1,0 +1,33 @@
+{{- /* Sprachseite (/sprachen/<sprache>/): Wörter aus data/sprachen/<daten>.toml als Knöpfe nach Gruppen.
+       Antippen spricht das Wort mit der Sprachausgabe des Browsers (assets/js/sprachen.js, ohne externe Dienste). */ -}}
+{{ define "main" }}
+{{- $d := index hugo.Data.sprachen .Params.daten }}
+<article class="beitrag">
+  <header class="seitenkopf">
+    {{- with .Parent }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
+    <h1>{{ .Title }}</h1>
+    {{- with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+  </header>
+  {{ partial "herkunft.html" . }}
+  {{- with .Content }}<div class="inhalt">{{ . }}</div>{{ end }}
+
+  <div class="sprache" data-sprache="{{ $d.sprache }}">
+    <div class="sprache-leiste">
+      <p class="meta">Auf ein Wort tippen, um es zu hören.</p>
+      <label class="sprache-langsam"><input type="checkbox" id="sprache-langsam"> langsam</label>
+    </div>
+    <p class="sprache-hinweis meta" hidden></p>
+    {{- range $d.gruppe }}
+    <h2>{{ .name }}</h2>
+    <div class="woerter">
+      {{- range .woerter }}
+      <button type="button" class="wort" data-wort="{{ index . 0 }}"><span lang="{{ $d.sprache }}">{{ index . 0 }}</span><small>{{ index . 1 }}</small></button>
+      {{- end }}
+    </div>
+    {{- end }}
+  </div>
+</article>
+{{- with resources.Get "js/sprachen.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
+{{ end }}

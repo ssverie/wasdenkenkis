@@ -409,3 +409,19 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
   font-size: 0.9rem;
 }
 .site-footer p { margin: 1.25rem 0; }
+
+/* Sprachen: Wörter als Knöpfe zum Anhören (layouts/sprachen/single.html, assets/js/sprachen.js) */
+.sprache-leiste { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1rem; }
+.sprache-leiste .meta { margin: 0; }
+.sprache-langsam { display: inline-flex; align-items: center; gap: .4rem; color: var(--text-leise); cursor: pointer; }
+.sprache-hinweis { padding: .6rem .9rem; border-left: 3px solid var(--akzent); background: var(--akzent-leise); border-radius: 4px; }
+.sprache h2 { font-size: 1.05rem; margin: 1.6rem 0 .6rem; color: var(--text-leise); border-bottom: 1px solid var(--linie); padding-bottom: .3rem; }
+.woerter { display: flex; flex-wrap: wrap; gap: .5rem; }
+.wort {
+  font: inherit; font-size: 1.1rem; color: var(--text); text-align: left;
+  padding: .55rem .9rem; border: 1px solid var(--linie); border-radius: var(--radius);
+  background: var(--fläche); cursor: pointer; transition: background .15s, border-color .15s;
+}
+.wort small { display: block; font-size: .8rem; color: var(--text-leise); }
+.wort:hover, .wort:focus-visible { border-color: var(--akzent); }
+.wort.aktiv { background: var(--akzent-leise); border-color: var(--akzent); }

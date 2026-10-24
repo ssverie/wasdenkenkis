@@ -1,0 +1,158 @@
+# Englisch – die 100 wichtigsten Wörter. Erzeugt aus input/englisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Englisch"
+sprache = "en-GB"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["yes", "ja"],
+  ["no", "nein"],
+  ["please", "bitte"],
+  ["thank you", "danke"],
+  ["hello", "hallo"],
+  ["goodbye", "auf Wiedersehen"],
+  ["sorry", "Entschuldigung"],
+  ["excuse me", "Entschuldigen Sie"],
+  ["good", "gut"],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["I", "ich"],
+  ["you", "du / Sie"],
+  ["he", "er"],
+  ["she", "sie"],
+  ["it", "es"],
+  ["we", "wir"],
+  ["they", "sie (Mehrzahl)"],
+  ["my", "mein"],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["be", "sein"],
+  ["have", "haben"],
+  ["do", "tun, machen"],
+  ["go", "gehen"],
+  ["come", "kommen"],
+  ["see", "sehen"],
+  ["know", "wissen, kennen"],
+  ["want", "wollen"],
+  ["like", "mögen"],
+  ["need", "brauchen"],
+  ["eat", "essen"],
+  ["drink", "trinken"],
+  ["speak", "sprechen"],
+  ["understand", "verstehen"],
+  ["help", "helfen"],
+  ["buy", "kaufen"],
+  ["pay", "bezahlen"],
+  ["give", "geben"],
+  ["take", "nehmen"],
+  ["can", "können"],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["what", "was"],
+  ["where", "wo"],
+  ["when", "wann"],
+  ["who", "wer"],
+  ["why", "warum"],
+  ["how", "wie"],
+  ["how much", "wie viel"],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["today", "heute"],
+  ["tomorrow", "morgen"],
+  ["yesterday", "gestern"],
+  ["now", "jetzt"],
+  ["later", "später"],
+  ["day", "Tag"],
+  ["week", "Woche"],
+  ["time", "Zeit"],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["one", "eins"],
+  ["two", "zwei"],
+  ["three", "drei"],
+  ["four", "vier"],
+  ["five", "fünf"],
+  ["six", "sechs"],
+  ["seven", "sieben"],
+  ["eight", "acht"],
+  ["nine", "neun"],
+  ["ten", "zehn"],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["man", "Mann"],
+  ["woman", "Frau"],
+  ["child", "Kind"],
+  ["friend", "Freund"],
+  ["family", "Familie"],
+  ["name", "Name"],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["house", "Haus"],
+  ["room", "Zimmer"],
+  ["street", "Straße"],
+  ["city", "Stadt"],
+  ["shop", "Geschäft"],
+  ["restaurant", "Restaurant"],
+  ["hotel", "Hotel"],
+  ["station", "Bahnhof"],
+  ["toilet", "Toilette"],
+  ["doctor", "Arzt"],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["water", "Wasser"],
+  ["coffee", "Kaffee"],
+  ["bread", "Brot"],
+  ["food", "Essen"],
+  ["money", "Geld"],
+  ["car", "Auto"],
+  ["phone", "Telefon"],
+  ["ticket", "Fahrkarte"],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["big", "groß"],
+  ["small", "klein"],
+  ["hot", "heiß"],
+  ["cold", "kalt"],
+  ["new", "neu"],
+  ["old", "alt"],
+  ["open", "offen"],
+  ["closed", "geschlossen"],
+  ["left", "links"],
+  ["right", "rechts"],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["here", "hier"],
+  ["there", "dort"],
+  ["and", "und"],
+  ["more", "mehr"],
+]

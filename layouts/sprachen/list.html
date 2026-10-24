@@ -1,0 +1,20 @@
+{{- /* Sprachen (/sprachen/): je Sprache eine Kachel mit Anzahl der Wörter (aus data/sprachen/<daten>.toml), alphabetisch */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+<ul class="karten">
+  {{- range .RegularPages.ByTitle }}
+  {{- $d := index hugo.Data.sprachen .Params.daten }}
+  {{- $n := 0 }}{{ range $d.gruppe }}{{ $n = add $n (len .woerter) }}{{ end }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .Title }}</strong>
+      <span lang="{{ $d.sprache }}">{{ range first 3 (index $d.gruppe 0).woerter }}{{ index . 0 }} · {{ end }}…</span>
+      <small>{{ $n }} Wörter</small>
+    </a>
+  </li>
+  {{- end }}
+</ul>
+{{ end }}

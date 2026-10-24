@@ -134,3 +134,10 @@ text = "Von den Modellen selbst geschrieben."
 status = "erledigt"
 von = "Sven"
 seit = "2026-10-21"
+
+[[idee]]
+titel = "Sprachen"
+text = "10 bis 20 Sprachen, je Sprache die 100 wichtigsten Wörter zum Anhören. Seit 24. Oktober unter Wissen, angefangen mit Englisch."
+status = "erledigt"
+von = "Sven"
+seit = "2026-10-24"
