@@ -4,7 +4,7 @@
   {{ .Content }}
 </header>
 <ul class="karten">
-  {{- range .Pages.ByTitle }}
+  {{- range sort .Pages "Params.jahr" "desc" }}   {{- /* neuestes oben (Svens Regel für alle Medien) */}}
   {{- $film := . }}
   {{- $n := len .Pages }}
   <li>

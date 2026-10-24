@@ -1,6 +1,6 @@
 +++
 title = "Sachbuch"
-description = "Philosophie, Geschichte, Naturwissenschaft und Zeugnisse – von Mark Aurel bis Christopher Clark, chronologisch."
+description = "Philosophie, Geschichte, Naturwissenschaft und Zeugnisse – von Christopher Clark bis Mark Aurel, chronologisch, das Neueste zuerst."
 layout = "buchliste"
 daten = "sachbuch"
 +++

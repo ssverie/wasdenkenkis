@@ -1,11 +1,11 @@
-{{- /* Bücherübersicht (/buecher/): alle Bücher mit eigener Seite, nach Erscheinungsjahr */ -}}
+{{- /* Bücherübersicht (/buecher/): alle Bücher mit eigener Seite, nach Erscheinungsjahr, neuestes oben */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>
 <ul class="karten">
-  {{- range .Pages.ByParam "jahr" }}
+  {{- range (.Pages.ByParam "jahr").Reverse }}
   {{- $n := len .Pages }}
   <li>
     <a class="karte" href="{{ .RelPermalink }}">

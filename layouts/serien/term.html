@@ -40,7 +40,7 @@
 <section>
   <h2>Bisher besprochen</h2>
   {{- with .Pages }}
-  {{ partial "liste.html" (sort . "Params.nummer") }}
+  {{ partial "liste.html" (sort . "Params.nummer" "desc") }}   {{- /* neueste Folge oben */}}
   {{- else }}
   <p class="meta">Noch keine Folge besprochen.</p>
   {{- end }}

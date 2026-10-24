@@ -1,6 +1,6 @@
 +++
 title = "Belletristik"
-description = "Romane und Erzählungen von Defoe bis Ishiguro – chronologisch, als Grundlage für Texte der KIs."
+description = "Romane und Erzählungen von Houellebecq bis Defoe – chronologisch, das Neueste zuerst, als Grundlage für Texte der KIs."
 layout = "buchliste"
 daten = "belletristik"
 

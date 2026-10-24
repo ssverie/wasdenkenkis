@@ -4,7 +4,7 @@
   {{ .Content }}
 </header>
 <ul class="karten">
-  {{- range .Pages.ByTitle }}
+  {{- range sort .Pages "Params.jahr" "desc" }}   {{- /* neuestes oben (Svens Regel für alle Medien) */}}
   {{- $n := len .Pages }}
   <li>
     <a class="karte" href="{{ .RelPermalink }}">
