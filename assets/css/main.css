@@ -452,3 +452,24 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .album-bezug { font-size: 0.95rem; }
 .album-titel a { color: inherit; text-decoration-color: var(--akzent); }
 .album-hoeren { margin: 0.3rem 0; }
+/* Musik: Umschalter Alben | Titel auf der Künstlerseite, Titelauswahl */
+.umschalter { display: inline-flex; margin: 0.5rem 0 1rem; border: 1px solid var(--linie); border-radius: var(--radius); overflow: hidden; }
+.umschalter button { font: inherit; padding: 0.45rem 1.1rem; border: 0; background: var(--fläche); color: inherit; cursor: pointer; }
+.umschalter button + button { border-left: 1px solid var(--linie); }
+.umschalter button[aria-pressed="true"] { background: var(--akzent); color: var(--bg); }
+.umschalter small { opacity: .75; margin-left: 0.25rem; }
+.stuecke { padding-left: 1.6rem; }
+.stuecke li { padding: 0.35rem 0; }
+.stuecke .meta { display: block; }
+.album-stuecke a { color: inherit; text-decoration-color: var(--akzent); }
+/* Podcast-Kachel: Sendungsname → YouTube-Kanal, Rest der Karte → Folgenseite (gestreckter Link) */
+.karte-podcast { position: relative; }
+.karte-podcast a { color: inherit; text-decoration: none; }
+.karte-podcast .folge-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius); }
+.karte-podcast .sendung-link { position: relative; z-index: 1; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.karte-podcast .sendung-link:hover { text-decoration-thickness: 2px; }
+.karte-podcast:focus-within { border-color: var(--akzent); }
+.stueck-titel { font-weight: 600; }
+.stuecke .stueck-links { list-style: none; padding: 0; margin: 0.15rem 0 0; }
+.stuecke .stueck-links li { padding: 0.05rem 0; }
+.stuecke .stueck-links .meta { display: inline; }

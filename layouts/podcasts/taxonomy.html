@@ -7,11 +7,16 @@
   {{- range sort .Pages "Params.erschienen" "desc" }}   {{- /* neuestes oben, nach Erscheinungsdatum (Svens Regel für alle Medien) */}}
   {{- $n := len .Pages }}
   <li>
-    <a class="karte" href="{{ .RelPermalink }}">
-      <strong>{{ .Title }}</strong>
+    {{- /* Sendungsname am Titelanfang führt zum YouTube-Kanal (sendung_youtube), alles andere zur Folgenseite (Sven). Die Folge ist ein
+           „gestreckter“ Link über die ganze Karte, der Kanal-Link liegt darüber – verschachtelte Links sind in HTML nicht erlaubt. */}}
+    {{- $sendung := .Params.sendung }}{{ $titel := .Title }}
+    <div class="karte karte-podcast">
+      <strong>
+        {{- if and .Params.sendung_youtube $sendung (strings.HasPrefix $titel $sendung) }}<a class="sendung-link" href="{{ .Params.sendung_youtube }}" rel="noopener">{{ $sendung }}</a> {{ $titel = strings.TrimSpace (strings.TrimPrefix $sendung $titel) }}{{ end }}
+        <a class="folge-link" href="{{ .RelPermalink }}">{{ $titel }}</a></strong>
       <span>{{ with .Params.gast }}Gast: {{ . }}{{ end }}{{ with .Params.erschienen }} · {{ . | time.Format ":date_medium" }}{{ end }}</span>
       <small>{{ with .Params.laenge }}{{ . }} · {{ end }}{{ $n }} {{ cond (eq $n 1) "Text" "Texte" }} von KIs</small>
-    </a>
+    </div>
   </li>
   {{- end }}
 </ul>

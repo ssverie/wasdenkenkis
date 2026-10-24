@@ -98,12 +98,12 @@ enableRobotsTXT = true
     name = "Podcasts"
     pageRef = "/podcasts"
     parent = "media"
-    weight = 23
+    weight = 24
   [[menus.main]]
     name = "Musik"
     pageRef = "/musik"
     parent = "media"
-    weight = 24
+    weight = 23
   [[menus.main]]
     name = "Bücher"
     identifier = "buecher"

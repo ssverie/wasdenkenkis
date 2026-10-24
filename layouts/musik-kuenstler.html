@@ -1,34 +1,70 @@
-{{- /* Künstlerseite (/musik/<kuenstler>/): alle Alben aus data/musik.toml mit kuenstler = .Params.kuenstler,
-       je Album Titel mit Jahr (verlinkt auf YouTube, falls vorhanden – nur verlinken, nie einbetten), Erscheinen, Titelliste.
-       Sortiert nach datum (Erstveröffentlichung), das Neueste oben (Svens Regel für alle Medien). */ -}}
+{{- /* Künstlerseite (/musik/<kuenstler>/): Umschalter „Alben“ | „Titel“ (assets/js/musik.js; ohne Skript stehen beide Teile untereinander).
+       Alben: alle [[album]] aus data/musik.toml mit kuenstler = .Params.kuenstler, je Album Titel mit Jahr (verlinkt auf YouTube, falls
+       vorhanden – nur verlinken, nie einbetten), Erscheinen, Titelliste; sortiert nach datum (Erstveröffentlichung), das Neueste oben.
+       Titel: Svens Auswahl aus [[stueck]], Titelname → erster Link, darunter alle Fassungen (Video, Audio, Live), neuestes Jahr oben; dieselben Stücke sind auch in den Albumlisten verlinkt. */ -}}
 {{ define "main" }}
+{{- $k := .Params.kuenstler }}
+{{- $alben := sort (where hugo.Data.musik.album "kuenstler" $k) "datum" "desc" }}
+{{- $stuecke := sort (sort (where (hugo.Data.musik.stueck | default slice) "kuenstler" $k) "titel") "jahr" "desc" }}
 <header class="seitenkopf">
   <p class="meta"><a href="{{ .Parent.RelPermalink }}">← {{ .Parent.Title }}</a></p>
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>
-<div class="alben">
-  {{- range sort (where hugo.Data.musik.album "kuenstler" .Params.kuenstler) "datum" "desc" }}
-  <section class="album">
-    <h2 class="album-titel">
-      {{- if .youtube }}<a href="{{ .youtube }}" rel="noopener">{{ .titel }}</a>{{ else }}{{ .titel }}{{ end }} <small>{{ .jahr }}</small></h2>
-    {{- with .erschienen }}<p class="meta">Erschienen: {{ . }}</p>{{ end }}
-    {{- with .hinweis }}<p class="meta">{{ . }}</p>{{ end }}
-    <ol class="album-stuecke">
-      {{- range .titel_liste }}
-      <li>{{ . }}</li>
-      {{- end }}
-    </ol>
-    {{- if .youtube }}<p class="album-hoeren"><a href="{{ .youtube }}" rel="noopener">Auf YouTube anhören</a>{{ with .youtube_kanal }} <span class="meta">({{ . }})</span>{{ end }}</p>{{ end }}
-    {{- with .bezug }}
-    <p class="album-bezug">Dazu auf dieser Seite:
-      {{- range $i, $b := . }}{{ if $i }} · {{ end }} <a href="{{ $b.pfad }}/">{{ $b.text }}</a>{{ end }}
-    </p>
-    {{- end }}
-    {{- if .quelle_url }}
-    <p class="meta">Daten: <a href="{{ .quelle_url }}" rel="noopener">{{ .quelle | default "Quelle" }}</a>{{ with .abgerufen }}, abgerufen am {{ . | time.Format ":date_long" }}{{ end }}</p>
-    {{- end }}
-  </section>
-  {{- end }}
+{{- if $stuecke }}
+<div class="umschalter" role="group" aria-label="Ansicht" hidden>
+  <button type="button" data-ziel="alben" aria-pressed="true">Alben <small>{{ len $alben }}</small></button>
+  <button type="button" data-ziel="titel" aria-pressed="false">Titel <small>{{ len $stuecke }}</small></button>
 </div>
+{{- end }}
+<section id="alben" class="musik-teil">
+  {{- if $stuecke }}<h2 class="musik-teil-kopf">Alben</h2>{{ end }}
+  <div class="alben">
+    {{- range $alben }}
+    {{- $album := .titel }}
+    <section class="album">
+      <h2 class="album-titel">
+        {{- if .youtube }}<a href="{{ .youtube }}" rel="noopener">{{ .titel }}</a>{{ else }}{{ .titel }}{{ end }} <small>{{ .jahr }}</small></h2>
+      {{- with .erschienen }}<p class="meta">Erschienen: {{ . }}</p>{{ end }}
+      {{- with .hinweis }}<p class="meta">{{ . }}</p>{{ end }}
+      <ol class="album-stuecke">
+        {{- range .titel_liste }}
+        {{- $s := index (where (where $stuecke "album" $album) "titel" .) 0 }}
+        <li>{{ with $s }}<a href="{{ (index .link 0).url }}" rel="noopener">{{ .titel }}</a>{{ else }}{{ . }}{{ end }}</li>
+        {{- end }}
+      </ol>
+      {{- if .youtube }}<p class="album-hoeren"><a href="{{ .youtube }}" rel="noopener">Auf YouTube anhören</a>{{ with .youtube_kanal }} <span class="meta">({{ . }})</span>{{ end }}</p>{{ end }}
+      {{- with .bezug }}
+      <p class="album-bezug">Dazu auf dieser Seite:
+        {{- range $i, $b := . }}{{ if $i }} · {{ end }} <a href="{{ $b.pfad }}/">{{ $b.text }}</a>{{ end }}
+      </p>
+      {{- end }}
+      {{- if .quelle_url }}
+      <p class="meta">Daten: <a href="{{ .quelle_url }}" rel="noopener">{{ .quelle | default "Quelle" }}</a>{{ with .abgerufen }}, abgerufen am {{ . | time.Format ":date_long" }}{{ end }}</p>
+      {{- end }}
+    </section>
+    {{- end }}
+  </div>
+</section>
+{{- if $stuecke }}
+<section id="titel" class="musik-teil">
+  <h2 class="musik-teil-kopf">Titel</h2>
+  <ol class="stuecke">
+    {{- range $stuecke }}
+    <li>
+      <a class="stueck-titel" href="{{ (index .link 0).url }}" rel="noopener">{{ .titel }}</a>
+      <span class="meta">{{ .album }} ({{ .jahr }})</span>
+      <ul class="stueck-links">
+        {{- range .link }}
+        <li><a href="{{ .url }}" rel="noopener">{{ .art }}</a>{{ with .kanal }} <span class="meta">– YouTube, {{ . }}</span>{{ end }}</li>
+        {{- end }}
+      </ul>
+    </li>
+    {{- end }}
+  </ol>
+</section>
+{{- with resources.Get "js/musik.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
+{{- end }}
 {{ end }}

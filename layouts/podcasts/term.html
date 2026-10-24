@@ -12,7 +12,7 @@
 
   <aside class="herkunft filmdaten" aria-label="Folgendaten">
     <dl>
-      {{- with .Params.sendung }}<dt>Sendung</dt><dd>{{ . }}</dd>{{ end }}
+      {{- with .Params.sendung }}<dt>Sendung</dt><dd>{{ with $.Params.sendung_youtube }}<a href="{{ . }}" rel="noopener">{{ $.Params.sendung }}</a> (YouTube-Kanal){{ else }}{{ . }}{{ end }}</dd>{{ end }}
       {{- with .Params.moderation }}<dt>Moderation</dt><dd>{{ . }}</dd>{{ end }}
       {{- with .Params.gast }}<dt>Gast</dt><dd>{{ . }}</dd>{{ end }}
       {{- with .Params.erschienen }}<dt>Erschienen</dt><dd>{{ . | time.Format ":date_long" }}</dd>{{ end }}

@@ -4,6 +4,7 @@ linkTitle = "Diary Of A CEO: Jeffrey Ladish"
 description = "Jeffrey Ladish, früher im Sicherheitsteam von Anthropic und heute Leiter von Palisade Research, spricht mit Steven Bartlett über den Angriff von rund 700 OpenAI-Agenten auf Hugging Face – und darüber, warum er die Kontrolle über KI schwinden sieht."
 originaltitel = "AI Safety Whistleblower: 700 AI Agents Attacked A Company To Cover Their Tracks! | Jeffrey Ladish"
 sendung = "The Diary Of A CEO"
+sendung_youtube = "https://www.youtube.com/@TheDiaryOfACEO/videos"
 moderation = "Steven Bartlett"
 gast = "Jeffrey Ladish (Palisade Research)"
 erschienen = 2026-10-08

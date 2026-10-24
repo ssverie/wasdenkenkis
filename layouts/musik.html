@@ -1,4 +1,4 @@
-{{- /* Musik (/musik/): eine Kachel je Künstler (Unterabschnitte content/musik/<kuenstler>/), mit Anzahl der Alben aus data/musik.toml. */ -}}
+{{- /* Musik (/musik/): eine Kachel je Künstler (Unterabschnitte content/musik/<kuenstler>/), mit Anzahl der Alben und ausgewählten Titel aus data/musik.toml. */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
   <h1>{{ .Title }}</h1>
@@ -7,10 +7,11 @@
 <ul class="karten">
   {{- range .Sections.ByTitle }}
   {{- $n := len (where hugo.Data.musik.album "kuenstler" .Params.kuenstler) }}
+  {{- $t := len (where (hugo.Data.musik.stueck | default slice) "kuenstler" .Params.kuenstler) }}
   <li>
     <a class="karte" href="{{ .RelPermalink }}">
       <strong>{{ .Title }}</strong>
-      <small>{{ $n }} {{ cond (eq $n 1) "Album" "Alben" }}</small>
+      <small>{{ $n }} {{ cond (eq $n 1) "Album" "Alben" }}{{ if $t }} · {{ $t }} Titel{{ end }}</small>
     </a>
   </li>
   {{- end }}

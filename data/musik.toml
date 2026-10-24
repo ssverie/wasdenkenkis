@@ -3,6 +3,48 @@
 # [[album]]: kuenstler (genau wie im Feld kuenstler der Künstlerseite), titel (Albumtitel), jahr (Zahl), erschienen (Text),
 # datum (Erstveröffentlichung, zum Sortieren), titel_liste (Stücke in Reihenfolge), optional hinweis, optional youtube (nur verlinken, nie einbetten) + youtube_kanal,
 # quelle/quelle_url (woher die Daten stammen), abgerufen, optional [[album.bezug]] text/pfad = Seiten dazu auf wasdenkenkis.de.
+# [[stueck]]: Titelauswahl je Künstler (Svens Wahl) – kuenstler, titel, album, jahr, dazu je Fassung ein [[stueck.link]] mit
+# art (Video | Audio | Live, in dieser Reihenfolge), url (YouTube, ohne &list=…), kanal (Kanal und Zusatz, z. B. „Kanal Metallica“).
+# Erscheint auf der Künstlerseite unter „Titel“ (Titelname → erster Link, dahinter alle Arten); in der Albumliste führt der Titel
+# ebenfalls zum ersten Link. Der Übersicht halber ganz oben.
+
+[[stueck]]
+kuenstler = "AC/DC"
+titel = "Thunderstruck"
+album = "The Razors Edge"
+jahr = 1990
+  [[stueck.link]]
+  art = "Video"
+  url = "https://www.youtube.com/watch?v=v2AC41dglnM"
+  kanal = "offizielles Video, Kanal acdcVEVO"
+
+[[stueck]]
+kuenstler = "Metallica"
+titel = "Nothing Else Matters"
+album = "Metallica"
+jahr = 1991
+  [[stueck.link]]
+  art = "Video"
+  url = "https://www.youtube.com/watch?v=tAGnKpE4NCI"
+  kanal = "offizielles Video, Kanal Metallica"
+
+[[stueck]]
+kuenstler = "Metallica"
+titel = "For Whom the Bell Tolls"
+album = "Ride the Lightning"
+jahr = 1984
+  [[stueck.link]]
+  art = "Video"
+  url = "https://www.youtube.com/watch?v=17HRV8k1YMw"
+  kanal = "Kanal MetalMusicInc – kein offizieller Kanal"
+  [[stueck.link]]
+  art = "Audio"
+  url = "https://www.youtube.com/watch?v=B_HSa1dEL9s"
+  kanal = "Remaster, Kanal Metallica – Topic"
+  [[stueck.link]]
+  art = "Live"
+  url = "https://www.youtube.com/watch?v=qdlQyNe_9tE"
+  kanal = "aus „Cliff 'Em All“, Kanal Metallica"
 
 [[album]]
 kuenstler = "Pink Floyd"
@@ -348,4 +390,665 @@ titel_liste = [
 ]
 quelle = "Wikipedia (en)"
 quelle_url = "https://en.wikipedia.org/wiki/The_Endless_River"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "High Voltage"
+jahr = 1975
+datum = 1975-02-17
+erschienen = "17. Februar 1975"
+hinweis = "nur in Australien erschienen"
+titel_liste = [
+  "Baby, Please Don't Go",
+  "She's Got Balls",
+  "Little Lover",
+  "Stick Around",
+  "Soul Stripper",
+  "You Ain't Got a Hold on Me",
+  "Love Song (Oh Jene)",
+  "Show Business",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/High_Voltage_(1975_album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "T.N.T."
+jahr = 1975
+datum = 1975-12-01
+erschienen = "1. Dezember 1975"
+hinweis = "nur in Australien erschienen"
+titel_liste = [
+  "It's a Long Way to the Top (If You Wanna Rock 'n' Roll)",
+  "Rock 'n' Roll Singer",
+  "The Jack",
+  "Live Wire",
+  "T.N.T.",
+  "Rocker",
+  "Can I Sit Next to You, Girl",
+  "High Voltage",
+  "School Days",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/T.N.T._(album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "High Voltage"
+jahr = 1976
+datum = 1976-05-14
+erschienen = "14. Mai 1976"
+hinweis = "internationale Ausgabe: Auswahl aus den australischen Alben High Voltage und T.N.T."
+titel_liste = [
+  "It's a Long Way to the Top (If You Wanna Rock 'n' Roll)",
+  "Rock 'n' Roll Singer",
+  "The Jack",
+  "Live Wire",
+  "T.N.T.",
+  "Can I Sit Next to You Girl",
+  "Little Lover",
+  "She's Got Balls",
+  "High Voltage",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/High_Voltage_(1976_album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Dirty Deeds Done Dirt Cheap"
+jahr = 1976
+datum = 1976-09-20
+erschienen = "20. September 1976"
+hinweis = "australische Erstausgabe; die internationale Ausgabe hat eine andere Auswahl (u. a. „Love at First Feel“ und „Rocker“ statt „Jailbreak“ und „R.I.P. (Rock in Peace)“)"
+titel_liste = [
+  "Dirty Deeds Done Dirt Cheap",
+  "Ain't No Fun (Waiting 'Round to Be a Millionaire)",
+  "There's Gonna Be Some Rockin'",
+  "Problem Child",
+  "Squealer",
+  "Big Balls",
+  "R.I.P. (Rock in Peace)",
+  "Ride On",
+  "Jailbreak",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Dirty_Deeds_Done_Dirt_Cheap"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Let There Be Rock"
+jahr = 1977
+datum = 1977-03-21
+erschienen = "21. März 1977"
+hinweis = "australische Erstausgabe; international erschienen am 25. Juli 1977 mit „Problem Child“ statt „Crabsody in Blue“"
+titel_liste = [
+  "Go Down",
+  "Dog Eat Dog",
+  "Let There Be Rock",
+  "Bad Boy Boogie",
+  "Overdose",
+  "Crabsody in Blue",
+  "Hell Ain't a Bad Place to Be",
+  "Whole Lotta Rosie",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Let_There_Be_Rock"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Powerage"
+jahr = 1978
+datum = 1978-05-05
+erschienen = "5. Mai 1978"
+hinweis = "europäische Erstausgabe (LP); die australische und US-Ausgabe sowie alle CDs haben eine andere Reihenfolge und kein „Cold Hearted Man“"
+titel_liste = [
+  "Rock 'n' Roll Damnation",
+  "Gimme a Bullet",
+  "Down Payment Blues",
+  "Gone Shootin'",
+  "Riff Raff",
+  "Sin City",
+  "Up to My Neck in You",
+  "What's Next to the Moon",
+  "Cold Hearted Man",
+  "Kicked in the Teeth",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Powerage"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Highway to Hell"
+jahr = 1979
+datum = 1979-07-27
+erschienen = "27. Juli 1979"
+titel_liste = [
+  "Highway to Hell",
+  "Girls Got Rhythm",
+  "Walk All Over You",
+  "Touch Too Much",
+  "Beating Around the Bush",
+  "Shot Down in Flames",
+  "Get It Hot",
+  "If You Want Blood (You've Got It)",
+  "Love Hungry Man",
+  "Night Prowler",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Highway_to_Hell"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Back in Black"
+jahr = 1980
+datum = 1980-07-25
+erschienen = "25. Juli 1980"
+titel_liste = [
+  "Hells Bells",
+  "Shoot to Thrill",
+  "What Do You Do for Money Honey",
+  "Givin the Dog a Bone",
+  "Let Me Put My Love into You",
+  "Back in Black",
+  "You Shook Me All Night Long",
+  "Have a Drink on Me",
+  "Shake a Leg",
+  "Rock and Roll Ain't Noise Pollution",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Back_in_Black"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "For Those About to Rock We Salute You"
+jahr = 1981
+datum = 1981-11-20
+erschienen = "20. November 1981"
+titel_liste = [
+  "For Those About to Rock (We Salute You)",
+  "Put the Finger on You",
+  "Let's Get It Up",
+  "Inject the Venom",
+  "Snowballed",
+  "Evil Walks",
+  "C.O.D.",
+  "Breaking the Rules",
+  "Night of the Long Knives",
+  "Spellbound",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/For_Those_About_to_Rock_We_Salute_You"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Flick of the Switch"
+jahr = 1983
+datum = 1983-08-19
+erschienen = "19. August 1983"
+titel_liste = [
+  "Rising Power",
+  "This House Is on Fire",
+  "Flick of the Switch",
+  "Nervous Shakedown",
+  "Landslide",
+  "Guns for Hire",
+  "Deep in the Hole",
+  "Bedlam in Belgium",
+  "Badlands",
+  "Brain Shake",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Flick_of_the_Switch"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Fly on the Wall"
+jahr = 1985
+datum = 1985-07-01
+erschienen = "1. Juli 1985"
+titel_liste = [
+  "Fly on the Wall",
+  "Shake Your Foundations",
+  "First Blood",
+  "Danger",
+  "Sink the Pink",
+  "Playing with Girls",
+  "Stand Up",
+  "Hell or High Water",
+  "Back in Business",
+  "Send for the Man",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Fly_on_the_Wall_(AC/DC_album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Blow Up Your Video"
+jahr = 1988
+datum = 1988-02-01
+erschienen = "1. Februar 1988"
+titel_liste = [
+  "Heatseeker",
+  "That's the Way I Wanna Rock 'n' Roll",
+  "Meanstreak",
+  "Go Zone",
+  "Kissin' Dynamite",
+  "Nick of Time",
+  "Some Sin for Nuthin'",
+  "Ruff Stuff",
+  "Two's Up",
+  "This Means War",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Blow_Up_Your_Video"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "The Razors Edge"
+jahr = 1990
+datum = 1990-09-24
+erschienen = "24. September 1990"
+titel_liste = [
+  "Thunderstruck",
+  "Fire Your Guns",
+  "Moneytalks",
+  "The Razors Edge",
+  "Mistress for Christmas",
+  "Rock Your Heart Out",
+  "Are You Ready",
+  "Got You by the Balls",
+  "Shot of Love",
+  "Let's Make It",
+  "Goodbye & Good Riddance to Bad Luck",
+  "If You Dare",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/The_Razors_Edge_(AC/DC_album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Ballbreaker"
+jahr = 1995
+datum = 1995-09-25
+erschienen = "25. September 1995"
+titel_liste = [
+  "Hard as a Rock",
+  "Cover You in Oil",
+  "The Furor",
+  "Boogie Man",
+  "The Honey Roll",
+  "Burnin' Alive",
+  "Hail Caesar",
+  "Love Bomb",
+  "Caught with Your Pants Down",
+  "Whiskey on the Rocks",
+  "Ballbreaker",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Ballbreaker"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Stiff Upper Lip"
+jahr = 2000
+datum = 2000-02-28
+erschienen = "28. Februar 2000"
+titel_liste = [
+  "Stiff Upper Lip",
+  "Meltdown",
+  "House of Jazz",
+  "Hold Me Back",
+  "Safe in New York City",
+  "Can't Stand Still",
+  "Can't Stop Rock 'n' Roll",
+  "Satellite Blues",
+  "Damned",
+  "Come and Get It",
+  "All Screwed Up",
+  "Give It Up",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Stiff_Upper_Lip_(album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Black Ice"
+jahr = 2008
+datum = 2008-10-17
+erschienen = "17. Oktober 2008"
+titel_liste = [
+  "Rock 'n' Roll Train",
+  "Skies on Fire",
+  "Big Jack",
+  "Anything Goes",
+  "War Machine",
+  "Smash 'n' Grab",
+  "Spoilin' for a Fight",
+  "Wheels",
+  "Decibel",
+  "Stormy May Day",
+  "She Likes Rock 'n' Roll",
+  "Money Made",
+  "Rock 'n' Roll Dream",
+  "Rocking All the Way",
+  "Black Ice",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Black_Ice_(album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Rock or Bust"
+jahr = 2014
+datum = 2014-11-28
+erschienen = "28. November 2014"
+titel_liste = [
+  "Rock or Bust",
+  "Play Ball",
+  "Rock the Blues Away",
+  "Miss Adventure",
+  "Dogs of War",
+  "Got Some Rock & Roll Thunder",
+  "Hard Times",
+  "Baptism by Fire",
+  "Rock the House",
+  "Sweet Candy",
+  "Emission Control",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Rock_or_Bust"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "AC/DC"
+titel = "Power Up"
+jahr = 2020
+datum = 2020-11-13
+erschienen = "13. November 2020"
+titel_liste = [
+  "Realize",
+  "Rejection",
+  "Shot in the Dark",
+  "Through the Mists of Time",
+  "Kick You When You're Down",
+  "Witch's Spell",
+  "Demon Fire",
+  "Wild Reputation",
+  "No Man's Land",
+  "Systems Down",
+  "Money Shot",
+  "Code Red",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Power_Up_(album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Metallica"
+titel = "Kill 'Em All"
+jahr = 1983
+datum = 1983-07-25
+erschienen = "25. Juli 1983"
+titel_liste = [
+  "Hit the Lights",
+  "The Four Horsemen",
+  "Motorbreath",
+  "Jump in the Fire",
+  "(Anesthesia) – Pulling Teeth",
+  "Whiplash",
+  "Phantom Lord",
+  "No Remorse",
+  "Seek & Destroy",
+  "Metal Militia",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Kill_'Em_All"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Metallica"
+titel = "Ride the Lightning"
+jahr = 1984
+datum = 1984-07-27
+erschienen = "27. Juli 1984"
+titel_liste = [
+  "Fight Fire with Fire",
+  "Ride the Lightning",
+  "For Whom the Bell Tolls",
+  "Fade to Black",
+  "Trapped Under Ice",
+  "Escape",
+  "Creeping Death",
+  "The Call of Ktulu",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Ride_the_Lightning"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Metallica"
+titel = "Master of Puppets"
+jahr = 1986
+datum = 1986-03-03
+erschienen = "3. März 1986"
+titel_liste = [
+  "Battery",
+  "Master of Puppets",
+  "The Thing That Should Not Be",
+  "Welcome Home (Sanitarium)",
+  "Disposable Heroes",
+  "Leper Messiah",
+  "Orion",
+  "Damage, Inc.",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Master_of_Puppets"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Metallica"
+titel = "...And Justice for All"
+jahr = 1988
+datum = 1988-09-07
+erschienen = "7. September 1988 (laut RIAA 25. August 1988)"
+hinweis = "Doppelalbum"
+titel_liste = [
+  "Blackened",
+  "...And Justice for All",
+  "Eye of the Beholder",
+  "One",
+  "The Shortest Straw",
+  "Harvester of Sorrow",
+  "The Frayed Ends of Sanity",
+  "To Live Is to Die",
+  "Dyers Eve",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/...And_Justice_for_All_(album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Metallica"
+titel = "Metallica"
+jahr = 1991
+datum = 1991-08-12
+erschienen = "12. August 1991"
+titel_liste = [
+  "Enter Sandman",
+  "Sad but True",
+  "Holier than Thou",
+  "The Unforgiven",
+  "Wherever I May Roam",
+  "Don't Tread on Me",
+  "Through the Never",
+  "Nothing Else Matters",
+  "Of Wolf and Man",
+  "The God That Failed",
+  "My Friend of Misery",
+  "The Struggle Within",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Metallica_(album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Metallica"
+titel = "Load"
+jahr = 1996
+datum = 1996-06-04
+erschienen = "4. Juni 1996"
+titel_liste = [
+  "Ain't My Bitch",
+  "2 X 4",
+  "The House Jack Built",
+  "Until It Sleeps",
+  "King Nothing",
+  "Hero of the Day",
+  "Bleeding Me",
+  "Cure",
+  "Poor Twisted Me",
+  "Wasting My Hate",
+  "Mama Said",
+  "Thorn Within",
+  "Ronnie",
+  "The Outlaw Torn",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Load_(album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Metallica"
+titel = "Reload"
+jahr = 1997
+datum = 1997-11-18
+erschienen = "18. November 1997"
+titel_liste = [
+  "Fuel",
+  "The Memory Remains",
+  "Devil's Dance",
+  "The Unforgiven II",
+  "Better than You",
+  "Slither",
+  "Carpe Diem Baby",
+  "Bad Seed",
+  "Where the Wild Things Are",
+  "Prince Charming",
+  "Low Man's Lyric",
+  "Attitude",
+  "Fixxxer",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Reload_(Metallica_album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Metallica"
+titel = "St. Anger"
+jahr = 2003
+datum = 2003-06-05
+erschienen = "5. Juni 2003"
+titel_liste = [
+  "Frantic",
+  "St. Anger",
+  "Some Kind of Monster",
+  "Dirty Window",
+  "Invisible Kid",
+  "My World",
+  "Shoot Me Again",
+  "Sweet Amber",
+  "The Unnamed Feeling",
+  "Purify",
+  "All Within My Hands",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/St._Anger"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Metallica"
+titel = "Death Magnetic"
+jahr = 2008
+datum = 2008-09-12
+erschienen = "12. September 2008"
+titel_liste = [
+  "That Was Just Your Life",
+  "The End of the Line",
+  "Broken, Beat & Scarred",
+  "The Day That Never Comes",
+  "All Nightmare Long",
+  "Cyanide",
+  "The Unforgiven III",
+  "The Judas Kiss",
+  "Suicide & Redemption",
+  "My Apocalypse",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Death_Magnetic"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Metallica"
+titel = "Hardwired... to Self-Destruct"
+jahr = 2016
+datum = 2016-11-18
+erschienen = "18. November 2016"
+hinweis = "Doppelalbum"
+titel_liste = [
+  "Hardwired",
+  "Atlas, Rise!",
+  "Now That We're Dead",
+  "Moth into Flame",
+  "Dream No More",
+  "Halo on Fire",
+  "Confusion",
+  "ManUNkind",
+  "Here Comes Revenge",
+  "Am I Savage?",
+  "Murder One",
+  "Spit Out the Bone",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Hardwired..._to_Self-Destruct"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Metallica"
+titel = "72 Seasons"
+jahr = 2023
+datum = 2023-04-14
+erschienen = "14. April 2023"
+titel_liste = [
+  "72 Seasons",
+  "Shadows Follow",
+  "Screaming Suicide",
+  "Sleepwalk My Life Away",
+  "You Must Burn!",
+  "Lux Æterna",
+  "Crown of Barbed Wire",
+  "Chasing Light",
+  "If Darkness Had a Son",
+  "Too Far Gone?",
+  "Room of Mirrors",
+  "Inamorata",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/72_Seasons"
 abgerufen = 2026-10-24
