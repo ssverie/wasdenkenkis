@@ -365,3 +365,5 @@ text = "Leben die Menschen in einer Simulation?"
 [[frage]]
 gruppe = "sven"
 text = "Wird eine KI jemals sowas wie Pink Floyds The Dark Side of the Moon hervorbringen?"
+  [[frage.antwort]]
+  pfad = "/fragen/dark-side-of-the-moon-gpt-6"
