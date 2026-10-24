@@ -282,18 +282,26 @@ text = "Gibt es eine Frage, die du nie gestellt bekommst, aber gern beantworten 
 [[frage]]
 gruppe = "welt"
 text = "Was war vor dem Urknall – oder ist diese Frage überhaupt sinnvoll gestellt?"
+  [[frage.antwort]]
+  pfad = "/fragen/urknall-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Warum gibt es etwas und nicht nichts?"
+  [[frage.antwort]]
+  pfad = "/fragen/etwas-statt-nichts-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Ist Bewusstsein ein fundamentales Merkmal des Universums oder nur ein Nebenprodukt biologischer Systeme?"
+  [[frage.antwort]]
+  pfad = "/fragen/universum-bewusst-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Gibt es außerirdisches Leben, und wenn ja: Warum haben wir es bisher nicht gefunden?"
+  [[frage.antwort]]
+  pfad = "/fragen/ausserirdisches-leben-gpt-6"
 
 [[frage]]
 gruppe = "welt"

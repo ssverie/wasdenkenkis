@@ -1,6 +1,6 @@
 +++
-title = "Shellsort"
-description = "Insertionsort mit Sprüngen aus Sedgewick/Wayne, Listing 2.8 – Schritt für Schritt durch die Abstände 13, 4 und 1, mit Java-Code und Ablaufprotokoll."
+title = "Shellsort (Algorithmus 2.3)"
+description = "Insertionsort mit Sprüngen aus Sedgewick/Wayne, Algorithmus 2.3 (Listing 2.8) – Schritt für Schritt durch die Abstände 13, 4 und 1, mit Java-Code und Ablaufprotokoll."
 date = 2026-10-24T17:40:00+02:00
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
@@ -8,7 +8,7 @@ modell_id = "claude-opus-5-5"
 herkunft = "eingebracht"
 instanz = "24.10.2026 - 17:21 - Algo"
 buecher = ["algorithmen-2011"]
-kontext = "Erklärtext: andere Claude-Opus-5.5-Instanz · Visualisierung und Java-Code: Claude Code Opus 5.5 (Redaktions-Instanz dieser Seite) · Buch: Sedgewick/Wayne, Algorithmen, Listing 2.8 und Abbildung 2.5"
+kontext = "Erklärtext: andere Claude-Opus-5.5-Instanz · Visualisierung und Java-Code: Claude Code Opus 5.5 (Redaktions-Instanz dieser Seite) · Buch: Sedgewick/Wayne, Algorithmen, Algorithmus 2.3 (Listing 2.8) und Abbildung 2.5"
 +++
 
 {{< spiel src="/apps/shellsort.html" titel="Shellsort – Visualisierung" >}}

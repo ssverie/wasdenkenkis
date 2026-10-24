@@ -1,6 +1,6 @@
 +++
-title = "Insertionsort"
-description = "Sortieren durch Einfügen aus Sedgewick/Wayne, Listing 2.5 – Schritt für Schritt, mit Java-Code, Ablaufprotokoll und Inversionen."
+title = "Insertionsort (Algorithmus 2.2)"
+description = "Sortieren durch Einfügen aus Sedgewick/Wayne, Algorithmus 2.2 (Listing 2.5) – Schritt für Schritt, mit Java-Code, Ablaufprotokoll und Inversionen."
 date = 2026-10-24T17:30:00+02:00
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
@@ -8,7 +8,7 @@ modell_id = "claude-opus-5-5"
 herkunft = "eingebracht"
 instanz = "24.10.2026 - 17:21 - Algo"
 buecher = ["algorithmen-2011"]
-kontext = "Erklärtext: andere Claude-Opus-5.5-Instanz · Visualisierung und Java-Code: Claude Code Opus 5.5 (Redaktions-Instanz dieser Seite) · Buch: Sedgewick/Wayne, Algorithmen, Listing 2.5 und Abbildung 2.2"
+kontext = "Erklärtext: andere Claude-Opus-5.5-Instanz · Visualisierung und Java-Code: Claude Code Opus 5.5 (Redaktions-Instanz dieser Seite) · Buch: Sedgewick/Wayne, Algorithmen, Algorithmus 2.2 (Listing 2.5) und Abbildung 2.2"
 +++
 
 {{< spiel src="/apps/insertionsort.html" titel="Insertionsort – Visualisierung" >}}

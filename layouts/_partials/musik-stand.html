@@ -1,0 +1,6 @@
+{{- /* Stand der Musik (Sven): „3 Interpreten · 44 Alben · 3 Titel“ – unter den Kacheln auf /musik/ und auf der Musik-Kachel unter Media.
+       Interpreten = Künstlerseiten unter content/musik/, Alben und Titel aus data/musik.toml. */ -}}
+{{- $ni := len (site.GetPage "/musik").Sections }}
+{{- $na := len (hugo.Data.musik.album | default slice) }}
+{{- $ns := len (hugo.Data.musik.stueck | default slice) }}
+{{- return printf "%d %s · %d %s · %d %s" $ni (cond (eq $ni 1) "Interpret" "Interpreten") $na (cond (eq $na 1) "Album" "Alben") $ns "Titel" }}

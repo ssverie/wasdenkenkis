@@ -473,3 +473,4 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .stuecke .stueck-links { list-style: none; padding: 0; margin: 0.15rem 0 0; }
 .stuecke .stueck-links li { padding: 0.05rem 0; }
 .stuecke .stueck-links .meta { display: inline; }
+.musik-status { margin-top: 1rem; }

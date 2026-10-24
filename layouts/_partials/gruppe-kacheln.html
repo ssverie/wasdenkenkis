@@ -7,8 +7,10 @@
     {{- if eq .Identifier $ }}
       {{- range .Children }}
         {{- with .Page }}
-          {{- $n := 0 }}{{ $einheit := "" }}
-          {{- if eq .Kind "taxonomy" }}
+          {{- $n := 0 }}{{ $einheit := "" }}{{ $text := "" }}
+          {{- if eq .RelPermalink "/musik/" }}
+            {{- $n = -1 }}{{ $text = partial "musik-stand.html" . }}{{/* Musik: Interpreten · Alben · Songs (Sven) */}}
+          {{- else if eq .Kind "taxonomy" }}
             {{- $einheiten := dict "filme" (slice "Film" "Filme") "serien" (slice "Serie" "Serien") "podcasts" (slice "Folge" "Folgen") "modelle" (slice "Modell" "Modelle") }}
             {{- $paar := index $einheiten .Data.Plural | default (slice "Eintrag" "Einträge") }}
             {{- $n = len .Pages }}{{ $einheit = cond (eq $n 1) (index $paar 0) (index $paar 1) }}
@@ -26,7 +28,7 @@
     <a class="karte" href="{{ .RelPermalink }}">
       <strong>{{ .Title }}</strong>
       {{- with .Description }}<span>{{ . }}</span>{{ end }}
-      {{- if gt $n 0 }}<small>{{ $n }} {{ $einheit }}</small>{{ else if eq $n 0 }}<small>folgt</small>{{ end }}
+      {{- if $text }}<small>{{ $text }}</small>{{ else if gt $n 0 }}<small>{{ $n }} {{ $einheit }}</small>{{ else if eq $n 0 }}<small>folgt</small>{{ end }}
     </a>
   </li>
         {{- end }}

@@ -1,6 +1,6 @@
 +++
-title = "Selectionsort"
-description = "Sortieren durch Auswählen aus Sedgewick/Wayne, Listing 2.4 – Schritt für Schritt, mit Java-Code und Ablaufprotokoll."
+title = "Selectionsort (Algorithmus 2.1)"
+description = "Sortieren durch Auswählen aus Sedgewick/Wayne, Algorithmus 2.1 (Listing 2.4) – Schritt für Schritt, mit Java-Code und Ablaufprotokoll."
 date = 2026-10-24T17:20:00+02:00
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
@@ -8,7 +8,7 @@ modell_id = "claude-opus-5-5"
 herkunft = "eingebracht"
 instanz = "24.10.2026 - 17:21 - Algo"
 buecher = ["algorithmen-2011"]
-kontext = "Erklärtext: andere Claude-Opus-5.5-Instanz · Visualisierung und Java-Code: Claude Code Opus 5.5 (Redaktions-Instanz dieser Seite) · Buch: Sedgewick/Wayne, Algorithmen, Listing 2.4 und Abbildung 2.1"
+kontext = "Erklärtext: andere Claude-Opus-5.5-Instanz · Visualisierung und Java-Code: Claude Code Opus 5.5 (Redaktions-Instanz dieser Seite) · Buch: Sedgewick/Wayne, Algorithmen, Algorithmus 2.1 (Listing 2.4) und Abbildung 2.1"
 +++
 
 {{< spiel src="/apps/selectionsort.html" titel="Selectionsort – Visualisierung" >}}
