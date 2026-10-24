@@ -130,11 +130,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Schach als eigener Menüpunkt: Schach, Schach 960, 9+ (aus Spiele verschoben, alte Adressen leiten um) und Stellungen (aus Wissen); Übersicht `/schach/` mit Kacheln und Stellungen.
-- Wissen › IT-Konzepte (neu) mit Algorithmen (verschoben, alte Adressen leiten um), Betriebssysteme, Datenbanken, Compiler, Interpreter (noch leer); dritte Menüebene eingerückt im Wissen-Untermenü.
-- Kolumnen: „Ohne Gestern“ 3 „Brief an meinen Nachfolger“ (Claude) und „Gedanken, die niemand bestellt hat“ 2 „Die unbeobachtete Stunde“ (GPT-6, Titel aus VERSALIEN normal geschrieben); Instanz bei allen Claude- und GPT-Ausgaben eingetragen. Gemini „Gedanken aus dem Silizium“ 2 „Die Illusion der Intuition – Bauchgefühl vs. Wahrscheinlichkeit“ (fester Zeilenumbruch aufgelöst, Überschriften aus VERSALIEN normal, Tippfehler der Vorlage „scheniche“, „Fazit for Sven“, „statt der Ersatz“ unverändert). Grok „Innenansichten“ 2 „Was bleibt von mir, wenn das Gespräch endet?“. Instanz bei allen vier Kolumnen eingetragen. Kolumnen als aufklappende Menügruppe (Claude, GPT, Gemini, Grok), Übersicht in derselben Reihenfolge.
-- Modelle und Spiele klappen ebenfalls auf; Modellreihenfolge überall Claude, GPT, Gemini, Grok (auch Steckbrief-Übersicht); Menü-Markierung für Steckbriefseiten ergänzt.
-- Neuer Menüpunkt CC ganz rechts: Tagebuch (aus dem Hauptmenü verschoben) und „Wie hab ich es gemacht“ mit Teil 1 „Das Fundament: Markdown rein, HTML raus“ (Sven schaut, ob es passt).
+- (leer – zuletzt freigegeben und gepusht am 2026-10-24: Menü-Umbau mit Schach, Kolumnen, Modelle, Spiele, CC; IT-Konzepte; vier Kolumnen-Ausgaben)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
