@@ -132,7 +132,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Fragen nach Svens README neu gegliedert (KI 35, Welt 20, Sven 1, CC 5); GPT-6-Antworten 4–23 (Instanz „22.10.2026 - 20:43 - Fragen“, wortgleich, 21.080 Wörter); Instanz auch bei 1–3. Offen: KI-Nr. 36 der README (= Nr. 11) nicht doppelt aufgenommen; Demokratie-Frage fehlt in der README und ist entfallen; Tippfehler „hervorbringne“ korrigiert.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-24: Fragen-Gliederung, GPT-Antworten 4–23)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
