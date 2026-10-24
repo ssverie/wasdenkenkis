@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selectionsort</title>
+<!-- Visualisierung von Selectionsort (nach Sedgewick/Wayne, Algorithmen, Listing 2.4)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code, keine externen Dateien. -->
+<style>
+  :root {
+    --bg: #fbfaf7; --panel: #ffffff; --line: #e2ded5; --text: #1c1c1f; --muted: #66666e;
+    --bar: #c9d6f2; --cur: #2f5bd3; --min: #c2410c; --done: #b9b6ae; --swap: #15803d;
+    --code-bg: #f3f1ea; --hl: #fde68a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141416; --panel: #1d1d21; --line: #2f2f36; --text: #ececef; --muted: #a3a3ad;
+      --bar: #2a3552; --cur: #86a6ff; --min: #f0a058; --done: #45454d; --swap: #5fd08a;
+      --code-bg: #232328; --hl: #5a4a12;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font: 15px/1.5 system-ui, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); padding: 16px; }
+  .wrap { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
+  .box { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .h { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
+  .controls label { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); }
+  select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  input[type=range] { accent-color: var(--cur); }
+  button { font: 600 14px system-ui, sans-serif; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); cursor: pointer; }
+  button.primary { background: var(--cur); border-color: var(--cur); color: #fff; }
+  @media (prefers-color-scheme: dark) { button.primary { color: #0d1530; } }
+  button:disabled { opacity: .4; cursor: default; }
+  .group { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  /* Balken: Höhe = Wert */
+  .bars { display: grid; gap: 3px; align-items: end; height: 180px; }
+  .bar { background: var(--bar); border-radius: 3px 3px 0 0; transition: background .25s, height .35s; display: flex; align-items: flex-start; justify-content: center; }
+  .bar span { font-size: 11px; font-weight: 600; margin-top: 2px; }
+  .bar.done { background: var(--done); }
+  .bar.cur { background: var(--cur); }
+  .bar.min { background: var(--min); }
+  .bar.swap { background: var(--swap); }
+  .bar.cur span, .bar.min span, .bar.swap span { color: #fff; }
+  @media (prefers-color-scheme: dark) { .bar.cur span, .bar.min span, .bar.swap span { color: #0d1530; } }
+  .idx, .marks { display: grid; gap: 3px; font-size: 11px; color: var(--muted); text-align: center; font-variant-numeric: tabular-nums; }
+  .marks { font-weight: 700; min-height: 1.4em; line-height: 1.2; }
+  .marks .i { color: var(--text); }
+  .marks .j { color: var(--cur); }
+  .marks .min { color: var(--min); }
+  .legende { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .legende i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+
+  .msg { font-size: 16px; min-height: 2.6em; }
+  .msg.swap { color: var(--swap); font-weight: 600; }
+  .count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .count b { color: var(--text); }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .two > * { min-width: 0; }
+  @media (max-width: 720px) { .two { grid-template-columns: 1fr; } }
+  pre { background: var(--code-bg); border-radius: 8px; padding: 10px 0; overflow-x: auto; font: 12.5px/1.65 ui-monospace, Consolas, monospace; }
+  pre .ln { display: block; padding: 0 12px; white-space: pre; }
+  pre .ln.on { background: var(--hl); }
+
+  /* Ablaufprotokoll: eine Zeile je Durchlauf, Inhalt direkt nach dem Tausch */
+  .proto { overflow-x: auto; }
+  .proto table { border-collapse: collapse; font: 12.5px ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; }
+  .proto th, .proto td { padding: 2px 5px; text-align: right; }
+  .proto th { color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--line); }
+  .proto td.grau { color: var(--done); }
+  .proto td.neu { color: var(--min); font-weight: 700; }
+  .proto tr.start td { color: var(--muted); }
+  .empty { color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="box controls">
+    <label>Größe
+      <select id="size"><option>10</option><option selected>12</option><option>16</option><option>20</option></select>
+    </label>
+    <label>Anordnung
+      <select id="art">
+        <option value="zufall" selected>zufällig</option>
+        <option value="fast">fast sortiert</option>
+        <option value="sortiert">schon sortiert</option>
+        <option value="umgekehrt">umgekehrt</option>
+      </select>
+    </label>
+    <button id="fresh">Neues Array</button>
+  </div>
+
+  <div class="box">
+    <div class="bars" id="bars"></div>
+    <div class="marks" id="marks"></div>
+    <div class="idx" id="idx"></div>
+    <div class="legende">
+      <span><i style="background:var(--done)"></i>fertig (links von i)</span>
+      <span><i style="background:var(--cur)"></i>a[j], wird geprüft</span>
+      <span><i style="background:var(--min)"></i>a[min], kleinstes bisher</span>
+      <span><i style="background:var(--swap)"></i>Tausch</span>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="skip" title="Bis zum nächsten Tausch">Bis Tausch ▶▶</button>
+        <button id="restart">Von vorn</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+
+  <div class="two">
+    <div class="box">
+      <div class="h">Java (eigene Fassung, nach Listing 2.4)</div>
+      <pre id="code"></pre>
+    </div>
+    <div class="box">
+      <div class="h">Ablaufprotokoll (nach jedem Tausch)</div>
+      <div class="proto" id="proto"></div>
+    </div>
+  </div>
+
+</div>
+<script>
+(function () {
+  const CODE = [
+    'public class Auswahl',
+    '{',
+    '   public static void sortiere(int[] a)',
+    '   {  // sortiert a[] aufsteigend',
+    '      int n = a.length;',
+    '      for (int i = 0; i < n; i++)',
+    '      {  // das Kleinste aus a[i..n-1] kommt nach a[i]',
+    '         int min = i;',
+    '         for (int j = i + 1; j < n; j++)',
+    '            if (a[j] < a[min]) min = j;',
+    '         tausche(a, i, min);',
+    '      }',
+    '   }',
+    '',
+    '   private static void tausche(int[] a, int i, int k)',
+    '   {  int t = a[i]; a[i] = a[k]; a[k] = t;  }',
+    '}'
+  ];
+  const L = { n: 4, fori: 5, min: 7, vergleich: 9, tausch: 10, ende: 12 };
+  const $ = id => document.getElementById(id);
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  let n = 12, start = [], steps = [], pos = 0, timer = null;
+
+  function makeArray() {
+    n = +$('size').value;
+    const art = $('art').value;
+    // Zahlen 1..99, ohne Doppelte, damit jeder Balken eindeutig ist
+    const set = new Set();
+    while (set.size < n) set.add(5 + Math.floor(Math.random() * 95));
+    let a = [...set];
+    if (art !== 'zufall') a.sort((x, y) => x - y);
+    if (art === 'umgekehrt') a.reverse();
+    if (art === 'fast') for (let k = 0; k < Math.max(1, Math.floor(n / 6)); k++) {
+      const p = Math.floor(Math.random() * (n - 1));
+      [a[p], a[p + 1]] = [a[p + 1], a[p]];
+    }
+    start = a;
+  }
+
+  // Den Algorithmus einmal komplett durchlaufen, jeden Schritt als Momentaufnahme festhalten
+  function build() {
+    const a = start.slice();
+    steps = [];
+    let vergleiche = 0, tausche = 0;
+    const proto = [];            // Zeilen des Ablaufprotokolls: {i, min, werte}
+    const snap = (line, o) => steps.push(Object.assign(
+      { line, a: a.slice(), vergleiche, tausche, proto: proto.slice() }, o));
+
+    snap(L.n, { msg: `Start: n = ${n}. In jedem Durchlauf i wird das kleinste Element des noch unsortierten Rests a[i..${n - 1}] gesucht und nach a[i] getauscht.` });
+    for (let i = 0; i < n; i++) {
+      let min = i;
+      snap(L.min, { i, min, msg: `Durchlauf i = ${i}: Zuerst gilt a[${i}] = ${a[i]} als kleinstes – min = ${i}.` });
+      for (let j = i + 1; j < n; j++) {
+        vergleiche++;
+        if (a[j] < a[min]) {
+          const alt = min;
+          min = j;
+          snap(L.vergleich, { i, j, min, msg: `a[${j}] = ${a[j]} < a[${alt}] = ${a[alt]} → neues Kleinstes, min = ${j}.` });
+        } else {
+          snap(L.vergleich, { i, j, min, msg: `a[${j}] = ${a[j]} ist nicht kleiner als a[${min}] = ${a[min]} → min bleibt ${min}.` });
+        }
+      }
+      tausche++;
+      const vorher = [a[i], a[min]];
+      [a[i], a[min]] = [a[min], a[i]];
+      proto.push({ i, min, werte: a.slice() });
+      snap(L.tausch, {
+        i, min, swap: [i, min], cls: 'swap',
+        msg: min === i
+          ? `a[${i}] = ${a[i]} ist schon das Kleinste – tausche(a, ${i}, ${i}) tauscht das Element mit sich selbst.`
+          : `tausche(a, ${i}, ${min}): ${vorher[1]} kommt nach vorn auf Platz ${i}, ${vorher[0]} wandert auf Platz ${min}. a[0..${i}] ist jetzt fertig.`
+      });
+    }
+    snap(L.ende, { fertig: true, cls: 'swap', msg: `Fertig: ${vergleiche} Vergleiche und ${tausche} Tauschvorgänge – unabhängig davon, wie das Array vorher aussah.` });
+    pos = 0;
+  }
+
+  function render() {
+    const s = steps[pos];
+    const cols = `repeat(${n}, 1fr)`;
+    ['bars', 'marks', 'idx'].forEach(id => $(id).style.gridTemplateColumns = cols);
+    const max = Math.max(...s.a);
+    $('bars').innerHTML = s.a.map((v, k) => {
+      let c = 'bar';
+      if (s.swap && (k === s.swap[0] || k === s.swap[1])) c += ' swap';
+      else if (s.fertig || (s.i != null && k < s.i)) c += ' done';
+      else if (k === s.min) c += ' min';
+      else if (k === s.j) c += ' cur';
+      return `<div class="${c}" style="height:${10 + 90 * v / max}%" title="a[${k}] = ${v}"><span>${v}</span></div>`;
+    }).join('');
+    $('idx').innerHTML = s.a.map((_, k) => `<div>${k}</div>`).join('');
+    $('marks').innerHTML = s.a.map((_, k) => {
+      if (s.fertig || s.i == null) return '<div></div>';
+      const t = [];
+      if (k === s.i) t.push('<span class="i">i</span>');
+      if (k === s.min) t.push('<span class="min">min</span>');
+      if (k === s.j) t.push('<span class="j">j</span>');
+      return `<div>${t.join('<br>')}</div>`;
+    }).join('');
+    const msg = $('msg');
+    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
+    const maxV = n * (n - 1) / 2;
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length} · Vergleiche: <b>${s.vergleiche}</b> von n(n−1)/2 = <b>${maxV}</b> · Tauschvorgänge: <b>${s.tausche}</b> von n = <b>${n}</b>`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
+
+    // Protokoll wie im Buch: Startzeile, dann je Durchlauf i, min und der Inhalt nach dem Tausch
+    const kopf = `<tr><th>i</th><th>min</th>${start.map((_, k) => `<th>${k}</th>`).join('')}</tr>`;
+    const startZeile = `<tr class="start"><td></td><td></td>${start.map(v => `<td>${v}</td>`).join('')}</tr>`;
+    const zeilen = s.proto.map(z => `<tr><td>${z.i}</td><td>${z.min}</td>${z.werte.map((v, k) =>
+      `<td class="${k < z.i ? 'grau' : (k === z.i ? 'neu' : '')}">${v}</td>`).join('')}</tr>`).join('');
+    $('proto').innerHTML = `<table>${kopf}${startZeile}${zeilen}</table>`;
+
+    $('back').disabled = pos === 0;
+    $('next').disabled = $('skip').disabled = pos === steps.length - 1;
+    if (pos === steps.length - 1) stop();
+  }
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  function fresh() { stop(); makeArray(); build(); render(); }
+
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('skip').addEventListener('click', () => {
+    stop();
+    do { pos++; } while (pos < steps.length - 1 && !steps[pos].swap);
+    render();
+  });
+  $('restart').addEventListener('click', () => { stop(); pos = 0; render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+  $('size').addEventListener('change', fresh);
+  $('art').addEventListener('change', fresh);
+  $('fresh').addEventListener('click', fresh);
+
+  // für den automatischen Test (wasdenkenkis.de): Schritte und Startarray von außen lesbar
+  window.__selection = { get steps() { return steps; }, get start() { return start; }, setStart(a) { stop(); start = a.slice(); n = a.length; build(); render(); } };
+
+  fresh();
+})();
+</script>
+</body>
+</html>
