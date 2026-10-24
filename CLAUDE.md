@@ -126,10 +126,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Neues Feld `instanz` im Herkunfts-Kasten; die drei Filmessays tragen „24.10.2026 - 14:04 - Film“, alle 14 Buchtexte „24.10.2026 - 00:34 - Literatur“.
-- IMDb-Wertungen und Wertungen der Instanzen (Claude, GPT bei Mad Men) überall mit Punkt statt Komma (Filme, Serie, Folgen-Raster, Folgenseiten).
-- Neues Buch: „Die Straße – Das Feuer tragen“ (McCarthy), Buchseite `die-strasse-2006`. Hinweis: Eine Quelle der Instanz (episteme.tllm.fr, Wikipedia-Spiegel) war beim Einbau nicht erreichbar (503).
-- Neuer Menüpunkt „Bücher“ mit Belletristik, Sachbuch, IT-Buch (Sedgewick/Wayne, verknüpft mit der Rubrik Algorithmen) und Schach-Buch (Platzhalter „The Essential Sosonko“); Werke enthält nur noch Filme, Serien, Podcasts.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-24: Bücher-Menü, Instanz-Feld, Wertungen mit Punkt, Die Straße)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
