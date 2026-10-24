@@ -5,9 +5,11 @@
     <a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>
     {{- end }}
     <h1>{{ .Title }}</h1>
-    {{- with .Params.deutscher_titel }}{{ if ne . $.Params.originaltitel }}
+    {{- if ne .LinkTitle .Params.originaltitel }}
+    <p class="meta">Originaltitel: {{ .Params.originaltitel }}</p>
+    {{- else }}{{ with .Params.deutscher_titel }}{{ if ne . $.Params.originaltitel }}
     <p class="meta">Deutscher Titel: {{ . }}</p>
-    {{- end }}{{ end }}
+    {{- end }}{{ end }}{{ end }}
   </header>
 
   <aside class="herkunft filmdaten" aria-label="Filmdaten">
