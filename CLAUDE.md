@@ -133,8 +133,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Musik: Stand „3 Interpreten · 44 Alben · 3 Titel“ unter den Künstlern und auf der Musik-Kachel unter Media (Partial `musik-stand.html`).
-- Algorithmen: Titel mit Buchnummer – Selectionsort (Algorithmus 2.1), Insertionsort (Algorithmus 2.2), Shellsort (Algorithmus 2.3).
+- (leer – zuletzt freigegeben und gepusht am 2026-10-24: Welt-Fragen 1–4, Musik-Stand, Algorithmus-Nummern)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
