@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 # Liest eine gelieferte Sprachseite (input\<sprache>-100.html, Format wie englisch-100.html:
-# const SPRACHE = "en-GB"; const WORTSCHATZ = { "Gruppe": [["wort","deutsch"], …], … })
+# const SPRACHE = "en-GB"; const WORTSCHATZ = { "Gruppe": [["wort","deutsch"], …], … };
+# Sprachen mit eigener Schrift wie Thai liefern [["wort","umschrift","deutsch"], …])
 # und schreibt data/sprachen/<sprache>.toml für die Rubrik Sprachen.
 # Aufruf: perl skripte/sprache-einlesen.pl input/englisch-100.html
 use strict;
@@ -22,10 +23,11 @@ my ($block) = $html =~ /const\s+WORTSCHATZ\s*=\s*\{(.*?)\n\};/s or die "WORTSCHA
 
 my $str = qr/"((?:[^"\\]|\\.)*)"/;
 my (@gruppen, $n);
-while ($block =~ /\G.*?(?:$str\s*:\s*\[|\[\s*$str\s*,\s*$str\s*\])/gcs) {
+while ($block =~ /\G.*?(?:$str\s*:\s*\[|\[\s*$str\s*,\s*$str\s*(?:,\s*$str\s*)?\])/gcs) {
   if (defined $1) { push @gruppen, { name => $1, woerter => [] }; next }
   die "Wort vor der ersten Gruppe\n" unless @gruppen;
-  push @{ $gruppen[-1]{woerter} }, [$2, $3];
+  # In den Daten immer [wort, deutsch] bzw. [wort, deutsch, umschrift] – Index 1 ist stets die Übersetzung
+  push @{ $gruppen[-1]{woerter} }, defined $4 ? [$2, $4, $3] : [$2, $3];
   $n++;
 }
 die "Keine Wörter gefunden\n" unless $n;
@@ -39,7 +41,7 @@ print $out "# $titel – die 100 wichtigsten Wörter. Erzeugt aus $datei mit skr
 print $out "name = ", toml($titel), "\nsprache = ", toml($code), "\n";
 for my $g (@gruppen) {
   print $out "\n[[gruppe]]\nname = ", toml($g->{name}), "\nwoerter = [\n";
-  print $out "  [", toml($_->[0]), ", ", toml($_->[1]), "],\n" for @{ $g->{woerter} };
+  print $out "  [", join(", ", map { toml($_) } @$_), "],\n" for @{ $g->{woerter} };
   print $out "]\n";
 }
 close $out;

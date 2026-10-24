@@ -1,0 +1,158 @@
+# Thai – die 100 wichtigsten Wörter. Erzeugt aus input/thai-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Thai"
+sprache = "th-TH"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["ใช่", "ja", "châi"],
+  ["ไม่", "nein / nicht", "mâi"],
+  ["ครับ", "Höflichkeitswort (Mann, ans Satzende)", "khráp"],
+  ["ขอบคุณ", "danke", "khàwp-khun"],
+  ["สวัสดี", "hallo / tschüss", "sà-wàt-dii"],
+  ["ลาก่อน", "auf Wiedersehen", "laa-gàwn"],
+  ["ขอโทษ", "Entschuldigung", "khǎw-thôot"],
+  ["ไม่เป็นไร", "macht nichts / kein Problem", "mâi-pen-rai"],
+  ["ดี", "gut", "dii"],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["ผม", "ich (Mann)", "phǒm"],
+  ["ฉัน", "ich (Frau)", "chǎn"],
+  ["คุณ", "du / Sie", "khun"],
+  ["เขา", "er / sie", "khǎo"],
+  ["มัน", "es", "man"],
+  ["เรา", "wir", "rao"],
+  ["พวกเขา", "sie (Mehrzahl)", "phûak-khǎo"],
+  ["ของผม", "mein (Mann)", "khǎwng phǒm"],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["เป็น", "sein", "pen"],
+  ["มี", "haben", "mii"],
+  ["ทำ", "tun, machen", "tham"],
+  ["ไป", "gehen", "pai"],
+  ["มา", "kommen", "maa"],
+  ["เห็น", "sehen", "hěn"],
+  ["รู้", "wissen", "rúu"],
+  ["อยาก", "wollen", "yàak"],
+  ["ชอบ", "mögen", "châwp"],
+  ["ต้องการ", "brauchen", "tâwng-gaan"],
+  ["กิน", "essen", "gin"],
+  ["ดื่ม", "trinken", "dʉ̀ʉm"],
+  ["พูด", "sprechen", "phûut"],
+  ["เข้าใจ", "verstehen", "khâo-jai"],
+  ["ช่วย", "helfen", "chûay"],
+  ["ซื้อ", "kaufen", "sʉ́ʉ"],
+  ["จ่าย", "bezahlen", "jàay"],
+  ["ให้", "geben", "hâi"],
+  ["เอา", "nehmen", "ao"],
+  ["ได้", "können", "dâi"],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["อะไร", "was", "à-rai"],
+  ["ที่ไหน", "wo", "thîi-nǎi"],
+  ["เมื่อไหร่", "wann", "mʉ̂a-rài"],
+  ["ใคร", "wer", "khrai"],
+  ["ทำไม", "warum", "tham-mai"],
+  ["อย่างไร", "wie", "yàang-rai"],
+  ["เท่าไหร่", "wie viel (kostet)", "thâo-rài"],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["วันนี้", "heute", "wan-níi"],
+  ["พรุ่งนี้", "morgen", "phrûng-níi"],
+  ["เมื่อวาน", "gestern", "mʉ̂a-waan"],
+  ["ตอนนี้", "jetzt", "dtawn-níi"],
+  ["ทีหลัง", "später", "thii-lǎng"],
+  ["วัน", "Tag", "wan"],
+  ["สัปดาห์", "Woche", "sàp-daa"],
+  ["เวลา", "Zeit", "wee-laa"],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["หนึ่ง", "eins", "nʉ̀ng"],
+  ["สอง", "zwei", "sǎwng"],
+  ["สาม", "drei", "sǎam"],
+  ["สี่", "vier", "sìi"],
+  ["ห้า", "fünf", "hâa"],
+  ["หก", "sechs", "hòk"],
+  ["เจ็ด", "sieben", "jèt"],
+  ["แปด", "acht", "bpàet"],
+  ["เก้า", "neun", "gâo"],
+  ["สิบ", "zehn", "sìp"],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["ผู้ชาย", "Mann", "phûu-chaai"],
+  ["ผู้หญิง", "Frau", "phûu-yǐng"],
+  ["เด็ก", "Kind", "dèk"],
+  ["เพื่อน", "Freund", "phʉ̂an"],
+  ["ครอบครัว", "Familie", "khrâwp-khrua"],
+  ["ชื่อ", "Name", "chʉ̂ʉ"],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["บ้าน", "Haus", "bâan"],
+  ["ห้อง", "Zimmer", "hâwng"],
+  ["ถนน", "Straße", "thà-nǒn"],
+  ["เมือง", "Stadt", "mʉang"],
+  ["ร้าน", "Geschäft", "ráan"],
+  ["ร้านอาหาร", "Restaurant", "ráan aa-hǎan"],
+  ["โรงแรม", "Hotel", "roong-raem"],
+  ["สถานีรถไฟ", "Bahnhof", "sà-thǎa-nii rót-fai"],
+  ["ห้องน้ำ", "Toilette", "hâwng-náam"],
+  ["หมอ", "Arzt", "mǎw"],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["น้ำ", "Wasser", "náam"],
+  ["กาแฟ", "Kaffee", "gaa-fae"],
+  ["ขนมปัง", "Brot", "khà-nǒm-bpang"],
+  ["อาหาร", "Essen", "aa-hǎan"],
+  ["เงิน", "Geld", "ngən"],
+  ["รถ", "Auto", "rót"],
+  ["โทรศัพท์", "Telefon", "thoo-rá-sàp"],
+  ["ตั๋ว", "Fahrkarte", "dtǔa"],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["ใหญ่", "groß", "yài"],
+  ["เล็ก", "klein", "lék"],
+  ["ร้อน", "heiß", "ráwn"],
+  ["หนาว", "kalt (Wetter)", "nǎao"],
+  ["ใหม่", "neu", "mài"],
+  ["เก่า", "alt (Dinge)", "gào"],
+  ["เปิด", "offen", "bpə̀ət"],
+  ["ปิด", "geschlossen", "bpìt"],
+  ["ซ้าย", "links", "sáai"],
+  ["ขวา", "rechts", "khwǎa"],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["ที่นี่", "hier", "thîi-nîi"],
+  ["ที่นั่น", "dort", "thîi-nân"],
+  ["และ", "und", "láe"],
+  ["อีก", "noch, mehr", "ìik"],
+]

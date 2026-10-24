@@ -21,8 +21,13 @@
           || alle.find(v => v.lang.toLowerCase().startsWith(SPRACHE.slice(0, 2).toLowerCase()))
           || null;
     // Stimmenliste ist da, aber keine passende: Hinweis (das Gerät versucht es trotzdem mit lang)
+    // Hinweis samt Windows-Weg nach der Thai-Vorlage der Sprachen-Instanz
     if (alle.length && !stimme) {
-      zeigeHinweis("Auf diesem Gerät ist keine Stimme für diese Sprache installiert – die Aussprache kann falsch klingen.");
+      const name = bereich.dataset.name || "diese Sprache";
+      zeigeHinweis("Auf diesem Gerät ist keine Stimme für " + name + " installiert – die Aussprache kann falsch klingen oder ganz fehlen. " +
+        "Unter Windows: Einstellungen → Zeit und Sprache → Sprache → „" + name + "“ hinzufügen (mit Sprachausgabe).");
+    } else if (stimme) {
+      hinweis.hidden = true;
     }
   }
   stimmeWaehlen();

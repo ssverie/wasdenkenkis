@@ -11,7 +11,7 @@
   {{ partial "herkunft.html" . }}
   {{- with .Content }}<div class="inhalt">{{ . }}</div>{{ end }}
 
-  <div class="sprache" data-sprache="{{ $d.sprache }}">
+  <div class="sprache" data-sprache="{{ $d.sprache }}" data-name="{{ $d.name }}">
     <div class="sprache-leiste">
       <p class="meta">Auf ein Wort tippen, um es zu hören.</p>
       <label class="sprache-langsam"><input type="checkbox" id="sprache-langsam"> langsam</label>
@@ -21,7 +21,9 @@
     <h2>{{ .name }}</h2>
     <div class="woerter">
       {{- range .woerter }}
-      <button type="button" class="wort" data-wort="{{ index . 0 }}"><span lang="{{ $d.sprache }}">{{ index . 0 }}</span><small>{{ index . 1 }}</small></button>
+      {{- /* [wort, deutsch] oder [wort, deutsch, umschrift] (Sprachen mit eigener Schrift, z. B. Thai) */}}
+      <button type="button" class="wort" data-wort="{{ index . 0 }}"><span lang="{{ $d.sprache }}">{{ index . 0 }}</span>
+        {{- if gt (len .) 2 }}<span class="umschrift">{{ index . 2 }}</span>{{ end }}<small>{{ index . 1 }}</small></button>
       {{- end }}
     </div>
     {{- end }}

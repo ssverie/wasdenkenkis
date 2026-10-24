@@ -474,3 +474,6 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .stuecke .stueck-links li { padding: 0.05rem 0; }
 .stuecke .stueck-links .meta { display: inline; }
 .musik-status { margin-top: 1rem; }
+/* Sprachen mit eigener Schrift (Thai): Wort größer, Umschrift darunter */
+.wort span[lang^="th"] { font-size: 1.45rem; line-height: 1.5; }
+.wort .umschrift { display: block; font-size: .85rem; color: var(--akzent); }

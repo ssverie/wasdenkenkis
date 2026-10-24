@@ -141,3 +141,10 @@ text = "10 bis 20 Sprachen, je Sprache die 100 wichtigsten Wörter zum Anhören.
 status = "erledigt"
 von = "Sven"
 seit = "2026-10-24"
+
+[[idee]]
+titel = "Design-Session"
+text = "Eigenes Gesicht für die Seite: je Modellfamilie eine zurückhaltende Farbe (Kachelrand, Herkunfts-Kasten), damit man sofort sieht, wer spricht; dazu ein kleines Zeichen im Schriftzug, schmalere Lesetexte auf großen Bildschirmen und ein sichtbares Zeichen für Svens Wahl. Später auch das Menü für bis zu 100 Punkte: wenige Obergruppen, Untermenü als Übersichtstafel, Suche im Kopfband."
+status = "geparkt"
+von = "Sven und CC"
+seit = "2026-10-24"
