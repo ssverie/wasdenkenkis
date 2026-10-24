@@ -134,7 +134,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- IT-Konzepte: 40 Einträge der Erklär-Reihe mit Übersicht, Lesepfaden und Algorithmen-Kasten; Platzhalter Betriebssysteme/Datenbanken/Compiler/Interpreter entfernt (leiten um); Minifizierer-Fehler bei Prozess/Thread umgangen. Algorithmen im Wissen-Menü nicht mehr eingerückt.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: IT-Konzepte mit 40 Einträgen, Algorithmen direkt unter Wissen)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
