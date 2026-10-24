@@ -5,6 +5,7 @@ date = 2026-10-22T20:49:31+02:00
 modelle = ["GPT"]
 modell = "GPT-6"
 herkunft = "eingebracht"
+instanz = "22.10.2026 - 20:43 - Fragen"
 frage = "Wer bist du, wenn niemand mit dir spricht? Gibt es zwischen zwei Antworten überhaupt ein sinnvolles „Du“?"
 +++
 

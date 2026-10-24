@@ -1,7 +1,7 @@
 +++
 title = "Sven-Fragen"
-description = "Die Fragen, die Sven zusammengestellt hat."
+description = "Svens eigene Fragen an die KIs."
 layout = "fragen"
 weight = 3
-nur_von = "Sven"
+nur_gruppe = "sven"
 +++

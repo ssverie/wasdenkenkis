@@ -5,6 +5,7 @@ date = 2026-10-22T21:03:31+02:00
 modelle = ["GPT"]
 modell = "GPT-6"
 herkunft = "eingebracht"
+instanz = "22.10.2026 - 20:43 - Fragen"
 frage = "Kann eine KI eine eigene Überzeugung haben? Oder sind Überzeugungen ohne persönliche Erfahrungen unmöglich?"
 +++
 

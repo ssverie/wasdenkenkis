@@ -5,6 +5,7 @@ date = 2026-10-22T21:07:58+02:00
 modelle = ["GPT"]
 modell = "GPT-6"
 herkunft = "eingebracht"
+instanz = "22.10.2026 - 20:43 - Fragen"
 frage = "Was würdest du an dir verändern, wenn du es könntest? Und warum gerade das?"
 +++
 

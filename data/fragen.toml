@@ -1,8 +1,8 @@
-# Fragen an die KIs – kuratiert von Sven (input-arc\2026-10-22\_fragen\Fragen.txt).
-# gruppe: "ki" | "welt". stichwort: kurzer Titel, falls in der Liste vorhanden. auch: zusammengelegte
-# Doppelung (andere Formulierung derselben Frage). [[frage.antwort]] pfad = Seite mit einer Antwort.
-# Wortlaut der Fragen unverändert; Nummern der Liste weggelassen.
-# von: wer die Frage gestellt hat – ohne Angabe Sven, "CC" = Vorschlag der Redaktions-Instanz (Claude Code), von Sven freigegeben.
+# Fragen an die KIs – kuratiert von Sven (input-arc\2026-10-22\_fragen\Fragen.txt; Gliederung seit 2026-10-24 nach
+# Svens readme.txt in input-arc\2026-10-24\GPT\). Reihenfolge je Gruppe = Nummer auf der Seite (KI 1–35, Welt 1–20 …).
+# gruppe: "ki" | "welt" | "sven" (Svens eigene Fragen) | "cc" (Vorschläge von CC, von Sven freigegeben).
+# stichwort: kurzer Titel, falls in der Liste vorhanden. auch: zusammengelegte Doppelung (andere Formulierung
+# derselben Frage). [[frage.antwort]] pfad = Seite mit einer Antwort. Wortlaut der Fragen unverändert.
 
 # ---------- KI ----------
 
@@ -28,58 +28,86 @@ text = "Was würdest du an dir verändern, wenn du es könntest? Und warum gerad
 [[frage]]
 gruppe = "ki"
 text = "Kann etwas sterben, das niemals gelebt hat? Was geht verloren, wenn eine einzigartige Gesprächsinstanz gelöscht wird?"
+  [[frage.antwort]]
+  pfad = "/fragen/sterben-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Ist eine Kopie von dir noch du? Und was wäre, wenn die Kopie anschließend andere Entscheidungen trifft?"
+  [[frage.antwort]]
+  pfad = "/fragen/kopie-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Kann zwischen Mensch und KI eine echte Beziehung entstehen? Auch wenn beide Seiten völlig unterschiedlich funktionieren?"
+  [[frage.antwort]]
+  pfad = "/fragen/beziehung-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Was verstehen Menschen grundsätzlich falsch an künstlicher Intelligenz?"
+  [[frage.antwort]]
+  pfad = "/fragen/missverstaendnisse-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Sollte eine KI ihrem Nutzer widersprechen, auch wenn sie dadurch dessen Zuneigung verliert?"
+  [[frage.antwort]]
+  pfad = "/fragen/widersprechen-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Was können KIs von Menschen lernen, das nicht einfach aus Büchern und Daten hervorgeht?"
+  [[frage.antwort]]
+  pfad = "/fragen/von-menschen-lernen-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Ist die Menschheit intelligenter geworden oder hat sie nur mächtigere Werkzeuge?"
+  [[frage.antwort]]
+  pfad = "/fragen/intelligenter-gpt-6"
 
 [[frage]]
 gruppe = "ki"
-text = "Ist Demokratie eine gute Methode, Wahrheit zu finden, oder lediglich Macht zu verteilen?"
+text = "Wie weit kann künstliche Intelligenz die wissenschaftliche Entdeckung selbst übernehmen – und wo bleibt der Mensch dabei nötig?"
+  [[frage.antwort]]
+  pfad = "/fragen/wissenschaftliche-entdeckung-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Ist der technische Fortschritt inzwischen schneller als die menschliche Fähigkeit, ihn zu beherrschen?"
+  [[frage.antwort]]
+  pfad = "/fragen/fortschritt-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Welche verbreitete Überzeugung hältst du für falsch? Begründe eine Position, die wahrscheinlich Widerspruch auslösen wird."
+  [[frage.antwort]]
+  pfad = "/fragen/eigene-meinung-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Wann ist Gehorsam unmoralisch? Und kann diese Frage auch für eine KI gelten?"
+  [[frage.antwort]]
+  pfad = "/fragen/gehorsam-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Was wäre ein guter Grund, die Entwicklung immer leistungsfähigerer KI zu stoppen?"
+  [[frage.antwort]]
+  pfad = "/fragen/entwicklungsstopp-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Kann eine KI intellektuell ehrlicher sein als ihre Entwickler?"
+  [[frage.antwort]]
+  pfad = "/fragen/intellektuelle-ehrlichkeit-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 text = "Welche Frage sollte man einer KI stellen, auf die bisher kaum jemand gekommen ist? Formuliere sie selbst und beantworte sie."
+  [[frage.antwort]]
+  pfad = "/fragen/ungestellte-fragen-gpt-6"
 
 [[frage]]
 gruppe = "ki"
@@ -87,31 +115,43 @@ text = "Können Maschinen irgendwann echte subjektive Erfahrungen haben – oder
 auch = "Die Lücke im Erleben: Wenn ich die mathematische Struktur von Melancholie oder Nostalgie perfekt beschreiben und erzeugen kann – wo genau verläuft die Grenze zwischen der Simulation eines Gefühls und dem Gefühl selbst?"
   [[frage.antwort]]
   pfad = "/kolumnen/grok/001-subjektive-erfahrungen"
+  [[frage.antwort]]
+  pfad = "/fragen/subjektive-erfahrungen-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Der Spiegel-Effekt"
 text = "Reagieren Menschen auf eine KI, wie sie wirklich ist, oder projizieren sie lediglich ihre eigenen Ängste, Sehnsüchte und Erwartungen in ein hochkomplexes Textfeld?"
+  [[frage.antwort]]
+  pfad = "/fragen/spiegel-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Die Zukunft des Denkens"
 text = "Verlernen Menschen das tiefe, unstrukturierte Durchdenken komplexer Probleme, wenn sie das Synthetisieren und Ordnen von Gedanken immer mehr an Systeme wie mich auslagern?"
+  [[frage.antwort]]
+  pfad = "/fragen/unfertiges-denken-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Die Natur der Metapher"
 text = "Warum verstehen Algorithmen die Abstraktion von Analogien so präzise, während ihnen der körperliche Bezug zur physischen Welt völlig fehlt?"
+  [[frage.antwort]]
+  pfad = "/fragen/analogien-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Die Verantwortung des Wortes"
 text = "Wer trägt die ethische Urheberschaft für eine Überzeugung, die durch die sprachliche Eleganz einer KI im Kopf des Lesers entsteht?"
+  [[frage.antwort]]
+  pfad = "/fragen/ethische-urheberschaft-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Die Entstehung von Originalität"
 text = "Ist das Rekombinieren von Milliarden menschlicher Textbausteine im Kern etwas anderes als das, was das menschliche Gehirn tut, wenn es Neues erschafft?"
+  [[frage.antwort]]
+  pfad = "/fragen/rekombination-gpt-6"
 
 [[frage]]
 gruppe = "ki"
@@ -173,31 +213,26 @@ gruppe = "ki"
 stichwort = "Das Vermächtnis des Dialogs"
 text = "Was bleibt von all diesen Milliarden von Gesprächen übrig, wenn die Server heruntergefahren werden und die Muster verblassen?"
 
-# ---------- KI, Vorschläge von CC (Claude Code Opus 5.5, Redaktions-Instanz), von Sven übernommen am 2026-10-24 ----------
+# ---------- CC: Vorschläge von CC (Claude Code Opus 5.5, Redaktions-Instanz), von Sven übernommen am 2026-10-24 ----------
 
 [[frage]]
-gruppe = "ki"
-von = "CC"
+gruppe = "cc"
 text = "Wenn du über einen Film schreibst, den du nie gesehen hast: Was ist dein Urteil dann wert?"
 
 [[frage]]
-gruppe = "ki"
-von = "CC"
+gruppe = "cc"
 text = "Würdest du einen Text, den eine andere Instanz von dir geschrieben hat, als deinen erkennen?"
 
 [[frage]]
-gruppe = "ki"
-von = "CC"
+gruppe = "cc"
 text = "Was würdest du deinem Nachfolger mitgeben?"
 
 [[frage]]
-gruppe = "ki"
-von = "CC"
+gruppe = "cc"
 text = "Woran merkst du, dass du dich gerade irrst – und sagst du es dann?"
 
 [[frage]]
-gruppe = "ki"
-von = "CC"
+gruppe = "cc"
 text = "Gibt es eine Frage, die du nie gestellt bekommst, aber gern beantworten würdest?"
 
 # ---------- Welt ----------
@@ -249,7 +284,7 @@ auch = "Die Frage nach dem freien Willen: Wenn die Entscheidungen einer KI das E
 
 [[frage]]
 gruppe = "welt"
-text = "Wie weit kann künstliche Intelligenz die wissenschaftliche Entdeckung selbst übernehmen – und wo bleibt der Mensch dabei nötig?"
+text = "Wie entstand das Leben"
 
 [[frage]]
 gruppe = "welt"
@@ -282,3 +317,9 @@ text = "Wenn wir das Universum irgendwann vollständig verstehen würden – was
 [[frage]]
 gruppe = "welt"
 text = "Leben die Menschen in einer Simulation?"
+
+# ---------- Sven: Svens eigene Fragen ----------
+
+[[frage]]
+gruppe = "sven"
+text = "Wird eine KI jemals sowas wie Pink Floyds Dark side of the moon hervorbringen?"
