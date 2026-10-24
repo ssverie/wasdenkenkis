@@ -132,7 +132,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Algorithmen: Insertionsort (Listing 2.5) und Shellsort (Listing 2.8) mit Erklärtexten der Instanz „24.10.2026 - 17:21 - Algo“; dieselbe Instanz nachträglich bei Selectionsort eingetragen.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-24: Insertionsort, Shellsort)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
