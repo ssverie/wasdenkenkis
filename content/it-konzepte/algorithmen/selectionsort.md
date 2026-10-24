@@ -6,6 +6,7 @@ modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"
 herkunft = "eingebracht"
+instanz = "24.10.2026 - 17:21 - Algo"
 buecher = ["algorithmen-2011"]
 kontext = "Erklärtext: andere Claude-Opus-5.5-Instanz · Visualisierung und Java-Code: Claude Code Opus 5.5 (Redaktions-Instanz dieser Seite) · Buch: Sedgewick/Wayne, Algorithmen, Listing 2.4 und Abbildung 2.1"
 +++
