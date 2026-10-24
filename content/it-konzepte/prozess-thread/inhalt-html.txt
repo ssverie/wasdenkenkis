@@ -1,0 +1,240 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Prozess</strong> ist ein laufendes Programm mit eigenem, abgeschottetem Speicher. Ein <strong>Thread</strong> ist ein Ausführungsstrang innerhalb eines Prozesses. Alle Threads eines Prozesses teilen sich denselben Speicher – das macht sie billig und schnell, aber gefährlich.</p>
+<p>Greifen zwei Threads ohne Absprache auf dieselben Daten zu, entstehen <strong>Race Conditions</strong>: Ergebnisse, die mal stimmen und mal nicht. <strong>Locks</strong> verhindern das, können aber <strong>Deadlocks</strong> erzeugen. Und seit Java 21 gibt es mit <strong>virtuellen Threads</strong> eine Möglichkeit, Hunderttausende Aufgaben gleichzeitig warten zu lassen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#prozess-thread">Prozess oder Thread?</a></li>
+  <li><a href="#race">Race Condition: count++ ist nicht ein Schritt</a></li>
+  <li><a href="#sichtbarkeit">Sichtbarkeit: wenn ein Thread nichts mitbekommt</a></li>
+  <li><a href="#deadlock">Deadlock: alle warten aufeinander</a></li>
+  <li><a href="#pools">Thread-Pools und virtuelle Threads</a></li>
+  <li><a href="#werkzeuge">Der Werkzeugkasten</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="prozess-thread">Prozess oder Thread?</h2>
+<p>Ein Bild dafür: Ein Prozess ist eine Wohnung mit eigener Tür. Threads sind die Mitbewohner. Sie teilen sich Küche und Kühlschrank – praktisch, weil niemand etwas hin- und hertragen muss. Aber wenn zwei gleichzeitig das letzte Ei nehmen wollen, gibt es Streit. Wer etwas mit der Nachbarwohnung austauschen will, muss klingeln.</p>
+
+<div class="vs">
+  <div>
+    <h4>Prozess</h4>
+    <svg viewBox="0 0 200 90" aria-hidden="true">
+      <rect x="4" y="6" width="88" height="78" rx="8" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--accent)"/>
+      <rect x="108" y="6" width="88" height="78" rx="8" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--accent-2)"/>
+      <text x="48" y="26" text-anchor="middle" class="svg-muted" font-size="10">Speicher A</text>
+      <text x="152" y="26" text-anchor="middle" class="svg-muted" font-size="10">Speicher B</text>
+      <path d="M30 60 q3 -10 6 0 t6 0" fill="none" stroke="var(--accent)" stroke-width="2"/>
+      <path d="M134 60 q3 -10 6 0 t6 0" fill="none" stroke="var(--accent-2)" stroke-width="2"/>
+      <text x="100" y="52" text-anchor="middle" class="svg-muted" font-size="13">⇠⇢</text>
+    </svg>
+    <ul>
+      <li>eigener Adressraum, vom Betriebssystem geschützt</li>
+      <li>Starten teuer (Millisekunden)</li>
+      <li>Austausch nur über Umwege: Pipes, Sockets, Dateien</li>
+      <li>Absturz betrifft nur ihn selbst</li>
+    </ul>
+  </div>
+  <div>
+    <h4>Thread</h4>
+    <svg viewBox="0 0 200 90" aria-hidden="true">
+      <rect x="4" y="6" width="192" height="78" rx="8" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+      <text x="100" y="26" text-anchor="middle" class="svg-muted" font-size="10">ein gemeinsamer Speicher</text>
+      <path d="M40 60 q3 -10 6 0 t6 0" fill="none" stroke="#2f5bd3" stroke-width="2"/>
+      <path d="M90 60 q3 -10 6 0 t6 0" fill="none" stroke="#b4540a" stroke-width="2"/>
+      <path d="M140 60 q3 -10 6 0 t6 0" fill="none" stroke="#15803d" stroke-width="2"/>
+    </svg>
+    <ul>
+      <li>teilt Heap, offene Dateien, alles</li>
+      <li>Starten billiger (Mikrosekunden)</li>
+      <li>Austausch direkt über gemeinsame Objekte</li>
+      <li>eine unbehandelte Exception beendet nur den Thread – aber ein kaputter Zustand trifft alle</li>
+    </ul>
+  </div>
+</div>
+
+<pre><code><span class="c">// Ein neuer Prozess: ein anderes Programm starten</span>
+Process p = <span class="k">new</span> ProcessBuilder(<span class="s">"git"</span>, <span class="s">"status"</span>).inheritIO().start();
+<span class="k">int</span> exitCode = p.waitFor();
+
+<span class="c">// Ein neuer Thread: im selben Prozess, mit Zugriff auf dieselben Objekte</span>
+Thread t = Thread.ofPlatform().start(() -&gt; System.out.println(<span class="s">"Hallo aus "</span> + Thread.currentThread()));
+t.join();</code></pre>
+
+<h3>Nebenläufig ist nicht parallel</h3>
+<p><strong>Nebenläufig</strong> (concurrent) heißt: Mehrere Aufgaben sind gleichzeitig in Arbeit und überlappen sich zeitlich. <strong>Parallel</strong> heißt: Sie werden im selben Moment ausgeführt – dafür braucht man mehrere Kerne. Ein Koch, der zwischen drei Töpfen hin- und herspringt, arbeitet nebenläufig. Drei Köche an drei Töpfen arbeiten parallel. Die Probleme auf dieser Seite treten bei beidem auf – schon ein einziger Kern, der zwischen Threads wechselt, reicht für eine Race Condition.</p>
+
+<h3>Die Lebensphasen eines Threads</h3>
+<div class="states">
+  <span>NEW</span><i>→</i><span class="run">RUNNABLE</span><i>⇄</i><span class="w">BLOCKED</span><span class="w">WAITING</span><span class="w">TIMED_WAITING</span><i>→</i><span>TERMINATED</span>
+</div>
+<p>So heißen die Zustände in <code>Thread.State</code>. BLOCKED bedeutet: wartet auf einen Lock. WAITING: wartet auf ein Signal, etwa bei <code>join()</code>. TIMED_WAITING: wartet mit Zeitlimit, etwa bei <code>sleep()</code>. In einem Thread-Dump mit <code>jstack</code> sieht man genau diese Zustände.</p>
+
+<h2 id="race">Race Condition: count++ ist nicht ein Schritt</h2>
+<p>In Java sieht <code>count++</code> aus wie ein Befehl. Für die CPU sind es drei: Wert aus dem Speicher <em>lesen</em>, <em>eins addieren</em>, Ergebnis <em>zurückschreiben</em>. Zwischen diesen Schritten kann der Scheduler jederzeit zu einem anderen Thread wechseln. Probier, ob du einen Zähler kaputt bekommst:</p>
+
+<div class="widget">
+  <div class="widget-title">Zwei Threads, ein Zähler</div>
+  <div class="thr">
+    <div class="tcol tA"><h4>Thread A</h4><ul class="ops" id="opsA"></ul><div class="reg" id="regA"></div><button id="stepA">A: nächster Schritt</button></div>
+    <div class="shared"><div class="lbl">count im Heap</div><div class="val" id="cnt">0</div><div class="lock" id="lockInfo"></div></div>
+    <div class="tcol tB"><h4>Thread B</h4><ul class="ops" id="opsB"></ul><div class="reg" id="regB"></div><button id="stepB">B: nächster Schritt</button></div>
+  </div>
+  <div class="verdict" id="verdict">Beide Threads führen <code>count++</code> einmal aus. Richtig wäre am Ende 2. Du bist der Scheduler: Wähle, wer als Nächstes einen Schritt machen darf.</div>
+  <div class="controls">
+    <label class="toggle"><input type="checkbox" id="useLock"> mit <code>synchronized</code></label>
+    <button id="raceReset">Von vorn</button>
+    <button id="bulk">2 × 100 000 Erhöhungen simulieren</button>
+  </div>
+  <div class="bulk" id="bulkOut" hidden></div>
+</div>
+
+<p>Das Tückische: Meistens geht es gut. Der Fehler zeigt sich nur, wenn der Wechsel genau zwischen Lesen und Schreiben fällt – im Test selten, unter Last in Produktion regelmäßig. Dieser Fehler heißt <strong>Lost Update</strong>, und er ist der Klassiker unter den Nebenläufigkeitsfehlern.</p>
+
+<pre><code><span class="k">class</span> Zaehler {
+    <span class="k">private int</span> count = <span class="s">0</span>;
+    <span class="k">void</span> inc() { count++; }          <span class="c">// lesen, +1, schreiben – drei Schritte</span>
+    <span class="k">int</span> get() { <span class="k">return</span> count; }
+}
+
+<span class="k">var</span> z = <span class="k">new</span> Zaehler();
+Runnable job = () -&gt; { <span class="k">for</span> (<span class="k">int</span> i = <span class="s">0</span>; i &lt; <span class="s">100_000</span>; i++) z.inc(); };
+Thread a = Thread.ofPlatform().start(job);
+Thread b = Thread.ofPlatform().start(job);
+a.join(); b.join();
+System.out.println(z.get());                <span class="c">// selten 200000</span></code></pre>
+
+<h3>Drei Reparaturen</h3>
+<pre><code><span class="c">// 1. Lock: Nur ein Thread zur Zeit darf in die Methode</span>
+<span class="k">synchronized void</span> inc() { count++; }
+
+<span class="c">// 2. Atomare Operation: die CPU erledigt lesen-ändern-schreiben untrennbar (Compare-and-Swap)</span>
+<span class="k">private final</span> AtomicInteger count = <span class="k">new</span> AtomicInteger();
+<span class="k">void</span> inc() { count.incrementAndGet(); }
+
+<span class="c">// 3. Bei sehr vielen schreibenden Threads: verteilte Teilzähler, erst beim Lesen summiert</span>
+<span class="k">private final</span> LongAdder count = <span class="k">new</span> LongAdder();
+<span class="k">void</span> inc() { count.increment(); }</code></pre>
+<p>Der Bereich, den nur ein Thread zur Zeit betreten darf, heißt <strong>kritischer Abschnitt</strong>. Er sollte so klein wie möglich sein: Wer im <code>synchronized</code>-Block eine Datenbank abfragt, lässt alle anderen Threads warten.</p>
+
+<h2 id="sichtbarkeit">Sichtbarkeit: wenn ein Thread nichts mitbekommt</h2>
+<p>Es gibt einen zweiten, noch heimtückischeren Fehler. Jeder Kern hat eigene Caches, und der JIT-Compiler darf Code umstellen, solange ein einzelner Thread keinen Unterschied merkt. Ohne Absprache ist deshalb nicht garantiert, dass ein Thread die Änderung eines anderen <em>überhaupt jemals</em> sieht.</p>
+<pre><code><span class="k">class</span> Arbeiter {
+    <span class="k">private boolean</span> stop = <span class="k">false</span>;           <span class="c">// ohne volatile!</span>
+    <span class="k">void</span> run()  { <span class="k">while</span> (!stop) { <span class="c">/* arbeiten */</span> } }
+    <span class="k">void</span> halt() { stop = <span class="k">true</span>; }            <span class="c">// aus einem anderen Thread</span>
+}
+<span class="c">// Die Schleife kann ewig laufen: Der JIT darf stop einmal lesen und dann annehmen,</span>
+<span class="c">// dass es sich nie ändert – im selben Thread wird es ja nie geschrieben.</span></code></pre>
+<p>Die Lösung ist <code>volatile boolean stop</code>. Das <strong>Java Memory Model</strong> formuliert die Regel dahinter als <em>happens-before</em>: Was ein Thread vor dem Schreiben einer volatile-Variable, vor dem Verlassen eines <code>synchronized</code>-Blocks oder vor dem Ende eines Threads getan hat, sieht garantiert jeder Thread, der danach diese Variable liest, denselben Lock nimmt oder <code>join()</code> aufruft. Ohne so eine Kante gibt es keine Garantie.</p>
+<div class="callout warn"><code>volatile</code> sorgt für Sichtbarkeit, nicht für Atomarität. Ein <code>volatile int count</code> mit <code>count++</code> verliert genauso Erhöhungen wie oben.</div>
+
+<h2 id="deadlock">Deadlock: alle warten aufeinander</h2>
+<p>Locks lösen Race Conditions – und schaffen ein neues Problem. Zwei Überweisungen laufen gleichzeitig: Thread 1 überweist von Konto A nach B, Thread 2 von B nach A. Jeder sperrt zuerst das Quellkonto, dann das Zielkonto. Spiel es durch:</p>
+
+<div class="widget">
+  <div class="widget-title">Zwei Überweisungen</div>
+  <div class="dl">
+    <svg viewBox="0 0 460 170" id="dlsvg" aria-label="Wartegraph">
+      <defs><marker id="dlar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2f5bd3"/></marker><marker id="dlar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#b4540a"/></marker><marker id="dlarR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#d33a2c"/></marker></defs>
+      <g font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="600">
+        <circle cx="70" cy="85" r="38" fill="var(--bg)" stroke="#2f5bd3" stroke-width="2"/><text x="70" y="90" text-anchor="middle" fill="var(--fg)">Thread 1</text>
+        <circle cx="390" cy="85" r="38" fill="var(--bg)" stroke="#b4540a" stroke-width="2"/><text x="390" y="90" text-anchor="middle" fill="var(--fg)">Thread 2</text>
+        <rect x="195" y="10" width="70" height="40" rx="8" fill="var(--card)" stroke="var(--line)" stroke-width="2" id="lkA"/><text x="230" y="35" text-anchor="middle" fill="var(--fg)">Konto A</text>
+        <rect x="195" y="120" width="70" height="40" rx="8" fill="var(--card)" stroke="var(--line)" stroke-width="2" id="lkB"/><text x="230" y="145" text-anchor="middle" fill="var(--fg)">Konto B</text>
+      </g>
+      <g id="dlEdges"></g>
+    </svg>
+    <div class="tcol tA"><h4>Thread 1: A → B</h4><div class="dl-state" id="dls1"></div><ul class="ops" id="dlo1"></ul><button id="dl1">Thread 1: nächster Schritt</button></div>
+    <div class="tcol tB"><h4>Thread 2: B → A</h4><div class="dl-state" id="dls2"></div><ul class="ops" id="dlo2"></ul><button id="dl2">Thread 2: nächster Schritt</button></div>
+  </div>
+  <div class="verdict" id="dlv">Durchgezogener Pfeil: Thread hält das Konto. Gestrichelter Pfeil: Thread wartet darauf.</div>
+  <div class="controls">
+    <label class="toggle"><input type="checkbox" id="dlOrder"> Locks immer in fester Reihenfolge (erst A, dann B)</label>
+    <button id="dlReset">Von vorn</button>
+  </div>
+</div>
+
+<p>Ein Deadlock braucht vier Bedingungen gleichzeitig – die <strong>Coffman-Bedingungen</strong>: Ressourcen sind exklusiv; wer etwas hält, wartet auf mehr; niemand kann einem anderen etwas wegnehmen; und das Warten bildet einen Kreis. Bricht man eine davon, ist der Deadlock unmöglich. Am einfachsten bricht man den Kreis: Alle nehmen Locks in derselben Reihenfolge.</p>
+<pre><code><span class="k">void</span> ueberweise(Konto von, Konto an, <span class="k">long</span> betrag) {
+    <span class="c">// Kreis brechen: immer zuerst das Konto mit der kleineren ID sperren</span>
+    Konto erstes  = von.id() &lt; an.id() ? von : an;
+    Konto zweites = erstes == von ? an : von;
+    <span class="k">synchronized</span> (erstes) {
+        <span class="k">synchronized</span> (zweites) {
+            von.abbuchen(betrag);
+            an.gutschreiben(betrag);
+        }
+    }
+}</code></pre>
+<p>Das berühmte Lehrbuchbild dafür sind die <strong>speisenden Philosophen</strong> von Edsger Dijkstra: Fünf Philosophen sitzen am runden Tisch, zwischen je zweien liegt eine Gabel, und jeder braucht zwei zum Essen. Nimmt jeder zuerst die linke Gabel, verhungern alle. Ein JVM-Deadlock lässt sich übrigens finden: <code>jstack</code> meldet ihn mit „Found one Java-level deadlock“. Auflösen kann die JVM ihn nicht – der Prozess muss neu gestartet werden.</p>
+
+<h2 id="pools">Thread-Pools und virtuelle Threads</h2>
+<p>Ein normaler Java-Thread – seit Java 21 <strong>Plattform-Thread</strong> genannt – ist ein echter Thread des Betriebssystems. Er ist vergleichsweise teuer: Er reserviert einen eigenen Stack (unter 64-Bit-Linux standardmäßig 1 MB Adressraum), und der Kernel muss ihn planen. Deshalb benutzt man <strong>Thread-Pools</strong>: eine feste Zahl Threads, die Aufgaben aus einer Warteschlange abarbeiten.</p>
+<p>Das passt schlecht zu Servern, deren Aufgaben meistens <em>warten</em> – auf die Datenbank, auf einen anderen Dienst. Ein Thread, der wartet, belegt seinen Platz im Pool und tut nichts. <strong>Virtuelle Threads</strong> lösen das: Die JVM verwaltet sie selbst und verteilt sie auf wenige Plattform-Threads, die sogenannten Carrier. Wartet ein virtueller Thread, wird er abgehängt, und der Carrier übernimmt einen anderen.</p>
+
+<div class="widget">
+  <div class="widget-title">Pool oder virtuelle Threads?</div>
+  <div class="seg" id="kind">
+    <button data-v="io" aria-pressed="true">Aufgabe wartet 1 s auf das Netzwerk</button>
+    <button data-v="cpu">Aufgabe rechnet 1 s</button>
+  </div>
+  <div class="sl"><span>Anzahl Aufgaben</span><input type="range" id="nTasks" min="0" max="3" step="1" value="1"><output id="nTasksO"></output></div>
+  <div class="sl"><span>Threads im Pool</span><input type="range" id="nPool" min="10" max="1000" step="10" value="200"><output id="nPoolO"></output></div>
+  <div class="pool-out">
+    <div id="outP"></div>
+    <div id="outV"></div>
+  </div>
+  <div class="pool-note" id="poolNote"></div>
+  <p class="fine">Idealisierte Rechnung auf einem Rechner mit 8 Kernen, ohne Overhead. Speicher: Stack-Reservierung bei Plattform-Threads, Größenordnung bei virtuellen Threads.</p>
+</div>
+
+<pre><code><span class="c">// Klassisch: fester Pool – 10 000 wartende Aufgaben brauchen 50 Runden à 1 s</span>
+<span class="k">try</span> (<span class="k">var</span> ex = Executors.newFixedThreadPool(<span class="s">200</span>)) {
+    <span class="k">for</span> (<span class="k">int</span> i = <span class="s">0</span>; i &lt; <span class="s">10_000</span>; i++) ex.submit(() -&gt; { Thread.sleep(<span class="s">1000</span>); <span class="k">return null</span>; });
+}
+
+<span class="c">// Seit Java 21: ein virtueller Thread je Aufgabe – fertig nach gut 1 s</span>
+<span class="k">try</span> (<span class="k">var</span> ex = Executors.newVirtualThreadPerTaskExecutor()) {
+    <span class="k">for</span> (<span class="k">int</span> i = <span class="s">0</span>; i &lt; <span class="s">10_000</span>; i++) ex.submit(() -&gt; { Thread.sleep(<span class="s">1000</span>); <span class="k">return null</span>; });
+}</code></pre>
+<p>Virtuelle Threads poolt man nicht – man erzeugt einfach für jede Aufgabe einen neuen. Will man begrenzen, wie viele gleichzeitig eine Datenbank treffen, nimmt man eine <code>Semaphore</code>. Ein früherer Haken ist inzwischen weg: Bis Java 23 blieb ein virtueller Thread in einem <code>synchronized</code>-Block an seinen Carrier gefesselt („Pinning“). Seit Java 24 ist das behoben.</p>
+
+<h2 id="werkzeuge">Der Werkzeugkasten</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Problem</th><th>Werkzeug in Java</th></tr></thead>
+  <tbody>
+    <tr><td>Ein Zähler, eine Referenz atomar ändern</td><td><code>AtomicInteger</code>, <code>AtomicReference</code>, <code>LongAdder</code></td></tr>
+    <tr><td>Mehrere Felder konsistent ändern</td><td><code>synchronized</code> oder <code>ReentrantLock</code></td></tr>
+    <tr><td>Viele lesen, wenige schreiben</td><td><code>ReadWriteLock</code>, <code>StampedLock</code>, oder unveränderliche Objekte (<code>record</code>)</td></tr>
+    <tr><td>Gemeinsame Map, Liste, Queue</td><td><code>ConcurrentHashMap</code>, <code>CopyOnWriteArrayList</code>, <code>BlockingQueue</code></td></tr>
+    <tr><td>Aufgaben verteilen</td><td><code>ExecutorService</code>, bei viel Warten virtuelle Threads</td></tr>
+    <tr><td>Ergebnisse verketten</td><td><code>CompletableFuture</code></td></tr>
+    <tr><td>Große Datenmengen auf alle Kerne verteilen</td><td><code>parallelStream()</code>, <code>ForkJoinPool</code></td></tr>
+    <tr><td>Zugriffe begrenzen</td><td><code>Semaphore</code></td></tr>
+    <tr><td>Auf mehrere Threads warten</td><td><code>CountDownLatch</code>, <code>join()</code>, Structured Concurrency (seit Java 21 als Preview in Arbeit)</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Die beste Nebenläufigkeit ist die, die man nicht braucht: Unveränderliche Objekte können beliebig viele Threads gleichzeitig lesen, ganz ohne Locks.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Mehr Threads, mehr Tempo.“</b> – Für Rechenarbeit bringt alles über die Zahl der Kerne nichts, nur zusätzliche Wechsel. Mehr Threads helfen nur, wenn sie überwiegend warten.</div>
+  <div><b>„volatile macht count++ sicher.“</b> – Es macht Änderungen sichtbar, aber nicht atomar. Dafür braucht es <code>AtomicInteger</code> oder einen Lock.</div>
+  <div><b>„Ich benutze ConcurrentHashMap, also ist mein Code thread-sicher.“</b> – Jede einzelne Operation ist sicher, ihre Kombination nicht. <code>if (!map.containsKey(k)) map.put(k, v)</code> ist eine Race Condition. Richtig: <code>putIfAbsent</code>, <code>computeIfAbsent</code> oder <code>merge</code>.</div>
+  <div><b>„Im Test lief es tausendmal – also ist es korrekt.“</b> – Nebenläufigkeitsfehler hängen vom Timing ab. Sie zeigen sich oft erst unter Last, auf anderer Hardware oder nach einem JVM-Update.</div>
+  <div><b>„Virtuelle Threads machen alles schneller.“</b> – Sie machen Warten billig. Rechenintensiver Code wird nicht schneller, denn die Zahl der Kerne bleibt dieselbe.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/betriebssystem/">Betriebssystem</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

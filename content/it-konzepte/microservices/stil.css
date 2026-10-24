@@ -1,0 +1,54 @@
+/* ---- Seitenspezifisch: Microservices und Monolith ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:10px 0 6px}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:2.6em}
+.erklaert .note code{font-size:.8rem}
+
+/* Kette */
+.erklaert .sl{display:grid;grid-template-columns:12em 1fr 3em;align-items:center;gap:10px;font-size:.88rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:1fr 3em}.erklaert .sl > span{grid-column:1/-1}}
+.erklaert .chain{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin:12px 0}
+.erklaert .chain span{padding:6px 9px;border-radius:7px;font:600 .74rem var(--sans);background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent)}
+.erklaert .chain i{color:var(--muted);font-style:normal}
+.erklaert .cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.erklaert .cmp{grid-template-columns:1fr}}
+.erklaert .cmp > div{padding:12px;border-radius:10px;background:var(--bg)}
+.erklaert .cmp h4{margin:0 0 6px;font-size:.88rem}
+.erklaert .cmp dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:0;font-size:.82rem}
+.erklaert .cmp dt{color:var(--muted)}.erklaert .cmp dd{margin:0;text-align:right;font:600 .82rem var(--mono)}
+.erklaert .cmp dd.bad{color:var(--bad)}
+
+/* Schnitt */
+.erklaert .svcs{display:grid;gap:8px;margin-top:10px}
+.erklaert .svc{padding:10px;border-radius:10px;border:2px solid var(--line);background:var(--card);font-size:.8rem;transition:border-color .25s,background .25s}
+.erklaert .svc b{display:block;font-size:.88rem;margin-bottom:4px}
+.erklaert .svc .mods{display:flex;flex-wrap:wrap;gap:3px}
+.erklaert .svc .mods span{padding:2px 6px;border-radius:5px;background:var(--bg);font-size:.72rem}
+.erklaert .svc.hit{border-color:var(--accent-2);background:var(--accent-2-soft)}
+.erklaert .svc.hit .mods span.hit{background:var(--accent-2);color:#fff}
+.erklaert .cut-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+@media (max-width:520px){.erklaert .cut-stats{grid-template-columns:1fr}}
+.erklaert .cut-stats div{padding:8px;border-radius:9px;background:var(--bg);text-align:center;font-size:.72rem;color:var(--muted)}
+.erklaert .cut-stats b{display:block;font:600 1.05rem var(--serif);color:var(--fg)}
+.erklaert .cut-stats .bad b{color:var(--bad)}.erklaert .cut-stats .good b{color:var(--ok)}
+
+/* Check */
+.erklaert .chk{display:flex;flex-direction:column;gap:6px}
+.erklaert .q{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:8px 12px;border-radius:9px;background:var(--card);border:1px solid var(--line);font-size:.86rem}
+.erklaert .q .yn{display:flex;gap:4px}
+.erklaert .q .yn button{padding:4px 10px;font-size:.8rem}
+.erklaert .q .yn button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .q .yn button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .q .yn button[aria-pressed="true"]{color:#0d1530}}
+@media (max-width:520px){.erklaert .q{grid-template-columns:1fr}}
+.erklaert .verdict{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:.9rem}
+.erklaert .verdict.mono{background:var(--ok-soft)}.erklaert .verdict.mid{background:var(--accent-soft)}.erklaert .verdict.ms{background:var(--accent-2-soft)}
+

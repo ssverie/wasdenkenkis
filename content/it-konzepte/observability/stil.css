@@ -1,0 +1,42 @@
+/* ---- Seitenspezifisch: Observability ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:2.6em}
+.erklaert .sl{display:grid;grid-template-columns:12em minmax(0,1fr) 4.5em;align-items:center;gap:10px;font-size:.88rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:minmax(0,1fr) 4.5em}.erklaert .sl > span{grid-column:1/-1}}
+
+/* Trace */
+.erklaert .wf{margin-top:6px;font-size:.76rem}
+.erklaert .wf .row{display:grid;grid-template-columns:9.5em minmax(0,1fr);gap:8px;align-items:center;min-height:20px}
+@media (max-width:520px){.erklaert .wf .row{grid-template-columns:6.5em minmax(0,1fr)}}
+.erklaert .wf .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-family:var(--mono);font-size:.7rem}
+.erklaert .wf .tr{position:relative;height:14px;background:var(--bg);border-radius:3px}
+.erklaert .wf .sp{position:absolute;top:2px;height:10px;border-radius:2px;min-width:2px}
+.erklaert .wf .sv0{background:#6b7fd7}.erklaert .wf .sv1{background:#3aa58a}.erklaert .wf .sv2{background:#c9922e}.erklaert .wf .sv3{background:#9b6bc9}.erklaert .wf .sv4{background:#5b9bd5}
+.erklaert .wf .sp.err{background:var(--bad)}.erklaert .wf .sp.hot{outline:2px solid var(--bad);outline-offset:1px}
+.erklaert .axis{display:grid;grid-template-columns:9.5em minmax(0,1fr);gap:8px;font:600 .68rem var(--mono);color:var(--muted);margin-top:4px}
+@media (max-width:520px){.erklaert .axis{grid-template-columns:6.5em minmax(0,1fr)}}
+.erklaert .axis div:last-child{display:flex;justify-content:space-between}
+.erklaert .tid{font:.72rem var(--mono);color:var(--muted);margin-bottom:6px;overflow-wrap:anywhere}
+
+/* Perzentile */
+.erklaert #pcSvg{width:100%;height:auto;display:block;margin-top:6px}
+.erklaert .kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+@media (max-width:520px){.erklaert .kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.erklaert .kpi div{padding:8px;border-radius:9px;background:var(--bg);text-align:center;font-size:.72rem;color:var(--muted)}
+.erklaert .kpi b{display:block;font:600 1.05rem var(--serif);color:var(--fg)}
+.erklaert .kpi .bad b{color:var(--bad)}.erklaert .kpi .hl{outline:2px solid var(--accent-2)}
+
+/* Budget */
+.erklaert .bud{height:22px;border-radius:7px;background:var(--bg);overflow:hidden;margin-top:10px;display:flex}
+.erklaert .bud i{display:block;height:100%;transition:width .25s}
+.erklaert .bud .used{background:var(--bad)}.erklaert .bud .left{background:var(--ok)}
+.erklaert .bl{display:flex;justify-content:space-between;font-size:.76rem;color:var(--muted);margin-top:4px;gap:8px;flex-wrap:wrap}
+

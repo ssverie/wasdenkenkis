@@ -1,0 +1,174 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Speicher kann <strong>schnell</strong>, <strong>groß</strong> oder <strong>billig</strong> sein – nie alles zugleich. Deshalb hat jeder Computer eine <strong>Speicherhierarchie</strong>: winzige, extrem schnelle Register und Caches direkt im Prozessor, darunter der größere, langsamere Arbeitsspeicher, darunter die riesige, noch langsamere SSD.</p>
+<p>Das funktioniert, weil Programme <strong>Lokalität</strong> zeigen: Was gerade gebraucht wurde, wird bald wieder gebraucht, und sein Nachbar im Speicher auch. Caches laden deshalb nie einzelne Bytes, sondern ganze <strong>Cache-Lines</strong> von 64 Byte. Wer seine Daten so anordnet, dass sie nebeneinander liegen, bekommt Geschwindigkeit geschenkt.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#pyramide">Die Pyramide</a></li>
+  <li><a href="#lokalitaet">Lokalität: warum Caches überhaupt funktionieren</a></li>
+  <li><a href="#java-layout">Wie Java-Daten im Speicher liegen</a></li>
+  <li><a href="#mehrkern">Caches und mehrere Kerne</a></li>
+  <li><a href="#unten">Die unteren Stufen: RAM, SSD, Netzwerk</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="pyramide">Die Pyramide</h2>
+<p>Stell dir vor, du arbeitest an einem Bericht. Was du gerade brauchst, liegt auf dem Schreibtisch – wenig Platz, aber sofort greifbar. Das Regal hinter dir fasst mehr, kostet aber eine Drehung. Die Bibliothek im Haus noch mehr, kostet aber einen Gang. Und das Archiv in einer anderen Stadt hat alles – aber eine Anfrage dauert Tage. Genau so ist der Speicher eines Computers organisiert. Klick auf eine Stufe:</p>
+
+<div class="widget pyr">
+  <div class="widget-title">Von schnell und klein zu langsam und groß</div>
+  <svg viewBox="0 0 600 300" id="pyrsvg" role="img" aria-label="Speicherpyramide: Register, L1, L2, L3, RAM, SSD"></svg>
+  <div class="pyr-info" id="pyrinfo"><b>Auf eine Stufe klicken.</b>Größen und Zeiten sind typische Werte für einen aktuellen Laptop- oder Desktop-Prozessor.</div>
+</div>
+
+<p>Warum baut man nicht einfach alles so schnell wie den L1-Cache? Zwei Gründe:</p>
+<ul>
+  <li><strong>Technik:</strong> Caches bestehen aus <strong>SRAM</strong> – sechs Transistoren pro Bit, schnell, aber groß und teuer. Arbeitsspeicher ist <strong>DRAM</strong> – ein Transistor und ein winziger Kondensator pro Bit, viel dichter und billiger, aber langsamer, und er muss ständig aufgefrischt werden, weil die Ladung verrinnt. Eine SSD speichert in Flash-Zellen, die auch ohne Strom ihren Zustand halten.</li>
+  <li><strong>Physik:</strong> Je größer ein Speicher, desto länger die Wege. Bei 4 GHz legt ein elektrisches Signal in einem Takt nur wenige Zentimeter zurück. Der L1-Cache sitzt deshalb direkt neben dem Rechenwerk, der Arbeitsspeicher auf einem eigenen Riegel, Zentimeter entfernt.</li>
+</ul>
+
+<h2 id="lokalitaet">Lokalität: warum Caches überhaupt funktionieren</h2>
+<p>Ein Cache mit 48 KB kann unmöglich die Daten eines Programms mit Gigabytes halten. Dass er trotzdem in den meisten Fällen trifft – oft in weit über 90 Prozent der Zugriffe –, liegt an zwei Eigenschaften fast aller Programme:</p>
+<div class="cards">
+  <div class="card"><div class="num">⟳</div><h4>Zeitliche Lokalität</h4><p>Was gerade benutzt wurde, wird bald wieder benutzt: die Schleifenvariable, der Zähler, die Methode, die immer wieder aufgerufen wird.</p></div>
+  <div class="card"><div class="num">↔</div><h4>Räumliche Lokalität</h4><p>Was neben dem gerade Benutzten liegt, wird bald auch benutzt: das nächste Element im Array, die nächste Zeile im Code.</p></div>
+  <div class="card"><div class="num">64</div><h4>Cache-Line</h4><p>Deshalb lädt der Cache nie ein einzelnes Byte, sondern immer einen Block von 64 Byte. Liest du ein <code>int</code>, kommen 15 Nachbarn gratis mit.</p></div>
+</div>
+<p>Dazu kommt der <strong>Prefetcher</strong>: Erkennt der Prozessor ein Muster – etwa, dass ein Programm Adresse für Adresse vorwärts liest –, lädt er die nächsten Cache-Lines schon, bevor sie verlangt werden. Bei einem Array funktioniert das hervorragend. Bei einer verketteten Liste nicht: Wo der nächste Knoten liegt, steht erst im aktuellen Knoten.</p>
+
+<div class="widget">
+  <div class="widget-title">Cache-Simulator</div>
+  <div class="seg" id="pat">
+    <button data-p="seq" aria-pressed="true">Array der Reihe nach</button>
+    <button data-p="col">Matrix spaltenweise</button>
+    <button data-p="list">Verkettete Liste</button>
+    <button data-p="rnd">Zufällige Zugriffe</button>
+  </div>
+  <div class="sim">
+    <div><h4>Arbeitsspeicher – jede Zeile eine Cache-Line mit 8 Werten</h4><div class="ram" id="ram"></div>
+      <div class="legend"><span><i style="background:var(--card)"></i>Daten</span><span><i style="background:var(--accent-2)"></i>aktueller Zugriff</span><span><i style="background:var(--line)"></i>schon gelesen</span><span><i style="background:var(--accent-soft)"></i>Zeile liegt im Cache</span></div></div>
+    <div><h4>Cache – 4 Lines</h4><div class="cache" id="cache"></div></div>
+  </div>
+  <div class="sim-stats" id="simstats"></div>
+  <div class="sim-note" id="simnote"></div>
+  <div class="controls">
+    <button class="primary" id="simPlay">Abspielen</button>
+    <button id="simStep">Ein Zugriff</button>
+    <button id="simAll">Sofort alles</button>
+    <button id="simReset">Von vorn</button>
+  </div>
+  <p class="fine">Vereinfacht: echte Caches sind viel größer, haben mehrere Stufen und einen Prefetcher. Zeitannahme: Treffer 1 ns, Fehlschlag 100 ns. Ersetzt wird die am längsten nicht benutzte Line (LRU).</p>
+</div>
+
+<p>Alle vier Muster lesen dieselben 64 Werte, die Rechenarbeit ist identisch. Trotzdem liegen zwischen dem besten und dem schlechtesten Muster Welten. Das ist die wichtigste Lektion dieser Seite: <strong>Die Reihenfolge der Speicherzugriffe kann wichtiger sein als die Zahl der Rechenschritte.</strong></p>
+
+<h2 id="java-layout">Wie Java-Daten im Speicher liegen</h2>
+<p>In Java entscheidet man selten bewusst über Speicherlayout – aber man entscheidet es trotzdem, mit jeder Wahl einer Datenstruktur. Dieselben vier Zahlen, dreimal gespeichert:</p>
+
+<figure class="lay">
+  <div>
+    <h4><code>int[]</code></h4>
+    <svg viewBox="0 0 560 40" aria-hidden="true">
+      <rect class="hd" x="2" y="6" width="80" height="28" rx="4"/><text class="tx" x="42" y="24" text-anchor="middle">Kopf+Länge</text>
+      <rect class="val" x="84" y="6" width="50" height="28" rx="4"/><text class="tx" x="109" y="24" text-anchor="middle">7</text>
+      <rect class="val" x="136" y="6" width="50" height="28" rx="4"/><text class="tx" x="161" y="24" text-anchor="middle">3</text>
+      <rect class="val" x="188" y="6" width="50" height="28" rx="4"/><text class="tx" x="213" y="24" text-anchor="middle">9</text>
+      <rect class="val" x="240" y="6" width="50" height="28" rx="4"/><text class="tx" x="265" y="24" text-anchor="middle">4</text>
+    </svg>
+    <p>Die Werte liegen direkt hintereinander, 4 Byte pro Zahl. Eine Cache-Line fasst 16 davon. Ideal.</p>
+  </div>
+  <div>
+    <h4><code>ArrayList&lt;Integer&gt;</code></h4>
+    <svg viewBox="0 0 560 100" aria-hidden="true">
+      <defs><marker id="layar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" fill="#b4540a"/></marker></defs>
+      <rect class="hd" x="2" y="6" width="80" height="28" rx="4"/><text class="tx" x="42" y="24" text-anchor="middle">Object[]</text>
+      <rect class="ref" x="84" y="6" width="50" height="28" rx="4"/><text class="tx" x="109" y="24" text-anchor="middle">ref</text>
+      <rect class="ref" x="136" y="6" width="50" height="28" rx="4"/><text class="tx" x="161" y="24" text-anchor="middle">ref</text>
+      <rect class="ref" x="188" y="6" width="50" height="28" rx="4"/><text class="tx" x="213" y="24" text-anchor="middle">ref</text>
+      <rect class="ref" x="240" y="6" width="50" height="28" rx="4"/><text class="tx" x="265" y="24" text-anchor="middle">ref</text>
+      <g><rect class="box" x="330" y="62" width="64" height="30" rx="4"/><text class="tx" x="362" y="81" text-anchor="middle">Integer 7</text></g>
+      <g><rect class="box" x="420" y="62" width="64" height="30" rx="4"/><text class="tx" x="452" y="81" text-anchor="middle">Integer 3</text></g>
+      <g><rect class="box" x="100" y="62" width="64" height="30" rx="4"/><text class="tx" x="132" y="81" text-anchor="middle">Integer 9</text></g>
+      <g><rect class="box" x="490" y="10" width="64" height="30" rx="4"/><text class="tx" x="522" y="29" text-anchor="middle">Integer 4</text></g>
+      <path class="ar" d="M109 34 C109 50 340 45 355 62"/><path class="ar" d="M161 34 C170 52 430 45 445 62"/><path class="ar" d="M213 34 C210 50 140 50 135 62"/><path class="ar" d="M265 20 C380 0 450 10 490 22"/>
+    </svg>
+    <p>Das Array enthält nur Verweise. Jede Zahl ist ein eigenes Objekt mit eigenem Kopf irgendwo im Heap – ein zusätzlicher Sprung pro Element, und mehrfacher Speicherbedarf.</p>
+  </div>
+  <div>
+    <h4><code>LinkedList&lt;Integer&gt;</code></h4>
+    <svg viewBox="0 0 560 100" aria-hidden="true">
+      <rect class="box" x="10" y="10" width="80" height="30" rx="4"/><text class="tx" x="50" y="29" text-anchor="middle">Node</text>
+      <rect class="box" x="300" y="62" width="80" height="30" rx="4"/><text class="tx" x="340" y="81" text-anchor="middle">Node</text>
+      <rect class="box" x="150" y="62" width="80" height="30" rx="4"/><text class="tx" x="190" y="81" text-anchor="middle">Node</text>
+      <rect class="box" x="450" y="10" width="80" height="30" rx="4"/><text class="tx" x="490" y="29" text-anchor="middle">Node</text>
+      <path class="ar" d="M90 25 C200 20 300 40 320 62"/><path class="ar" d="M300 80 C270 95 250 95 230 80"/><path class="ar" d="M210 62 C260 20 400 20 450 25"/>
+      <text class="tx" x="110" y="58" fill="var(--muted)">next</text>
+    </svg>
+    <p>Jeder Knoten ist ein Objekt mit Verweisen auf Vorgänger, Nachfolger und den Wert – der wiederum ein eigenes <code>Integer</code> ist. Um zum nächsten Element zu kommen, muss erst der aktuelle Knoten geladen sein. Der Prefetcher kann nicht vorausladen.</p>
+  </div>
+  <figcaption>Vereinfacht. Wo genau die Objekte liegen, entscheidet die JVM; direkt nacheinander erzeugte Objekte liegen oft nah beieinander – nach einigen Garbage Collections nicht mehr unbedingt.</figcaption>
+</figure>
+
+<h2 id="mehrkern">Caches und mehrere Kerne</h2>
+<p>Jeder Kern hat eigene L1- und L2-Caches. Was passiert, wenn zwei Kerne dieselbe Speicherstelle in ihren Caches haben und einer schreibt? Ein <strong>Kohärenzprotokoll</strong> sorgt dafür, dass die Kopie des anderen ungültig wird – bekannt ist etwa MESI, benannt nach den Zuständen einer Line: Modified, Exclusive, Shared, Invalid. Das kostet Zeit, und es arbeitet auf ganzen Cache-Lines.</p>
+<p>Daraus entsteht eine berüchtigte Bremse, <strong>False Sharing</strong>: Zwei Threads schreiben auf zwei <em>verschiedene</em> Variablen, die zufällig in derselben Cache-Line liegen. Logisch teilen sie nichts, physisch reißen sie sich ständig gegenseitig die Line weg. Die JDK-Klasse <code>LongAdder</code> aus dem <a href="/it-konzepte/prozess-thread/">Thread-Eintrag</a> vermeidet genau das: Sie verteilt ihre Teilzähler mit Abstand auf verschiedene Cache-Lines.</p>
+<pre><code><span class="k">class</span> Zaehler {
+    <span class="k">volatile long</span> a;   <span class="c">// Thread 1 schreibt nur a</span>
+    <span class="k">volatile long</span> b;   <span class="c">// Thread 2 schreibt nur b</span>
+}   <span class="c">// a und b liegen 8 Byte auseinander – dieselbe Cache-Line, ständiges Hin und Her</span></code></pre>
+
+<h2 id="unten">Die unteren Stufen: RAM, SSD, Netzwerk</h2>
+<p>Unterhalb der Caches gilt dasselbe Prinzip, nur mit größeren Blöcken und längeren Wartezeiten. Das <a href="/it-konzepte/betriebssystem/">Betriebssystem</a> verwaltet den Arbeitsspeicher in Seiten von meist 4 KB und benutzt freien RAM als Zwischenspeicher für Dateien. Eine SSD liest ebenfalls in Blöcken; zusammenhängende Daten am Stück zu lesen, ist auch hier viel schneller als verstreute.</p>
+<p>Und die Hierarchie endet nicht am Gehäuse. Eine Datenbank hält häufig benutzte Seiten im RAM, ein Server legt Ergebnisse in Redis ab, ein CDN hält Bilder in der Nähe des Nutzers, der Browser speichert Dateien lokal. Überall dieselbe Idee: Halte das Benutzte nah. Und überall dasselbe Problem: Wann ist die Kopie veraltet? Nicht umsonst gilt <em>Cache-Invalidierung</em> als eines der schwersten Probleme der Informatik.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="k">int</span>[][] m = <span class="k">new int</span>[<span class="s">4096</span>][<span class="s">4096</span>];
+<span class="k">long</span> s = <span class="s">0</span>;
+
+<span class="k">for</span> (<span class="k">int</span> r = <span class="s">0</span>; r &lt; <span class="s">4096</span>; r++)          <span class="c">// zeilenweise: Nachbarn im Speicher</span>
+    <span class="k">for</span> (<span class="k">int</span> c = <span class="s">0</span>; c &lt; <span class="s">4096</span>; c++) s += m[r][c];
+
+<span class="k">for</span> (<span class="k">int</span> c = <span class="s">0</span>; c &lt; <span class="s">4096</span>; c++)          <span class="c">// spaltenweise: jeder Zugriff eine andere Zeile</span>
+    <span class="k">for</span> (<span class="k">int</span> r = <span class="s">0</span>; r &lt; <span class="s">4096</span>; r++) s += m[r][c];
+
+<span class="c">// Gleiche Rechenarbeit, oft ein Vielfaches an Laufzeit.</span>
+<span class="c">// Messen mit JMH – nicht mit System.nanoTime() um eine Schleife.</span></code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Entscheidung</th><th>Folge für den Cache</th></tr></thead>
+  <tbody>
+    <tr><td><strong><code>int[]</code> statt <code>List&lt;Integer&gt;</code></strong></td><td>Werte statt Verweise: dichter, kein Sprung pro Element. Bei Streams: <code>IntStream</code> statt <code>Stream&lt;Integer&gt;</code></td></tr>
+    <tr><td><strong><code>ArrayList</code> statt <code>LinkedList</code></strong></td><td>fast immer schneller, oft sogar beim Einfügen in der Mitte – das Verschieben eines zusammenhängenden Blocks ist billiger als das Suchen der Einfügestelle in einer Kette</td></tr>
+    <tr><td><strong>Objektköpfe</strong></td><td>jedes Objekt trägt einen Kopf von typischerweise 12 Byte; seit Java 25 lässt er sich mit <code>-XX:+UseCompactObjectHeaders</code> auf 8 Byte verkleinern. Viele kleine Objekte heißt viel Kopf</td></tr>
+    <tr><td><strong>Garbage Collector</strong></td><td>verschiebt lebende Objekte zusammen – das verbessert nebenbei die Lokalität</td></tr>
+    <tr><td><strong>Spaltenorientierte Daten</strong></td><td>statt <code>Person[]</code> mit vielen Feldern mehrere Arrays (<code>int[] alter</code>, <code>double[] gehalt</code>), wenn man meist nur ein Feld über alle Einträge liest – so arbeiten analytische Datenbanken</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Wer genau wissen will, wie ein Objekt im Speicher liegt, kann es mit dem Werkzeug JOL (Java Object Layout) aus dem OpenJDK-Projekt ausgeben lassen. Und das langfristige Ziel von Projekt Valhalla ist, dass eigene Klassen so dicht im Array liegen können wie heute nur <code>int</code> und <code>double</code>.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Die O-Notation sagt mir, was schneller ist.“</b> – Sie sagt, wie etwas mit der Größe wächst. Konstante Faktoren wie Cache-Fehlschläge ignoriert sie – und die können einen Faktor 100 ausmachen.</div>
+  <div><b>„Mehr RAM macht den Rechner schneller.“</b> – Nur wenn er vorher auslagern musste. Sonst liegt der zusätzliche Speicher als Datei-Zwischenspeicher bereit, und das war's.</div>
+  <div><b>„Eine SSD ist fast so schnell wie RAM.“</b> – Sie ist viel schneller als eine Festplatte. Aber ein Zugriff dauert immer noch etwa tausendmal länger als einer auf den Arbeitsspeicher.</div>
+  <div><b>„Der JIT-Compiler optimiert das schon.“</b> – Er kann Schleifen umbauen, Werte in Registern halten und Objekte sogar ganz wegoptimieren. Aber er kann aus einer <code>LinkedList</code> kein Array machen.</div>
+  <div><b>„Cache ist das, was man im Browser löscht.“</b> – Das ist einer von vielen. Prozessor-Caches arbeiten unsichtbar in Hardware; das Prinzip ist dasselbe.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/betriebssystem/">Betriebssystem</a>
+  <a href="/it-konzepte/prozess-thread/">Prozess, Thread, Nebenläufigkeit</a>
+  <a href="/erklaert/inferenz/">Inferenz <small style="color:var(--muted)">(KI)</small></a>
+  <a href="/it-konzepte/schaltwerke/">Schaltwerke</a>
+  <a href="/it-konzepte/cpu/">Die CPU</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

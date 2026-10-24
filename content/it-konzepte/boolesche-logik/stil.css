@@ -1,0 +1,54 @@
+/* ---- Seitenspezifisch: Boolesche Logik ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:10px 0 6px}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:2.6em}
+
+/* Gattertabelle */
+.erklaert .gt{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+@media (max-width:620px){.erklaert .gt{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.erklaert .gt div{padding:8px;border-radius:9px;background:var(--bg);text-align:center;font-size:.76rem;min-width:0}
+.erklaert .gt b{display:block;font-size:.9rem;margin-bottom:2px}
+.erklaert .gt code{font-size:.72rem}
+.erklaert .gt table{margin:6px auto 0;border-collapse:collapse;font:.74rem var(--mono)}
+.erklaert .gt td{padding:1px 5px}
+.erklaert .gt td.o{font-weight:700;color:var(--accent)}
+
+/* Editor */
+.erklaert .tt{display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:620px){.erklaert .tt{grid-template-columns:minmax(0,1fr)}}
+.erklaert .ttab{border-collapse:collapse;font:.84rem var(--mono)}
+.erklaert .ttab th, .erklaert .ttab td{padding:3px 10px;text-align:center;border-bottom:1px solid var(--line)}
+.erklaert .ttab th{font:700 .72rem var(--sans);color:var(--muted)}
+.erklaert .ttab td.o button{min-width:34px;padding:2px 8px;font:700 .84rem var(--mono)}
+.erklaert .ttab td.o button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .ttab td.o button.on{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .ttab td.o button.on{color:#0d1530}}
+.erklaert .ttab tr.hit td{background:var(--accent-2-soft)}
+.erklaert .form{font:.84rem/1.6 var(--mono);padding:8px 10px;border-radius:8px;background:var(--bg);overflow-wrap:anywhere}
+.erklaert #ttSvg{width:100%;height:auto;display:block;margin-top:8px}
+
+/* NAND */
+.erklaert #ndSvg{width:100%;max-width:560px;height:auto;display:block;margin:6px auto 0}
+.erklaert .ins{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.erklaert .ins button{padding:6px 14px;font:700 .9rem var(--mono)}
+.erklaert .ins button.on{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+
+/* Äquivalenz */
+.erklaert .eq{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+@media (max-width:560px){.erklaert .eq{grid-template-columns:minmax(0,1fr)}}
+.erklaert .eq input{width:100%;min-width:0;box-sizing:border-box;font:600 .9rem var(--mono);padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.erklaert .ex{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.erklaert .ex button{padding:5px 10px;font-size:.78rem}
+.erklaert .verd{margin-top:10px;padding:10px 12px;border-radius:9px;font-size:.88rem;background:var(--bg)}
+.erklaert .verd.yes{background:var(--ok-soft)}.erklaert .verd.no{background:rgba(200,60,60,.12)}
+.erklaert .cmpt{border-collapse:collapse;font:.78rem var(--mono);margin-top:8px}
+.erklaert .cmpt th, .erklaert .cmpt td{padding:2px 8px;text-align:center;border-bottom:1px solid var(--line)}
+.erklaert .cmpt th{font:700 .7rem var(--sans);color:var(--muted)}
+.erklaert .cmpt tr.diff td{background:rgba(200,60,60,.12);font-weight:700}
+

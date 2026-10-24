@@ -1,0 +1,144 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Intraktabel</strong> heißt ein Problem, das zwar lösbar ist, aber nur mit einem Aufwand, der exponentiell mit der Eingabe wächst – schon bei moderater Größe praktisch unlösbar. Als „effizient“ gilt dagegen, was in <strong>polynomieller Zeit</strong> geht. Die Klasse <strong>P</strong> umfasst alle Probleme, die sich so lösen lassen; <strong>NP</strong> alle, bei denen sich eine vorgeschlagene Lösung so <em>prüfen</em> lässt.</p>
+<p>Im Zentrum steht <strong>SAT</strong>: Gibt es eine Belegung von Wahrheitswerten, die eine logische Formel wahr macht? Cook und Levin bewiesen 1971, dass sich jedes NP-Problem in SAT übersetzen lässt – SAT ist <strong>NP-vollständig</strong>. Ein schneller Algorithmus für SAT wäre einer für alles in NP. Niemand kennt einen, und die meisten glauben, es gibt keinen. Trotzdem lösen moderne <strong>SAT-Solver</strong> praktische Instanzen mit Millionen Variablen – Grundlage für Chipverifikation, Paketverwaltung und Planung.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#grenze">Wo die Grenze verläuft</a></li>
+  <li><a href="#pnp">P und NP genauer</a></li>
+  <li><a href="#sat">SAT: Finden gegen Prüfen</a></li>
+  <li><a href="#reduktion">Reduktion: ein Problem in SAT übersetzen</a></li>
+  <li><a href="#solver">Wie SAT-Solver es trotzdem schaffen</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="grenze">Wo die Grenze verläuft</h2>
+<p>Auf der <a href="/it-konzepte/komplexitaet/">Komplexitäts-Seite</a> ging es um O(n) gegen O(n²). Hier geht es um eine gröbere, aber härtere Grenze: <strong>polynomiell</strong> (n, n², n³, auch n¹⁰) gegen <strong>exponentiell</strong> (2ⁿ, n!). Bei einer Milliarde Schritten pro Sekunde:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Aufwand</th><th>n = 20</th><th>n = 50</th><th>n = 100</th></tr></thead>
+  <tbody>
+    <tr><td><strong>n³</strong></td><td>8 µs</td><td>125 µs</td><td>1 ms</td></tr>
+    <tr><td><strong>2ⁿ</strong></td><td>1 ms</td><td>13 Tage</td><td>4 · 10¹³ Jahre</td></tr>
+    <tr><td><strong>n!</strong></td><td>77 Jahre</td><td>10⁴⁸ Jahre</td><td>10¹⁴¹ Jahre</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Das Universum ist etwa 1,4 · 10¹⁰ Jahre alt. Schnellere Hardware hilft bei exponentiellem Aufwand kaum: Ein tausendmal schnellerer Rechner schafft bei 2ⁿ gerade einmal zehn Elemente mehr. Deshalb gilt seit den 1960er-Jahren die Faustregel (nach Cobham und Edmonds): <strong>polynomiell heißt handhabbar, exponentiell heißt intraktabel.</strong> Ein O(n¹⁰⁰)-Algorithmus wäre zwar kaum praktisch, aber solche kommen bei natürlichen Problemen selten vor.</p>
+
+<h2 id="pnp">P und NP genauer</h2>
+<div class="cards">
+  <div class="card"><div class="num">P</div><h3>Polynomiell lösbar</h3><p>Ja/Nein-Probleme, die eine <a href="/it-konzepte/turingmaschine/">Turingmaschine</a> – und damit jeder Rechner – in polynomieller Zeit entscheidet. Kürzeste Wege, Sortieren, Primzahltest (seit 2002 bewiesen), lineare Optimierung.</p></div>
+  <div class="card"><div class="num">NP</div><h3>Polynomiell prüfbar</h3><p>Ja/Nein-Probleme, bei denen es für jede Ja-Instanz einen kurzen <strong>Beleg</strong> (Zertifikat) gibt, der sich in polynomieller Zeit prüfen lässt. Der Name heißt „nichtdeterministisch polynomiell“: Eine Maschine, die richtig raten dürfte, wäre schnell.</p></div>
+  <div class="card"><div class="num">NPC</div><h3>NP-vollständig</h3><p>Die schwersten Probleme in NP: Jedes andere NP-Problem lässt sich in polynomieller Zeit in sie übersetzen. SAT, Graphfärbung, Rucksack, Handlungsreisender (als Ja/Nein-Frage), Sudoku in beliebiger Größe.</p></div>
+</div>
+<p>Jedes Problem in P ist auch in NP – wer lösen kann, kann auch prüfen. Die offene Frage ist die Umkehrung: <strong>Ist P = NP?</strong> Wenn ja, wäre jedes Problem, dessen Lösungen man schnell prüfen kann, auch schnell lösbar. Fast alle Fachleute glauben, dass nicht – aber seit 1971 hat es niemand bewiesen. Wie sich Finden und Prüfen anfühlen, zeigt das folgende Rätsel.</p>
+
+<h2 id="sat">SAT: Finden gegen Prüfen</h2>
+<p>Eine Formel in <strong>konjunktiver Normalform</strong> ist eine Liste von <em>Klauseln</em>, die alle erfüllt sein müssen; jede Klausel ist erfüllt, wenn mindestens eines ihrer Literale stimmt. ¬B heißt „B ist falsch“. Finde die Belegung, die alle 14 Klauseln erfüllt – es gibt genau eine:</p>
+
+<div class="widget">
+  <div class="widget-title">Sechs Variablen, vierzehn Klauseln</div>
+  <div class="vars" id="saV"></div>
+  <div class="cls" id="saC"></div>
+  <div class="tst" id="saS"></div>
+  <div class="verd" id="saR"></div>
+  <div class="row"><button id="saReset">Alles auf falsch</button><button id="saShow">Lösung zeigen</button></div>
+</div>
+
+<p>Das ist der Kern von NP: Prüfen kostet einen Blick auf jede Klausel – das macht der Rechner in Mikrosekunden. Finden heißt im schlimmsten Fall, die 2⁶ = 64 Belegungen durchzuprobieren. Bei 100 Variablen wären es 2¹⁰⁰ ≈ 10³⁰. Das Zertifikat ist die Belegung selbst: kurz, leicht zu prüfen, schwer zu finden.</p>
+
+<h3>Cook und Levin: alles ist SAT</h3>
+<p>Stephen Cook (1971) und unabhängig Leonid Levin zeigten: Die Rechnung einer beliebigen nichtdeterministischen Turingmaschine lässt sich in eine SAT-Formel übersetzen – Variablen für „Feld i enthält zum Zeitpunkt t das Zeichen x“, Klauseln für die Regeln. Die Formel ist genau dann erfüllbar, wenn die Maschine „ja“ sagt. Damit war SAT das erste NP-vollständige Problem. Richard Karp zeigte 1972 für 21 weitere Probleme, dass sich SAT in sie übersetzen lässt – heute sind es tausende.</p>
+
+<h2 id="reduktion">Reduktion: ein Problem in SAT übersetzen</h2>
+<p>Ein praktisches Beispiel: Lässt sich eine Landkarte so färben, dass Nachbarländer verschiedene Farben haben? Die Übersetzung in SAT ist mechanisch – eine Variable pro Land und Farbe („Frankreich ist rot“), dazu drei Arten von Klauseln: Jedes Land hat mindestens eine Farbe, höchstens eine Farbe, und Nachbarn haben nicht dieselbe. Färbe selbst oder frag den Solver:</p>
+
+<div class="widget">
+  <div class="widget-title">Kartenfärbung als SAT</div>
+  <div class="seg" id="mpK">
+    <button data-k="3" aria-pressed="true">3 Farben</button>
+    <button data-k="4">4 Farben</button>
+  </div>
+  <svg id="mapSvg" viewBox="0 0 420 300" role="img" aria-label="Länder als Knoten, Nachbarschaft als Kanten"></svg>
+  <div class="row"><button id="mpSolve">SAT-Solver fragen</button><button id="mpClear">Leeren</button></div>
+  <div class="enc" id="mpEnc"></div>
+  <div class="verd" id="mpR"></div>
+  <p class="fine">Klick auf ein Land wechselt seine Farbe. Die Karte ist vereinfacht: Länder als Punkte, gemeinsame Grenzen als Linien.</p>
+</div>
+
+<p>Genau so arbeitet man in der Praxis: Man beschreibt sein Problem – Stundenplan, Paketabhängigkeiten, Schaltkreis – als Formel und überlässt die Suche einem SAT-Solver, an dem Forscher seit Jahrzehnten feilen. Die Übersetzung ist polynomiell; die Schwierigkeit steckt allein im Lösen.</p>
+
+<h2 id="solver">Wie SAT-Solver es trotzdem schaffen</h2>
+<p>NP-vollständig heißt: Im <em>schlimmsten</em> Fall ist kein schneller Algorithmus bekannt. Praktische Formeln sind aber selten der schlimmste Fall. Der Grundalgorithmus <strong>DPLL</strong> (Davis, Putnam, Logemann, Loveland, 1962) probiert nicht blind, sondern setzt eine Variable, folgert alles, was daraus zwingend folgt (<em>Unit Propagation</em>: hat eine Klausel nur noch ein offenes Literal, muss es wahr sein), und geht bei einem Widerspruch zurück. Moderne <strong>CDCL</strong>-Solver (seit Ende der 1990er) lernen zusätzlich aus jedem Widerspruch eine neue Klausel, die denselben Fehler künftig sofort verhindert – damit wurden Instanzen mit Millionen Variablen alltäglich.</p>
+<p>Wie schwer eine Formel ist, hängt erstaunlich stark von einem einzigen Verhältnis ab. Bei zufälligen 3-SAT-Formeln mit 25 Variablen:</p>
+
+<div class="widget">
+  <div class="widget-title">Der Phasenübergang</div>
+  <div class="sl"><span>Klauseln pro Variable</span><input type="range" id="phR" min="0" max="14" value="7"><output id="phRo"></output></div>
+  <svg id="phSvg" viewBox="0 0 480 200" role="img" aria-label="Anteil erfüllbarer Formeln und Suchaufwand"></svg>
+  <div class="note" id="phN"></div>
+  <p class="fine">Live berechnet: je 40 zufällige Formeln mit 25 Variablen, gelöst mit einem einfachen DPLL-Solver im Browser. Gezählt werden die Sackgassen – Widersprüche, nach denen der Solver eine Entscheidung zurücknehmen muss.</p>
+</div>
+
+<p>Wenige Klauseln: fast jede Belegung passt, der Solver ist sofort fertig. Viele Klauseln: Widersprüche zeigen sich schnell. Dazwischen, bei etwa 4,3 Klauseln pro Variable, liegt ein scharfer Übergang – und genau dort sind die Formeln am schwersten. (Bei so kleinen Formeln wie hier verschwimmt der Übergang etwas und die Spitze rutscht leicht nach rechts; je mehr Variablen, desto schärfer wird er.) Das zeigt: „NP-vollständig“ ist eine Aussage über die schwersten Fälle, nicht über die typischen.</p>
+
+<h3>Was, wenn P = NP wäre?</h3>
+<p>Die Folgen wären enorm. Viele Optimierungsprobleme in Logistik, Planung und Chipdesign würden handhabbar, mathematische Beweise ließen sich womöglich automatisch finden. Gleichzeitig hinge die heutige <a href="/it-konzepte/kryptografie/">Kryptografie</a> am seidenen Faden: Sie beruht darauf, dass sich Schlüssel schwer finden, aber leicht prüfen lassen. Bemerkenswert dabei: Das Faktorisieren großer Zahlen, auf dem RSA beruht, liegt zwar in NP, gilt aber <em>nicht</em> als NP-vollständig – es könnte leichter sein als SAT. Quantencomputer könnten es mit Shors Algorithmus effizient lösen; für NP-vollständige Probleme ist dagegen kein solcher Durchbruch bekannt.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Mit <strong>SAT4J</strong> gibt es einen ausgereiften SAT-Solver in reinem Java – er steckt unter anderem in Eclipse, wo er die Abhängigkeiten von Plugins auflöst. Variablen sind Zahlen ab 1, eine negative Zahl bedeutet „nicht“:</p>
+<pre><code><span class="c">// (A ∨ ¬B) ∧ (B ∨ C) ∧ (¬A ∨ ¬C)  – A=1, B=2, C=3</span>
+ISolver solver = SolverFactory.newDefault();
+solver.newVar(<span class="n">3</span>);
+solver.addClause(<span class="k">new</span> VecInt(<span class="k">new int</span>[] { <span class="n">1</span>, -<span class="n">2</span> }));
+solver.addClause(<span class="k">new</span> VecInt(<span class="k">new int</span>[] { <span class="n">2</span>,  <span class="n">3</span> }));
+solver.addClause(<span class="k">new</span> VecInt(<span class="k">new int</span>[] { -<span class="n">1</span>, -<span class="n">3</span> }));
+
+<span class="k">if</span> (solver.isSatisfiable()) {
+    <span class="k">int</span>[] belegung = solver.model();   <span class="c">// z. B. [1, 2, -3]: A wahr, B wahr, C falsch</span>
+}
+<span class="c">// Ausnahmen (ContradictionException, TimeoutException) hier weggelassen</span>
+
+<span class="c">// Kartenfärbung: Variable für "Land l hat Farbe f"</span>
+<span class="k">int</span> var(<span class="k">int</span> land, <span class="k">int</span> farbe) { <span class="k">return</span> land * FARBEN + farbe + <span class="n">1</span>; }
+<span class="k">for</span> (<span class="k">int</span>[] kante : nachbarn)
+    <span class="k">for</span> (<span class="k">int</span> f = <span class="n">0</span>; f &lt; FARBEN; f++)
+        solver.addClause(<span class="k">new</span> VecInt(<span class="k">new int</span>[] { -var(kante[<span class="n">0</span>], f), -var(kante[<span class="n">1</span>], f) }));</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Werkzeug</th><th>Wofür</th></tr></thead>
+  <tbody>
+    <tr><td><strong>SAT4J</strong></td><td>SAT und verwandte Probleme in reinem Java, etwa Abhängigkeiten auflösen</td></tr>
+    <tr><td><strong>Google OR-Tools (CP-SAT)</strong></td><td>Constraint-Solver mit Java-Schnittstelle: Schichtpläne, Tourenplanung, Zuordnungen – intern auf SAT-Technik aufgebaut</td></tr>
+    <tr><td><strong>Timefold Solver</strong></td><td>Planungsprobleme in Java (Nachfolger von OptaPlanner) – sucht mit Heuristiken gute statt beweisbar optimale Lösungen</td></tr>
+    <tr><td><strong>Z3</strong></td><td>SMT-Solver (SAT plus Arithmetik und Datenstrukturen) mit Java-Anbindung – Grundlage vieler Werkzeuge zur Programmverifikation</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Die praktische Lehre: Wer merkt, dass sein Problem NP-vollständig ist, schreibt keinen eigenen Suchalgorithmus, sondern übersetzt es für einen Solver – und setzt ein Zeitlimit, denn eine Garantie gibt es nicht.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„NP heißt ‚nicht polynomiell‘.“</b> – Es heißt „nichtdeterministisch polynomiell“. Alle Probleme in P gehören auch zu NP.</div>
+  <div><b>„NP-vollständig heißt: in der Praxis unlösbar.“</b> – Es heißt: im schlimmsten Fall kein schneller Algorithmus bekannt. SAT-Solver lösen täglich riesige praktische Instanzen.</div>
+  <div><b>„Quantencomputer lösen NP-vollständige Probleme.“</b> – Dafür ist kein effizienter Quantenalgorithmus bekannt. Die bekannte allgemeine Beschleunigung (Grover) ist nur quadratisch – aus 2<sup>n</sup> wird 2<sup>n/2</sup>.</div>
+  <div><b>„RSA ist sicher, weil Faktorisieren NP-vollständig ist.“</b> – Das ist nicht bekannt und gilt als unwahrscheinlich. RSA beruht darauf, dass niemand einen schnellen klassischen Algorithmus kennt.</div>
+  <div><b>„Intraktabel und unentscheidbar ist dasselbe.“</b> – Intraktable Probleme sind lösbar, nur zu langsam. Unentscheidbare (<a href="/it-konzepte/berechenbarkeit/">G4</a>) sind mit keinem Aufwand allgemein lösbar.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/komplexitaet/">Komplexität und O-Notation</a>
+  <a href="/it-konzepte/berechenbarkeit/">Berechenbarkeit</a>
+  <a href="/it-konzepte/turingmaschine/">Turingmaschine</a>
+  <a href="/it-konzepte/kryptografie/">Kryptografie-Grundlagen</a>
+  <a href="/it-konzepte/datenstrukturen/">Datenstrukturen</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

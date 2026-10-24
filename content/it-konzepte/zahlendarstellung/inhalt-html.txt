@@ -1,0 +1,114 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Im Rechner ist jede Zahl eine Folge von Bits, und ihre Bedeutung hängt allein davon ab, wie man sie liest. <strong>Ganze Zahlen</strong> stehen im Binärsystem, negative im <strong>Zweierkomplement</strong>: Das höchste Bit zählt negativ. Damit rechnet derselbe Addierer für positive und negative Zahlen – und eine Zahl, die über den Rand läuft, springt ohne Warnung auf die andere Seite.</p>
+<p><strong>Kommazahlen</strong> speichert man als <strong>Gleitkommazahl</strong> nach IEEE 754: Vorzeichen, Exponent und Mantisse, wie die wissenschaftliche Schreibweise 6,02 · 10²³, nur zur Basis 2. Dadurch reicht der Bereich von winzig bis riesig, aber die Genauigkeit ist begrenzt – und viele Dezimalbrüche wie 0,1 lassen sich binär gar nicht exakt darstellen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#stellen">Stellenwertsysteme</a></li>
+  <li><a href="#zweierkomplement">Negative Zahlen: das Zweierkomplement</a></li>
+  <li><a href="#gleitkomma">Gleitkommazahlen nach IEEE 754</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="stellen">Stellenwertsysteme</h2>
+<p>Die Zahl 2026 bedeutet 2·1000 + 0·100 + 2·10 + 6·1 – jede Stelle zählt zehnmal so viel wie die rechts von ihr. Im <strong>Binärsystem</strong> zählt jede Stelle doppelt so viel: 1, 2, 4, 8, 16 … Das <strong>Hexadezimalsystem</strong> zur Basis 16 ist nur eine Kurzschrift dafür: Eine Hex-Ziffer (0–9, A–F) steht für genau vier Bits. Klick Bits an oder gib eine Zahl ein:</p>
+
+<div class="widget">
+  <div class="widget-title">16 Bits, vier Schreibweisen</div>
+  <div class="inrow"><input type="text" id="cvIn" inputmode="numeric" value="2026" aria-label="Dezimalzahl"><button data-v="255">255</button><button data-v="4096">4096</button><button data-v="48879">0xBEEF</button><button data-v="65535">65535</button></div>
+  <div class="bits" id="cvB" style="grid-template-columns:repeat(16,minmax(0,1fr))"></div>
+  <div class="reps" id="cvR"></div>
+  <div class="lbl">Dezimal → binär: immer wieder durch 2 teilen, die Reste von unten lesen</div>
+  <div class="div" id="cvD"></div>
+</div>
+
+<p>Warum binär? Weil sich zwei Zustände physikalisch am zuverlässigsten unterscheiden lassen: Spannung hoch oder niedrig. Und warum Hex? Weil <code>0xBEEF</code> leichter zu lesen ist als <code>1011111011101111</code> und man trotzdem jedes Bit sieht, wenn man vier Bits pro Ziffer im Kopf hat. Oktal (Basis 8, drei Bits pro Ziffer) ist heute fast nur noch bei Unix-Dateirechten wie <code>chmod 755</code> zu sehen.</p>
+
+<h2 id="zweierkomplement">Negative Zahlen: das Zweierkomplement</h2>
+<p>Die naheliegende Idee – ein Bit fürs Vorzeichen, der Rest für den Betrag – hat zwei Nachteile: Es gäbe +0 und −0, und Addieren bräuchte Sonderfälle. Das <strong>Zweierkomplement</strong> löst beides: Bei <var>n</var> Bits zählt das höchste Bit nicht +2<sup>n−1</sup>, sondern −2<sup>n−1</sup>. Bei 8 Bits ist <code>1000 0000</code> also −128 und <code>1111 1111</code> ist −128 + 127 = −1. Negieren heißt: alle Bits umdrehen und 1 addieren.</p>
+<p>Der Trick dahinter: Es wird einfach modulo 2<sup>n</sup> gerechnet, wie auf einem Zifferblatt. Deshalb funktioniert derselbe Addierer für alles. Addiere zwei 8-Bit-Zahlen:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein 8-Bit-Addierer</div>
+  <div class="sl"><span>a</span><input type="range" id="adA" min="0" max="255" value="100"><output id="adAo"></output></div>
+  <div class="sl"><span>b</span><input type="range" id="adB" min="0" max="255" value="50"><output id="adBo"></output></div>
+  <div class="add" id="adV"></div>
+  <div class="flags" id="adF"></div>
+  <div class="note" id="adN"></div>
+  <p class="fine">Die Regler stellen das Bitmuster ein. Dieselben Bits werden einmal ohne Vorzeichen (0 bis 255) und einmal im Zweierkomplement (−128 bis 127) gelesen.</p>
+</div>
+
+<p>Prozessoren merken sich beides in Statusbits: das <strong>Carry-Flag</strong> für Überlauf ohne Vorzeichen und das <strong>Overflow-Flag</strong> für Überlauf mit Vorzeichen. Java wertet sie bei <code>int</code> und <code>long</code> nicht aus – die Rechnung läuft stillschweigend modulo 2³² bzw. 2⁶⁴ weiter.</p>
+
+<h2 id="gleitkomma">Gleitkommazahlen nach IEEE 754</h2>
+<p>Für Kommazahlen schreibt man die Zahl wie in der wissenschaftlichen Notation: ±1,<var>m</var> · 2<sup><var>e</var></sup>. Ein <code>float</code> hat 32 Bits: 1 für das Vorzeichen, 8 für den Exponenten (mit einem Versatz von 127 gespeichert, damit auch negative Exponenten ohne Vorzeichen auskommen) und 23 für die Nachkommastellen der Mantisse. Die führende 1 vor dem Komma wird gar nicht gespeichert – sie ist bei normalen Zahlen immer da. Ein <code>double</code> funktioniert genauso mit 1 + 11 + 52 Bits.</p>
+
+<div class="widget">
+  <div class="widget-title">Was in einem float steht</div>
+  <div class="inrow"><input type="text" id="flIn" value="0.1" aria-label="Zahl"><button data-v="0.1">0,1</button><button data-v="1">1</button><button data-v="-2.5">−2,5</button><button data-v="16777217">16 777 217</button><button data-v="1e-45">kleinste</button><button data-v="Infinity">∞</button><button data-v="NaN">NaN</button></div>
+  <div class="fbits" id="flB"></div>
+  <div class="fleg"><span><i style="background:#c0504d"></i>Vorzeichen</span><span><i style="background:#d9a43b"></i>Exponent (8 Bit)</span><span><i style="background:#4f81bd"></i>Mantisse (23 Bit)</span></div>
+  <div class="fcalc" id="flC"></div>
+  <div class="note" id="flN"></div>
+</div>
+
+<p>Gleitkommazahlen sind also nicht gleichmäßig verteilt: Zwischen 1 und 2 liegen genauso viele <code>float</code>s wie zwischen 1024 und 2048 – oben ist der Abstand entsprechend 1024-mal größer. Diesen Abstand zur nächsten darstellbaren Zahl nennt man <strong>ulp</strong> (unit in the last place). Beim <code>double</code> gibt es rund 16 gültige Dezimalstellen, beim <code>float</code> nur etwa 7. Ab 2²⁴ = 16 777 216 kann ein <code>float</code> nicht mehr jede ganze Zahl darstellen, ein <code>double</code> ab 2⁵³.</p>
+<p>Dazu kommen Sonderwerte: <strong>±Unendlich</strong> (für <code>1.0/0</code>), <strong>NaN</strong> (für <code>0.0/0</code>; NaN ist nicht einmal sich selbst gleich), <strong>−0</strong> und die <strong>subnormalen Zahlen</strong> knapp über null, bei denen die führende 1 wegfällt, damit der Übergang zur Null weich wird.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Typ</th><th>Bits</th><th>Bereich</th><th>Bemerkung</th></tr></thead>
+  <tbody>
+    <tr><td><code>byte</code></td><td>8</td><td>−128 … 127</td><td>mit Vorzeichen – <code>(byte) 200</code> ist −56</td></tr>
+    <tr><td><code>short</code></td><td>16</td><td>−32 768 … 32 767</td><td></td></tr>
+    <tr><td><code>char</code></td><td>16</td><td>0 … 65 535</td><td>der einzige Ganzzahltyp ohne Vorzeichen</td></tr>
+    <tr><td><code>int</code></td><td>32</td><td>etwa ±2,1 Milliarden</td><td>Standard für Ganzzahlen</td></tr>
+    <tr><td><code>long</code></td><td>64</td><td>etwa ±9,2 · 10¹⁸</td><td>Literal mit <code>L</code></td></tr>
+    <tr><td><code>float</code></td><td>32</td><td>bis etwa 3,4 · 10³⁸</td><td>etwa 7 Dezimalstellen</td></tr>
+    <tr><td><code>double</code></td><td>64</td><td>bis etwa 1,8 · 10³⁰⁸</td><td>etwa 16 Dezimalstellen – Standard für Kommazahlen</td></tr>
+  </tbody>
+</table>
+</div>
+<pre><code>Integer.toBinaryString(<span class="n">2026</span>);          <span class="c">// "11111101010"</span>
+Integer.toHexString(-<span class="n">1</span>);              <span class="c">// "ffffffff"</span>
+Integer.parseInt(<span class="s">"BEEF"</span>, <span class="n">16</span>);         <span class="c">// 48879</span>
+<span class="k">int</span> x = <span class="n">0b1011_0000</span>;                  <span class="c">// Binärliteral mit Trennstrich</span>
+
+Math.addExact(Integer.MAX_VALUE, <span class="n">1</span>);   <span class="c">// wirft ArithmeticException statt still überzulaufen</span>
+-<span class="n">8</span> &gt;&gt; <span class="n">1</span>;                             <span class="c">// -4  (arithmetisch: Vorzeichen bleibt)</span>
+-<span class="n">8</span> &gt;&gt;&gt; <span class="n">1</span>;                            <span class="c">// 2147483644  (logisch: Nullen von links)</span>
+Integer.toUnsignedString(-<span class="n">1</span>);         <span class="c">// "4294967295" – dieselben Bits ohne Vorzeichen gelesen</span>
+b &amp; <span class="n">0xFF</span>;                              <span class="c">// byte als 0..255 lesen</span>
+
+Float.floatToIntBits(<span class="n">0.1f</span>);           <span class="c">// 1036831949 = 0x3DCCCCCD – die Bits aus dem Beispiel</span>
+Math.ulp(<span class="n">1.0</span>);                         <span class="c">// 2.220446049250313E-16</span>
+Double.NaN == Double.NaN;              <span class="c">// false – deshalb Double.isNaN(x)</span>
+<span class="k">new</span> BigDecimal(<span class="n">0.1</span>);                  <span class="c">// 0.1000000000000000055511151231257827…</span>
+<span class="k">new</span> BigDecimal(<span class="s">"0.1"</span>);                <span class="c">// genau 0.1 – für Geld immer aus Strings</span></code></pre>
+<p>Für Geldbeträge gilt deshalb: <code>BigDecimal</code> (aus Strings erzeugt) oder ganze Cent als <code>long</code>, nie <code>double</code>. Und Gleitkommazahlen vergleicht man nicht mit <code>==</code>, sondern mit einer Toleranz.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„double ist ungenau.“</b> – Jedes Rechenergebnis ist exakt die nächstgelegene darstellbare Zahl; das ist genau festgelegt und reproduzierbar. Ungenau wird es, weil viele Dezimalbrüche keine exakte Binärdarstellung haben – und weil sich kleine Rundungen über viele Schritte summieren.</div>
+  <div><b>„Ein Überlauf löst in Java einen Fehler aus.“</b> – Bei <code>int</code> und <code>long</code> nicht: Die Zahl springt stumm auf die andere Seite. Nur <code>Math.addExact</code> und Co. werfen eine Exception.</div>
+  <div><b>„Math.abs liefert immer etwas Positives.“</b> – <code>Math.abs(Integer.MIN_VALUE)</code> ist wieder <code>Integer.MIN_VALUE</code>, weil +2 147 483 648 in einem <code>int</code> keinen Platz hat.</div>
+  <div><b>„float spart Speicher, also nehme ich float.“</b> – Nur bei großen Arrays lohnt sich das. Für einzelne Werte kostet die geringere Genauigkeit mehr, als die vier gesparten Bytes bringen.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/datenformate/">Datenformate und Serialisierung</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/kryptografie/">Kryptografie-Grundlagen</a>
+  <a href="/it-konzepte/maschinensprache/">Maschinensprache</a>
+  <a href="/it-konzepte/boolesche-logik/">Boolesche Logik</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

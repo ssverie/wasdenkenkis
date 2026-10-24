@@ -1,0 +1,40 @@
+/* ---- Seitenspezifisch: Maschinensprache ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:10px 0 6px}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:2.6em}
+
+/* Simulator */
+.erklaert .toy{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:12px;align-items:start}
+@media (max-width:640px){.erklaert .toy{grid-template-columns:minmax(0,1fr)}}
+.erklaert .mem{font:.76rem/1.5 var(--mono);background:var(--bg);border-radius:9px;padding:6px 0;max-height:360px;overflow:auto}
+.erklaert .mem div{display:grid;grid-template-columns:2.6em 3.6em minmax(0,1fr);gap:6px;padding:0 10px;border-left:3px solid transparent}
+.erklaert .mem div.pc{background:var(--accent-2-soft);border-left-color:var(--accent-2);font-weight:700}
+.erklaert .mem div.chg{animation:fl .8s}
+@keyframes fl{from{background:var(--ok-soft)}}
+.erklaert .mem div.sep{display:block;color:var(--muted);font:600 .66rem var(--sans);text-transform:uppercase;letter-spacing:.05em;padding-top:4px}
+.erklaert .mem .a{color:var(--muted)}.erklaert .mem .d{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.erklaert .regs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+.erklaert .regs div{padding:4px 6px;border-radius:6px;background:var(--bg);font:.74rem var(--mono);display:flex;justify-content:space-between;gap:4px;min-width:0}
+.erklaert .regs div span{color:var(--muted)}
+.erklaert .regs div.chg{background:var(--ok-soft)}
+.erklaert .pcbox{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;margin-bottom:6px}
+.erklaert .pcbox div{padding:6px 8px;border-radius:6px;background:var(--accent-2-soft);font:600 .8rem var(--mono);display:flex;justify-content:space-between}
+.erklaert .out{min-height:2em;font:600 .86rem var(--mono);padding:6px 8px;border-radius:6px;background:var(--bg);overflow-wrap:anywhere}
+.erklaert .ctl{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.erklaert .ctl button{padding:6px 11px;font-size:.84rem}
+.erklaert .ctl span{margin-left:auto;font-size:.8rem;color:var(--muted);align-self:center}
+.erklaert .src{width:100%;box-sizing:border-box;height:150px;font:.78rem/1.45 var(--mono);padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg);resize:vertical;margin-top:4px}
+.erklaert details.edit{margin-top:10px}
+.erklaert details.edit summary{cursor:pointer;font-size:.84rem;color:var(--accent)}
+
+/* Java ↔ Maschine */
+.erklaert .jm{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:10px}
+@media (max-width:620px){.erklaert .jm{grid-template-columns:minmax(0,1fr)}}
+.erklaert .jm pre{margin:0;font-size:.78rem}
+

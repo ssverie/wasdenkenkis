@@ -1,0 +1,155 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Eine SSD ist für das Betriebssystem eine lange Reihe nummerierter Blöcke, meist 4 KB groß. Ein <strong>Dateisystem</strong> macht daraus Dateien und Ordner: Es merkt sich, welche Blöcke zu welcher Datei gehören, welche frei sind, wie die Dateien heißen, wem sie gehören und wann sie geändert wurden.</p>
+<p>Die schwierigste Aufgabe ist <strong>Persistenz</strong>: Schon eine kleine Änderung braucht mehrere Schreibvorgänge an verschiedenen Stellen. Fällt mittendrin der Strom aus, darf das Dateisystem nicht kaputt sein. Moderne Dateisysteme lösen das mit einem <strong>Journal</strong> oder mit <strong>Copy-on-Write</strong>. Und für Programme gilt: Wirklich auf der Platte ist erst, was mit <code>fsync</code> erzwungen wurde.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#aufbau">Von Blöcken zu Dateien</a></li>
+  <li><a href="#absturz">Das eigentliche Problem: der Stromausfall</a></li>
+  <li><a href="#fsync">„Gespeichert“ ist nicht gespeichert: fsync</a></li>
+  <li><a href="#ssd">Was SSDs anders machen</a></li>
+  <li><a href="#familien">Die gängigen Dateisysteme</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="aufbau">Von Blöcken zu Dateien</h2>
+<p>Ein Dateisystem verwaltet im Kern drei Dinge. Am Beispiel der Unix-Familie, also Linux und macOS – Windows mit NTFS funktioniert im Prinzip ähnlich:</p>
+<div class="cards">
+  <div class="card"><div class="num">i</div><h4>Inode</h4><p>Der Steckbrief einer Datei: Größe, Besitzer, Rechte, Zeitstempel und die Liste ihrer Blöcke. <em>Nicht</em> enthalten: ihr Name.</p></div>
+  <div class="card"><div class="num">/</div><h4>Verzeichnis</h4><p>Eine besondere Datei, die nur eine Tabelle enthält: Name → Inode-Nummer. Ein Ordner „enthält“ also keine Dateien, sondern Namen.</p></div>
+  <div class="card"><div class="num">▦</div><h4>Freiliste</h4><p>Eine Übersicht, welche Blöcke frei sind – oft eine Bitmap mit einem Bit pro Block.</p></div>
+</div>
+<p>Dass Name und Datei getrennt sind, hat überraschende Folgen. Eine Datei kann mehrere Namen haben – das sind <strong>Hardlinks</strong>. Und Löschen entfernt zunächst nur einen Namen. Probier es aus:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein Dateisystem zum Anfassen</div>
+  <div class="controls" style="margin-top:0;margin-bottom:12px">
+    <button class="primary" id="fsNew">Neue Datei</button>
+    <button id="fsGrow">Ausgewählte vergrößern</button>
+    <button id="fsLink">Hardlink anlegen</button>
+    <button id="fsDel">Namen löschen</button>
+    <button id="fsReset">Zurücksetzen</button>
+  </div>
+  <div class="fs">
+    <div>
+      <h4>Verzeichnis /home/sven</h4>
+      <div class="tbl-wrap" style="margin:0"><table><thead><tr><th>Name</th><th>Inode</th></tr></thead><tbody id="fsDir"></tbody></table></div>
+      <h4 style="margin-top:12px">Inode-Tabelle</h4>
+      <div class="tbl-wrap" style="margin:0"><table><thead><tr><th>Nr.</th><th>Links</th><th>Blöcke</th></tr></thead><tbody id="fsIno"></tbody></table></div>
+    </div>
+    <div>
+      <h4>Die SSD: 48 Blöcke</h4>
+      <div class="disk" id="fsDisk"></div>
+      <div class="legend"><span><i style="background:var(--code-bg)"></i>Verwaltung (Superblock, Bitmap, Inodes)</span><span><i style="background:var(--bg)"></i>frei</span><span><i style="background:repeating-linear-gradient(45deg,var(--bg) 0 3px,var(--line) 3px 6px)"></i>frei – alte Daten noch lesbar</span></div>
+    </div>
+  </div>
+  <div class="fs-msg" id="fsMsg"></div>
+</div>
+
+<p>Zwei Dinge aus dem Experiment sind in der Praxis wichtig:</p>
+<ul>
+  <li><strong>Gelöscht heißt nicht weg.</strong> Die Blöcke gelten als frei, ihr Inhalt bleibt, bis sie neu beschrieben werden. Darauf beruhen Wiederherstellungsprogramme – und deshalb muss man Datenträger vor dem Verkauf sicher löschen. Bei SSDs sorgt der TRIM-Befehl allerdings dafür, dass freigegebene Blöcke bald tatsächlich gelöscht werden.</li>
+  <li><strong>Fragmentierung.</strong> Wächst eine Datei und dahinter ist kein Platz, landen ihre Blöcke verstreut. Auf Festplatten mit mechanischem Lesekopf war das teuer, daher das Defragmentieren. Auf SSDs spielt es kaum eine Rolle.</li>
+</ul>
+<div class="callout">Ein Klassiker im Betrieb: Eine riesige Logdatei wird gelöscht, aber die Platte bleibt voll. Der Grund: Der Prozess, der hineinschreibt, hat sie noch geöffnet. Auch ein offener Dateizeiger zählt als Verweis – erst wenn der Prozess die Datei schließt oder neu startet, gibt das Dateisystem die Blöcke frei. <code>lsof | grep deleted</code> zeigt solche Fälle.</div>
+
+<h2 id="absturz">Das eigentliche Problem: der Stromausfall</h2>
+<p>Hängt man an eine Datei einen Block an, müssen drei Dinge auf die Platte: der <strong>Datenblock</strong> selbst, der aktualisierte <strong>Inode</strong> (neue Größe, neuer Blockverweis) und die <strong>Bitmap</strong> (Block jetzt belegt). Das sind drei Schreibvorgänge an drei Stellen – und die Platte kann immer nur einen nach dem anderen garantieren. Was passiert, wenn dazwischen der Strom ausfällt?</p>
+
+<div class="widget">
+  <div class="widget-title">Stromausfall beim Anhängen eines Blocks</div>
+  <div class="seg" id="crMode">
+    <button data-m="raw" aria-pressed="true">Ohne Schutz</button>
+    <button data-m="jour">Journaling</button>
+    <button data-m="cow">Copy-on-Write</button>
+  </div>
+  <div class="sl"><span>Strom fällt aus nach</span><input type="range" id="crAt" min="0" max="3" step="1" value="2"><output id="crAtO"></output></div>
+  <ul class="steps" id="crSteps"></ul>
+  <div class="outcome" id="crOut"></div>
+</div>
+
+<p>Früher half nach einem Absturz nur eines: <code>fsck</code> oder <code>chkdsk</code> prüfte beim Neustart <em>das ganze Dateisystem</em> auf Widersprüche. Bei großen Platten dauerte das Stunden. Die beiden modernen Verfahren machen das überflüssig:</p>
+<div class="cards">
+  <div class="card"><div class="num">J</div><h4>Journaling</h4><p>Erst die geplanten Änderungen in ein Protokoll schreiben, mit einem Abschluss-Eintrag versiegeln, dann ausführen. Nach einem Absturz wird nur das Journal gelesen: Versiegelte Einträge werden wiederholt, unversiegelte verworfen. Beispiele: ext4, NTFS, XFS.</p></div>
+  <div class="card"><div class="num">C</div><h4>Copy-on-Write</h4><p>Nie etwas überschreiben. Neue Versionen werden an freie Stellen geschrieben, und am Ende wird mit einem einzigen Schreibvorgang der oberste Zeiger umgehängt. Beispiele: Btrfs, ZFS, Apples APFS.</p></div>
+  <div class="card"><div class="num">⧉</div><h4>Bonus: Snapshots</h4><p>Wer nie überschreibt, kann alte Versionen fast kostenlos aufheben. Copy-on-Write-Systeme können deshalb in Sekunden Schnappschüsse des ganzen Dateisystems anlegen – Grundlage etwa für Time Machine.</p></div>
+</div>
+<p>Wer genau hinschaut, erkennt das Muster: Ein Journal ist dasselbe wie das Write-Ahead-Log einer Datenbank, und das Umhängen eines Zeigers ist eine atomare Operation. Dateisysteme und Datenbanken lösen hier dasselbe Problem.</p>
+
+<h2 id="fsync">„Gespeichert“ ist nicht gespeichert: fsync</h2>
+<p>Wie im Eintrag <a href="/it-konzepte/betriebssystem/">Betriebssystem</a> beschrieben, kehrt ein Schreibaufruf zurück, sobald der Kernel die Daten in seinem Zwischenspeicher im RAM hat. Auf die Platte schreibt er sie später, gebündelt und in günstiger Reihenfolge. Das ist schnell – aber bei einem Stromausfall sind die letzten Sekunden weg. Und selbst die SSD hat noch einen eigenen Zwischenspeicher.</p>
+<p>Wer eine Garantie braucht, ruft <code>fsync</code> auf: Der Aufruf kehrt erst zurück, wenn die Daten dauerhaft gespeichert sind. Datenbanken tun das bei jedem Commit – das ist einer der Gründe, warum ein Commit messbar Zeit kostet.</p>
+
+<h3>Eine Datei sicher ersetzen</h3>
+<p>Eine Konfigurationsdatei direkt zu überschreiben, ist gefährlich: Stürzt das Programm mittendrin ab, ist sie halb alt, halb neu. Das bewährte Muster: in eine temporäre Datei schreiben, erzwingen, dann umbenennen. Ein Umbenennen innerhalb desselben Dateisystems ist atomar – danach sieht jeder entweder die alte oder die neue Datei, nie eine halbe.</p>
+<pre><code>Path ziel = Path.of(<span class="s">"config.json"</span>);
+Path tmp  = ziel.resolveSibling(<span class="s">"config.json.tmp"</span>);
+
+<span class="k">try</span> (FileChannel ch = FileChannel.open(tmp, CREATE, WRITE, TRUNCATE_EXISTING)) {
+    ch.write(ByteBuffer.wrap(daten));
+    ch.force(<span class="k">true</span>);                                 <span class="c">// fsync: Daten und Metadaten auf die Platte</span>
+}
+Files.move(tmp, ziel, StandardCopyOption.ATOMIC_MOVE);  <span class="c">// alt oder neu – nie halb</span></code></pre>
+<p>Ganz gründlich wäre es, danach auch das Verzeichnis zu synchronisieren, damit der neue Name selbst einen Absturz übersteht. Das geht in Java nur plattformabhängig; für die meisten Anwendungen genügt das Muster oben.</p>
+
+<h2 id="ssd">Was SSDs anders machen</h2>
+<p>Eine SSD kann einen Block nicht einfach überschreiben. Flash-Speicher lässt sich nur in großen Einheiten löschen, und jede Zelle verträgt nur eine begrenzte Zahl von Löschvorgängen. Ein Controller in der SSD, die <strong>Flash Translation Layer</strong>, schreibt deshalb jede Änderung an eine neue Stelle, führt Buch, wo welcher Block gerade wirklich liegt, verteilt die Abnutzung gleichmäßig und räumt im Hintergrund auf. Die SSD betreibt also intern selbst so etwas wie Copy-on-Write – unter einem Dateisystem, das davon nichts weiß.</p>
+
+<h2 id="familien">Die gängigen Dateisysteme</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Dateisystem</th><th>Wo</th><th>Besonderheit</th></tr></thead>
+  <tbody>
+    <tr><td><strong>FAT32</strong></td><td>alte USB-Sticks, Kameras</td><td>von allen lesbar, aber einzelne Dateien höchstens 4 GB, kein Journal</td></tr>
+    <tr><td><strong>exFAT</strong></td><td>USB-Sticks, SD-Karten</td><td>Nachfolger ohne 4-GB-Grenze, ebenfalls überall lesbar</td></tr>
+    <tr><td><strong>NTFS</strong></td><td>Windows</td><td>Journaling, Rechte, Verschlüsselung</td></tr>
+    <tr><td><strong>ext4</strong></td><td>Linux, Standard vieler Distributionen</td><td>Journaling, bewährt und robust</td></tr>
+    <tr><td><strong>XFS</strong></td><td>Linux-Server</td><td>Journaling, stark bei großen Dateien</td></tr>
+    <tr><td><strong>Btrfs</strong></td><td>Linux</td><td>Copy-on-Write, Snapshots, Prüfsummen</td></tr>
+    <tr><td><strong>ZFS</strong></td><td>Server, Speichersysteme</td><td>Copy-on-Write, Prüfsummen für alle Daten, eigene Plattenverwaltung</td></tr>
+    <tr><td><strong>APFS</strong></td><td>macOS, iOS</td><td>Copy-on-Write, Snapshots, Klone von Dateien ohne Kopieren</td></tr>
+  </tbody>
+</table>
+</div>
+<p>In der Cloud kommt eine weitere Art hinzu: <strong>Objektspeicher</strong> wie Amazon S3. Er sieht aus wie ein Dateisystem, ist aber keines – es gibt kein Umbenennen, kein Anhängen und keine echten Ordner, nur Schlüssel und unveränderliche Objekte. Wer dort Dateisystem-Gewohnheiten voraussetzt, erlebt Überraschungen.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Konzept</th><th>In Java</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Inode-Nummer</strong></td><td><code>Files.getAttribute(p, "unix:ino")</code> – auf Linux und macOS</td></tr>
+    <tr><td><strong>Hardlink, Symlink</strong></td><td><code>Files.createLink(neu, bestehend)</code>, <code>Files.createSymbolicLink(link, ziel)</code></td></tr>
+    <tr><td><strong>Linkzähler, Rechte, Zeiten</strong></td><td><code>Files.readAttributes(p, PosixFileAttributes.class)</code>, <code>"unix:nlink"</code></td></tr>
+    <tr><td><strong>fsync</strong></td><td><code>FileChannel.force(true)</code>, oder Öffnen mit <code>StandardOpenOption.SYNC</code> bzw. <code>DSYNC</code></td></tr>
+    <tr><td><strong>atomares Umbenennen</strong></td><td><code>Files.move(..., ATOMIC_MOVE)</code> – wirft eine Exception, wenn das Dateisystem es nicht garantiert</td></tr>
+    <tr><td><strong>Seitencache direkt nutzen</strong></td><td><code>FileChannel.map(...)</code> blendet eine Datei in den Speicher ein; Änderungen gehen über den Seitencache des Kernels</td></tr>
+    <tr><td><strong>Änderungen beobachten</strong></td><td><code>WatchService</code> – nutzt die Benachrichtigungen des Betriebssystems</td></tr>
+    <tr><td><strong>Offene Dateien</strong></td><td>try-with-resources: Ein vergessener Stream hält Dateien offen – unter Windows lassen sie sich dann nicht löschen, unter Linux bleibt ihr Platz belegt</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Gelöscht ist gelöscht.“</b> – Gelöscht ist zunächst nur der Name. Die Daten bleiben, bis die Blöcke neu beschrieben oder per TRIM geleert werden.</div>
+  <div><b>„Ein Ordner enthält Dateien.“</b> – Er enthält Namen, die auf Inodes verweisen. Deshalb ist Verschieben innerhalb eines Dateisystems sofort fertig, egal wie groß die Datei ist – es wird nur ein Eintrag umgehängt.</div>
+  <div><b>„Nach close() ist die Datei auf der Platte.“</b> – Nach <code>close()</code> ist sie beim Kernel. Auf der Platte ist sie erst nach <code>fsync</code> oder irgendwann später.</div>
+  <div><b>„Ein Journal schützt meine Daten.“</b> – Meist schützt es nur die Struktur des Dateisystems. Viele Systeme protokollieren standardmäßig nur Metadaten; der Inhalt einer Datei kann nach einem Absturz trotzdem alt oder unvollständig sein.</div>
+  <div><b>„Defragmentieren macht den Rechner schneller.“</b> – Bei Festplatten mit Lesekopf ja. Bei SSDs bringt es nichts und verschleißt sie unnötig.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/betriebssystem/">Betriebssystem</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/virtualisierung-container/">Virtualisierung und Container</a>
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

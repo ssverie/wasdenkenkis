@@ -1,0 +1,144 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Eine <strong>Datenstruktur</strong> legt fest, wie Daten im Speicher angeordnet sind – und damit, welche Operationen billig und welche teuer sind. Kein Aufbau ist für alles gut: Ein <strong>Array</strong> findet das zehnte Element sofort, aber Einfügen am Anfang verschiebt alles. Eine <strong>Hashtabelle</strong> findet einen Schlüssel in konstanter Zeit, kennt aber keine Reihenfolge. Ein <strong>Suchbaum</strong> hält alles sortiert, braucht dafür aber logarithmische Zeit.</p>
+<p>Die Wahl folgt aus der Frage: Welche Operationen braucht mein Programm am häufigsten? Die Java-Collections sind fertige, sehr gute Umsetzungen der klassischen Strukturen – wer weiß, was in ihnen steckt, wählt die richtige.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#ueberblick">Der Werkzeugkasten</a></li>
+  <li><a href="#hashmap">Die Hashtabelle: wie HashMap funktioniert</a></li>
+  <li><a href="#baeume">Suchbäume: sortiert und trotzdem schnell</a></li>
+  <li><a href="#heap">Der Heap: immer das Kleinste zuerst</a></li>
+  <li><a href="#graphen">Graphen</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="ueberblick">Der Werkzeugkasten</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Struktur</th><th>Stark bei</th><th>Schwach bei</th><th>In Java</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Array / dynamisches Array</strong></td><td>Zugriff per Index <code>O(1)</code>, Durchlaufen (Cache!)</td><td>Einfügen/Löschen vorn oder in der Mitte <code>O(n)</code>, Suchen <code>O(n)</code></td><td><code>int[]</code>, <code>ArrayList</code></td></tr>
+    <tr><td><strong>Verkettete Liste</strong></td><td>Einfügen/Löschen an bekannter Stelle <code>O(1)</code></td><td>Zugriff per Index <code>O(n)</code>, schlecht für den Cache</td><td><code>LinkedList</code></td></tr>
+    <tr><td><strong>Stapel (Stack)</strong></td><td>zuletzt hinein, zuerst heraus – <code>O(1)</code></td><td>alles andere</td><td><code>ArrayDeque</code> mit <code>push</code>/<code>pop</code></td></tr>
+    <tr><td><strong>Schlange (Queue)</strong></td><td>zuerst hinein, zuerst heraus – <code>O(1)</code></td><td>alles andere</td><td><code>ArrayDeque</code> mit <code>offer</code>/<code>poll</code></td></tr>
+    <tr><td><strong>Hashtabelle</strong></td><td>Einfügen, Finden, Löschen per Schlüssel <code>O(1)</code> im Mittel</td><td>keine Reihenfolge, keine Bereichsabfragen</td><td><code>HashMap</code>, <code>HashSet</code></td></tr>
+    <tr><td><strong>Balancierter Suchbaum</strong></td><td>sortiert, Bereiche, Minimum, Nachbarn – alles <code>O(log n)</code></td><td>langsamer als Hashing bei reinem Nachschlagen</td><td><code>TreeMap</code>, <code>TreeSet</code></td></tr>
+    <tr><td><strong>Heap</strong></td><td>kleinstes (oder größtes) Element <code>O(1)</code>, Einfügen und Entnehmen <code>O(log n)</code></td><td>Suchen nach beliebigen Werten <code>O(n)</code></td><td><code>PriorityQueue</code></td></tr>
+    <tr><td><strong>Graph</strong></td><td>Beziehungen beliebiger Art: Wege, Nachbarn, Netze</td><td>braucht eigene Algorithmen</td><td>keine Standardklasse – meist <code>Map&lt;Knoten, List&lt;Knoten&gt;&gt;</code></td></tr>
+  </tbody>
+</table>
+</div>
+<p>Arrays und Listen kamen schon in der <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a> vor: Ein Array liegt am Stück im Speicher, eine verkettete Liste verstreut. Dass die Liste in der O-Notation beim Einfügen besser aussieht, ändert wenig – man muss die Einfügestelle ja erst finden, und das ist bei ihr <code>O(n)</code> mit vielen Cache-Fehlschlägen.</p>
+
+<h2 id="hashmap">Die Hashtabelle: wie HashMap funktioniert</h2>
+<p>Eine Hashtabelle ist ein Array von <strong>Fächern</strong> (Buckets). Aus dem Schlüssel wird eine Zahl berechnet, der <strong>Hashcode</strong>, und daraus das Fach. Zum Finden rechnet man dasselbe noch einmal und schaut in genau ein Fach – egal, wie groß die Tabelle ist. Landen zwei Schlüssel im selben Fach, ist das eine <strong>Kollision</strong>; sie liegen dann in einer kleinen Liste nebeneinander. Probier es mit echten Java-Hashcodes:</p>
+
+<div class="widget">
+  <div class="widget-title">Eine HashMap von innen</div>
+  <div class="row">
+    <input type="text" id="hmKey" value="Anna" aria-label="Schlüssel">
+    <button class="primary" id="hmPut">put</button>
+    <button id="hmGet">get</button>
+    <button id="hmMany">10 Namen einfügen</button>
+    <button id="hmReset">Leeren</button>
+  </div>
+  <label class="toggle"><input type="checkbox" id="hmBad"> <span>Schlechter <code>hashCode()</code>: liefert immer 42</span></label>
+  <div class="bk" id="hmB"></div>
+  <div class="calc" id="hmCalc"></div>
+  <div class="hm-stats" id="hmS"></div>
+  <div class="note" id="hmN"></div>
+  <p class="fine">Wie im JDK: Startgröße 16 Fächer, Hashcode von <code>String</code> wie in Java, Verteilung mit <code>h ^ (h &gt;&gt;&gt; 16)</code>, Fach = Hash &amp; (Größe − 1). Bei mehr als 75 % Füllung verdoppelt sich die Tabelle.</p>
+</div>
+
+<p>Drei Dinge folgen daraus für jeden Java-Entwickler:</p>
+<ul>
+  <li><strong><code>equals</code> und <code>hashCode</code> gehören zusammen.</strong> Gleiche Objekte müssen gleiche Hashcodes haben, sonst findet die Map sie nicht – sie schaut im falschen Fach nach. Records erzeugen beides automatisch und richtig.</li>
+  <li><strong>Schlüssel dürfen sich nicht ändern.</strong> Ändert sich ein Feld, das in den Hashcode eingeht, nachdem der Schlüssel in der Map liegt, liegt er im falschen Fach – und ist für <code>get</code> unauffindbar, obwohl er noch da ist.</li>
+  <li><strong>Ein schlechter Hashcode macht aus O(1) O(n).</strong> Seit Java 8 wandelt HashMap ein überfülltes Fach in einen kleinen Baum um und begrenzt den Schaden auf <code>O(log n)</code>. Gute Verteilung bleibt trotzdem wichtig.</li>
+</ul>
+
+<h2 id="baeume">Suchbäume: sortiert und trotzdem schnell</h2>
+<p>Ein <strong>binärer Suchbaum</strong> hält Werte so, dass links von jedem Knoten nur Kleinere und rechts nur Größere stehen. Gesucht wird von der Wurzel abwärts, bei jedem Schritt eine Richtung – wie die binäre Suche aus dem <a href="/it-konzepte/komplexitaet/">vorigen Eintrag</a>. Aber nur, wenn der Baum ausgewogen ist. Füge die Zahlen 1 bis 15 in verschiedener Reihenfolge ein:</p>
+
+<div class="widget">
+  <div class="widget-title">Gleiche Werte, andere Reihenfolge</div>
+  <div class="seg" id="tSel">
+    <button data-o="sorted">Sortiert einfügen: 1, 2, 3 …</button>
+    <button data-o="random" aria-pressed="true">Gemischt einfügen</button>
+    <button data-o="balanced">Selbstbalancierend</button>
+  </div>
+  <svg id="tree" viewBox="0 0 600 300" role="img" aria-label="Binärer Suchbaum"></svg>
+  <div class="tree-stats" id="tS"></div>
+  <div class="note" id="tN"></div>
+</div>
+
+<p>Deshalb benutzen echte Implementierungen <strong>selbstbalancierende Bäume</strong>, die sich beim Einfügen und Löschen umbauen. Javas <code>TreeMap</code> ist ein <strong>Rot-Schwarz-Baum</strong>: Jeder Knoten trägt eine Farbe, und ein paar Regeln über die Farben garantieren, dass kein Weg mehr als doppelt so lang ist wie ein anderer. Datenbanken benutzen die breiteren <strong>B-Bäume</strong>, deren Knoten eine ganze Speicherseite füllen. Der Lohn für den Aufwand: Ein Baum kennt die Reihenfolge. <code>firstKey()</code>, <code>ceilingKey(x)</code>, <code>subMap(von, bis)</code> – all das kann eine Hashtabelle nicht.</p>
+
+<h2 id="heap">Der Heap: immer das Kleinste zuerst</h2>
+<p>Manchmal braucht man nicht alles sortiert, sondern nur immer das kleinste Element: die nächste fällige Aufgabe, den kürzesten offenen Weg, die Anfrage mit der höchsten Priorität. Dafür gibt es den <strong>Heap</strong>: ein Baum, in dem jeder Knoten kleiner ist als seine Kinder. Die Wurzel ist also immer das Minimum. Der Clou: Er wird lückenlos in einem Array gespeichert – die Kinder von Position <code>i</code> stehen an <code>2i+1</code> und <code>2i+2</code>.</p>
+
+<div class="widget">
+  <div class="widget-title">PriorityQueue zum Zuschauen</div>
+  <div class="row">
+    <button class="primary" id="hpAdd">offer(Zufallszahl)</button>
+    <button id="hpPoll">poll() – Kleinstes entnehmen</button>
+    <button id="hpReset">Neu</button>
+  </div>
+  <svg id="heapsvg" viewBox="0 0 560 220" role="img" aria-label="Heap als Baum"></svg>
+  <div class="harr" id="hpA"></div>
+  <div class="note" id="hpN"></div>
+</div>
+
+<p>Ein neues Element kommt ans Ende und <strong>steigt auf</strong>, solange es kleiner ist als sein Elternknoten. Beim Entnehmen rückt das letzte Element an die Spitze und <strong>sinkt ab</strong>. Beides berührt nur einen Weg von der Wurzel zu einem Blatt – <code>O(log n)</code>. Auf diesem Prinzip beruhen auch der Sortieralgorithmus Heapsort und Dijkstras Algorithmus für kürzeste Wege in Navigationssystemen.</p>
+
+<h2 id="graphen">Graphen</h2>
+<p>Ein <strong>Graph</strong> besteht aus Knoten und Kanten: Städte und Straßen, Personen und Freundschaften, Klassen und ihre Abhängigkeiten, Dienste und ihre Aufrufe. Gespeichert wird er meist als <strong>Adjazenzliste</strong> – für jeden Knoten die Liste seiner Nachbarn – oder bei dichten Graphen als Matrix. Die wichtigsten Algorithmen darauf: Breitensuche (kürzester Weg nach Anzahl Schritten), Tiefensuche (Erreichbarkeit, Zyklen finden), Dijkstra (kürzester Weg nach Gewicht) und topologisches Sortieren – genau das tut Maven, wenn es Module in die richtige Build-Reihenfolge bringt.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Ich brauche …</th><th>Nimm</th></tr></thead>
+  <tbody>
+    <tr><td>eine Liste, meist hinten anfügen und durchlaufen</td><td><code>ArrayList</code> – fast immer die richtige Wahl</td></tr>
+    <tr><td>vorn und hinten einfügen und entnehmen, Stapel oder Schlange</td><td><code>ArrayDeque</code> – nicht <code>Stack</code>, nicht <code>LinkedList</code></td></tr>
+    <tr><td>schnelles Nachschlagen per Schlüssel</td><td><code>HashMap</code> / <code>HashSet</code></td></tr>
+    <tr><td>… mit Einfügereihenfolge</td><td><code>LinkedHashMap</code> / <code>LinkedHashSet</code></td></tr>
+    <tr><td>… sortiert, mit Bereichsabfragen</td><td><code>TreeMap</code> / <code>TreeSet</code></td></tr>
+    <tr><td>immer das kleinste oder dringendste Element</td><td><code>PriorityQueue</code></td></tr>
+    <tr><td>Schlüssel sind Enum-Werte</td><td><code>EnumMap</code> / <code>EnumSet</code> – intern ein Array oder ein Bitfeld, sehr schnell</td></tr>
+    <tr><td>gleichzeitiger Zugriff aus mehreren Threads</td><td><code>ConcurrentHashMap</code>, <code>ConcurrentLinkedQueue</code>, <code>BlockingQueue</code></td></tr>
+    <tr><td>Millionen Zahlen ohne Boxing</td><td><code>int[]</code> oder Bibliotheken wie fastutil und Eclipse Collections</td></tr>
+  </tbody>
+</table>
+</div>
+<pre><code><span class="c">// Seit Java 21: SequencedCollection – einheitlicher Zugriff auf Anfang und Ende</span>
+List&lt;String&gt; liste = <span class="k">new</span> ArrayList&lt;&gt;(List.of(<span class="s">"a"</span>, <span class="s">"b"</span>, <span class="s">"c"</span>));
+liste.getFirst();   liste.getLast();   liste.reversed();
+
+LinkedHashMap&lt;String, Integer&gt; m = <span class="k">new</span> LinkedHashMap&lt;&gt;();
+m.putFirst(<span class="s">"neu"</span>, <span class="s">1</span>);                    <span class="c">// vorn einfügen</span>
+m.firstEntry();  m.pollLastEntry();</code></pre>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„LinkedList ist besser zum Einfügen.“</b> – Nur wenn man die Stelle schon hat, etwa über einen Iterator. Sonst muss man sie erst suchen, in <code>O(n)</code> mit vielen Cache-Fehlschlägen. In der Praxis ist <code>ArrayList</code> fast immer schneller.</div>
+  <div><b>„Eine HashMap gibt ihre Einträge in Einfügereihenfolge zurück.“</b> – Manchmal sieht es so aus, besonders bei kleinen Zahlen. Verlassen darf man sich darauf nie; die Reihenfolge kann sich mit der Tabellengröße und der Java-Version ändern. Dafür gibt es <code>LinkedHashMap</code>.</div>
+  <div><b>„Hashcodes sind eindeutig.“</b> – Es gibt nur rund vier Milliarden <code>int</code>-Werte, aber unendlich viele Strings. <code>"Aa"</code> und <code>"BB"</code> haben in Java denselben Hashcode. Kollisionen sind normal; deshalb vergleicht die Map am Ende mit <code>equals</code>.</div>
+  <div><b>„Für einen Stapel nimmt man die Klasse Stack.“</b> – <code>Stack</code> stammt aus Java 1.0, erbt von <code>Vector</code> und synchronisiert jeden Aufruf. Die Dokumentation empfiehlt selbst <code>ArrayDeque</code>.</div>
+  <div><b>„Eine PriorityQueue ist sortiert.“</b> – Nur die Spitze ist garantiert das Minimum. Wer über sie iteriert oder sie ausgibt, sieht die Heap-Reihenfolge, keine sortierte.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/komplexitaet/">Komplexität und O-Notation</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/programmierparadigmen/">Programmierparadigmen</a>
+  <a href="/it-konzepte/relationale-datenbanken/">Relationale Datenbanken</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

@@ -1,0 +1,109 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Schaltwerk</strong> (sequenzielle Schaltung) hat im Unterschied zum Schaltnetz ein Gedächtnis: Sein Ausgang hängt nicht nur von den aktuellen Eingängen ab, sondern auch von dem, was vorher war. Der Trick ist die <strong>Rückkopplung</strong> – zwei Gatter, die sich gegenseitig speisen, halten einen Zustand fest. So entsteht das <strong>Flipflop</strong>, die Speicherzelle für ein Bit.</p>
+<p>Mehrere Flipflops nebeneinander bilden ein <strong>Register</strong>, viele Register mit einem Decoder zur Auswahl einen <strong>Speicher</strong>. Damit alles im Gleichschritt bleibt, übernehmen die Flipflops neue Werte nur im Moment der <strong>Taktflanke</strong>. Der Takt gibt den Rhythmus vor – und wie schnell er sein darf, bestimmt das langsamste Schaltnetz zwischen zwei Registern.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#flipflop">Ein Bit merken: das SR-Flipflop</a></li>
+  <li><a href="#takt">Der Takt: alle im Gleichschritt</a></li>
+  <li><a href="#speicher">Vom Register zum Speicher</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="flipflop">Ein Bit merken: das SR-Flipflop</h2>
+<p>Zwei NOR-Gatter, deren Ausgänge jeweils auf einen Eingang des anderen zurückgeführt sind: Das ist die einfachste Speicherzelle. Der Eingang <strong>S</strong> (Set) setzt den Ausgang Q auf 1, <strong>R</strong> (Reset) setzt ihn auf 0. Sind beide 0, passiert – nichts. Die Schaltung hält den letzten Zustand. Probier es:</p>
+
+<div class="widget">
+  <div class="widget-title">Zwei NOR-Gatter, ein Bit Gedächtnis</div>
+  <div class="tg" id="srT"></div>
+  <svg id="srSvg" viewBox="0 0 560 240" role="img" aria-label="SR-Flipflop aus zwei NOR-Gattern"></svg>
+  <div class="note" id="srN"></div>
+</div>
+
+<p>Das Entscheidende passiert, wenn man S wieder auf 0 zurücknimmt: Q bleibt 1, weil der eigene Ausgang über das andere Gatter sich selbst bestätigt. Die Schaltung hat zwei stabile Zustände und bleibt in dem, in den man sie zuletzt gebracht hat. Genau so funktionieren die Speicherzellen in den Caches eines Prozessors (SRAM): sechs Transistoren pro Bit, zwei rückgekoppelte Inverter plus zwei Schalter für Lesen und Schreiben.</p>
+
+<h2 id="takt">Der Takt: alle im Gleichschritt</h2>
+<p>Ein SR-Flipflop reagiert sofort auf jede Änderung. In einem Prozessor mit Milliarden von Gattern wäre das Chaos: Signale kommen unterschiedlich schnell an, Zwischenergebnisse flackern. Deshalb benutzt man <strong>getaktete</strong> Flipflops. Das <strong>D-Flipflop</strong> hat einen Dateneingang D und einen Takteingang: Es übernimmt den Wert von D <em>nur</em> im Moment, in dem der Takt von 0 auf 1 springt (der steigenden Flanke), und hält ihn dann bis zur nächsten Flanke – egal, was D in der Zwischenzeit tut.</p>
+
+<div class="widget">
+  <div class="widget-title">D-Flipflop mit Zeitdiagramm</div>
+  <div class="tg" id="dfT"></div>
+  <svg id="wfSvg" viewBox="0 0 520 170" role="img" aria-label="Zeitdiagramm von Takt, D und Q"></svg>
+  <div class="note" id="dfN"></div>
+  <p class="fine">Gestrichelte Linien: Taktflanken. Eine Zahl wie „2×“ über D heißt: So oft wurde D zwischen zwei Flanken umgeschaltet – Q hat davon nichts mitbekommen.</p>
+</div>
+
+<p>Mit dem Freigabeeingang (<em>enable</em>) wird daraus der Baustein, aus dem Register bestehen: Ist die Freigabe aus, behält das Flipflop seinen Wert auch bei einer Taktflanke. Technisch ist das ein Multiplexer aus <a href="/it-konzepte/schaltnetze/">H4</a> vor dem D-Eingang, der entweder den neuen Wert oder den alten Ausgang zurückführt.</p>
+<p>Damit entsteht das Grundmuster jeder digitalen Maschine: <strong>Register halten den Zustand, Schaltnetze berechnen daraus den nächsten Zustand, die Taktflanke übernimmt ihn.</strong> Zwischen zwei Flanken muss das Schaltnetz fertig gerechnet haben. Die längste Gatterkette zwischen zwei Registern – der <strong>kritische Pfad</strong> – bestimmt deshalb die höchste Taktfrequenz. Bei 4 GHz bleiben dafür 0,25 Nanosekunden; in dieser Zeit legt Licht gerade 7,5 Zentimeter zurück. Deshalb teilen Prozessoren die Arbeit an einem Befehl in viele kurze Stufen auf (Pipelining).</p>
+
+<h2 id="speicher">Vom Register zum Speicher</h2>
+<p>Ein Register sind <var>n</var> D-Flipflops nebeneinander mit gemeinsamem Takt und gemeinsamer Freigabe – ein Wort. Ein <strong>Speicher</strong> sind viele Register übereinander, dazu ein Decoder, der aus der Adresse genau eine Zeile auswählt: Beim Schreiben bekommt nur diese Zeile die Freigabe, beim Lesen lässt ein Multiplexer nur ihren Inhalt durch. Acht Wörter zu acht Bit:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein Speicher mit 8 Wörtern</div>
+  <div class="ctl"><span class="lbl" style="margin:0">Adresse</span><span class="adr" id="mmA"></span></div>
+  <div class="rows" id="mmR"></div>
+  <div class="ctl"><span class="lbl" style="margin:0">Daten</span><input type="text" id="mmIn" value="42" inputmode="numeric" aria-label="Wert zum Schreiben"><button id="mmW">Schreiben</button><button id="mmL">Lesen</button></div>
+  <div class="out" id="mmO"></div>
+  <div class="note" id="mmN"></div>
+</div>
+
+<p>Die Lehrmaschine aus <a href="/it-konzepte/maschinensprache/">H2</a> hat genau so einen Speicher, nur größer: 256 Wörter zu 16 Bit, ein Decoder mit 8 Adressbits. Ein Arbeitsspeicher mit 16 GB funktioniert nach demselben Prinzip – allerdings in einer anderen Technik.</p>
+
+<h3>SRAM und DRAM</h3>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th></th><th>SRAM</th><th>DRAM</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Speicherzelle</strong></td><td>rückgekoppeltes Flipflop, etwa 6 Transistoren</td><td>ein winziger Kondensator plus 1 Transistor</td></tr>
+    <tr><td><strong>Hält den Wert</strong></td><td>solange Strom da ist</td><td>nur Millisekunden – der Kondensator entlädt sich, muss ständig aufgefrischt werden (Refresh)</td></tr>
+    <tr><td><strong>Geschwindigkeit</strong></td><td>sehr schnell</td><td>deutlich langsamer</td></tr>
+    <tr><td><strong>Dichte und Preis</strong></td><td>groß und teuer pro Bit</td><td>klein und billig pro Bit</td></tr>
+    <tr><td><strong>Wo</strong></td><td>Register, Caches in der CPU</td><td>Arbeitsspeicher (DDR-Module)</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Dieser Unterschied ist der Grund für die <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>: kleine, schnelle Flipflop-Speicher nah am Rechenwerk, große, langsame Kondensator-Speicher weiter weg. Und für Daten, die ohne Strom überleben sollen, gibt es Flash: Ladungen, die in einer isolierten Schicht eingesperrt sind.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Das Taktprinzip – erst den nächsten Zustand komplett aus dem aktuellen berechnen, dann alles auf einmal übernehmen – kennt man aus der Software. So lässt sich ein getaktetes Schaltwerk in Java nachbilden:</p>
+<pre><code><span class="k">final class</span> Register {
+    <span class="k">private int</span> q;          <span class="c">// gespeicherter Wert (Ausgang)</span>
+    <span class="k">private int</span> d;          <span class="c">// anliegender Eingang</span>
+    <span class="k">private boolean</span> enable;
+
+    <span class="k">void</span> setD(<span class="k">int</span> wert, <span class="k">boolean</span> en) { d = wert; enable = en; }   <span class="c">// zwischen den Flanken: beliebig oft</span>
+    <span class="k">void</span> flanke()                    { <span class="k">if</span> (enable) q = d; }         <span class="c">// nur hier ändert sich q</span>
+    <span class="k">int</span>  q()                         { <span class="k">return</span> q; }
+}
+
+<span class="c">// Ein Takt der ganzen Maschine: erst ALLE Eingänge aus den alten Ausgängen berechnen,</span>
+<span class="c">// dann ALLE Register gleichzeitig takten – sonst würde ein Register schon den neuen Wert eines anderen sehen</span>
+<span class="k">for</span> (Register r : register) r.setD(naechsterWert(r), freigabe(r));
+<span class="k">for</span> (Register r : register) r.flanke();</code></pre>
+<p>Dasselbe Muster steckt im Game of Life (neue Generation in ein zweites Feld schreiben, dann tauschen), in Spiel-Schleifen und in Simulationen. Wer es verletzt und Zustände „mitten im Takt“ überschreibt, bekommt Ergebnisse, die von der Reihenfolge abhängen – in Hardware wie in Software ein klassischer Fehler.</p>
+<p>Hardware selbst wird heute ebenfalls in Code beschrieben, in <strong>Hardwarebeschreibungssprachen</strong> wie Verilog und VHDL oder in Bibliotheken für höhere Sprachen wie Chisel (Scala) und SpinalHDL. Ein Register ist dort ein Objekt, dessen Wert sich nur an der Taktflanke ändert; ein Werkzeug übersetzt die Beschreibung in Gatter und Flipflops für einen Chip oder ein FPGA.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Speicher ist ein passiver Behälter.“</b> – Jedes Bit im SRAM ist eine aktive Schaltung, die sich ständig selbst bestätigt. DRAM muss sogar laufend nachgeladen werden – ohne Refresh wären die Daten nach Sekundenbruchteilen weg.</div>
+  <div><b>„Höherer Takt heißt automatisch schnellerer Prozessor.“</b> – Der Takt sagt, wie oft geschaltet wird, nicht wie viel pro Takt passiert. Seit Mitte der 2000er-Jahre stagnieren die Frequenzen; Fortschritt kommt aus mehr Arbeit pro Takt und mehr Kernen.</div>
+  <div><b>„Ein Flipflop speichert, weil es eine Art Schalter einrastet.“</b> – Es gibt keinen mechanischen Zustand. Gespeichert ist das Bit allein durch die Rückkopplung: Jedes Gatter hält das andere in seinem Zustand.</div>
+  <div><b>„Beim SR-Flipflop sind alle Eingaben erlaubt.“</b> – S = R = 1 setzt beide Ausgänge auf 0 – und wer gewinnt, wenn beide gleichzeitig wieder auf 0 gehen, hängt von winzigen Laufzeitunterschieden ab. Deshalb gilt diese Kombination als verboten.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/schaltnetze/">Schaltnetze</a>
+  <a href="/it-konzepte/boolesche-logik/">Boolesche Logik</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/maschinensprache/">Maschinensprache</a>
+  <a href="/it-konzepte/cpu/">Die CPU</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

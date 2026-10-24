@@ -1,0 +1,150 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Netzwerk-Kommunikation ist in <strong>Schichten</strong> aufgebaut. Jede löst genau ein Problem und benutzt die darunter: Die <strong>Verbindungsschicht</strong> bringt Daten zum nächsten Gerät im selben Netz, <strong>IP</strong> findet den Weg quer durchs Internet, <strong>TCP</strong> macht daraus eine zuverlässige Verbindung, und ganz oben sprechen Anwendungen ihre eigenen Protokolle wie HTTP.</p>
+<p>Das Entscheidende: IP garantiert gar nichts. Pakete können verloren gehen, doppelt ankommen oder sich überholen. TCP baut darauf mit Nummerierung, Bestätigungen und Neuübertragung einen verlässlichen Datenstrom. Wer auf Zuverlässigkeit verzichten kann, nimmt das schlankere <strong>UDP</strong>.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#schichten">Warum Schichten?</a></li>
+  <li><a href="#ip">IP: Adressen und Wege</a></li>
+  <li><a href="#tcp">TCP: Zuverlässigkeit auf unzuverlässigem Grund</a></li>
+  <li><a href="#ports">Ports, Sockets und UDP</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="schichten">Warum Schichten?</h2>
+<p>Ein Brief im Umschlag: Du schreibst den Inhalt, steckst ihn in einen Umschlag mit Adresse, die Post legt ihn in einen Sack für das Zielverteilzentrum, der Sack kommt auf einen Lastwagen. Der Lastwagenfahrer kennt den Brief nicht, der Briefschreiber nicht die Route. Jede Ebene kümmert sich um ihren Teil und packt den Inhalt der Ebene darüber unbesehen ein. Genau so arbeitet ein Netzwerk – das Prinzip heißt <strong>Kapselung</strong>.</p>
+<p>Der Vorteil: Jede Schicht ist austauschbar. HTTP funktioniert über WLAN, Kabel oder Mobilfunk gleich, weil es von der Funktechnik nichts weiß. Und ein neues Anwendungsprotokoll braucht keine neuen Router.</p>
+
+<div class="tbl-wrap lyr">
+<table>
+  <thead><tr><th>TCP/IP-Schicht</th><th>OSI-Schicht</th><th>Aufgabe</th><th>Beispiele</th></tr></thead>
+  <tbody>
+    <tr><td>Anwendung</td><td>5–7</td><td>Was die Programme miteinander besprechen</td><td>HTTP, DNS, SMTP, SSH</td></tr>
+    <tr><td>Transport</td><td>4</td><td>Von Programm zu Programm: Ports, Zuverlässigkeit, Reihenfolge</td><td>TCP, UDP, QUIC</td></tr>
+    <tr><td>Internet</td><td>3</td><td>Von Rechner zu Rechner quer durch viele Netze: Adressen, Routing</td><td>IPv4, IPv6</td></tr>
+    <tr><td>Verbindung</td><td>1–2</td><td>Zum nächsten Gerät im selben Netz, über Kabel oder Funk</td><td>Ethernet, WLAN, Mobilfunk</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Das <strong>OSI-Modell</strong> mit seinen sieben Schichten aus den späten 1970er-Jahren ist das Lehrbuchmodell – man hört Sätze wie „ein Layer-7-Loadbalancer“. Gesiegt hat in der Praxis aber das schlankere <strong>TCP/IP-Modell</strong>, auf dem das Internet läuft.</p>
+
+<div class="widget">
+  <div class="widget-title">Kapselung: ein Request auf dem Weg nach unten</div>
+  <div class="enc" id="enc"></div>
+  <div class="enc-txt" id="encTxt"></div>
+  <div class="controls">
+    <button id="encUp">← Zurück</button>
+    <button class="primary" id="encDown">Eine Schicht tiefer →</button>
+  </div>
+  <p class="fine">Größen typisch für IPv4 und Ethernet ohne Optionen. Beim Empfänger läuft alles umgekehrt: Jede Schicht nimmt ihren Kopf ab und reicht den Rest nach oben.</p>
+</div>
+
+<h2 id="ip">IP: Adressen und Wege</h2>
+<p>Jedes Gerät im Internet braucht eine <strong>IP-Adresse</strong>. Die klassische Form, IPv4, hat 32 Bit – geschrieben als vier Zahlen wie <code>203.0.113.20</code>. Das sind gut 4,3 Milliarden Adressen, und die sind seit Jahren praktisch vergeben. Zwei Auswege:</p>
+<ul>
+  <li><strong>NAT:</strong> Zu Hause haben alle Geräte private Adressen (<code>192.168.x.x</code>, <code>10.x.x.x</code> oder <code>172.16–31.x.x</code>), die im Internet nicht vorkommen. Der Router tritt nach außen mit einer einzigen öffentlichen Adresse auf und merkt sich, welche Antwort zu welchem Gerät gehört.</li>
+  <li><strong>IPv6:</strong> 128 Bit, also so viele Adressen, dass jedes Gerät eine eigene, weltweit eindeutige bekommen kann. Geschrieben in Hex, etwa <code>2001:db8::1</code>. Ein großer Teil des Verkehrs läuft heute schon darüber – Umstieg seit über zwanzig Jahren.</li>
+</ul>
+<p>Den Weg findet IP Schritt für Schritt. Jeder <strong>Router</strong> schaut auf die Zieladresse, sucht in seiner Tabelle den besten nächsten Nachbarn und schickt das Paket weiter. Kein Router kennt den ganzen Weg. Jedes Paket wird einzeln behandelt – zwei Pakete derselben Nachricht können verschiedene Wege nehmen. Damit kein Paket ewig im Kreis läuft, trägt es einen Zähler (TTL), den jeder Router um eins verringert; bei null wird es verworfen. Das Werkzeug <code>traceroute</code> nutzt genau das, um die Stationen eines Weges sichtbar zu machen.</p>
+<div class="callout">IP arbeitet nach dem Prinzip <strong>„best effort“</strong>: Jeder Router gibt sein Bestes – aber ist sein Puffer voll, wirft er Pakete einfach weg. Keine Fehlermeldung, kein zweiter Versuch. Das ist kein Konstruktionsfehler, sondern Absicht: Ein dummes Netz mit klugen Endpunkten ist einfacher, billiger und robuster.</div>
+
+<h2 id="tcp">TCP: Zuverlässigkeit auf unzuverlässigem Grund</h2>
+<p>TCP macht aus verlorenen, doppelten und vertauschten Paketen einen sauberen, geordneten Datenstrom. Die Tricks dahinter:</p>
+<div class="cards">
+  <div class="card"><div class="num">#</div><h4>Nummerieren</h4><p>Jedes Byte hat eine Folgenummer. So erkennt der Empfänger Lücken, Doppelte und falsche Reihenfolge.</p></div>
+  <div class="card"><div class="num">✓</div><h4>Bestätigen</h4><p>Der Empfänger meldet zurück, bis wohin er alles lückenlos hat (ACK). Bleibt eine Bestätigung aus, sendet der Absender erneut.</p></div>
+  <div class="card"><div class="num">⇵</div><h4>Puffern</h4><p>Was zu früh ankommt, wartet beim Empfänger, bis die Lücke davor gefüllt ist. Erst dann bekommt die Anwendung die Daten – in richtiger Reihenfolge.</p></div>
+</div>
+
+<div class="widget">
+  <div class="widget-title">Acht Pakete über ein unzuverlässiges Netz</div>
+  <div class="seg" id="proto">
+    <button data-p="tcp" aria-pressed="true">TCP</button>
+    <button data-p="udp">UDP</button>
+  </div>
+  <div class="sl"><span>Verlustrate im Netz</span><input type="range" id="loss" min="0" max="40" step="5" value="20"><output id="lossO"></output></div>
+  <div class="lane"><h4>1 · Gesendet</h4><div class="chips" id="lSent"></div></div>
+  <div class="lane"><h4>2 · Im Netz – so kommen sie an</h4><div class="chips" id="lNet"></div></div>
+  <div class="lane"><h4>3 · An die Anwendung übergeben</h4><div class="chips" id="lApp"></div></div>
+  <div class="loss-note" id="lossNote"></div>
+  <div class="controls"><button class="primary" id="send">Senden</button></div>
+</div>
+
+<p>Dazu kommen zwei Regelkreise, die man selten sieht, aber ständig nutzt. Die <strong>Flusskontrolle</strong> sorgt dafür, dass ein schneller Sender einen langsamen Empfänger nicht überflutet: Der Empfänger meldet, wie viel Platz sein Puffer noch hat. Die <strong>Überlastkontrolle</strong> schützt das Netz selbst: TCP beginnt vorsichtig, steigert das Tempo, solange alles ankommt, und bremst deutlich, sobald Pakete verloren gehen – denn Verluste bedeuten meist volle Router. Dass Millionen TCP-Verbindungen sich so freiwillig zurücknehmen, hält das Internet seit den 1980er-Jahren am Laufen.</p>
+
+<h3>Der Handshake – und was er kostet</h3>
+<p>Bevor TCP Daten überträgt, tauschen beide Seiten drei Pakete aus: <code>SYN</code>, <code>SYN-ACK</code>, <code>ACK</code>. Dabei vereinbaren sie ihre Startnummern. Das kostet eine volle Rundreise (RTT, round-trip time) – und für eine verschlüsselte Verbindung kommt noch der TLS-Handshake dazu. Bei weiten Wegen merkt man das deutlich:</p>
+
+<div class="widget">
+  <div class="widget-title">Wie lange bis zur ersten Antwort?</div>
+  <div class="seg" id="hsMode">
+    <button data-m="tls12">TCP + TLS 1.2</button>
+    <button data-m="tls13" aria-pressed="true">TCP + TLS 1.3</button>
+    <button data-m="quic">QUIC (HTTP/3)</button>
+  </div>
+  <div class="sl"><span>Rundreise (RTT)</span><input type="range" id="rtt" min="10" max="300" step="10" value="100"><output id="rttO"></output></div>
+  <svg id="hs" viewBox="0 0 560 300" role="img" aria-label="Ablaufdiagramm des Verbindungsaufbaus"></svg>
+  <div class="hs-out" id="hsOut"></div>
+  <p class="fine">Vereinfacht, ohne Rechenzeit. 10 ms entsprechen etwa einer Verbindung innerhalb Deutschlands, 100 ms einer nach Nordamerika, 300 ms einer schlechten Mobilfunkverbindung ans andere Ende der Welt.</p>
+</div>
+
+<p>Genau deshalb wurde <strong>QUIC</strong> entwickelt, die Grundlage von HTTP/3. Es läuft über UDP und baut Zuverlässigkeit und Verschlüsselung selbst ein – Verbindungsaufbau und Schlüsselaustausch in einem Schritt. Ein weiterer Vorteil: Geht bei TCP ein Paket verloren, warten alle Daten dahinter, auch die anderer Dateien auf derselben Verbindung. QUIC verwaltet mehrere unabhängige Datenströme, ein Verlust bremst nur seinen eigenen.</p>
+
+<h2 id="ports">Ports, Sockets und UDP</h2>
+<p>Eine IP-Adresse bringt ein Paket zum richtigen Rechner. Welches <em>Programm</em> es bekommt, entscheidet die <strong>Portnummer</strong>, eine Zahl von 0 bis 65 535. Server lauschen auf bekannten Ports: 443 für HTTPS, 80 für HTTP, 22 für SSH, 53 für DNS, 5432 für PostgreSQL. Der Client bekommt vom Betriebssystem einen zufälligen hohen Port. Eine TCP-Verbindung ist eindeutig bestimmt durch vier Werte: Quell-Adresse, Quell-Port, Ziel-Adresse, Ziel-Port. Das Ende einer Verbindung im Programm heißt <strong>Socket</strong>.</p>
+<p><strong>UDP</strong> verzichtet auf all die TCP-Mechanik: kein Handshake, keine Bestätigung, keine Reihenfolge. Ein Paket, ein Versuch. Das klingt schlechter, ist aber oft genau richtig: Bei einem Videoanruf ist ein verlorenes Bild von vor einer halben Sekunde wertlos – eine Neuübertragung käme zu spät. Auch DNS-Anfragen, Online-Spiele und QUIC laufen über UDP.</p>
+
+<h3>Ganz unten: das lokale Netz</h3>
+<p>Innerhalb eines lokalen Netzes zählt eine andere Adresse: die <strong>MAC-Adresse</strong> der Netzwerkkarte. Will ein Rechner ein Paket an eine IP im selben Netz schicken, fragt er per <strong>ARP</strong> in die Runde: „Wer hat 192.168.1.20?“ – und bekommt die MAC-Adresse zurück. Ein <strong>Switch</strong> verteilt Pakete innerhalb eines Netzes anhand der MAC-Adressen, ein <strong>Router</strong> verbindet verschiedene Netze anhand der IP-Adressen. Der Router zu Hause ist meist beides, dazu WLAN-Zugangspunkt und NAT-Übersetzer.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">// Ein Echo-Server: schickt alles zurück, was er bekommt</span>
+<span class="k">try</span> (<span class="k">var</span> server = <span class="k">new</span> ServerSocket(<span class="s">5000</span>);
+     <span class="k">var</span> exec = Executors.newVirtualThreadPerTaskExecutor()) {
+    <span class="k">while</span> (<span class="k">true</span>) {
+        Socket s = server.accept();               <span class="c">// kehrt nach dem TCP-Handshake zurück</span>
+        exec.submit(() -&gt; {
+            <span class="k">try</span> (s; <span class="k">var</span> in = s.getInputStream(); <span class="k">var</span> out = s.getOutputStream()) {
+                in.transferTo(out);               <span class="c">// ein Datenstrom, keine Nachrichten</span>
+            }
+            <span class="k">return null</span>;
+        });
+    }
+}</code></pre>
+<p>Die Fehlermeldungen von Java verraten, auf welcher Schicht es hakt:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Exception</th><th>Was im Netz passiert ist</th></tr></thead>
+  <tbody>
+    <tr><td><code>UnknownHostException</code></td><td>Der Name ließ sich nicht in eine IP-Adresse auflösen – ein DNS-Problem, noch vor TCP.</td></tr>
+    <tr><td><code>ConnectException: Connection refused</code></td><td>Der Rechner ist erreichbar, aber auf dem Port lauscht niemand. Er hat das <code>SYN</code> mit einem <code>RST</code> beantwortet.</td></tr>
+    <tr><td><code>SocketTimeoutException: Connect timed out</code></td><td>Auf das <code>SYN</code> kam gar nichts zurück – Rechner aus, falsche Adresse oder eine Firewall verwirft die Pakete stillschweigend.</td></tr>
+    <tr><td><code>SocketTimeoutException: Read timed out</code></td><td>Die Verbindung steht, aber die Gegenseite schickt nichts mehr.</td></tr>
+    <tr><td><code>SocketException: Connection reset</code></td><td>Die Gegenseite hat die Verbindung hart abgebrochen.</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Zwei Ratschläge aus der Praxis: Immer beide Timeouts setzen – beim <code>HttpClient</code> mit <code>connectTimeout</code> und pro Anfrage mit <code>timeout</code>, bei Sockets mit <code>connect(addr, ms)</code> und <code>setSoTimeout</code>. Ohne Timeout wartet ein Thread im Zweifel ewig. Und Verbindungen wiederverwenden statt jedes Mal neu aufzubauen – Connection-Pools sparen genau die Handshakes aus dem Widget oben.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„TCP überträgt Nachrichten.“</b> – TCP überträgt einen Bytestrom ohne Grenzen. Wer 100 Bytes schreibt, bekommt beim Lesen vielleicht 60 und dann 40 – oder zwei Nachrichten auf einmal. Wo eine Nachricht endet, muss das Anwendungsprotokoll festlegen, etwa mit einer Längenangabe oder einem Zeilenumbruch.</div>
+  <div><b>„UDP ist unzuverlässig, also schlechter.“</b> – Es ist schneller und einfacher. Wo Aktualität wichtiger ist als Vollständigkeit, ist es die bessere Wahl – und QUIC zeigt, dass man darauf sogar mehr Zuverlässigkeit bauen kann als TCP bietet.</div>
+  <div><b>„Eine IP-Adresse gehört zu einem Rechner.“</b> – Hinter einer Adresse können durch NAT Hunderte Geräte stecken, ein Rechner kann viele Adressen haben, und Adressen wechseln.</div>
+  <div><b>„Mehr Bandbreite heißt schneller laden.“</b> – Bei kleinen Anfragen bestimmt die Rundreisezeit das Tempo, nicht die Bandbreite. Eine Glasfaser nach Australien hat immer noch mindestens die Laufzeit des Lichts.</div>
+  <div><b>„Das Internet funktioniert nach dem OSI-Modell.“</b> – OSI ist ein Lehrmodell. Das Internet läuft auf TCP/IP, und manche Protokolle passen in keine Schicht sauber hinein.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/betriebssystem/">Betriebssystem</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

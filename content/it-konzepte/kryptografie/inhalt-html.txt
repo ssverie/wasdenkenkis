@@ -1,0 +1,153 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Fast alles in der IT-Sicherheit baut auf drei Werkzeugen auf: <strong>symmetrische Verschlüsselung</strong> (ein gemeinsamer Schlüssel, schnell – AES), <strong>asymmetrische Verfahren</strong> (ein Schlüsselpaar aus öffentlichem und privatem Schlüssel – RSA, elliptische Kurven) und <strong>Hashfunktionen</strong> (ein unumkehrbarer Fingerabdruck beliebiger Daten – SHA-256).</p>
+<p>Aus ihnen werden alle höheren Bausteine zusammengesetzt: digitale Signaturen, Zertifikate, Passwortspeicherung, TLS. Die wichtigste Regel für Entwickler: Nie selbst erfinden, nie selbst implementieren – fertige, geprüfte Bibliotheken richtig benutzen. Die meisten Fehler passieren nicht in der Mathematik, sondern beim Benutzen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#werkzeuge">Die drei Werkzeuge</a></li>
+  <li><a href="#hash">Hashfunktionen: der Fingerabdruck</a></li>
+  <li><a href="#symmetrisch">Symmetrisch: AES</a></li>
+  <li><a href="#asymmetrisch">Asymmetrisch: Schlüsselpaare</a></li>
+  <li><a href="#zufall">Zufall</a></li>
+  <li><a href="#quanten">Quantencomputer</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="werkzeuge">Die drei Werkzeuge</h2>
+<div class="cards">
+  <div class="card"><div class="num">🔑</div><h4>Symmetrisch</h4><p>Ein Schlüssel zum Ver- und Entschlüsseln, wie ein Tresor mit einem Code. Extrem schnell, auch für Gigabytes. Problem: Wie bekommt die andere Seite den Schlüssel?</p></div>
+  <div class="card"><div class="num">🔐</div><h4>Asymmetrisch</h4><p>Ein Schlüsselpaar. Den öffentlichen kann jeder haben, den privaten nur der Besitzer. Löst das Verteilungsproblem, ist aber tausendfach langsamer.</p></div>
+  <div class="card"><div class="num">#</div><h4>Hash</h4><p>Kein Schlüssel. Macht aus beliebigen Daten einen Fingerabdruck fester Länge – unumkehrbar. Prüft, ob sich etwas verändert hat.</p></div>
+</div>
+<p>In der Praxis werden sie immer kombiniert. TLS benutzt alle drei: einen asymmetrischen Schlüsselaustausch, um einen gemeinsamen Schlüssel zu vereinbaren, Signaturen und Hashes für die Zertifikate, und symmetrische Verschlüsselung für die eigentlichen Daten.</p>
+
+<h2 id="hash">Hashfunktionen: der Fingerabdruck</h2>
+<p>Eine kryptografische Hashfunktion wie <strong>SHA-256</strong> macht aus beliebigen Daten – einem Wort oder einer Datei mit Gigabytes – genau 256 Bit. Drei Eigenschaften machen sie nützlich:</p>
+<ul>
+  <li><strong>Einwegfunktion:</strong> Aus dem Hash lässt sich die Eingabe nicht berechnen.</li>
+  <li><strong>Kollisionsresistenz:</strong> Es ist praktisch unmöglich, zwei verschiedene Eingaben mit gleichem Hash zu finden.</li>
+  <li><strong>Lawineneffekt:</strong> Ändert sich ein einziges Bit der Eingabe, ändert sich etwa die Hälfte der Ausgabe – völlig unvorhersehbar.</li>
+</ul>
+
+<div class="widget">
+  <div class="widget-title">SHA-256 live – ein Buchstabe Unterschied</div>
+  <div class="lbl">Eingabe 1</div>
+  <input class="inp" id="h1" value="Überweise 100 Euro an Anna" aria-label="Eingabe 1">
+  <div class="hx" id="o1" style="margin-top:6px"></div>
+  <div class="lbl">Eingabe 2</div>
+  <input class="inp" id="h2" value="Überweise 900 Euro an Anna" aria-label="Eingabe 2">
+  <div class="hx" id="o2" style="margin-top:6px"></div>
+  <div class="bitbar" id="bits" aria-hidden="true"></div>
+  <div class="h-note" id="hNote"></div>
+  <p class="fine">Echte SHA-256-Berechnung in deinem Browser. Orange: Stellen, die sich unterscheiden.</p>
+</div>
+
+<p>Hashes stecken überall: Git benennt jeden Commit nach seinem Hash. Downloads geben eine Prüfsumme an. Signaturen unterschreiben nicht die ganze Datei, sondern ihren Hash. Und Passwörter werden – mit speziellen, absichtlich langsamen Hashfunktionen – gehasht gespeichert; mehr dazu im nächsten Eintrag.</p>
+<p>Ältere Verfahren gelten als gebrochen: Für <strong>MD5</strong> lassen sich Kollisionen in Sekunden erzeugen, für <strong>SHA-1</strong> wurde 2017 die erste praktische Kollision veröffentlicht. Als Prüfsumme gegen zufällige Fehler taugen sie noch, für Sicherheit nicht mehr.</p>
+
+<h3>HMAC: Hash mit Schlüssel</h3>
+<p>Ein Hash allein beweist nur, dass Daten unverändert sind – solange der Hash selbst sicher übermittelt wurde. Wer die Daten fälscht, kann auch einen neuen Hash berechnen. Ein <strong>HMAC</strong> mischt einen geheimen Schlüssel in den Hash: Nur wer den Schlüssel kennt, kann den richtigen Wert erzeugen oder prüfen. So sichern etwa Webhooks und viele Token ihre Echtheit.</p>
+
+<h2 id="symmetrisch">Symmetrisch: AES</h2>
+<p>Der Standard für symmetrische Verschlüsselung ist <strong>AES</strong>, seit 2001 vom US-Standardinstitut NIST festgelegt, mit Schlüsseln von 128 oder 256 Bit. Moderne Prozessoren haben eigene Befehle dafür und verschlüsseln Gigabytes pro Sekunde. Eine Alternative ist <strong>ChaCha20</strong>, schnell auch ohne Hardware-Unterstützung.</p>
+<p>AES verschlüsselt immer genau 16 Byte auf einmal. Für längere Daten braucht man einen <strong>Betriebsmodus</strong> – und hier passieren die klassischen Fehler. Der naive Modus <strong>ECB</strong> verschlüsselt jeden Block einzeln mit demselben Schlüssel. Gleiche Blöcke ergeben dann gleiche Geheimtexte:</p>
+
+<div class="widget">
+  <div class="widget-title">Warum der Betriebsmodus zählt</div>
+  <div class="ecb">
+    <div><canvas id="cvPlain" width="24" height="24"></canvas><b>Original</b><p>ein Bild aus Pixel-Blöcken</p></div>
+    <div><canvas id="cvEcb" width="24" height="24"></canvas><b>„Verschlüsselt“ mit ECB</b><p>gleiche Blöcke → gleicher Geheimtext. Das Motiv bleibt sichtbar.</p></div>
+    <div><canvas id="cvCtr" width="24" height="24"></canvas><b>Verschlüsselt mit GCM</b><p>jeder Block bekommt einen anderen Zähler → nur Rauschen</p></div>
+  </div>
+  <p class="fine">Nachgestellt: Jeder 2×2-Pixel-Block wird durch eine Pseudo-Verschlüsselung (SHA-256) ersetzt – bei ECB nur abhängig vom Blockinhalt, bei GCM zusätzlich von seiner Position.</p>
+</div>
+
+<p>Richtig ist heute ein <strong>AEAD</strong>-Modus („authenticated encryption“): <strong>AES-GCM</strong> oder <strong>ChaCha20-Poly1305</strong>. Sie verschlüsseln nicht nur, sondern hängen auch eine Prüfsumme an – eine Veränderung am Geheimtext fällt beim Entschlüsseln sofort auf. Ihre eine harte Regel: Jede Verschlüsselung braucht einen neuen Startwert (Nonce, IV). Wer mit demselben Schlüssel zweimal dieselbe Nonce benutzt, verrät Teile der Klartexte und ermöglicht Fälschungen.</p>
+
+<h2 id="asymmetrisch">Asymmetrisch: Schlüsselpaare</h2>
+<p>Ein Bild dafür ist ein Briefkasten: Einwerfen kann jeder (öffentlicher Schlüssel), öffnen nur, wer den Schlüssel hat (privater Schlüssel). Umgekehrt funktioniert die <strong>Signatur</strong>: Nur der Besitzer des privaten Schlüssels kann sie erzeugen, aber jeder mit dem öffentlichen Schlüssel kann sie prüfen – wie ein Siegel.</p>
+<p>Das älteste und bekannteste Verfahren ist <strong>RSA</strong> von 1977. Seine Sicherheit beruht darauf, dass man zwei große Primzahlen leicht multiplizieren, das Produkt aber praktisch nicht wieder zerlegen kann. Hier eine Spielzeug-Version mit winzigen Primzahlen:</p>
+
+<div class="widget">
+  <div class="widget-title">RSA mit Spielzeugzahlen</div>
+  <div class="rsa-keys">
+    <div class="pub"><b>Öffentlicher Schlüssel – darf jeder kennen</b><code>n = 3233, e = 17</code></div>
+    <div class="priv"><b>Privater Schlüssel – geheim</b><code>d = 2753</code> · entstanden aus p = 61, q = 53</div>
+  </div>
+  <div class="seg" id="rsaMode">
+    <button data-m="enc" aria-pressed="true">Verschlüsseln</button>
+    <button data-m="sig">Signieren</button>
+  </div>
+  <div class="rsa-in"><label>Nachricht als Zahl (0–3232): <input class="inp" type="number" id="rsaM" min="0" max="3232" value="65"></label><label class="toggle" id="tamperL" hidden><input type="checkbox" id="tamper"> Nachricht unterwegs fälschen</label></div>
+  <div class="rsa-row" id="rsaRow"></div>
+  <div class="rsa-note" id="rsaNote"></div>
+</div>
+
+<p>Mit 3233 kommt jeder in Sekundenbruchteilen auf 61 × 53. Echte RSA-Schlüssel haben 2048 bis 4096 Bit – Zahlen mit über 600 Dezimalstellen, die mit heutigen Computern nicht zerlegbar sind. Echtes RSA benutzt außerdem eine zufällige Auffüllung (Padding); die nackte Formel aus dem Spielzeug wäre unsicher.</p>
+<p>Moderne Systeme setzen meist auf <strong>elliptische Kurven</strong>: gleiche Sicherheit mit viel kürzeren Schlüsseln und schnelleren Rechnungen. Ein 256-Bit-Kurvenschlüssel entspricht etwa einem 3072-Bit-RSA-Schlüssel. Bekannte Verfahren: <strong>X25519</strong> für den Schlüsselaustausch, <strong>Ed25519</strong> und <strong>ECDSA</strong> für Signaturen.</p>
+
+<h2 id="zufall">Zufall</h2>
+<p>Jeder Schlüssel, jede Nonce, jedes Sitzungs-Token ist nur so gut wie der Zufall, aus dem es entstand. Gewöhnliche Zufallsgeneratoren wie <code>java.util.Random</code> sind für Simulationen gebaut: Aus wenigen Ausgaben lässt sich der innere Zustand berechnen und jede künftige Zahl vorhersagen. Für alles Sicherheitsrelevante gibt es <strong>kryptografisch sichere</strong> Generatoren – in Java <code>SecureRandom</code>, der aus dem Zufall des Betriebssystems schöpft.</p>
+
+<h2 id="quanten">Quantencomputer</h2>
+<p>Ein ausreichend großer Quantencomputer könnte mit dem <strong>Shor-Algorithmus</strong> große Zahlen zerlegen und das Problem hinter elliptischen Kurven lösen. Damit wären RSA, ECDH und ECDSA gebrochen – also fast alle heutigen asymmetrischen Verfahren. Symmetrische Verfahren und Hashes trifft es viel schwächer: AES mit 256 Bit gilt weiter als sicher.</p>
+<p>So einen Quantencomputer gibt es noch nicht. Trotzdem eilt es, wegen „<strong>harvest now, decrypt later</strong>“: Wer heute verschlüsselten Verkehr aufzeichnet, kann ihn später entschlüsseln. Deshalb hat NIST im August 2024 die ersten Post-Quanten-Standards veröffentlicht: <strong>ML-KEM</strong> (früher Kyber) für den Schlüsselaustausch, <strong>ML-DSA</strong> (früher Dilithium) und <strong>SLH-DSA</strong> für Signaturen. Browser und große Anbieter nutzen ML-KEM bereits – meist als Hybrid zusammen mit X25519, damit die Verbindung sicher bleibt, falls sich eines der beiden Verfahren als schwach herausstellt. Java bringt ML-KEM und ML-DSA seit Version 24 mit.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">// Symmetrisch: AES-GCM – verschlüsselt und schützt vor Veränderung</span>
+KeyGenerator kg = KeyGenerator.getInstance(<span class="s">"AES"</span>);
+kg.init(<span class="s">256</span>);
+SecretKey key = kg.generateKey();
+
+<span class="k">byte</span>[] iv = <span class="k">new byte</span>[<span class="s">12</span>];
+<span class="k">new</span> SecureRandom().nextBytes(iv);                  <span class="c">// für JEDE Verschlüsselung neu!</span>
+Cipher c = Cipher.getInstance(<span class="s">"AES/GCM/NoPadding"</span>);
+c.init(Cipher.ENCRYPT_MODE, key, <span class="k">new</span> GCMParameterSpec(<span class="s">128</span>, iv));
+<span class="k">byte</span>[] geheim = c.doFinal(<span class="s">"Hallo"</span>.getBytes(UTF_8));  <span class="c">// IV mitspeichern – er ist nicht geheim</span>
+
+<span class="c">// Hash</span>
+<span class="k">byte</span>[] h = MessageDigest.getInstance(<span class="s">"SHA-256"</span>).digest(<span class="s">"Hallo"</span>.getBytes(UTF_8));
+System.out.println(HexFormat.of().formatHex(h));
+
+<span class="c">// Signatur mit Ed25519 (seit Java 15)</span>
+KeyPair kp = KeyPairGenerator.getInstance(<span class="s">"Ed25519"</span>).generateKeyPair();
+Signature s = Signature.getInstance(<span class="s">"Ed25519"</span>);
+s.initSign(kp.getPrivate());  s.update(daten);  <span class="k">byte</span>[] sig = s.sign();
+s.initVerify(kp.getPublic()); s.update(daten);  <span class="k">boolean</span> echt = s.verify(sig);</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Regel</th><th>Warum</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Kein <code>"AES"</code> ohne Modus</strong></td><td><code>Cipher.getInstance("AES")</code> bedeutet in Java <code>AES/ECB/PKCS5Padding</code> – genau der Modus aus dem Bild oben.</td></tr>
+    <tr><td><strong><code>SecureRandom</code>, nie <code>Random</code></strong></td><td>für Schlüssel, IVs, Token, Passwort-Reset-Links.</td></tr>
+    <tr><td><strong>Signaturen und MACs zeitkonstant vergleichen</strong></td><td><code>MessageDigest.isEqual(a, b)</code> statt <code>Arrays.equals</code> – sonst verrät die Laufzeit, wie viele Bytes stimmen.</td></tr>
+    <tr><td><strong>Schlüssel gehören nicht in den Code</strong></td><td>nicht ins Repository, nicht in die <code>application.properties</code>. Dafür gibt es Schlüsselverwaltungen: Vault, Cloud-KMS, Kubernetes Secrets.</td></tr>
+    <tr><td><strong>Lieber eine Bibliothek höherer Ebene</strong></td><td>Die JCA bietet Bausteine, keine fertigen Rezepte. Bibliotheken wie Google Tink nehmen viele Entscheidungen sicher vorweg.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Hashen ist Verschlüsseln.“</b> – Verschlüsseltes lässt sich mit dem Schlüssel zurückholen, Gehashtes nie. Wer Passwörter „verschlüsselt“ speichert, kann sie entschlüsseln – und ein Angreifer mit dem Schlüssel auch.</div>
+  <div><b>„Base64 ist eine Verschlüsselung.“</b> – Es ist nur eine Schreibweise für Bytes als Text. Jeder kann es ohne Schlüssel zurückwandeln.</div>
+  <div><b>„Ein geheimes eigenes Verfahren ist sicherer.“</b> – Seit Auguste Kerckhoffs (1883) gilt: Ein Verfahren muss sicher sein, auch wenn der Gegner alles außer dem Schlüssel kennt. Öffentlich geprüfte Verfahren sind sicherer als geheime.</div>
+  <div><b>„Signieren heißt: mit dem privaten Schlüssel verschlüsseln.“</b> – Bei Lehrbuch-RSA sieht die Formel so aus. Echte Signaturverfahren funktionieren anders, und bei Kurvenverfahren gibt es gar kein „Verschlüsseln mit dem privaten Schlüssel“.</div>
+  <div><b>„Quantencomputer knacken jede Verschlüsselung.“</b> – Sie bedrohen die heutigen asymmetrischen Verfahren. AES-256 und SHA-256 bleiben auch dann sicher, und für den Rest gibt es bereits Nachfolger.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/tls/">TLS und Zertifikate</a>
+  <a href="/it-konzepte/datenformate/">Datenformate und Serialisierung</a>
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/intraktabilitaet/">Intraktabilität</a>
+  <a href="/it-konzepte/zahlendarstellung/">Zahlen im Rechner</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

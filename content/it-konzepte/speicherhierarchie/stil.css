@@ -1,0 +1,60 @@
+/* ---- Seitenspezifisch: Speicherhierarchie ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+/* Pyramide */
+.erklaert .pyr svg{max-width:600px}
+.erklaert .pyr .lv{cursor:pointer;transition:opacity .2s}
+.erklaert .pyr .lv:hover{opacity:.85}
+.erklaert .pyr .lv:focus{outline:none}
+.erklaert .pyr .lt{font:700 13px var(--sans);fill:var(--fg)}
+.erklaert .pyr .ls{font:11px var(--sans);fill:var(--muted)}
+.erklaert .pyr .lv.sel polygon{stroke:var(--accent-2);stroke-width:3}
+.erklaert .pyr-info{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.9rem;min-height:4.4em}
+.erklaert .pyr-info b{display:block}
+.erklaert .pyr-info dl{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;margin:6px 0 0;font-size:.84rem}
+.erklaert .pyr-info dt{color:var(--muted)}.erklaert .pyr-info dd{margin:0}
+
+/* Cache-Simulator */
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .sim{display:grid;grid-template-columns:1fr 150px;gap:16px;align-items:start}
+@media (max-width:600px){.erklaert .sim{grid-template-columns:1fr}}
+.erklaert .sim h4{margin:0 0 6px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.erklaert .ram{display:flex;flex-direction:column;gap:3px}
+.erklaert .line{display:grid;grid-template-columns:2.2em repeat(8,minmax(0,1fr));gap:2px;align-items:center;padding:2px;border-radius:5px;transition:background .2s}
+.erklaert .line .ln{font:.62rem var(--mono);color:var(--muted);text-align:right;padding-right:4px}
+.erklaert .line.inc{background:var(--accent-soft)}
+.erklaert .c{height:18px;border-radius:3px;background:var(--bg);border:1px solid var(--line);font:.55rem var(--mono);color:var(--muted);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.erklaert .c.arr{background:var(--card)}
+.erklaert .c.node{background:var(--card);border-color:var(--accent-2)}
+.erklaert .c.seen{background:var(--line)}
+.erklaert .c.cur{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+.erklaert .cache{display:flex;flex-direction:column;gap:5px}
+.erklaert .slot{padding:8px 10px;border-radius:8px;border:1px dashed var(--line);font:.78rem var(--mono);color:var(--muted);min-height:34px;transition:background .2s}
+.erklaert .slot.full{border-style:solid;color:var(--fg);background:var(--accent-soft)}
+.erklaert .slot.hit{background:var(--ok-soft);border-color:var(--ok)}
+.erklaert .slot.miss{background:var(--accent-2-soft);border-color:var(--accent-2)}
+.erklaert .sim-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+@media (max-width:560px){.erklaert .sim-stats{grid-template-columns:1fr 1fr}}
+.erklaert .sim-stats div{padding:9px;border-radius:9px;background:var(--bg);text-align:center;font-size:.72rem;color:var(--muted)}
+.erklaert .sim-stats b{display:block;font:600 1.1rem var(--serif);color:var(--fg);font-variant-numeric:tabular-nums}
+.erklaert .sim-stats .ok b{color:var(--ok)}.erklaert .sim-stats .bad b{color:var(--accent-2)}
+.erklaert .sim-note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:3em}
+.erklaert .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.75rem;color:var(--muted);margin-top:8px}
+.erklaert .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:4px;border:1px solid var(--line)}
+
+/* Layout-Vergleich */
+.erklaert .lay{display:flex;flex-direction:column;gap:14px}
+.erklaert .lay h4{margin:0 0 4px;font-size:.92rem}
+.erklaert .lay p{margin:4px 0 0;font-size:.85rem;color:var(--muted)}
+.erklaert .lay svg{width:100%;height:auto;display:block}
+.erklaert .lay .box{fill:var(--card);stroke:var(--line);stroke-width:1.5}
+.erklaert .lay .val{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.erklaert .lay .ref{fill:var(--accent-2-soft);stroke:var(--accent-2);stroke-width:1.5}
+.erklaert .lay .hd{fill:var(--code-bg);stroke:var(--line);stroke-width:1.5}
+.erklaert .lay .tx{font:10px var(--mono);fill:var(--fg)}
+.erklaert .lay .ar{stroke:var(--accent-2);stroke-width:1.5;fill:none;marker-end:url(#layar)}
+

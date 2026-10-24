@@ -1,0 +1,62 @@
+/* ---- Seitenspezifisch: Build und CI/CD ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .toggle{display:flex;align-items:center;gap:7px;font-size:.86rem;cursor:pointer;margin:6px 0}
+.erklaert .toggle input{accent-color:var(--accent);width:17px;height:17px;flex:0 0 auto}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:2.6em}
+.erklaert .note code{font-size:.8rem}
+
+/* Lebenszyklus */
+.erklaert .cmds{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .cmds button{font:600 .82rem var(--mono);padding:6px 10px}
+.erklaert .cmds button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .cmds button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .cmds button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .lc{display:flex;flex-direction:column;gap:4px}
+.erklaert .ph{display:grid;grid-template-columns:7.5em 1fr;gap:10px;align-items:center;padding:7px 12px;border-radius:9px;border:1px solid var(--line);background:var(--card);font-size:.84rem;transition:background .25s,border-color .25s,opacity .25s}
+.erklaert .ph b{font-family:var(--mono);font-size:.84rem}
+.erklaert .ph span{color:var(--muted)}
+.erklaert .ph span code{font-size:.76rem}
+.erklaert .ph.on{background:var(--accent-soft);border-color:var(--accent)}
+.erklaert .ph.on b{color:var(--accent)}
+.erklaert .ph.off{opacity:.38}
+.erklaert .ph.clean{background:var(--accent-2-soft);border-color:var(--accent-2)}
+@media (max-width:520px){.erklaert .ph{grid-template-columns:1fr;gap:1px}}
+
+/* Abhängigkeiten */
+.erklaert .dt{font:.82rem/1.75 var(--mono);padding:12px 14px;border-radius:10px;background:var(--bg);overflow-x:auto;white-space:pre}
+.erklaert .dt .win{color:var(--ok);font-weight:700}
+.erklaert .dt .lose{color:var(--muted);text-decoration:line-through}
+.erklaert .dt .pin{color:var(--accent);font-weight:700}
+.erklaert .dt .c{color:var(--muted)}
+.erklaert .dep-res{margin-top:10px;padding:10px 12px;border-radius:9px;font-size:.88rem}
+.erklaert .dep-res.ok{background:var(--ok-soft)}.erklaert .dep-res.bad{background:var(--bad-soft)}
+
+/* Pipeline */
+.erklaert .pl{display:flex;flex-wrap:wrap;gap:6px;align-items:stretch}
+.erklaert .st{flex:1 1 110px;min-width:0;padding:10px;border-radius:10px;border:2px solid var(--line);background:var(--card);font-size:.78rem;text-align:center;transition:background .3s,border-color .3s}
+.erklaert .st b{display:block;font-size:.84rem;margin-bottom:2px}
+.erklaert .st small{color:var(--muted)}
+.erklaert .st.run{border-color:var(--accent);background:var(--accent-soft)}
+.erklaert .st.ok{border-color:var(--ok);background:var(--ok-soft)}
+.erklaert .st.fail{border-color:var(--bad);background:var(--bad-soft)}
+.erklaert .st.skip{opacity:.4}
+.erklaert .st.wait{border-color:var(--accent-2);background:var(--accent-2-soft)}
+.erklaert .pl-ctl{display:flex;flex-direction:column;gap:2px;margin-bottom:10px}
+
+/* Ausrollen */
+.erklaert .srv{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;margin:8px 0}
+.erklaert .srv div{padding:10px 4px;border-radius:9px;text-align:center;font:700 .8rem var(--mono);border:2px solid var(--line);transition:background .3s,border-color .3s}
+.erklaert .srv div small{display:block;font:400 .62rem var(--sans);color:var(--muted)}
+.erklaert .srv .v1{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.erklaert .srv .v2{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.erklaert .srv .idle{opacity:.35}
+.erklaert .srv .upd{background:var(--accent-2-soft);border-color:var(--accent-2);color:var(--accent-2)}
+.erklaert .traffic{font-size:.8rem;color:var(--muted)}
+.erklaert .traffic b{color:var(--fg)}
+

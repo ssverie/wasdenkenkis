@@ -1,0 +1,52 @@
+/* ---- Seitenspezifisch: Zahlen im Rechner ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:2.6em}
+.erklaert .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:10px 0 6px}
+.erklaert .inrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.erklaert .inrow input{flex:0 1 11em;min-width:0;font:600 .95rem var(--mono);padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.erklaert .inrow button{padding:6px 10px;font-size:.82rem}
+.erklaert .sl{display:grid;grid-template-columns:7em minmax(0,1fr) 4em;align-items:center;gap:10px;font-size:.88rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+
+/* Bits */
+.erklaert .bits{display:grid;gap:3px;margin-top:10px}
+.erklaert .bits button{padding:0;height:38px;min-width:0;font:700 .95rem var(--mono);border-radius:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+.erklaert .bits button small{font:500 .52rem var(--sans);color:var(--muted)}
+.erklaert .bits button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.erklaert .bits button.on small{color:rgba(255,255,255,.8)}
+:root[data-theme="dark"] .erklaert .bits button.on{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .bits button.on{color:#0d1530}}
+.erklaert .bits button.gap{margin-left:6px}
+@media (max-width:520px){.erklaert .bits button{height:32px;font-size:.8rem}.erklaert .bits button small{display:none}.erklaert .bits button.gap{margin-left:3px}}
+.erklaert .reps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+@media (max-width:520px){.erklaert .reps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.erklaert .reps div{padding:8px;border-radius:9px;background:var(--bg);text-align:center;font-size:.72rem;color:var(--muted);min-width:0}
+.erklaert .reps b{display:block;font:600 .95rem var(--mono);color:var(--fg);overflow-wrap:anywhere}
+.erklaert .div{font:.78rem/1.6 var(--mono);margin-top:10px;padding:8px 10px;border-radius:8px;background:var(--bg);overflow-x:auto;white-space:pre}
+.erklaert .div i{font-style:normal;color:var(--accent-2);font-weight:700}
+
+/* Addierer */
+.erklaert .add{font:600 1rem/1.5 var(--mono);display:grid;grid-template-columns:5.5em auto;gap:0 10px;justify-content:center;margin-top:10px}
+.erklaert .add span{text-align:right;letter-spacing:.18em;white-space:nowrap}
+.erklaert .add .cy{font-size:.72rem;color:var(--accent-2)}
+.erklaert .add .rl{font:500 .74rem var(--sans);color:var(--muted);letter-spacing:0;align-self:center}
+.erklaert .add .sum{border-top:2px solid var(--fg)}
+.erklaert .flags{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+@media (max-width:520px){.erklaert .flags{grid-template-columns:1fr}}
+.erklaert .flags div{padding:10px;border-radius:9px;background:var(--bg);font-size:.82rem}
+.erklaert .flags b{font-family:var(--mono)}
+.erklaert .flags .bad{background:rgba(200,60,60,.12)}
+
+/* Float */
+.erklaert .fbits{display:grid;grid-template-columns:repeat(32,minmax(0,1fr));gap:2px;margin-top:10px}
+.erklaert .fbits button{padding:0;height:30px;min-width:0;font:700 .72rem var(--mono);border-radius:3px}
+.erklaert .fbits button.s{border-color:#c0504d}.erklaert .fbits button.e{border-color:#d9a43b}.erklaert .fbits button.m{border-color:#4f81bd}
+.erklaert .fbits button.s.on{background:#c0504d;color:#fff}.erklaert .fbits button.e.on{background:#d9a43b;color:#1b1b1b}.erklaert .fbits button.m.on{background:#4f81bd;color:#fff}
+@media (max-width:520px){.erklaert .fbits{gap:1px}.erklaert .fbits button{height:24px;font-size:.58rem;border-radius:2px}}
+.erklaert .fleg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.76rem;color:var(--muted);margin-top:6px}
+.erklaert .fleg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.erklaert .fcalc{margin-top:10px;font:.82rem/1.6 var(--mono);padding:8px 10px;border-radius:8px;background:var(--bg);overflow-wrap:anywhere}
+.erklaert .fcalc .x{color:var(--bad);font-weight:700}
+

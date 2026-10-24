@@ -1,0 +1,45 @@
+/* ---- Seitenspezifisch: Kryptografie-Grundlagen ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .inp{width:100%;font:500 1rem var(--mono);padding:9px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.erklaert .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:10px 0 4px}
+
+/* Hash */
+.erklaert .hx{font:.82rem/1.5 var(--mono);word-break:break-all;padding:10px 12px;border-radius:9px;background:var(--bg)}
+.erklaert .hx span.d{background:var(--accent-2-soft);color:var(--accent-2);font-weight:700;border-radius:2px}
+.erklaert .bitbar{display:grid;grid-template-columns:repeat(64,1fr);gap:1px;margin-top:10px}
+.erklaert .bitbar i{height:10px;background:var(--line)}
+.erklaert .bitbar i.d{background:var(--accent-2)}
+.erklaert .h-note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--accent-2-soft)}
+
+/* ECB */
+.erklaert .ecb{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;text-align:center}
+@media (max-width:560px){.erklaert .ecb{grid-template-columns:1fr}}
+.erklaert .ecb canvas{width:100%;max-width:200px;image-rendering:pixelated;border-radius:8px;border:1px solid var(--line);display:block;margin:0 auto 6px}
+.erklaert .ecb b{font-size:.86rem}
+.erklaert .ecb p{margin:2px 0 0;font-size:.78rem;color:var(--muted)}
+
+/* RSA */
+.erklaert .rsa-keys{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+@media (max-width:560px){.erklaert .rsa-keys{grid-template-columns:1fr}}
+.erklaert .rsa-keys div{padding:10px 12px;border-radius:9px;font-size:.84rem}
+.erklaert .rsa-keys .pub{background:var(--ok-soft)}.erklaert .rsa-keys .priv{background:var(--bad-soft)}
+.erklaert .rsa-keys b{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.erklaert .rsa-keys code{font-size:.85rem;background:transparent}
+.erklaert .rsa-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:stretch}
+@media (max-width:620px){.erklaert .rsa-row{grid-template-columns:1fr}}
+.erklaert .rsa-row > div{padding:12px;border-radius:10px;background:var(--bg);text-align:center;font-size:.8rem;color:var(--muted)}
+.erklaert .rsa-row b{display:block;font:600 1.4rem var(--mono);color:var(--fg);margin:2px 0}
+.erklaert .rsa-row code{font-size:.75rem;background:transparent}
+.erklaert .rsa-row .ok b{color:var(--ok)}.erklaert .rsa-row .bad b{color:var(--bad)}
+.erklaert .rsa-in{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px;font-size:.88rem}
+.erklaert .rsa-in input{width:6em}
+.erklaert .rsa-note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg)}
+.erklaert .toggle{display:flex;align-items:center;gap:7px;font-size:.86rem;cursor:pointer}
+.erklaert .toggle input{accent-color:var(--accent);width:17px;height:17px}
+

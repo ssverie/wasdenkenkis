@@ -1,0 +1,117 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein Problem heißt <strong>berechenbar</strong> (oder entscheidbar), wenn es ein Programm gibt, das für jede Eingabe nach endlich vielen Schritten die richtige Antwort liefert. Turing bewies 1936: Es gibt Probleme, für die kein solches Programm existieren kann. Das bekannteste ist das <strong>Halteproblem</strong> – die Frage, ob ein beliebiges Programm mit einer beliebigen Eingabe irgendwann anhält.</p>
+<p>Der <strong>Satz von Rice</strong> verallgemeinert das: Keine interessante Frage über das <em>Verhalten</em> von Programmen ist allgemein entscheidbar – ob es abstürzt, ob es eine Nullreferenz liest, ob es dasselbe tut wie ein anderes Programm. Deshalb müssen Compiler und Analysewerkzeuge immer annähern: Sie melden entweder Fehler, die keine sind, oder übersehen echte.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#frage">Hilberts Frage</a></li>
+  <li><a href="#halteproblem">Das Halteproblem</a></li>
+  <li><a href="#reduktion">Reduktion: ein Beweis für viele</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="frage">Hilberts Frage</h2>
+<p>1928 stellte David Hilbert das <em>Entscheidungsproblem</em>: Gibt es ein mechanisches Verfahren, das für jede mathematische Aussage entscheidet, ob sie aus den Axiomen folgt? Wenn ja, wäre Mathematik im Prinzip automatisierbar. Turing und unabhängig davon Alonzo Church zeigten 1936: Nein. Turings Weg dorthin war genau die Frage, die diese Seite behandelt.</p>
+<p>Dass es unlösbare Probleme geben <em>muss</em>, sieht man schon durch Zählen. Jedes Programm ist eine endliche Zeichenkette – man kann alle Programme durchnummerieren: erst die der Länge 1, dann die der Länge 2 und so weiter. Ja/Nein-Probleme über natürliche Zahlen dagegen gibt es so viele wie unendliche 0-1-Folgen, und die lassen sich nach Cantors Diagonalargument <em>nicht</em> durchnummerieren. Es gibt also mehr Probleme als Programme – die allermeisten Probleme hat kein Programm. Offen bleibt nur, ob auch ein <em>interessantes</em> darunter ist.</p>
+
+<h2 id="halteproblem">Das Halteproblem</h2>
+<p>Angenommen, jemand liefert eine Methode <code>haelt(programm, eingabe)</code>, die immer nach endlicher Zeit antwortet und immer recht hat. Turings Beweis zeigt, dass es sie nicht geben kann – durch einen Widerspruch. Klick dich durch:</p>
+
+<div class="widget">
+  <div class="widget-title">Der Beweis in sechs Schritten</div>
+  <div class="pf">
+    <div class="code" id="pfC"></div>
+    <div class="pfx" id="pfX"></div>
+  </div>
+  <div class="nav"><button id="pfP">← Zurück</button><button id="pfN">Weiter →</button><span id="pfI"></span></div>
+</div>
+
+<p>Das Muster heißt <strong>Diagonalisierung</strong>: Man füttert ein Programm mit sich selbst und dreht die Antwort um – dieselbe Idee wie bei Cantor und beim Lügner-Paradox („Dieser Satz ist falsch“). Gödels Unvollständigkeitssatz von 1931 beruht auf einer verwandten Konstruktion.</p>
+<p>Wichtig ist, was der Satz <em>nicht</em> sagt: Für viele einzelne Programme kann man sehr wohl entscheiden, ob sie anhalten. Unmöglich ist nur ein Verfahren, das für <em>alle</em> Programme funktioniert. Und es ist kein Geschwindigkeitsproblem – auch ein unendlich schneller Rechner könnte das Halteproblem nicht lösen.</p>
+
+<h3>Warum ein Halte-Orakel die Mathematik lösen würde</h3>
+<p>Wie viel ein solches <code>haelt</code> wert wäre, zeigt ein harmloses Programm. Nimm eine Zahl; ist sie gerade, halbiere sie, sonst nimm sie mal 3 plus 1. Wiederhole, bis 1 herauskommt:</p>
+
+<div class="widget">
+  <div class="widget-title">Hält diese Schleife immer an?</div>
+  <pre style="margin:0 0 10px"><code><span class="k">while</span> (n != <span class="n">1</span>) n = (n % <span class="n">2</span> == <span class="n">0</span>) ? n / <span class="n">2</span> : <span class="n">3</span> * n + <span class="n">1</span>;</code></pre>
+  <div class="inrow">
+    <input type="text" id="czN" inputmode="numeric" value="27" aria-label="Startwert">
+    <button data-v="7">7</button><button data-v="27">27</button><button data-v="97">97</button><button data-v="871">871</button><button data-v="77031">77031</button>
+  </div>
+  <svg id="czSvg" viewBox="0 0 480 170" role="img" aria-label="Verlauf der Collatz-Folge"></svg>
+  <div class="cz" id="czI"></div>
+  <div class="note" id="czNt"></div>
+</div>
+
+<p>Ob diese Schleife für <em>jeden</em> Startwert endet, ist die <strong>Collatz-Vermutung</strong> – seit 1937 offen. Mit Computern wurde sie für astronomisch viele Startwerte geprüft, bewiesen ist sie nicht. Ein Halte-Orakel würde hier sofort helfen: Für jeden einzelnen Startwert könnte es sagen, ob die Schleife endet. Noch direkter bei der Goldbach-Vermutung: Ein Programm prüft jede gerade Zahl ab 4, ob sie Summe zweier Primzahlen ist, und hält beim ersten Gegenbeispiel. Ob dieses Programm hält, ist genau die Frage, ob die Vermutung falsch ist – eine einzige Frage an das Orakel, und ein Jahrhundertproblem wäre gelöst. Dass es so einfach nicht geht, ist kein Zufall.</p>
+
+<h2 id="reduktion">Reduktion: ein Beweis für viele</h2>
+<p>Hat man ein unentscheidbares Problem, bekommt man weitere geschenkt. Die Technik heißt <strong>Reduktion</strong>: Man zeigt, dass ein Verfahren für Problem X auch das Halteproblem lösen würde. Da es für das Halteproblem keines gibt, kann es auch für X keines geben. Beispiel: „Gibt dieses Programm irgendwann ‚Hallo‘ aus?“ Nimm ein beliebiges Programm, ersetze alle seine Ausgaben durch nichts und hänge am Ende <code>print("Hallo")</code> an. Es gibt genau dann „Hallo“ aus, wenn das ursprüngliche Programm anhält. Wer die Hallo-Frage beantworten kann, beantwortet also das Halteproblem.</p>
+<p>So entstand eine lange Liste unentscheidbarer Probleme, darunter erstaunlich konkrete: ob eine Gleichung mit ganzzahligen Koeffizienten eine ganzzahlige Lösung hat (Hilberts zehntes Problem, 1970 gelöst – mit „unentscheidbar“), ob sich eine Menge von Kacheln lückenlos zu einer unendlichen Fläche fügt, oder ob zwei kontextfreie Grammatiken dieselbe Sprache beschreiben.</p>
+
+<h3>Der Satz von Rice</h3>
+<p>Henry Rice zog 1953 die allgemeinste Konsequenz: <strong>Jede nichttriviale Eigenschaft dessen, was ein Programm tut, ist unentscheidbar.</strong> „Nichttrivial“ heißt nur: Manche Programme haben die Eigenschaft, andere nicht. „Was es tut“ heißt: Es geht um das Verhalten, nicht um den Text. Ob ein Programm mehr als 100 Zeilen hat, ist entscheidbar. Ob es jemals eine <code>NullPointerException</code> wirft, ob es sortiert, ob es Daten an Dritte schickt, ob es dasselbe tut wie die alte Version – unentscheidbar.</p>
+<p>Für Werkzeuge heißt das: Ein Analysewerkzeug kann nicht gleichzeitig <em>alle</em> echten Fehler finden, <em>nie</em> falschen Alarm schlagen und <em>immer</em> fertig werden. Eins davon muss es opfern. Probier zwei Strategien an sechs Codestücken aus:</p>
+
+<div class="widget">
+  <div class="widget-title">Kann hier eine NullPointerException fliegen?</div>
+  <div class="seg" id="anS">
+    <button data-s="sound" aria-pressed="true">Vorsichtig: alles melden, was nicht sicher ist</button>
+    <button data-s="prag">Pragmatisch: nur Sicheres melden</button>
+    <button data-s="perfect">Perfekt</button>
+  </div>
+  <div class="an" id="anL"></div>
+  <div class="kpi" id="anK"></div>
+  <div class="note" id="anN"></div>
+</div>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Schon der Java-Compiler arbeitet mit dieser Grenze. Seine Prüfung, ob eine Variable vor dem Lesen belegt ist, ist bewusst einfach und vorsichtig – er lehnt auch Code ab, der in Wahrheit korrekt ist:</p>
+<pre><code><span class="k">int</span> x;
+<span class="k">if</span> (b)  x = <span class="n">1</span>;
+<span class="k">if</span> (!b) x = <span class="n">2</span>;
+System.out.println(x);   <span class="c">// Fehler: variable x might not have been initialized</span>
+                         <span class="c">// obwohl einer der beiden Zweige immer greift</span>
+
+<span class="k">while</span> (<span class="k">true</span>) { }
+System.out.println(<span class="s">"nie"</span>);   <span class="c">// Fehler: unreachable statement</span>
+<span class="k">if</span> (<span class="k">false</span>) { System.out.println(<span class="s">"nie"</span>); }   <span class="c">// erlaubt – die Regeln sind festgelegt, nicht „klug“</span></code></pre>
+<p>Die Sprachspezifikation legt genau fest, wie weit der Compiler denkt – damit alle Compiler dieselben Programme akzeptieren. Klüger könnte er sein, vollständig nie.</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Werkzeug</th><th>Wie es mit der Grenze umgeht</th></tr></thead>
+  <tbody>
+    <tr><td><strong>NullAway, Checker Framework</strong></td><td>verlangen Annotationen wie <code>@Nullable</code> – mit deiner Hilfe wird die Frage entscheidbar, und sie können Nullfehler im annotierten Code ausschließen</td></tr>
+    <tr><td><strong>SpotBugs, Error Prone, Sonar</strong></td><td>suchen bekannte Fehlermuster – pragmatisch, wenig Fehlalarme, finden nicht alles</td></tr>
+    <tr><td><strong>Typsystem</strong></td><td>die erfolgreichste Annäherung: Es beweist Eigenschaften, indem es Programme ablehnt, die es nicht versteht</td></tr>
+    <tr><td><strong>Tests</strong></td><td>prüfen einzelne Eingaben statt aller – sie können Fehler zeigen, aber nie ihre Abwesenheit beweisen</td></tr>
+    <tr><td><strong>Timeouts</strong></td><td>die praktische Antwort auf das Halteproblem: Wenn man nicht wissen kann, ob etwas endet, begrenzt man, wie lange man wartet</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Das Halteproblem heißt: Man kann nie wissen, ob ein Programm anhält.“</b> – Für sehr viele einzelne Programme weiß man es genau. Unmöglich ist nur ein einziges Verfahren, das es für <em>alle</em> Programme richtig beantwortet.</div>
+  <div><b>„Mit genug Rechenleistung oder KI lässt sich das lösen.“</b> – Der Beweis gilt für jedes denkbare Verfahren, egal wie schnell oder schlau. Ein Werkzeug kann es sehr oft richtig machen, aber nie immer.</div>
+  <div><b>„Unentscheidbar heißt: Die Antwort existiert nicht.“</b> – Jedes Programm hält entweder an oder nicht; die Antwort existiert. Es gibt nur kein Verfahren, das sie allgemein findet.</div>
+  <div><b>„Echte Rechner haben endlichen Speicher, also ist das Halteproblem dort lösbar.“</b> – Theoretisch ja: Bei endlich vielen Zuständen wiederholt sich irgendwann einer. Praktisch hat ein Rechner mit 16 GB mehr Zustände, als das Universum Atome hat – das hilft niemandem.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/universalitaet/">Universalität</a>
+  <a href="/it-konzepte/turingmaschine/">Turingmaschine</a>
+  <a href="/it-konzepte/formale-sprachen/">Formale Sprachen und Automaten</a>
+  <a href="/it-konzepte/testen/">Testen</a>
+  <a href="/it-konzepte/komplexitaet/">Komplexität und O-Notation</a>
+  <a href="/it-konzepte/intraktabilitaet/">Intraktabilität</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

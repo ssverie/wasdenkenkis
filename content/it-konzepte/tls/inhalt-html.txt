@@ -1,0 +1,141 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>TLS</strong> (Transport Layer Security, früher SSL) legt sich zwischen TCP und eine Anwendung wie HTTP und sorgt für dreierlei: Niemand kann mitlesen (<strong>Vertraulichkeit</strong>), niemand kann unbemerkt etwas ändern (<strong>Integrität</strong>), und man spricht wirklich mit dem, mit dem man sprechen will (<strong>Authentizität</strong>). HTTPS ist einfach HTTP über TLS.</p>
+<p>Zwei Ideen tragen das Ganze: Ein <strong>Schlüsselaustausch</strong> lässt zwei Fremde über ein abgehörtes Netz einen gemeinsamen geheimen Schlüssel vereinbaren. Und ein <strong>Zertifikat</strong>, unterschrieben von einer Stelle, der der Browser vertraut, beweist, wem der Server gehört.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#wozu">Wovor TLS schützt</a></li>
+  <li><a href="#schluessel">Das Kernproblem: ein Geheimnis vereinbaren, während alle zuhören</a></li>
+  <li><a href="#zertifikate">Zertifikate: Wer ist am anderen Ende?</a></li>
+  <li><a href="#handshake">Der TLS-1.3-Handshake</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="wozu">Wovor TLS schützt</h2>
+<p>Ohne TLS geht jede Anfrage im Klartext über jedes WLAN, jeden Router, jeden Knoten auf dem Weg. Wer im selben Café-WLAN sitzt oder einen Router kontrolliert, kann Passwörter und Cookies mitlesen. Schlimmer noch: Er kann Antworten <em>verändern</em> – Werbung einschleusen, einen Download austauschen, ein Formular auf seinen eigenen Server umlenken.</p>
+<div class="cards">
+  <div class="card"><div class="num">🔒</div><h4>Vertraulichkeit</h4><p>Die Daten sind mit einem gemeinsamen Schlüssel verschlüsselt, meist mit AES oder ChaCha20. Wer mitliest, sieht nur Zeichensalat.</p></div>
+  <div class="card"><div class="num">✓</div><h4>Integrität</h4><p>Jeder Datensatz trägt eine Prüfsumme, die nur mit dem Schlüssel berechnet werden kann. Ein verändertes Byte fällt sofort auf.</p></div>
+  <div class="card"><div class="num">🪪</div><h4>Authentizität</h4><p>Der Server beweist mit seinem Zertifikat und dem dazugehörigen privaten Schlüssel, dass er zur Domain gehört.</p></div>
+</div>
+
+<h2 id="schluessel">Das Kernproblem: ein Geheimnis vereinbaren, während alle zuhören</h2>
+<p>Verschlüsseln ist leicht, wenn beide denselben Schlüssel haben. Aber wie kommt man an einen gemeinsamen Schlüssel, wenn man sich noch nie getroffen hat und jemand jedes Wort mithört? Die verblüffende Lösung fanden Whitfield Diffie und Martin Hellman 1976. Man erklärt sie am besten mit Farben: Farben zu mischen ist leicht, eine Mischung wieder zu trennen praktisch unmöglich.</p>
+
+<div class="widget">
+  <div class="widget-title">Schlüsselaustausch mit Farben</div>
+  <div class="dh">
+    <div>
+      <h4>Alice (Browser)</h4>
+      <div class="pot"><i id="cA"></i><span>Geheime Farbe – verlässt nie den Rechner</span></div>
+      <input type="range" id="hA" min="0" max="359" value="0" aria-label="Geheime Farbe von Alice">
+      <div class="pub">schickt öffentlich</div>
+      <div class="pot"><i id="mA"></i><span>Gemeinsame Farbe + ihre geheime</span></div>
+      <div class="pub">bekommt von Bob und mischt ihre geheime dazu</div>
+      <div class="pot big"><i id="kA"></i><span><b>Ergebnis</b></span></div>
+    </div>
+    <div class="eve">
+      <h4>Eve hört alles mit</h4>
+      <div class="pot"><i id="cC"></i><span>Die gemeinsame Startfarbe – öffentlich</span></div>
+      <div class="pot"><i id="eA"></i><span>Mischung von Alice</span></div>
+      <div class="pot"><i id="eB"></i><span>Mischung von Bob</span></div>
+      <div class="pub">Eves bester Versuch: beide Mischungen zusammenkippen</div>
+      <div class="pot big"><i id="kE"></i><span><b>Falsch</b> – die Startfarbe ist doppelt drin</span></div>
+    </div>
+    <div>
+      <h4>Bob (Server)</h4>
+      <div class="pot"><i id="cB"></i><span>Geheime Farbe – verlässt nie den Server</span></div>
+      <input type="range" id="hB" min="0" max="359" value="210" aria-label="Geheime Farbe von Bob">
+      <div class="pub">schickt öffentlich</div>
+      <div class="pot"><i id="mB"></i><span>Gemeinsame Farbe + seine geheime</span></div>
+      <div class="pub">bekommt von Alice und mischt seine geheime dazu</div>
+      <div class="pot big"><i id="kB"></i><span><b>Ergebnis</b></span></div>
+    </div>
+  </div>
+  <div class="dh-note" id="dhNote"></div>
+</div>
+
+<p>In Wirklichkeit sind die „Farben“ Zahlen, und das „Mischen“ ist eine Rechnung, die in eine Richtung schnell und rückwärts praktisch unmöglich ist – klassisch Potenzieren modulo einer riesigen Primzahl, heute meist das Rechnen auf <strong>elliptischen Kurven</strong> (etwa X25519). Mit dem gemeinsamen Ergebnis werden dann die eigentlichen Sitzungsschlüssel erzeugt.</p>
+<p>Ein wichtiger Bonus: Weil für jede Verbindung neue Geheimzahlen gewürfelt und danach vergessen werden, nützt es einem Angreifer nichts, wenn er heute den Verkehr aufzeichnet und Jahre später den Server knackt. Das heißt <strong>Forward Secrecy</strong> und ist in TLS 1.3 Pflicht.</p>
+
+<h2 id="zertifikate">Zertifikate: Wer ist am anderen Ende?</h2>
+<p>Der Farbtrick hat eine Lücke. Eve könnte sich in die Mitte setzen, mit Alice einen Schlüssel vereinbaren und mit Bob einen anderen – und alles umschlüsseln und mitlesen. Das ist der <strong>Man-in-the-Middle-Angriff</strong>. Alice braucht also einen Beweis, dass sie wirklich mit Bob spricht.</p>
+<p>Diesen Beweis liefert ein <strong>Zertifikat</strong>: ein Dokument, das sagt „Der öffentliche Schlüssel X gehört zur Domain <code>shop.example.com</code>“, gültig von–bis, unterschrieben von einer <strong>Zertifizierungsstelle</strong> (CA). Im Handshake unterschreibt der Server zusätzlich die Verbindungsdaten mit seinem privaten Schlüssel – das kann nur, wer den passenden Schlüssel zum Zertifikat hat.</p>
+<p>Und woher weiß der Browser, dass die Unterschrift der CA echt ist? Sie ist selbst von einer höheren Stelle unterschrieben – bis hinauf zu einer <strong>Root-CA</strong>, deren Zertifikat fest im Betriebssystem, im Browser oder im JDK hinterlegt ist. Diese <strong>Vertrauenskette</strong> lässt sich an jeder Stelle brechen. Probier es:</p>
+
+<div class="widget">
+  <div class="widget-title">Die Vertrauenskette prüfen</div>
+  <div class="breaks" id="brk">
+    <label class="toggle"><input type="checkbox" data-b="exp"> <span>Das Server-Zertifikat ist abgelaufen</span></label>
+    <label class="toggle"><input type="checkbox" data-b="name"> <span>Es lautet auf <code>example.org</code> statt <code>shop.example.com</code></span></label>
+    <label class="toggle"><input type="checkbox" data-b="mid"> <span>Der Server schickt das Zwischenzertifikat nicht mit</span></label>
+    <label class="toggle"><input type="checkbox" data-b="self"> <span>Es ist selbst signiert</span></label>
+  </div>
+  <div class="chain" id="chain"></div>
+  <div class="verdict" id="verdict"></div>
+</div>
+
+<p>Der Fall mit dem fehlenden Zwischenzertifikat ist in der Praxis der tückischste: Im Browser funktioniert alles, weil der fehlende Teil nachgeladen oder aus früheren Besuchen bekannt ist. Erst ein Java-Programm, <code>curl</code> oder eine App scheitert – und alle schauen ratlos auf den Browser, in dem es doch geht.</p>
+
+<h3>Wer stellt Zertifikate aus?</h3>
+<p>Früher kosteten Zertifikate Geld und Papierkram, deshalb lief ein Großteil des Webs unverschlüsselt. Das änderte 2015 <strong>Let's Encrypt</strong>: eine gemeinnützige CA, die kostenlos und vollautomatisch Zertifikate ausstellt. Ein Programm auf dem Server beweist über das ACME-Protokoll, dass es die Domain kontrolliert, und erneuert das Zertifikat selbstständig. Heute läuft der allergrößte Teil des Webverkehrs über HTTPS.</p>
+<p>Die Laufzeiten werden dabei immer kürzer, damit gestohlene oder falsch ausgestellte Zertifikate schnell nutzlos werden. Seit März 2026 dürfen öffentliche Zertifikate höchstens 200 Tage gelten; bis 2029 sinkt die Grenze schrittweise auf 47 Tage. Ohne Automatisierung ist das nicht mehr zu bewältigen. Zudem landet jedes ausgestellte Zertifikat in öffentlichen Logbüchern (<strong>Certificate Transparency</strong>) – so fällt auf, wenn eine CA ein Zertifikat für eine fremde Domain ausstellt.</p>
+
+<h2 id="handshake">Der TLS-1.3-Handshake</h2>
+<p>Alles zusammen passiert in einer einzigen Rundreise – im Eintrag <a href="/it-konzepte/tcp-ip/">TCP/IP</a> ist sie im Zeitdiagramm zu sehen:</p>
+<ol class="hs">
+  <li class="clr"><span class="w">ClientHello<small>unverschlüsselt</small></span><span>„Ich kann diese Verfahren, und hier ist schon meine Hälfte des Schlüsselaustauschs – meine Farbmischung.“ Dazu der gewünschte Servername (SNI), damit der Server weiß, welches Zertifikat er zeigen soll.</span></li>
+  <li class="clr"><span class="w">ServerHello<small>unverschlüsselt</small></span><span>„Wir nehmen dieses Verfahren, hier ist meine Hälfte.“ Ab jetzt haben beide den gemeinsamen Schlüssel.</span></li>
+  <li class="enc"><span class="w">Zertifikat<small>schon verschlüsselt</small></span><span>Der Server schickt seine Zertifikatskette.</span></li>
+  <li class="enc"><span class="w">CertificateVerify<small>verschlüsselt</small></span><span>Der Server unterschreibt den bisherigen Handshake mit seinem privaten Schlüssel – der Beweis, dass er der Inhaber des Zertifikats ist und niemand dazwischensitzt.</span></li>
+  <li class="enc"><span class="w">Finished<small>verschlüsselt</small></span><span>Beide bestätigen, dass sie dasselbe gesehen haben. Dann fließen die eigentlichen HTTP-Daten.</span></li>
+</ol>
+<p>Bei einem erneuten Besuch geht es sogar ohne Rundreise (<strong>0-RTT</strong>): Der Client schickt seine Anfrage gleich mit. Der Haken: Ein Angreifer könnte diese erste Nachricht aufzeichnen und noch einmal abspielen. Server erlauben 0-RTT deshalb nur für Anfragen, die man gefahrlos wiederholen kann.</p>
+<p>Eine Variante ist im Firmennetz verbreitet: <strong>gegenseitiges TLS</strong> (mTLS). Dort zeigt auch der Client ein Zertifikat. So weisen sich Dienste untereinander aus, etwa in Kubernetes mit einem Service-Mesh.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Java bringt seine eigene Liste vertrauenswürdiger Root-CAs mit, den <strong>Truststore</strong> <code>cacerts</code> im JDK. Die meisten TLS-Probleme in Java-Anwendungen drehen sich um ihn – typischerweise, wenn eine Firma eine eigene CA für interne Server betreibt, die das JDK nicht kennt.</p>
+<pre><code><span class="c"># Firmen-Root-CA in einen eigenen Truststore aufnehmen (statt das JDK zu verändern)</span>
+keytool -importcert -alias firmen-root -file firmen-root.pem \
+        -keystore truststore.p12 -storetype PKCS12 -storepass geheim
+
+<span class="c"># Anwendung damit starten</span>
+java -Djavax.net.ssl.trustStore=truststore.p12 -Djavax.net.ssl.trustStorePassword=geheim -jar app.jar
+
+<span class="c"># Wenn es hakt: den Handshake mitprotokollieren</span>
+java -Djavax.net.debug=ssl:handshake -jar app.jar</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Bedeutung</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Truststore</strong></td><td>Wem ich vertraue: Zertifikate von CAs. Standard: <code>$JAVA_HOME/lib/security/cacerts</code>.</td></tr>
+    <tr><td><strong>Keystore</strong></td><td>Wer ich bin: mein eigenes Zertifikat samt privatem Schlüssel – für Server oder für mTLS.</td></tr>
+    <tr><td><strong><code>SSLContext</code></strong></td><td>Bündelt beides für eine Verbindung. Der <code>HttpClient</code> nimmt ohne Angabe den Standard.</td></tr>
+    <tr><td><strong>PKIX path building failed</strong></td><td>Java findet keine Kette zu einer vertrauten Root – unbekannte CA oder fehlendes Zwischenzertifikat.</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="callout warn">Im Netz kursieren Code-Schnipsel mit einem <code>TrustManager</code>, der jedes Zertifikat akzeptiert, „damit es endlich läuft“. Damit ist die Verbindung zwar verschlüsselt, aber nicht mehr authentisch – jeder Man-in-the-Middle wird durchgewunken. So etwas darf nie in Produktion. Die richtige Lösung ist fast immer, die fehlende CA in einen Truststore aufzunehmen oder die Server-Konfiguration zu reparieren.</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Das Schloss heißt: Die Seite ist seriös.“</b> – Es heißt nur: Die Verbindung ist verschlüsselt, und der Server gehört zu dieser Domain. Auch Phishing-Seiten haben Zertifikate – für ihre eigene, ähnlich klingende Domain.</div>
+  <div><b>„Mit HTTPS sieht niemand, welche Seiten ich besuche.“</b> – Pfad, Inhalt und Cookies sind verborgen. Die Domain ist aber meist sichtbar – über die DNS-Anfrage und den Servernamen im ClientHello. Encrypted Client Hello (ECH) soll das schließen, ist aber noch nicht überall angekommen.</div>
+  <div><b>„Das Zertifikat verschlüsselt die Daten.“</b> – Das Zertifikat dient nur dem Ausweisen. Verschlüsselt wird mit Sitzungsschlüsseln aus dem Schlüsselaustausch, für jede Verbindung neu.</div>
+  <div><b>„Selbst signiert ist genauso sicher.“</b> – Verschlüsselt ja, aber niemand bürgt dafür, wer am anderen Ende ist. Gegen einen Man-in-the-Middle hilft das nur, wenn man das Zertifikat vorher auf sicherem Weg kennt.</div>
+  <div><b>„HTTPS macht Seiten langsam.“</b> – Mit TLS 1.3 kostet der Aufbau eine Rundreise, und moderne Prozessoren verschlüsseln mit eigenen AES-Befehlen nebenbei. Zudem gibt es HTTP/2 und HTTP/3 in Browsern nur mit Verschlüsselung.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/http/">HTTP</a>
+  <a href="/it-konzepte/tcp-ip/">Schichtenmodell und TCP/IP</a>
+  <a href="/it-konzepte/dns/">DNS</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

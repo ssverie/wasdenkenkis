@@ -1,0 +1,112 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Eine <strong>CPU</strong> besteht aus zwei Teilen. Der <strong>Datenpfad</strong> enthält die Bausteine, die Daten halten und verarbeiten: Programmzähler (PC), Befehlsregister (IR), Registersatz und ALU, verbunden mit dem Speicher durch Busse und Multiplexer. Das <strong>Steuerwerk</strong> ist ein Schaltwerk, das aus dem Opcode des aktuellen Befehls und der aktuellen Phase berechnet, welche Leitungen in diesem Takt aktiv sind: Welches Register wird gelesen, was rechnet die ALU, wohin wird geschrieben.</p>
+<p>So wird jeder Befehl in Phasen ausgeführt: <strong>Holen</strong> (der Befehl an der Adresse im PC kommt ins IR, der PC zählt weiter), <strong>Dekodieren</strong> (das Steuerwerk liest den Opcode), <strong>Ausführen</strong> (die ausgewählten Bausteine arbeiten, das Ergebnis wird geschrieben). Moderne Prozessoren überlappen diese Phasen mehrerer Befehle – das <strong>Pipelining</strong> – und raten bei Sprüngen voraus, wohin es weitergeht.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#datenpfad">Der Datenpfad der Lehrmaschine</a></li>
+  <li><a href="#pipeline">Pipelining: mehrere Befehle gleichzeitig</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="datenpfad">Der Datenpfad der Lehrmaschine</h2>
+<p>Alle Teile kennen wir schon: Der <strong>PC</strong> ist ein 8-Bit-Register mit einem Addierer, der 1 dazuzählt (<a href="/it-konzepte/schaltnetze/">H4</a>, <a href="/it-konzepte/schaltwerke/">H5</a>). Der <strong>Speicher</strong> sind 256 Register mit Decoder (<a href="/it-konzepte/schaltwerke/">H5</a>). Der <strong>Registersatz</strong> sind 16 Register, aus denen zwei Multiplexer gleichzeitig zwei Werte lesen und in das ein Decoder einen Wert schreibt. Die <strong>ALU</strong> rechnet (<a href="/it-konzepte/schaltnetze/">H4</a>). Das <strong>IR</strong> hält den aktuellen Befehl, damit seine Bitfelder – Opcode, d, s, t, Adresse – während der Ausführung anliegen. Klick dich durch ein Programm aus <a href="/it-konzepte/maschinensprache/">H2</a>, Phase für Phase:</p>
+
+<div class="widget">
+  <div class="widget-title">Holen, Dekodieren, Ausführen</div>
+  <div class="seg" id="dpP">
+    <button data-k="sum" aria-pressed="true">Schleife: 1 + … + n</button>
+    <button data-k="call">Methode: Quadrat</button>
+  </div>
+  <div class="ph" id="dpPh"><span>1 · Holen</span><span>2 · Dekodieren</span><span>3 · Ausführen</span></div>
+  <svg id="dpSvg" viewBox="0 0 640 380" role="img" aria-label="Datenpfad der Lehrmaschine mit Steuerwerk"></svg>
+  <div class="lbl">Steuersignale der eben ausgeführten Phase</div>
+  <div class="sig" id="dpSig"></div>
+  <div class="st" id="dpSt"></div>
+  <div class="ctl"><button id="dpStep">Nächste Phase</button><button id="dpInstr">Ganzer Befehl</button><button id="dpRun">Bis zum Ende</button><button id="dpReset">Zurück</button><span id="dpC"></span></div>
+  <div class="note" id="dpN"></div>
+</div>
+
+<p>Das Steuerwerk selbst ist ein Schaltwerk wie in <a href="/it-konzepte/schaltwerke/">H5</a>: Ein kleines Register merkt sich die Phase, ein Schaltnetz berechnet aus Phase und Opcode die Steuersignale. Für 16 Opcodes und drei Phasen ist das eine Wahrheitstabelle mit 48 Zeilen und rund zwanzig Ausgängen – in Hardware wenige hundert Gatter. Bei komplizierten Befehlssätzen wie x86 werden manche Befehle intern zusätzlich in Folgen einfacherer Schritte zerlegt (<strong>Mikrocode</strong>, bei modernen Prozessoren <em>Mikrooperationen</em>).</p>
+<p>Damit ist der Kreis von Block H geschlossen: Aus Bits (<a href="/it-konzepte/zahlendarstellung/">H1</a>) werden Befehle (<a href="/it-konzepte/maschinensprache/">H2</a>), aus Gattern (<a href="/it-konzepte/boolesche-logik/">H3</a>) Schaltnetze (<a href="/it-konzepte/schaltnetze/">H4</a>) und Speicher (<a href="/it-konzepte/schaltwerke/">H5</a>), und zusammen eine Maschine, die Programme ausführt – eine universelle Maschine im Sinne von <a href="/it-konzepte/universalitaet/">G3</a>.</p>
+
+<h2 id="pipeline">Pipelining: mehrere Befehle gleichzeitig</h2>
+<p>Die Lehrmaschine erledigt einen Befehl nach dem anderen, jede Phase in einem eigenen Takt. Dabei steht der größte Teil der Schaltung meistens still: Während die ALU rechnet, hat der Speicher nichts zu tun. Echte Prozessoren teilen die Arbeit deshalb in Stufen ein und schieben die Befehle wie am Fließband durch – wenn Befehl 1 ausgeführt wird, wird Befehl 2 schon dekodiert und Befehl 3 geholt. Die klassische Lehrbuch-Pipeline hat fünf Stufen: Holen (IF), Dekodieren (ID), Ausführen (EX), Speicherzugriff (MEM), Zurückschreiben (WB).</p>
+
+<div class="widget">
+  <div class="widget-title">Fünf Befehle, fünf Stufen</div>
+  <div class="seg" id="plS">
+    <button data-k="seq">Ohne Pipeline</button>
+    <button data-k="pipe" aria-pressed="true">Mit Pipeline</button>
+    <button data-k="dep">Abhängigkeit</button>
+    <button data-k="miss">Sprung falsch geraten</button>
+  </div>
+  <div class="pl" id="plT"></div>
+  <div class="kpi" id="plK"></div>
+  <div class="note" id="plN"></div>
+</div>
+
+<p>Zwei Störungen bremsen das Fließband. Braucht ein Befehl das Ergebnis seines Vorgängers, muss er warten, bis es da ist – oder die Hardware leitet es auf einer Abkürzung direkt weiter (<em>Forwarding</em>). Und bei einem bedingten Sprung weiß der Prozessor erst spät, wo es weitergeht. Statt zu warten, <strong>rät</strong> er: Eine Sprungvorhersage merkt sich, wie sich jeder Sprung bisher verhalten hat, und liegt bei typischem Code weit über 90 % richtig. Lag sie falsch, werden die schon begonnenen Befehle verworfen. Bei modernen Prozessoren mit 15 bis 20 Stufen kostet das jeweils viele Takte.</p>
+
+<h3>Was moderne Prozessoren noch tun</h3>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Technik</th><th>Idee</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Superskalar</strong></td><td>mehrere ALUs: mehrere Befehle pro Takt in jeder Stufe</td></tr>
+    <tr><td><strong>Out-of-Order</strong></td><td>Befehle in anderer Reihenfolge ausführen, wenn ihre Daten schon bereitstehen – das Ergebnis sieht aus, als wäre alles der Reihe nach passiert</td></tr>
+    <tr><td><strong>Spekulation</strong></td><td>hinter einer vorhergesagten Verzweigung weiterrechnen und bei Irrtum verwerfen</td></tr>
+    <tr><td><strong>Caches</strong></td><td>kleine SRAM-Speicher, damit nicht jeder Zugriff hunderte Takte auf den DRAM wartet (<a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>)</td></tr>
+    <tr><td><strong>SIMD</strong></td><td>eine Operation auf 4, 8 oder 16 Werte zugleich – breite ALUs</td></tr>
+    <tr><td><strong>Mehrere Kerne</strong></td><td>mehrere vollständige Datenpfade auf einem Chip – für mehrere Threads</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Dass Spekulation Nebenwirkungen in den Caches hinterlässt, die man messen kann, wurde 2018 als Sicherheitsproblem bekannt (Spectre, Meltdown). Seitdem sind Betriebssysteme, Browser und JVMs mit Gegenmaßnahmen ausgestattet – ein Beispiel dafür, dass Hardwaredetails bis in die Softwareschichten durchschlagen.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Die meisten Details der CPU bleiben unter der JVM verborgen – aber nicht alle. Das berühmteste Beispiel ist die Sprungvorhersage:</p>
+<pre><code><span class="k">int</span>[] daten = zufallszahlen(<span class="n">1_000_000</span>, <span class="n">0</span>, <span class="n">256</span>);
+<span class="c">// Arrays.sort(daten);   // mit dieser Zeile kann die Schleife um ein Vielfaches schneller sein</span>
+
+<span class="k">long</span> summe = <span class="n">0</span>;
+<span class="k">for</span> (<span class="k">int</span> x : daten)
+    <span class="k">if</span> (x &gt;= <span class="n">128</span>)            <span class="c">// zufällige Daten: die Vorhersage liegt oft falsch</span>
+        summe += x;           <span class="c">// sortierte Daten: erst immer nein, dann immer ja – fast perfekt vorhersagbar</span></code></pre>
+<p>Ob der Effekt auftritt, hängt allerdings vom JIT ab: Erkennt er das Muster, ersetzt er den Sprung durch einen bedingten Move oder vektorisiert die Schleife, und der Unterschied verschwindet. Genau deshalb misst man solche Dinge nicht mit <code>System.nanoTime()</code> um eine Schleife, sondern mit <strong>JMH</strong>, das Aufwärmen, JIT-Effekte und Optimierungen berücksichtigt.</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>CPU-Eigenschaft</th><th>Was es in Java bedeutet</th></tr></thead>
+  <tbody>
+    <tr><td>Sprungvorhersage</td><td>vorhersagbare Verzweigungen sind billig, zufällige teuer</td></tr>
+    <tr><td>Caches</td><td>ein <code>int[]</code> durchlaufen ist viel schneller als eine <code>LinkedList</code> – die Daten liegen hintereinander</td></tr>
+    <tr><td>SIMD</td><td>der JIT vektorisiert einfache Schleifen selbst; die Vector API (Inkubator-Modul <code>jdk.incubator.vector</code>) macht es ausdrücklich</td></tr>
+    <tr><td>Out-of-Order und mehrere Kerne</td><td>ohne Synchronisation sieht ein anderer Thread Schreibzugriffe womöglich in anderer Reihenfolge – deshalb gibt es das Java Memory Model, <code>volatile</code> und Locks</td></tr>
+    <tr><td>Befehlssatz</td><td><code>-XX:+PrintAssembly</code> (mit hsdis) zeigt, was der JIT tatsächlich erzeugt</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Die CPU führt Befehle streng nacheinander aus.“</b> – Sie tut nur so. Intern laufen Dutzende Befehle überlappend, außer der Reihe und spekulativ; nach außen sieht es aus, als wäre einer nach dem anderen fertig geworden.</div>
+  <div><b>„Das Steuerwerk ist ein Programm.“</b> – Bei einfachen Prozessoren ist es reine Schaltungslogik. Mikrocode gibt es bei manchen komplexen Befehlen, aber auch er wird von Hardware abgearbeitet.</div>
+  <div><b>„Mehr Kerne machen jedes Programm schneller.“</b> – Nur Programme, die ihre Arbeit auf mehrere Threads verteilen. Ein einzelner Thread läuft immer auf einem Kern.</div>
+  <div><b>„Der Prozessor wartet meist auf das Rechnen.“</b> – Meist wartet er auf Daten aus dem Speicher. Der Engpass zwischen Prozessor und Speicher heißt seit den 1970ern Von-Neumann-Flaschenhals.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/maschinensprache/">Maschinensprache</a>
+  <a href="/it-konzepte/schaltwerke/">Schaltwerke</a>
+  <a href="/it-konzepte/schaltnetze/">Schaltnetze</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/compiler-jit/">Compiler, Interpreter, JIT</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

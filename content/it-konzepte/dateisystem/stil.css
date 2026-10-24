@@ -1,0 +1,47 @@
+/* ---- Seitenspezifisch: Dateisysteme und Persistenz ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+
+/* Mini-Dateisystem */
+.erklaert .fs{display:grid;grid-template-columns:1fr 1.3fr;gap:14px}
+@media (max-width:620px){.erklaert .fs{grid-template-columns:1fr}}
+.erklaert .fs h4{margin:0 0 6px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.erklaert .fs table{font-size:.8rem}
+.erklaert .fs th, .erklaert .fs td{padding:5px 9px}
+.erklaert .fs tr.sel td{background:var(--accent-2-soft)}
+.erklaert .fs tbody tr{cursor:pointer}
+.erklaert .fs td code{font-size:.78rem}
+.erklaert .disk{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:3px;margin-top:6px}
+.erklaert .blk{padding:0;aspect-ratio:1;border-radius:4px;border:1px solid var(--line);background:var(--bg);font:.55rem var(--mono);color:#fff;display:flex;align-items:center;justify-content:center;transition:background .25s,outline-color .25s}
+.erklaert .blk.mt{background:var(--code-bg);color:var(--muted)}
+.erklaert .blk.ghost{background:repeating-linear-gradient(45deg,var(--bg) 0 3px,var(--line) 3px 6px);color:var(--muted)}
+.erklaert .blk.hl{outline:2px solid var(--accent-2);outline-offset:1px}
+.erklaert .f0{background:#2f5bd3}.erklaert .f1{background:#15803d}.erklaert .f2{background:#8b3fb8}.erklaert .f3{background:#b4540a}.erklaert .f4{background:#0e7490}.erklaert .f5{background:#a21caf}.erklaert .f6{background:#4d7c0f}.erklaert .f7{background:#be123c}
+.erklaert .fs-msg{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.9rem;min-height:3.2em}
+.erklaert .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.74rem;color:var(--muted);margin-top:8px}
+.erklaert .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:4px;border:1px solid var(--line)}
+
+/* Absturz */
+.erklaert .sl{display:grid;grid-template-columns:11em 1fr 7em;align-items:center;gap:10px;font-size:.88rem;margin:6px 0 12px}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent-2)}
+.erklaert .sl output{text-align:right;font:600 .82rem var(--sans)}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:1fr 6em}.erklaert .sl > span{grid-column:1/-1}}
+.erklaert .steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px;counter-reset:s}
+.erklaert .steps li{display:grid;grid-template-columns:1.8em 1fr auto;gap:8px;align-items:center;padding:8px 12px;border-radius:9px;border:1px solid var(--line);background:var(--card);font-size:.86rem;counter-increment:s}
+.erklaert .steps li::before{content:counter(s);font:700 .8rem var(--mono);color:var(--muted)}
+.erklaert .steps li .tag{font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.erklaert .steps li.done{background:var(--ok-soft);border-color:var(--ok)}
+.erklaert .steps li.done .tag{background:var(--ok);color:#fff}
+.erklaert .steps li.lost{opacity:.5}
+.erklaert .steps li.lost .tag{background:var(--bg);color:var(--muted)}
+.erklaert .steps li.crash{display:flex;align-items:center;gap:8px;color:var(--bad);font-weight:700;font-size:.8rem;margin:2px 0;counter-increment:none;border:0;background:none;padding:0}
+.erklaert .steps li.crash::before, .erklaert .steps li.crash::after{content:"";flex:1;border-top:2px dashed var(--bad)}
+.erklaert .outcome{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:.9rem}
+.erklaert .outcome.good{background:var(--ok-soft)}.erklaert .outcome.warn{background:var(--accent-2-soft)}.erklaert .outcome.bad{background:var(--bad-soft)}
+.erklaert .outcome b{display:block;margin-bottom:2px}
+

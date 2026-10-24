@@ -1,0 +1,143 @@
+<div class="erklaert">
+<div class="tldr">
+<p>In Java legt man Objekte mit <code>new</code> an, aber gibt sie nie selbst frei. Das übernimmt der <strong>Garbage Collector</strong> (GC): Er findet Objekte, die vom Programm aus nicht mehr <strong>erreichbar</strong> sind, und gibt ihren Speicher frei. Erreichbar heißt: Es gibt einen Weg von Verweisen, der bei einer lokalen Variable, einem statischen Feld oder einem laufenden Thread beginnt.</p>
+<p>Die wichtigste Beobachtung dahinter: <strong>Die meisten Objekte sterben jung.</strong> Deshalb teilt die JVM den Speicher in Generationen und räumt den jungen Bereich oft und billig auf. Moderne Collectors wie <strong>G1</strong> (Standard) und <strong>ZGC</strong> erledigen den Großteil der Arbeit parallel zum Programm und halten Pausen kurz – bei ZGC unter einer Millisekunde, egal wie groß der Speicher ist.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#erreichbar">Was ist Müll?</a></li>
+  <li><a href="#generationen">Die meisten Objekte sterben jung</a></li>
+  <li><a href="#collectors">Die Collectors und ihre Pausen</a></li>
+  <li><a href="#lecks">Speicherlecks in Java</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="erreichbar">Was ist Müll?</h2>
+<p>Müll ist nicht „was nicht mehr gebraucht wird“ – das kann keine Maschine wissen. Müll ist, <strong>was nicht mehr erreichbar ist</strong>. Der GC beginnt bei den <strong>Wurzeln</strong> – lokale Variablen auf den Stacks aller Threads, statische Felder, ein paar JVM-interne Verweise – und folgt allen Verweisen. Was er dabei erreicht, lebt. Der Rest wird freigegeben. Probier es:</p>
+
+<div class="widget">
+  <div class="widget-title">Markieren und aufräumen</div>
+  <div class="seg" id="ogMode">
+    <button data-m="trace" aria-pressed="true">Tracing (wie die JVM)</button>
+    <button data-m="rc">Referenzzählung (wie Python, Swift)</button>
+  </div>
+  <svg id="og" viewBox="0 0 600 260" role="img" aria-label="Objektgraph mit Wurzeln und Verweisen"></svg>
+  <div class="controls">
+    <button id="ogCut">kunde = null;</button>
+    <button class="primary" id="ogMark">1 · Markieren</button>
+    <button id="ogSweep">2 · Aufräumen</button>
+    <button id="ogReset">Zurücksetzen</button>
+  </div>
+  <div class="note" id="ogN"></div>
+</div>
+
+<p>Der Vergleich zeigt den Unterschied der beiden großen Verfahren. <strong>Referenzzählung</strong> zählt für jedes Objekt, wie viele Verweise auf es zeigen, und gibt es bei null sofort frei. Das ist einfach und vorhersehbar – aber zwei Objekte, die aufeinander zeigen, halten sich gegenseitig ewig am Leben. <strong>Tracing</strong> fragt nur: Komme ich von den Wurzeln aus hin? Zyklen sind dann kein Problem. Die JVM benutzt ausschließlich Tracing.</p>
+
+<h2 id="generationen">Die meisten Objekte sterben jung</h2>
+<p>Ein Iterator in einer Schleife, ein String beim Zusammenbauen einer Log-Zeile, ein DTO für eine einzige HTTP-Antwort – die überwiegende Mehrheit aller Objekte lebt nur Millisekunden. Das ist die <strong>Generationenhypothese</strong>, und sie stimmt bei fast allen Programmen. Die JVM nutzt das aus:</p>
+<ul>
+  <li>Neue Objekte entstehen im <strong>Eden</strong>. Das ist extrem billig: Jeder Thread hat seinen eigenen Abschnitt und schiebt nur einen Zeiger weiter – ein paar Maschinenbefehle.</li>
+  <li>Ist Eden voll, gibt es eine <strong>kleine Sammlung</strong> (Minor GC): Die wenigen Überlebenden werden in einen <strong>Survivor</strong>-Bereich kopiert, der Rest von Eden ist mit einem Schlag frei. Der Aufwand hängt nur von den Überlebenden ab – nicht vom Müll.</li>
+  <li>Wer mehrere kleine Sammlungen überlebt, wird in die <strong>alte Generation</strong> befördert. Die wird selten und gründlicher aufgeräumt.</li>
+</ul>
+
+<div class="widget">
+  <div class="widget-title">Ein Programm erzeugt Objekte</div>
+  <div class="controls" style="margin-top:0">
+    <button class="primary" id="gRun">Programm laufen lassen</button>
+    <button id="gLeak">Speicherleck einschalten</button>
+    <button id="gReset">Neu</button>
+  </div>
+  <div class="gens" id="gens"></div>
+  <div class="gstats" id="gS"></div>
+  <div class="gclog" id="gLog"></div>
+  <p class="fine">Modellhaft: Jedes Objekt bekommt eine zufällige Lebensdauer – 80 % sterben sofort, 15 % leben eine Weile, 5 % bleiben dauerhaft. Pausenzeit proportional zu den kopierten bzw. geprüften Objekten.</p>
+</div>
+
+<h2 id="collectors">Die Collectors und ihre Pausen</h2>
+<p>Während der GC Objekte verschiebt, darf das Programm sie nicht gleichzeitig benutzen. Ältere Collectors halten deshalb alle Threads an – eine <strong>Stop-the-World-Pause</strong>. Moderne Collectors erledigen fast alles nebenläufig, während das Programm weiterläuft, und brauchen nur noch winzige Pausen zum Abstimmen. Der Preis dafür ist etwas mehr Rechenzeit und Speicher.</p>
+
+<div class="widget">
+  <div class="widget-title">Zehn Sekunden im Leben eines Servers</div>
+  <div class="sl"><span>Heap-Größe</span><input type="range" id="pzH" min="0" max="5" step="1" value="2"><output id="pzHo"></output></div>
+  <div class="pz" id="pz"></div>
+  <div class="note" id="pzN"></div>
+  <p class="fine">Grob modelliert, je nach Anwendung sehr verschieden. Rot: Programm steht. G1 zielt standardmäßig auf Pausen unter 200 ms.</p>
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Collector</th><th>Stärke</th><th>Typisch für</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Serial</strong></td><td>ein Thread, minimaler Aufwand</td><td>kleine Programme, Container mit einem Kern</td></tr>
+    <tr><td><strong>Parallel</strong></td><td>höchster Durchsatz, längere Pausen</td><td>Batch-Verarbeitung, wo nur die Gesamtzeit zählt</td></tr>
+    <tr><td><strong>G1</strong></td><td>ausgewogen: guter Durchsatz, planbare Pausen. Teilt den Heap in viele Regionen und räumt zuerst die mit dem meisten Müll</td><td>Standard seit Java 9 – für die meisten Anwendungen richtig</td></tr>
+    <tr><td><strong>ZGC</strong></td><td>Pausen unter einer Millisekunde, auch bei Terabyte-Heaps; seit Java 21 mit Generationen</td><td>Dienste mit strengen Antwortzeiten, große Heaps</td></tr>
+    <tr><td><strong>Shenandoah</strong></td><td>ebenfalls fast pausenlos, aus dem OpenJDK-Umfeld von Red Hat</td><td>wie ZGC</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="lecks">Speicherlecks in Java</h2>
+<p>Ein Garbage Collector verhindert, dass vergessene Objekte Speicher belegen. Er kann aber nicht verhindern, dass Objekte <em>erreichbar</em> bleiben, die niemand mehr braucht. Genau das ist ein Speicherleck in Java – und im Widget oben mit „Speicherleck einschalten“ zu sehen: Die alte Generation läuft voll, große Sammlungen werden immer häufiger und bringen immer weniger, bis ein <code>OutOfMemoryError</code> kommt.</p>
+<div class="cards">
+  <div class="card"><div class="num">∞</div><h4>Wachsende Sammlungen</h4><p>Eine statische <code>Map</code> als Cache, in die nur hineingelegt, aber nie etwas entfernt wird. Der Klassiker schlechthin.</p></div>
+  <div class="card"><div class="num">👂</div><h4>Vergessene Listener</h4><p>Ein Objekt meldet sich als Beobachter an, aber nie ab. Der Beobachtete hält es für immer fest.</p></div>
+  <div class="card"><div class="num">🧵</div><h4>ThreadLocal im Pool</h4><p>Threads in einem Pool leben ewig – und mit ihnen alles, was in ihren <code>ThreadLocal</code>s liegt, wenn man es nicht mit <code>remove()</code> entfernt.</p></div>
+</div>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c"># Collector wählen und Heap festlegen</span>
+java -XX:+UseZGC -Xms4g -Xmx4g -jar app.jar
+
+<span class="c"># GC-Protokoll mitschreiben</span>
+java -Xlog:gc*:file=gc.log -jar app.jar
+
+<span class="c"># Bei OutOfMemoryError automatisch ein Speicherabbild schreiben</span>
+java -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp -jar app.jar
+
+<span class="c"># Laufende JVM untersuchen</span>
+jcmd &lt;pid&gt; GC.heap_info
+jcmd &lt;pid&gt; GC.class_histogram | head -20</code></pre>
+<pre><code><span class="c">// Leck: wächst bei jeder Anfrage, wird nie kleiner</span>
+<span class="k">private static final</span> Map&lt;String, Bericht&gt; CACHE = <span class="k">new</span> HashMap&lt;&gt;();
+
+<span class="c">// Besser: begrenzter Cache mit Ablaufzeit, z. B. mit der Bibliothek Caffeine</span>
+<span class="k">private final</span> Cache&lt;String, Bericht&gt; cache = Caffeine.newBuilder()
+        .maximumSize(<span class="s">10_000</span>)
+        .expireAfterWrite(Duration.ofMinutes(<span class="s">10</span>))
+        .build();</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Werkzeug</th><th>Wofür</th></tr></thead>
+  <tbody>
+    <tr><td><strong>GC-Log</strong></td><td>Wie oft, wie lange, wie viel freigegeben? Der erste Blick bei Performance-Problemen.</td></tr>
+    <tr><td><strong>Heap-Dump + Eclipse MAT</strong></td><td>Wer hält die vielen Objekte fest? Der „Dominator Tree“ zeigt den Verursacher eines Lecks meist sofort.</td></tr>
+    <tr><td><strong>Java Flight Recorder</strong></td><td>Laufende Aufzeichnung mit wenig Overhead: Allokationen, GC, Sperren, heiße Methoden. Auswertung in JDK Mission Control.</td></tr>
+    <tr><td><strong>try-with-resources</strong></td><td>Der GC räumt Speicher, nicht Dateien, Sockets oder Datenbankverbindungen. <code>finalize()</code> ist seit Java 18 zum Entfernen vorgesehen und war nie verlässlich.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Java hat keine Speicherlecks.“</b> – Es hat keine vergessenen Freigaben. Aber alles, was erreichbar bleibt, bleibt – auch wenn es niemand mehr braucht.</div>
+  <div><b>„<code>System.gc()</code> hilft.“</b> – Es ist nur ein Hinweis, löst oft eine teure volle Sammlung aus und stört die Heuristiken des Collectors. In normalem Code hat es nichts zu suchen.</div>
+  <div><b>„Objekte zu erzeugen ist teuer.“</b> – Das Anlegen kostet ein paar Maschinenbefehle, und kurzlebige Objekte sterben in Eden praktisch gratis. Teuer sind Objekte, die lange leben und viel Speicher belegen.</div>
+  <div><b>„Mehr Heap ist immer besser.“</b> – Mehr Heap heißt seltener sammeln, aber bei älteren Collectors längere Pausen. Und im Container muss neben dem Heap noch Platz für Metaspace, Thread-Stacks und nativen Speicher bleiben.</div>
+  <div><b>„Auf <code>null</code> setzen hilft dem GC.“</b> – Bei lokalen Variablen fast nie – der JIT weiß ohnehin, ab wann eine Variable nicht mehr benutzt wird. Sinnvoll ist es nur bei Feldern langlebiger Objekte, etwa in selbst gebauten Sammlungen.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/compiler-jit/">Compiler, Interpreter, JIT</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/datenstrukturen/">Datenstrukturen</a>
+  <a href="/it-konzepte/virtualisierung-container/">Virtualisierung und Container</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

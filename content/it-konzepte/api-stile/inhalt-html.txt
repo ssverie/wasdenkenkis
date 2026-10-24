@@ -1,0 +1,155 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Eine <strong>API</strong> ist ein Vertrag zwischen Programmen: Welche Anfragen gibt es, was muss man mitschicken, was kommt zurück. Vier Stile prägen die Praxis. <strong>REST</strong> denkt in Ressourcen mit Adressen und benutzt HTTP so, wie es gemeint ist. <strong>gRPC</strong> denkt in Funktionsaufrufen, binär und schnell. <strong>GraphQL</strong> lässt den Client genau die Felder anfordern, die er braucht. <strong>Ereignisse</strong> drehen das Verhältnis um: Ein Dienst verkündet, was passiert ist, und andere reagieren – ohne dass der Absender auf sie wartet.</p>
+<p>Keiner ist allgemein besser. Entscheidend sind die Fragen: Wer ruft auf – ein Browser, eine App, ein anderer Dienst? Wie eng dürfen die Beteiligten aneinander gekoppelt sein? Und was passiert, wenn einer ausfällt?</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#vergleich">Dieselbe Aufgabe, drei Stile</a></li>
+  <li><a href="#async">Synchron oder asynchron?</a></li>
+  <li><a href="#vertraege">Verträge und Versionen</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="vergleich">Dieselbe Aufgabe, drei Stile</h2>
+<p>Eine App will Bestellung 42 anzeigen: mit Datum, dem Namen des Kunden und den Artikelnamen der Positionen. Wie viele Anfragen braucht das?</p>
+
+<div class="widget">
+  <div class="widget-title">Bestellung 42 anzeigen</div>
+  <div class="seg" id="vS">
+    <button data-s="rest" aria-pressed="true">REST</button>
+    <button data-s="grpc">gRPC</button>
+    <button data-s="gql">GraphQL</button>
+  </div>
+  <label class="toggle"><input type="checkbox" id="vMob"> <span>Mobilfunk mit 150 ms Rundreise statt Rechenzentrum mit 1 ms</span></label>
+  <div class="calls" id="vC"></div>
+  <div class="stats" id="vSt"></div>
+  <div class="note" id="vN"></div>
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th></th><th>REST</th><th>gRPC</th><th>GraphQL</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Denkweise</strong></td><td>Ressourcen mit Adressen</td><td>Funktionen aufrufen</td><td>einen Datengraphen abfragen</td></tr>
+    <tr><td><strong>Transport</strong></td><td>HTTP, meist JSON</td><td>HTTP/2, Protobuf</td><td>HTTP, ein Endpunkt, JSON</td></tr>
+    <tr><td><strong>Vertrag</strong></td><td>OpenAPI (optional)</td><td><code>.proto</code>-Datei (Pflicht)</td><td>GraphQL-Schema (Pflicht)</td></tr>
+    <tr><td><strong>Caching</strong></td><td>eingebaut über HTTP</td><td>selbst lösen</td><td>schwierig: alles ist ein POST</td></tr>
+    <tr><td><strong>Streaming</strong></td><td>umständlich</td><td>eingebaut, in beide Richtungen</td><td>über Subscriptions</td></tr>
+    <tr><td><strong>Im Browser</strong></td><td>überall</td><td>nur über eine Brücke (gRPC-Web)</td><td>überall</td></tr>
+    <tr><td><strong>Typisch für</strong></td><td>öffentliche APIs, CRUD</td><td>interne Dienste untereinander</td><td>Frontends mit vielfältigem Datenbedarf</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>REST richtig verstanden</h3>
+<p>REST ist mehr als „JSON über HTTP“. Der Kern: Alles ist eine <strong>Ressource</strong> mit eigener Adresse (<code>/bestellungen/42</code>), und man arbeitet mit den einheitlichen <a href="/it-konzepte/http/">HTTP-Methoden</a> darauf – <code>GET</code> liest, <code>PUT</code> ersetzt, <code>DELETE</code> löscht. Substantive in der URL, Verben in der Methode: <code>POST /bestellungen</code>, nicht <code>POST /legeBestellungAn</code>. Weil REST HTTP so benutzt, wie es gedacht ist, funktionieren Caches, Proxys, Statuscodes und Werkzeuge einfach mit.</p>
+
+<h3>GraphQL: Der Client bestimmt</h3>
+<p>Bei REST legt der Server fest, was eine Antwort enthält. Bei GraphQL schreibt der Client eine Abfrage mit genau den Feldern, die er braucht – und bekommt genau die zurück:</p>
+
+<div class="widget">
+  <div class="widget-title">Felder wählen</div>
+  <div class="gq">
+    <div class="fields" id="gF"></div>
+    <div><div class="code" id="gQ"></div></div>
+    <div><div class="code" id="gR"></div></div>
+  </div>
+  <div class="note" id="gN"></div>
+</div>
+
+<p>Der Preis liegt beim Server: Jede denkbare Kombination von Feldern muss effizient beantwortbar sein. Eine naive Umsetzung fragt für jede Position einzeln den Artikel ab – das <a href="/it-konzepte/relationale-datenbanken/">N+1-Problem</a> in neuem Gewand. Dagegen helfen „DataLoader“, die Einzelanfragen bündeln. Und weil Clients beliebig tiefe Abfragen bauen können, braucht ein öffentlicher GraphQL-Server Grenzen für Tiefe und Aufwand.</p>
+
+<h2 id="async">Synchron oder asynchron?</h2>
+<p>Bei REST, gRPC und GraphQL wartet der Aufrufer auf die Antwort – das ist <strong>synchron</strong>. Bei <strong>Ereignissen</strong> verkündet ein Dienst nur, was passiert ist („Bestellung 42 wurde aufgegeben“), über einen Nachrichtenvermittler. Wer sich dafür interessiert, reagiert, wann er kann. Der Unterschied zeigt sich, wenn etwas schiefgeht:</p>
+
+<div class="widget">
+  <div class="widget-title">Eine Bestellung aufgeben</div>
+  <div class="seg" id="fS">
+    <button data-s="sync" aria-pressed="true">Synchron: Aufruf für Aufruf</button>
+    <button data-s="async">Asynchron: Ereignis</button>
+  </div>
+  <label class="toggle"><input type="checkbox" id="fSlow"> <span>Der Lager-Dienst ist überlastet und braucht 2 Sekunden</span></label>
+  <label class="toggle"><input type="checkbox" id="fDown"> <span>Der Mail-Dienst ist ausgefallen</span></label>
+  <svg id="flow" viewBox="0 0 620 240" role="img" aria-label="Bestelldienst und abhängige Dienste"></svg>
+  <div class="res" id="fR"></div>
+</div>
+
+<p>Synchrone Ketten sind leicht zu verstehen und zu debuggen, aber zerbrechlich: Ihre Verfügbarkeit ist das Produkt der Verfügbarkeiten aller Glieder, ihre Antwortzeit die Summe. Fünf Dienste mit je 99,9 % Verfügbarkeit ergeben zusammen nur noch 99,5 % – rund 44 Stunden Ausfall im Jahr statt knapp neun. Ereignisse entkoppeln: Der Absender muss die Empfänger nicht einmal kennen, und neue Empfänger kommen dazu, ohne dass er sich ändert. Der Preis ist <a href="/it-konzepte/nosql-cap/">Eventual Consistency</a> – die Mail kommt vielleicht erst in einer Minute – und Abläufe, die schwerer nachzuvollziehen sind. Mehr dazu im Eintrag zu Messaging.</p>
+<p>Eine leichte Form des Ereignisses über Systemgrenzen hinweg sind <strong>Webhooks</strong>: Ein externer Dienst ruft eine URL der eigenen Anwendung auf, wenn etwas passiert – etwa wenn eine Zahlung eingegangen ist. Weil jeder diese URL aufrufen könnte, prüft man eine Signatur, typischerweise einen HMAC aus der <a href="/it-konzepte/kryptografie/">Kryptografie</a>.</p>
+
+<h2 id="vertraege">Verträge und Versionen</h2>
+<p>Eine API ist ein Versprechen an Programme, die man oft nicht kennt und nicht ändern kann. Deshalb gilt: Hinzufügen ist erlaubt, Wegnehmen und Umdeuten nicht.</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Änderung</th><th>Kompatibel?</th></tr></thead>
+  <tbody>
+    <tr><td>neues optionales Feld in der Antwort</td><td>✓ – sofern Clients unbekannte Felder ignorieren</td></tr>
+    <tr><td>neuer Endpunkt, neue Methode</td><td>✓</td></tr>
+    <tr><td>neues <em>Pflicht</em>feld in der Anfrage</td><td>✗ – alte Clients schicken es nicht</td></tr>
+    <tr><td>Feld umbenennen oder entfernen</td><td>✗ – bei Protobuf ist Umbenennen harmlos, Entfernen nicht</td></tr>
+    <tr><td>Bedeutung oder Einheit ändern</td><td>✗ – das schlimmste, weil es nicht sofort auffällt</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Die Gegenseite heißt <strong>tolerant reader</strong>: Clients sollen nur lesen, was sie brauchen, und den Rest ignorieren. Für echte Brüche gibt es Versionen – <code>/v2/bestellungen</code> oder ein Header –, und die alte Version läuft eine Weile parallel weiter. Bewährt hat sich, den Vertrag zuerst zu schreiben (<strong>contract first</strong>) und Code daraus zu erzeugen: aus OpenAPI, der <code>.proto</code>-Datei oder dem GraphQL-Schema.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">// REST mit Spring</span>
+@RestController @RequestMapping(<span class="s">"/bestellungen"</span>)
+<span class="k">class</span> BestellungController {
+    @GetMapping(<span class="s">"/{id}"</span>)  BestellungDto lade(@PathVariable <span class="k">long</span> id) { … }
+    @PostMapping        ResponseEntity&lt;Void&gt; lege(@RequestBody @Valid NeueBestellung b) { … }
+}
+
+<span class="c">// Deklarativer HTTP-Client (seit Spring 6): ein Interface, Spring baut die Implementierung</span>
+@HttpExchange(<span class="s">"/kunden"</span>)
+<span class="k">interface</span> KundenClient {
+    @GetExchange(<span class="s">"/{id}"</span>) Kunde lade(@PathVariable <span class="k">long</span> id);
+}
+
+<span class="c">// GraphQL mit Spring for GraphQL</span>
+@Controller
+<span class="k">class</span> BestellungGraph {
+    @QueryMapping  Bestellung bestellung(@Argument <span class="k">long</span> id) { … }
+    @BatchMapping  Map&lt;Bestellung, Kunde&gt; kunde(List&lt;Bestellung&gt; bs) { … }  <span class="c">// gegen N+1</span>
+}
+
+<span class="c">// Ereignis veröffentlichen, z. B. mit Spring for Apache Kafka</span>
+kafka.send(<span class="s">"bestellungen"</span>, <span class="k">new</span> BestellungAufgegeben(<span class="s">42</span>, kundeId, summeCent));</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Werkzeug</th><th>Wofür</th></tr></thead>
+  <tbody>
+    <tr><td><strong>springdoc-openapi</strong></td><td>erzeugt aus Spring-Controllern eine OpenAPI-Beschreibung und eine Testoberfläche</td></tr>
+    <tr><td><strong>OpenAPI Generator</strong></td><td>erzeugt umgekehrt aus einer OpenAPI-Datei Client- und Server-Code</td></tr>
+    <tr><td><strong>grpc-java</strong></td><td>erzeugt aus <code>.proto</code>-Dateien Stubs für Client und Server</td></tr>
+    <tr><td><strong>Spring for GraphQL</strong></td><td>Schema-first-GraphQL mit Annotationen, inklusive Batch-Laden</td></tr>
+    <tr><td><strong>Problem Details</strong></td><td>einheitliche Fehlerantworten nach RFC 9457 – in Spring über <code>ProblemDetail</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„REST heißt JSON über HTTP.“</b> – REST heißt Ressourcen, einheitliche Methoden und zustandslose Anfragen. Eine API mit <code>POST /getKunde</code> benutzt HTTP, ist aber kein REST.</div>
+  <div><b>„GraphQL macht REST überflüssig.“</b> – Es löst das Problem vielfältiger Clients elegant, erkauft das aber mit schwierigerem Caching, aufwendigerem Server und neuen Lastrisiken. Für einfache, stabile APIs ist REST oft die bessere Wahl.</div>
+  <div><b>„gRPC ist immer schneller.“</b> – Binär und mit dauerhafter Verbindung meist ja. Aber wenn die Datenbank 50 ms braucht, sind die eingesparten Mikrosekunden beim Parsen bedeutungslos.</div>
+  <div><b>„Asynchron ist moderner, also besser.“</b> – Es ist entkoppelter. Dafür muss man mit verzögerter Konsistenz, doppelten Nachrichten und schwer verfolgbaren Abläufen leben. Für eine Anfrage, auf deren Antwort der Nutzer wartet, ist synchron meist richtig.</div>
+  <div><b>„Mit /v1 in der URL ist Kompatibilität gelöst.“</b> – Die Version hilft nur bei bewussten Brüchen. Die meisten Probleme entstehen durch unbewusste – ein umbenanntes Feld, eine geänderte Einheit.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/http/">HTTP</a>
+  <a href="/it-konzepte/datenformate/">Datenformate und Serialisierung</a>
+  <a href="/it-konzepte/tcp-ip/">Schichtenmodell und TCP/IP</a>
+  <a href="/it-konzepte/authentifizierung/">Authentifizierung</a>
+  <a href="/it-konzepte/microservices/">Microservices und Monolith</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

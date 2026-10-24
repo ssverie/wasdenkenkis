@@ -1,0 +1,140 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Beim <strong>Messaging</strong> schicken Dienste einander keine Aufrufe, sondern <strong>Nachrichten</strong> über einen <strong>Vermittler</strong> (Broker). Der Absender legt eine Nachricht ab und arbeitet weiter; der Empfänger holt sie, wann er kann. Fällt der Empfänger aus oder ist überlastet, warten die Nachrichten – nichts geht verloren, und der Absender merkt nichts davon.</p>
+<p>Es gibt zwei grundverschiedene Modelle. In einer <strong>Warteschlange</strong> (RabbitMQ, JMS, Amazon SQS) bekommt jede Nachricht genau ein Empfänger, danach ist sie weg – ideal, um Arbeit zu verteilen. In einem <strong>Log</strong> (Apache Kafka) bleiben Nachrichten gespeichert, jeder Leser merkt sich nur seine Position und kann jederzeit zurückspulen – ideal, wenn viele unabhängige Systeme denselben Strom von Ereignissen brauchen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#modelle">Warteschlange oder Log?</a></li>
+  <li><a href="#kafka">Kafka: Topics, Partitionen, Gruppen</a></li>
+  <li><a href="#absturz">Wenn ein Leser abstürzt</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="modelle">Warteschlange oder Log?</h2>
+<p>Ein Bestelldienst veröffentlicht Ereignisse. Zwei Leser interessieren sich dafür. Schau, was in beiden Modellen passiert – und was, wenn später ein dritter dazukommt:</p>
+
+<div class="widget">
+  <div class="widget-title">Zwei Modelle, dieselben Nachrichten</div>
+  <div class="seg" id="qlM">
+    <button data-m="queue" aria-pressed="true">Warteschlange</button>
+    <button data-m="log">Log (Kafka)</button>
+  </div>
+  <div class="controls" style="margin-top:0;margin-bottom:10px">
+    <button class="primary" id="qlP">Nachricht senden</button>
+    <button id="qlC">Leser holen ab</button>
+    <button id="qlN">Neuer Leser kommt dazu</button>
+    <button id="qlR">Neu</button>
+  </div>
+  <div class="strip" id="qlS"></div>
+  <div class="ptrs" id="qlPt"></div>
+  <div class="cons" id="qlCs"></div>
+  <div class="note" id="qlNote"></div>
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th></th><th>Warteschlange</th><th>Log</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Nach dem Lesen</strong></td><td>Nachricht wird gelöscht</td><td>Nachricht bleibt, bis ihre Aufbewahrungszeit abläuft</td></tr>
+    <tr><td><strong>Mehrere Leser</strong></td><td>teilen sich die Nachrichten – Lastverteilung</td><td>jede Gruppe liest alles – unabhängig voneinander</td></tr>
+    <tr><td><strong>Zurückspulen</strong></td><td>nicht möglich</td><td>jederzeit: Position zurücksetzen und neu verarbeiten</td></tr>
+    <tr><td><strong>Wer merkt sich den Fortschritt?</strong></td><td>der Vermittler pro Nachricht</td><td>der Leser – eine einzige Zahl, der Offset</td></tr>
+    <tr><td><strong>Stärken</strong></td><td>Aufgaben verteilen, flexible Weiterleitung, Prioritäten</td><td>riesiger Durchsatz, Ereignisströme, Wiederholbarkeit</td></tr>
+    <tr><td><strong>Beispiele</strong></td><td>RabbitMQ, ActiveMQ, Amazon SQS</td><td>Apache Kafka, Redpanda, Amazon Kinesis</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Ein Log ist im Grunde die einfachste denkbare Datenstruktur: eine Datei, an die nur hinten angehängt wird. Genau deshalb ist es so schnell – Schreiben und Lesen sind fast immer sequenziell, und das Betriebssystem bedient die meisten Leser aus seinem <a href="/it-konzepte/dateisystem/">Seitencache</a>. Kafka schafft so auf gewöhnlicher Hardware Hunderttausende Nachrichten pro Sekunde und Rechner.</p>
+
+<h2 id="kafka">Kafka: Topics, Partitionen, Gruppen</h2>
+<p>Ein einzelnes Log hätte eine Grenze: Es liegt auf einem Rechner und wird von einem Leser pro Gruppe gelesen. Kafka teilt deshalb jedes <strong>Topic</strong> in <strong>Partitionen</strong> – mehrere unabhängige Logs. Jede Nachricht hat einen <strong>Schlüssel</strong>, etwa die Kunden-ID, und der Schlüssel bestimmt per Hash die Partition. In einer <strong>Consumer Group</strong> bekommt jeder Leser eigene Partitionen zugeteilt:</p>
+
+<div class="widget">
+  <div class="widget-title">Partitionen und Leser</div>
+  <div class="sl"><span>Partitionen</span><input type="range" id="kP" min="1" max="6" value="4"><output id="kPo"></output></div>
+  <div class="sl"><span>Leser in der Gruppe</span><input type="range" id="kC" min="1" max="8" value="2"><output id="kCo"></output></div>
+  <div class="parts" id="kParts"></div>
+  <div class="idle" id="kIdle"></div>
+  <div class="note" id="kN"></div>
+  <p class="fine">24 Bestellereignisse von 6 Kunden; Farbe = Kunde. Die Nummer ist die Reihenfolge, in der die Ereignisse gesendet wurden.</p>
+</div>
+
+<p>Daraus folgen die zwei Regeln, die man über Kafka wissen muss:</p>
+<ul>
+  <li><strong>Reihenfolge gibt es nur innerhalb einer Partition.</strong> Alle Ereignisse eines Kunden landen über den Schlüssel in derselben Partition und werden in Reihenfolge gelesen. Über Partitionen hinweg gibt es keine Reihenfolge. Wer „Bestellung angelegt“ und „Bestellung storniert“ mit verschiedenen Schlüsseln schickt, kann sie in falscher Reihenfolge bekommen.</li>
+  <li><strong>Die Zahl der Partitionen begrenzt die Parallelität.</strong> Mehr Leser als Partitionen bringt nichts – die überzähligen sitzen untätig herum. Partitionen später zu erhöhen, ändert die Zuordnung der Schlüssel; deshalb plant man sie großzügig.</li>
+</ul>
+<p>Jede Partition wird außerdem auf mehrere Rechner kopiert. Ein Rechner ist Anführer der Partition, die anderen folgen – das Muster aus dem Eintrag zu <a href="/it-konzepte/verteilte-systeme/">verteilten Systemen</a>. Seit Version 4.0 verwaltet Kafka das mit einem eigenen Raft-basierten Verfahren (KRaft) statt mit dem früher nötigen ZooKeeper.</p>
+
+<h2 id="absturz">Wenn ein Leser abstürzt</h2>
+<p>Ein Leser holt eine Nachricht, verarbeitet sie und meldet dann dem Vermittler „erledigt“ – bei Kafka, indem er seinen Offset weiterschreibt (<em>commit</em>). Was passiert, wenn er zwischen diesen Schritten abstürzt? Die Antwort hängt an der Reihenfolge:</p>
+
+<div class="widget">
+  <div class="widget-title">Absturz mitten in der Arbeit</div>
+  <div class="seg" id="crO">
+    <button data-o="after" aria-pressed="true">Erst verarbeiten, dann bestätigen</button>
+    <button data-o="before">Erst bestätigen, dann verarbeiten</button>
+  </div>
+  <label class="toggle"><input type="checkbox" id="crIdem"> <span>Empfänger ist idempotent: merkt sich verarbeitete Nachrichten-IDs</span></label>
+  <ol class="steps" id="crS"></ol>
+  <div class="cr-res" id="crR" hidden></div>
+  <div class="controls"><button id="crPrev">← Zurück</button><button class="primary" id="crNext">Weiter →</button></div>
+</div>
+
+<p>„Erst verarbeiten, dann bestätigen“ ist der übliche Weg: Nichts geht verloren, dafür kann eine Nachricht doppelt kommen – <strong>at least once</strong>. Also müssen Empfänger mit Doppelten umgehen können, genau wie im Eintrag zu <a href="/it-konzepte/verteilte-systeme/">verteilten Systemen</a> beschrieben: idempotente Operationen oder eine Tabelle bereits verarbeiteter Nachrichten-IDs.</p>
+<h3>Giftnachrichten</h3>
+<p>Eine Nachricht, die der Empfänger nie verarbeiten kann – kaputtes JSON, ein Wert, den der Code nicht erwartet –, ist eine <strong>Giftnachricht</strong>. Weil der Empfänger sie nie bestätigt, bekommt er sie wieder und wieder, und in Kafka blockiert sie dabei die ganze Partition: Alles dahinter wartet. Die Lösung ist eine <strong>Dead Letter Queue</strong>: Nach einigen gescheiterten Versuchen wird die Nachricht in ein eigenes Topic verschoben, der Strom läuft weiter, und ein Mensch schaut sich den Fall später an.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">// Senden mit Spring Kafka – der Schlüssel bestimmt die Partition</span>
+kafka.send(<span class="s">"bestellungen"</span>, kundeId, <span class="k">new</span> BestellungAufgegeben(bestellId, kundeId, summeCent));
+
+<span class="c">// Empfangen: eine Methode, Spring kümmert sich um Gruppe, Partitionen und Offsets</span>
+@KafkaListener(topics = <span class="s">"bestellungen"</span>, groupId = <span class="s">"versand"</span>)
+<span class="k">void</span> beiBestellung(BestellungAufgegeben e) {
+    <span class="k">if</span> (verarbeitet.existsById(e.bestellId())) <span class="k">return</span>;   <span class="c">// Doppelte ignorieren</span>
+    versand.planen(e);
+}
+
+<span class="c">// Nach 3 gescheiterten Versuchen in die Dead Letter Queue ("bestellungen.DLT")</span>
+@Bean
+DefaultErrorHandler fehlerbehandlung(KafkaTemplate&lt;Object, Object&gt; t) {
+    <span class="k">return new</span> DefaultErrorHandler(<span class="k">new</span> DeadLetterPublishingRecoverer(t), <span class="k">new</span> FixedBackOff(<span class="s">1000</span>, <span class="s">2</span>));
+}</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Einstellung</th><th>Wofür</th></tr></thead>
+  <tbody>
+    <tr><td><code>acks=all</code></td><td>Der Sender gilt erst als erfolgreich, wenn alle synchronen Kopien die Nachricht haben – sonst kann sie beim Ausfall des Anführers verloren gehen.</td></tr>
+    <tr><td><code>enable.idempotence=true</code></td><td>Der Producer nummeriert seine Nachrichten, damit Neuversuche keine Doppelten im Log erzeugen. In aktuellen Versionen Standard.</td></tr>
+    <tr><td><code>enable.auto.commit=false</code></td><td>Offsets erst nach erfolgreicher Verarbeitung bestätigen – Spring Kafka macht das standardmäßig so.</td></tr>
+    <tr><td><code>retention.ms</code></td><td>Wie lange Nachrichten aufbewahrt werden – Tage, Wochen oder für immer. Mit „log compaction“ bleibt pro Schlüssel nur der jeweils letzte Wert.</td></tr>
+    <tr><td>Spring AMQP / JMS</td><td>Für Warteschlangen-Vermittler wie RabbitMQ: <code>@RabbitListener</code> bzw. <code>@JmsListener</code> nach demselben Prinzip.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Kafka ist eine Warteschlange.“</b> – Kafka ist ein Log. Nachrichten verschwinden nicht beim Lesen, und mehrere Gruppen lesen alles. Für klassische Aufgabenverteilung mit Prioritäten oder Einzelbestätigung sind Warteschlangen oft die bessere Wahl.</div>
+  <div><b>„Nachrichten kommen in der Reihenfolge an, in der sie gesendet wurden.“</b> – Nur innerhalb einer Partition. Was zusammen in Reihenfolge bleiben muss, braucht denselben Schlüssel.</div>
+  <div><b>„Mehr Leser, mehr Durchsatz.“</b> – Nur bis zur Zahl der Partitionen. Danach warten die zusätzlichen Leser untätig.</div>
+  <div><b>„Jede Nachricht wird genau einmal verarbeitet.“</b> – Kafka kann innerhalb seiner selbst mit Transaktionen „exactly once“ herstellen. Sobald die Verarbeitung eine Datenbank oder eine externe API berührt, muss der Empfänger Doppelte selbst erkennen.</div>
+  <div><b>„Asynchron heißt: Fehler sind nicht mehr mein Problem.“</b> – Sie tauchen nur später und woanders auf. Ohne Dead Letter Queue, Überwachung der Rückstände (consumer lag) und Alarme bleiben sie unbemerkt.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/verteilte-systeme/">Verteilte Systeme</a>
+  <a href="/it-konzepte/api-stile/">API-Stile</a>
+  <a href="/it-konzepte/datenstrukturen/">Datenstrukturen</a>
+  <a href="/it-konzepte/dateisystem/">Dateisysteme und Persistenz</a>
+  <a href="/it-konzepte/microservices/">Microservices und Monolith</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

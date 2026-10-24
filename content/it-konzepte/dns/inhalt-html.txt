@@ -1,0 +1,129 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Rechner im Internet finden sich über IP-Adressen. Menschen merken sich Namen. Das <strong>Domain Name System</strong> (DNS) übersetzt das eine ins andere – <code>example.com</code> in <code>192.0.2.10</code>. Es ist eine der größten verteilten Datenbanken der Welt, und es gibt keinen zentralen Server, der alle Namen kennt.</p>
+<p>Stattdessen ist DNS eine <strong>Hierarchie</strong>: Die Root-Server kennen die Server für <code>.com</code> oder <code>.de</code>, die kennen die Server jeder einzelnen Domain. Ein <strong>Resolver</strong> fragt sich durch und merkt sich die Antworten so lange, wie ihre <strong>TTL</strong> erlaubt. Deshalb ist DNS schnell – und deshalb brauchen Änderungen Zeit.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#namen">Namen von rechts nach links</a></li>
+  <li><a href="#aufloesung">Eine Anfrage, Schritt für Schritt</a></li>
+  <li><a href="#eintraege">Was im DNS steht</a></li>
+  <li><a href="#ttl">TTL: warum Änderungen „Zeit brauchen“</a></li>
+  <li><a href="#sicherheit">Sicherheit und Ausfälle</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="namen">Namen von rechts nach links</h2>
+<p>Ein Domainname wird von rechts nach links gelesen, wie eine Postadresse von Land zu Straße. Ganz rechts steht eigentlich noch ein unsichtbarer Punkt: die Wurzel.</p>
+<div class="widget">
+  <div class="nm"><span class="c">www</span><span class="d">.</span><span class="b">example</span><span class="d">.</span><span class="a">com</span><span class="d">.</span></div>
+  <div class="nm-l">
+    <div><b style="color:var(--accent)">www</b><br>Name eines Rechners oder Dienstes, frei wählbar</div>
+    <div><b style="color:var(--accent-2)">example</b><br>die Domain, registriert vom Inhaber</div>
+    <div><b style="color:var(--ok)">com</b><br>Top-Level-Domain (TLD), betrieben von einer Registry</div>
+    <div><b>.</b><br>die Wurzel – der Ausgangspunkt jeder Suche</div>
+  </div>
+</div>
+<p>Jede Ebene ist für die darunter <strong>zuständig</strong> und kann Verantwortung weitergeben – man sagt: delegieren. Die Wurzel delegiert <code>.de</code> an die DENIC in Frankfurt, die DENIC delegiert <code>example.de</code> an die Server, die der Inhaber angibt. Diese Server heißen <strong>autoritativ</strong>: Sie kennen die echte Antwort, alle anderen geben nur Kopien weiter.</p>
+
+<h2 id="aufloesung">Eine Anfrage, Schritt für Schritt</h2>
+<p>Dein Rechner fragt nicht selbst die ganze Kette ab. Er gibt die Frage an einen <strong>rekursiven Resolver</strong> weiter – meist beim Internetanbieter oder ein öffentlicher wie 1.1.1.1 oder 8.8.8.8. Der Resolver erledigt die Arbeit:</p>
+
+<div class="widget">
+  <div class="widget-title">Wer kennt www.example.com?</div>
+  <div class="seg" id="rzMode">
+    <button data-m="cold" aria-pressed="true">Alle Caches leer</button>
+    <button data-m="warm">Ein Nutzer hat kurz vorher gefragt</button>
+  </div>
+  <svg id="rz" viewBox="0 0 600 250" role="img" aria-label="DNS-Auflösung zwischen Browser, Resolver und Nameservern"></svg>
+  <div class="rz-txt" id="rzTxt"></div>
+  <div class="rz-stat" id="rzStat"></div>
+  <div class="controls">
+    <button id="rzPrev">← Zurück</button>
+    <button class="primary" id="rzNext">Weiter →</button>
+  </div>
+  <p class="fine">Laufzeiten beispielhaft. Adressen aus dem für Dokumentation reservierten Bereich.</p>
+</div>
+
+<p>Der kalte Fall ist selten. Die Adressen der <code>.com</code>- und <code>.de</code>-Server hat jeder Resolver ohnehin im Cache, die Root-Server werden kaum noch gefragt. Trotzdem sind sie entscheidend: Es gibt 13 Root-Server-Namen, von <code>a.root-servers.net</code> bis <code>m.root-servers.net</code>, betrieben von zwölf Organisationen. Hinter jedem Namen stehen dank <strong>Anycast</strong> viele Maschinen weltweit – zusammen weit über tausend Standorte. Eine Anfrage landet automatisch beim nächstgelegenen.</p>
+
+<h2 id="eintraege">Was im DNS steht</h2>
+<p>DNS kennt nicht nur Adressen. Jeder Eintrag (Resource Record) hat einen Typ. Mit dem Werkzeug <code>dig</code> (oder <code>nslookup</code>) kann man sie abfragen:</p>
+
+<div class="widget">
+  <div class="widget-title">dig ausprobieren</div>
+  <div class="seg" id="digT">
+    <button data-t="A" aria-pressed="true">A</button><button data-t="AAAA">AAAA</button><button data-t="CNAME">CNAME</button><button data-t="MX">MX</button><button data-t="TXT">TXT</button><button data-t="NS">NS</button><button data-t="PTR">PTR</button>
+  </div>
+  <div class="term" id="digOut"></div>
+  <div class="dig-txt" id="digTxt"></div>
+  <p class="fine">Beispielhafte Antworten für die Dokumentations-Domain example.com. Die Spalten: Name, TTL in Sekunden, Klasse (IN = Internet), Typ, Wert.</p>
+</div>
+
+<h2 id="ttl">TTL: warum Änderungen „Zeit brauchen“</h2>
+<p>Jede Antwort trägt eine <strong>TTL</strong> (time to live): So viele Sekunden darf sie zwischengespeichert werden. Caches gibt es auf jeder Ebene – im Browser, im Betriebssystem, im Resolver, sogar in der JVM. Ändert man die IP-Adresse eines Servers, sehen Nutzer die neue erst, wenn ihr Cache abgelaufen ist. Das ist das, was oft „DNS-Propagation“ genannt wird: Es breitet sich nichts aus, es laufen nur Kopien ab.</p>
+
+<div class="widget">
+  <div class="widget-title">Umzug auf einen neuen Server</div>
+  <div class="seg" id="ttlSel">
+    <button data-v="300">TTL 5 Minuten</button>
+    <button data-v="3600" aria-pressed="true">TTL 1 Stunde</button>
+    <button data-v="86400">TTL 1 Tag</button>
+  </div>
+  <svg id="ttlc" viewBox="0 0 600 200" role="img" aria-label="Anteil der Nutzer, die noch die alte Adresse bekommen"></svg>
+  <div class="ttl-note" id="ttlNote"></div>
+</div>
+
+<p>Die Profi-Technik daraus: Ein paar Tage vor einem Umzug die TTL senken, etwa auf fünf Minuten. Dann umziehen – alle sind schnell auf der neuen Adresse. Danach die TTL wieder erhöhen, denn kurze TTLs bedeuten mehr Anfragen und etwas langsamere erste Aufrufe. Wichtig: Die Senkung wirkt erst, wenn die alte, lange TTL einmal abgelaufen ist.</p>
+
+<h2 id="sicherheit">Sicherheit und Ausfälle</h2>
+<p>DNS stammt aus dem Jahr 1983 und wurde für ein freundliches Netz entworfen. Anfragen gehen meist unverschlüsselt per UDP über Port 53. Daraus ergeben sich drei Probleme:</p>
+<div class="cards">
+  <div class="card"><div class="num">!</div><h4>Gefälschte Antworten</h4><p>Wer einem Resolver eine falsche Antwort unterschiebt, bevor die echte ankommt, leitet alle seine Nutzer um – Cache Poisoning. 2008 zeigte Dan Kaminsky, wie leicht das ging. <strong>DNSSEC</strong> signiert Einträge kryptografisch, ist aber längst nicht überall eingeführt.</p></div>
+  <div class="card"><div class="num">👁</div><h4>Mitlesen</h4><p>Jeder auf dem Weg sieht, welche Namen du abfragst. <strong>DNS over HTTPS</strong> (DoH) und <strong>DNS over TLS</strong> (DoT) verschlüsseln die Anfragen; viele Browser nutzen das inzwischen.</p></div>
+  <div class="card"><div class="num">⚡</div><h4>Ausfälle</h4><p>Ist DNS weg, ist alles weg – auch wenn die Server laufen. Im Oktober 2021 war Facebook rund sechs Stunden unerreichbar, weil seine DNS-Server nach einer Fehlkonfiguration aus dem Internet verschwunden waren.</p></div>
+</div>
+<p>Nicht umsonst kursiert unter Administratoren der Spruch: „It's always DNS.“ Wenn etwas Unerklärliches mit dem Netz passiert, lohnt sich der erste Blick dorthin.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code>InetAddress[] alle = InetAddress.getAllByName(<span class="s">"www.example.com"</span>);  <span class="c">// A und AAAA</span>
+<span class="k">for</span> (InetAddress a : alle) System.out.println(a.getHostAddress());
+
+<span class="c">// Die JVM hat einen eigenen DNS-Cache – unabhängig von der TTL des Eintrags.</span>
+<span class="c">// Setzen, bevor der erste Name aufgelöst wird:</span>
+Security.setProperty(<span class="s">"networkaddress.cache.ttl"</span>, <span class="s">"60"</span>);           <span class="c">// Erfolge: 60 s</span>
+Security.setProperty(<span class="s">"networkaddress.cache.negative.ttl"</span>, <span class="s">"5"</span>);   <span class="c">// Fehlschläge: 5 s</span></code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Thema</th><th>Was man wissen sollte</th></tr></thead>
+  <tbody>
+    <tr><td><strong>JVM-Cache</strong></td><td>Ohne Einstellung hält die JVM erfolgreiche Antworten typischerweise 30 Sekunden, fehlgeschlagene 10 Sekunden. In älteren Konfigurationen mit Security Manager sogar für immer – dann sieht ein langlaufender Dienst einen Server-Umzug nie.</td></tr>
+    <tr><td><strong>Blockieren</strong></td><td>Eine DNS-Auflösung ist ein blockierender Aufruf, der bei Problemen Sekunden dauern kann. Wer Antwortzeiten misst, sollte DNS-Zeit von Verbindungszeit trennen.</td></tr>
+    <tr><td><strong>Eigener Resolver</strong></td><td>Seit Java 18 lässt sich die Namensauflösung über die Schnittstelle <code>InetAddressResolver</code> austauschen – praktisch für Tests.</td></tr>
+    <tr><td><strong>Kubernetes</strong></td><td>Dienste finden sich dort über DNS-Namen wie <code>bestellung.shop.svc.cluster.local</code>. Kurze Namen werden mit mehreren Suchdomänen ausprobiert – ein externer Name kann so mehrere vergebliche Anfragen auslösen, bevor er aufgelöst wird. Ein Punkt am Ende (<code>api.example.com.</code>) macht ihn eindeutig.</td></tr>
+    <tr><td><strong>Testen</strong></td><td>Die <code>hosts</code>-Datei des Betriebssystems wird vor DNS gefragt. Ein Eintrag dort lenkt einen Namen auf dem eigenen Rechner um – ideal zum Ausprobieren eines neuen Servers.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„DNS-Änderungen brauchen 24 bis 48 Stunden.“</b> – Sie brauchen so lange, wie die alte TTL es vorgibt. Mit kurzer TTL sind es Minuten.</div>
+  <div><b>„Ein Name gehört zu einem Server.“</b> – Hinter einem Namen können viele Adressen stehen, und große Anbieter geben je nach Standort des Fragenden unterschiedliche Antworten – so verteilen CDNs ihre Last.</div>
+  <div><b>„DNS ist nur fürs Web.“</b> – E-Mail findet ihren Weg über MX-Einträge, Dienste beweisen Domainbesitz über TXT-Einträge, Zertifizierungsstellen prüfen CAA-Einträge.</div>
+  <div><b>„Die Seite lädt nicht, also ist der Server kaputt.“</b> – Oft ist der Server in Ordnung und nur die Namensauflösung gestört. Ein Test mit der IP-Adresse statt dem Namen zeigt es.</div>
+  <div><b>„Eine Domain kauft man.“</b> – Man mietet sie für eine Laufzeit. Vergisst man die Verlängerung, kann sie jemand anderes registrieren.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/tcp-ip/">Schichtenmodell und TCP/IP</a>
+  <a href="/it-konzepte/betriebssystem/">Betriebssystem</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

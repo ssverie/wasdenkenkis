@@ -1,0 +1,142 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Monolith</strong> ist eine Anwendung, die als Ganzes gebaut und ausgeliefert wird – ein Prozess, eine Datenbank. <strong>Microservices</strong> zerlegen sie in viele kleine Dienste, die jeweils einen fachlichen Bereich verantworten, ihre eigenen Daten besitzen, unabhängig ausgeliefert werden und über das Netz miteinander reden.</p>
+<p>Der eigentliche Nutzen ist organisatorisch: Viele Teams können unabhängig voneinander arbeiten und ausliefern. Der Preis ist technisch: Aus Methodenaufrufen werden Netzwerkaufrufe, aus Transaktionen verteilte Abläufe, aus einem Prozess Dutzende, die überwacht werden müssen. Für kleine Teams überwiegt meist der Preis. Ein gut gegliederter <strong>modularer Monolith</strong> bietet viel vom Nutzen ohne die Kosten – und lässt sich später entlang seiner Module aufteilen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#kosten">Was ein Aufruf über das Netz kostet</a></li>
+  <li><a href="#vergleich">Was man gewinnt, was man bezahlt</a></li>
+  <li><a href="#schnitt">Wo schneidet man?</a></li>
+  <li><a href="#modulith">Der Mittelweg: modularer Monolith</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="kosten">Was ein Aufruf über das Netz kostet</h2>
+<p>Im Monolithen ruft der Bestellcode den Lagercode einfach auf – ein Methodenaufruf, ein paar Nanosekunden, und er schlägt nie fehl, weil das Netz hakt. Bei Microservices wird daraus ein HTTP- oder gRPC-Aufruf. Stell eine Aufrufkette zusammen:</p>
+
+<div class="widget">
+  <div class="widget-title">Eine Anfrage durch die Architektur</div>
+  <div class="sl"><span>Dienste in der Aufrufkette</span><input type="range" id="chN" min="1" max="10" value="4"><output id="chNo"></output></div>
+  <div class="chain" id="chC"></div>
+  <div class="cmp" id="chCmp"></div>
+  <div class="note" id="chNote"></div>
+  <p class="fine">Annahmen: Ein Aufruf innerhalb des Rechenzentrums kostet samt Serialisierung etwa 2 ms; jeder Dienst ist zu 99,9 % verfügbar. Methodenaufrufe im selben Prozess: Nanosekunden, praktisch immer verfügbar.</p>
+</div>
+
+<p>Daraus folgt eine Grundregel: Dienste sollten so geschnitten sein, dass eine typische Anfrage <em>wenige</em> von ihnen braucht – idealerweise einen. Und lange synchrone Ketten löst man, wo es geht, durch <a href="/it-konzepte/messaging/">Ereignisse</a> auf.</p>
+
+<h2 id="vergleich">Was man gewinnt, was man bezahlt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th></th><th>Monolith</th><th>Microservices</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Ausliefern</strong></td><td>alles zusammen; eine Änderung, ein Release</td><td>jeder Dienst einzeln, ohne die anderen</td></tr>
+    <tr><td><strong>Skalieren</strong></td><td>das Ganze mehrfach starten</td><td>nur die Teile, die Last haben</td></tr>
+    <tr><td><strong>Teams</strong></td><td>alle im selben Code, Abstimmung nötig</td><td>jedes Team besitzt seine Dienste</td></tr>
+    <tr><td><strong>Fehler</strong></td><td>ein Speicherleck reißt alles mit</td><td>Ausfälle bleiben eher lokal – wenn man sie abfängt</td></tr>
+    <tr><td><strong>Konsistenz</strong></td><td>eine Datenbank, echte Transaktionen</td><td>verteilte Daten, Sagas, Eventual Consistency</td></tr>
+    <tr><td><strong>Fehlersuche</strong></td><td>ein Stacktrace, ein Log</td><td>verteiltes Tracing über viele Dienste nötig</td></tr>
+    <tr><td><strong>Betrieb</strong></td><td>ein Prozess, eine Pipeline</td><td>Dutzende Pipelines, Container-Orchestrierung, Service-Netz</td></tr>
+    <tr><td><strong>Umbauen</strong></td><td>Refactoring mit der IDE über alles hinweg</td><td>Schnittstellen zwischen Teams verhandeln und versionieren</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Zwei Regeln trennen gute von schlechten Microservice-Architekturen. Erstens: <strong>Jeder Dienst besitzt seine Daten.</strong> Teilen sich zwei Dienste eine Datenbanktabelle, sind sie nicht unabhängig – eine Spaltenänderung bricht beide. Zweitens: <strong>Der Schnitt folgt der Fachlichkeit, nicht der Technik.</strong> Was das bedeutet, zeigt das nächste Beispiel.</p>
+
+<h2 id="schnitt">Wo schneidet man?</h2>
+<p>Ein Online-Shop soll in drei Dienste zerlegt werden. Zwei Vorschläge liegen auf dem Tisch. Wähle einen – und dann eine typische Änderung, wie sie jede Woche vorkommt:</p>
+
+<div class="widget">
+  <div class="widget-title">Zwei Schnitte, dieselbe Änderung</div>
+  <div class="lbl">Schnitt</div>
+  <div class="seg" id="ctS">
+    <button data-s="tech">Technisch: nach Schichten</button>
+    <button data-s="fach" aria-pressed="true">Fachlich: nach Bereichen</button>
+  </div>
+  <div class="lbl">Änderung</div>
+  <div class="seg" id="ctC">
+    <button data-c="feld" aria-pressed="true">Lieferhinweis bei der Bestellung</button>
+    <button data-c="zahl">Neue Zahlungsart</button>
+    <button data-c="rabatt">Neue Rabattregel im Katalog</button>
+  </div>
+  <div class="svcs" id="ctSv"></div>
+  <div class="cut-stats" id="ctSt"></div>
+  <div class="note" id="ctN"></div>
+</div>
+
+<p>Der technische Schnitt erzeugt einen <strong>verteilten Monolithen</strong>: alle Nachteile verteilter Systeme, aber keiner der Vorteile – denn jede Änderung erfordert, dass alle Dienste gemeinsam geändert und ausgeliefert werden. Der fachliche Schnitt folgt dem, was im Domain-Driven Design <strong>Bounded Context</strong> heißt: ein Bereich, in dem Begriffe eine eindeutige Bedeutung haben. „Kunde“ bedeutet im Versand eine Lieferadresse, in der Buchhaltung eine Zahlungshistorie – das sind zwei verschiedene Modelle, und sie dürfen in zwei Diensten verschieden aussehen.</p>
+
+<h3>Conways Gesetz</h3>
+<p>Schon 1968 formulierte Melvin Conway eine Beobachtung, die heute ein Gesetz heißt: Organisationen bauen Systeme, deren Struktur ihre Kommunikationsstruktur abbildet. Drei Teams bauen drei Komponenten – ob die Fachlichkeit das hergibt oder nicht. Daraus folgt umgekehrt: Wer eine bestimmte Architektur will, muss die Teams passend zuschneiden. Microservices ohne Teams, die jeweils einen Dienst wirklich besitzen, liefern selten ihr Versprechen.</p>
+
+<h2 id="modulith">Der Mittelweg: modularer Monolith</h2>
+<p>Ein <strong>modularer Monolith</strong> wird als ein Programm ausgeliefert, ist innen aber in klar getrennte Module gegliedert – nach denselben fachlichen Grenzen, die man Microservices geben würde. Module greifen nicht in die Interna der anderen, kommunizieren über definierte Schnittstellen oder Ereignisse und besitzen ihre eigenen Tabellen. Man bekommt klare Struktur, unabhängiges Arbeiten im Code und eine spätere Aufteilung ohne große Umbauten – aber Methodenaufrufe, eine Transaktion und einen Prozess.</p>
+<p>Viele bekannte Architekten raten deshalb: <strong>erst Monolith, dann aufteilen</strong> – wenn die fachlichen Grenzen sich bewährt haben und ein konkreter Grund vorliegt. Für den Weg dahin gibt es das <strong>Strangler-Fig-Muster</strong>, benannt nach einer Würgefeige: Neue Funktionen entstehen als eigener Dienst neben dem Monolithen, ein Proxy leitet Schritt für Schritt Anfragen um, bis der alte Teil abgeschaltet werden kann.</p>
+
+<div class="widget">
+  <div class="widget-title">Braucht ihr Microservices?</div>
+  <div class="chk" id="dq"></div>
+  <div class="verdict mono" id="dv"></div>
+  <p class="fine">Eine grobe Faustregel, keine Entscheidung.</p>
+</div>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">// Spring Modulith: Pakete direkt unter der Hauptklasse sind Module –</span>
+<span class="c">// dieser Test schlägt fehl, sobald ein Modul in die Interna eines anderen greift</span>
+@Test
+<span class="k">void</span> modulgrenzenEingehalten() {
+    ApplicationModules.of(ShopApplication.<span class="k">class</span>).verify();
+}
+
+<span class="c">// Module reden über Ereignisse statt über direkte Aufrufe</span>
+@Service
+<span class="k">class</span> BestellService {
+    <span class="k">private final</span> ApplicationEventPublisher events;
+    @Transactional
+    <span class="k">void</span> aufgeben(Bestellung b) {
+        repo.save(b);
+        events.publishEvent(<span class="k">new</span> BestellungAufgegeben(b.id()));
+    }
+}
+
+<span class="c">// im Modul "lager" – läuft nach dem Commit, eigene Transaktion</span>
+@ApplicationModuleListener
+<span class="k">void</span> beiBestellung(BestellungAufgegeben e) { reservierung.reserviere(e.bestellId()); }</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Werkzeug</th><th>Wofür</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Spring Modulith</strong></td><td>Module im Monolithen prüfen, dokumentieren, mit Ereignissen verbinden – und später leicht herauslösen</td></tr>
+    <tr><td><strong>ArchUnit</strong></td><td>Architekturregeln als Tests, auch ohne Spring</td></tr>
+    <tr><td><strong>Java-Module (JPMS)</strong></td><td>Grenzen auf Sprachebene: <code>exports</code> legt fest, was ein Modul nach außen zeigt</td></tr>
+    <tr><td><strong>Vertragstests</strong></td><td>Pact oder Spring Cloud Contract: prüfen, dass Dienste die Erwartungen ihrer Aufrufer erfüllen – ohne alles gemeinsam zu starten</td></tr>
+    <tr><td><strong>OpenTelemetry</strong></td><td>verteiltes Tracing – ohne das sind Fehler in Microservices kaum zu finden (siehe <a href="/it-konzepte/observability/">Observability</a>)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Microservices sind die moderne Architektur, Monolithen sind veraltet.“</b> – Beides sind Werkzeuge mit Kosten. Viele erfolgreiche Produkte laufen als gut gegliederter Monolith, und manche Firmen sind von Microservices bewusst zurückgegangen.</div>
+  <div><b>„Micro heißt: wenige Zeilen Code.“</b> – Die Größe ist zweitrangig. Entscheidend ist, dass ein Dienst einen fachlichen Bereich vollständig abdeckt und unabhängig geändert werden kann.</div>
+  <div><b>„Die Dienste können sich ruhig eine Datenbank teilen.“</b> – Dann sind sie über das Schema gekoppelt und nicht mehr unabhängig. Geteilte Datenbanken sind das häufigste Merkmal eines verteilten Monolithen.</div>
+  <div><b>„Aufteilen können wir später immer noch.“</b> – Stimmt nur, wenn der Monolith innen sauber gegliedert ist. Ein verflochtener Monolith lässt sich kaum zerlegen – deshalb lohnen sich Modulgrenzen von Anfang an.</div>
+  <div><b>„Jeder Dienst sollte die beste Technik für sein Problem wählen.“</b> – Theoretisch. Praktisch bedeuten fünf Sprachen und vier Datenbanken fünfmal so viel Betriebswissen. Die meisten Organisationen beschränken sich bewusst.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/api-stile/">API-Stile</a>
+  <a href="/it-konzepte/verteilte-systeme/">Verteilte Systeme</a>
+  <a href="/it-konzepte/messaging/">Messaging</a>
+  <a href="/it-konzepte/virtualisierung-container/">Virtualisierung und Container</a>
+  <a href="/it-konzepte/cloud/">Cloud</a>
+  <a href="/it-konzepte/observability/">Observability</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

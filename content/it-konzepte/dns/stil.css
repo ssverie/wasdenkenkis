@@ -1,0 +1,45 @@
+/* ---- Seitenspezifisch: DNS ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+
+/* Namensbaum */
+.erklaert .nm{display:flex;flex-wrap:wrap;justify-content:center;gap:2px;font:600 1.5rem var(--mono);margin:6px 0 4px}
+.erklaert .nm span{padding:4px 8px;border-radius:8px}
+.erklaert .nm .a{background:var(--ok-soft);color:var(--ok)}.erklaert .nm .b{background:var(--accent-2-soft);color:var(--accent-2)}.erklaert .nm .c{background:var(--accent-soft);color:var(--accent)}.erklaert .nm .d{background:var(--code-bg);color:var(--muted)}
+.erklaert .nm-l{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;font-size:.78rem;color:var(--muted);text-align:center}
+@media (max-width:560px){.erklaert .nm-l{grid-template-columns:1fr 1fr}.erklaert .nm{font-size:1.1rem}}
+
+/* Auflösung */
+.erklaert #rz{max-width:600px}
+.erklaert #rz .nd{fill:var(--card);stroke:var(--line);stroke-width:2}
+.erklaert #rz .nd.on{stroke:var(--accent-2);stroke-width:3}
+.erklaert #rz .t{font:700 12px var(--sans);fill:var(--fg)}
+.erklaert #rz .s{font:10px var(--sans);fill:var(--muted)}
+.erklaert #rz .ar{stroke:var(--accent);stroke-width:2.5;fill:none}
+.erklaert #rz .ar.back{stroke:var(--ok)}
+.erklaert .rz-txt{margin-top:10px;padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.9rem;min-height:5em}
+.erklaert .rz-txt code{font-size:.82rem}
+.erklaert .rz-stat{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:.82rem;color:var(--muted);margin-top:8px}
+.erklaert .rz-stat b{color:var(--fg);font-variant-numeric:tabular-nums}
+
+/* dig */
+.erklaert .term{border-radius:10px;background:#16161a;color:#e6e6ea;font:.8rem/1.6 var(--mono);padding:12px 14px;overflow-x:auto;white-space:pre}
+.erklaert .term .p{color:#7fdca1}.erklaert .term .c{color:#8f8f99}.erklaert .term .v{color:#f5b77c}
+.erklaert .dig-txt{margin-top:10px;font-size:.9rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:3em}
+
+/* TTL */
+.erklaert .sl{display:grid;grid-template-columns:11em 1fr 6em;align-items:center;gap:10px;font-size:.88rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:1fr 5em}.erklaert .sl > span{grid-column:1/-1}}
+.erklaert #ttlc{max-width:600px}
+.erklaert #ttlc .ax{stroke:var(--line);stroke-width:1}
+.erklaert #ttlc .lb{font:13px var(--sans);fill:var(--muted)}
+.erklaert #ttlc .ln{fill:none;stroke-width:3}
+.erklaert .ttl-note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--accent-2-soft)}
+

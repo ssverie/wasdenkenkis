@@ -1,0 +1,137 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Boolesche Logik</strong>, benannt nach George Boole (1854), rechnet mit nur zwei Werten: 0 und 1, falsch und wahr. Die Grundoperationen sind <strong>UND</strong>, <strong>ODER</strong> und <strong>NICHT</strong>. Jede Funktion, die aus einigen Bits ein Bit macht, lässt sich vollständig durch eine <strong>Wahrheitstabelle</strong> beschreiben – und aus jeder Wahrheitstabelle lässt sich mechanisch eine Formel aus UND, ODER und NICHT bauen.</p>
+<p>In Hardware wird jede Operation zu einem <strong>Gatter</strong> aus wenigen Transistoren. Bemerkenswert: Eine einzige Gattersorte, <strong>NAND</strong> (nicht-und), genügt, um alle anderen nachzubauen – und damit jeden Rechner. Für Entwickler ist dieselbe Logik Alltag: Jede if-Bedingung ist eine boolesche Formel, und die Gesetze von De Morgan helfen beim Umformen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#gatter">Sechs Grundoperationen</a></li>
+  <li><a href="#normalform">Von der Tabelle zur Formel</a></li>
+  <li><a href="#nand">Ein Gatter für alles</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="gatter">Sechs Grundoperationen</h2>
+<div class="gt">
+  <div><b>UND</b><code>a &amp;&amp; b</code><table><tr><td>00</td><td class="o">0</td></tr><tr><td>01</td><td class="o">0</td></tr><tr><td>10</td><td class="o">0</td></tr><tr><td>11</td><td class="o">1</td></tr></table></div>
+  <div><b>ODER</b><code>a || b</code><table><tr><td>00</td><td class="o">0</td></tr><tr><td>01</td><td class="o">1</td></tr><tr><td>10</td><td class="o">1</td></tr><tr><td>11</td><td class="o">1</td></tr></table></div>
+  <div><b>NICHT</b><code>!a</code><table><tr><td>0</td><td class="o">1</td></tr><tr><td>1</td><td class="o">0</td></tr></table></div>
+  <div><b>XOR</b><code>a ^ b</code><table><tr><td>00</td><td class="o">0</td></tr><tr><td>01</td><td class="o">1</td></tr><tr><td>10</td><td class="o">1</td></tr><tr><td>11</td><td class="o">0</td></tr></table></div>
+  <div><b>NAND</b><code>!(a &amp;&amp; b)</code><table><tr><td>00</td><td class="o">1</td></tr><tr><td>01</td><td class="o">1</td></tr><tr><td>10</td><td class="o">1</td></tr><tr><td>11</td><td class="o">0</td></tr></table></div>
+  <div><b>NOR</b><code>!(a || b)</code><table><tr><td>00</td><td class="o">1</td></tr><tr><td>01</td><td class="o">0</td></tr><tr><td>10</td><td class="o">0</td></tr><tr><td>11</td><td class="o">0</td></tr></table></div>
+</div>
+<p>Mit zwei Eingängen gibt es genau 16 mögliche Funktionen (jede der vier Zeilen kann 0 oder 1 liefern, also 2⁴). Mit <var>n</var> Eingängen sind es 2<sup>2<sup>n</sup></sup> – bei drei Eingängen schon 256, bei vier 65 536. Trotzdem lassen sie sich alle aus denselben Bausteinen zusammensetzen.</p>
+
+<h3>Die wichtigsten Gesetze</h3>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Gesetz</th><th>Formel</th><th>In Java</th></tr></thead>
+  <tbody>
+    <tr><td><strong>De Morgan</strong></td><td>¬(a ∧ b) = ¬a ∨ ¬b</td><td><code>!(a &amp;&amp; b) == (!a || !b)</code></td></tr>
+    <tr><td><strong>De Morgan</strong></td><td>¬(a ∨ b) = ¬a ∧ ¬b</td><td><code>!(a || b) == (!a &amp;&amp; !b)</code></td></tr>
+    <tr><td>Distributiv</td><td>a ∧ (b ∨ c) = (a ∧ b) ∨ (a ∧ c)</td><td>funktioniert auch umgekehrt: a ∨ (b ∧ c) = (a ∨ b) ∧ (a ∨ c)</td></tr>
+    <tr><td>Absorption</td><td>a ∨ (a ∧ b) = a</td><td>überflüssige Teilbedingungen erkennen</td></tr>
+    <tr><td>Doppelte Negation</td><td>¬¬a = a</td><td><code>!!a == a</code></td></tr>
+    <tr><td>Komplement</td><td>a ∧ ¬a = 0, a ∨ ¬a = 1</td><td>Bedingungen, die nie oder immer gelten</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="normalform">Von der Tabelle zur Formel</h2>
+<p>Jede Wahrheitstabelle lässt sich in eine Formel übersetzen, und zwar immer auf dieselbe Weise: Für jede Zeile mit Ergebnis 1 schreibt man ein UND der Eingänge (negiert, wo der Eingang 0 ist) – einen <em>Minterm</em>. Alle Minterme verbindet man mit ODER. Das Ergebnis heißt <strong>disjunktive Normalform</strong>. Klick die Ausgänge an oder wähle eine Vorlage:</p>
+
+<div class="widget">
+  <div class="widget-title">Wahrheitstabelle → Formel → Schaltung</div>
+  <div class="seg" id="ttP">
+    <button data-v="00010111" aria-pressed="true">Mehrheit</button>
+    <button data-v="01101001">Ungerade Parität</button>
+    <button data-v="00000001">UND aus drei</button>
+    <button data-v="01010011">Auswahl: a ? b : c</button>
+    <button data-v="00000000">Leer</button>
+  </div>
+  <div class="tt">
+    <table class="ttab" id="ttT"></table>
+    <div>
+      <div class="lbl">Disjunktive Normalform</div>
+      <div class="form" id="ttF"></div>
+      <div class="lbl">Als Java-Ausdruck</div>
+      <div class="form" id="ttJ"></div>
+    </div>
+  </div>
+  <svg id="ttSvg" viewBox="0 0 480 220" role="img" aria-label="Schaltung aus UND- und ODER-Gattern"></svg>
+  <div class="note" id="ttN"></div>
+</div>
+
+<p>Damit ist bewiesen: <strong>UND, ODER und NICHT reichen für jede boolesche Funktion.</strong> Die Normalform ist aber selten die kürzeste. Die Mehrheitsfunktion etwa lässt sich auch als <code>(a &amp;&amp; b) || (a &amp;&amp; c) || (b &amp;&amp; c)</code> schreiben – drei UND-Gatter statt vier. Für wenige Eingänge findet man solche Vereinfachungen von Hand mit Karnaugh-Diagrammen; im Allgemeinen ist das Finden der kleinsten Schaltung ein sehr schweres Problem, das Chip-Entwurfswerkzeuge mit Heuristiken angehen.</p>
+
+<h2 id="nand">Ein Gatter für alles</h2>
+<p>Es geht noch sparsamer. NICHT ist ein NAND, dessen beide Eingänge verbunden sind. UND ist ein NAND mit einem NICHT dahinter. ODER folgt aus De Morgan: a ∨ b = ¬(¬a ∧ ¬b) – also ein NAND aus zwei negierten Eingängen. Schalte die Eingänge um:</p>
+
+<div class="widget">
+  <div class="widget-title">Alles aus NAND</div>
+  <div class="seg" id="ndS">
+    <button data-k="not">NICHT</button>
+    <button data-k="and" aria-pressed="true">UND</button>
+    <button data-k="or">ODER</button>
+    <button data-k="xor">XOR</button>
+  </div>
+  <div class="ins" id="ndI"><button data-i="a">a = 0</button><button data-i="b">b = 0</button></div>
+  <svg id="ndSvg" viewBox="0 0 560 220" role="img" aria-label="Schaltung aus NAND-Gattern"></svg>
+  <div class="note" id="ndN"></div>
+</div>
+
+<p>Das hat praktische Gründe. In der heute üblichen CMOS-Technik braucht ein NAND-Gatter vier Transistoren, ein UND dagegen sechs – es ist ein NAND mit nachgeschaltetem Inverter. Chips werden deshalb aus wenigen Standardzellen gebaut, in denen NAND, NOR und Inverter die Hauptrolle spielen. Und weil NAND allein genügt, folgt eine bemerkenswerte Tatsache: Ein ganzer Computer ist im Prinzip nichts als sehr viele, geschickt verbundene NAND-Gatter.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Bedingungen umzuformen ist Alltag – beim Vereinfachen, beim Umdrehen eines if, beim Herausziehen einer Methode. Ob zwei Bedingungen wirklich gleichwertig sind, entscheidet die Wahrheitstabelle. Gib zwei Ausdrücke mit <code>a</code>, <code>b</code>, <code>c</code> ein:</p>
+
+<div class="widget">
+  <div class="widget-title">Sind diese Bedingungen gleich?</div>
+  <div class="eq"><input type="text" id="eqA" spellcheck="false" value="!(a &amp;&amp; b)" aria-label="Ausdruck 1"><input type="text" id="eqB" spellcheck="false" value="!a || !b" aria-label="Ausdruck 2"></div>
+  <div class="ex" id="eqX">
+    <button data-a="!(a &amp;&amp; b)" data-b="!a || !b">De Morgan</button>
+    <button data-a="!(a &amp;&amp; b)" data-b="!a &amp;&amp; !b">Typischer Fehler</button>
+    <button data-a="a || (a &amp;&amp; b)" data-b="a">Absorption</button>
+    <button data-a="a &amp;&amp; b || c" data-b="a &amp;&amp; (b || c)">Klammern vergessen</button>
+    <button data-a="a ^ b" data-b="(a || b) &amp;&amp; !(a &amp;&amp; b)">XOR</button>
+  </div>
+  <div class="verd" id="eqV"></div>
+</div>
+
+<p>Einige Java-Besonderheiten:</p>
+<pre><code><span class="c">// &amp;&amp; und || werten kurzgeschlossen aus – &amp; und | immer beide Seiten</span>
+<span class="k">if</span> (s != <span class="k">null</span> &amp;&amp; s.isEmpty()) …     <span class="c">// sicher</span>
+<span class="k">if</span> (s != <span class="k">null</span> &amp;  s.isEmpty()) …     <span class="c">// NullPointerException, wenn s null ist</span>
+
+<span class="c">// Auf int angewendet: 32 boolesche Operationen gleichzeitig, Bit für Bit</span>
+<span class="k">int</span> rechte = LESEN | SCHREIBEN;          <span class="c">// Bits setzen</span>
+<span class="k">boolean</span> darf = (rechte &amp; SCHREIBEN) != <span class="n">0</span>;  <span class="c">// Bit prüfen</span>
+rechte &amp;= ~SCHREIBEN;                   <span class="c">// Bit löschen: UND mit NICHT</span>
+x ^= y; y ^= x; x ^= y;                 <span class="c">// Tausch ohne Hilfsvariable – nett, aber unleserlich</span>
+
+<span class="c">// Viele Bits: BitSet bietet and, or, xor, andNot über beliebig lange Bitfolgen</span>
+BitSet b = <span class="k">new</span> BitSet(); b.set(<span class="n">3</span>); b.and(andere);</code></pre>
+<p>Die Bitoperationen auf <code>int</code> sind genau das, was die Hardware tut: Eine ALU führt ein UND auf 64 Bits in einem Schritt aus, mit 64 Gattern nebeneinander. Mehr dazu in <a href="/it-konzepte/schaltnetze/">H4</a>.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„!(a &amp;&amp; b) ist dasselbe wie !a &amp;&amp; !b.“</b> – Der häufigste Logikfehler. Nach De Morgan wird aus UND beim Negieren ein ODER: <code>!a || !b</code>.</div>
+  <div><b>„&amp; und &amp;&amp; sind bei boolean austauschbar.“</b> – Das Ergebnis ist gleich, aber <code>&amp;</code> wertet immer beide Seiten aus. Mit Nebenwirkungen oder Null-Prüfungen macht das einen Unterschied.</div>
+  <div><b>„ODER heißt entweder–oder.“</b> – Das umgangssprachliche „oder“ ist oft exklusiv. Das logische ODER ist auch wahr, wenn beide Seiten wahr sind; „entweder–oder“ ist XOR.</div>
+  <div><b>„Logik hat immer nur zwei Werte.“</b> – In SQL nicht: <code>NULL</code> bringt einen dritten Wert „unbekannt“. <code>NULL = NULL</code> ist dort nicht wahr, sondern unbekannt – deshalb braucht man <code>IS NULL</code>.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/zahlendarstellung/">Zahlen im Rechner</a>
+  <a href="/it-konzepte/maschinensprache/">Maschinensprache</a>
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/intraktabilitaet/">Intraktabilität</a>
+  <a href="/it-konzepte/schaltnetze/">Schaltnetze</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

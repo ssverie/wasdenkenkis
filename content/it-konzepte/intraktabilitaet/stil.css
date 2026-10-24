@@ -1,0 +1,43 @@
+/* ---- Seitenspezifisch: Intraktabilität ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:2.6em}
+.erklaert .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:10px 0 6px}
+.erklaert .sl{display:grid;grid-template-columns:12em minmax(0,1fr) 3.5em;align-items:center;gap:10px;font-size:.88rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:minmax(0,1fr) 3.5em}.erklaert .sl > span{grid-column:1/-1}}
+
+/* SAT-Rätsel */
+.erklaert .vars{display:flex;flex-wrap:wrap;gap:6px}
+.erklaert .vars button{min-width:62px;padding:7px 10px;font:600 .9rem var(--mono)}
+.erklaert .vars button.t{background:var(--ok);border-color:var(--ok);color:#fff}
+.erklaert .cls{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
+.erklaert .cls span{padding:5px 8px;border-radius:7px;font:.78rem var(--mono);border:1px solid var(--line);background:var(--card);transition:background .2s,border-color .2s}
+.erklaert .cls span.ok{background:var(--ok-soft);border-color:var(--ok)}
+.erklaert .cls span.no{background:rgba(200,60,60,.1);border-color:var(--bad)}
+.erklaert .cls span b{color:var(--ok)}
+.erklaert .tst{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.84rem;margin-top:10px}
+.erklaert .tst b{font-family:var(--mono)}
+.erklaert .verd{margin-top:10px;padding:10px 12px;border-radius:9px;font-size:.88rem;background:var(--bg)}
+.erklaert .verd.yes{background:var(--ok-soft)}
+
+/* Karte */
+.erklaert #mapSvg{width:100%;max-width:520px;height:auto;display:block;margin:4px auto 0}
+.erklaert #mapSvg .nd{cursor:pointer}
+.erklaert #mapSvg .nd circle{stroke:var(--fg);stroke-width:1.5}
+.erklaert #mapSvg .nd text{font:600 12px var(--sans);fill:#1b1b1b;pointer-events:none}
+.erklaert #mapSvg line{stroke:var(--muted);stroke-width:2}
+.erklaert #mapSvg line.bad{stroke:var(--bad);stroke-width:4}
+.erklaert .row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.erklaert .row button{padding:6px 11px;font-size:.84rem}
+.erklaert .enc{margin-top:10px;font:.74rem/1.5 var(--mono);padding:8px 10px;border-radius:8px;background:var(--bg);max-height:9.5em;overflow:auto;overflow-wrap:anywhere}
+
+/* Phasenübergang */
+.erklaert #phSvg{width:100%;height:auto;display:block;margin-top:6px}
+

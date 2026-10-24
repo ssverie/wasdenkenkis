@@ -1,0 +1,57 @@
+/* ---- Seitenspezifisch: Datenformate und Serialisierung ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .inp{width:100%;font:500 1.05rem var(--sans);padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.erklaert .code{border-radius:10px;background:#16161a;color:#e6e6ea;font:.8rem/1.6 var(--mono);padding:12px 14px;overflow-x:auto;white-space:pre;margin:0}
+.erklaert .code .k{color:#86a6ff}.erklaert .code .s{color:#f5b77c}.erklaert .code .n{color:#7fdca1}.erklaert .code .c{color:#8f8f99}
+
+/* Zeichen */
+.erklaert .chars{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.erklaert .chr{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 8px;border-radius:9px;background:var(--bg);border:1px solid var(--line);min-width:52px}
+.erklaert .chr .g{font:500 1.35rem var(--sans);line-height:1.2}
+.erklaert .chr .cp{font:.62rem var(--mono);color:var(--muted)}
+.erklaert .chr .by{display:flex;gap:2px}
+.erklaert .chr .by span{font:600 .62rem var(--mono);padding:2px 3px;border-radius:3px;background:var(--accent-soft);color:var(--accent)}
+.erklaert .chr.n2 .by span{background:var(--ok-soft);color:var(--ok)}
+.erklaert .chr.n3 .by span{background:var(--accent-2-soft);color:var(--accent-2)}
+.erklaert .chr.n4 .by span{background:var(--bad-soft);color:var(--bad)}
+.erklaert .cnt{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+@media (max-width:560px){.erklaert .cnt{grid-template-columns:1fr 1fr}}
+.erklaert .cnt div{padding:9px;border-radius:9px;background:var(--bg);text-align:center;font-size:.72rem;color:var(--muted)}
+.erklaert .cnt b{display:block;font:600 1.15rem var(--serif);color:var(--fg)}
+.erklaert .moji{margin-top:12px;padding:10px 12px;border-radius:9px;background:var(--bad-soft);font-size:.88rem}
+.erklaert .moji code{font-size:.95rem;background:transparent}
+.erklaert .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.72rem;color:var(--muted);margin-top:8px}
+.erklaert .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:4px}
+
+/* Formate */
+.erklaert .fmt-out{display:grid;grid-template-columns:1fr 13em;gap:12px;align-items:start}
+@media (max-width:620px){.erklaert .fmt-out{grid-template-columns:1fr}}
+.erklaert .sizes{display:flex;flex-direction:column;gap:5px}
+.erklaert .sz{display:grid;grid-template-columns:5em 1fr 3.5em;gap:6px;align-items:center;font-size:.75rem}
+.erklaert .sz .tr{height:12px;background:var(--bg);border-radius:4px;overflow:hidden}
+.erklaert .sz .fl{height:100%;background:var(--muted);border-radius:4px}
+.erklaert .sz.on .fl{background:var(--accent)}
+.erklaert .sz.on span{font-weight:700;color:var(--fg)}
+.erklaert .sz span:last-child{text-align:right;font-family:var(--mono);color:var(--muted)}
+.erklaert .pb{display:flex;flex-wrap:wrap;gap:4px;margin-top:2px}
+.erklaert .pb span{font:600 .76rem var(--mono);padding:4px 6px;border-radius:5px;cursor:default}
+.erklaert .pb .t{background:var(--accent-soft);color:var(--accent)}
+.erklaert .pb .l{background:var(--code-bg);color:var(--muted)}
+.erklaert .pb .v{background:var(--ok-soft);color:var(--ok)}
+.erklaert .pb span.hl{outline:2px solid var(--accent-2)}
+.erklaert .pb-ann{margin-top:8px;font-size:.84rem;min-height:2.6em;color:var(--muted)}
+.erklaert .fmt-note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg)}
+
+/* Zahlenfalle */
+.erklaert .nf{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media (max-width:560px){.erklaert .nf{grid-template-columns:1fr}}
+.erklaert .nf div{padding:10px 12px;border-radius:9px;background:var(--bg);font-size:.8rem;color:var(--muted)}
+.erklaert .nf b{display:block;font:600 1rem var(--mono);color:var(--fg);overflow-wrap:anywhere}
+.erklaert .nf .bad b{color:var(--bad)}.erklaert .nf .good b{color:var(--ok)}
+

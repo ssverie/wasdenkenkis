@@ -1,0 +1,152 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Build</strong> verwandelt Quellcode in etwas Lauffähiges: kompilieren, testen, verpacken. Damit das auf jedem Rechner gleich abläuft, beschreibt man ihn als Code – in Java mit <strong>Maven</strong> oder <strong>Gradle</strong>. Die Werkzeuge laden auch die benötigten Bibliotheken samt deren Abhängigkeiten, und genau dort entstehen die tückischsten Fehler.</p>
+<p><strong>Continuous Integration</strong> heißt: Jede Änderung wird sofort automatisch gebaut und getestet. <strong>Continuous Delivery</strong> heißt: Jede erfolgreich getestete Version <em>könnte</em> per Knopfdruck live gehen; bei <strong>Continuous Deployment</strong> geht sie es automatisch. Eine <strong>Pipeline</strong> führt all das in festen Stufen aus – und mit Strategien wie Rolling, Blue-Green oder Canary merken Nutzer vom Ausrollen nichts.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#maven">Der Build als Code</a></li>
+  <li><a href="#abhaengigkeiten">Abhängigkeiten und ihre Konflikte</a></li>
+  <li><a href="#ci">Continuous Integration</a></li>
+  <li><a href="#ausrollen">Ausrollen ohne Ausfall</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="maven">Der Build als Code</h2>
+<p>Früher bestand ein Build oft aus einer Anleitung im Wiki und einem Entwickler, der „wusste, wie es geht“. Heute steht alles in einer Datei im Repository – bei Maven in der <code>pom.xml</code>. Maven folgt dabei einem festen <strong>Lebenszyklus</strong>: einer Kette von Phasen, an die Plugins ihre Arbeit hängen. Wer eine Phase aufruft, bekommt alle davor mit:</p>
+
+<div class="widget">
+  <div class="widget-title">Was macht mvn …?</div>
+  <div class="cmds" id="lcC">
+    <button data-p="compile">mvn compile</button>
+    <button data-p="test">mvn test</button>
+    <button data-p="package" aria-pressed="true">mvn package</button>
+    <button data-p="verify">mvn verify</button>
+    <button data-p="install">mvn install</button>
+    <button data-p="clean">mvn clean</button>
+  </div>
+  <div class="lc" id="lc"></div>
+  <div class="note" id="lcN"></div>
+</div>
+
+<p>Maven hat zwei Stärken, die man leicht übersieht: <strong>Konvention statt Konfiguration</strong> – Quellen liegen in <code>src/main/java</code>, Tests in <code>src/test/java</code>, und niemand muss das einstellen. Und den <strong>Maven Wrapper</strong> (<code>mvnw</code>): ein kleines Skript im Repository, das genau die richtige Maven-Version herunterlädt. Damit baut jeder Rechner gleich, ohne Installation. Gradle verfolgt dieselben Ziele mit einer Programmiersprache statt XML und mit einem ausgefeilten Cache, der unveränderte Arbeitsschritte überspringt.</p>
+
+<h2 id="abhaengigkeiten">Abhängigkeiten und ihre Konflikte</h2>
+<p>Eine Spring-Boot-Anwendung deklariert vielleicht zwanzig Abhängigkeiten – und bekommt Hunderte. Jede Bibliothek bringt ihre eigenen mit, die <strong>transitiven Abhängigkeiten</strong>. Brauchen zwei davon dieselbe Bibliothek in verschiedenen Versionen, muss das Werkzeug sich für eine entscheiden. Auf dem Klassenpfad kann nur eine liegen.</p>
+
+<div class="widget">
+  <div class="widget-title">Zwei Bibliotheken, zwei Versionen</div>
+  <div class="seg" id="depTool">
+    <button data-t="maven" aria-pressed="true">Maven</button>
+    <button data-t="gradle">Gradle</button>
+  </div>
+  <label class="toggle"><input type="checkbox" id="depSwap"> <span>Die alte Version hängt näher an der Anwendung</span></label>
+  <label class="toggle"><input type="checkbox" id="depPin"> <span>Version in <code>&lt;dependencyManagement&gt;</code> festlegen</span></label>
+  <div class="dt" id="dt"></div>
+  <div class="dep-res" id="depR"></div>
+</div>
+
+<p>Das ist der Grund für einen der rätselhaftesten Fehler im Java-Alltag: <code>NoSuchMethodError</code> oder <code>ClassNotFoundException</code> zur Laufzeit, obwohl alles kompiliert. Kompiliert wurde gegen eine Version, geladen wird eine andere. Abhilfe schaffen <code>mvn dependency:tree</code> zum Nachsehen, ausdrücklich festgelegte Versionen und <strong>BOMs</strong> („Bill of Materials“) – Versionslisten, die zusammenpassende Versionen vorgeben. Spring Boot liefert so eine für Hunderte Bibliotheken.</p>
+
+<h3>Reproduzierbare Builds</h3>
+<p>Ein Build ist <strong>reproduzierbar</strong>, wenn derselbe Quellcode immer exakt dieselben Bytes ergibt. Das klingt selbstverständlich, ist es aber nicht: Zeitstempel in JAR-Dateien, die Reihenfolge von Dateien, Versionsbereiche wie „1.+“, die heute etwas anderes auflösen als morgen. Reproduzierbarkeit ist wichtig, weil man nur dann prüfen kann, dass ein ausgeliefertes Programm wirklich aus dem behaupteten Quellcode stammt. Maven unterstützt sie mit der Eigenschaft <code>project.build.outputTimestamp</code>.</p>
+
+<h2 id="ci">Continuous Integration</h2>
+<p>CI ist zuerst eine Arbeitsweise, dann ein Werkzeug: Alle integrieren ihre Änderungen mindestens täglich in den Hauptzweig, und jede Integration wird automatisch gebaut und getestet. Wer das nicht tut, erlebt die „Integrationshölle“ – wochenlang getrennte Branches, die beim Zusammenführen nicht mehr zusammenpassen. Das Werkzeug dafür ist eine <strong>Pipeline</strong>, etwa in GitHub Actions, GitLab CI oder Jenkins:</p>
+
+<div class="widget">
+  <div class="widget-title">Eine Pipeline läuft</div>
+  <div class="pl-ctl">
+    <label class="toggle"><input type="checkbox" id="plFail"> <span>Ein Unit-Test schlägt fehl</span></label>
+    <label class="toggle"><input type="checkbox" id="plCve"> <span>Eine Abhängigkeit hat eine bekannte Sicherheitslücke</span></label>
+    <label class="toggle"><input type="checkbox" id="plCd" checked> <span>Continuous Deployment: ohne manuelle Freigabe in Produktion</span></label>
+  </div>
+  <div class="pl" id="pl"></div>
+  <div class="controls"><button class="primary" id="plRun">git push</button></div>
+  <div class="note" id="plN"></div>
+</div>
+
+<p>Die wichtigsten Prinzipien einer guten Pipeline:</p>
+<ul>
+  <li><strong>Schnell scheitern:</strong> Billige Prüfungen zuerst. Wer zehn Minuten auf einen Integrationstest wartet, um dann zu erfahren, dass ein Komma fehlt, wartet beim nächsten Mal nicht mehr.</li>
+  <li><strong>Einmal bauen, überall ausrollen:</strong> Dasselbe Artefakt – dieselbe JAR-Datei, dasselbe Container-Image – wandert von Test über Abnahme bis Produktion. Wer für jede Umgebung neu baut, testet etwas anderes, als er ausliefert.</li>
+  <li><strong>Rot heißt: alles stehen lassen.</strong> Ein kaputter Hauptzweig hat Vorrang vor neuen Funktionen. Sonst gewöhnt sich das Team an rote Pipelines, und die Pipeline verliert jeden Wert.</li>
+</ul>
+
+<h2 id="ausrollen">Ausrollen ohne Ausfall</h2>
+<p>Die neue Version ist gebaut und getestet. Jetzt soll sie auf sechs Server – ohne dass ein Nutzer eine Fehlermeldung sieht. Drei gängige Strategien:</p>
+
+<div class="widget">
+  <div class="widget-title">Version 2 ausrollen</div>
+  <div class="seg" id="dpS">
+    <button data-s="rolling" aria-pressed="true">Rolling</button>
+    <button data-s="bluegreen">Blue-Green</button>
+    <button data-s="canary">Canary</button>
+  </div>
+  <div class="srv" id="srv"></div>
+  <div class="traffic" id="trf"></div>
+  <div class="note" id="dpN"></div>
+  <div class="controls"><button id="dpPrev">← Zurück</button><button class="primary" id="dpNext">Nächster Schritt →</button></div>
+</div>
+
+<p>Oft kommen <strong>Feature Flags</strong> dazu: Neuer Code wird ausgeliefert, aber per Schalter erst später – oder nur für einen Teil der Nutzer – aktiviert. Ausliefern und Freischalten werden damit zwei getrennte Entscheidungen, und ein Problem lässt sich mit einem Klick abschalten, ohne neu auszurollen.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">&lt;!-- pom.xml: Versionen zentral festlegen --&gt;</span>
+&lt;dependencyManagement&gt;
+  &lt;dependencies&gt;
+    &lt;dependency&gt;                                  <span class="c">&lt;!-- BOM: passende Versionen für vieles --&gt;</span>
+      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+      &lt;artifactId&gt;spring-boot-dependencies&lt;/artifactId&gt;
+      &lt;version&gt;${spring-boot.version}&lt;/version&gt;
+      &lt;type&gt;pom&lt;/type&gt;
+      &lt;scope&gt;import&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;</code></pre>
+<pre><code><span class="c"># .github/workflows/build.yml – eine minimale CI für Maven</span>
+<span class="k">name:</span> build
+<span class="k">on:</span> [push, pull_request]
+<span class="k">jobs:</span>
+  <span class="k">build:</span>
+    <span class="k">runs-on:</span> ubuntu-latest
+    <span class="k">steps:</span>
+      - <span class="k">uses:</span> actions/checkout@v4
+      - <span class="k">uses:</span> actions/setup-java@v4
+        <span class="k">with:</span> { distribution: temurin, java-version: <span class="s">'21'</span>, cache: maven }
+      - <span class="k">run:</span> ./mvnw -B verify</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Befehl</th><th>Wofür</th></tr></thead>
+  <tbody>
+    <tr><td><code>./mvnw dependency:tree</code></td><td>Welche Bibliothek zieht welche andere herein – und welche Version hat gewonnen?</td></tr>
+    <tr><td><code>./mvnw versions:display-dependency-updates</code></td><td>Welche Abhängigkeiten sind veraltet?</td></tr>
+    <tr><td><code>maven-enforcer-plugin</code></td><td>Bricht den Build ab, wenn Regeln verletzt sind – etwa widersprüchliche Versionen oder eine zu alte Java-Version.</td></tr>
+    <tr><td><code>-SNAPSHOT</code>-Versionen</td><td>Veränderliche Entwicklungsstände. Gehören nie in ein Release, denn morgen kann sich dahinter etwas anderes verbergen.</td></tr>
+    <tr><td>SBOM</td><td>Eine maschinenlesbare Liste aller enthaltenen Bibliotheken, etwa mit dem CycloneDX-Plugin. Damit weiß man sofort, ob eine neu bekannte Lücke einen betrifft.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„CI heißt: Wir haben einen Jenkins.“</b> – CI heißt, häufig zu integrieren. Ein Build-Server, der langlebige Feature-Branches baut, ist keine Continuous Integration.</div>
+  <div><b>„Continuous Deployment heißt: Code ungeprüft live stellen.“</b> – Das Gegenteil: Weil es keine manuelle Freigabe gibt, müssen die automatischen Prüfungen so gut sein, dass man ihnen vertraut.</div>
+  <div><b>„Kompiliert, also passen die Abhängigkeiten.“</b> – Zur Laufzeit kann eine andere Version auf dem Klassenpfad liegen als zur Kompilierzeit. <code>NoSuchMethodError</code> ist das typische Zeichen.</div>
+  <div><b>„Für Produktion bauen wir neu, mit Produktions-Einstellungen.“</b> – Dann ist das, was läuft, nie getestet worden. Einstellungen gehören in Konfiguration oder Umgebungsvariablen, nicht ins Artefakt.</div>
+  <div><b>„Bei mir lokal geht's.“</b> – Genau dafür baut die Pipeline auf einer frischen Maschine: Dort fallen vergessene Dateien, lokale Einstellungen und Versionsunterschiede auf.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/git/">Versionskontrolle mit Git</a>
+  <a href="/it-konzepte/compiler-jit/">Compiler, Interpreter, JIT</a>
+  <a href="/it-konzepte/virtualisierung-container/">Virtualisierung und Container</a>
+  <a href="/it-konzepte/datenstrukturen/">Datenstrukturen</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

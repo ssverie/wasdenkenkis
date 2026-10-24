@@ -1,0 +1,173 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Virtualisierung</strong> heißt: Ein Rechner tut so, als wäre er mehrere. Eine <strong>virtuelle Maschine</strong> (VM) ist ein komplett nachgebildeter Computer mit eigenem Betriebssystem. Ein <strong>Hypervisor</strong> teilt die echte Hardware unter den VMs auf.</p>
+<p>Ein <strong>Container</strong> geht einen leichteren Weg: Er ist ein ganz normaler Prozess, dem der Linux-Kernel eine eigene Sicht auf die Welt vorgaukelt – eigene Prozessliste, eigenes Netzwerk, eigenes Dateisystem – und den er in Rechenzeit und Speicher begrenzt. Alle Container teilen sich den Kernel des Hosts. Das macht sie klein und schnell, aber weniger stark voneinander getrennt als VMs.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#problem">Welches Problem wird gelöst?</a></li>
+  <li><a href="#vm">Virtuelle Maschinen</a></li>
+  <li><a href="#container">Container: ein Prozess mit Scheuklappen</a></li>
+  <li><a href="#kubernetes">Viele Container: Orchestrierung</a></li>
+  <li><a href="#sicherheit">Wie sicher ist die Trennung?</a></li>
+  <li><a href="#java">Für Entwickler übersetzt: Java im Container</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="problem">Welches Problem wird gelöst?</h2>
+<p>Drei alte Ärgernisse aus dem Serverbetrieb:</p>
+<div class="cards">
+  <div class="card"><div class="num">1</div><h4>„Bei mir läuft's“</h4><p>Auf dem Entwicklerrechner ist Java 21 installiert, auf dem Server Java 17, und eine Bibliothek fehlt. Man möchte die Anwendung samt Umgebung ausliefern.</p></div>
+  <div class="card"><div class="num">2</div><h4>Leere Server</h4><p>Früher bekam jede Anwendung ihren eigenen Server, aus Angst vor gegenseitiger Störung. Die meisten Server langweilten sich die meiste Zeit.</p></div>
+  <div class="card"><div class="num">3</div><h4>Gegenseitige Störung</h4><p>Teilen sich Anwendungen einen Server, frisst eine fehlerhafte den ganzen Speicher – und reißt die anderen mit.</p></div>
+</div>
+<p>Virtualisierung und Container lösen alle drei: Jede Anwendung bekommt eine abgeschottete, reproduzierbare Umgebung, und viele davon teilen sich einen Rechner.</p>
+
+<h2 id="vm">Virtuelle Maschinen</h2>
+<p>Eine VM ist ein Computer aus Software. Das Betriebssystem darin – der <strong>Gast</strong> – glaubt, es habe Prozessor, Speicher, Festplatte und Netzwerkkarte für sich allein. Tatsächlich verteilt der <strong>Hypervisor</strong> die echte Hardware des <strong>Hosts</strong>. Moderne Prozessoren helfen dabei mit eigenen Befehlen (Intel VT-x, AMD-V, bei ARM eigene Virtualisierungsmodi), sodass Gast-Code fast mit voller Geschwindigkeit direkt auf der CPU läuft.</p>
+<div class="cards">
+  <div class="card"><div class="num">1</div><h4>Typ 1: direkt auf der Hardware</h4><p>Der Hypervisor ist selbst ein schlankes Betriebssystem. Beispiele: KVM (im Linux-Kernel), Microsoft Hyper-V, VMware ESXi, Xen. So laufen Rechenzentren und die Cloud.</p></div>
+  <div class="card"><div class="num">2</div><h4>Typ 2: als Programm</h4><p>Der Hypervisor läuft als Anwendung auf einem normalen Betriebssystem. Beispiele: VirtualBox, VMware Workstation, Parallels. Praktisch für den Schreibtisch.</p></div>
+  <div class="card"><div class="num">★</div><h4>Was VMs können</h4><p>Schnappschüsse anlegen, eine laufende VM auf einen anderen Server umziehen, ohne dass sie es merkt, und jedes beliebige Betriebssystem ausführen – auch Windows auf Linux.</p></div>
+</div>
+
+<h2 id="container">Container: ein Prozess mit Scheuklappen</h2>
+<p>Ein Container enthält <em>kein</em> eigenes Betriebssystem im engeren Sinn – keinen eigenen Kernel. Er enthält nur die Dateien, die eine Anwendung braucht: die Anwendung selbst, ihre Bibliotheken, vielleicht eine JVM und ein paar Systemprogramme. Gestartet wird daraus ein ganz normaler Prozess auf dem Host-Kernel. Zwei Kernel-Funktionen machen ihn zum Container:</p>
+<div class="cards">
+  <div class="card"><div class="num">N</div><h4>Namespaces: was er sieht</h4><p>Eigene Prozessliste, eigenes Netzwerk, eigenes Dateisystem, eigener Rechnername, eigene Benutzer. Der Prozess sieht nur seinen Ausschnitt der Welt.</p></div>
+  <div class="card"><div class="num">C</div><h4>cgroups: was er darf</h4><p>Control Groups begrenzen Rechenzeit, Arbeitsspeicher und Ein-/Ausgabe. Überschreitet ein Container sein Speicherlimit, beendet ihn der Kernel.</p></div>
+  <div class="card"><div class="num">L</div><h4>Image: was er mitbringt</h4><p>Ein Paket aus Dateischichten, das alles enthält, was die Anwendung braucht. Unveränderlich – jede Änderung im laufenden Container landet in einer eigenen, wegwerfbaren Schicht.</p></div>
+</div>
+
+<div class="widget">
+  <div class="widget-title">Drei Arten, Anwendungen zu betreiben</div>
+  <div class="stacks">
+    <div class="stk">
+      <h4>Ein Server, alles direkt</h4>
+      <div class="row"><div class="b app">App A</div><div class="b app">App B</div><div class="b app">App C</div></div>
+      <div class="row"><div class="b lib">gemeinsame Bibliotheken – Versionskonflikte</div></div>
+      <div class="row"><div class="b os">Betriebssystem</div></div>
+      <div class="row"><div class="b hw">Hardware</div></div>
+      <p>billig, aber keine Trennung</p>
+    </div>
+    <div class="stk">
+      <h4>Virtuelle Maschinen</h4>
+      <div class="row"><div class="b app">App A</div><div class="b app">App B</div><div class="b app">App C</div></div>
+      <div class="row"><div class="b lib">Bibl.</div><div class="b lib">Bibl.</div><div class="b lib">Bibl.</div></div>
+      <div class="row"><div class="b os">Gast-OS mit Kernel</div><div class="b os">Gast-OS mit Kernel</div><div class="b os">Gast-OS mit Kernel</div></div>
+      <div class="row"><div class="b hv">Hypervisor</div></div>
+      <div class="row"><div class="b hw">Hardware</div></div>
+      <p>starke Trennung, aber dreimal ein ganzes Betriebssystem</p>
+    </div>
+    <div class="stk">
+      <h4>Container</h4>
+      <div class="row"><div class="b app">App A</div><div class="b app">App B</div><div class="b app">App C</div></div>
+      <div class="row"><div class="b lib">Bibl.</div><div class="b lib">Bibl.</div><div class="b lib">Bibl.</div></div>
+      <div class="row"><div class="b ce">Container-Laufzeit (Namespaces, cgroups)</div></div>
+      <div class="row"><div class="b os">ein Betriebssystem mit einem Kernel</div></div>
+      <div class="row"><div class="b hw">Hardware</div></div>
+      <p>leicht und schnell, Trennung durch den Kernel</p>
+    </div>
+  </div>
+</div>
+
+<p>Was der Unterschied praktisch bedeutet, zeigt eine Rechnung: Wie viele Anwendungen passen auf einen Server?</p>
+
+<div class="widget">
+  <div class="widget-title">Wie viele passen auf einen Server?</div>
+  <div class="sl"><span>Arbeitsspeicher des Servers</span><input type="range" id="srvRam" min="16" max="256" step="16" value="64"><output id="srvRamO"></output></div>
+  <div class="sl"><span>Speicher pro Anwendung</span><input type="range" id="appRam" min="0" max="6" step="1" value="2"><output id="appRamO"></output></div>
+  <div class="fit">
+    <div><h4>Als virtuelle Maschinen</h4><div class="big" id="nVM"></div><div class="dots" id="dVM"></div>
+      <dl><dt>pro Stück zusätzlich</dt><dd>≈ 1 GB Gast-Betriebssystem</dd><dt>Start</dt><dd>Sekunden bis Minuten</dd><dt>Image</dt><dd>oft mehrere GB</dd></dl></div>
+    <div><h4>Als Container</h4><div class="big" id="nCT"></div><div class="dots" id="dCT"></div>
+      <dl><dt>pro Stück zusätzlich</dt><dd>wenige MB</dd><dt>Start</dt><dd>meist unter 1 Sekunde</dd><dt>Image</dt><dd>oft unter 200 MB</dd></dl></div>
+  </div>
+  <p class="fine">Grobe Modellrechnung: 2 GB bleiben für den Host, jede VM braucht zusätzlich etwa 1 GB für ihr eigenes Betriebssystem. In Wirklichkeit kommen Rechenzeit, Platten und Netzwerk als Grenzen hinzu.</p>
+</div>
+
+<p>Dass ein Container nur ein Prozess ist, kann man auf jedem Linux-Host sehen: <code>ps aux</code> zeigt ihn in der normalen Prozessliste. Von innen sieht die Welt ganz anders aus. Schalte die Namespaces einzeln ein:</p>
+
+<div class="widget">
+  <div class="widget-title">Was sieht der Prozess?</div>
+  <div class="ns-ctl" id="nsctl">
+    <label class="toggle"><input type="checkbox" data-ns="pid" checked> PID</label>
+    <label class="toggle"><input type="checkbox" data-ns="mnt" checked> Mount</label>
+    <label class="toggle"><input type="checkbox" data-ns="net" checked> Netzwerk</label>
+    <label class="toggle"><input type="checkbox" data-ns="uts" checked> Rechnername</label>
+    <label class="toggle"><input type="checkbox" data-ns="user" checked> Benutzer</label>
+  </div>
+  <div class="views">
+    <div class="term" id="inside"></div>
+    <div class="term" id="outside"></div>
+  </div>
+  <div class="ns-note" id="nsnote"></div>
+</div>
+
+<h3>Images und Schichten</h3>
+<p>Ein Container-Image wird meist aus einem <code>Dockerfile</code> gebaut. Jede Anweisung erzeugt eine <strong>Schicht</strong> (Layer), und unveränderte Schichten werden aus dem Cache genommen – beim Bauen wie beim Hochladen. Deshalb ist die Reihenfolge wichtig: Was sich selten ändert, gehört nach unten.</p>
+
+<div class="widget">
+  <div class="widget-title">Was muss neu gebaut werden?</div>
+  <div class="seg" id="chg">
+    <button data-c="code" aria-pressed="true">Eigener Code geändert</button>
+    <button data-c="dep">Abhängigkeit aktualisiert</button>
+    <button data-c="base">Neues Java-Update im Basis-Image</button>
+  </div>
+  <label class="toggle" style="margin-bottom:12px"><input type="checkbox" id="badOrder"> Ungünstige Reihenfolge: erst Code, dann Abhängigkeiten</label>
+  <div class="layers" id="layers"></div>
+  <div class="lay-sum" id="laysum"></div>
+  <p class="fine">Schichten von unten nach oben. Größen beispielhaft.</p>
+</div>
+
+<h3>Kurze Geschichte</h3>
+<p>Die Idee ist älter, als man denkt: IBM virtualisierte Großrechner schon in den 1960er-Jahren. Mit <code>chroot</code> bekam Unix 1979 den Vorläufer der Container – einen Prozess mit eigenem Wurzelverzeichnis. FreeBSD Jails (2000) und Linux-Container (LXC, 2008) bauten das aus. 2013 machte <strong>Docker</strong> Container mit einem einfachen Werkzeug und dem Image-Format populär. Heute ist das Format als OCI-Standard festgeschrieben, und es gibt viele Werkzeuge dafür – Docker, Podman, containerd.</p>
+
+<h2 id="kubernetes">Viele Container: Orchestrierung</h2>
+<p>Ein Container ist leicht zu starten. Hunderte auf Dutzenden Servern zu betreiben – mit Neustarts bei Absturz, Lastverteilung, Updates ohne Ausfall –, ist eine eigene Aufgabe. Das übernimmt ein <strong>Orchestrierer</strong>, heute fast immer <strong>Kubernetes</strong>. Man beschreibt den gewünschten Zustand („drei Instanzen dieser Anwendung, je 1 GB Speicher, erreichbar unter diesem Namen“), und Kubernetes sorgt ständig dafür, dass er hergestellt wird. Stirbt ein Container, startet es einen neuen; fällt ein Server aus, verteilt es die Container auf andere.</p>
+
+<h2 id="sicherheit">Wie sicher ist die Trennung?</h2>
+<p>Hier liegt der eigentliche Preis der Container: Alle teilen sich einen Kernel. Findet ein Angreifer in einem Container eine Lücke im Kernel, kann er unter Umständen ausbrechen und den Host übernehmen. Bei einer VM müsste er zusätzlich durch den Hypervisor, der viel kleiner und besser abgeschottet ist.</p>
+<p>Deshalb gibt es Mischformen. <strong>Firecracker</strong>, entwickelt von Amazon für AWS Lambda, startet winzige VMs in Sekundenbruchteilen – so schnell wie Container, so getrennt wie VMs. Projekte wie gVisor und Kata Containers gehen ähnliche Wege. Und auf dem Mac und unter Windows laufen Linux-Container ohnehin in einer verborgenen Linux-VM, denn sie brauchen einen Linux-Kernel.</p>
+
+<h2 id="java">Für Entwickler übersetzt: Java im Container</h2>
+<p>Erst einmal ein Namenskonflikt: Auch die <strong>JVM</strong> ist eine virtuelle Maschine – aber eine ganz andere Art. Eine VM wie bei VirtualBox ist eine <em>System-VM</em>: Sie bildet einen ganzen Computer nach. Die JVM ist eine <em>Prozess-VM</em>: Sie bildet einen gedachten Prozessor für ein einzelnes Programm nach, damit derselbe Bytecode überall läuft. Im Container läuft also eine virtuelle Maschine in einem Prozess mit Scheuklappen – möglicherweise in einer virtuellen Maschine in der Cloud.</p>
+<pre><code><span class="c"># Dockerfile für eine Java-Anwendung – selten Geändertes nach unten</span>
+<span class="k">FROM</span> eclipse-temurin:21-jre
+<span class="k">WORKDIR</span> /app
+<span class="k">COPY</span> target/lib/ lib/                 <span class="c"># Abhängigkeiten: ändern sich selten</span>
+<span class="k">COPY</span> target/app.jar app.jar           <span class="c"># eigener Code: ändert sich ständig</span>
+<span class="k">ENTRYPOINT</span> [<span class="s">"java"</span>, <span class="s">"-XX:MaxRAMPercentage=75"</span>, <span class="s">"-jar"</span>, <span class="s">"app.jar"</span>]</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Thema</th><th>Was man wissen sollte</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Speicherlimit</strong></td><td>Die JVM erkennt seit Java 10 die cgroup-Grenzen des Containers. Standardmäßig nimmt sie aber nur ein Viertel davon als maximalen Heap. <code>-XX:MaxRAMPercentage=75</code> gibt ihr mehr – Rest bleibt für Metaspace, Thread-Stacks und nativen Speicher.</td></tr>
+    <tr><td><strong>Prozessorkerne</strong></td><td><code>Runtime.availableProcessors()</code> richtet sich nach dem CPU-Limit des Containers. Davon hängen Größe von GC-Threads und Common Pool ab.</td></tr>
+    <tr><td><strong>Exit-Code 137</strong></td><td>Der Kernel hat den Container wegen Speicherüberschreitung beendet (OOMKilled) – kein <code>OutOfMemoryError</code>, keine Shutdown-Hooks. Meist ist der Heap zu groß im Verhältnis zum Limit, oder nativer Speicher wächst.</td></tr>
+    <tr><td><strong>Startzeit</strong></td><td>Container sollen schnell starten, die JVM wärmt sich langsam auf. Hilfen: Class Data Sharing, der AOT-Cache aus Projekt Leyden (seit Java 24), CRaC oder ein GraalVM Native Image.</td></tr>
+    <tr><td><strong>Images ohne Docker bauen</strong></td><td>Werkzeuge wie Jib oder Spring Boot Buildpacks erzeugen aus Maven oder Gradle direkt gut geschichtete Images.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Ein Container ist eine kleine VM.“</b> – Nein: kein eigener Kernel, keine nachgebildete Hardware. Ein Container ist ein Prozess, dem der Kernel eine eingeschränkte Sicht gibt.</div>
+  <div><b>„Docker ist Container.“</b> – Docker hat Container populär gemacht. Die Technik steckt im Linux-Kernel, das Format ist ein offener Standard, und es gibt viele Werkzeuge dafür.</div>
+  <div><b>„Container sind genauso sicher getrennt wie VMs.“</b> – Sie teilen sich einen Kernel. Für Code, dem man nicht vertraut, nimmt man VMs oder Mischformen wie Firecracker.</div>
+  <div><b>„Im Container ist ein ganzes Ubuntu.“</b> – Nur dessen Dateien, also Programme und Bibliotheken. Der Kernel ist immer der des Hosts.</div>
+  <div><b>„Was ich im laufenden Container ändere, bleibt.“</b> – Nur bis der Container gelöscht wird. Dauerhafte Daten gehören in ein Volume oder eine Datenbank.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/betriebssystem/">Betriebssystem</a>
+  <a href="/it-konzepte/prozess-thread/">Prozess, Thread, Nebenläufigkeit</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

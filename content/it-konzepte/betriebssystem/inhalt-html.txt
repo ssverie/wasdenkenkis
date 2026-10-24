@@ -1,0 +1,234 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Betriebssystem</strong> ist die Software zwischen Hardware und Programmen. Es hat drei Aufgaben: Es <strong>vereinfacht</strong> (Programme sehen „Dateien“ statt Speicherblöcke), es <strong>verteilt</strong> (Rechenzeit, Arbeitsspeicher, Geräte) und es <strong>schützt</strong> (kein Programm kann ein anderes kaputtmachen).</p>
+<p>Sein Kern heißt <strong>Kernel</strong>. Nur er darf direkt auf die Hardware zugreifen. Alle anderen Programme müssen ihn bitten – über <strong>Systemaufrufe</strong>. Windows, macOS, Linux, Android und iOS lösen dieselben Aufgaben, nur mit unterschiedlichen Kernels.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#wozu">Wozu überhaupt?</a></li>
+  <li><a href="#schichten">Die Schichten</a></li>
+  <li><a href="#systemaufruf">Der Systemaufruf: eine Datei speichern</a></li>
+  <li><a href="#prozesse">Prozesse und Scheduling</a></li>
+  <li><a href="#speicher">Speicher: Jeder glaubt, er hätte alles</a></li>
+  <li><a href="#treiber">Dateien, Geräte und Treiber</a></li>
+  <li><a href="#start">Was beim Einschalten passiert</a></li>
+  <li><a href="#kernelarten">Wie viel gehört in den Kernel?</a></li>
+  <li><a href="#familien">Die großen Familien</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="wozu">Wozu überhaupt?</h2>
+<p>Stell dir ein Restaurant vor. Die Gäste sind die Programme, die Küche ist die Hardware. Würde jeder Gast selbst in die Küche laufen, an den Herd drängeln und im Kühlschrank wühlen, gäbe es Chaos – und jeder Gast müsste wissen, wie genau dieser Herd funktioniert.</p>
+<p>Also gibt es Personal: Die Gäste bestellen am Tisch, das Personal teilt Herde und Zutaten zu, sorgt dafür, dass niemand fremde Teller isst, und die Gäste müssen von der Küche nichts wissen. Dieses Personal ist das Betriebssystem.</p>
+<p>Ohne Betriebssystem müsste jedes Programm selbst wissen, wie man genau diese SSD anspricht, diese Grafikkarte, diesen WLAN-Chip. So war es tatsächlich in der Frühzeit der Computer – und so ist es heute noch bei sehr einfachen Geräten wie einer Fernbedienung.</p>
+
+<div class="cards">
+  <div class="card"><div class="num">1</div><h4>Vereinfachen</h4><p>Statt „schreibe Bytes in Block 48 213 der SSD“ heißt es „speichere <code>brief.txt</code>“. Dasselbe Programm läuft auf jeder Hardware.</p></div>
+  <div class="card"><div class="num">2</div><h4>Verteilen</h4><p>Hunderte Programme teilen sich wenige Prozessorkerne, einen Arbeitsspeicher, eine Netzwerkkarte. Das Betriebssystem entscheidet, wer wann was bekommt.</p></div>
+  <div class="card"><div class="num">3</div><h4>Schützen</h4><p>Ein abstürzender Browser reißt nicht den Texteditor mit. Und ein Programm kann nicht die Passwörter eines anderen auslesen.</p></div>
+</div>
+
+<h2 id="schichten">Die Schichten</h2>
+<p>Ein Computer ist wie ein Stapel aufgebaut. Jede Schicht benutzt nur die darunterliegende. Klick dich durch:</p>
+
+<div class="widget">
+  <div class="widget-title">Der Schichtenstapel</div>
+  <div class="layers" id="layers">
+    <div class="zone">Benutzermodus – eingeschränkte Rechte</div>
+    <button class="layer" data-i="0">Programme <small>Browser, Word, Spiele, deine Java-App</small></button>
+    <button class="layer" data-i="1">Oberfläche &amp; Dienste <small>Fenster, Taskleiste, Hintergrunddienste</small></button>
+    <button class="layer" data-i="2">Bibliotheken <small>z. B. libc, Win32-API</small></button>
+    <button class="layer sys" data-i="3">⇅ Systemaufrufe – die einzige Tür</button>
+    <div class="zone">Kernelmodus – volle Rechte</div>
+    <button class="layer k" data-i="4">Kernel <small>Prozesse, Speicher, Dateisysteme, Netzwerk</small></button>
+    <button class="layer k" data-i="5">Treiber <small>für SSD, Grafik, WLAN, USB …</small></button>
+    <button class="layer hw" data-i="6">Hardware <small>CPU, RAM, SSD, Netzwerkkarte</small></button>
+  </div>
+  <div class="lay-info" id="layinfo"><b>Auf eine Schicht klicken.</b>Die Erklärung erscheint hier.</div>
+</div>
+
+<p>Die entscheidende Linie ist die gestrichelte: die Grenze zwischen <strong>Benutzermodus</strong> und <strong>Kernelmodus</strong>. Der Prozessor selbst kennt diese beiden Modi. Im Benutzermodus verweigert er bestimmte Befehle – etwa direkt auf ein Gerät zuzugreifen oder fremden Speicher zu lesen. Versucht ein Programm es trotzdem, hält die CPU an und übergibt an den Kernel, der das Programm meist beendet.</p>
+
+<div class="callout">Was viele überrascht: Die Fensteroberfläche ist <em>nicht</em> das Betriebssystem im engeren Sinn. Die meisten Server der Welt laufen ganz ohne – nur mit Kernel, Diensten und einer Kommandozeile.</div>
+
+<h2 id="systemaufruf">Der Systemaufruf: eine Datei speichern</h2>
+<p>Was passiert eigentlich, wenn du in einem Texteditor <kbd>Strg</kbd>+<kbd>S</kbd> drückst? Eine erstaunlich lange Reise – mit einer Überraschung am Ende.</p>
+
+<div class="widget">
+  <div class="widget-title">Die Reise einer gespeicherten Datei</div>
+  <div class="lanes" id="lanes">
+    <div class="lane user" data-l="app"><div class="ln">Editor</div><div class="lt"></div></div>
+    <div class="lane user" data-l="lib"><div class="ln">Bibliothek</div><div class="lt"></div></div>
+    <div class="border-line"><span>Systemaufruf</span></div>
+    <div class="lane kern" data-l="kern"><div class="ln">Kernel</div><div class="lt"></div></div>
+    <div class="lane kern" data-l="fs"><div class="ln">Dateisystem</div><div class="lt"></div></div>
+    <div class="lane kern" data-l="drv"><div class="ln">Treiber</div><div class="lt"></div></div>
+    <div class="lane" data-l="hw"><div class="ln">Hardware</div><div class="lt"></div></div>
+  </div>
+  <div class="step-txt" id="steptxt"></div>
+  <div class="controls">
+    <button id="sPrev">← Zurück</button>
+    <button class="primary" id="sNext">Weiter →</button>
+    <span class="prog" id="sProg"></span>
+  </div>
+  <p class="fine">U = Benutzermodus, K = Kernelmodus. Vereinfacht; die Grundidee gilt für Windows, macOS und Linux gleichermaßen.</p>
+</div>
+
+<p>Die Überraschung steckt in Schritt 7 und 8: „Gespeichert“ heißt zunächst nur, dass der Kernel die Daten übernommen hat. Auf die SSD kommen sie oft erst Sekunden später. Deshalb gibt es „Hardware sicher entfernen“ – und deshalb rufen Datenbanken ausdrücklich <code>fsync</code> auf, wenn eine Buchung wirklich auf der Platte sein muss.</p>
+
+<h3>Interrupts: wenn die Hardware sich meldet</h3>
+<p>Der Weg geht auch umgekehrt. Kommt ein Netzwerkpaket an oder drückst du eine Taste, schickt das Gerät der CPU einen <strong>Interrupt</strong> – eine Unterbrechung. Die CPU lässt alles stehen, springt in den Kernel, der Treiber holt die Daten ab, und dann geht es weiter, wo sie war. Das passiert tausende Male pro Sekunde, ohne dass man es merkt.</p>
+
+<h2 id="prozesse">Prozesse und Scheduling</h2>
+<p>Ein <strong>Programm</strong> ist eine Datei auf der Platte. Startest du es, wird daraus ein <strong>Prozess</strong>: das laufende Programm samt eigenem Speicher, offenen Dateien und einer Nummer, der Prozess-ID. Ein Prozess kann mehrere <strong>Threads</strong> haben – Ausführungsstränge, die sich den Speicher teilen.</p>
+<p>Auf einem normalen Laptop laufen Hunderte Prozesse mit Tausenden Threads, aber nur 8 oder 16 Kerne. Wie geht das? Der <strong>Scheduler</strong> des Kernels lässt jeden Thread kurz rechnen – typischerweise wenige Millisekunden –, unterbricht ihn dann und lässt den nächsten ran. Das geht so schnell, dass alles gleichzeitig wirkt.</p>
+
+<div class="widget">
+  <div class="widget-title">Spiel Scheduler</div>
+  <div class="sch-ctl">
+    <div><div class="lbl">Strategie</div>
+      <div class="seg" id="sStrat">
+        <button data-v="fcfs">Einer nach dem anderen</button>
+        <button data-v="rr" aria-pressed="true">Zeitscheiben</button>
+      </div></div>
+    <div><div class="lbl">Prozessorkerne</div>
+      <div class="seg" id="sCores">
+        <button data-v="1" aria-pressed="true">1 Kern</button>
+        <button data-v="2">2 Kerne</button>
+      </div></div>
+    <div style="grid-column:1/-1"><div class="lbl">Länge einer Zeitscheibe</div>
+      <label><input type="range" id="sQ" min="1" max="6" value="2"><output id="sQo">2 Einheiten</output></label></div>
+  </div>
+  <div class="gantt" id="gantt"></div>
+  <div class="plegend" id="plegend"></div>
+  <div class="sch-stats" id="schstats"></div>
+  <div class="sch-note" id="schnote"></div>
+</div>
+
+<p>Das ist der Kern des Scheduling-Problems: Wer alles nacheinander abarbeitet, hat am wenigsten Wechsel-Aufwand – aber der Musikplayer stottert, weil er warten muss, bis der Compiler fertig ist. Kurze Zeitscheiben machen das System reaktionsschnell, kosten aber Wechsel. Jeder Wechsel (<strong>Kontextwechsel</strong>) bedeutet: Register sichern, anderen Thread laden, Caches werden kalt.</p>
+<p>Echte Scheduler sind deutlich klüger als dieses Spiel. Sie bevorzugen Programme, die gerade auf Eingaben reagieren müssen, geben Hintergrundjobs weniger Zeit und verteilen auf moderne Prozessoren mit schnellen und sparsamen Kernen.</p>
+
+<h2 id="speicher">Speicher: Jeder glaubt, er hätte alles</h2>
+<p>Jeder Prozess sieht einen eigenen, riesigen Adressraum, der bei Adresse 0 beginnt – als hätte er den Arbeitsspeicher für sich allein. Das ist eine Illusion: der <strong>virtuelle Speicher</strong>. Der Speicher wird in kleine Seiten zerlegt, meist 4 KiB groß. Eine Tabelle pro Prozess, die <strong>Seitentabelle</strong>, legt fest, welche virtuelle Seite in welchem echten Speicherrahmen liegt. Die Übersetzung macht ein eigener Baustein in der CPU, die MMU, bei jedem einzelnen Speicherzugriff.</p>
+
+<div class="widget">
+  <div class="widget-title">Zwei Prozesse, ein Arbeitsspeicher</div>
+  <div class="vm">
+    <div><h4>Prozess A</h4><div class="vcol" id="vmA"></div></div>
+    <div class="ram"><h4>Echter Arbeitsspeicher</h4><div class="frames" id="frames"></div><div class="swap" id="swap"></div></div>
+    <div><h4>Prozess B</h4><div class="vcol" id="vmB"></div></div>
+  </div>
+  <div class="vm-out" id="vmout">Klick auf eine Seite von Prozess A oder B – das Betriebssystem übersetzt die Adresse.</div>
+  <div class="controls"><button id="vmReset">Zurücksetzen</button></div>
+</div>
+
+<p>Was die Illusion leistet:</p>
+<ul>
+  <li><strong>Schutz:</strong> Prozess A kann die Speicherseiten von B gar nicht adressieren – sie stehen nicht in seiner Tabelle. Greift ein Programm auf eine nicht zugeordnete Adresse zu, beendet der Kernel es: der berühmte <em>Segmentation fault</em> unter Linux und macOS, unter Windows eine <em>Zugriffsverletzung</em>.</li>
+  <li><strong>Teilen:</strong> Bibliotheken, die viele Programme benutzen, liegen nur einmal im Speicher und erscheinen in vielen Seitentabellen.</li>
+  <li><strong>Mehr als da ist:</strong> Selten benutzte Seiten lagert das Betriebssystem auf die SSD aus (<em>Swap</em> oder Auslagerungsdatei). Wird so eine Seite gebraucht, gibt es einen <strong>Seitenfehler</strong>: Der Kernel holt sie zurück, das Programm merkt nur eine kurze Verzögerung. Wird das zu viel, beginnt der Rechner zu „zähen“ – er ist nur noch mit Hin- und Herschaufeln beschäftigt.</li>
+</ul>
+
+<h2 id="treiber">Dateien, Geräte und Treiber</h2>
+<p>Ein <strong>Dateisystem</strong> verwandelt eine SSD – im Grunde eine lange Reihe nummerierter Blöcke – in Ordner, Dateinamen, Rechte und Zeitstempel. Verbreitet sind NTFS (Windows), APFS (Apple) und ext4 oder Btrfs (Linux). USB-Sticks benutzen oft exFAT, weil es alle Systeme lesen können.</p>
+<p>Ein <strong>Treiber</strong> ist der Übersetzer für ein bestimmtes Gerät: Der Kernel sagt „schreib diese Blöcke“, der Treiber weiß, welche Register dieses SSD-Controllers dafür wie gesetzt werden müssen. Treiber laufen meist im Kernelmodus – deshalb kann ein fehlerhafter Treiber das ganze System abstürzen lassen, was ein normales Programm nie könnte.</p>
+<div class="callout">Unix hat dafür eine elegante Idee: <strong>Alles ist eine Datei.</strong> Auch Geräte, Netzwerkverbindungen und Prozessinformationen werden über dieselben Befehle angesprochen – öffnen, lesen, schreiben, schließen. Unter Linux steht etwa unter <code>/proc/cpuinfo</code> eine „Datei“, die es nirgends auf der Platte gibt: Der Kernel erzeugt ihren Inhalt beim Lesen.</div>
+
+<h2 id="start">Was beim Einschalten passiert</h2>
+<div class="pipeline">
+  <div class="stage"><b>Firmware</b>UEFI prüft die Hardware</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>Bootloader</b>findet und lädt den Kernel</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>Kernel</b>erkennt Geräte, lädt Treiber</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>Erster Prozess</b>systemd, launchd, wininit</div>
+  <div class="arrow">→</div>
+  <div class="stage out"><b>Anmeldung</b>Dienste und Oberfläche laufen</div>
+</div>
+<p>Der erste Prozess startet alle weiteren. Unter Linux kann man das sehen: Prozess Nummer 1 ist der Urahn, von dem alle anderen abstammen.</p>
+
+<h2 id="kernelarten">Wie viel gehört in den Kernel?</h2>
+<p>Alles, was im Kernel läuft, ist schnell – aber ein Fehler darin trifft das ganze System. Darüber gibt es seit Jahrzehnten Streit. Berühmt ist die Debatte von 1992, in der der Informatikprofessor Andrew Tanenbaum Linux öffentlich „obsolet“ nannte, weil es einen großen Kernel hatte. Linus Torvalds widersprach heftig. Linux läuft heute auf Milliarden Geräten; Tanenbaums Mikrokernel-Ideen stecken trotzdem in vielen Systemen, bei denen Ausfallsicherheit zählt.</p>
+<div class="cards">
+  <div class="card"><div class="num">M</div><h4>Monolithisch</h4><p>Alles im Kernel: Dateisysteme, Netzwerk, Treiber. Schnell, weil alles direkt zusammenarbeitet. Beispiel: Linux.</p></div>
+  <div class="card"><div class="num">µ</div><h4>Mikrokernel</h4><p>Nur das Nötigste im Kernel, Treiber und Dateisysteme als eigene Prozesse. Stürzt ein Treiber ab, startet man ihn neu. Beispiele: QNX in vielen Autos, seL4, MINIX 3.</p></div>
+  <div class="card"><div class="num">H</div><h4>Hybrid</h4><p>Ein Mittelweg: Mikrokernel-Struktur, aber aus Geschwindigkeitsgründen vieles im Kernelmodus. Beispiele: der Windows-NT-Kernel, XNU bei Apple.</p></div>
+</div>
+
+<h2 id="familien">Die großen Familien</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>System</th><th>Kernel</th><th>Typischer Einsatz</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Windows</strong></td><td>NT-Kernel</td><td>die meisten Desktop-PCs und Laptops</td></tr>
+    <tr><td><strong>macOS</strong></td><td>XNU (Teil von Darwin), als Unix zertifiziert</td><td>Macs</td></tr>
+    <tr><td><strong>Linux</strong></td><td>Linux – mit Distributionen wie Ubuntu, Debian, Fedora</td><td>Server, Cloud, alle 500 schnellsten Supercomputer, Router, Fernseher</td></tr>
+    <tr><td><strong>Android</strong></td><td>Linux-Kernel, darüber eine eigene Welt</td><td>die meisten Smartphones</td></tr>
+    <tr><td><strong>iOS / iPadOS</strong></td><td>XNU, wie macOS</td><td>iPhones, iPads</td></tr>
+    <tr><td><strong>Echtzeitsysteme</strong></td><td>z. B. FreeRTOS, Zephyr, QNX</td><td>Steuergeräte, Waschmaschinen, Sensoren – überall, wo eine Reaktion garantiert rechtzeitig kommen muss</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Streng genommen ist „Linux“ nur der Kernel. Ein benutzbares System entsteht erst mit den Werkzeugen und Bibliotheken drumherum – deshalb spricht man von <strong>Distributionen</strong>.</p>
+
+<h3>Kurze Geschichte</h3>
+<ul class="tl">
+  <li><b>1950er</b>Stapelverarbeitung: Ein Programm nach dem anderen, Lochkarten rein, Ergebnis Stunden später.</li>
+  <li><b>1964</b>IBM kündigt OS/360 an – ein Betriebssystem für eine ganze Rechnerfamilie.</li>
+  <li><b>1969</b>Ken Thompson und Dennis Ritchie beginnen Unix bei den Bell Labs. Seine Ideen prägen bis heute Linux, macOS, Android und iOS.</li>
+  <li><b>1981</b>MS-DOS auf dem IBM-PC: ein Programm zur Zeit, kaum Schutz.</li>
+  <li><b>1984</b>Der Macintosh macht die grafische Oberfläche populär.</li>
+  <li><b>1991</b>Linus Torvalds kündigt Linux an – „nur ein Hobby“, wie er schrieb.</li>
+  <li><b>1993</b>Windows NT erscheint; sein Kernel steckt bis heute in Windows 11.</li>
+  <li><b>2007/2008</b>iPhone und das erste Android-Smartphone: Betriebssysteme für die Hosentasche.</li>
+</ul>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Betriebssystem</th><th>In der Java-Welt</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Prozess</strong></td><td>jede gestartete JVM – jedes <code>java …</code> ist ein eigener Prozess mit eigenem Adressraum</td></tr>
+    <tr><td><strong>Thread</strong></td><td>ein Plattform-Thread ist genau ein Thread des Betriebssystems; der Kernel plant ihn</td></tr>
+    <tr><td><strong>Scheduler</strong></td><td>virtuelle Threads (seit Java 21) machen dasselbe eine Ebene höher: Die JVM verteilt viele virtuelle Threads auf wenige OS-Threads</td></tr>
+    <tr><td><strong>Systemaufruf</strong></td><td>ganz unten in <code>FileOutputStream.write</code> oder <code>Socket</code> steht nativer Code, der den Kernel aufruft</td></tr>
+    <tr><td><strong>Virtueller Speicher</strong></td><td><code>-Xmx8g</code> reserviert Adressraum; echte Speicherseiten belegt das Betriebssystem erst, wenn der Heap sie benutzt</td></tr>
+    <tr><td><strong>Rechteprüfung</strong></td><td>eine <code>AccessDeniedException</code> ist die Antwort des Kernels, übersetzt in Java</td></tr>
+    <tr><td><strong>Signale</strong></td><td><kbd>Strg</kbd>+<kbd>C</kbd> schickt SIGINT, Shutdown-Hooks laufen. <code>kill -9</code> schickt SIGKILL – der Prozess ist sofort weg, keine Hooks</td></tr>
+    <tr><td><strong>OOM-Killer</strong></td><td>wird unter Linux der Speicher knapp, beendet der Kernel Prozesse – dann gibt es keinen <code>OutOfMemoryError</code>, die JVM ist einfach weg (im Container oft Exit-Code 137 = 128 + 9)</td></tr>
+  </tbody>
+</table>
+</div>
+<pre><code><span class="c">// Was die JVM vom Betriebssystem erfährt</span>
+System.out.println(ProcessHandle.current().pid());       <span class="c">// Prozess-ID, vergeben vom Kernel</span>
+System.out.println(Runtime.getRuntime().availableProcessors());
+<span class="c">// Kerne, die das OS diesem Prozess zugesteht – die JVM beachtet auch Container-Grenzen</span>
+
+Files.writeString(Path.of(<span class="s">"brief.txt"</span>), <span class="s">"Hallo"</span>);
+<span class="c">// darunter: Systemaufrufe zum Öffnen, Schreiben, Schließen – ohne fsync!</span>
+
+Thread.ofPlatform().start(task);  <span class="c">// ein echter OS-Thread</span>
+Thread.ofVirtual().start(task);   <span class="c">// von der JVM geplant, läuft auf einem OS-Thread</span></code></pre>
+<p>Unter Linux zeigt <code>strace -f java Hallo</code>, welche Systemaufrufe die JVM tatsächlich macht – schon ein „Hello World“ erzeugt Tausende.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Das Betriebssystem ist das, was ich auf dem Bildschirm sehe.“</b> – Die Oberfläche ist nur die sichtbarste Schicht. Die eigentliche Arbeit macht der Kernel, und viele Systeme haben gar keine Oberfläche.</div>
+  <div><b>„Viel belegter Arbeitsspeicher ist schlecht.“</b> – Moderne Systeme nutzen freien Speicher als Zwischenspeicher für Dateien und geben ihn sofort her, wenn ein Programm ihn braucht. Ungenutzter Speicher wäre verschenkt.</div>
+  <div><b>„Alle meine Programme laufen gleichzeitig.“</b> – Echt gleichzeitig nur so viele, wie es Kerne gibt. Der Rest ist sehr schnelles Abwechseln.</div>
+  <div><b>„‚Gespeichert‘ heißt: Es liegt auf der Platte.“</b> – Oft liegt es erst im Zwischenspeicher des Kernels und wird Sekunden später geschrieben.</div>
+  <div><b>„Linux ist ein Betriebssystem wie Windows.“</b> – Linux ist zunächst nur ein Kernel. Erst eine Distribution macht daraus ein komplettes System.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/inferenz/">Inferenz <small style="color:var(--muted)">(KI)</small></a>
+  <a href="/erklaert/agenten/">Agenten <small style="color:var(--muted)">(KI)</small></a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

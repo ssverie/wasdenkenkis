@@ -1,0 +1,149 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Eine <strong>formale Sprache</strong> ist einfach eine Menge von Zeichenketten – etwa „alle gültigen Ganzzahlen“ oder „alle Binärzahlen, die durch 3 teilbar sind“. Die Frage lautet dann: Gibt es eine Maschine, die für jede Eingabe entscheidet, ob sie dazugehört?</p>
+<p>Die einfachste solche Maschine ist der <strong>endliche Automat</strong> (DFA): eine feste Zahl von Zuständen, ein Zeichen nach dem anderen, kein weiterer Speicher. Er kann genau die Sprachen erkennen, die sich mit <strong>regulären Ausdrücken</strong> beschreiben lassen. Was er nicht kann: unbegrenzt zählen – deshalb lassen sich verschachtelte Klammern, HTML oder JSON nicht mit einem Regex prüfen. Für mehr braucht man mehr Speicher; am Ende dieser Leiter steht die <strong>Turingmaschine</strong>.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#begriffe">Alphabet, Wort, Sprache</a></li>
+  <li><a href="#dfa">Der endliche Automat</a></li>
+  <li><a href="#grenzen">Was ein Automat nicht kann</a></li>
+  <li><a href="#backtracking">Wenn ein Regex hängt</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="begriffe">Alphabet, Wort, Sprache</h2>
+<p>Die Theorie beginnt mit drei Begriffen. Ein <strong>Alphabet</strong> ist eine endliche Menge von Zeichen, etwa {0, 1} oder {a, b}. Ein <strong>Wort</strong> ist eine endliche Folge davon – auch das leere Wort ε zählt. Eine <strong>Sprache</strong> ist eine beliebige Menge von Wörtern, meist unendlich groß.</p>
+<p>Das klingt abstrakt, deckt aber fast alles ab: „Alle syntaktisch korrekten Java-Programme“ ist eine Sprache über dem Unicode-Alphabet. „Alle E-Mail-Adressen“ auch. Und jede Ja/Nein-Frage an einen Computer lässt sich so formulieren: Gehört diese Eingabe zur Sprache der Eingaben, bei denen die Antwort „ja“ ist?</p>
+
+<h2 id="dfa">Der endliche Automat</h2>
+<p>Ein <strong>deterministischer endlicher Automat</strong> (DFA) besteht aus Zuständen, einem Startzustand, einigen akzeptierenden Zuständen und einer Übergangstabelle: Für jeden Zustand und jedes Zeichen steht fest, wohin es geht. Er liest die Eingabe einmal von links nach rechts – und am Ende entscheidet allein der Zustand, in dem er steht. Probier es aus:</p>
+
+<div class="widget">
+  <div class="widget-title">Drei Automaten zum Durchklicken</div>
+  <div class="seg" id="dfS">
+    <button data-k="int" aria-pressed="true">Ganzzahl</button>
+    <button data-k="ab">Enthält „ab“</button>
+    <button data-k="div3">Binär durch 3 teilbar</button>
+  </div>
+  <div class="rx" id="dfRx"></div>
+  <svg id="dfSvg" viewBox="0 0 480 220" role="img" aria-label="Zustandsdiagramm des Automaten"></svg>
+  <div class="inrow">
+    <input type="text" id="dfIn" spellcheck="false" autocomplete="off" aria-label="Eingabe">
+    <button id="dfStep">Schritt</button>
+    <button id="dfAll">Alles</button>
+    <button id="dfReset">Zurück</button>
+  </div>
+  <div class="tape" id="dfTape"></div>
+  <div class="verd" id="dfV"></div>
+</div>
+
+<p>Das Bemerkenswerte am dritten Beispiel: Der Automat prüft die Teilbarkeit beliebig langer Binärzahlen mit nur drei Zuständen – er merkt sich nur den Rest. Jedes neue Bit verdoppelt die Zahl und addiert 0 oder 1, also wird aus Rest <var>r</var> der Rest (2<var>r</var> + Bit) mod 3. Mehr muss er nicht wissen.</p>
+
+<h3>Regex und Automat sind dasselbe</h3>
+<p>Ein zentraler Satz der Theorie (nach Stephen Kleene, 1956): Zu jedem regulären Ausdruck gibt es einen endlichen Automaten, der genau dieselbe Sprache erkennt – und umgekehrt. Ein regulärer Ausdruck ist die <em>Beschreibung</em>, der Automat die <em>Maschine</em>. Regex-Bibliotheken übersetzen den Ausdruck in einen Automaten, oft zuerst in einen <strong>nichtdeterministischen</strong> (NFA), der an einer Stelle mehrere Wege offenhalten darf. Ein NFA kann nicht mehr als ein DFA, ist aber oft viel kleiner; man kann ihn in einen DFA umrechnen, der dann allerdings im schlimmsten Fall exponentiell viele Zustände hat.</p>
+<p>Streng genommen sind die Ausdrücke in Java, Perl oder JavaScript mehr als „regulär“: Rückverweise wie <code>(a+)\1</code> gehen über das hinaus, was ein endlicher Automat kann. Der Preis dafür kommt weiter unten.</p>
+
+<h2 id="grenzen">Was ein Automat nicht kann</h2>
+<p>Ein Automat hat keinen Speicher außer seinem Zustand – und davon nur endlich viele. Deshalb kann er nicht beliebig weit zählen. Das klassische Beispiel sind korrekt verschachtelte Klammern: Um zu prüfen, ob auf <var>n</var> öffnende auch <var>n</var> schließende folgen, müsste er sich <var>n</var> merken. Stell ein, wie viele Zustände der Automat hat und wie tief verschachtelt wird:</p>
+
+<div class="widget">
+  <div class="widget-title">Klammern zählen mit endlich vielen Zuständen</div>
+  <div class="sl"><span>Zustände des Automaten</span><input type="range" id="kzK" min="2" max="10" value="5"><output id="kzKo"></output></div>
+  <div class="sl"><span>Verschachtelungstiefe</span><input type="range" id="kzN" min="1" max="12" value="3"><output id="kzNo"></output></div>
+  <div class="kz" id="kzZ"></div>
+  <div class="pr" id="kzP"></div>
+  <div class="note" id="kzN2"></div>
+</div>
+
+<p>Daraus folgt eine Regel für die Praxis: <strong>Verschachtelte Strukturen – HTML, JSON, XML, Programmcode, arithmetische Ausdrücke – lassen sich nicht zuverlässig mit einem Regex prüfen.</strong> Man braucht einen Parser. Ein Regex taugt dafür, die einzelnen Bausteine (Zahlen, Bezeichner, Zeichenketten) zu erkennen – genau so arbeitet ein Compiler: Der <em>Lexer</em> ist ein Automat, der <em>Parser</em> darüber kann verschachteln.</p>
+
+<h3>Die Chomsky-Hierarchie</h3>
+<p>Gibt man dem Automaten mehr Speicher, kann er mehr Sprachen erkennen. Noam Chomsky ordnete die Sprachklassen 1956 in eine Hierarchie, die bis heute den Bau von Compilern prägt:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Sprachklasse</th><th>Maschine</th><th>Speicher</th><th>Beispiel</th></tr></thead>
+  <tbody>
+    <tr><td><strong>regulär</strong></td><td>endlicher Automat</td><td>nur der Zustand</td><td>Zahlen, Bezeichner, einfache Muster</td></tr>
+    <tr><td><strong>kontextfrei</strong></td><td>Kellerautomat</td><td>ein Stapel</td><td>Klammern, Syntax von Programmiersprachen</td></tr>
+    <tr><td><strong>kontextsensitiv</strong></td><td>linear beschränkte Maschine</td><td>Band, so lang wie die Eingabe</td><td>a<sup>n</sup>b<sup>n</sup>c<sup>n</sup></td></tr>
+    <tr><td><strong>rekursiv aufzählbar</strong></td><td>Turingmaschine</td><td>unbegrenztes Band</td><td>alles, was überhaupt berechenbar ist</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Ein Stapel reicht für Klammern: bei „(“ drauflegen, bei „)“ herunternehmen, am Ende muss er leer sein. Genau das macht jeder Parser – und jeder Entwickler, der die Klammerprüfung in einer Bewerbung programmieren soll. Die letzte Zeile ist das Thema der <a href="/it-konzepte/turingmaschine/">nächsten Seite</a>.</p>
+
+<h2 id="backtracking">Wenn ein Regex hängt</h2>
+<p>Ein echter DFA liest jedes Zeichen genau einmal – seine Laufzeit ist linear, egal wie der Ausdruck aussieht. Die Regex-Engines von Java, JavaScript, Python und Perl arbeiten aber anders: Sie probieren Möglichkeiten nacheinander aus und gehen bei einem Fehlschlag zurück (<strong>Backtracking</strong>). Das macht Rückverweise möglich, kann aber bei ungünstigen Mustern explodieren. Das Muster <code>(a+)+b</code> auf eine Folge von <var>n</var> mal „a“ ohne „b“ am Ende:</p>
+
+<div class="widget">
+  <div class="widget-title">Linear gegen exponentiell</div>
+  <div class="sl"><span>Länge der Eingabe</span><input type="range" id="btN" min="5" max="40" value="20"><output id="btNo"></output></div>
+  <div class="rx" id="btIn"></div>
+  <div class="kpi" id="btK"></div>
+  <div class="bar2"><i id="btB"></i></div>
+  <div class="note" id="btNt"></div>
+  <p class="fine">Modellhaft: Schritte einer einfachen Backtracking-Engine, gezählt als Versuche; Zeit bei 100 Millionen Schritten pro Sekunde. Reale Engines haben einige Optimierungen, das Grundproblem bleibt.</p>
+</div>
+
+<p>Das Problem entsteht durch verschachtelte Wiederholungen, die dieselben Zeichen auf viele Arten aufteilen können: <var>n</var> Zeichen lassen sich auf 2<sup><var>n</var>−1</sup> Arten in Gruppen zerlegen, und die Engine probiert jede, bevor sie aufgibt. Weil das auch mit Absicht ausgelöst werden kann, gilt es als Sicherheitsthema (ReDoS). Abhilfe: Muster ohne verschachtelte Quantoren schreiben, possessive Quantoren oder atomare Gruppen nutzen, Eingabelängen begrenzen – oder eine Engine mit garantierter Linearzeit verwenden, wie Googles RE2, das auf Rückverweise verzichtet.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">// Ein DFA in Java: Zustand als enum, Übergänge als switch</span>
+<span class="k">enum</span> Z { START, MINUS, ZIFFERN, FEHLER }
+
+<span class="k">static boolean</span> istGanzzahl(String s) {
+    Z z = Z.START;
+    <span class="k">for</span> (<span class="k">char</span> c : s.toCharArray()) {
+        <span class="k">boolean</span> ziffer = c &gt;= <span class="s">'0'</span> &amp;&amp; c &lt;= <span class="s">'9'</span>;
+        z = <span class="k">switch</span> (z) {
+            <span class="k">case</span> START   -&gt; c == <span class="s">'-'</span> ? Z.MINUS : ziffer ? Z.ZIFFERN : Z.FEHLER;
+            <span class="k">case</span> MINUS, ZIFFERN -&gt; ziffer ? Z.ZIFFERN : Z.FEHLER;
+            <span class="k">case</span> FEHLER  -&gt; Z.FEHLER;
+        };
+    }
+    <span class="k">return</span> z == Z.ZIFFERN;     <span class="c">// einziger akzeptierender Zustand</span>
+}
+
+<span class="c">// Dasselbe als Regex – Pattern einmal kompilieren, nicht bei jedem Aufruf</span>
+<span class="k">private static final</span> Pattern GANZZAHL = Pattern.compile(<span class="s">"-?[0-9]+"</span>);
+<span class="k">boolean</span> ok = GANZZAHL.matcher(s).matches();
+
+<span class="c">// Backtracking vermeiden: possessiver Quantor gibt einmal Erfasstes nicht wieder her</span>
+Pattern.compile(<span class="s">"(a++)+b"</span>);   <span class="c">// scheitert sofort statt exponentiell</span></code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Situation</th><th>Werkzeug</th></tr></thead>
+  <tbody>
+    <tr><td>Muster in flachen Zeichenketten</td><td><code>java.util.regex.Pattern</code> – vorkompiliert als Konstante</td></tr>
+    <tr><td>Zustandsabhängige Logik (Protokolle, Workflows)</td><td>Automat als <code>enum</code> mit <code>switch</code> – oder Spring Statemachine</td></tr>
+    <tr><td>Verschachtelte Formate</td><td>einen Parser: Jackson für JSON, ein XML-Parser, jsoup für HTML</td></tr>
+    <tr><td>Eigene kleine Sprache</td><td>ANTLR erzeugt Lexer und Parser aus einer Grammatik</td></tr>
+    <tr><td>Regex auf Eingaben von außen</td><td>einfache Muster, Längenbegrenzung, oder eine Engine mit Linearzeit wie RE2/J</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Mit einem guten Regex kann man HTML parsen.“</b> – HTML ist verschachtelt, reguläre Sprachen können das nicht. Für einzelne, bekannte Stellen mag es gutgehen; zuverlässig ist nur ein Parser.</div>
+  <div><b>„Regex ist immer schnell, weil es ein Automat ist.“</b> – Echte Automaten ja. Die Engines in Java und den meisten Skriptsprachen arbeiten mit Backtracking und können bei ungünstigen Mustern exponentiell langsam werden.</div>
+  <div><b>„Ein NFA kann mehr als ein DFA.“</b> – Nein, beide erkennen genau die regulären Sprachen. Der NFA ist nur oft kompakter.</div>
+  <div><b>„Formale Sprachen sind reine Theorie.“</b> – Jeder Compiler, jeder Syntax-Highlighter, jede Eingabevalidierung und jede Protokoll-Implementierung baut darauf auf.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/komplexitaet/">Komplexität und O-Notation</a>
+  <a href="/it-konzepte/compiler-jit/">Compiler, Interpreter, JIT</a>
+  <a href="/it-konzepte/datenformate/">Datenformate und Serialisierung</a>
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/turingmaschine/">Turingmaschine</a>
+  <a href="/it-konzepte/berechenbarkeit/">Berechenbarkeit</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

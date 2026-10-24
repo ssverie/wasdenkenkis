@@ -1,0 +1,138 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Programmierparadigma</strong> ist eine Denkweise, wie man ein Programm gliedert. <strong>Imperativ</strong>: eine Folge von Anweisungen, die Zustand verändern. <strong>Objektorientiert</strong>: Zustand und Verhalten in Objekte gebündelt, die miteinander sprechen. <strong>Funktional</strong>: Funktionen, die aus Werten neue Werte berechnen, ohne etwas zu verändern. <strong>Deklarativ</strong>: beschreiben, <em>was</em> herauskommen soll, nicht <em>wie</em>.</p>
+<p>Kein Stil ist der richtige. Moderne Sprachen mischen sie, und Java kann seit Lambdas, Streams, Records und Pattern Matching alle. Die wichtigste Lektion aus dem Vergleich: Viele schwer zu findende Fehler entstehen aus <strong>geteiltem, veränderlichem Zustand</strong> – und jeder Stil hat eine andere Antwort darauf.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#vergleich">Ein Problem, vier Stile</a></li>
+  <li><a href="#zustand">Das Kernproblem: geteilter, veränderlicher Zustand</a></li>
+  <li><a href="#erweitern">Was ist leichter zu erweitern?</a></li>
+  <li><a href="#geschichte">Woher die Stile kommen</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="vergleich">Ein Problem, vier Stile</h2>
+<p>Die Aufgabe: Wie viel Umsatz haben alle versandten Bestellungen über 20 Euro gebracht?</p>
+
+<div class="widget">
+  <div class="widget-title">Dieselbe Frage, vier Antworten</div>
+  <div class="seg" id="stSel">
+    <button data-s="imp" aria-pressed="true">Imperativ</button>
+    <button data-s="oo">Objektorientiert</button>
+    <button data-s="fn">Funktional</button>
+    <button data-s="dec">Deklarativ (SQL)</button>
+  </div>
+  <div class="code" id="stCode"></div>
+  <div class="st-note" id="stNote"></div>
+</div>
+
+<div class="cards">
+  <div class="card"><div class="num">→</div><h4>Imperativ</h4><p>Schritt für Schritt: Variable anlegen, Schleife, Bedingung, Variable ändern. Nah an der Maschine, die genau so arbeitet – <a href="/it-konzepte/was-ist-ein-computer/">Befehle holen, ausführen, Speicher ändern</a>.</p></div>
+  <div class="card"><div class="num">◎</div><h4>Objektorientiert</h4><p>Objekte kapseln ihren Zustand und bieten Methoden an. Wer etwas wissen will, fragt das Objekt – statt in seine Felder zu greifen. Gliedert große Systeme nach Verantwortung.</p></div>
+  <div class="card"><div class="num">λ</div><h4>Funktional</h4><p>Funktionen ohne Nebenwirkungen, unveränderliche Werte, Funktionen als Bausteine, die man kombiniert. Leicht zu testen, leicht zu parallelisieren.</p></div>
+</div>
+<p>Der vierte, <strong>deklarative</strong> Stil steckt oft in eigenen Sprachen: SQL, HTML, CSS, reguläre Ausdrücke, Konfigurationsdateien. Man beschreibt das Ergebnis, und ein Programm darunter – der Abfrageoptimierer, der Browser – entscheidet den Weg. Javas Streams sind ein Schritt in diese Richtung: <code>filter</code> und <code>map</code> sagen, was passieren soll, nicht in welcher Reihenfolge die Elemente angefasst werden.</p>
+
+<h2 id="zustand">Das Kernproblem: geteilter, veränderlicher Zustand</h2>
+<p>In Java zeigen Variablen auf Objekte – sie enthalten sie nicht. Zwei Variablen können auf dasselbe Objekt zeigen. Verändert man es über die eine, ändert es sich auch für die andere. Spiel es durch:</p>
+
+<div class="widget">
+  <div class="widget-title">Zwei Variablen, ein Objekt</div>
+  <div class="seg" id="mutSel">
+    <button data-m="sort" aria-pressed="true">b.sort(…)</button>
+    <button data-m="stream">b = b.stream().sorted().toList()</button>
+    <button data-m="copy">b = new ArrayList&lt;&gt;(a); b.sort(…)</button>
+  </div>
+  <div class="code" id="mutCode"></div>
+  <div class="heap" id="heap"></div>
+  <div class="st-note" id="mutNote"></div>
+</div>
+
+<p>Im Kleinen ist das harmlos. Im Großen ist es eine der häufigsten Fehlerquellen: Eine Methode sortiert „nur kurz“ eine Liste, die sie übergeben bekommen hat – und an ganz anderer Stelle im Programm ist eine Anzeige plötzlich falsch sortiert. Mit mehreren <a href="/it-konzepte/prozess-thread/">Threads</a> wird daraus eine Race Condition. Die drei Stile antworten unterschiedlich:</p>
+<ul>
+  <li><strong>Imperativ:</strong> Disziplin und Dokumentation – „diese Methode verändert ihr Argument“.</li>
+  <li><strong>Objektorientiert:</strong> Kapselung. Ein Objekt gibt seinen inneren Zustand nicht heraus, sondern nur Kopien oder unveränderliche Sichten (<code>List.copyOf</code>, <code>Collections.unmodifiableList</code>).</li>
+  <li><strong>Funktional:</strong> Zustand gar nicht erst verändern. Jede Operation erzeugt einen neuen Wert. Was sich nie ändert, kann man bedenkenlos teilen – auch zwischen Threads.</li>
+</ul>
+
+<h3>Reine Funktionen</h3>
+<p>Eine Funktion ist <strong>rein</strong>, wenn ihr Ergebnis nur von ihren Argumenten abhängt und sie nichts anderes bewirkt – nichts schreibt, nichts ausgibt, nichts verändert. <code>Math.max(a, b)</code> ist rein. <code>list.add(x)</code>, <code>System.out.println</code>, <code>LocalDate.now()</code> und jede Datenbankabfrage sind es nicht. Reine Funktionen sind trivial zu testen, man kann ihre Ergebnisse zwischenspeichern und sie gefahrlos parallel ausführen. Funktionale Programme sind deshalb meist so gebaut: ein großer Kern aus reinen Funktionen, außen eine dünne Schicht, die mit der Welt redet.</p>
+
+<h2 id="erweitern">Was ist leichter zu erweitern?</h2>
+<p>Ein klassischer Unterschied zwischen objektorientiertem und funktionalem Stil zeigt sich beim Erweitern. Ein Programm rechnet mit geometrischen Formen: Kreis und Rechteck, mit Fläche und Umfang. Jetzt soll etwas dazukommen. Welche Stellen muss man anfassen?</p>
+
+<div class="widget">
+  <div class="widget-title">Neue Form oder neue Operation?</div>
+  <div class="seg" id="exStyle">
+    <button data-s="oo" aria-pressed="true">Objektorientiert: Methoden in den Klassen</button>
+    <button data-s="fn">Funktional: switch über die Typen</button>
+  </div>
+  <div class="seg" id="exChg">
+    <button data-c="none" aria-pressed="true">Ausgangslage</button>
+    <button data-c="type">+ neue Form: Dreieck</button>
+    <button data-c="op">+ neue Operation: zeichnen</button>
+  </div>
+  <div id="mxBox"></div>
+  <div class="legend"><span><i style="background:var(--ok-soft);border-color:var(--ok)"></i>neu geschrieben</span><span><i style="background:var(--accent-2-soft);border-color:var(--accent-2)"></i>bestehende Datei geändert</span></div>
+  <div class="mx-sum" id="mxSum"></div>
+</div>
+
+<p>Das ist das sogenannte <strong>Expression Problem</strong>: Objektorientierung macht neue Typen billig, funktionaler Stil neue Operationen. Welcher Fall häufiger vorkommt, entscheidet, welcher Stil an einer Stelle besser passt. Eine Benutzeroberfläche bekommt ständig neue Elemente, aber selten neue Grundoperationen – klassisch objektorientiert. Ein Compiler hat eine feste Menge von Sprachkonstrukten, aber ständig neue Analysen darüber – klassisch funktional.</p>
+
+<h2 id="geschichte">Woher die Stile kommen</h2>
+<ul class="tl">
+  <li><b>1957</b>Fortran – imperativ, die erste weitverbreitete Hochsprache.</li>
+  <li><b>1958</b>Lisp – funktional, Funktionen als Werte. Die Idee ist so alt wie die Programmierung selbst.</li>
+  <li><b>1967</b>Simula aus Norwegen führt Klassen und Objekte ein; Smalltalk macht in den 1970ern alles zum Objekt.</li>
+  <li><b>1970er</b>SQL und Prolog – deklarativ: Man beschreibt Ergebnis oder Regeln, nicht den Weg.</li>
+  <li><b>1995</b>Java – konsequent objektorientiert.</li>
+  <li><b>2014</b>Java 8 bringt Lambdas und Streams. Seitdem kommen immer mehr funktionale Bausteine dazu: Records (Java 16), sealed Interfaces (17), Pattern Matching im switch (21).</li>
+</ul>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">// Funktional-algebraisch in modernem Java: Daten + Fallunterscheidung</span>
+<span class="k">sealed interface</span> Form <span class="k">permits</span> Kreis, Rechteck {}
+<span class="k">record</span> Kreis(<span class="k">double</span> r) <span class="k">implements</span> Form {}
+<span class="k">record</span> Rechteck(<span class="k">double</span> b, <span class="k">double</span> h) <span class="k">implements</span> Form {}
+
+<span class="k">static double</span> flaeche(Form f) {
+    <span class="k">return switch</span> (f) {
+        <span class="k">case</span> Kreis k    -&gt; Math.PI * k.r() * k.r();
+        <span class="k">case</span> Rechteck r -&gt; r.b() * r.h();
+    };   <span class="c">// kein default nötig: Der Compiler kennt alle Fälle –</span>
+}        <span class="c">// und meldet einen Fehler, sobald jemand eine neue Form hinzufügt</span></code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Stil</th><th>Werkzeuge in Java</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Imperativ</strong></td><td>Schleifen, Zuweisungen, Arrays – immer noch der schnellste Weg für heiße innere Schleifen</td></tr>
+    <tr><td><strong>Objektorientiert</strong></td><td>Klassen, Interfaces, Kapselung mit <code>private</code>, Polymorphie über überschriebene Methoden. Faustregel: Komposition vor Vererbung</td></tr>
+    <tr><td><strong>Funktional</strong></td><td>Lambdas, Methodenreferenzen, <code>Function</code> und Co., Streams, <code>Optional</code>, Records als unveränderliche Werte, <code>List.of</code> und <code>toList()</code> liefern unveränderliche Listen</td></tr>
+    <tr><td><strong>Algebraische Datentypen</strong></td><td>sealed Interfaces + Records + Pattern Matching: „ein Wert ist genau eines von diesen“ – mit Prüfung durch den Compiler</td></tr>
+    <tr><td><strong>Deklarativ</strong></td><td>Annotationen wie <code>@Transactional</code> oder <code>@NotNull</code>, Spring-Konfiguration, SQL und JPQL, Stream-Pipelines</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Objektorientiert heißt Vererbung.“</b> – Der Kern ist Kapselung: Objekte verwalten ihren Zustand selbst. Tiefe Vererbungshierarchien gelten heute eher als Warnzeichen; Interfaces und Komposition sind meist besser.</div>
+  <div><b>„Funktional heißt: ohne Objekte.“</b> – Funktional heißt: ohne Nebenwirkungen und ohne Veränderung. Ein Record mit Methoden, die neue Records zurückgeben, ist objektorientiert und funktional zugleich.</div>
+  <div><b>„Streams sind schneller als Schleifen.“</b> – Meist sind sie gleich schnell oder etwas langsamer. Ihr Vorteil ist Lesbarkeit. <code>parallelStream()</code> hilft nur bei großen Datenmengen mit teurer Arbeit pro Element.</div>
+  <div><b>„Imperativ ist veraltet.“</b> – Die Hardware arbeitet imperativ, und jeder andere Stil wird am Ende dorthin übersetzt. Für eine einfache, zeitkritische Schleife ist er oft das Klarste.</div>
+  <div><b>„Man muss sich für einen Stil entscheiden.“</b> – Gute Programme mischen: objektorientiert im Großen, funktional im Kleinen, deklarativ, wo es eine passende Sprache gibt.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/prozess-thread/">Prozess, Thread, Nebenläufigkeit</a>
+  <a href="/it-konzepte/datenformate/">Datenformate und Serialisierung</a>
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

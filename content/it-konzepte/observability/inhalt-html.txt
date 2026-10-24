@@ -1,0 +1,126 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Observability</strong> (Beobachtbarkeit) heißt: Man kann aus den Daten, die ein laufendes System nach außen gibt, verstehen, was in ihm vorgeht – auch bei Fehlern, an die vorher niemand gedacht hat. Die drei Grundarten dieser Daten sind <strong>Logs</strong> (einzelne Ereignisse), <strong>Metriken</strong> (Zahlen über die Zeit) und <strong>Traces</strong> (der Weg einer Anfrage durch alle Dienste).</p>
+<p>Klassisches Monitoring beantwortet bekannte Fragen: Ist die CPU voll? Observability soll auch unbekannte beantworten: Warum sind nur Bestellungen mit Gutschein aus Österreich langsam? Der heutige Standard, um alle drei Datenarten zu erzeugen, ist <strong>OpenTelemetry</strong>.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#drei">Logs, Metriken, Traces</a></li>
+  <li><a href="#tracing">Verteiltes Tracing</a></li>
+  <li><a href="#perzentile">Warum der Durchschnitt lügt</a></li>
+  <li><a href="#slo">SLOs und Fehlerbudget</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="drei">Logs, Metriken, Traces</h2>
+<div class="cards">
+  <div class="card"><div class="num">Logs</div><h3>Was ist passiert?</h3><p>Einzelne Ereignisse mit Zeitstempel und Details: „Zahlung für Bestellung 4711 abgelehnt, Grund: Limit“. Reich an Kontext, aber teuer in der Menge und nur durchsuchbar, wenn sie strukturiert sind – als JSON-Felder statt als Fließtext.</p></div>
+  <div class="card"><div class="num">Metriken</div><h3>Wie viel, wie schnell?</h3><p>Zahlen über die Zeit: Anfragen pro Sekunde, Fehlerquote, Antwortzeiten, Speicherverbrauch. Billig zu speichern, ideal für Dashboards und Alarme – aber zusammengefasst, ohne den einzelnen Fall.</p></div>
+  <div class="card"><div class="num">Traces</div><h3>Wo ging die Zeit hin?</h3><p>Der Weg einer einzelnen Anfrage durch alle Dienste, als Baum von <em>Spans</em> mit Start und Dauer. Zeigt, welcher Aufruf langsam war oder fehlschlug – das Werkzeug für <a href="/it-konzepte/microservices/">Microservices</a>.</p></div>
+</div>
+<p>Die Stärke entsteht durch die Verbindung: Eine Metrik zeigt, <em>dass</em> etwas schiefläuft – die Antwortzeit steigt. Ein Trace zeigt, <em>wo</em> – im Zahlungsdienst. Die Logs dieses Traces zeigen, <em>warum</em> – Zeitüberschreitung beim Zahlungsanbieter. Damit das funktioniert, trägt jede Logzeile die <strong>Trace-ID</strong> der Anfrage, zu der sie gehört.</p>
+
+<h2 id="tracing">Verteiltes Tracing</h2>
+<p>Beim ersten Dienst bekommt eine Anfrage eine Trace-ID. Bei jedem weiteren Aufruf wird sie mitgeschickt – über HTTP im Header <code>traceparent</code> (W3C-Standard), über Nachrichten in deren Headern. Jeder Dienst meldet seine Spans an einen Sammler, und daraus entsteht dieses Wasserfalldiagramm. Wähle ein Problem:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein Trace, vier Geschichten</div>
+  <div class="seg" id="trS">
+    <button data-k="ok" aria-pressed="true">Alles normal</button>
+    <button data-k="db">Langsame Abfrage</button>
+    <button data-k="n1">N+1-Aufrufe</button>
+    <button data-k="retry">Wiederholungen</button>
+  </div>
+  <div class="tid" id="trId"></div>
+  <div class="wf" id="trW"></div>
+  <div class="axis"><div></div><div id="trAx"></div></div>
+  <div class="note" id="trN"></div>
+  <p class="fine">Modellhaft vereinfacht. Farben stehen für Dienste, rot markierte Spans sind fehlgeschlagen oder auffällig.</p>
+</div>
+
+<h2 id="perzentile">Warum der Durchschnitt lügt</h2>
+<p>Antwortzeiten sind fast nie normalverteilt: Die meisten Anfragen sind schnell, ein paar sehr langsam. Der Durchschnitt verwischt das. Deshalb misst man <strong>Perzentile</strong>: p95 = 500 ms heißt, 95 % der Anfragen waren schneller als 500 ms. Schieb den Anteil langsamer Anfragen hoch:</p>
+
+<div class="widget">
+  <div class="widget-title">1000 Anfragen, vier Kennzahlen</div>
+  <div class="sl"><span>Anteil langsamer Anfragen</span><input type="range" id="pcF" min="0" max="12" step="0.5" value="3"><output id="pcFo"></output></div>
+  <svg id="pcSvg" viewBox="0 0 480 160" role="img" aria-label="Verteilung der Antwortzeiten"></svg>
+  <div class="kpi" id="pcK"></div>
+  <div class="note" id="pcN"></div>
+  <p class="fine">Modellhaft: schnelle Anfragen um 80 ms, langsame um 2 Sekunden. Die x-Achse ist logarithmisch.</p>
+</div>
+
+<p>Gerade die langsamen Anfragen sind wichtig: Oft sind es die Kunden mit dem größten Warenkorb. Und wer bei einem Seitenaufbau zwanzig Dienste fragt, trifft fast sicher auf einen langsamen – das p99 eines einzelnen Dienstes wird zum Normalfall der Seite.</p>
+
+<h2 id="slo">SLOs und Fehlerbudget</h2>
+<p>Wie zuverlässig muss ein Dienst sein? 100 % ist unerreichbar und unbezahlbar. Stattdessen legt man ein <strong>Service Level Objective</strong> fest, etwa: „99,9 % der Anfragen innerhalb von 30 Tagen erfolgreich und schneller als 300 ms.“ Was zu 100 % fehlt, ist das <strong>Fehlerbudget</strong> – es darf ausgegeben werden, für Deployments, Experimente, Ausfälle.</p>
+
+<div class="widget">
+  <div class="widget-title">Wie viel Ausfall darf sein?</div>
+  <div class="seg" id="slS">
+    <button data-v="99">99 %</button>
+    <button data-v="99.5">99,5 %</button>
+    <button data-v="99.9" aria-pressed="true">99,9 %</button>
+    <button data-v="99.99">99,99 %</button>
+  </div>
+  <div class="sl"><span>Ausfall in diesem Monat bisher</span><input type="range" id="slU" min="0" max="240" step="5" value="20"><output id="slUo"></output></div>
+  <div class="bud" id="slB"></div>
+  <div class="bl" id="slL"></div>
+  <div class="note" id="slN"></div>
+</div>
+
+<p>Das Budget ist ein Werkzeug für Entscheidungen: Ist noch viel übrig, darf das Team schneller ausliefern und mehr riskieren. Ist es aufgebraucht, hat Stabilität Vorrang. Und es bestimmt die <strong>Alarme</strong>: Statt bei jeder CPU-Spitze zu wecken, schlägt man Alarm, wenn das Budget gefährlich schnell verbraucht wird – also wenn Nutzer tatsächlich etwas merken. Zu viele Alarme sind gefährlicher als zu wenige: Wer nachts ständig umsonst geweckt wird, ignoriert irgendwann auch den echten.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">// Logs: SLF4J mit Platzhaltern – Trace-ID kommt automatisch über den MDC dazu,</span>
+<span class="c">// wenn Micrometer Tracing oder der OpenTelemetry-Agent aktiv ist</span>
+<span class="k">private static final</span> Logger log = LoggerFactory.getLogger(BestellService.<span class="k">class</span>);
+log.info(<span class="s">"Bestellung angelegt id={} positionen={}"</span>, b.id(), b.positionen().size());
+
+<span class="c">// Metriken: Micrometer – Zähler und Zeitmesser, mit Tags zum Aufschlüsseln</span>
+Counter.builder(<span class="s">"bestellungen"</span>).tag(<span class="s">"zahlart"</span>, zahlart).register(registry).increment();
+Timer.builder(<span class="s">"zahlung.dauer"</span>)
+     .publishPercentiles(<span class="n">0.5</span>, <span class="n">0.95</span>, <span class="n">0.99</span>)
+     .register(registry)
+     .record(() -&gt; zahlung.ausfuehren(b));
+
+<span class="c">// Traces: oft ganz ohne Code – der Agent instrumentiert HTTP, JDBC, Kafka …</span>
+<span class="c">// java -javaagent:opentelemetry-javaagent.jar -Dotel.service.name=bestellung -jar app.jar</span></code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Baustein</th><th>Rolle</th></tr></thead>
+  <tbody>
+    <tr><td><strong>OpenTelemetry</strong></td><td>herstellerneutraler Standard und Bibliotheken für Traces, Metriken und Logs; der Java-Agent instrumentiert gängige Bibliotheken automatisch</td></tr>
+    <tr><td><strong>Micrometer</strong></td><td>Metrik- und Tracing-Fassade in Spring Boot – „SLF4J für Metriken“; Actuator stellt die Werte bereit, etwa für Prometheus</td></tr>
+    <tr><td><strong>Prometheus</strong></td><td>holt Metriken regelmäßig ab, speichert sie als Zeitreihen und wertet Alarmregeln aus</td></tr>
+    <tr><td><strong>Grafana</strong></td><td>Dashboards über Metriken, Logs und Traces</td></tr>
+    <tr><td><strong>Jaeger, Tempo, Zipkin</strong></td><td>speichern Traces und zeigen sie als Wasserfall</td></tr>
+    <tr><td><strong>Loki, Elasticsearch</strong></td><td>sammeln und durchsuchen Logs</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Ein Fallstrick bei Metriken ist die <strong>Kardinalität</strong>: Jede Kombination von Tag-Werten ist eine eigene Zeitreihe. Ein Tag <code>zahlart</code> mit fünf Werten ist harmlos – ein Tag <code>kundenId</code> mit einer Million Werten legt das Metriksystem lahm. Für Einzelfälle sind Logs und Traces da.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Viel loggen hilft viel.“</b> – Unstrukturierte Massen kosten Speicher, Geld und Suchzeit. Besser: weniger, dafür strukturiert, mit Trace-ID – und keine Passwörter oder personenbezogenen Daten in Logs.</div>
+  <div><b>„Die durchschnittliche Antwortzeit ist gut, also ist alles gut.“</b> – Der Durchschnitt versteckt die langsamen Anfragen. Perzentile wie p95 und p99 zeigen, was die unglücklichsten Nutzer erleben.</div>
+  <div><b>„Monitoring und Observability sind dasselbe.“</b> – Monitoring prüft bekannte Zustände mit vorab definierten Schwellen. Observability soll erlauben, auch neue, unvorhergesehene Fragen an die Daten zu stellen.</div>
+  <div><b>„Je mehr Alarme, desto sicherer.“</b> – Alarmmüdigkeit ist real. Alarme sollten auf Symptome zielen, die Nutzer spüren, und jeder sollte eine klare Handlung auslösen.</div>
+  <div><b>„Tracing muss man in jeden Aufruf einbauen.“</b> – Für die gängigen Bibliotheken übernimmt das der OpenTelemetry-Agent oder Micrometer Tracing. Eigene Spans braucht man nur für fachlich interessante Abschnitte.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/microservices/">Microservices und Monolith</a>
+  <a href="/it-konzepte/verteilte-systeme/">Verteilte Systeme</a>
+  <a href="/it-konzepte/cloud/">Cloud</a>
+  <a href="/it-konzepte/api-stile/">API-Stile</a>
+  <a href="/it-konzepte/messaging/">Messaging</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

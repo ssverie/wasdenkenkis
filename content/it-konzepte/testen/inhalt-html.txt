@@ -1,0 +1,169 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein automatischer <strong>Test</strong> ist Code, der anderen Code ausführt und prüft, ob das Ergebnis stimmt. Er dient zweierlei: Er findet Fehler, und er erlaubt Änderungen ohne Angst – wer umbaut und alle Tests bleiben grün, hat wahrscheinlich nichts kaputt gemacht.</p>
+<p>Man unterscheidet nach Reichweite: <strong>Unit-Tests</strong> prüfen eine kleine Einheit isoliert, schnell und zuverlässig. <strong>Integrationstests</strong> prüfen das Zusammenspiel mit Datenbank, Netzwerk oder anderen Modulen. <strong>End-to-End-Tests</strong> prüfen das ganze System wie ein Nutzer. Je höher, desto realistischer – aber auch langsamer, teurer und wackeliger. Daraus ergibt sich die <strong>Testpyramide</strong>: viele kleine Tests unten, wenige große oben.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#pyramide">Die Testpyramide</a></li>
+  <li><a href="#doubles">Mocks, Stubs und Fakes</a></li>
+  <li><a href="#mutation">Abdeckung ist nicht Qualität</a></li>
+  <li><a href="#property">Property-based Testing</a></li>
+  <li><a href="#tdd">Test-Driven Development</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="pyramide">Die Testpyramide</h2>
+<p>Die Pyramide ist keine Stilfrage, sondern eine Rechnung: Jeder Test kostet Laufzeit, und jeder hat eine kleine Wahrscheinlichkeit, ohne echten Fehler zu scheitern – weil ein Netzwerk hakt, eine Zeitgrenze knapp ist, ein Browser zu langsam lädt. Stell die Mischung selbst zusammen:</p>
+
+<div class="widget">
+  <div class="widget-title">Eine Teststrategie zusammenstellen</div>
+  <div class="seg" id="pyP">
+    <button data-p="pyr" aria-pressed="true">Pyramide</button>
+    <button data-p="ice">Eistüte</button>
+    <button data-p="none">Nur Unit-Tests</button>
+  </div>
+  <div class="pyr">
+    <svg id="pySvg" viewBox="0 0 300 200" aria-hidden="true"></svg>
+    <div>
+      <div class="sl"><span>Unit</span><input type="range" id="pyU" min="0" max="3000" step="50"><output id="pyUo"></output></div>
+      <div class="sl"><span>Integration</span><input type="range" id="pyI" min="0" max="400" step="10"><output id="pyIo"></output></div>
+      <div class="sl"><span>End-to-End</span><input type="range" id="pyE" min="0" max="200" step="5"><output id="pyEo"></output></div>
+    </div>
+  </div>
+  <div class="py-stats" id="pyS"></div>
+  <div class="note" id="pyN"></div>
+  <p class="fine">Modellannahmen: Unit 5 ms und 1 : 100 000 Fehlalarm, Integration 0,5 s und 1 : 2 000, End-to-End 20 s und 1 : 200. Echte Werte schwanken stark – die Größenordnungen nicht.</p>
+</div>
+
+<p>Die umgedrehte Form – wenige Unit-Tests, ein Berg manueller und End-to-End-Tests – heißt spöttisch <strong>Eistüte</strong>. Sie ist häufig, weil End-to-End-Tests sich am realistischsten anfühlen. Aber eine Testsuite, die eine Stunde läuft und jedes dritte Mal grundlos rot ist, wird nicht mehr ernst genommen. Und ein roter End-to-End-Test sagt nur „irgendwo ist etwas kaputt“; ein roter Unit-Test sagt, wo.</p>
+
+<h3>Was einen guten Test ausmacht</h3>
+<div class="cards">
+  <div class="card"><div class="num">⚡</div><h4>Schnell</h4><p>Was Minuten dauert, läuft man nicht vor jedem Commit. Unit-Tests sollten in Millisekunden fertig sein.</p></div>
+  <div class="card"><div class="num">=</div><h4>Deterministisch</h4><p>Gleicher Code, gleiches Ergebnis – jedes Mal. Keine Abhängigkeit von Uhrzeit, Zufall, Reihenfolge oder Netzwerk.</p></div>
+  <div class="card"><div class="num">◎</div><h4>Aussagekräftig</h4><p>Scheitert er, weiß man, was kaputt ist. Ein Test prüft eine Sache und hat einen Namen, der sie beschreibt.</p></div>
+</div>
+<p>Ein wackeliger Test (<em>flaky test</em>), den man „einfach noch mal laufen lässt“, ist schlimmer als keiner: Er gewöhnt das Team daran, Rot zu ignorieren. Die häufigsten Ursachen: <code>Thread.sleep</code> statt Warten auf eine Bedingung, Abhängigkeit von der Systemuhr, gemeinsamer Zustand zwischen Tests und nebenläufiger Code mit <a href="/it-konzepte/prozess-thread/">Race Conditions</a>.</p>
+
+<h2 id="doubles">Mocks, Stubs und Fakes</h2>
+<p>Ein Unit-Test soll eine Einheit isoliert prüfen. Hängt sie von etwas Langsamem oder Unberechenbarem ab – einer Datenbank, einem Zahlungsdienst, der Uhr –, ersetzt man das durch ein <strong>Test-Double</strong>:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Art</th><th>Was es tut</th><th>Beispiel</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Stub</strong></td><td>liefert vorbereitete Antworten</td><td>„Der Wechselkurs ist immer 1,08.“</td></tr>
+    <tr><td><strong>Mock</strong></td><td>prüft zusätzlich, ob und wie er aufgerufen wurde</td><td>„Wurde <code>sendeMail</code> genau einmal mit dieser Adresse aufgerufen?“</td></tr>
+    <tr><td><strong>Fake</strong></td><td>eine echte, aber vereinfachte Implementierung</td><td>ein Repository auf Basis einer <code>HashMap</code> statt der Datenbank</td></tr>
+    <tr><td><strong>Echte Abhängigkeit im Container</strong></td><td>das Original, für den Test frisch gestartet</td><td>PostgreSQL per Testcontainers – für Integrationstests</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Mocks sind mächtig, aber verführerisch. Wer alles mockt, testet am Ende, dass der Code die Methoden aufruft, die er aufruft – und jeder Umbau zerbricht Dutzende Tests, obwohl sich am Verhalten nichts geändert hat. Faustregel: Mocken, was man nicht besitzt oder was langsam und unberechenbar ist. Den Rest echt benutzen oder durch Fakes ersetzen. Und zur Uhrzeit: Code, der <code>Instant.now()</code> direkt aufruft, ist schwer testbar – übergibt man eine <code>Clock</code>, kann der Test die Zeit festlegen.</p>
+
+<h2 id="mutation">Abdeckung ist nicht Qualität</h2>
+<p>Die <strong>Testabdeckung</strong> misst, welche Zeilen beim Testen ausgeführt wurden. Sie zeigt zuverlässig, was <em>gar nicht</em> getestet ist. Aber ausgeführt heißt nicht geprüft. Besser misst das ein <strong>Mutationstest</strong>: Ein Werkzeug baut absichtlich kleine Fehler ein – <code>&gt;=</code> wird zu <code>&gt;</code>, ein Rückgabewert zu 0 – und schaut, ob ein Test das bemerkt. Jeder unbemerkte „Mutant“ ist ein Fehler, den die Tests nicht finden würden. Wähle Tests aus:</p>
+
+<div class="widget">
+  <div class="widget-title">Abdeckung gegen Mutationen</div>
+  <div class="mt">
+    <div>
+      <h4>Code</h4>
+      <div class="src" id="mSrc"></div>
+      <h4 style="margin-top:12px">Tests</h4>
+      <div id="mTests"></div>
+    </div>
+    <div>
+      <h4>Eingebaute Fehler (Mutanten)</h4>
+      <div class="mut" id="mMut"></div>
+      <div class="mstats" id="mS"></div>
+    </div>
+  </div>
+  <div class="note" id="mN"></div>
+  <p class="fine">Die Mutanten werden wirklich ausgeführt: Jeder ist eine leicht veränderte Version der Funktion, gegen die alle gewählten Tests laufen.</p>
+</div>
+
+<h2 id="property">Property-based Testing</h2>
+<p>Bei klassischen Tests denkt sich der Entwickler Beispiele aus – und übersieht genau die Fälle, an die er auch beim Programmieren nicht gedacht hat. <strong>Property-based Testing</strong> dreht das um: Man beschreibt eine <em>Eigenschaft</em>, die immer gelten muss, und das Werkzeug erzeugt Hunderte zufällige Eingaben. Findet es einen Gegenbeispiel, <strong>schrumpft</strong> es ihn auf den kleinsten Fall, der noch scheitert.</p>
+
+<div class="widget">
+  <div class="widget-title">Eine Sortierfunktion mit verstecktem Fehler</div>
+  <div class="src" style="margin-bottom:10px"><span style="color:var(--muted)">// Jemand hat „optimiert“:</span>
+List&lt;Integer&gt; sortiere(List&lt;Integer&gt; xs) {
+    <span style="color:var(--muted)">return new ArrayList&lt;&gt;(new TreeSet&lt;&gt;(xs));   // sortiert ja auch …</span>
+}</div>
+  <div class="seg" id="pbP">
+    <button data-p="sorted" aria-pressed="true">Eigenschaft: Ergebnis ist aufsteigend sortiert</button>
+    <button data-p="len">Eigenschaft: Länge bleibt gleich</button>
+  </div>
+  <div class="controls" style="margin-top:0"><button class="primary" id="pbRun">100 zufällige Listen prüfen</button></div>
+  <div class="pb-log" id="pbLog">Noch nicht gestartet.</div>
+  <div class="note" id="pbN"></div>
+</div>
+
+<p>Die Kunst liegt im Finden guter Eigenschaften. Bewährte Muster: Hin und zurück ergibt das Original (serialisieren, deserialisieren). Das Ergebnis erfüllt eine Bedingung (sortiert, keine Duplikate, Summe gleich). Eine einfache, langsame Implementierung liefert dasselbe wie die schnelle. Zweimal anwenden ändert nichts mehr (Idempotenz).</p>
+
+<h2 id="tdd">Test-Driven Development</h2>
+<p>Beim <strong>TDD</strong> schreibt man den Test vor dem Code, in einem kurzen Kreislauf: <strong>Rot</strong> – ein Test, der noch scheitert. <strong>Grün</strong> – gerade so viel Code, dass er besteht. <strong>Aufräumen</strong> – den Code verbessern, während alle Tests grün bleiben. Der Hauptnutzen ist weniger die Testabdeckung als das Design: Code, der von Anfang an testbar sein muss, bekommt fast zwangsläufig klare Schnittstellen und wenig versteckte Abhängigkeiten. Ob man TDD streng befolgt, ist Geschmackssache; den Kreislauf beim Beheben eines Fehlers zu nutzen – erst ein Test, der den Fehler zeigt, dann die Korrektur – lohnt sich immer.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">// JUnit + AssertJ: ein Test, viele Fälle</span>
+@ParameterizedTest
+@CsvSource({ <span class="s">"20000, true, 2000"</span>, <span class="s">"20000, false, 1000"</span>, <span class="s">"9999, true, 0"</span>, <span class="s">"10000, true, 1000"</span> })
+<span class="k">void</span> rabatt(<span class="k">long</span> betrag, <span class="k">boolean</span> stamm, <span class="k">long</span> erwartet) {
+    assertThat(Preise.rabattCent(betrag, stamm)).isEqualTo(erwartet);
+}
+
+<span class="c">// Mockito: Zahlungsdienst ersetzen, Aufruf prüfen</span>
+ZahlungsDienst zahlung = mock(ZahlungsDienst.<span class="k">class</span>);
+when(zahlung.belaste(any(), anyLong())).thenReturn(Ergebnis.OK);
+<span class="k">new</span> Kasse(zahlung).bezahle(kunde, <span class="s">5990</span>);
+verify(zahlung).belaste(kunde, <span class="s">5990</span>);
+
+<span class="c">// Testcontainers: echte PostgreSQL für den Integrationstest</span>
+@Container
+<span class="k">static</span> PostgreSQLContainer&lt;?&gt; db = <span class="k">new</span> PostgreSQLContainer&lt;&gt;(<span class="s">"postgres:16"</span>);
+
+<span class="c">// jqwik: Property-based Testing</span>
+@Property
+<span class="k">void</span> sortierenBehaeltLaenge(@ForAll List&lt;Integer&gt; xs) {
+    assertThat(sortiere(xs)).hasSize(xs.size());
+}</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Werkzeug</th><th>Wofür</th></tr></thead>
+  <tbody>
+    <tr><td><strong>JUnit</strong></td><td>das Fundament: Tests schreiben und ausführen, parametrisieren, verschachteln</td></tr>
+    <tr><td><strong>AssertJ</strong></td><td>lesbare Prüfungen mit guten Fehlermeldungen</td></tr>
+    <tr><td><strong>Mockito</strong></td><td>Stubs und Mocks</td></tr>
+    <tr><td><strong>Testcontainers</strong></td><td>echte Datenbanken, Kafka und andere Dienste in Docker – frisch für jeden Testlauf</td></tr>
+    <tr><td><strong>jqwik</strong></td><td>Property-based Testing für die JUnit-Plattform</td></tr>
+    <tr><td><strong>PIT</strong></td><td>Mutationstests für Java – <code>mvn org.pitest:pitest-maven:mutationCoverage</code></td></tr>
+    <tr><td><strong>JaCoCo</strong></td><td>Testabdeckung messen</td></tr>
+    <tr><td><strong>ArchUnit</strong></td><td>Architekturregeln als Test: „Der Controller greift nie direkt auf ein Repository zu.“</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„100 % Testabdeckung heißt fehlerfrei.“</b> – Sie heißt, dass jede Zeile einmal ausgeführt wurde. Ob dabei etwas geprüft wurde, zeigt erst ein Mutationstest.</div>
+  <div><b>„Tests kosten Zeit.“</b> – Sie kosten Zeit beim Schreiben und sparen sie bei jeder späteren Änderung. Ohne Tests wird jede Änderung an altem Code ein Risiko, und das Team traut sich irgendwann nicht mehr.</div>
+  <div><b>„Ein wackeliger Test wird einfach neu gestartet.“</b> – Er zeigt fast immer ein echtes Problem: im Test oder – unangenehmer – im Code, etwa eine Race Condition.</div>
+  <div><b>„Private Methoden muss man auch testen.“</b> – Getestet wird das Verhalten über die öffentliche Schnittstelle. Wer das Bedürfnis hat, eine private Methode einzeln zu testen, hat oft eine eigene Klasse gefunden, die herausgelöst werden möchte.</div>
+  <div><b>„Je mehr Mocks, desto besser isoliert.“</b> – Zu viele Mocks testen die Implementierung statt des Verhaltens. Solche Tests zerbrechen bei jedem Umbau und finden trotzdem kaum Fehler.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/build-cicd/">Build und CI/CD</a>
+  <a href="/it-konzepte/programmierparadigmen/">Programmierparadigmen</a>
+  <a href="/it-konzepte/prozess-thread/">Prozess, Thread, Nebenläufigkeit</a>
+  <a href="/it-konzepte/git/">Versionskontrolle mit Git</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

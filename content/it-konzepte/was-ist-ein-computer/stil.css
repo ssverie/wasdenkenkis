@@ -1,0 +1,89 @@
+/* ---- Seitenspezifisch: Was ist ein Computer? ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert kbd{font:600 .8em var(--mono);padding:.1em .4em;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;background:var(--card)}
+/* Bits */
+.erklaert .bits{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;max-width:520px;margin:0 auto}
+.erklaert .bit{display:flex;flex-direction:column;align-items:center;gap:4px}
+.erklaert .bit button{width:100%;aspect-ratio:1;max-width:56px;padding:0;font:700 1.3rem var(--mono);border-radius:10px}
+.erklaert .bit button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .bit button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .bit button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .bit small{font:.68rem var(--mono);color:var(--muted)}
+.erklaert .interp{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:16px}
+.erklaert .interp div{padding:10px;border-radius:10px;background:var(--bg);text-align:center;font-size:.74rem;color:var(--muted)}
+.erklaert .interp b{display:block;font:600 1.25rem var(--mono);color:var(--fg);margin-bottom:2px;min-height:1.5em}
+.erklaert .interp .sw{display:block;width:44px;height:26px;border-radius:6px;margin:0 auto 4px;border:1px solid var(--line)}
+.erklaert .bit-quick{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;justify-content:center}
+.erklaert .bit-quick button{padding:5px 10px;font-size:.8rem}
+
+/* Addierer */
+.erklaert #adder{max-width:600px}
+.erklaert #adder .w{fill:none;stroke-width:3;stroke-linejoin:round;transition:stroke .2s}
+.erklaert #adder .w0{stroke:var(--line)}
+.erklaert #adder .w1{stroke:var(--accent-2)}
+.erklaert #adder .g{fill:var(--card);stroke:var(--fg);stroke-width:1.5}
+.erklaert #adder .gt{font:700 12px var(--mono);fill:var(--fg)}
+.erklaert #adder .in{cursor:pointer}
+.erklaert #adder .lamp0{fill:var(--bg);stroke:var(--line);stroke-width:2}
+.erklaert #adder .lamp1{fill:var(--accent-2);stroke:var(--accent-2);stroke-width:2}
+.erklaert #adder .lt{font:700 13px var(--mono)}
+.erklaert #adder .lab{font:600 11px var(--sans);fill:var(--muted)}
+.erklaert .add-res{margin-top:10px;text-align:center;font-size:.92rem}
+.erklaert .add-res code{font-size:1rem}
+
+/* Mini-CPU */
+.erklaert .cpu{display:grid;grid-template-columns:200px 1fr;gap:16px;align-items:start}
+@media (max-width:620px){.erklaert .cpu{grid-template-columns:1fr}}
+.erklaert .regs{display:flex;flex-direction:column;gap:8px}
+.erklaert .reg{padding:10px 12px;border-radius:10px;background:var(--bg);font-size:.75rem;color:var(--muted)}
+.erklaert .reg b{display:block;font:600 1.15rem var(--mono);color:var(--fg)}
+.erklaert .reg.flash{background:var(--accent-2-soft)}
+.erklaert .phase{display:flex;gap:4px}
+.erklaert .phase span{flex:1;text-align:center;padding:5px 2px;border-radius:7px;background:var(--bg);font-size:.7rem;font-weight:700;color:var(--muted)}
+.erklaert .phase span.on{background:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .phase span.on{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .phase span.on{color:#0d1530}}
+.erklaert .mem{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.erklaert .cell{position:relative;padding:6px 7px;border-radius:8px;border:1px solid var(--line);background:var(--card);font-size:.68rem;color:var(--muted);transition:background .2s}
+.erklaert .cell .ad{position:absolute;top:4px;right:6px;font:.62rem var(--mono)}
+.erklaert .cell b{display:block;font:600 1rem var(--mono);color:var(--fg)}
+.erklaert .cell .as{font:.68rem var(--mono)}
+.erklaert .cell.pc{outline:2px solid var(--accent);outline-offset:1px}
+.erklaert .cell.rd{background:var(--accent-soft)}
+.erklaert .cell.wr{background:var(--accent-2-soft)}
+.erklaert .cell.data b{color:var(--accent-2)}
+.erklaert .cpu-txt{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.9rem;min-height:3.4em}
+.erklaert .isa{font-size:.8rem;margin-top:10px}
+.erklaert .isa td, .erklaert .isa th{padding:5px 10px}
+
+/* Bauteile */
+.erklaert .parts svg{max-width:560px}
+.erklaert .parts .bx{fill:var(--card);stroke:var(--line);stroke-width:2}
+.erklaert .parts .bx.cpu{fill:var(--accent-soft);stroke:var(--accent)}
+.erklaert .parts .ln{stroke:var(--muted);stroke-width:3}
+.erklaert .parts .ln.fast{stroke:var(--accent);stroke-width:5}
+.erklaert .parts .t{font:700 13px var(--sans);fill:var(--fg)}
+.erklaert .parts .s{font:11px var(--sans);fill:var(--muted)}
+
+/* Latenzen */
+.erklaert .lat{display:flex;flex-direction:column;gap:7px}
+.erklaert .lrow{display:grid;grid-template-columns:11em 1fr 7.5em;gap:10px;align-items:center;font-size:.85rem}
+.erklaert .lrow .lb{font-weight:600}
+.erklaert .lrow .tr{height:16px;background:var(--bg);border-radius:5px;overflow:hidden}
+.erklaert .lrow .fl{height:100%;background:var(--accent);border-radius:5px;transition:width .4s}
+.erklaert .lrow .v{text-align:right;font:600 .82rem var(--mono)}
+@media (max-width:520px){.erklaert .lrow{grid-template-columns:1fr 6.5em}.erklaert .lrow .tr{grid-column:1/-1;order:3}}
+
+.erklaert .tl{list-style:none;padding:0;margin:16px 0;border-left:2px solid var(--line)}
+.erklaert .tl li{position:relative;padding:4px 0 10px 18px;font-size:.92rem}
+.erklaert .tl li::before{content:"";position:absolute;left:-6px;top:11px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.erklaert .tl b{font-family:var(--mono);font-size:.85rem;margin-right:6px}
+.erklaert .journey{display:flex;flex-direction:column;gap:0}
+.erklaert .jstep{display:grid;grid-template-columns:9em 1fr;gap:12px;align-items:start;padding:12px 0;border-bottom:1px dashed var(--line)}
+.erklaert .jstep:last-child{border-bottom:0}
+.erklaert .jstep .jl{font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent)}
+.erklaert .jstep .jl small{display:block;text-transform:none;letter-spacing:0;font-weight:400;color:var(--muted)}
+.erklaert .jstep pre{margin:0}
+@media (max-width:560px){.erklaert .jstep{grid-template-columns:1fr;gap:4px}}
+

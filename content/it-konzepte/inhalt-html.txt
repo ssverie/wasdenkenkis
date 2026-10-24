@@ -1,0 +1,117 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Diese Reihe frischt die Grundlagen der Informatik auf – für alle, die sie einmal gelernt und im Alltag teilweise vergessen haben, und für alle, die nachschlagen wollen, was hinter einem Begriff steckt. Jede Seite beginnt beim Einfachen, hat Mitmach-Beispiele zum Ausprobieren und endet mit einem Abschnitt „Für Entwickler übersetzt“ mit Java-Code.</p>
+<p>Die Blöcke bauen aufeinander auf, lassen sich aber auch einzeln lesen. Wer einen bestimmten Schwerpunkt hat, kann einem der Lesepfade folgen.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#lesepfade">Lesepfade</a></li>
+  <li><a href="#eintraege">Die Einträge</a></li>
+  <li><a href="#aufbau">Wie die Einträge aufgebaut sind</a></li>
+  <li><a href="#ki">Und die KI?</a></li>
+</ol>
+</nav>
+
+<h2 id="lesepfade">Lesepfade</h2>
+<p>Statt alles der Reihe nach: sechs Wege durch die Reihe, je nach Interesse.</p>
+<div class="paths" id="paths">
+  <button data-p="alle" aria-pressed="true">Alles der Reihe nach</button>
+  <button data-p="java">Java-Alltag</button>
+  <button data-p="web">Wie das Web funktioniert</button>
+  <button data-p="haube">Unter der Haube</button>
+  <button data-p="arch">Architektur</button>
+  <button data-p="theorie">Theorie</button>
+  <button data-p="hardware">Vom Transistor zur CPU</button>
+</div>
+<div class="path-note" id="pathNote"></div>
+
+<h2 id="eintraege">Die Einträge</h2>
+
+<div class="blk"><span class="bl">0</span><h3>Einstieg</h3></div>
+<div class="qlist">
+  <div class="q" data-s="was-ist-ein-computer"><div class="num">0</div><div><h4><a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a><span class="step"></span></h4><p>Bits und Bytes, Logikgatter, eine Mini-CPU zum Durchsteppen, Latenzen und der Weg einer Java-Zeile bis zum Maschinencode.</p></div><span class="st on">verfügbar</span></div>
+</div>
+
+<div class="blk"><span class="bl">A</span><h3>Rechner und System</h3></div>
+<div class="qlist">
+  <div class="q" data-s="betriebssystem"><div class="num">A1</div><div><h4><a href="/it-konzepte/betriebssystem/">Betriebssystem</a><span class="step"></span></h4><p>Kernel und Systemaufrufe, Scheduler, virtueller Speicher – und warum „Gespeichert“ noch nicht auf der Platte heißt.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="prozess-thread"><div class="num">A2</div><div><h4><a href="/it-konzepte/prozess-thread/">Prozess, Thread, Nebenläufigkeit</a><span class="step"></span></h4><p>Race Conditions, Deadlocks, volatile und virtuelle Threads.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="speicherhierarchie"><div class="num">A3</div><div><h4><a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a><span class="step"></span></h4><p>Register, Caches, RAM, SSD – mit Cache-Simulator und der Frage, warum ein Array eine verkettete Liste schlägt.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="virtualisierung-container"><div class="num">A4</div><div><h4><a href="/it-konzepte/virtualisierung-container/">Virtualisierung und Container</a><span class="step"></span></h4><p>Hypervisor, Namespaces, cgroups, Image-Schichten – und Java im Container.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="dateisystem"><div class="num">A5</div><div><h4><a href="/it-konzepte/dateisystem/">Dateisysteme und Persistenz</a><span class="step"></span></h4><p>Inodes, Hardlinks, Journaling, Copy-on-Write und sicheres Speichern mit fsync.</p></div><span class="st on">verfügbar</span></div>
+</div>
+
+<div class="blk"><span class="bl">B</span><h3>Netze</h3></div>
+<div class="qlist">
+  <div class="q" data-s="tcp-ip"><div class="num">B1</div><div><h4><a href="/it-konzepte/tcp-ip/">Schichtenmodell und TCP/IP</a><span class="step"></span></h4><p>Kapselung, Routing, Paketverlust, Handshakes und QUIC.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="dns"><div class="num">B2</div><div><h4><a href="/it-konzepte/dns/">DNS</a><span class="step"></span></h4><p>Vom Namen zur Adresse, Eintragstypen, TTL – und warum es so oft am DNS liegt.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="http"><div class="num">B3</div><div><h4><a href="/it-konzepte/http/">HTTP</a><span class="step"></span></h4><p>Anfrage und Antwort, Methoden, Statuscodes, Caching, HTTP/2 und HTTP/3.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="tls"><div class="num">B4</div><div><h4><a href="/it-konzepte/tls/">TLS und Zertifikate</a><span class="step"></span></h4><p>Schlüsselaustausch mit Farben, Vertrauenskette, typische Zertifikatsfehler in Browser und Java.</p></div><span class="st on">verfügbar</span></div>
+</div>
+
+<div class="blk"><span class="bl">C</span><h3>Daten</h3></div>
+<div class="qlist">
+  <div class="q" data-s="relationale-datenbanken"><div class="num">C1</div><div><h4><a href="/it-konzepte/relationale-datenbanken/">Relationale Datenbanken</a><span class="step"></span></h4><p>JOINs, B-Baum-Indizes, Transaktionen und der letzte freie Platz unter READ COMMITTED.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="nosql-cap"><div class="num">C2</div><div><h4><a href="/it-konzepte/nosql-cap/">NoSQL und das CAP-Theorem</a><span class="step"></span></h4><p>Fünf Datenmodelle, Consistent Hashing, Netzunterbrechung und Quoren.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="datenformate"><div class="num">C3</div><div><h4><a href="/it-konzepte/datenformate/">Datenformate und Serialisierung</a><span class="step"></span></h4><p>UTF-8 und Zeichensalat, JSON gegen Protobuf, die Zahlenfalle in JavaScript.</p></div><span class="st on">verfügbar</span></div>
+</div>
+
+<div class="blk"><span class="bl">D</span><h3>Sicherheit</h3></div>
+<div class="qlist">
+  <div class="q" data-s="kryptografie"><div class="num">D1</div><div><h4><a href="/it-konzepte/kryptografie/">Kryptografie-Grundlagen</a><span class="step"></span></h4><p>Hashes, AES und Betriebsmodi, RSA mit Spielzeugzahlen, Post-Quanten-Verfahren.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="authentifizierung"><div class="num">D2</div><div><h4><a href="/it-konzepte/authentifizierung/">Authentifizierung</a><span class="step"></span></h4><p>Passwort-Hashing, JWT, OAuth 2 mit PKCE, OpenID Connect und Passkeys.</p></div><span class="st on">verfügbar</span></div>
+</div>
+
+<div class="blk"><span class="bl">E</span><h3>Software bauen</h3></div>
+<div class="qlist">
+  <div class="q" data-s="programmierparadigmen"><div class="num">E1</div><div><h4><a href="/it-konzepte/programmierparadigmen/">Programmierparadigmen</a><span class="step"></span></h4><p>Imperativ, objektorientiert, funktional, deklarativ – und geteilter veränderlicher Zustand.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="komplexitaet"><div class="num">E2</div><div><h4><a href="/it-konzepte/komplexitaet/">Komplexität und O-Notation</a><span class="step"></span></h4><p>Wachstumsklassen, binäre Suche, amortisierte Kosten, P und NP.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="datenstrukturen"><div class="num">E3</div><div><h4><a href="/it-konzepte/datenstrukturen/">Datenstrukturen</a><span class="step"></span></h4><p>HashMap von innen, Suchbäume, Heaps – und welche Java-Collection wann.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="compiler-jit"><div class="num">E4</div><div><h4><a href="/it-konzepte/compiler-jit/">Compiler, Interpreter, JIT</a><span class="step"></span></h4><p>Ein Mini-Compiler zum Ausprobieren, HotSpot, Deoptimierung, Native Image und Leyden.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="garbage-collection"><div class="num">E5</div><div><h4><a href="/it-konzepte/garbage-collection/">Garbage Collection</a><span class="step"></span></h4><p>Erreichbarkeit, Generationen, G1 und ZGC – und Speicherlecks in Java.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="git"><div class="num">E6</div><div><h4><a href="/it-konzepte/git/">Versionskontrolle mit Git</a><span class="step"></span></h4><p>Commits als Graph, Branches als Zettel, Merge gegen Rebase.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="build-cicd"><div class="num">E7</div><div><h4><a href="/it-konzepte/build-cicd/">Build und CI/CD</a><span class="step"></span></h4><p>Maven-Lebenszyklus, Versionskonflikte, Pipelines, Rolling, Blue-Green und Canary.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="testen"><div class="num">E8</div><div><h4><a href="/it-konzepte/testen/">Testen</a><span class="step"></span></h4><p>Testpyramide, Mocks, Mutationstests und Property-based Testing.</p></div><span class="st on">verfügbar</span></div>
+</div>
+
+<div class="blk"><span class="bl">F</span><h3>Architektur und Betrieb</h3></div>
+<div class="qlist">
+  <div class="q" data-s="api-stile"><div class="num">F1</div><div><h4><a href="/it-konzepte/api-stile/">API-Stile</a><span class="step"></span></h4><p>REST, gRPC, GraphQL und Ereignisse im Vergleich – und warum synchrone Ketten zerbrechlich sind.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="verteilte-systeme"><div class="num">F2</div><div><h4><a href="/it-konzepte/verteilte-systeme/">Verteilte Systeme</a><span class="step"></span></h4><p>Idempotenz, Raft-Konsens, Retries mit Jitter – und warum „genau einmal“ ein Mythos ist.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="messaging"><div class="num">F3</div><div><h4><a href="/it-konzepte/messaging/">Messaging</a><span class="step"></span></h4><p>Warteschlange gegen Log, Kafka-Partitionen, Abstürze und Giftnachrichten.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="microservices"><div class="num">F4</div><div><h4><a href="/it-konzepte/microservices/">Microservices und Monolith</a><span class="step"></span></h4><p>Was die Aufteilung wirklich kostet.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="cloud"><div class="num">F5</div><div><h4><a href="/it-konzepte/cloud/">Cloud</a><span class="step"></span></h4><p>IaaS, PaaS, Serverless – und was „die Cloud“ physisch ist.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="observability"><div class="num">F6</div><div><h4><a href="/it-konzepte/observability/">Observability</a><span class="step"></span></h4><p>Logs, Metriken, Traces und OpenTelemetry.</p></div><span class="st on">verfügbar</span></div>
+</div>
+
+<div class="blk"><span class="bl">G</span><h3>Theorie</h3></div>
+<div class="qlist">
+  <div class="q" data-s="formale-sprachen"><div class="num">G1</div><div><h4><a href="/it-konzepte/formale-sprachen/">Formale Sprachen und Automaten</a><span class="step"></span></h4><p>Regex und DFA, warum Klammern einen Automaten überfordern, und Backtracking in Java.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="turingmaschine"><div class="num">G2</div><div><h4><a href="/it-konzepte/turingmaschine/">Turingmaschine</a><span class="step"></span></h4><p>Band, Kopf, Zustände – das einfachste Modell eines vollständigen Computers.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="universalitaet"><div class="num">G3</div><div><h4><a href="/it-konzepte/universalitaet/">Universalität</a><span class="step"></span></h4><p>Eine Maschine, die jede andere simuliert – und was „Turing-vollständig“ heißt.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="berechenbarkeit"><div class="num">G4</div><div><h4><a href="/it-konzepte/berechenbarkeit/">Berechenbarkeit</a><span class="step"></span></h4><p>Das Halteproblem und Fragen, die kein Programm je beantworten kann.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="intraktabilitaet"><div class="num">G5</div><div><h4><a href="/it-konzepte/intraktabilitaet/">Intraktabilität</a><span class="step"></span></h4><p>P, NP, NP-Vollständigkeit und SAT-Solver.</p></div><span class="st on">verfügbar</span></div>
+</div>
+
+<div class="blk"><span class="bl">H</span><h3>Vom Gatter zur CPU</h3></div>
+<div class="qlist">
+  <div class="q" data-s="zahlendarstellung"><div class="num">H1</div><div><h4><a href="/it-konzepte/zahlendarstellung/">Zahlen im Rechner</a><span class="step"></span></h4><p>Binär und hex, Zweierkomplement und Überlauf, was in den 32 Bits eines float steht.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="maschinensprache"><div class="num">H2</div><div><h4><a href="/it-konzepte/maschinensprache/">Maschinensprache</a><span class="step"></span></h4><p>Eine Spielzeug-CPU programmieren: Register, Sprünge, Schleifen, Funktionen.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="boolesche-logik"><div class="num">H3</div><div><h4><a href="/it-konzepte/boolesche-logik/">Boolesche Logik</a><span class="step"></span></h4><p>Wahrheitstabellen, Gatter und warum NAND allein genügt.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="schaltnetze"><div class="num">H4</div><div><h4><a href="/it-konzepte/schaltnetze/">Schaltnetze</a><span class="step"></span></h4><p>Decoder, Multiplexer, Addierer und ALU aus Gattern.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="schaltwerke"><div class="num">H5</div><div><h4><a href="/it-konzepte/schaltwerke/">Schaltwerke</a><span class="step"></span></h4><p>Flipflop, Register, Speicher und Takt – wie ein Schaltkreis sich etwas merkt.</p></div><span class="st on">verfügbar</span></div>
+  <div class="q" data-s="cpu"><div class="num">H6</div><div><h4><a href="/it-konzepte/cpu/">Die CPU</a><span class="step"></span></h4><p>Programmzähler, Steuerwerk und Datenpfad: alles zusammengesetzt.</p></div><span class="st on">verfügbar</span></div>
+</div>
+
+<h2 id="aufbau">Wie die Einträge aufgebaut sind</h2>
+<div class="how">
+  <div><h4>Kurz gesagt</h4><p>Jede Seite beginnt mit zwei Absätzen, die das Wichtigste zusammenfassen – für alle, die nur nachschlagen wollen.</p></div>
+  <div><h4>Zum Ausprobieren</h4><p>Simulationen statt Abbildungen: selbst einen Deadlock auslösen, eine HashMap füllen, den Strom im Dateisystem abschalten.</p></div>
+  <div><h4>Für Entwickler übersetzt</h4><p>Am Ende jeder Seite: was das Konzept im Java-Alltag bedeutet, mit Code, Werkzeugen und typischen Fehlern.</p></div>
+</div>
+
+<h2 id="ki">Und die KI?</h2>
+<p>Wie Sprachmodelle funktionieren, erklärt die Schwesterreihe <a href="/erklaert/">KI-Begriffe</a>. Viele Themen berühren sich: Die <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a> erklärt, warum <a href="/erklaert/inferenz/">Inferenz</a> vor allem Speicherbandbreite braucht, und die <a href="/it-konzepte/komplexitaet/">O-Notation</a>, warum ein langes <a href="/erklaert/kontextfenster/">Kontextfenster</a> so teuer ist.</p>
+</div>

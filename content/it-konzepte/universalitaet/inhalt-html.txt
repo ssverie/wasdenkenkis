@@ -1,0 +1,141 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Eine <strong>universelle Turingmaschine</strong> bekommt auf ihr Band zwei Dinge: die Beschreibung einer beliebigen anderen Turingmaschine und deren Eingabe. Dann tut sie genau das, was die beschriebene Maschine täte. Man braucht also nicht für jede Aufgabe eine eigene Maschine – eine reicht, und das <strong>Programm wird zu Daten</strong>.</p>
+<p>Genau so funktioniert jeder Computer: Programm und Daten liegen im selben Speicher (<strong>Von-Neumann-Architektur</strong>). Ein System heißt <strong>Turing-vollständig</strong>, wenn es eine universelle Maschine simulieren kann. Dafür genügt erstaunlich wenig – weshalb auch Tabellenkalkulationen, Typsysteme und Kartenspiele dazugehören. Und weil Universalität ihren Preis hat, wählt man für Konfigurationen und Datenformate oft bewusst eine schwächere Sprache.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#utm">Programme als Daten</a></li>
+  <li><a href="#vonneumann">Von Turing zu von Neumann</a></li>
+  <li><a href="#vollstaendig">Was „Turing-vollständig“ heißt</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="utm">Programme als Daten</h2>
+<p>Turing zeigte 1936: Man kann eine Turingmaschine als Zeichenkette aufschreiben – Regel für Regel. Und man kann eine Maschine bauen, die eine solche Zeichenkette liest und Schritt für Schritt ausführt. Das Feld links ist so eine Beschreibung, und dieser Simulator ist die universelle Maschine. Ändere die Regeln und schau, was passiert:</p>
+
+<div class="widget">
+  <div class="widget-title">Eine universelle Maschine</div>
+  <div class="seg" id="uP">
+    <button data-k="add" aria-pressed="true">Unär addieren</button>
+    <button data-k="inc">Binär +1</button>
+    <button data-k="bb">Fleißiger Biber</button>
+    <button data-k="loop">Endlosschleife</button>
+  </div>
+  <div class="utm">
+    <div>
+      <div class="lbl">Programm – eine Regel pro Zeile</div>
+      <textarea id="uSrc" spellcheck="false" aria-label="Regeln der Maschine"></textarea>
+      <div class="hint">Zustand · liest · schreibt · L/R · neuer Zustand. <code>_</code> ist ein leeres Feld. Die erste Zeile legt den Startzustand fest, der Zustand <code>halt</code> beendet die Maschine.</div>
+    </div>
+    <div>
+      <div class="lbl">Dasselbe als ein Wort auf dem Band</div>
+      <div class="enc" id="uEnc"></div>
+      <div class="hint" id="uEncH"></div>
+    </div>
+  </div>
+  <div class="band"><div class="headm">▼ Kopf</div><div class="cells" id="uC"></div></div>
+  <div class="inrow">
+    <input type="text" id="uIn" spellcheck="false" autocomplete="off" aria-label="Eingabe">
+    <button id="uStep">Schritt</button>
+    <button id="uRun">Bis zum Ende</button>
+    <button id="uReset">Zurück</button>
+  </div>
+  <div class="verd" id="uV"></div>
+</div>
+
+<p>Zwei Dinge fallen auf. Erstens: Der Simulator selbst ändert sich nie – nur die Daten, die man ihm gibt. Zweitens: Bei der Endlosschleife bricht er nach 2000 Schritten ab. Er kann nicht wissen, ob die Maschine mit Schritt 2001 vielleicht doch angehalten hätte. Dass sich das grundsätzlich nicht vorab entscheiden lässt, ist der Inhalt von <a href="/it-konzepte/berechenbarkeit/"><strong>G4 Berechenbarkeit</strong></a>.</p>
+
+<h2 id="vonneumann">Von Turing zu von Neumann</h2>
+<p>Die frühen Rechner wurden für jede Aufgabe neu verkabelt: Beim ENIAC (1945) bedeutete ein neues Programm tagelanges Umstecken. John von Neumann beschrieb 1945 im Entwurf zum EDVAC einen Rechner, der das Programm wie Daten im Speicher hält – die Idee der universellen Maschine, in Röhren gegossen. Ein Programm zu wechseln hieß nun: andere Zahlen in den Speicher laden.</p>
+<p>Diese Idee hat sich durch alle Schichten fortgepflanzt. Jede Ebene ist eine universelle Maschine, die die nächste als Daten behandelt:</p>
+<div class="pipeline">
+  <div class="stage"><b>Dein Java-Code</b>Text – für den Compiler nur Daten</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>Bytecode</b>Daten für die JVM, die ihn interpretiert oder übersetzt</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>JVM</b>selbst ein Programm – Daten für das Betriebssystem</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>Maschinencode</b>Daten für die CPU, die ihn holt und ausführt</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>CPU</b>die universelle Maschine aus Silizium</div>
+</div>
+<p>Darauf beruhen auch <a href="/it-konzepte/virtualisierung-container/">virtuelle Maschinen</a>, Emulatoren, die alte Spielkonsolen auf dem Handy laufen lassen, und <a href="/it-konzepte/compiler-jit/">JIT-Compiler</a>, die zur Laufzeit neuen Maschinencode erzeugen und ausführen.</p>
+
+<h2 id="vollstaendig">Was „Turing-vollständig“ heißt</h2>
+<p>Ein System ist Turing-vollständig, wenn es jede Turingmaschine simulieren kann – meist zeigt man das, indem man darin eine einfachere, bekannt universelle Maschine nachbaut. Die Zutaten sind überraschend bescheiden: Speicher, der bei Bedarf wachsen kann, und eine Möglichkeit, abhängig von Daten unterschiedlich weiterzumachen und Dinge zu wiederholen. Deshalb taucht Universalität an unerwarteten Stellen auf. Tippe:</p>
+
+<div class="widget">
+  <div class="widget-title">Turing-vollständig oder nicht?</div>
+  <div class="tq" id="tq"></div>
+  <div class="score" id="tqS"></div>
+</div>
+
+<p>Streng genommen ist kein echter Rechner Turing-vollständig, weil sein Speicher endlich ist. Man sagt es trotzdem, wenn die einzige Grenze der Speicher ist – nicht die Sprache selbst.</p>
+
+<h3>Das Prinzip der geringsten Mächtigkeit</h3>
+<p>Universalität klingt nach einem Vorteil, hat aber einen Preis: Über ein Turing-vollständiges Programm kann man im Allgemeinen nicht vorab sagen, ob es anhält, wie lange es läuft oder was es tun wird – man muss es ausführen. Für Daten und Konfiguration ist das ein Nachteil. Tim Berners-Lee formulierte daraus das <strong>Prinzip der geringsten Mächtigkeit</strong>: Wähle die schwächste Sprache, die für die Aufgabe ausreicht. Deshalb ist JSON eine reine Datenbeschreibung, deshalb prüft der Linux-Kern eBPF-Programme vor dem Laden darauf, dass sie terminieren, und deshalb sind deklarative Formate wie SQL ohne Rekursion oder Build-Beschreibungen in YAML oft leichter zu prüfen als ein Skript.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Die JVM ist eine universelle Maschine im Lehrbuchsinn: Programme kommen als Daten herein – als Bytes einer <code>.class</code>-Datei – und werden ausgeführt. Java kann das sogar mit sich selbst:</p>
+<pre><code><span class="c">// Bytecode zur Laufzeit laden – das Programm ist ein byte[]</span>
+<span class="k">class</span> AusBytes <span class="k">extends</span> ClassLoader {
+    Class&lt;?&gt; lade(String name, <span class="k">byte</span>[] code) {
+        <span class="k">return</span> defineClass(name, code, <span class="n">0</span>, code.length);
+    }
+}
+
+<span class="c">// Java-Quelltext zur Laufzeit übersetzen – der Compiler als Bibliothek</span>
+JavaCompiler javac = ToolProvider.getSystemJavaCompiler();
+<span class="k">int</span> ergebnis = javac.run(<span class="k">null</span>, <span class="k">null</span>, <span class="k">null</span>, <span class="s">"Generiert.java"</span>);
+
+<span class="c">// Das Interpreter-Muster: eine eigene kleine Sprache, deren Programme Objekte sind</span>
+<span class="k">sealed interface</span> Ausdruck <span class="k">permits</span> Zahl, Plus, Mal {}
+<span class="k">record</span> Zahl(<span class="k">int</span> wert) <span class="k">implements</span> Ausdruck {}
+<span class="k">record</span> Plus(Ausdruck l, Ausdruck r) <span class="k">implements</span> Ausdruck {}
+<span class="k">record</span> Mal(Ausdruck l, Ausdruck r) <span class="k">implements</span> Ausdruck {}
+
+<span class="k">static int</span> werte(Ausdruck a) {
+    <span class="k">return switch</span> (a) {
+        <span class="k">case</span> Zahl z -&gt; z.wert();
+        <span class="k">case</span> Plus p -&gt; werte(p.l()) + werte(p.r());
+        <span class="k">case</span> Mal m  -&gt; werte(m.l()) * werte(m.r());
+    };
+}</code></pre>
+<p>Dieser kleine Interpreter ist übrigens <em>nicht</em> Turing-vollständig – er hat weder Verzweigungen noch Schleifen, jede Auswertung endet garantiert. Genau das kann gewollt sein: Lässt man Nutzer Formeln eingeben, ist eine Sprache, die immer terminiert, viel sicherer als ein eingebetteter Skriptinterpreter.</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Wo es im Alltag auftaucht</th><th>Worauf achten</th></tr></thead>
+  <tbody>
+    <tr><td>Skripte in der Anwendung (Groovy, JavaScript-Engines)</td><td>Laufzeit begrenzen, Zugriffe einschränken – jedes Skript kann endlos laufen</td></tr>
+    <tr><td>Template-Engines (Thymeleaf, Freemarker)</td><td>Logik in Templates klein halten; mächtige Templates sind schwer zu prüfen</td></tr>
+    <tr><td>Build-Skripte (Gradle)</td><td>sind Programme – deshalb kann ein Build hängen, und Werkzeuge können ihn nur ausführen, nicht vorab analysieren</td></tr>
+    <tr><td>Deserialisierung von Objekten</td><td>Daten sollten Daten bleiben: nur erwartete Typen zulassen, lieber JSON mit festem Schema</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Turing-vollständig heißt: leistungsfähig und praktisch.“</b> – Es heißt nur, dass man im Prinzip alles berechnen kann. Ein Kartenspiel oder der MOV-Befehl sind Turing-vollständig – und völlig unpraktisch.</div>
+  <div><b>„Mehr Mächtigkeit ist immer besser.“</b> – Für Daten, Konfiguration und Nutzereingaben ist eine schwächere Sprache oft die bessere Wahl, weil man sie prüfen kann, ohne sie auszuführen.</div>
+  <div><b>„HTML und CSS sind Programmiersprachen, weil man damit viel machen kann.“</b> – HTML beschreibt Struktur, nicht Berechnung. Über CSS wird gestritten; ohne fortlaufende Nutzerinteraktion gilt es nicht als Turing-vollständig.</div>
+  <div><b>„Von Neumann hat das gespeicherte Programm allein erfunden.“</b> – Die Idee entstand im Team um ENIAC und EDVAC und hat Wurzeln bei Turing. Der Name blieb an von Neumann hängen, weil er den Bericht schrieb.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/turingmaschine/">Turingmaschine</a>
+  <a href="/it-konzepte/formale-sprachen/">Formale Sprachen und Automaten</a>
+  <a href="/it-konzepte/compiler-jit/">Compiler, Interpreter, JIT</a>
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/virtualisierung-container/">Virtualisierung und Container</a>
+  <a href="/it-konzepte/berechenbarkeit/">Berechenbarkeit</a>
+  <a href="/it-konzepte/maschinensprache/">Maschinensprache</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

@@ -1,0 +1,178 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>NoSQL</strong> ist ein Sammelbegriff für Datenbanken, die keine klassischen Tabellen benutzen: <strong>Schlüssel-Wert-Speicher</strong>, <strong>Dokument-Datenbanken</strong>, <strong>Spalten-Datenbanken</strong> und <strong>Graph-Datenbanken</strong>. Jede ist für ein bestimmtes Zugriffsmuster gebaut und lässt sich oft leichter auf viele Rechner verteilen als eine relationale Datenbank.</p>
+<p>Sobald Daten auf mehreren Rechnern liegen, gilt das <strong>CAP-Theorem</strong>: Reißt das Netz zwischen ihnen, muss das System wählen – entweder alle sehen garantiert denselben Stand (<strong>Konsistenz</strong>), oder jeder Rechner antwortet weiter, auch wenn sein Stand veraltet sein könnte (<strong>Verfügbarkeit</strong>). Beides zugleich geht nicht.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#warum">Warum es NoSQL gibt</a></li>
+  <li><a href="#familien">Die vier Familien</a></li>
+  <li><a href="#verteilen">Daten verteilen: Replikation und Sharding</a></li>
+  <li><a href="#cap">Das CAP-Theorem</a></li>
+  <li><a href="#konsistenz">Konsistenzmodelle</a></li>
+  <li><a href="#wann">Wann was?</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="warum">Warum es NoSQL gibt</h2>
+<p>Relationale Datenbanken wachsen klassisch <strong>vertikal</strong>: größerer Server, mehr Speicher, schnellere Platten. Irgendwann gibt es keinen größeren Server mehr. Mitte der 2000er-Jahre standen Google und Amazon genau dort und bauten eigene Systeme, die <strong>horizontal</strong> wachsen – einfach mehr gewöhnliche Rechner dazu. Die Beschreibungen von Googles Bigtable (2006) und Amazons Dynamo (2007) wurden zu Bauplänen einer ganzen Generation. 2009 bekam die Bewegung ihren Namen, heute meist gelesen als „Not only SQL“.</p>
+<p>Der Preis: Was relationale Datenbanken mühelos können – JOINs über beliebige Tabellen, Transaktionen über beliebige Zeilen –, wird auf vielen Rechnern teuer. NoSQL-Systeme verzichten deshalb oft darauf und verlangen, dass man die Daten so ablegt, wie man sie später abfragt.</p>
+
+<h2 id="familien">Die vier Familien</h2>
+<p>Dieselben Daten – Kundin Anna mit zwei Bestellungen – in fünf Modellen:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein Datensatz, fünf Datenmodelle</div>
+  <div class="seg" id="mSel">
+    <button data-m="rel">Relational</button>
+    <button data-m="kv" aria-pressed="true">Schlüssel-Wert</button>
+    <button data-m="doc">Dokument</button>
+    <button data-m="col">Spalten</button>
+    <button data-m="gr">Graph</button>
+  </div>
+  <div class="mod">
+    <div id="mData"></div>
+    <div class="fit" id="mFit"></div>
+  </div>
+</div>
+
+<h2 id="verteilen">Daten verteilen: Replikation und Sharding</h2>
+<p>Zwei Techniken stecken hinter jeder verteilten Datenbank, oft kombiniert:</p>
+<div class="cards">
+  <div class="card"><div class="num">⧉</div><h4>Replikation</h4><p>Dieselben Daten liegen auf mehreren Rechnern. Fällt einer aus, übernehmen die anderen, und Lesezugriffe verteilen sich. Die Schwierigkeit: alle Kopien aktuell halten.</p></div>
+  <div class="card"><div class="num">▤</div><h4>Sharding</h4><p>Die Daten werden aufgeteilt: Kunden A–M auf Rechner 1, N–Z auf Rechner 2. Jeder Rechner trägt nur einen Teil der Last. Die Schwierigkeit: Anfragen über mehrere Teile.</p></div>
+  <div class="card"><div class="num">#</div><h4>Hash-Verteilung</h4><p>Statt nach Alphabet verteilt man meist nach einem Hash des Schlüssels – so landen die Daten gleichmäßig verteilt, ohne dass ein Rechner alle „M“-Namen abbekommt.</p></div>
+</div>
+<p>Die naheliegende Formel lautet: Rechner = Hash(Schlüssel) mod Anzahl. Das funktioniert – bis ein Rechner dazukommt. Dann ändert sich das Ergebnis für fast jeden Schlüssel, und fast alle Daten müssten umziehen. <strong>Consistent Hashing</strong> löst das: Rechner und Schlüssel werden auf einen gedachten Ring abgebildet, jeder Schlüssel gehört dem nächsten Rechner im Uhrzeigersinn. Ein neuer Rechner übernimmt nur ein Stück des Rings.</p>
+
+<div class="widget">
+  <div class="widget-title">1000 Kunden auf Rechner verteilen</div>
+  <div class="shard-ctl">
+    <button class="primary" id="shAdd">Rechner hinzufügen</button>
+    <button id="shDel">Rechner entfernen</button>
+    <span id="shN"></span>
+  </div>
+  <div class="nodes">
+    <div><h4>Hash mod Anzahl</h4><div class="bars" id="shMod"></div><div class="moved" id="mvMod"></div></div>
+    <div><h4>Consistent Hashing</h4><div class="bars" id="shCon"></div><div class="moved" id="mvCon"></div></div>
+  </div>
+  <div class="sh-note" id="shNote"></div>
+  <p class="fine">Echte Berechnung mit 1000 Schlüsseln. Beim Consistent Hashing hat jeder Rechner 100 Punkte auf dem Ring („virtuelle Knoten“), damit die Verteilung gleichmäßig wird – so machen es etwa Cassandra und DynamoDB.</p>
+</div>
+
+<h2 id="cap">Das CAP-Theorem</h2>
+<p>Eric Brewer stellte im Jahr 2000 eine Vermutung auf, die Seth Gilbert und Nancy Lynch 2002 bewiesen. Ein verteiltes System kann von diesen drei Eigenschaften nicht alle gleichzeitig garantieren:</p>
+<div class="cards">
+  <div class="card"><div class="num">C</div><h4>Consistency</h4><p>Jedes Lesen liefert den neuesten geschriebenen Wert – oder einen Fehler. Alle sehen dasselbe.</p></div>
+  <div class="card"><div class="num">A</div><h4>Availability</h4><p>Jede Anfrage an einen funktionierenden Rechner bekommt eine Antwort – keinen Fehler.</p></div>
+  <div class="card"><div class="num">P</div><h4>Partition tolerance</h4><p>Das System arbeitet weiter, auch wenn das Netz zwischen seinen Rechnern unterbrochen ist.</p></div>
+</div>
+<p>Wichtig ist, wie man das liest. Netzunterbrechungen passieren – man kann P nicht abwählen. Die eigentliche Aussage ist: <strong>Wenn</strong> das Netz reißt, muss man zwischen C und A wählen. Spiel es durch:</p>
+
+<div class="widget">
+  <div class="widget-title">Das Netz reißt</div>
+  <div class="seg" id="capMode">
+    <button data-m="cp" aria-pressed="true">CP: lieber Fehler als falsch</button>
+    <button data-m="ap">AP: lieber alt als gar nicht</button>
+  </div>
+  <svg id="capsvg" viewBox="0 0 520 230" role="img" aria-label="Drei Repliken mit Netzunterbrechung"></svg>
+  <div class="cap-log" id="capLog"></div>
+  <div class="controls">
+    <button id="capPrev">← Zurück</button>
+    <button class="primary" id="capNext">Weiter →</button>
+  </div>
+</div>
+
+<p>Keine der beiden Antworten ist falsch, es kommt auf die Daten an. Ein Kontostand oder der letzte Sitzplatz verlangt CP – lieber eine Fehlermeldung als eine Doppelbuchung. Ein Warenkorb, ein Like-Zähler oder ein Social-Media-Feed verträgt AP – lieber kurz veraltet als „Seite nicht verfügbar“. Amazon hat Dynamo genau deshalb als AP-System gebaut: Ein Warenkorb, der Artikel doppelt enthält, ist ärgerlich; einer, der sich nicht öffnen lässt, kostet Umsatz.</p>
+<p>Eine Erweiterung, <strong>PACELC</strong>, ergänzt den Normalfall: Auch ohne Netzunterbrechung muss man abwägen – zwischen niedriger <strong>Latenz</strong> und strenger <strong>Konsistenz</strong>. Denn auf die Bestätigung aller Kopien zu warten, kostet bei jedem Schreiben Zeit.</p>
+
+<h3>Quoren: Konsistenz zum Einstellen</h3>
+<p>Viele Systeme lassen die Wahl pro Anfrage offen. Bei N Kopien bestätigt ein Schreiben, sobald W Kopien es haben, und ein Lesen fragt R Kopien. Ist R + W größer als N, überschneiden sich Lese- und Schreibmenge immer – mindestens eine gefragte Kopie kennt den neuesten Wert.</p>
+
+<div class="widget">
+  <div class="widget-title">N, W und R</div>
+  <div class="sl"><span>Kopien (N)</span><input type="range" id="qN" min="3" max="7" step="2" value="3"><output id="qNo"></output></div>
+  <div class="sl"><span>Schreiben wartet auf (W)</span><input type="range" id="qW" min="1" max="3" value="2"><output id="qWo"></output></div>
+  <div class="sl"><span>Lesen fragt (R)</span><input type="range" id="qR" min="1" max="3" value="2"><output id="qRo"></output></div>
+  <div class="qrow" id="qRow"></div>
+  <div class="legend"><span><i style="border-color:var(--accent);background:var(--accent-soft)"></i>hat das neueste Schreiben</span><span><i style="border-color:var(--accent-2)"></i>wird beim Lesen gefragt</span><span><i style="border-color:var(--ok);box-shadow:0 0 0 2px var(--ok)"></i>beides</span></div>
+  <div class="q-out" id="qOut"></div>
+  <p class="fine">Ungünstigster Fall gezeigt: Das Lesen fragt bevorzugt die Kopien, die das Schreiben nicht erreicht hat.</p>
+</div>
+
+<h2 id="konsistenz">Konsistenzmodelle</h2>
+<p>Zwischen „alle sehen sofort dasselbe“ und „irgendwann stimmt es“ gibt es Abstufungen, die in der Praxis viel ausmachen:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Modell</th><th>Garantie</th><th>Spürbar als</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Stark (linearisierbar)</strong></td><td>Jedes Lesen sieht das neueste Schreiben</td><td>verhält sich wie eine einzige Datenbank</td></tr>
+    <tr><td><strong>Read your writes</strong></td><td>Ich sehe immer meine eigenen Änderungen</td><td>kein „Ich habe doch gerade gespeichert – wo ist es?“</td></tr>
+    <tr><td><strong>Monotones Lesen</strong></td><td>Ich sehe nie einen älteren Stand als vorhin</td><td>Kommentare verschwinden nicht beim Neuladen</td></tr>
+    <tr><td><strong>Eventual Consistency</strong></td><td>Ohne neue Schreibvorgänge stimmen irgendwann alle Kopien überein</td><td>kurz veraltete Zähler, Listen, Feeds</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="wann">Wann was?</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Bedarf</th><th>Typische Wahl</th></tr></thead>
+  <tbody>
+    <tr><td>Geschäftsdaten mit Beziehungen und Transaktionen</td><td>relational – PostgreSQL, MySQL, Oracle</td></tr>
+    <tr><td>Cache, Sitzungen, Zähler, Ranglisten</td><td>Schlüssel-Wert im Speicher – Redis, Valkey</td></tr>
+    <tr><td>Objekte mit wechselnder Struktur, als Ganzes gelesen</td><td>Dokument – MongoDB, oder <code>jsonb</code> in PostgreSQL</td></tr>
+    <tr><td>Riesige Schreiblast, Messwerte, Ereignisse, weltweit verteilt</td><td>Spalten – Cassandra, ScyllaDB; Zeitreihen – InfluxDB, TimescaleDB</td></tr>
+    <tr><td>Beziehungen über viele Ecken: Netzwerke, Empfehlungen, Betrugserkennung</td><td>Graph – Neo4j</td></tr>
+    <tr><td>Volltextsuche</td><td>Suchmaschine – Elasticsearch, OpenSearch</td></tr>
+    <tr><td>SQL und Transaktionen, aber weltweit verteilt</td><td>„NewSQL“ – Google Spanner, CockroachDB</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Die Grenzen verschwimmen: PostgreSQL speichert und indiziert JSON, MongoDB kann Transaktionen über mehrere Dokumente, und verteilte SQL-Datenbanken zeigen, dass starke Konsistenz und horizontales Wachstum sich nicht ausschließen – sie kosten nur Latenz. Viele Systeme setzen mehrere Datenbanken nebeneinander ein, jede für ihren Zweck.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">// Spring Data MongoDB: ein Dokument mit eingebetteten Bestellungen</span>
+@Document(<span class="s">"kunden"</span>)
+<span class="k">record</span> Kunde(@Id String id, String name, List&lt;Bestellung&gt; bestellungen) {}
+<span class="k">record</span> Bestellung(<span class="k">long</span> nr, LocalDate datum, BigDecimal summe) {}
+
+<span class="k">interface</span> KundenRepository <span class="k">extends</span> MongoRepository&lt;Kunde, String&gt; {
+    List&lt;Kunde&gt; findByName(String name);               <span class="c">// Abfrage aus dem Methodennamen</span>
+}
+
+<span class="c">// Spring Data Redis: Schlüssel-Wert mit Ablaufzeit – ein klassischer Cache</span>
+redis.opsForValue().set(<span class="s">"sitzung:a81f"</span>, kundeId, Duration.ofMinutes(<span class="s">30</span>));</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Thema</th><th>Was man wissen sollte</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Spring Data</strong></td><td>Dieselbe Repository-Idee für JPA, MongoDB, Redis, Cassandra, Neo4j und Elasticsearch – die Abfragen unterscheiden sich trotzdem, weil die Modelle sich unterscheiden.</td></tr>
+    <tr><td><strong>Datenmodell nach Abfrage</strong></td><td>In Dokument- und Spalten-Datenbanken entwirft man von den Abfragen her: Was zusammen gelesen wird, gehört zusammen gespeichert. Das Gegenteil der Normalisierung.</td></tr>
+    <tr><td><strong>Eventual Consistency im Code</strong></td><td>Nach dem Speichern sofort neu lesen kann den alten Stand liefern. Entweder mit der eigenen Antwort weiterarbeiten oder für dieses Lesen stärkere Konsistenz anfordern.</td></tr>
+    <tr><td><strong>Schema im Code</strong></td><td>„Schemalos“ heißt: Die Datenbank prüft nichts. Das Schema steckt dann in den Java-Klassen – alte Dokumente mit alten Feldern muss der Code weiter verstehen.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„CAP heißt: Such dir zwei von dreien aus.“</b> – Netzunterbrechungen sind keine Wahl. Die Entscheidung zwischen C und A fällt nur, wenn das Netz tatsächlich reißt – und im Normalfall geht es um Latenz gegen Konsistenz.</div>
+  <div><b>„NoSQL ist schneller als SQL.“</b> – Für das Zugriffsmuster, für das es gebaut ist. Für ein anderes kann es dramatisch langsamer sein. Eine relationale Datenbank auf einem Server reicht für die allermeisten Anwendungen.</div>
+  <div><b>„NoSQL hat kein Schema.“</b> – Es hat ein implizites Schema im Code. Das ist flexibel, verschiebt aber die Prüfung von der Datenbank in jede Anwendung, die die Daten liest.</div>
+  <div><b>„MongoDB kann keine Transaktionen.“</b> – Seit Version 4.0 von 2018 kann es Transaktionen über mehrere Dokumente. Die meisten NoSQL-Systeme haben über die Jahre nachgerüstet.</div>
+  <div><b>„Eventual Consistency heißt: irgendwann, vielleicht.“</b> – In der Praxis meist Millisekunden. Es heißt aber auch: Ohne Vorkehrung kann ein Nutzer seine eigene Änderung kurz nicht sehen.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/relationale-datenbanken/">Relationale Datenbanken</a>
+  <a href="/it-konzepte/tcp-ip/">Schichtenmodell und TCP/IP</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

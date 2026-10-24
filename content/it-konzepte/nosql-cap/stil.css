@@ -1,0 +1,67 @@
+/* ---- Seitenspezifisch: NoSQL und das CAP-Theorem ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .code{border-radius:10px;background:#16161a;color:#e6e6ea;font:.78rem/1.6 var(--mono);padding:12px 14px;overflow-x:auto;white-space:pre;margin:0}
+.erklaert .code .k{color:#86a6ff;font-weight:700}.erklaert .code .s{color:#f5b77c}.erklaert .code .c{color:#8f8f99}.erklaert .code .g{color:#7fdca1}
+
+/* Modelle */
+.erklaert .mod{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;align-items:start}
+@media (max-width:640px){.erklaert .mod{grid-template-columns:1fr}}
+.erklaert .mod h4{margin:0 0 6px;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.erklaert .mod .fit{font-size:.85rem}
+.erklaert .mod .fit p{margin:0 0 8px}
+.erklaert .mod .pro{color:var(--ok)}.erklaert .mod .con{color:var(--bad)}
+.erklaert .mod .ex{font-size:.8rem;color:var(--muted)}
+.erklaert #graph{max-width:340px}
+.erklaert #graph .n{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.erklaert #graph .n2{fill:var(--accent-2-soft);stroke:var(--accent-2);stroke-width:1.5}
+.erklaert #graph .t{font:600 11px var(--sans);fill:var(--fg)}
+.erklaert #graph .e{stroke:var(--muted);stroke-width:1.5}
+.erklaert #graph .el{font:10px var(--mono);fill:var(--muted)}
+
+/* Sharding */
+.erklaert .shard-ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px;font-size:.88rem}
+.erklaert .nodes{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.erklaert .nodes{grid-template-columns:1fr}}
+.erklaert .nodes h4{margin:0 0 8px;font-size:.9rem}
+.erklaert .bars{display:flex;flex-direction:column;gap:5px}
+.erklaert .br{display:grid;grid-template-columns:5em 1fr 3em;gap:8px;align-items:center;font-size:.78rem}
+.erklaert .br .tr{height:14px;background:var(--bg);border-radius:4px;overflow:hidden}
+.erklaert .br .fl{height:100%;border-radius:4px;transition:width .4s}
+.erklaert .br span:last-child{text-align:right;font-family:var(--mono);color:var(--muted)}
+.erklaert .moved{margin-top:10px;padding:10px;border-radius:9px;background:var(--bg);text-align:center;font-size:.78rem;color:var(--muted)}
+.erklaert .moved b{display:block;font:600 1.3rem var(--serif)}
+.erklaert .moved.bad b{color:var(--bad)}.erklaert .moved.good b{color:var(--ok)}
+.erklaert .sh-note{margin-top:12px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--accent-2-soft)}
+
+/* CAP */
+.erklaert #capsvg{max-width:520px}
+.erklaert #capsvg .nd{stroke-width:2.5}
+.erklaert #capsvg .t{font:700 13px var(--sans);fill:var(--fg)}
+.erklaert #capsvg .v{font:700 18px var(--mono)}
+.erklaert #capsvg .s{font:10px var(--sans);fill:var(--muted)}
+.erklaert #capsvg .lk{stroke:var(--line);stroke-width:3}
+.erklaert #capsvg .cut{stroke:var(--bad);stroke-width:3;stroke-dasharray:6 5}
+.erklaert .cap-log{margin-top:10px;padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.9rem;min-height:4.6em}
+.erklaert .cap-log.err{background:var(--bad-soft)}.erklaert .cap-log.warn{background:var(--accent-2-soft)}.erklaert .cap-log.ok{background:var(--ok-soft)}
+
+/* Quorum */
+.erklaert .sl{display:grid;grid-template-columns:12em 1fr 3em;align-items:center;gap:10px;font-size:.88rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .9rem var(--mono)}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:1fr 3em}.erklaert .sl > span{grid-column:1/-1}}
+.erklaert .qrow{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.erklaert .qrow .rep{width:44px;height:44px;border-radius:10px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font:700 .72rem var(--sans);background:var(--card)}
+.erklaert .qrow .rep.w{border-color:var(--accent);background:var(--accent-soft)}
+.erklaert .qrow .rep.r{border-color:var(--accent-2)}
+.erklaert .qrow .rep.w.r{background:var(--accent-soft);border-color:var(--ok);box-shadow:0 0 0 2px var(--ok)}
+.erklaert .q-out{margin-top:10px;font-size:.9rem;padding:10px 12px;border-radius:9px}
+.erklaert .q-out.good{background:var(--ok-soft)}.erklaert .q-out.bad{background:var(--bad-soft)}
+.erklaert .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.74rem;color:var(--muted)}
+.erklaert .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:4px;border:2px solid}
+

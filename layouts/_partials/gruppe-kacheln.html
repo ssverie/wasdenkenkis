@@ -22,7 +22,9 @@
           {{- else if eq .Section "links" }}
             {{- $n = len hugo.Data.links.eintrag }}{{ $einheit = cond (eq $n 1) "Link" "Links" }}
           {{- else }}
-            {{- $n = len (where .RegularPagesRecursive "Params.archiv" "!=" true) }}{{ $paar := .Params.einheit | default (slice "Beitrag" "Beiträge") }}{{ $einheit = cond (eq $n 1) (index $paar 0) (index $paar 1) }}
+            {{- /* Reihen mit Lesereihenfolge (KI-Begriffe, IT-Konzepte) zählen nur ihre eigenen Einträge, nicht Unterbereiche wie Algorithmen */}}
+            {{- $seiten := cond (eq .Layout "begriffe-uebersicht") .RegularPages .RegularPagesRecursive }}
+            {{- $n = len (where $seiten "Params.archiv" "!=" true) }}{{ $paar := .Params.einheit | default (slice "Beitrag" "Beiträge") }}{{ $einheit = cond (eq $n 1) (index $paar 0) (index $paar 1) }}
           {{- end }}
   <li>
     <a class="karte" href="{{ .RelPermalink }}">

@@ -11,6 +11,17 @@
   <div class="inhalt">
     {{ .Content }}
   </div>
+  {{- /* Unterbereiche der Rubrik, die nicht zur Lieferung gehören (IT-Konzepte › Algorithmen) */}}
+  {{- with .Sections }}
+  <section class="eigene-sache">
+    <h2>Außerdem in dieser Rubrik</h2>
+    <ul>
+      {{- range . }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a>{{ with .Description }} – {{ . }}{{ end }} <span class="meta">({{ len .RegularPages }} {{ cond (eq (len .RegularPages) 1) "Seite" "Seiten" }})</span></li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end }}
   {{- /* Seiten der Instanz, die keine Begriffe sind (z. B. Werkstattbericht): eigene_sache = true */}}
   {{- with where .RegularPages "Params.eigene_sache" true }}
   <section class="eigene-sache">

@@ -1,0 +1,144 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Die <strong>O-Notation</strong> beschreibt, wie der Aufwand eines Algorithmus wächst, wenn die Eingabe größer wird – nicht, wie lange er in Sekunden braucht. <code>O(n)</code> heißt: doppelt so viele Daten, etwa doppelt so viel Arbeit. <code>O(n²)</code> heißt: doppelt so viele Daten, viermal so viel Arbeit. Konstante Faktoren fallen weg, nur die Wachstumsform zählt.</p>
+<p>Für die Praxis entscheidend: Bei kleinen Datenmengen ist fast alles schnell. Der Unterschied zwischen <code>O(n)</code> und <code>O(n²)</code> zeigt sich erst bei Tausenden oder Millionen Einträgen – dann aber dramatisch. Die meisten Performance-Katastrophen im Alltag sind versehentlich quadratischer Code, etwa ein <code>list.contains()</code> in einer Schleife.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#wachstum">Wie schnell wächst der Aufwand?</a></li>
+  <li><a href="#logn">Die Macht des Logarithmus</a></li>
+  <li><a href="#amortisiert">Amortisiert: warum ArrayList.add trotzdem O(1) ist</a></li>
+  <li><a href="#pnp">P, NP und Probleme ohne schnelle Lösung</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="wachstum">Wie schnell wächst der Aufwand?</h2>
+<p>Angenommen, ein Rechner schafft eine Milliarde einfache Schritte pro Sekunde. Wie lange brauchen Algorithmen verschiedener Klassen? Schieb die Datenmenge hoch:</p>
+
+<div class="widget">
+  <div class="widget-title">Die Komplexitätsklassen im Vergleich</div>
+  <div class="sl"><span>Datenmenge n</span><input type="range" id="gN" min="1" max="9" step="1" value="3"><output id="gNo"></output></div>
+  <div class="gr" id="gr"></div>
+  <div class="gr-note" id="grNote"></div>
+  <p class="fine">Balken logarithmisch. Angenommen: 10⁹ Schritte pro Sekunde, Konstante 1.</p>
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Klasse</th><th>Name</th><th>Typisches Beispiel</th></tr></thead>
+  <tbody>
+    <tr><td><code>O(1)</code></td><td>konstant</td><td>Array-Zugriff per Index, <code>HashMap.get</code> im Normalfall</td></tr>
+    <tr><td><code>O(log n)</code></td><td>logarithmisch</td><td>binäre Suche, Suche im B-Baum einer <a href="/it-konzepte/relationale-datenbanken/">Datenbank</a>, <code>TreeMap.get</code></td></tr>
+    <tr><td><code>O(n)</code></td><td>linear</td><td>einmal alles durchgehen, Maximum suchen</td></tr>
+    <tr><td><code>O(n log n)</code></td><td>„n log n“</td><td>gutes Sortieren – schneller geht es mit Vergleichen nicht</td></tr>
+    <tr><td><code>O(n²)</code></td><td>quadratisch</td><td>jedes Element mit jedem vergleichen, zwei verschachtelte Schleifen</td></tr>
+    <tr><td><code>O(2ⁿ)</code></td><td>exponentiell</td><td>alle Teilmengen ausprobieren</td></tr>
+    <tr><td><code>O(n!)</code></td><td>fakultät</td><td>alle Reihenfolgen ausprobieren – etwa alle Routen einer Rundreise</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Was die O-Notation weglässt</h3>
+<p>Formal ist <code>O(f(n))</code> eine <em>obere Schranke</em>: Ab einer gewissen Größe wächst der Aufwand höchstens wie <code>f(n)</code>, mal einer Konstante. Deshalb sind <code>3n + 50</code> und <code>n</code> beide <code>O(n)</code>, und die Basis des Logarithmus spielt keine Rolle. Das macht die Notation handlich – und führt in die Irre, wenn die Konstante riesig ist. Ein <code>O(n)</code>-Algorithmus, der bei jedem Schritt auf die Festplatte wartet, verliert gegen einen <code>O(n log n)</code>-Algorithmus im Cache, solange n nicht astronomisch ist. Die <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a> ist so eine versteckte Konstante.</p>
+<p>Außerdem unterscheidet man <strong>schlechtesten Fall</strong>, <strong>Durchschnittsfall</strong> und <strong>amortisierte</strong> Kosten. Quicksort ist im Durchschnitt <code>O(n log n)</code>, im schlechtesten Fall <code>O(n²)</code>. Ein <code>HashMap.get</code> ist im Durchschnitt <code>O(1)</code> – solange die Hashes gut verteilt sind.</p>
+
+<h2 id="logn">Die Macht des Logarithmus</h2>
+<p>Ein Telefonbuch mit einer Million Namen: Wer Seite für Seite sucht, braucht im Schnitt eine halbe Million Blicke. Wer in der Mitte aufschlägt und je nach Buchstabe die vordere oder hintere Hälfte nimmt, braucht höchstens 20. Jeder Schritt halbiert den Rest – das ist <strong>binäre Suche</strong>, und sie funktioniert nur auf sortierten Daten.</p>
+
+<div class="widget">
+  <div class="widget-title">Linear gegen binär suchen</div>
+  <div class="srch-ctl">
+    <label>Gesucht: <input type="number" id="sT" min="1" max="127" value="91"></label>
+    <button class="primary" id="sBin">Binär suchen</button>
+    <button id="sLin">Linear suchen</button>
+    <button id="sStep">Ein Schritt</button>
+  </div>
+  <div class="arr" id="arr"></div>
+  <div class="srch-out" id="sOut">64 sortierte Zahlen. Wähle eine Suche.</div>
+  <div class="cmp" id="sCmp"></div>
+</div>
+
+<h2 id="amortisiert">Amortisiert: warum ArrayList.add trotzdem O(1) ist</h2>
+<p>Eine <code>ArrayList</code> speichert ihre Elemente in einem Array fester Größe. Ist es voll, legt sie ein größeres an und kopiert alles um – das kostet <code>O(n)</code>. Trotzdem gilt <code>add</code> als <code>O(1)</code>. Der Trick: Das Array wächst nicht um eins, sondern um die Hälfte. Teure Kopien werden dadurch immer seltener. Füge Elemente hinzu:</p>
+
+<div class="widget">
+  <div class="widget-title">ArrayList wächst</div>
+  <div class="controls" style="margin-top:0">
+    <button class="primary" id="alAdd">1 hinzufügen</button>
+    <button id="alAdd10">10 hinzufügen</button>
+    <button id="alAdd100">100 hinzufügen</button>
+    <button id="alReset">Zurücksetzen</button>
+  </div>
+  <div class="cap" id="cap"></div>
+  <div class="al-stats" id="alStats"></div>
+  <div class="al-note" id="alNote"></div>
+  <p class="fine">Wie im JDK: Startkapazität 10, Wachstum um den Faktor 1,5. Orange: beim letzten Wachsen umkopierte Elemente. Bei mehr als 160 Plätzen wird nur der Anfang gezeichnet.</p>
+</div>
+
+<p>Über viele Aufrufe gemittelt kostet jedes <code>add</code> nur eine kleine, feste Zahl von Kopien – das ist <strong>amortisiert</strong> <code>O(1)</code>. Einzelne Aufrufe können trotzdem teuer sein. Wer vorher weiß, wie viele Elemente kommen, gibt die Kapazität gleich mit: <code>new ArrayList&lt;&gt;(10_000)</code>.</p>
+
+<h2 id="pnp">P, NP und Probleme ohne schnelle Lösung</h2>
+<p>Manche Probleme scheinen grundsätzlich keine schnelle Lösung zu haben. Die Theorie teilt sie grob ein:</p>
+<div class="cards">
+  <div class="card"><div class="num">P</div><h4>Schnell lösbar</h4><p>Probleme, die sich in polynomieller Zeit lösen lassen – <code>O(n)</code>, <code>O(n²)</code>, <code>O(n³)</code>. Sortieren, kürzeste Wege, Suchen.</p></div>
+  <div class="card"><div class="num">NP</div><h4>Schnell prüfbar</h4><p>Eine vorgeschlagene Lösung lässt sich schnell prüfen – aber finden? Ein ausgefülltes Sudoku zu prüfen ist leicht, eines zu lösen bei beliebiger Größe schwer.</p></div>
+  <div class="card"><div class="num">?</div><h4>P = NP?</h4><p>Ob jedes schnell prüfbare Problem auch schnell lösbar ist, weiß niemand. Es ist eine der berühmtesten offenen Fragen der Mathematik, ausgeschrieben mit einer Million Dollar Preisgeld.</p></div>
+</div>
+<p>Die schwersten Probleme in NP heißen <strong>NP-vollständig</strong>: Fände man für eines einen schnellen Algorithmus, hätte man ihn für alle. Dazu gehören Stundenpläne, Tourenplanung, das Packen von Containern, viele Konfigurationsprobleme. In der Praxis löst man sie trotzdem – nur nicht garantiert optimal: mit Heuristiken, Näherungsverfahren oder spezialisierten Lösern, die typische Fälle schnell schaffen. Wer im Projekt merkt, dass sein Problem NP-vollständig ist, sucht besser eine gute statt der perfekten Lösung.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Operation</th><th>Aufwand</th><th>Anmerkung</th></tr></thead>
+  <tbody>
+    <tr><td><code>ArrayList.get(i)</code></td><td><code>O(1)</code></td><td>direkter Array-Zugriff</td></tr>
+    <tr><td><code>ArrayList.add(x)</code></td><td><code>O(1)</code> amortisiert</td><td>gelegentlich Umkopieren</td></tr>
+    <tr><td><code>ArrayList.add(0, x)</code>, <code>remove(0)</code></td><td><code>O(n)</code></td><td>alles dahinter wird verschoben – dafür gibt es <code>ArrayDeque</code></td></tr>
+    <tr><td><code>List.contains(x)</code></td><td><code>O(n)</code></td><td>durchsucht die ganze Liste</td></tr>
+    <tr><td><code>LinkedList.get(i)</code></td><td><code>O(n)</code></td><td>läuft die Kette entlang</td></tr>
+    <tr><td><code>HashMap.get</code>, <code>HashSet.contains</code></td><td><code>O(1)</code> im Mittel</td><td>bei vielen Kollisionen seit Java 8 höchstens <code>O(log n)</code></td></tr>
+    <tr><td><code>TreeMap.get</code>, <code>TreeSet.add</code></td><td><code>O(log n)</code></td><td>sortiert, Bereichsabfragen möglich</td></tr>
+    <tr><td><code>PriorityQueue.offer</code>, <code>poll</code></td><td><code>O(log n)</code></td><td><code>peek</code> ist <code>O(1)</code></td></tr>
+    <tr><td><code>List.sort</code>, <code>Arrays.sort</code></td><td><code>O(n log n)</code></td><td>bei Objekten TimSort, nutzt vorsortierte Abschnitte</td></tr>
+  </tbody>
+</table>
+</div>
+<pre><code><span class="c">// Versehentlich O(n²): contains auf einer Liste, in einer Schleife</span>
+List&lt;String&gt; ohneDoppelte = <span class="k">new</span> ArrayList&lt;&gt;();
+<span class="k">for</span> (String s : eingaben)
+    <span class="k">if</span> (!ohneDoppelte.contains(s)) ohneDoppelte.add(s);
+
+<span class="c">// O(n): ein Set – LinkedHashSet behält dabei die Reihenfolge</span>
+List&lt;String&gt; ohneDoppelte = List.copyOf(<span class="k">new</span> LinkedHashSet&lt;&gt;(eingaben));
+
+<span class="c">// Versehentlich O(n²): String-Verkettung in einer Schleife kopiert jedes Mal alles</span>
+String text = <span class="s">""</span>;
+<span class="k">for</span> (String zeile : zeilen) text += zeile + <span class="s">"\n"</span>;
+
+<span class="c">// O(n)</span>
+String text = String.join(<span class="s">"\n"</span>, zeilen);</code></pre>
+<p>Bei 100 Elementen ist all das egal. Bei 100 000 macht es den Unterschied zwischen Millisekunden und Minuten. Ein guter Reflex beim Code-Review: Steht in einer Schleife ein Aufruf, der selbst eine Schleife ist – <code>contains</code>, <code>indexOf</code>, <code>remove(Object)</code>, eine Datenbankabfrage?</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„O(1) ist immer schneller als O(n).“</b> – Nur ab einer gewissen Größe. Für zehn Elemente ist eine Liste oft schneller als eine HashMap, weil Hash-Berechnung und Speicherzugriffe mehr kosten als zehn Vergleiche.</div>
+  <div><b>„O-Notation sagt, wie lange etwas dauert.“</b> – Sie sagt, wie der Aufwand wächst. Für Sekunden braucht man Konstanten, Hardware und Messungen.</div>
+  <div><b>„O heißt schlechtester Fall.“</b> – O ist eine obere Schranke für eine Funktion. Ob man den schlechtesten, durchschnittlichen oder amortisierten Fall betrachtet, ist eine eigene Angabe.</div>
+  <div><b>„Exponentielle Algorithmen gibt es nur in der Theorie.“</b> – Auch ein ungünstig formulierter regulärer Ausdruck kann bei bestimmten Eingaben exponentiell lange brauchen. Ein Grund, warum man reguläre Ausdrücke auf fremde Eingaben vorsichtig anwendet.</div>
+  <div><b>„NP heißt: nicht polynomiell.“</b> – NP steht für „nichtdeterministisch polynomiell“. Ob NP-Probleme wirklich keine schnelle Lösung haben, ist gerade die offene Frage.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/programmierparadigmen/">Programmierparadigmen</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/relationale-datenbanken/">Relationale Datenbanken</a>
+  <a href="/it-konzepte/kryptografie/">Kryptografie-Grundlagen</a>
+  <a href="/it-konzepte/intraktabilitaet/">Intraktabilität</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

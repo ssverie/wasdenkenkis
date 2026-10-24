@@ -1,0 +1,56 @@
+/* ---- Seitenspezifisch: HTTP ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .term{border-radius:10px;background:#16161a;color:#e6e6ea;font:.8rem/1.6 var(--mono);padding:12px 14px;overflow-x:auto;white-space:pre}
+.erklaert .term .m{color:#86a6ff;font-weight:700}.erklaert .term .h{color:#d6a8f5}.erklaert .term .v{color:#f5b77c}.erklaert .term .c{color:#8f8f99}.erklaert .term .ok{color:#7fdca1;font-weight:700}.erklaert .term .er{color:#ff8a80;font-weight:700}.erklaert .term .rd{color:#ecd36b;font-weight:700}
+
+/* Baukasten */
+.erklaert .rb{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;font-size:.86rem}
+@media (max-width:600px){.erklaert .rb{grid-template-columns:1fr}}
+.erklaert .rb label{display:flex;flex-direction:column;gap:4px}
+.erklaert .rb label.toggle{flex-direction:row;align-items:center;gap:7px}
+.erklaert .rb .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.erklaert .rb select{font:500 .88rem var(--mono);padding:7px 9px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg)}
+.erklaert .rb .chk{display:flex;flex-direction:column;gap:6px}
+.erklaert .toggle{display:flex;align-items:center;gap:7px;font-size:.84rem;cursor:pointer}
+.erklaert .toggle input{accent-color:var(--accent);width:17px;height:17px}
+.erklaert .toggle code{font-size:.78rem}
+.erklaert .ex{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+@media (max-width:700px){.erklaert .ex{grid-template-columns:1fr}}
+.erklaert .ex .term{min-height:150px}
+.erklaert .ex-note{margin-top:10px;font-size:.9rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:3em}
+
+/* Statuscodes */
+.erklaert .codes{display:flex;flex-wrap:wrap;gap:6px}
+.erklaert .codes button{font:700 .86rem var(--mono);padding:6px 10px}
+.erklaert .codes button.k1{color:var(--muted)}.erklaert .codes button.k2{color:var(--ok)}.erklaert .codes button.k3{color:#a16207}.erklaert .codes button.k4{color:var(--accent-2)}.erklaert .codes button.k5{color:var(--bad)}
+.erklaert .codes button[aria-pressed="true"]{outline:2px solid currentColor;outline-offset:1px}
+.erklaert .code-info{margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.9rem;min-height:4em}
+.erklaert .code-info b{display:block}
+
+/* Wasserfall */
+.erklaert .sl{display:grid;grid-template-columns:11em 1fr 5em;align-items:center;gap:10px;font-size:.88rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:1fr 4.5em}.erklaert .sl > span{grid-column:1/-1}}
+.erklaert .wf{display:flex;flex-direction:column;gap:3px;margin-top:10px}
+.erklaert .wr{white-space:nowrap;display:grid;grid-template-columns:5.2em 1fr;gap:8px;align-items:center;font:.7rem var(--mono);color:var(--muted)}
+.erklaert .wt{position:relative;height:14px;background:var(--bg);border-radius:4px}
+.erklaert .wt i{position:absolute;top:0;bottom:0;border-radius:4px}
+.erklaert .wt i.su{background:var(--line)}
+.erklaert .wt i.rq{background:var(--accent)}
+.erklaert .wt i.st{background:var(--bad)}
+.erklaert .wsum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+@media (max-width:520px){.erklaert .wsum{grid-template-columns:1fr}}
+.erklaert .wsum div{padding:9px;border-radius:9px;background:var(--bg);text-align:center;font-size:.74rem;color:var(--muted)}
+.erklaert .wsum div.on{outline:2px solid var(--accent)}
+.erklaert .wsum b{display:block;font:600 1.1rem var(--serif);color:var(--fg)}
+.erklaert .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.74rem;color:var(--muted);margin-top:8px}
+.erklaert .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;vertical-align:-1px;margin-right:4px}
+.erklaert .wf-note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--accent-2-soft)}
+

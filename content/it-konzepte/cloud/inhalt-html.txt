@@ -1,0 +1,143 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Cloud Computing</strong> heißt: Rechenleistung, Speicher, Datenbanken und ganze Dienste werden über das Netz gemietet, per Schnittstelle in Minuten bereitgestellt und nach Verbrauch abgerechnet. Physisch stehen dahinter riesige Rechenzentren, gruppiert in <strong>Regionen</strong>, jede aus mehreren voneinander unabhängigen <strong>Zonen</strong>.</p>
+<p>Je nach Modell übernimmt der Anbieter mehr oder weniger: Bei <strong>IaaS</strong> mietest du virtuelle Maschinen, bei <strong>PaaS</strong> eine Laufzeitumgebung, bei <strong>Serverless</strong> nur noch die Ausführung einzelner Funktionen, bei <strong>SaaS</strong> die fertige Anwendung. Der große Vorteil ist <strong>Elastizität</strong> – Kapazität wächst und schrumpft mit der Last. Der Preis: laufende Kosten, die genau beobachtet werden wollen, und Abhängigkeit von einem Anbieter.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#physisch">Was „die Cloud“ physisch ist</a></li>
+  <li><a href="#modelle">IaaS, PaaS, Serverless, SaaS</a></li>
+  <li><a href="#elastizitaet">Elastizität: zahlen, was man braucht</a></li>
+  <li><a href="#ausfall">Ausfälle einplanen</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="physisch">Was „die Cloud“ physisch ist</h2>
+<p>Hinter jeder Cloud stehen Rechenzentren mit zehntausenden Servern, eigener Stromversorgung und Kühlung. Die großen Anbieter gliedern sie in zwei Ebenen:</p>
+<div class="cards">
+  <div class="card"><div class="num">Region</div><h3>Ein geografischer Ort</h3><p>Zum Beispiel Frankfurt, Irland oder Virginia. Regionen sind weitgehend unabhängig voneinander. Die Wahl der Region bestimmt Latenz zu den Nutzern – und welches Recht für die Daten gilt.</p></div>
+  <div class="card"><div class="num">Zone</div><h3>Availability Zone</h3><p>Innerhalb einer Region meist mindestens drei getrennte Rechenzentren oder -gruppen, mit eigener Stromversorgung und eigenem Netzanschluss, aber nur wenige Millisekunden voneinander entfernt. Brennt eine ab, laufen die anderen weiter.</p></div>
+  <div class="card"><div class="num">Edge</div><h3>Am Rand des Netzes</h3><p>Viele kleinere Standorte nah an den Nutzern, vor allem für Caching (CDN) und kleine Funktionen. Bringt statische Inhalte in wenigen Millisekunden zum Browser.</p></div>
+</div>
+<p>Auf den Servern läuft <a href="/it-konzepte/virtualisierung-container/">Virtualisierung</a>: Deine „Maschine“ ist eine virtuelle, die sich die Hardware mit anderen Kunden teilt. Alles wird über eine API gesteuert – eine neue Maschine ist ein HTTP-Aufruf, kein Bestellformular.</p>
+
+<h2 id="modelle">IaaS, PaaS, Serverless, SaaS</h2>
+<p>Die Modelle unterscheiden sich darin, ab welcher Schicht der Anbieter übernimmt. Wähle eines:</p>
+
+<div class="widget">
+  <div class="widget-title">Wer kümmert sich um was?</div>
+  <div class="seg" id="stS">
+    <button data-m="0">Eigenes Rechenzentrum</button>
+    <button data-m="1" aria-pressed="true">IaaS</button>
+    <button data-m="2">PaaS</button>
+    <button data-m="3">Serverless</button>
+    <button data-m="4">SaaS</button>
+  </div>
+  <div class="stk" id="stK"></div>
+  <div class="leg"><span><i style="background:var(--accent)"></i>du</span><span><i style="background:var(--bg);border:1px solid var(--line)"></i>Anbieter</span></div>
+  <div class="note" id="stN"></div>
+</div>
+
+<p>Wichtig ist das Prinzip der <strong>geteilten Verantwortung</strong>: Der Anbieter sichert, was er betreibt – Gebäude, Hardware, je nach Modell auch Betriebssystem und Laufzeit. Was du konfigurierst, bleibt deine Aufgabe: Zugriffsrechte, offene Ports, öffentlich lesbare Speicher, Patches deiner eigenen Software. Ein großer Teil der Sicherheitsvorfälle in der Cloud geht auf solche Fehlkonfigurationen zurück, nicht auf Lücken beim Anbieter.</p>
+
+<h2 id="elastizitaet">Elastizität: zahlen, was man braucht</h2>
+<p>Ein eigenes Rechenzentrum muss für die höchste Last gebaut werden – und steht den Rest der Zeit halb leer. In der Cloud kann die Kapazität der Last folgen. Ein Onlineshop über einen Tag, mit Abendspitze:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein Tag Last – vier Strategien</div>
+  <div class="sl"><span>Spitze gegenüber Grundlast</span><input type="range" id="ldP" min="1" max="10" value="5"><output id="ldPo"></output></div>
+  <div class="seg" id="ldS">
+    <button data-s="peak">Fest, für die Spitze</button>
+    <button data-s="avg">Fest, für den Durchschnitt</button>
+    <button data-s="auto" aria-pressed="true">Autoscaling</button>
+    <button data-s="fn">Serverless</button>
+  </div>
+  <svg id="ldSvg" viewBox="0 0 480 190" role="img" aria-label="Last und Kapazität über 24 Stunden"></svg>
+  <div class="kpi" id="ldK"></div>
+  <div class="note" id="ldN"></div>
+  <p class="fine">Modellhaft. Eine Kapazitätseinheit kostet 1 pro Stunde. Autoscaling reagiert mit einer Stunde Verzögerung und hält 20 % Reserve. Serverless kostet pro genutzter Einheit das 2,5-Fache, im Leerlauf nichts. Reale Preise und Verhältnisse unterscheiden sich je nach Anbieter und Dienst.</p>
+</div>
+
+<p>Daran sieht man die Abwägung: Feste Kapazität für die Spitze ist sicher, aber teuer. Autoscaling spart, reagiert aber mit Verzögerung – bei steilen Anstiegen fehlt kurz Kapazität, weshalb man Reserven einplant oder vorausschauend skaliert. Serverless folgt der Last fast perfekt und kostet im Leerlauf nichts, ist pro Recheneinheit aber teurer: ideal für unregelmäßige Last, teuer für Dauerlast.</p>
+<p>Auch die Cloud ist nicht automatisch günstiger. Bei gleichmäßiger, gut planbarer Last kann eigene oder langfristig gemietete Hardware billiger sein. Deshalb gibt es Rabattmodelle für feste Zusagen – und eine eigene Disziplin, die sich nur um Cloudkosten kümmert (FinOps).</p>
+
+<h2 id="ausfall">Ausfälle einplanen</h2>
+<p>In der Cloud fallen Server ständig aus – bei zehntausenden Maschinen ist das Alltag. Hochverfügbarkeit entsteht durch die Verteilung: mehrere Instanzen, über mehrere Zonen, im Extremfall über mehrere Regionen. Probier aus, was welcher Ausfall anrichtet:</p>
+
+<div class="widget">
+  <div class="widget-title">Verteilung gegen Ausfall</div>
+  <div class="lbl">Aufbau</div>
+  <div class="seg" id="azD">
+    <button data-d="one">Ein Server</button>
+    <button data-d="zone">Drei Server, eine Zone</button>
+    <button data-d="multi" aria-pressed="true">Drei Zonen</button>
+    <button data-d="region">Zwei Regionen</button>
+  </div>
+  <div class="lbl">Ausfall</div>
+  <div class="seg" id="azF">
+    <button data-f="none" aria-pressed="true">Keiner</button>
+    <button data-f="srv">Ein Server</button>
+    <button data-f="zone">Eine Zone</button>
+    <button data-f="region">Ganze Region</button>
+  </div>
+  <div class="regs" id="azR"></div>
+  <div class="res up" id="azRes"></div>
+</div>
+
+<p>Jede Stufe kostet: Mehrere Zonen bedeuten Datenreplikation und etwas Latenz zwischen den Zonen, mehrere Regionen bedeuten die Probleme <a href="/it-konzepte/verteilte-systeme/">verteilter Systeme</a> im großen Maßstab – Daten über hunderte Kilometer konsistent zu halten, ist schwer und teuer. Für die meisten Anwendungen sind mehrere Zonen in einer Region der übliche Kompromiss.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Damit eine Anwendung gut in der Cloud läuft, sollte sie sich an ein paar Regeln halten, die als <strong>Twelve-Factor App</strong> bekannt geworden sind: Konfiguration aus der Umgebung statt aus Dateien im Archiv, keine Daten auf der lokalen Platte, schnell starten, sauber beenden, Logs auf die Standardausgabe.</p>
+<pre><code><span class="c"># application.yml – Werte kommen aus Umgebungsvariablen der Plattform</span>
+spring:
+  datasource:
+    url: ${DB_URL}
+    password: ${DB_PASSWORD}       <span class="c"># besser: aus einem Secret-Manager</span>
+management:
+  endpoint.health.probes.enabled: <span class="k">true</span>   <span class="c"># /actuator/health/liveness und /readiness</span></code></pre>
+<pre><code><span class="c">// Serverless: eine Funktion statt eines Servers (AWS Lambda)</span>
+<span class="k">public class</span> BildVerkleinern <span class="k">implements</span> RequestHandler&lt;S3Event, String&gt; {
+    @Override
+    <span class="k">public</span> String handleRequest(S3Event ereignis, Context ctx) {
+        <span class="c">// läuft nur, wenn ein Bild hochgeladen wird – und kostet nur dann</span>
+        <span class="k">return</span> verkleinere(ereignis);
+    }
+}</code></pre>
+<p>Ein Java-spezifisches Thema ist der <strong>Kaltstart</strong>: Wird eine Serverless-Funktion nach einer Pause aufgerufen, muss zuerst eine JVM starten, Klassen laden und das Framework hochfahren – das kann bei Spring-Anwendungen Sekunden dauern. Dafür gibt es Gegenmittel:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Technik</th><th>Wie sie hilft</th></tr></thead>
+  <tbody>
+    <tr><td><strong>GraalVM Native Image</strong></td><td>übersetzt die Anwendung vorab in Maschinencode – startet in Millisekunden, verzichtet aber auf den <a href="/it-konzepte/compiler-jit/">JIT</a> und braucht Konfiguration für Reflection</td></tr>
+    <tr><td><strong>CRaC / SnapStart</strong></td><td>speichern eine fertig hochgefahrene JVM als Abbild und setzen dort wieder auf</td></tr>
+    <tr><td><strong>Schlanke Frameworks</strong></td><td>Quarkus und Micronaut verlagern viel Arbeit vom Start in die Übersetzungszeit</td></tr>
+    <tr><td><strong>Warmhalten</strong></td><td>eine Mindestzahl Instanzen dauerhaft bereithalten – kostet dafür auch im Leerlauf</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Infrastruktur selbst wird heute meist als Code beschrieben (<strong>Infrastructure as Code</strong>), etwa mit Terraform oder den Werkzeugen der Anbieter: Netze, Datenbanken und Rechte stehen versioniert im Repository und werden von der <a href="/it-konzepte/build-cicd/">Pipeline</a> ausgerollt.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Die Cloud ist immer billiger.“</b> – Bei schwankender Last oft ja, bei gleichmäßiger Dauerlast nicht unbedingt. Vergessene Maschinen, Datenverkehr aus der Cloud hinaus und überdimensionierte Instanzen treiben Rechnungen schnell hoch.</div>
+  <div><b>„Um Sicherheit kümmert sich der Anbieter.“</b> – Nur um seinen Teil. Zugriffsrechte, Netzregeln, Verschlüsselungseinstellungen und die eigene Software bleiben beim Kunden.</div>
+  <div><b>„Serverless heißt: keine Server.“</b> – Es gibt sie natürlich, man sieht sie nur nicht. Der Anbieter verwaltet sie und rechnet pro Aufruf ab.</div>
+  <div><b>„In der Cloud ist alles automatisch hochverfügbar.“</b> – Eine einzelne virtuelle Maschine fällt genauso aus wie ein Server im Keller. Verfügbarkeit entsteht erst durch Verteilung über Zonen.</div>
+  <div><b>„Mit Kubernetes sind wir anbieterunabhängig.“</b> – Die Container ja. Datenbanken, Warteschlangen, Rechteverwaltung und Netz sind meist trotzdem anbieterspezifisch. Lock-in lässt sich verringern, selten ganz vermeiden – und manchmal ist er den Komfort wert.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/virtualisierung-container/">Virtualisierung und Container</a>
+  <a href="/it-konzepte/microservices/">Microservices und Monolith</a>
+  <a href="/it-konzepte/verteilte-systeme/">Verteilte Systeme</a>
+  <a href="/it-konzepte/build-cicd/">Build und CI/CD</a>
+  <a href="/it-konzepte/authentifizierung/">Authentifizierung</a>
+  <a href="/it-konzepte/observability/">Observability</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

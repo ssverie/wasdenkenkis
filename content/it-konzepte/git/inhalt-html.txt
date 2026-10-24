@@ -1,0 +1,131 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Git</strong> speichert die Geschichte eines Projekts als Folge von <strong>Commits</strong>. Ein Commit ist ein vollständiger Schnappschuss aller Dateien, plus Autor, Nachricht und Verweis auf den oder die Vorgänger. Jeder Commit wird über einen <strong>Hash</strong> seines gesamten Inhalts benannt – ändert man irgendetwas, entsteht ein anderer Commit.</p>
+<p>Zusammen bilden die Commits einen <strong>Graphen</strong>. Ein <strong>Branch</strong> ist nichts weiter als ein beweglicher Zeiger auf einen Commit, <strong>HEAD</strong> sagt, auf welchem Branch man gerade steht. <strong>Merge</strong> führt zwei Linien mit einem neuen Commit zusammen; <strong>Rebase</strong> schreibt Commits neu auf eine andere Basis. Wer das Bild vom Graphen mit Zetteln im Kopf hat, versteht fast jeden Git-Befehl.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#schnappschuesse">Schnappschüsse mit Fingerabdruck</a></li>
+  <li><a href="#bereiche">Drei Bereiche</a></li>
+  <li><a href="#graph">Branches sind Zettel</a></li>
+  <li><a href="#verteilt">Verteilt: jeder hat alles</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="schnappschuesse">Schnappschüsse mit Fingerabdruck</h2>
+<p>Ältere Systeme wie CVS und Subversion speicherten pro Datei die Unterschiede zur Vorversion. Git denkt anders: Jeder Commit ist ein vollständiger Schnappschuss. Damit das nicht explodiert, speichert Git jeden Dateiinhalt nur einmal – unter seinem Hash. Eine unveränderte Datei in hundert Commits liegt genau einmal im Repository.</p>
+<p>Auch der Commit selbst hat einen Hash, berechnet aus allem, was ihn ausmacht: dem Schnappschuss, dem Autor, der Nachricht – und dem Hash des Vorgängers. Daraus folgt etwas Wichtiges:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein Commit kennt seine ganze Geschichte</div>
+  <div class="chain" id="chain"></div>
+  <div class="note" id="chN">Ändere die Nachricht des zweiten Commits.</div>
+  <p class="fine">Echte SHA-256-Berechnung, auf 7 Zeichen gekürzt. Git selbst benutzt standardmäßig SHA-1, neuere Versionen können auch SHA-256.</p>
+</div>
+
+<p>Weil jeder Hash den Hash des Vorgängers enthält, kann man die Vergangenheit nicht unbemerkt ändern: Jede Änderung erzeugt neue Hashes für alle Nachfolger. Ein Commit-Hash garantiert also die gesamte Geschichte bis zum ersten Commit. Dasselbe Prinzip – eine Kette von Hashes – steckt auch in Blockchains.</p>
+
+<h2 id="bereiche">Drei Bereiche</h2>
+<p>Zwischen dem Bearbeiten einer Datei und dem Commit liegt in Git eine Zwischenstation, die bei anderen Systemen fehlt:</p>
+<div class="areas">
+  <div class="ar"><b>Arbeitsverzeichnis</b><small>die Dateien, an denen du arbeitest</small></div>
+  <div class="cmd"><span>git add →</span><span class="back">← git restore</span></div>
+  <div class="ar"><b>Staging-Bereich</b><small>„Index“: was in den nächsten Commit soll</small></div>
+  <div class="cmd"><span>git commit →</span><span class="back">← git restore --staged</span></div>
+  <div class="ar"><b>Repository</b><small>die Commits in <code>.git</code></small></div>
+</div>
+<p>Der Staging-Bereich erlaubt, aus einem Durcheinander von Änderungen saubere Commits zu bauen: erst nur die Fehlerkorrektur, dann getrennt die Umbenennung. <code>git add -p</code> geht sogar einzelne Stellen innerhalb einer Datei durch.</p>
+
+<h2 id="graph">Branches sind Zettel</h2>
+<p>Ein Branch kostet in Git praktisch nichts: Er ist eine winzige Datei mit einem Commit-Hash darin. Neuer Commit auf einem Branch heißt: Commit anlegen, Zettel einen Schritt weiterschieben. <strong>HEAD</strong> ist der Zettel, der sagt, welcher Branch gerade dran ist. Spiel es durch – und vergleiche dann Merge und Rebase:</p>
+
+<div class="widget">
+  <div class="widget-title">Der Commit-Graph</div>
+  <div class="gctl">
+    <button class="primary" id="gC">git commit</button>
+    <button id="gB">git switch -c feature</button>
+    <button id="gSm">git switch main</button>
+    <button id="gSf">git switch feature</button>
+    <button id="gM">git merge …</button>
+    <button id="gR">git rebase main</button>
+    <button id="gX">Neu</button>
+  </div>
+  <div class="gwrap"><svg id="gg" viewBox="0 0 640 192" role="img" aria-label="Commit-Graph mit Branches"></svg></div>
+  <div class="note" id="gN"></div>
+  <p class="fine">Vorschlag zum Ausprobieren: Branch anlegen, zwei Commits, zurück auf main, ein Commit, dann einmal mergen – und nach „Neu“ dasselbe mit Rebase.</p>
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th></th><th>Merge</th><th>Rebase</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Was passiert</strong></td><td>ein neuer Commit mit zwei Eltern verbindet die Linien</td><td>die eigenen Commits werden auf die neue Basis kopiert – mit neuen Hashes</td></tr>
+    <tr><td><strong>Geschichte</strong></td><td>zeigt, wie es wirklich war, auch die Parallelität</td><td>eine gerade Linie, leichter zu lesen</td></tr>
+    <tr><td><strong>Bestehende Commits</strong></td><td>bleiben unverändert</td><td>werden ersetzt; die alten verschwinden aus dem Graphen</td></tr>
+    <tr><td><strong>Gefahr</strong></td><td>unübersichtliche Graphen bei vielen Merges</td><td>wer die alten Commits schon hatte, hat jetzt eine abweichende Geschichte</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Daraus folgt die eine Regel, die man sich merken muss: <strong>Commits, die andere schon haben, nicht rebasen.</strong> Den eigenen Feature-Branch vor dem Zusammenführen auf den neuesten Stand von main zu rebasen, ist dagegen gängige Praxis. Danach muss man ihn mit <code>--force-with-lease</code> pushen – die Variante, die abbricht, wenn jemand anderes inzwischen etwas hochgeladen hat.</p>
+
+<h3>Konflikte</h3>
+<p>Haben beide Seiten dieselbe Stelle derselben Datei geändert, kann Git nicht entscheiden und markiert die Stelle:</p>
+<pre><code><span class="k">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>
+    <span class="k">return</span> preis * <span class="s">0.9</span>;      <span class="c">// main: 10 % Rabatt</span>
+=======
+    <span class="k">return</span> preis * rabatt; <span class="c">// feature: Rabatt konfigurierbar</span>
+<span class="k">&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature</span></code></pre>
+<p>Man entscheidet von Hand, entfernt die Markierungen, <code>git add</code> und schließt mit <code>git commit</code> (beim Merge) oder <code>git rebase --continue</code> ab. Kleine, häufig integrierte Branches haben deutlich weniger Konflikte als große, wochenlang getrennte.</p>
+
+<h2 id="verteilt">Verteilt: jeder hat alles</h2>
+<p>Git ist <strong>verteilt</strong>: Jeder Klon enthält die vollständige Geschichte. Ein „Server“ wie GitHub oder GitLab ist technisch nur ein weiteres Repository, auf das sich alle geeinigt haben. <code>git fetch</code> holt neue Commits von dort und aktualisiert die <em>Remote-Branches</em> wie <code>origin/main</code> – ohne die eigenen anzufassen. <code>git pull</code> ist <code>fetch</code> plus Merge (oder Rebase), <code>git push</code> schickt die eigenen Commits hin und schiebt dort den Zettel weiter – aber nur, wenn das ohne Verlust geht.</p>
+<p>Entstanden ist Git 2005 in wenigen Wochen: Linus Torvalds schrieb es für die Linux-Entwicklung, nachdem das bis dahin genutzte Werkzeug nicht mehr kostenlos zur Verfügung stand.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code>git switch -c feature/rabatt          <span class="c"># neuer Branch, gleich draufwechseln</span>
+git add -p                            <span class="c"># Änderungen stückweise auswählen</span>
+git commit -m <span class="s">"Rabatt für Stammkunden"</span>
+git fetch &amp;&amp; git rebase origin/main     <span class="c"># eigenen Branch aktualisieren</span>
+git push --force-with-lease           <span class="c"># nach Rebase – nur auf eigenen Branches</span>
+
+git log --oneline --graph --all       <span class="c"># der Graph aus dem Widget, im Terminal</span>
+git reflog                            <span class="c"># wo stand HEAD früher? „verlorene“ Commits wiederfinden</span>
+
+git bisect start                      <span class="c"># Fehler suchen per binärer Suche:</span>
+git bisect bad                        <span class="c">#   jetzt ist er da</span>
+git bisect good v1.4                  <span class="c">#   damals nicht – Git halbiert, du testest</span></code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Thema</th><th>Für Java-Projekte</th></tr></thead>
+  <tbody>
+    <tr><td><strong>.gitignore</strong></td><td><code>target/</code>, <code>build/</code>, <code>.idea/</code>, <code>*.class</code> – Erzeugtes gehört nicht ins Repository, nur Quellen.</td></tr>
+    <tr><td><strong>Zeilenenden</strong></td><td>Eine <code>.gitattributes</code> mit <code>* text=auto</code> verhindert, dass Windows- und Linux-Entwickler sich gegenseitig jede Zeile „ändern“. Für Shell-Skripte ausdrücklich <code>eol=lf</code>.</td></tr>
+    <tr><td><strong>git bisect</strong></td><td>Die <a href="/it-konzepte/komplexitaet/">binäre Suche</a> angewandt auf die Geschichte: Unter 1000 Commits findet man den schuldigen in etwa 10 Schritten. Mit <code>git bisect run mvn test</code> sogar automatisch.</td></tr>
+    <tr><td><strong>Große Dateien</strong></td><td>Binärdateien wie JARs oder Videos bleiben für immer in der Geschichte. Dafür gibt es Git LFS – oder besser ein Artefakt-Repository.</td></tr>
+    <tr><td><strong>Git aus Java</strong></td><td>Die Bibliothek JGit implementiert Git vollständig in Java – sie steckt etwa in Eclipse und vielen Build-Werkzeugen.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Git speichert Unterschiede.“</b> – Git speichert Schnappschüsse. Unterschiede rechnet es bei Bedarf aus. Intern komprimiert es ähnliche Inhalte zwar platzsparend, aber das ist ein Speicherdetail, kein Modell.</div>
+  <div><b>„Ein Branch ist eine Kopie des Codes.“</b> – Er ist ein Zeiger auf einen Commit. Einen Branch anzulegen kostet 41 Byte, egal wie groß das Projekt ist.</div>
+  <div><b>„Was weg ist, ist weg.“</b> – Nach einem missglückten Rebase oder Reset sind die alten Commits nur nicht mehr sichtbar. <code>git reflog</code> zeigt, wo HEAD vorher stand; standardmäßig werden solche Einträge erst nach Wochen aufgeräumt.</div>
+  <div><b>„git pull ist harmlos.“</b> – Es ist fetch plus Merge und kann unerwartete Merge-Commits oder Konflikte erzeugen. Viele Teams stellen <code>pull.rebase</code> ein oder holen lieber erst mit <code>fetch</code> und entscheiden dann.</div>
+  <div><b>„Git ist GitHub.“</b> – Git ist das Werkzeug, GitHub, GitLab und Bitbucket sind Plattformen drumherum. Pull Requests, Issues und Pipelines gehören zur Plattform, nicht zu Git.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/datenstrukturen/">Datenstrukturen</a>
+  <a href="/it-konzepte/kryptografie/">Kryptografie-Grundlagen</a>
+  <a href="/it-konzepte/komplexitaet/">Komplexität und O-Notation</a>
+  <a href="/it-konzepte/dateisystem/">Dateisysteme und Persistenz</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

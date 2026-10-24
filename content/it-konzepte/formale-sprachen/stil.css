@@ -1,0 +1,54 @@
+/* ---- Seitenspezifisch: Formale Sprachen und Automaten ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:2.6em}
+.erklaert .sl{display:grid;grid-template-columns:12em minmax(0,1fr) 3.5em;align-items:center;gap:10px;font-size:.88rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:minmax(0,1fr) 3.5em}.erklaert .sl > span{grid-column:1/-1}}
+
+/* DFA */
+.erklaert .rx{font:.82rem var(--mono);color:var(--muted);margin-bottom:6px;overflow-wrap:anywhere}
+.erklaert .rx b{color:var(--fg)}
+.erklaert #dfSvg{width:100%;height:auto;display:block}
+.erklaert #dfSvg .st circle{fill:var(--card);stroke:var(--line);stroke-width:2;transition:fill .2s,stroke .2s}
+.erklaert #dfSvg .st.on circle{fill:var(--accent-2-soft);stroke:var(--accent-2);stroke-width:3}
+.erklaert #dfSvg .st text{font:600 13px var(--sans);fill:var(--fg)}
+.erklaert #dfSvg .ed path{fill:none;stroke:var(--muted);stroke-width:1.5}
+.erklaert #dfSvg .ed text{font:12px var(--mono);fill:var(--muted)}
+.erklaert #dfSvg .ed.on path{stroke:var(--accent-2);stroke-width:2.6}
+.erklaert #dfSvg .ed.on text{fill:var(--accent-2);font-weight:700}
+.erklaert .inrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.erklaert .inrow input[type=text]{flex:1 1 10em;min-width:0;font:600 .95rem var(--mono);padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.erklaert .inrow button{padding:6px 11px;font-size:.84rem}
+.erklaert .tape{display:flex;flex-wrap:wrap;gap:3px;margin-top:10px;min-height:30px}
+.erklaert .tape span{min-width:24px;height:28px;display:grid;place-items:center;border-radius:6px;background:var(--bg);font:600 .9rem var(--mono);border:1px solid var(--line)}
+.erklaert .tape span.done{opacity:.45}
+.erklaert .tape span.cur{background:var(--accent-2);color:#fff;border-color:var(--accent-2)}
+.erklaert .verd{margin-top:10px;padding:10px 12px;border-radius:9px;font-size:.88rem;background:var(--bg)}
+.erklaert .verd.yes{background:var(--ok-soft)}.erklaert .verd.no{background:rgba(200,60,60,.12)}
+
+/* Klammern */
+.erklaert .kz{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0}
+.erklaert .kz span{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--line);font:600 .78rem var(--mono);background:var(--card)}
+.erklaert .kz span.last{border-style:dashed}
+.erklaert .kz span.hit{border-color:var(--accent-2);background:var(--accent-2-soft)}
+.erklaert .pr{display:grid;gap:6px;margin-top:8px}
+.erklaert .pr div{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:8px;background:var(--bg);font-size:.82rem}
+.erklaert .pr code{overflow-wrap:anywhere;font-size:.78rem}
+.erklaert .pr b.ok{color:var(--ok)}.erklaert .pr b.bad{color:var(--bad)}
+
+/* Backtracking */
+.erklaert .kpi{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+@media (max-width:520px){.erklaert .kpi{grid-template-columns:1fr}}
+.erklaert .kpi div{padding:10px;border-radius:9px;background:var(--bg);text-align:center;font-size:.74rem;color:var(--muted)}
+.erklaert .kpi b{display:block;font:600 1.1rem var(--serif);color:var(--fg)}
+.erklaert .kpi .bad b{color:var(--bad)}.erklaert .kpi .good b{color:var(--ok)}
+.erklaert .bar2{height:12px;border-radius:6px;background:var(--bg);overflow:hidden;margin-top:6px}
+.erklaert .bar2 i{display:block;height:100%;background:var(--bad);transition:width .2s}
+

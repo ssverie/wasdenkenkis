@@ -1,0 +1,51 @@
+/* ---- Seitenspezifisch: Authentifizierung ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:10px 0 4px}
+.erklaert .toggle{display:flex;align-items:center;gap:7px;font-size:.86rem;cursor:pointer}
+.erklaert .toggle input{accent-color:var(--accent);width:17px;height:17px;flex:0 0 auto}
+
+/* Passwort-DB */
+.erklaert .pwdb{font-size:.78rem}
+.erklaert .pwdb th, .erklaert .pwdb td{padding:6px 9px}
+.erklaert .pwdb td code{font-size:.72rem;word-break:break-all;background:transparent}
+.erklaert .pwdb tr.same td{background:var(--bad-soft)}
+.erklaert .crack{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+@media (max-width:560px){.erklaert .crack{grid-template-columns:1fr}}
+.erklaert .crack div{padding:10px;border-radius:9px;background:var(--bg);text-align:center;font-size:.74rem;color:var(--muted)}
+.erklaert .crack b{display:block;font:600 1.15rem var(--serif);color:var(--fg)}
+.erklaert .crack .bad b{color:var(--bad)}.erklaert .crack .good b{color:var(--ok)}
+.erklaert .sl{display:grid;grid-template-columns:14em 1fr;align-items:center;gap:10px;font-size:.88rem;margin:12px 0 0}
+.erklaert .sl select{font:500 .88rem var(--sans);padding:7px 9px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--fg);min-width:0}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:1fr}}
+.erklaert .pw-note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg)}
+
+/* OAuth */
+.erklaert #oa{max-width:620px}
+.erklaert #oa .ac{fill:var(--card);stroke:var(--line);stroke-width:2}
+.erklaert #oa .ac.on{stroke:var(--accent-2);stroke-width:3}
+.erklaert #oa .t{font:700 13px var(--sans);fill:var(--fg)}
+.erklaert #oa .s{font:11px var(--sans);fill:var(--muted)}
+.erklaert #oa .ln{stroke:var(--line);stroke-width:1.5;stroke-dasharray:3 4}
+.erklaert #oa .ar{stroke-width:2.5;fill:none}
+.erklaert #oa .al{font:600 12px var(--mono);fill:var(--fg)}
+.erklaert .oa-txt{margin-top:10px;padding:12px 14px;border-radius:10px;background:var(--bg);font-size:.9rem;min-height:5em}
+.erklaert .oa-txt code{font-size:.78rem;overflow-wrap:anywhere}
+
+/* JWT */
+.erklaert .jwt{font:.78rem/1.55 var(--mono);word-break:break-all;padding:12px 14px;border-radius:10px;background:var(--bg)}
+.erklaert .jwt .h{color:#b4540a}.erklaert .jwt .p{color:#8b3fb8}.erklaert .jwt .s{color:#0e7490}
+:root[data-theme="dark"] .erklaert .jwt .h{color:#f0a058}:root[data-theme="dark"] .erklaert .jwt .p{color:#d6a8f5}:root[data-theme="dark"] .erklaert .jwt .s{color:#67d4e8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .jwt .h{color:#f0a058}:root:not([data-theme="light"]) .erklaert .jwt .p{color:#d6a8f5}:root:not([data-theme="light"]) .erklaert .jwt .s{color:#67d4e8}}
+.erklaert .jparts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+@media (max-width:560px){.erklaert .jparts{grid-template-columns:1fr}}
+.erklaert .jparts pre{margin:0;font-size:.76rem}
+.erklaert .jctl{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.erklaert .jres{margin-top:10px;padding:10px 12px;border-radius:9px;font-size:.88rem}
+.erklaert .jres.ok{background:var(--ok-soft)}.erklaert .jres.no{background:var(--bad-soft)}
+

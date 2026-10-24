@@ -1,0 +1,52 @@
+/* ---- Seitenspezifisch: TLS und Zertifikate ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .toggle{display:flex;align-items:center;gap:7px;font-size:.86rem;cursor:pointer}
+.erklaert .toggle input{accent-color:var(--accent);width:17px;height:17px;flex:0 0 auto}
+
+/* Farbmischen */
+.erklaert .dh{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;align-items:start}
+@media (max-width:640px){.erklaert .dh{grid-template-columns:1fr}}
+.erklaert .dh > div{padding:12px;border-radius:12px;background:var(--bg)}
+.erklaert .dh h4{margin:0 0 8px;font-size:.9rem}
+.erklaert .dh .eve h4{color:var(--bad)}
+.erklaert .pot{display:flex;align-items:center;gap:10px;margin:6px 0;font-size:.8rem}
+.erklaert .pot i{flex:0 0 38px;height:38px;border-radius:50%;border:2px solid var(--line);display:block}
+.erklaert .pot.big i{flex-basis:52px;height:52px}
+.erklaert .dh input[type=range]{width:100%;accent-color:var(--accent)}
+.erklaert .dh .pub{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-top:10px}
+.erklaert .dh-note{margin-top:12px;font-size:.9rem;padding:10px 12px;border-radius:9px;background:var(--accent-2-soft)}
+
+/* Kette */
+.erklaert .chain{display:flex;flex-direction:column;align-items:center;gap:0}
+.erklaert .cert{width:100%;max-width:420px;padding:10px 14px;border-radius:10px;border:2px solid var(--ok);background:var(--card);font-size:.82rem;transition:border-color .2s,background .2s}
+.erklaert .cert.bad{border-color:var(--bad);background:var(--bad-soft)}
+.erklaert .cert.miss{border-style:dashed;border-color:var(--bad);background:transparent;color:var(--muted)}
+.erklaert .cert b{display:block;font-size:.92rem}
+.erklaert .cert dl{display:grid;grid-template-columns:auto 1fr;gap:1px 10px;margin:4px 0 0;font-size:.76rem;color:var(--muted)}
+.erklaert .cert dd{margin:0;color:var(--fg);overflow-wrap:anywhere}
+.erklaert .cert .x{color:var(--bad);font-weight:700}
+.erklaert .link{font-size:.72rem;color:var(--muted);padding:4px 0;text-align:center}
+.erklaert .store{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:4px}
+.erklaert .breaks{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.erklaert .verdict{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:600px){.erklaert .verdict{grid-template-columns:1fr}}
+.erklaert .verdict > div{padding:12px;border-radius:10px;font-size:.84rem}
+.erklaert .verdict .ok{background:var(--ok-soft)}.erklaert .verdict .no{background:var(--bad-soft)}
+.erklaert .verdict h4{margin:0 0 4px;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+.erklaert .verdict code{font-size:.75rem;overflow-wrap:anywhere}
+
+/* Handshake-Schritte */
+.erklaert .hs{list-style:none;margin:16px 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.erklaert .hs li{display:grid;grid-template-columns:7.5em 1fr;gap:12px;padding:10px 14px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:.88rem}
+.erklaert .hs li .w{font-weight:700;font-size:.78rem}
+.erklaert .hs li .w small{display:block;font-weight:400;color:var(--muted)}
+.erklaert .hs li.enc{border-left:4px solid var(--ok)}
+.erklaert .hs li.clr{border-left:4px solid var(--accent-2)}
+@media (max-width:520px){.erklaert .hs li{grid-template-columns:1fr;gap:2px}}
+

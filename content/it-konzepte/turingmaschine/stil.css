@@ -1,0 +1,38 @@
+/* ---- Seitenspezifisch: Turingmaschine ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:2.6em}
+.erklaert .sl{display:grid;grid-template-columns:12em minmax(0,1fr) 3.5em;align-items:center;gap:10px;font-size:.88rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{text-align:right;font:600 .85rem var(--mono)}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:minmax(0,1fr) 3.5em}.erklaert .sl > span{grid-column:1/-1}}
+
+/* Simulator */
+.erklaert .tmdesc{font-size:.86rem;color:var(--muted);margin-bottom:8px}
+.erklaert .band{position:relative;overflow:hidden;padding:26px 0 6px;margin-top:4px}
+.erklaert .cells{display:flex;justify-content:center;gap:2px}
+.erklaert .cells span{flex:0 0 30px;height:34px;display:grid;place-items:center;border:1px solid var(--line);background:var(--card);font:600 .95rem var(--mono);border-radius:4px;transition:background .15s}
+.erklaert .cells span.bl{color:var(--line)}
+.erklaert .cells span.hd{background:var(--accent-2-soft);border:2px solid var(--accent-2)}
+.erklaert .cells span.wr{animation:fl .5s}
+@keyframes fl{from{background:var(--accent-2)}}
+.erklaert .headm{position:absolute;top:0;left:50%;transform:translateX(-50%);font:700 .72rem var(--sans);color:var(--accent-2);white-space:nowrap}
+.erklaert .inrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
+.erklaert .inrow input[type=text]{flex:1 1 8em;min-width:0;font:600 .95rem var(--mono);padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.erklaert .inrow button{padding:6px 11px;font-size:.84rem}
+.erklaert .tst{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:.84rem;margin-top:10px}
+.erklaert .tst b{font-family:var(--mono)}
+.erklaert .tmt{width:100%;border-collapse:collapse;font:.78rem var(--mono);margin-top:10px}
+.erklaert .tmt th, .erklaert .tmt td{padding:4px 6px;border-bottom:1px solid var(--line);text-align:left}
+.erklaert .tmt th{font:600 .7rem var(--sans);color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.erklaert .tmt tr.on td{background:var(--accent-2-soft);font-weight:700}
+.erklaert .verd{margin-top:10px;padding:10px 12px;border-radius:9px;font-size:.88rem;background:var(--bg)}
+.erklaert .verd.yes{background:var(--ok-soft)}.erklaert .verd.no{background:rgba(200,60,60,.12)}
+
+.erklaert #stSvg{width:100%;height:auto;display:block;margin-top:6px}
+

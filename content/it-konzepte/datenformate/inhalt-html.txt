@@ -1,0 +1,139 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Im Arbeitsspeicher ist ein Objekt ein Geflecht aus Feldern und Verweisen. Um es zu speichern oder zu verschicken, muss es zu einer flachen Folge von Bytes werden – das heißt <strong>Serialisierung</strong>, der Rückweg <strong>Deserialisierung</strong>. Textformate wie <strong>JSON</strong> und <strong>XML</strong> sind lesbar und überall verstanden; Binärformate wie <strong>Protobuf</strong> sind kleiner und schneller, brauchen aber ein Schema.</p>
+<p>Unter jedem Textformat liegt eine zweite Übersetzung: Zeichen werden über <strong>Unicode</strong> zu Nummern und über eine Kodierung – heute fast immer <strong>UTF-8</strong> – zu Bytes. Wer dabei auf beiden Seiten nicht dieselbe Kodierung annimmt, bekommt Zeichensalat.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#zeichen">Von Zeichen zu Bytes</a></li>
+  <li><a href="#formate">Ein Objekt, fünf Formate</a></li>
+  <li><a href="#fallen">Die Fallen in JSON</a></li>
+  <li><a href="#schema">Schemas und Weiterentwicklung</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="zeichen">Von Zeichen zu Bytes</h2>
+<p><strong>Unicode</strong> gibt jedem Zeichen aller Schriften eine Nummer, einen <strong>Codepoint</strong>: „A“ ist U+0041, „ü“ ist U+00FC, „€“ ist U+20AC, „👋“ ist U+1F44B. Wie diese Nummern als Bytes gespeichert werden, regelt eine <strong>Kodierung</strong>. <strong>UTF-8</strong> braucht für die alten ASCII-Zeichen ein Byte, für Umlaute zwei, für die meisten anderen Schriften drei und für Emoji vier. Tipp etwas ein:</p>
+
+<div class="widget">
+  <div class="widget-title">Zeichen, Codepoints, Bytes</div>
+  <input class="inp" id="txt" value="Grüße 👋 für 5 €" aria-label="Text">
+  <div class="chars" id="chars"></div>
+  <div class="legend"><span><i style="background:var(--accent-soft)"></i>1 Byte</span><span><i style="background:var(--ok-soft)"></i>2 Bytes</span><span><i style="background:var(--accent-2-soft)"></i>3 Bytes</span><span><i style="background:var(--bad-soft)"></i>4 Bytes</span></div>
+  <div class="cnt" id="cnt"></div>
+  <div class="moji" id="moji"></div>
+</div>
+
+<p>Zwei Dinge daraus begegnen Java-Entwicklern ständig:</p>
+<ul>
+  <li><strong>Mojibake</strong> – Zeichensalat. Er entsteht, wenn UTF-8-Bytes als ein älterer Zeichensatz wie Windows-1252 oder ISO-8859-1 gelesen werden. Aus den zwei Bytes von „ü“ werden dann zwei Zeichen, „Ã¼“. Die Daten sind nicht kaputt, nur falsch gelesen. Seit Java 18 ist UTF-8 der Standard-Zeichensatz der JVM; vorher hing er vom Betriebssystem ab – eine klassische Fehlerquelle zwischen Windows-Entwicklerrechner und Linux-Server.</li>
+  <li><strong><code>String.length()</code> zählt keine Zeichen.</strong> Java speichert Text intern in UTF-16, und <code>length()</code> zählt dessen 16-Bit-Einheiten. Ein Emoji braucht zwei davon. Wer Text auf „höchstens 10 Zeichen“ kürzt, kann ein Emoji in der Mitte zerschneiden.</li>
+</ul>
+
+<h2 id="formate">Ein Objekt, fünf Formate</h2>
+<p>Dieselbe Bestellung in den gängigen Formaten. Der Betrag steht absichtlich in Cent als ganze Zahl – dazu gleich mehr.</p>
+
+<div class="widget">
+  <div class="widget-title">Formate im Vergleich</div>
+  <div class="seg" id="fSel">
+    <button data-f="json" aria-pressed="true">JSON</button>
+    <button data-f="xml">XML</button>
+    <button data-f="yaml">YAML</button>
+    <button data-f="csv">CSV</button>
+    <button data-f="pb">Protobuf</button>
+  </div>
+  <div class="fmt-out">
+    <div id="fBody"></div>
+    <div><div class="sizes" id="fSizes"></div></div>
+  </div>
+  <div class="fmt-note" id="fNote"></div>
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Format</th><th>Stärken</th><th>Schwächen</th><th>Typisch für</th></tr></thead>
+  <tbody>
+    <tr><td><strong>JSON</strong></td><td>einfach, überall unterstützt, lesbar</td><td>keine Kommentare, unscharfe Zahlen, kein Datumstyp</td><td>Web-APIs, Konfiguration, Dokument-Datenbanken</td></tr>
+    <tr><td><strong>XML</strong></td><td>Schemas (XSD), Namensräume, Attribute, ausgereifte Werkzeuge</td><td>ausführlich, komplex, Sicherheitsfallen beim Parsen</td><td>Behörden- und Bankformate wie SEPA, Office-Dateien, ältere Enterprise-Schnittstellen</td></tr>
+    <tr><td><strong>YAML</strong></td><td>für Menschen angenehm, Kommentare</td><td>Einrückung trägt Bedeutung, überraschende Typumwandlungen</td><td>Konfiguration: Kubernetes, Spring, CI-Pipelines</td></tr>
+    <tr><td><strong>CSV</strong></td><td>minimal, jede Tabellenkalkulation kann es</td><td>kein Standard für Trennzeichen, Escaping und Zeichensatz; flach</td><td>Datenexporte, Tabellen</td></tr>
+    <tr><td><strong>Protobuf</strong></td><td>sehr klein und schnell, typisiert, gut weiterentwickelbar</td><td>nicht lesbar, Schema nötig</td><td>gRPC, interne Dienste, große Datenmengen</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Ähnliche Binärformate sind <strong>Avro</strong> (beliebt mit Kafka, das Schema reist mit oder liegt in einer Registry), <strong>MessagePack</strong> und <strong>CBOR</strong> (binäres JSON ohne Schema).</p>
+
+<h2 id="fallen">Die Fallen in JSON</h2>
+<p>JSON definiert Zahlen ohne Grenzen – aber JavaScript liest jede Zahl als 64-Bit-Gleitkommazahl. Ganze Zahlen sind damit nur bis 2<sup>53</sup> exakt, also bis 9 007 199 254 740 992. Java-<code>long</code>-IDs gehen bis 2<sup>63</sup>. Hier rechnet dein Browser live:</p>
+
+<div class="widget">
+  <div class="widget-title">Die Zahlenfalle</div>
+  <input class="inp" id="num" value="9007199254740993" aria-label="Zahl" inputmode="numeric">
+  <div class="nf" id="nf"></div>
+  <p class="fine">Probier auch 1234567890123456789 oder 0.1 – und eine Zahl unter 9007199254740992.</p>
+</div>
+
+<p>Deshalb liefern viele APIs große IDs als String. Weitere Fallen:</p>
+<ul>
+  <li><strong>Geld als <code>double</code>:</strong> 0,1 ist binär nicht exakt darstellbar (siehe <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>). Beträge in Cent als ganze Zahl oder als String mit Dezimalstellen, in Java als <code>BigDecimal</code>.</li>
+  <li><strong>Datum:</strong> JSON hat keinen Datumstyp. Der Standard ist ein String nach ISO 8601: <code>"2026-10-24T14:30:00Z"</code> – mit Zeitzone oder ausdrücklich in UTC. Zeitstempel als Millisekunden-Zahl sind kompakt, aber unlesbar und anfällig für Verwechslung mit Sekunden.</li>
+  <li><strong>Fehlend oder <code>null</code>:</strong> <code>{}</code> und <code>{"rabatt": null}</code> sind zweierlei – „nicht mitgeschickt“ und „ausdrücklich leer“. Bei Teil-Updates mit PATCH ist der Unterschied entscheidend.</li>
+</ul>
+
+<h2 id="schema">Schemas und Weiterentwicklung</h2>
+<p>Daten leben länger als Code. Eine Nachricht, die Version 1 eines Dienstes schreibt, muss Version 2 noch lesen können – und oft umgekehrt. Dafür gibt es Regeln:</p>
+<div class="cards">
+  <div class="card"><div class="num">+</div><h4>Felder hinzufügen</h4><p>Unproblematisch, wenn alte Leser unbekannte Felder ignorieren und neue Leser mit fehlenden Feldern umgehen können – mit einem Standardwert.</p></div>
+  <div class="card"><div class="num">✎</div><h4>Felder umbenennen</h4><p>In JSON ein Bruch: Der Name <em>ist</em> der Schlüssel. In Protobuf harmlos: Übertragen wird nur die Feldnummer, der Name existiert nur im Schema.</p></div>
+  <div class="card no"><div class="num">✗</div><h4>Bedeutung ändern</h4><p>Immer ein Bruch: Ein Feld, das bisher Euro enthielt, plötzlich in Cent zu füllen. In Protobuf gilt deshalb: Eine einmal benutzte Feldnummer wird nie wiederverwendet.</p></div>
+</div>
+<p>Für JSON gibt es mit <strong>JSON Schema</strong> und <strong>OpenAPI</strong> ebenfalls Schemas – sie werden aber beim Lesen meist nicht geprüft, sondern dienen der Dokumentation und Codegenerierung.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="k">record</span> Bestellung(<span class="k">long</span> id, String kunde, <span class="k">long</span> summeCent, <span class="k">boolean</span> versandt, List&lt;Integer&gt; artikel) {}
+
+ObjectMapper json = <span class="k">new</span> ObjectMapper();                          <span class="c">// Jackson</span>
+String text = json.writeValueAsString(<span class="k">new</span> Bestellung(<span class="s">42</span>, <span class="s">"Anna"</span>, <span class="s">5990</span>, <span class="k">true</span>, List.of(<span class="s">17</span>, <span class="s">23</span>)));
+Bestellung b = json.readValue(text, Bestellung.<span class="k">class</span>);           <span class="c">// Records gehen direkt</span>
+
+<span class="k">byte</span>[] bytes = text.getBytes(StandardCharsets.UTF_8);             <span class="c">// Zeichensatz immer angeben</span>
+<span class="s">"👋"</span>.length();                                                    <span class="c">// 2 – UTF-16-Einheiten</span>
+<span class="s">"👋"</span>.codePointCount(<span class="s">0</span>, <span class="s">2</span>);                                        <span class="c">// 1 – Zeichen</span></code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Thema</th><th>Was man wissen sollte</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Unbekannte Felder</strong></td><td>Jackson wirft standardmäßig einen Fehler bei Feldern, die die Klasse nicht kennt. Für tolerante Leser: <code>FAIL_ON_UNKNOWN_PROPERTIES</code> abschalten oder <code>@JsonIgnoreProperties(ignoreUnknown = true)</code>.</td></tr>
+    <tr><td><strong>Datum</strong></td><td>Für <code>LocalDate</code>, <code>Instant</code> und Co. braucht Jackson 2 das Modul <code>jackson-datatype-jsr310</code>; Spring Boot bindet es automatisch ein.</td></tr>
+    <tr><td><strong>Große Zahlen</strong></td><td><code>long</code>-IDs für JavaScript-Clients mit <code>@JsonFormat(shape = STRING)</code> als String ausliefern.</td></tr>
+    <tr><td><strong>Zeichensatz</strong></td><td>Überall <code>StandardCharsets.UTF_8</code> angeben – bei <code>getBytes</code>, <code>new String(bytes, …)</code>, Readern und Writern. Auch wenn es seit Java 18 der Standard ist: Der Code wird dadurch eindeutig.</td></tr>
+    <tr><td><strong><code>java.io.Serializable</code></strong></td><td>Javas eingebaute Serialisierung ist bequem, aber gefährlich: Beim Einlesen können manipulierte Daten Code in beliebigen Klassen auf dem Klassenpfad anstoßen – eine der folgenreichsten Sicherheitslücken der Java-Geschichte. Für Daten von außen nie <code>ObjectInputStream</code> verwenden; wenn unvermeidbar, mit Deserialisierungsfiltern absichern.</td></tr>
+    <tr><td><strong>Protobuf in Java</strong></td><td>Aus der <code>.proto</code>-Datei erzeugt der Compiler Java-Klassen mit Buildern. Mit gRPC entstehen daraus auch gleich Client und Server.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Unicode und UTF-8 sind dasselbe.“</b> – Unicode nummeriert die Zeichen, UTF-8 ist eine von mehreren Arten, diese Nummern als Bytes zu schreiben. UTF-16 und UTF-32 sind andere.</div>
+  <div><b>„Ein Zeichen ist ein Byte“ – oder ein <code>char</code>.</b> – In UTF-8 sind es 1 bis 4 Bytes, in Javas <code>char</code> 1 oder 2. Und was Menschen als ein Zeichen sehen – etwa eine Flagge oder ein Emoji mit Hautton –, sind oft mehrere Codepoints.</div>
+  <div><b>„JSON-Zahlen sind exakt.“</b> – Im Format ja. Aber jeder Leser entscheidet, wie er sie speichert, und JavaScript rundet ab 2<sup>53</sup>.</div>
+  <div><b>„Binärformate sind sicherer, weil unlesbar.“</b> – Sie sind nur unbequemer zu lesen. Wer die Daten abfängt, dekodiert sie mit einem Werkzeug in Sekunden. Sicherheit kommt von Verschlüsselung, nicht vom Format.</div>
+  <div><b>„XML ist tot.“</b> – In Web-APIs weitgehend abgelöst. Aber jede <code>.docx</code>-Datei ist gezipptes XML, Maven-Projekte beschreiben sich in XML, und europäischer Zahlungsverkehr läuft über XML-Formate.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/http/">HTTP</a>
+  <a href="/it-konzepte/nosql-cap/">NoSQL und das CAP-Theorem</a>
+  <a href="/it-konzepte/relationale-datenbanken/">Relationale Datenbanken</a>
+  <a href="/it-konzepte/zahlendarstellung/">Zahlen im Rechner</a>
+  <a href="/it-konzepte/formale-sprachen/">Formale Sprachen und Automaten</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

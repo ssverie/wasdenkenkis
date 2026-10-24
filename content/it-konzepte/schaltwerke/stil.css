@@ -1,0 +1,39 @@
+/* ---- Seitenspezifisch: Schaltwerke ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:2.6em}
+.erklaert .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:10px 0 6px}
+.erklaert .tg{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.84rem}
+.erklaert .tg button{padding:6px 12px;font:700 .86rem var(--mono)}
+.erklaert .tg button.on{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+.erklaert .tg button.clk{font-family:var(--sans);font-weight:600}
+.erklaert .tg span{color:var(--muted);font-size:.78rem}
+.erklaert #srSvg{width:100%;max-width:560px;height:auto;display:block;margin:8px auto 0}
+.erklaert #wfSvg{width:100%;height:auto;display:block;margin-top:8px}
+
+/* Speicher */
+.erklaert .memw{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;margin-top:10px}
+.erklaert .dec{display:flex;flex-direction:column;gap:3px}
+.erklaert .dec span{font:.7rem var(--mono);padding:3px 6px;border-radius:5px;background:var(--bg);color:var(--muted);text-align:center}
+.erklaert .dec span.on{background:var(--accent-2);color:#fff;font-weight:700}
+.erklaert .rows{display:flex;flex-direction:column;gap:3px}
+.erklaert .rows{margin-top:10px}
+.erklaert .rows div{display:grid;grid-template-columns:2.2em repeat(8,minmax(0,1fr)) 3em;gap:2px;padding:2px;border-radius:6px;align-items:center;transition:background .2s}
+.erklaert .rows div span.dl{font:.7rem var(--mono);padding:2px 0;border-radius:5px;background:var(--bg);color:var(--muted);text-align:center}
+.erklaert .rows div.sel span.dl{background:var(--accent-2);color:#fff;font-weight:700}
+.erklaert .rows div span.v{font:.72rem var(--mono);color:var(--muted);text-align:right}
+.erklaert .rows div.sel{background:var(--accent-2-soft)}
+.erklaert .rows div.wr{animation:wr .7s}
+@keyframes wr{from{background:var(--ok-soft)}}
+.erklaert .rows i{display:block;height:22px;border-radius:3px;border:1px solid var(--line);background:var(--card);font:600 .68rem/22px var(--mono);text-align:center;font-style:normal}
+.erklaert .rows i.one{background:var(--accent);color:#fff;border-color:var(--accent)}
+.erklaert .vals{display:flex;flex-direction:column;gap:3px}
+.erklaert .vals span{font:.72rem/28px var(--mono);color:var(--muted);height:28px}
+@media (max-width:520px){.erklaert .rows i{height:18px;font-size:.6rem;line-height:18px}.erklaert .dec span{padding:1px 4px}.erklaert .vals span{line-height:22px;height:22px}}
+.erklaert .ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
+.erklaert .ctl input{width:6em;font:600 .9rem var(--mono);padding:6px 8px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+.erklaert .ctl button{padding:6px 12px;font-size:.84rem}
+.erklaert .ctl .adr button{padding:5px 9px;font:600 .8rem var(--mono)}
+.erklaert .ctl .adr button[aria-pressed="true"]{background:var(--accent-2);border-color:var(--accent-2);color:#fff}
+.erklaert .out{margin-top:8px;font:600 .9rem var(--mono)}
+

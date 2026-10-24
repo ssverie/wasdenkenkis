@@ -1,0 +1,174 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Eine <strong>relationale Datenbank</strong> speichert Daten in <strong>Tabellen</strong>: Zeilen sind Datensätze, Spalten sind Eigenschaften. Jede Zeile hat einen <strong>Primärschlüssel</strong>, und Tabellen verweisen über <strong>Fremdschlüssel</strong> aufeinander. Abgefragt wird mit <strong>SQL</strong> – man beschreibt, <em>was</em> man will, die Datenbank entscheidet, <em>wie</em> sie es holt.</p>
+<p>Zwei Dinge machen den Unterschied in der Praxis: <strong>Indizes</strong> – meist B-Bäume, die eine Suche in einer Milliarde Zeilen mit vier Lesezugriffen erledigen. Und <strong>Transaktionen</strong> – sie garantieren, dass zusammengehörige Änderungen ganz oder gar nicht passieren. Wie gut sich gleichzeitige Transaktionen voneinander abschirmen, regelt das <strong>Isolationslevel</strong> – und das Standardlevel schützt weniger, als die meisten denken.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#tabellen">Tabellen, Schlüssel, Beziehungen</a></li>
+  <li><a href="#sql">SQL und JOINs</a></li>
+  <li><a href="#index">Indizes: vier Zugriffe statt zehn Millionen</a></li>
+  <li><a href="#transaktionen">Transaktionen und ACID</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="tabellen">Tabellen, Schlüssel, Beziehungen</h2>
+<p>Ein kleiner Online-Shop: Kunden geben Bestellungen auf, eine Bestellung enthält mehrere Positionen, jede Position verweist auf einen Artikel.</p>
+<figure class="schema">
+<svg viewBox="0 0 620 210" role="img" aria-label="Tabellen Kunde, Bestellung, Position, Artikel mit Fremdschlüsseln">
+  <g><rect class="tb" x="10" y="20" width="130" height="96" rx="8"/><rect class="th" x="10" y="20" width="130" height="24" rx="8"/><text class="tt" x="20" y="37">kunde</text>
+    <text class="pk" x="20" y="62">🔑 id</text><text class="tc" x="20" y="80">name</text><text class="tc" x="20" y="98">email</text></g>
+  <g><rect class="tb" x="170" y="20" width="140" height="96" rx="8"/><rect class="th" x="170" y="20" width="140" height="24" rx="8"/><text class="tt" x="180" y="37">bestellung</text>
+    <text class="pk" x="180" y="62">🔑 id</text><text class="tc" x="180" y="80">kunde_id →</text><text class="tc" x="180" y="98">datum</text></g>
+  <g><rect class="tb" x="340" y="20" width="130" height="114" rx="8"/><rect class="th" x="340" y="20" width="130" height="24" rx="8"/><text class="tt" x="350" y="37">position</text>
+    <text class="pk" x="350" y="62">🔑 id</text><text class="tc" x="350" y="80">bestellung_id →</text><text class="tc" x="350" y="98">artikel_id →</text><text class="tc" x="350" y="116">menge</text></g>
+  <g><rect class="tb" x="490" y="20" width="120" height="96" rx="8"/><rect class="th" x="490" y="20" width="120" height="24" rx="8"/><text class="tt" x="500" y="37">artikel</text>
+    <text class="pk" x="500" y="62">🔑 id</text><text class="tc" x="500" y="80">name</text><text class="tc" x="500" y="98">preis</text></g>
+  <path class="fk" d="M170 76 C155 76 155 58 140 58"/><path class="fk" d="M340 76 C325 76 325 58 310 58"/><path class="fk" d="M470 94 C480 94 480 58 490 58"/>
+  <text class="tc" x="10" y="170" style="fill:var(--muted)">Ein Kunde – viele Bestellungen. Eine Bestellung – viele Positionen.</text>
+  <text class="tc" x="10" y="190" style="fill:var(--muted)">Der Fremdschlüssel verhindert Bestellungen für Kunden, die es nicht gibt.</text>
+</svg>
+</figure>
+<p>Warum die Daten auf mehrere Tabellen verteilt werden, statt Name und E-Mail des Kunden in jede Bestellung zu schreiben? Weil sonst eine geänderte E-Mail-Adresse an hundert Stellen geändert werden müsste – und irgendwann irgendwo nicht. Diese Aufteilung heißt <strong>Normalisierung</strong>: jede Tatsache genau einmal. Für Auswertungen, bei denen nur gelesen wird, verdoppelt man manchmal bewusst Daten, um Abfragen zu beschleunigen – das ist dann Denormalisierung.</p>
+
+<h2 id="sql">SQL und JOINs</h2>
+<p>Verteilte Daten muss man beim Lesen wieder zusammenführen. Das macht der <strong>JOIN</strong>: Er verknüpft Zeilen zweier Tabellen, deren Schlüssel zusammenpassen. Welche Art von JOIN man nimmt, entscheidet, was mit Zeilen ohne Partner passiert:</p>
+
+<div class="widget">
+  <div class="widget-title">JOIN zum Ausprobieren</div>
+  <div class="seg" id="jMode">
+    <button data-m="inner" aria-pressed="true">INNER JOIN</button>
+    <button data-m="left">LEFT JOIN</button>
+    <button data-m="group">LEFT JOIN + GROUP BY</button>
+  </div>
+  <div class="sql" id="jSql"></div>
+  <div class="jt">
+    <div><h4>kunde</h4><div class="tbl-wrap" style="margin:0"><table class="mini" id="jK"></table></div></div>
+    <div><h4>bestellung</h4><div class="tbl-wrap" style="margin:0"><table class="mini" id="jB"></table></div></div>
+  </div>
+  <div class="jres"><h4>Ergebnis</h4><div class="tbl-wrap" style="margin:0"><table class="mini" id="jR"></table></div></div>
+  <div class="j-note" id="jNote"></div>
+</div>
+
+<h2 id="index">Indizes: vier Zugriffe statt zehn Millionen</h2>
+<p>Ohne Hilfe muss die Datenbank für <code>WHERE email = '…'</code> jede Zeile anschauen – ein <strong>Full Table Scan</strong>. Ein <strong>Index</strong> ist eine zusätzliche, sortierte Struktur, meist ein <strong>B-Baum</strong> (genauer ein B+-Baum): ein sehr breiter, sehr flacher Suchbaum, dessen Knoten genau eine Speicherseite füllen. In jedem Knoten steht, in welchem Teilbaum ein Wert liegen muss. Gesucht wird von oben nach unten – wie im Telefonbuch erst die richtige Seite, dann der Name.</p>
+
+<div class="widget">
+  <div class="widget-title">Suchen mit und ohne Index</div>
+  <div class="bt-ctl">
+    <label>Gesuchter Wert (1–27): <input type="number" id="btKey" min="1" max="27" value="20"></label>
+    <button class="primary" id="btIdx">Mit Index suchen</button>
+    <button id="btScan">Ohne Index suchen</button>
+  </div>
+  <div class="bt" id="bt"></div>
+  <div class="bt-out" id="btOut">Ein Mini-B-Baum: In jedem Knoten haben nur drei Werte Platz. Echte Knoten fassen Hunderte.</div>
+  <div class="sl"><span>Zeilen in der Tabelle</span><input type="range" id="btN" min="3" max="9" step="1" value="7"><output id="btNO"></output></div>
+  <div class="cmp" id="btCmp"></div>
+  <p class="fine">Annahmen: 100 Zeilen pro Datenseite, 500 Verweise pro Indexknoten.</p>
+</div>
+
+<p>Weil jeder Knoten Hunderte Verweise hat, wächst die Tiefe des Baums extrem langsam: Von einer Million auf eine Milliarde Zeilen kommt gerade eine Ebene hinzu. Die oberen Ebenen liegen ohnehin fast immer im Arbeitsspeicher. Und weil die Blätter sortiert und miteinander verkettet sind, helfen B-Bäume auch bei Bereichen (<code>BETWEEN</code>, <code>&gt;</code>) und bei <code>ORDER BY</code>.</p>
+<p>Umsonst ist ein Index nicht: Jedes <code>INSERT</code>, <code>UPDATE</code> und <code>DELETE</code> muss ihn mitpflegen, und er braucht Platz. Ob die Datenbank ihn nutzt, sieht man mit <code>EXPLAIN</code> – das zeigt den <strong>Ausführungsplan</strong>, den der Abfrageoptimierer gewählt hat.</p>
+
+<h2 id="transaktionen">Transaktionen und ACID</h2>
+<p>Eine Buchung besteht aus mehreren Schritten: Platz reduzieren, Buchung anlegen, vielleicht Zahlung vermerken. Eine <strong>Transaktion</strong> fasst sie zusammen. Sie garantiert vier Dinge, zusammengefasst als <strong>ACID</strong>:</p>
+<div class="cards">
+  <div class="card"><div class="num">A</div><h4>Atomarität</h4><p>Alles oder nichts. Stürzt etwas mittendrin ab, wird alles zurückgerollt.</p></div>
+  <div class="card"><div class="num">C</div><h4>Konsistenz</h4><p>Nach der Transaktion gelten alle Regeln wieder – Fremdschlüssel, Eindeutigkeit, Prüfbedingungen.</p></div>
+  <div class="card"><div class="num">I</div><h4>Isolation</h4><p>Gleichzeitige Transaktionen stören sich nicht – <em>in welchem Maß</em>, bestimmt das Isolationslevel.</p></div>
+</div>
+<div class="cards" style="grid-template-columns:1fr">
+  <div class="card"><div class="num">D</div><h4>Dauerhaftigkeit</h4><p>Was bestätigt ist, übersteht auch einen Stromausfall. Dafür schreibt die Datenbank jede Änderung zuerst in ein Write-Ahead-Log und erzwingt es mit <code>fsync</code> – dasselbe Prinzip wie das Journal im <a href="/it-konzepte/dateisystem/">Dateisystem</a>.</p></div>
+</div>
+
+<h3>Der letzte freie Platz</h3>
+<p>Das „I“ ist das tückischste. Die meisten Datenbanken – PostgreSQL, Oracle, SQL Server – arbeiten standardmäßig mit <strong>READ COMMITTED</strong>: Jede Abfrage sieht alles, was andere bis dahin bestätigt haben. Das verhindert viel, aber nicht alles. Zwei Kunden buchen gleichzeitig den letzten Platz eines Flugs. Probier die Varianten durch:</p>
+
+<div class="widget">
+  <div class="widget-title">Zwei Buchungen, ein Platz</div>
+  <div class="seg" id="txMode">
+    <button data-m="naiv" aria-pressed="true">Naiv: lesen, prüfen, schreiben</button>
+    <button data-m="forupd">SELECT … FOR UPDATE</button>
+    <button data-m="atom">Atomares UPDATE</button>
+    <button data-m="opt">Optimistisch mit Version</button>
+    <button data-m="ser">Naiv, aber SERIALIZABLE</button>
+  </div>
+  <div class="tx" id="tx"></div>
+  <div class="dbstate" id="txState"></div>
+  <div class="tx-out" id="txOut" hidden></div>
+  <div class="controls">
+    <button id="txPrev">← Zurück</button>
+    <button class="primary" id="txNext">Nächster Schritt →</button>
+  </div>
+  <p class="fine">T1 bucht für Anna, T2 für Ben. Verhalten am Beispiel PostgreSQL; andere Datenbanken unterscheiden sich in Details.</p>
+</div>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Isolationslevel</th><th>Was es verhindert</th><th>Standard bei</th></tr></thead>
+  <tbody>
+    <tr><td><strong>READ UNCOMMITTED</strong></td><td>praktisch nichts – man sieht sogar Unbestätigtes</td><td>–</td></tr>
+    <tr><td><strong>READ COMMITTED</strong></td><td>Lesen von Unbestätigtem</td><td>PostgreSQL, Oracle, SQL Server</td></tr>
+    <tr><td><strong>REPEATABLE READ</strong></td><td>zusätzlich: Ein zweites Lesen derselben Zeile liefert dasselbe</td><td>MySQL (InnoDB)</td></tr>
+    <tr><td><strong>SERIALIZABLE</strong></td><td>alles: Ergebnis wie bei strikt nacheinander ausgeführten Transaktionen – mit dem Preis, dass manche abbrechen und wiederholt werden müssen</td><td>–</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="k">void</span> buche(<span class="k">long</span> flugId, <span class="k">long</span> kundeId) <span class="k">throws</span> SQLException {
+    <span class="k">try</span> (Connection con = dataSource.getConnection()) {      <span class="c">// aus dem Pool, z. B. HikariCP</span>
+        con.setAutoCommit(<span class="k">false</span>);                            <span class="c">// Transaktion beginnt</span>
+        <span class="k">try</span> {
+            <span class="k">try</span> (<span class="k">var</span> ps = con.prepareStatement(
+                    <span class="s">"UPDATE flug SET frei = frei - 1 WHERE id = ? AND frei &gt; 0"</span>)) {
+                ps.setLong(<span class="s">1</span>, flugId);
+                <span class="k">if</span> (ps.executeUpdate() == <span class="s">0</span>) <span class="k">throw new</span> AusgebuchtException(flugId);
+            }
+            <span class="k">try</span> (<span class="k">var</span> ps = con.prepareStatement(
+                    <span class="s">"INSERT INTO buchung (flug_id, kunde_id) VALUES (?, ?)"</span>)) {
+                ps.setLong(<span class="s">1</span>, flugId);
+                ps.setLong(<span class="s">2</span>, kundeId);
+                ps.executeUpdate();
+            }
+            con.commit();
+        } <span class="k">catch</span> (SQLException | RuntimeException e) {
+            con.rollback();
+            <span class="k">throw</span> e;
+        }
+    }
+}</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Thema</th><th>Was man wissen sollte</th></tr></thead>
+  <tbody>
+    <tr><td><strong><code>PreparedStatement</code></strong></td><td>Werte immer als Parameter übergeben, nie per String-Verkettung ins SQL – sonst SQL-Injection.</td></tr>
+    <tr><td><strong>Auto-Commit</strong></td><td>JDBC bestätigt standardmäßig jede einzelne Anweisung sofort. Für eine Transaktion über mehrere Anweisungen muss man es abschalten – Spring erledigt das mit <code>@Transactional</code>.</td></tr>
+    <tr><td><strong>Optimistisches Locking</strong></td><td>In JPA genügt ein Feld mit <code>@Version</code>. Bei einem Konflikt kommt eine <code>OptimisticLockException</code>, die man mit einem neuen Versuch beantwortet.</td></tr>
+    <tr><td><strong>Das N+1-Problem</strong></td><td>Lädt man 100 Bestellungen per JPA und greift dann auf <code>bestellung.getKunde()</code> zu, feuert Hibernate oft 100 einzelne Abfragen hinterher. Abhilfe: <code>JOIN FETCH</code> in der Abfrage oder ein <code>@EntityGraph</code>. Im SQL-Log sofort zu erkennen.</td></tr>
+    <tr><td><strong>Connection-Pool</strong></td><td>Eine Verbindung aufzubauen kostet einen Netzwerk-Handshake und eine Anmeldung. Pools halten Verbindungen offen. Zu große Pools schaden aber: Die Datenbank hat nur begrenzt Kerne.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Eine Transaktion schützt vor allen Konflikten.“</b> – Unter READ COMMITTED geht im naiven „lesen, prüfen, schreiben“ trotzdem eine Änderung verloren. Man braucht Sperren, ein atomares UPDATE, eine Versionsspalte oder SERIALIZABLE.</div>
+  <div><b>„Ein Index auf (nachname, vorname) hilft auch bei der Suche nach dem Vornamen.“</b> – Meist nicht. Ein zusammengesetzter Index ist nach der ersten Spalte sortiert, wie ein Telefonbuch: Nach Vornamen sucht man darin auch Seite für Seite.</div>
+  <div><b>„Mehr Indizes, mehr Tempo.“</b> – Beim Lesen vielleicht. Jedes Schreiben wird langsamer, und auf Spalten mit wenigen Werten – etwa einem Ja/Nein-Feld – nützt ein Index kaum.</div>
+  <div><b>„<code>WHERE spalte = NULL</code> findet leere Felder.“</b> – Es findet nichts. NULL bedeutet „unbekannt“, und unbekannt = unbekannt ist wieder unbekannt. Richtig ist <code>IS NULL</code>.</div>
+  <div><b>„Mit einem ORM muss ich kein SQL können.“</b> – Bis die erste Seite langsam ist. Wer nicht ins SQL-Log und in den Ausführungsplan schaut, findet N+1-Probleme und fehlende Indizes nie.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/dateisystem/">Dateisysteme und Persistenz</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/prozess-thread/">Prozess, Thread, Nebenläufigkeit</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

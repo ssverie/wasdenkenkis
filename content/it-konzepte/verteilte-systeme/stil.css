@@ -1,0 +1,47 @@
+/* ---- Seitenspezifisch: Verteilte Systeme ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .lbl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:4px 0 6px}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg);min-height:2.6em}
+.erklaert .note code{font-size:.8rem}
+
+/* Neuversuch */
+.erklaert .seq{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.erklaert .msg{display:grid;grid-template-columns:7em 1fr 7em;gap:8px;align-items:center;font-size:.8rem}
+.erklaert .msg .ln{position:relative;height:22px}
+.erklaert .msg .ln i{position:absolute;top:10px;left:0;right:0;border-top:2px solid var(--accent)}
+.erklaert .msg .ln i.lost{border-top:2px dashed var(--bad);right:45%}
+.erklaert .msg .ln b{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--card);padding:0 6px;font:600 .72rem var(--mono);white-space:nowrap}
+.erklaert .msg .ln b.x{color:var(--bad)}
+.erklaert .msg .ln.r i{border-top-color:var(--ok)}
+.erklaert .msg span{text-align:center;color:var(--muted)}
+.erklaert .msg .wait{grid-column:1/-1;text-align:center;font-size:.76rem;color:var(--accent-2);font-weight:600}
+.erklaert .acct{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.erklaert .acct div{padding:10px;border-radius:9px;background:var(--bg);text-align:center;font-size:.74rem;color:var(--muted)}
+.erklaert .acct b{display:block;font:600 1.2rem var(--serif);color:var(--fg)}
+.erklaert .acct .bad b{color:var(--bad)}.erklaert .acct .good b{color:var(--ok)}
+
+/* Raft */
+.erklaert #raft{max-width:600px}
+.erklaert #raft .nd{stroke-width:3}
+.erklaert #raft .t{font:700 13px var(--sans);fill:var(--fg)}
+.erklaert #raft .s{font:10px var(--sans);fill:var(--muted)}
+.erklaert #raft .lg{stroke-width:1}
+.erklaert #raft .part{stroke:var(--bad);stroke-width:3;stroke-dasharray:8 6}
+.erklaert .rctl{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.erklaert .rctl button{font-size:.82rem;padding:6px 10px}
+
+/* Backoff */
+.erklaert #bo{max-width:620px}
+.erklaert #bo .ax{stroke:var(--line)}
+.erklaert #bo .lb{font:11px var(--sans);fill:var(--muted)}
+.erklaert .bo-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+@media (max-width:520px){.erklaert .bo-stats{grid-template-columns:1fr}}
+.erklaert .bo-stats div{padding:8px;border-radius:9px;background:var(--bg);text-align:center;font-size:.72rem;color:var(--muted)}
+.erklaert .bo-stats b{display:block;font:600 1.05rem var(--serif);color:var(--fg)}
+

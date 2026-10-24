@@ -1,14 +1,23 @@
 # Erzeugt aus input/<reihe>/<eintrag>/index.html je ein Hugo-Bundle unter content/<reihe>/<eintrag>/
 # (index.md, inhalt-html.txt, stil.css, skript.js). Die Übersicht wird zur Rubrikseite content/<reihe>/:
 # bei erklaert der Ordner lesereihenfolge/, sonst eine index.html direkt in input/<reihe>/.
-# Aufruf aus dem Projektordner: perl skripte/begriffe-erzeugen.pl [erklaert|philosophie] (Standard: erklaert),
+# Aufruf aus dem Projektordner: perl skripte/begriffe-erzeugen.pl [erklaert|philosophie|it] (Standard: erklaert),
 # danach je stil-roh.css mit skripte/css-begrenzen.pl zu stil.css machen
 use strict; use warnings; use utf8;
 use open qw(:std :encoding(UTF-8));
 
 my $reihe  = shift // 'erklaert';
 my $quelle = "input/$reihe";
-my $ziel   = "content/$reihe";
+# Die IT-Reihe der Instanz heißt „IT-Begriffe“ und verlinkt unter /it/ – auf der Seite ist das die Rubrik IT-Konzepte (/it-konzepte/)
+my %zielordner = (it => 'it-konzepte');
+my %titel_uebersicht = (erklaert => 'KI-Begriffe', it => 'IT-Konzepte');
+my $ziel   = "content/" . ($zielordner{$reihe} // $reihe);
+# Frühere Platzhalter-Unterbereiche von IT-Konzepte leiten auf den passenden Eintrag um (Adressen stabil halten)
+my %aliase = (
+  'betriebssystem'          => ['/it-konzepte/betriebssysteme/'],
+  'relationale-datenbanken' => ['/it-konzepte/datenbanken/'],
+  'compiler-jit'            => ['/it-konzepte/compiler/', '/it-konzepte/interpreter/'],
+);
 # Datum = wann der Beitrag auf die Seite kam: vorhandene Seiten behalten ihr Datum (aus ihrer index.md),
 # neue bekommen die Dateizeit der gelieferten index.html.
 sub altesDatum {
@@ -44,6 +53,18 @@ for my $b (@begriffe) {
   my ($css) = $html =~ m{(/\* ---- Seitenspezifisch.*?)</style>}s;
   my ($js)  = $html =~ m{<script>\n?(.*?)</script>}s;   # optional (z. B. Werkstattbericht ohne Mitmach-Elemente)
 
+  # Interne Links der Reihe auf den Zielordner umbiegen (/it/… → /it-konzepte/…), auch im Skript
+  if (my $z = $zielordner{$reihe}) {
+    $artikel =~ s{(href=["'])/\Q$reihe\E/}{$1/$z/}g;
+    $js =~ s{(href=["'])/\Q$reihe\E/}{$1/$z/}g if defined $js;
+  }
+  # Hugos JS-Minifizierer fasst „const a=…; const [x,y]=…a…“ zusammen und vertauscht dabei die Reihenfolge
+  # (ReferenceError beim Laden). Abhilfe: die erste Deklaration als let – andere Art, wird nicht zusammengefasst.
+  if (defined $js) {
+    $js =~ s{const\s+(\w+)(\s*=[^;\n]*;\s*\n?\s*const\s*\[[^\]]*\]\s*=[^;\n]*\b\1\b)}{let $1$2}g
+      and print "  ($b: const → let wegen Minifizierer)\n";
+  }
+
   my $istUebersicht = ($b eq 'lesereihenfolge' || $b eq '');
   my $dir = $istUebersicht ? $ziel : "$ziel/$b";
   mkdir $dir unless -d $dir;
@@ -52,7 +73,7 @@ for my $b (@begriffe) {
   if (defined $js) { schreiben("$dir/skript.js", $js); } else { unlink "$dir/skript.js"; }
 
   my $fm = "+++\n";
-  $fm .= "title = \"" . toml($istUebersicht && $reihe eq 'erklaert' ? 'KI-Begriffe' : text($titel)) . "\"\n";
+  $fm .= "title = \"" . toml($istUebersicht && $titel_uebersicht{$reihe} ? $titel_uebersicht{$reihe} : text($titel)) . "\"\n";
   $fm .= "description = \"" . toml(text($lead)) . "\"\n";
   my $mdDatei = $istUebersicht ? "$dir/_index.md" : "$dir/index.md";
   $fm .= "date = " . (altesDatum($mdDatei) // dateizeit($quelldatei)) . "\n";
@@ -62,8 +83,11 @@ for my $b (@begriffe) {
   if ($b eq 'was-ist-ein-sprachmodell') { $fm .= "thema = \"sprachmodell\"\nfassung = 2\n"; }
   # Werkstattbericht der Instanz: kein Begriff, erscheint auf der Übersicht unter „In eigener Sache“
   if ($b eq 'wie-diese-reihe-entstand') { $fm .= "eigene_sache = true\n"; }
+  if (my $al = $aliase{$b}) { $fm .= "aliases = [" . join(', ', map { "\"$_\"" } @$al) . "]\n" if $reihe eq 'it'; }
   if ($istUebersicht) {
     $fm .= "aliases = [\"/erklaert/lesereihenfolge/\"]\n" if $reihe eq 'erklaert';
+    # Menügruppe bleibt (Wissen › IT-Konzepte › Algorithmen); die Übersicht nennt die Unterbereiche unter den Einträgen
+    $fm .= "menu_gruppe = \"it-konzepte\"\n" if $reihe eq 'it';
     $fm .= "layout = \"begriffe-uebersicht\"\n";
   }
   $fm .= "stile = [\"stil.css\"]\n" if defined $css;

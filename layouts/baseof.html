@@ -13,7 +13,7 @@
   {{- $css := resources.Get "css/main.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
   {{- /* KI-Begriffe und KI-Philosophie: gemeinsames Stylesheet für alle interaktiven Seiten der Erklär-Reihe (und die Übersichten) */}}
-  {{- if and (in (slice "erklaert" "philosophie") .Section) (or .Params.stile .Params.skripte) }}{{ with resources.Get "css/erklaert.css" | minify | fingerprint }}
+  {{- if and (in (slice "erklaert" "philosophie" "it-konzepte") .Section) (or .Params.stile .Params.skripte) }}{{ with resources.Get "css/erklaert.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
   {{- end }}{{ end }}
   {{- /* Seiteneigene Stile aus dem Page-Bundle (z. B. interaktive Erklärseiten): stile = ["stil.css"] */}}

@@ -1,0 +1,114 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Schaltnetz</strong> (kombinatorische Schaltung) ist eine Verschaltung von Gattern ohne Rückkopplung: Die Ausgänge hängen nur von den aktuellen Eingängen ab, nach einer kurzen <strong>Laufzeit</strong> stellt sich das Ergebnis ein. Ein Schaltnetz hat kein Gedächtnis – das kommt erst mit den Schaltwerken in <a href="/it-konzepte/schaltwerke/">H5</a>.</p>
+<p>Aus wenigen Grundbausteinen entsteht alles Weitere: Ein <strong>Decoder</strong> macht aus einer Binärzahl genau eine aktive Leitung, ein <strong>Multiplexer</strong> wählt eines von mehreren Signalen aus, ein <strong>Volladdierer</strong> addiert drei Bits. Viele Volladdierer hintereinander addieren ganze Zahlen; mehrere Recheneinheiten nebeneinander plus ein Multiplexer ergeben die <strong>ALU</strong> – und der Opcode eines Maschinenbefehls ist nichts anderes als die Auswahlleitung dieses Multiplexers.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#decoder">Decoder und Multiplexer</a></li>
+  <li><a href="#addierer">Addieren: Volladdierer und Übertragskette</a></li>
+  <li><a href="#alu">Die ALU</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="decoder">Decoder und Multiplexer</h2>
+<p>Ein <strong>Decoder</strong> mit <var>n</var> Eingängen hat 2<sup><var>n</var></sup> Ausgänge, von denen immer genau einer 1 ist – der, dessen Nummer an den Eingängen anliegt. Jeder Ausgang ist ein UND der passend negierten Eingänge, genau die Minterme aus <a href="/it-konzepte/boolesche-logik/">H3</a>. Ein <strong>Multiplexer</strong> nutzt den Decoder, um von mehreren Dateneingängen genau einen zum Ausgang durchzulassen: Jeder Dateneingang geht durch ein UND mit „seiner“ Decoderleitung, dann ein ODER über alle.</p>
+
+<div class="widget">
+  <div class="widget-title">Auswählen mit Gattern</div>
+  <div class="seg" id="mxS">
+    <button data-k="dec">Decoder 2 → 4</button>
+    <button data-k="mux" aria-pressed="true">Multiplexer 4 → 1</button>
+  </div>
+  <div class="tg" id="mxT"></div>
+  <svg id="mxSvg" viewBox="0 0 600 300" role="img" aria-label="Decoder und Multiplexer aus Gattern"></svg>
+  <div class="note" id="mxN"></div>
+</div>
+
+<p>Der Multiplexer ist das <code>switch</code> der Hardware: Die Auswahlbits entscheiden, was durchkommt. Sein Gegenstück, der <strong>Demultiplexer</strong>, verteilt umgekehrt ein Signal auf eine von mehreren Leitungen – etwa einen Schreibbefehl auf genau eine Speicherzelle. Arbeitet man mit 16 Bit breiten Werten, legt man einfach 16 Multiplexer nebeneinander, die dieselben Auswahlbits teilen. Ein solches Bündel paralleler Leitungen heißt <strong>Bus</strong>.</p>
+
+<h2 id="addierer">Addieren: Volladdierer und Übertragskette</h2>
+<p>Ein <strong>Volladdierer</strong> addiert drei Bits – zwei Ziffern und den Übertrag von rechts – und liefert ein Summenbit und einen neuen Übertrag. Mit den Funktionen aus <a href="/it-konzepte/boolesche-logik/">H3</a>: Die Summe ist die ungerade Parität der drei Bits, der Übertrag ihre Mehrheit. Schaltet man acht Volladdierer hintereinander, wobei jeder seinen Übertrag an den linken Nachbarn weitergibt, entsteht ein 8-Bit-Addierer – ein <strong>Ripple-Carry-Addierer</strong>. Der Übertrag „rieselt“ dabei von rechts nach links:</p>
+
+<div class="widget">
+  <div class="widget-title">Acht Volladdierer in Reihe</div>
+  <div class="sl"><span>a</span><input type="range" id="raA" min="0" max="255" value="127"><output id="raAo"></output></div>
+  <div class="sl"><span>b</span><input type="range" id="raB" min="0" max="255" value="1"><output id="raBo"></output></div>
+  <div class="fa" id="raF"></div>
+  <div class="ctl"><button id="raGo">Übertrag verfolgen</button><button id="raAll">Sofort fertig</button></div>
+  <div class="res" id="raR"></div>
+  <div class="note" id="raN"></div>
+</div>
+
+<p>Das Problem der Kette: Im schlimmsten Fall muss der Übertrag durch alle Stufen laufen, bevor das oberste Bit stimmt. Bei 64 Bit wären das 64 Stufen hintereinander – zu langsam für einen Prozessor, der Milliarden Additionen pro Sekunde schaffen soll. Echte Addierer berechnen die Überträge deshalb vorab (<strong>Carry-Lookahead</strong>): Aus a und b sieht man jeder Stelle an, ob sie einen Übertrag <em>erzeugt</em> (beide 1) oder <em>weiterreicht</em> (genau eine 1). Daraus lassen sich alle Überträge in Gruppen parallel bestimmen; die Laufzeit wächst dann nur noch logarithmisch mit der Bitbreite – auf Kosten von mehr Gattern.</p>
+
+<h3>Subtrahieren ohne Subtrahierer</h3>
+<p>Für die Subtraktion braucht es keine eigene Schaltung. Im Zweierkomplement (<a href="/it-konzepte/zahlendarstellung/">H1</a>) ist −b dasselbe wie „alle Bits von b umdrehen, plus 1“. Also: a − b = a + ¬b + 1. Die Bits dreht man mit XOR-Gattern um, die 1 kommt als Übertrag in die unterste Stufe. Eine einzige Steuerleitung schaltet so zwischen Addieren und Subtrahieren um.</p>
+
+<h2 id="alu">Die ALU</h2>
+<p>Die <strong>arithmetisch-logische Einheit</strong> fasst alles zusammen: Addierer, Subtrahierer, bitweise Logik und Schieber liegen nebeneinander und rechnen <em>alle gleichzeitig</em> mit denselben Eingängen. Ein Multiplexer wählt am Ende das gewünschte Ergebnis aus. Die Auswahlleitung ist der Opcode – hier dieselben Nummern wie bei der Lehrmaschine aus <a href="/it-konzepte/maschinensprache/">H2</a>:</p>
+
+<div class="widget">
+  <div class="widget-title">Eine 8-Bit-ALU</div>
+  <div class="sl"><span>A</span><input type="range" id="alA" min="0" max="255" value="12"><output id="alAo"></output></div>
+  <div class="sl"><span>B</span><input type="range" id="alB" min="0" max="255" value="3"><output id="alBo"></output></div>
+  <div class="seg" id="alS">
+    <button data-o="1" aria-pressed="true">1 · Addieren</button>
+    <button data-o="2">2 · Subtrahieren</button>
+    <button data-o="3">3 · UND</button>
+    <button data-o="4">4 · XOR</button>
+    <button data-o="5">5 · links schieben</button>
+    <button data-o="6">6 · rechts schieben</button>
+  </div>
+  <div class="alu" id="alU"></div>
+  <div class="mux" id="alM"></div>
+  <div class="note" id="alN"></div>
+</div>
+
+<p>Das ist die Antwort auf die Frage, wie ein Befehl wie <code>1CAB</code> ausgeführt wird: Die Steuerung schaltet RA und RB auf die Eingänge der ALU, legt die Ziffer 1 an den Multiplexer und das Ergebnis nach RC. Wie das Ergebnis dort gespeichert wird und wer die Leitungen im richtigen Moment schaltet, zeigen <a href="/it-konzepte/schaltwerke/">H5</a> und <a href="/it-konzepte/cpu/">H6</a>.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Viele Bausteine haben eine direkte Entsprechung in Java – und der JIT-Compiler nutzt manche davon, um Sprünge zu vermeiden:</p>
+<pre><code><span class="c">// Multiplexer: der Bedingungsoperator</span>
+<span class="k">int</span> m = sel ? x : y;              <span class="c">// JIT: oft bedingter Move (cmov), kein Sprung</span>
+
+<span class="c">// Multiplexer ohne Verzweigung, rein mit Bitlogik</span>
+<span class="k">int</span> maske = -(sel ? <span class="n">1</span> : <span class="n">0</span>);        <span class="c">// alle Bits 1 oder alle 0</span>
+<span class="k">int</span> m2 = (x &amp; maske) | (y &amp; ~maske);
+
+<span class="c">// Decoder: aus einer Zahl genau ein gesetztes Bit</span>
+<span class="k">int</span> eins = <span class="n">1</span> &lt;&lt; nummer;
+
+<span class="c">// Volladdierer aus Bitoperationen</span>
+<span class="k">int</span> summe   = a ^ b ^ cin;
+<span class="k">int</span> uebertr = (a &amp; b) | (a &amp; cin) | (b &amp; cin);   <span class="c">// Mehrheit</span>
+
+<span class="c">// Direkt in Hardware – der JIT setzt einzelne Befehle ein</span>
+Integer.bitCount(x);               <span class="c">// Anzahl gesetzter Bits (Parität: bitCount &amp; 1)</span>
+Integer.numberOfLeadingZeros(x);   <span class="c">// höchstes gesetztes Bit</span>
+Math.multiplyHigh(a, b);           <span class="c">// obere 64 Bit eines 128-Bit-Produkts</span></code></pre>
+<p>Methoden wie <code>Integer.bitCount</code> sind sogenannte <strong>Intrinsics</strong>: Der Java-Code dahinter ist nur der Ersatz. Auf Prozessoren, die einen passenden Befehl haben, ersetzt der JIT den ganzen Aufruf durch genau diesen einen Befehl – also durch ein spezielles Schaltnetz in der CPU.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Die ALU berechnet nur die gewählte Operation.“</b> – Meist rechnen alle Einheiten parallel, und der Multiplexer wählt aus. Das ist einfacher und schneller, als erst zu entscheiden und dann zu rechnen.</div>
+  <div><b>„Schaltnetze liefern ihr Ergebnis sofort.“</b> – Jedes Gatter braucht eine winzige Zeit, bis sein Ausgang umschaltet. Die längste Gatterkette bestimmt, wie hoch die Taktfrequenz sein darf.</div>
+  <div><b>„Für Subtraktion, Vergleich und Negation braucht man jeweils eigene Schaltungen.“</b> – Alles läuft über den Addierer: Subtrahieren ist Addieren des Komplements, Vergleichen ist Subtrahieren und auf Vorzeichen und Null prüfen.</div>
+  <div><b>„Multiplikation ist einfach eine weitere Einheit wie die Addition.“</b> – Ein Multiplizierer ist um Größenordnungen aufwendiger, im Grunde viele Addierer übereinander. Lange hatten kleine Prozessoren gar keinen und multiplizierten in Software.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/boolesche-logik/">Boolesche Logik</a>
+  <a href="/it-konzepte/zahlendarstellung/">Zahlen im Rechner</a>
+  <a href="/it-konzepte/maschinensprache/">Maschinensprache</a>
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/schaltwerke/">Schaltwerke</a>
+  <a href="/it-konzepte/cpu/">Die CPU</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

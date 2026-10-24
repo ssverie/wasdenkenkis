@@ -1,0 +1,221 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>Computer</strong> ist eine Maschine, die Befehle aus ihrem Speicher holt und ausführt – einen nach dem anderen, milliardenfach pro Sekunde. Programm und Daten liegen dabei im selben Speicher, beides sind nur Zahlen. Diese Idee heißt <strong>Von-Neumann-Architektur</strong>, und fast jeder heutige Computer folgt ihr.</p>
+<p>Ganz unten besteht alles aus Schaltern, die an oder aus sind – <strong>Bits</strong>. Aus Schaltern baut man Logikgatter, aus Gattern Addierer, aus Addierern und Speicher einen Prozessor. Und weil so ein Prozessor rechnen, speichern und springen kann, kann er im Prinzip <em>alles</em> berechnen, was überhaupt berechenbar ist.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#grundidee">Die Grundidee</a></li>
+  <li><a href="#bits">Alles ist eine Zahl</a></li>
+  <li><a href="#gatter">Vom Schalter zum Rechnen</a></li>
+  <li><a href="#zyklus">Holen, dekodieren, ausführen</a></li>
+  <li><a href="#bauteile">Die Bauteile und ihr Tempo</a></li>
+  <li><a href="#java">Für Entwickler übersetzt: der Weg einer Java-Zeile</a></li>
+  <li><a href="#turing">Ausblick: Was kann ein Computer überhaupt?</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="grundidee">Die Grundidee</h2>
+<p>Ein Taschenrechner rechnet auch. Was macht einen Computer anders? Er ist <strong>programmierbar</strong>: Was er tut, steht nicht in seiner Verdrahtung, sondern in einer Liste von Befehlen, die man austauschen kann. Heute Textverarbeitung, morgen Schach, übermorgen ein Sprachmodell – dieselbe Hardware.</p>
+<p>Der entscheidende Kniff stammt aus einem Bericht von John von Neumann aus dem Jahr 1945: Die Befehle liegen <em>im selben Speicher wie die Daten</em>. Ein Programm ist also selbst nur Daten. Damit kann ein Programm ein anderes laden, ein Compiler kann Programme erzeugen, ein Betriebssystem kann Programme starten – und ein Virus kann sich in fremde Programme schreiben.</p>
+
+<figure class="parts">
+<svg viewBox="0 0 520 200" role="img" aria-label="Von-Neumann-Architektur: CPU mit Steuerwerk und Rechenwerk, verbunden über einen Bus mit Speicher und Ein-/Ausgabe">
+  <rect class="bx cpu" x="20" y="20" width="200" height="160" rx="12"/>
+  <text class="t" x="120" y="44" text-anchor="middle">Prozessor (CPU)</text>
+  <rect class="bx" x="40" y="60" width="160" height="46" rx="8"/><text class="t" x="120" y="80" text-anchor="middle">Steuerwerk</text><text class="s" x="120" y="96" text-anchor="middle">holt und dekodiert Befehle</text>
+  <rect class="bx" x="40" y="118" width="160" height="46" rx="8"/><text class="t" x="120" y="138" text-anchor="middle">Rechenwerk (ALU)</text><text class="s" x="120" y="154" text-anchor="middle">rechnet, vergleicht</text>
+  <line class="ln fast" x1="220" y1="100" x2="300" y2="100"/>
+  <text class="s" x="260" y="90" text-anchor="middle">Bus</text>
+  <line class="ln" x1="300" y1="50" x2="300" y2="150"/>
+  <line class="ln" x1="300" y1="50" x2="330" y2="50"/><line class="ln" x1="300" y1="150" x2="330" y2="150"/>
+  <rect class="bx" x="330" y="20" width="170" height="64" rx="10"/><text class="t" x="415" y="44" text-anchor="middle">Speicher</text><text class="s" x="415" y="62" text-anchor="middle">Programm und Daten –</text><text class="s" x="415" y="76" text-anchor="middle">beides nur Zahlen</text>
+  <rect class="bx" x="330" y="118" width="170" height="64" rx="10"/><text class="t" x="415" y="142" text-anchor="middle">Ein- und Ausgabe</text><text class="s" x="415" y="160" text-anchor="middle">Tastatur, Bildschirm,</text><text class="s" x="415" y="174" text-anchor="middle">SSD, Netzwerk</text>
+</svg>
+<figcaption>Die Von-Neumann-Architektur. Moderne Prozessoren sind unendlich viel komplizierter – das Grundschema gilt immer noch.</figcaption>
+</figure>
+
+<h2 id="bits">Alles ist eine Zahl</h2>
+<p>Ein <strong>Bit</strong> ist die kleinste Einheit: an oder aus, 1 oder 0. Acht Bits sind ein <strong>Byte</strong> und können 256 verschiedene Werte darstellen. Was ein Byte <em>bedeutet</em>, steht nicht im Byte selbst – das entscheidet allein das Programm, das es liest. Klick die Bits an:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein Byte, viele Bedeutungen</div>
+  <div class="bits" id="bytebits"></div>
+  <div class="interp" id="interp"></div>
+  <div class="bit-quick">
+    <button data-v="65">„A“</button><button data-v="127">127</button><button data-v="128">128</button><button data-v="255">alles an</button><button data-v="0">alles aus</button><button data-v="45">Befehl der Mini-CPU</button>
+  </div>
+  <p class="fine">Probier 127 und dann 128: Als <code>int</code> wächst die Zahl, als Java-<code>byte</code> springt sie ins Negative.</p>
+</div>
+
+<p>Daher kommen ein paar Dinge, die jeder Java-Entwickler schon gesehen hat:</p>
+<ul>
+  <li><strong>Hexadezimal</strong> ist nur eine bequeme Schreibweise: Eine Hex-Ziffer steht für genau 4 Bit, ein Byte also für zwei Hex-Ziffern. <code>0xFF</code> = <code>1111 1111</code> = 255.</li>
+  <li><strong>Negative Zahlen</strong> stellt man im <strong>Zweierkomplement</strong> dar: Das höchste Bit zählt negativ. Deshalb ist in Java <code>Integer.MAX_VALUE + 1 == Integer.MIN_VALUE</code> – die Zahl läuft über, ohne Fehlermeldung.</li>
+  <li><strong>Kommazahlen</strong> (<code>double</code>) werden binär als Mantisse und Exponent gespeichert. Viele Dezimalbrüche lassen sich binär nicht exakt darstellen, so wie 1/3 dezimal nicht. Deshalb gilt:</li>
+</ul>
+<pre><code>System.out.println(<span class="s">0.1</span> + <span class="s">0.2</span>);                 <span class="c">// 0.30000000000000004</span>
+System.out.println(<span class="s">0.1</span> + <span class="s">0.2</span> == <span class="s">0.3</span>);          <span class="c">// false</span>
+System.out.println(Integer.MAX_VALUE + <span class="s">1</span>);       <span class="c">// -2147483648</span>
+System.out.println((<span class="k">byte</span>) <span class="s">200</span>);                  <span class="c">// -56</span>
+<span class="c">// Für Geld: BigDecimal oder ganze Cent als long</span></code></pre>
+<p>Text ist ebenfalls nur eine Tabelle von Zahlen: In ASCII ist „A“ die 65. Heute benutzt man <strong>Unicode</strong> mit über 150 000 Zeichen, gespeichert meist als <strong>UTF-8</strong> – ein Zeichen braucht dort 1 bis 4 Bytes. Bilder sind Zahlen für Rot, Grün und Blau je Pixel. Und Befehle für den Prozessor sind auch nur Zahlen.</p>
+
+<h2 id="gatter">Vom Schalter zum Rechnen</h2>
+<p>Physisch ist ein Bit eine Spannung: hoch oder niedrig. Geschaltet wird mit <strong>Transistoren</strong> – winzigen elektronischen Schaltern, bei denen eine Spannung an einem Anschluss den Strom zwischen zwei anderen ein- oder ausschaltet. Aus wenigen Transistoren baut man <strong>Logikgatter</strong>:</p>
+<div class="cards">
+  <div class="card"><div class="num">&amp;</div><h4>UND</h4><p>Ausgang 1, wenn <em>beide</em> Eingänge 1 sind. Wie <code>a &amp;&amp; b</code>.</p></div>
+  <div class="card"><div class="num">≥1</div><h4>ODER</h4><p>Ausgang 1, wenn <em>mindestens einer</em> 1 ist. Wie <code>a || b</code>.</p></div>
+  <div class="card"><div class="num">=1</div><h4>XOR</h4><p>Ausgang 1, wenn <em>genau einer</em> 1 ist. Wie <code>a ^ b</code>.</p></div>
+</div>
+<p>Mehr braucht man nicht, um zu rechnen. Binär addieren funktioniert wie schriftliches Addieren in der Schule, nur einfacher: 0+0=0, 0+1=1, 1+1=10 – also 0, „eins gemerkt“. Ein <strong>Volladdierer</strong> addiert zwei Bits und den Übertrag von der Stelle davor. Klick auf die Eingänge:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein Volladdierer aus fünf Gattern</div>
+  <svg id="adder" viewBox="0 0 600 230" role="img" aria-label="Volladdierer mit klickbaren Eingängen A, B und Übertrag"></svg>
+  <div class="controls" style="justify-content:center;margin-top:6px"><button data-tg="A">A umschalten</button><button data-tg="B">B umschalten</button><button data-tg="C">Übertrag umschalten</button></div>
+  <div class="add-res" id="addres"></div>
+  <p class="fine">Orange Leitung = 1. Für 64-Bit-Zahlen schaltet man 64 solcher Addierer hintereinander; echte Prozessoren benutzen schnellere Varianten, die den Übertrag vorausberechnen.</p>
+</div>
+
+<p>So geht es Schicht für Schicht weiter: Aus Gattern werden Addierer, aus rückgekoppelten Gattern Speicherzellen (<strong>Flipflops</strong>), aus beidem ein Rechenwerk. Ein aktueller Prozessor enthält davon unvorstellbar viele: Der erste Mikroprozessor, der Intel 4004 von 1971, hatte rund 2 300 Transistoren. Apples M3 Max von 2023 hat 92 Milliarden.</p>
+
+<h2 id="zyklus">Holen, dekodieren, ausführen</h2>
+<p>Ein Prozessor macht im Kern immer dasselbe, in einer endlosen Schleife: den nächsten Befehl aus dem Speicher <strong>holen</strong>, herausfinden, was er bedeutet (<strong>dekodieren</strong>), ihn <strong>ausführen</strong>. Ein Register namens <strong>Befehlszähler</strong> (PC, program counter) merkt sich, wo der nächste Befehl steht. Den Takt gibt ein Quarz vor – bei 4 GHz vier Milliarden Mal pro Sekunde.</p>
+<p>Hier ist eine Mini-CPU mit 16 Byte Speicher und sieben Befehlen. Programm und Daten liegen im selben Speicher; die CPU kann sie nicht unterscheiden. Sie führt einfach aus, worauf der Befehlszähler zeigt.</p>
+
+<div class="widget">
+  <div class="widget-title">Mini-CPU zum Durchsteppen</div>
+  <div class="seg" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px" id="progSel">
+    <button data-p="0" class="primary">Programm 1: 3 + 4</button>
+    <button data-p="1">Programm 2: Schleife 5 + 4 + 3 + 2 + 1</button>
+  </div>
+  <div class="cpu">
+    <div class="regs">
+      <div class="phase" id="phase"><span>Holen</span><span>Dekodieren</span><span>Ausführen</span></div>
+      <div class="reg" id="rPC">Befehlszähler (PC)<b>0</b></div>
+      <div class="reg" id="rIR">Befehlsregister (IR)<b>–</b></div>
+      <div class="reg" id="rACC">Akkumulator (ACC)<b>0</b></div>
+      <div class="reg" id="rN">Ausgeführte Befehle<b>0</b></div>
+    </div>
+    <div><div class="mem" id="mem"></div></div>
+  </div>
+  <div class="cpu-txt" id="cputxt"></div>
+  <div class="controls">
+    <button class="primary" id="cStep">Nächste Phase</button>
+    <button id="cInstr">Ganzer Befehl</button>
+    <button id="cRun">Laufen lassen</button>
+    <button id="cReset">Zurücksetzen</button>
+  </div>
+  <details class="isa"><summary style="cursor:pointer;color:var(--accent)">Befehlssatz anzeigen</summary>
+  <div class="tbl-wrap"><table><thead><tr><th>Code</th><th>Befehl</th><th>Bedeutung</th></tr></thead><tbody>
+    <tr><td><code>0x</code></td><td><code>HLT</code></td><td>anhalten</td></tr>
+    <tr><td><code>1a</code></td><td><code>LDA a</code></td><td>lade Speicherzelle a in den Akkumulator</td></tr>
+    <tr><td><code>2a</code></td><td><code>ADD a</code></td><td>addiere Zelle a zum Akkumulator</td></tr>
+    <tr><td><code>3a</code></td><td><code>SUB a</code></td><td>ziehe Zelle a ab</td></tr>
+    <tr><td><code>4a</code></td><td><code>STA a</code></td><td>speichere den Akkumulator in Zelle a</td></tr>
+    <tr><td><code>5a</code></td><td><code>JMP a</code></td><td>springe zu Adresse a</td></tr>
+    <tr><td><code>6a</code></td><td><code>JZ a</code></td><td>springe zu a, wenn der Akkumulator 0 ist</td></tr>
+  </tbody></table></div>
+  <p class="fine">Ein Befehl ist ein Byte: die erste Hex-Ziffer ist der Befehl, die zweite die Adresse. <code>1E</code> heißt also „LDA 14“.</p></details>
+</div>
+
+<p>Mit nur diesen Befehlen – rechnen, laden, speichern, springen, bedingt springen – lässt sich jedes Programm schreiben, das es gibt; es wird nur entsprechend lang. Der bedingte Sprung <code>JZ</code> ist dabei das Entscheidende: Er macht aus einer Rechenmaschine eine, die Schleifen und <code>if</code> kann.</p>
+<p>Echte Prozessoren sind trickreicher: Sie bearbeiten mehrere Befehle gleichzeitig wie am Fließband (<strong>Pipelining</strong>), raten, wohin ein Sprung geht (<strong>Sprungvorhersage</strong>), und führen Befehle in anderer Reihenfolge aus, wenn das Ergebnis dasselbe bleibt. Nach außen sieht es trotzdem so aus, als liefe genau diese einfache Schleife.</p>
+
+<h2 id="bauteile">Die Bauteile und ihr Tempo</h2>
+<div class="cards">
+  <div class="card"><div class="num">C</div><h4>CPU</h4><p>Wenige, sehr flexible Kerne (heute meist 4 bis 24 im Laptop), jeder mit eigenen schnellen Zwischenspeichern, den Caches.</p></div>
+  <div class="card"><div class="num">R</div><h4>Arbeitsspeicher (RAM)</h4><p>Schnell, aber flüchtig: Ohne Strom ist alles weg. Hier liegen laufende Programme und ihre Daten.</p></div>
+  <div class="card"><div class="num">S</div><h4>SSD</h4><p>Dauerhaft, aber viel langsamer als RAM. Hier liegen Programme und Dateien, wenn sie nicht laufen.</p></div>
+  <div class="card"><div class="num">G</div><h4>GPU</h4><p>Tausende einfache Rechenwerke, die alle dasselbe auf vielen Daten tun – gebaut für Grafik, heute auch das Arbeitspferd der <a href="/erklaert/inferenz/">KI</a>.</p></div>
+  <div class="card"><div class="num">B</div><h4>Busse</h4><p>Die Verbindungen: Speicherbus zum RAM, PCI Express zu GPU und SSD, USB nach außen.</p></div>
+  <div class="card"><div class="num">F</div><h4>Firmware</h4><p>Ein kleines Programm im Chip auf der Hauptplatine (UEFI), das beim Einschalten alles prüft und das <a href="/it-konzepte/betriebssystem/">Betriebssystem</a> startet.</p></div>
+</div>
+
+<p>Der wichtigste Unterschied zwischen diesen Bauteilen ist ihre Geschwindigkeit – und der ist so gewaltig, dass man ihn sich kaum vorstellen kann. Darum hier ein Trick: Tu so, als dauerte ein einziger Prozessortakt eine Sekunde.</p>
+
+<div class="widget">
+  <div class="widget-title">Wenn ein Takt eine Sekunde wäre</div>
+  <div class="seg" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px" id="latSel">
+    <button data-m="h" class="primary">Menschliche Zeit</button>
+    <button data-m="r">Echte Zeit</button>
+  </div>
+  <div class="lat" id="lat"></div>
+  <p class="fine">Größenordnungen, gerundet; echte Werte schwanken je nach Hardware. Die Balken sind logarithmisch – linear wären alle oberen Zeilen unsichtbar.</p>
+</div>
+<p>Daraus folgt einer der wichtigsten Sätze der Informatik-Praxis: <strong>Rechnen ist billig, Daten holen ist teuer.</strong> Ein Prozessor wartet die meiste Zeit auf Daten. Darum gibt es Caches, darum ist ein Durchlauf durch ein Array so viel schneller als durch eine verkettete Liste, und darum wartet ein Server meistens aufs Netzwerk.</p>
+
+<h2 id="java">Für Entwickler übersetzt: der Weg einer Java-Zeile</h2>
+<p>Ein Prozessor versteht kein Java. Was mit dieser Methode passiert, bis sie wirklich läuft:</p>
+<div class="journey">
+  <div class="jstep"><div class="jl">Quelltext<small>du</small></div><pre><code><span class="k">static int</span> sum(<span class="k">int</span> a, <span class="k">int</span> b) {
+    <span class="k">int</span> c = a + b;
+    <span class="k">return</span> c;
+}</code></pre></div>
+  <div class="jstep"><div class="jl">Bytecode<small>javac, sichtbar mit <code>javap -c</code></small></div><pre><code>iload_0      <span class="c">// a auf den Operandenstapel</span>
+iload_1      <span class="c">// b auf den Operandenstapel</span>
+iadd         <span class="c">// beide addieren</span>
+istore_2     <span class="c">// Ergebnis in c</span>
+iload_2
+ireturn</code></pre></div>
+  <div class="jstep"><div class="jl">Maschinencode<small>JIT-Compiler zur Laufzeit, x86-64, sinngemäß</small></div><pre><code>mov  eax, esi   <span class="c">// a ins Register eax</span>
+add  eax, edx   <span class="c">// b dazuaddieren</span>
+ret             <span class="c">// zurück, Ergebnis steht in eax</span></code></pre></div>
+  <div class="jstep"><div class="jl">Bytes<small>was die CPU wirklich liest</small></div><pre><code>89 F0  01 D0  C3</code></pre></div>
+</div>
+<p>Der Bytecode ist der Befehlssatz einer gedachten Maschine, der JVM – sie arbeitet mit einem Stapel statt mit Registern, wie die Mini-CPU oben mit ihrem Akkumulator. Erst der JIT-Compiler übersetzt häufig benutzte Methoden in echten Maschinencode für genau diesen Prozessor. Und die fünf Bytes am Ende sind derselbe Stoff wie die Bytes im Widget oben: Zahlen, die zufällig als Befehle gemeint sind.</p>
+
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Hardware</th><th>In Java sichtbar als</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Wortbreite 64 Bit</strong></td><td><code>long</code> und Referenzen; <code>int</code> bleibt bewusst 32 Bit, auf jeder Plattform gleich</td></tr>
+    <tr><td><strong>Zweierkomplement</strong></td><td>Überlauf ohne Exception; <code>Math.addExact</code> wirft eine, wenn man es will</td></tr>
+    <tr><td><strong>Gleitkomma nach IEEE 754</strong></td><td><code>float</code>, <code>double</code>, <code>NaN</code>, <code>-0.0</code></td></tr>
+    <tr><td><strong>Bitoperationen</strong></td><td><code>&amp; | ^ ~ &lt;&lt; &gt;&gt; &gt;&gt;&gt;</code> – direkt in Maschinenbefehle übersetzt</td></tr>
+    <tr><td><strong>Byte-Reihenfolge</strong></td><td>Java rechnet intern unabhängig davon; beim Lesen fremder Binärdaten hilft <code>ByteBuffer.order()</code></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="turing">Ausblick: Was kann ein Computer überhaupt?</h2>
+<p>1936 – bevor es einen einzigen elektronischen Computer gab – beschrieb Alan Turing eine gedachte Maschine: ein unendliches Band mit Zeichen, ein Lese-Schreib-Kopf und eine Tabelle von Regeln. Die <strong>Turingmaschine</strong> ist absurd unpraktisch, aber sie kann alles berechnen, was überhaupt berechenbar ist. Und jeder Computer, der rechnen, speichern und bedingt springen kann, kann eine Turingmaschine nachbilden – man nennt ihn <strong>Turing-vollständig</strong>.</p>
+<p>Daraus folgt etwas Verblüffendes: Ein Smartphone und ein Supercomputer können <em>dieselben</em> Probleme lösen. Sie unterscheiden sich nur darin, wie schnell und mit wie viel Speicher. Und Turing zeigte gleich mit, dass es Fragen gibt, die <em>kein</em> Computer je beantworten kann – etwa, ob ein beliebiges Programm irgendwann anhält. Mehr dazu in einem späteren Eintrag.</p>
+
+<h3>Kurze Geschichte</h3>
+<ul class="tl">
+  <li><b>1837</b>Charles Babbage entwirft die Analytical Engine, einen mechanischen, programmierbaren Rechner. Gebaut wird sie nie; Ada Lovelace schreibt 1843 ein Programm für sie.</li>
+  <li><b>1936</b>Alan Turing beschreibt die Turingmaschine.</li>
+  <li><b>1941</b>Konrad Zuse stellt in Berlin die Z3 fertig – den ersten funktionsfähigen, frei programmierbaren, vollautomatischen Digitalrechner.</li>
+  <li><b>1945</b>ENIAC in den USA; John von Neumann beschreibt das Prinzip „Programm im Speicher“.</li>
+  <li><b>1947</b>Der Transistor wird bei den Bell Labs erfunden und ersetzt bald die Röhre.</li>
+  <li><b>1971</b>Intel 4004: der ganze Prozessor auf einem Chip.</li>
+  <li><b>1981</b>Der IBM-PC macht den Computer zum Bürogerät.</li>
+  <li><b>2007</b>Das Smartphone macht ihn zum Taschengerät – heute die häufigste Form des Computers.</li>
+</ul>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Mehr Gigahertz heißt schneller.“</b> – Nur bei sonst gleicher Bauweise. Wie viel ein Prozessor pro Takt schafft, wie viele Kerne er hat und wie groß seine Caches sind, zählt oft mehr.</div>
+  <div><b>„Speicher ist Speicher.“</b> – Arbeitsspeicher und SSD unterscheiden sich um einen Faktor von etwa tausend in der Zugriffszeit. „Mein Handy hat 256 GB Speicher“ meint die SSD, nicht den RAM.</div>
+  <div><b>„Der Computer versteht Java.“</b> – Er versteht nur Maschinencode für seinen Prozessortyp. Alles andere wird übersetzt – vorher oder zur Laufzeit.</div>
+  <div><b>„Computer rechnen exakt.“</b> – Mit ganzen Zahlen ja, bis zum Überlauf. Mit Kommazahlen nur näherungsweise: <code>0.1 + 0.2</code> ist nicht <code>0.3</code>.</div>
+  <div><b>„Ein Supercomputer kann Dinge, die mein Laptop grundsätzlich nicht kann.“</b> – Er kann sie nur schneller. Beide sind Turing-vollständig.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/betriebssystem/">Betriebssystem</a>
+  <a href="/it-konzepte/prozess-thread/">Prozess, Thread, Nebenläufigkeit</a>
+  <a href="/erklaert/neuronales-netz/">Neuronales Netz <small style="color:var(--muted)">(KI)</small></a>
+  <a href="/erklaert/inferenz/">Inferenz <small style="color:var(--muted)">(KI)</small></a>
+  <a href="/it-konzepte/zahlendarstellung/">Zahlen im Rechner</a>
+  <a href="/it-konzepte/cpu/">Die CPU</a>
+  <a href="/it-konzepte/turingmaschine/">Turingmaschine</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

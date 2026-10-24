@@ -1,0 +1,158 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein <strong>verteiltes System</strong> besteht aus mehreren Rechnern, die über ein Netz zusammenarbeiten – heute also fast jede größere Anwendung. Das Grundproblem: Nachrichten können verloren gehen, sich verspäten oder doppelt ankommen, und ein Rechner kann ausfallen, während die anderen weiterlaufen. Ein Absender, der keine Antwort bekommt, weiß <em>nicht</em>, ob seine Anfrage ankam.</p>
+<p>Daraus folgen die Grundregeln: Jeder Aufruf braucht ein <strong>Timeout</strong>. Neuversuche sind nur sicher, wenn Operationen <strong>idempotent</strong> sind. „Genau einmal zustellen“ gibt es nicht – nur „mindestens einmal“ plus Erkennen von Doppelten. Und wenn mehrere Rechner sich einigen müssen, wer das Sagen hat, braucht man ein <strong>Konsensverfahren</strong> wie Raft, das mit einer Mehrheit arbeitet.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#irrtuemer-netz">Acht falsche Annahmen</a></li>
+  <li><a href="#einmal">Wurde es ausgeführt oder nicht?</a></li>
+  <li><a href="#konsens">Konsens: Wer hat das Sagen?</a></li>
+  <li><a href="#retries">Timeouts, Neuversuche und der Ansturm danach</a></li>
+  <li><a href="#uhren">Uhren lügen</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="irrtuemer-netz">Acht falsche Annahmen</h2>
+<p>Schon in den 1990er-Jahren schrieben Ingenieure bei Sun Microsystems die Annahmen auf, die Entwickler verteilter Systeme stillschweigend treffen – und die alle falsch sind:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Die Annahme</th><th>Die Wirklichkeit</th></tr></thead>
+  <tbody>
+    <tr><td>Das Netz ist zuverlässig.</td><td>Pakete gehen verloren, Verbindungen brechen ab, Router fallen aus.</td></tr>
+    <tr><td>Die Latenz ist null.</td><td>Jeder Aufruf kostet Millisekunden – über Kontinente hinweg Hunderte.</td></tr>
+    <tr><td>Die Bandbreite ist unbegrenzt.</td><td>Große Antworten und viele kleine Aufrufe summieren sich.</td></tr>
+    <tr><td>Das Netz ist sicher.</td><td>Alles, was übers Netz geht, muss verschlüsselt und geprüft werden.</td></tr>
+    <tr><td>Die Topologie ändert sich nicht.</td><td>Container kommen und gehen, IP-Adressen wechseln.</td></tr>
+    <tr><td>Es gibt einen Administrator.</td><td>Viele Teams, viele Zuständigkeiten, niemand sieht alles.</td></tr>
+    <tr><td>Transport kostet nichts.</td><td>Serialisierung, Verschlüsselung und Datenverkehr kosten Rechenzeit und Geld.</td></tr>
+    <tr><td>Das Netz ist einheitlich.</td><td>Unterschiedliche Hardware, Protokolle und Versionen.</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Dazu kommt das Kernproblem: <strong>Teilausfälle</strong>. Auf einem einzelnen Rechner läuft ein Programm oder es stürzt ab. In einem verteilten System kann ein Teil ausfallen, während der Rest weitermacht – und von außen sieht ein ausgefallener Rechner genauso aus wie ein langsamer oder ein schlecht erreichbarer.</p>
+
+<h2 id="einmal">Wurde es ausgeführt oder nicht?</h2>
+<p>Ein Bestelldienst schickt eine Überweisung an den Zahlungsdienst. Die Antwort bleibt aus. Was tun?</p>
+
+<div class="widget">
+  <div class="widget-title">Überweisung von 100 €</div>
+  <div class="lbl">Was im Netz passiert</div>
+  <div class="seg" id="rnS">
+    <button data-s="ok">Alles gut</button>
+    <button data-s="req">Anfrage geht verloren</button>
+    <button data-s="resp" aria-pressed="true">Antwort geht verloren</button>
+  </div>
+  <div class="lbl">Was der Absender bei Timeout tut</div>
+  <div class="seg" id="rnP">
+    <button data-p="none">Nicht wiederholen</button>
+    <button data-p="retry" aria-pressed="true">Wiederholen</button>
+    <button data-p="idem">Wiederholen mit Idempotenz-Schlüssel</button>
+  </div>
+  <div class="seq" id="rnSeq"></div>
+  <div class="acct" id="rnA"></div>
+  <div class="note" id="rnN"></div>
+</div>
+
+<p>Aus Sicht des Absenders sehen „Anfrage verloren“ und „Antwort verloren“ identisch aus: Es kam nichts zurück. Deshalb gibt es nur zwei Zustellgarantien, die man tatsächlich bauen kann:</p>
+<div class="cards">
+  <div class="card"><div class="num">≤1</div><h4>Höchstens einmal</h4><p>Nie wiederholen. Nichts wird doppelt ausgeführt, aber manches gar nicht. Gut für Dinge, die man verlieren darf – Messwerte, Statistiken.</p></div>
+  <div class="card"><div class="num">≥1</div><h4>Mindestens einmal</h4><p>Wiederholen, bis eine Bestätigung kommt. Nichts geht verloren, aber manches kommt doppelt an. Der Standard bei Nachrichtenvermittlern.</p></div>
+  <div class="card"><div class="num">=1</div><h4>Effektiv einmal</h4><p>Mindestens einmal zustellen, beim Empfänger Doppelte erkennen und ignorieren. Das ist alles, was „exactly once“ in der Praxis je bedeutet.</p></div>
+</div>
+<p>Eine Operation ist <strong>idempotent</strong>, wenn mehrfaches Ausführen dasselbe bewirkt wie einmaliges. „Setze den Status auf versandt“ ist idempotent, „Buche 100 € ab“ nicht. Nicht-idempotente Operationen macht man idempotent, indem der Absender jeder Anfrage eine eindeutige Kennung mitgibt und der Empfänger sich merkt, welche er schon ausgeführt hat.</p>
+
+<h2 id="konsens">Konsens: Wer hat das Sagen?</h2>
+<p>Viele Systeme brauchen genau einen Rechner, der Entscheidungen trifft – einen <strong>Anführer</strong> (Leader). Er ordnet alle Schreibvorgänge, damit keine Widersprüche entstehen. Fällt er aus, muss ein neuer gewählt werden, und zwar so, dass es nie zwei gleichzeitig gibt. Das leistet ein <strong>Konsensverfahren</strong>. Das bekannteste ist <strong>Raft</strong> (2014), entworfen ausdrücklich, um verständlicher zu sein als sein Vorgänger Paxos. Raft steckt in etcd, dem Gedächtnis von Kubernetes, und in vielen Datenbanken. Die Kernidee: Alles braucht eine <strong>Mehrheit</strong>.</p>
+
+<div class="widget">
+  <div class="widget-title">Fünf Rechner, ein Anführer</div>
+  <div class="rctl">
+    <button class="primary" id="rW">Schreiben</button>
+    <button id="rK">Anführer fällt aus</button>
+    <button id="rE">Neuwahl</button>
+    <button id="rP">Netz teilen 2 | 3</button>
+    <button id="rH">Alles reparieren</button>
+    <button id="rX">Neu</button>
+  </div>
+  <svg id="raft" viewBox="0 0 600 260" role="img" aria-label="Raft-Cluster mit fünf Knoten"></svg>
+  <div class="note" id="rN"></div>
+  <p class="fine">Stark vereinfacht. Volle Blöcke: bestätigte Einträge (von einer Mehrheit gespeichert). Schraffiert: noch unbestätigt. In echtem Raft laufen Wahlen automatisch nach zufälligen Wartezeiten ab.</p>
+</div>
+
+<p>Weil jede Entscheidung eine Mehrheit braucht und es nur eine Mehrheit geben kann, kann es nie zwei Anführer geben, die beide etwas durchsetzen – auch nicht, wenn das Netz sich teilt. Die Minderheit bleibt einfach stehen; das ist die Entscheidung für <a href="/it-konzepte/nosql-cap/">Konsistenz im CAP-Theorem</a>. Daraus folgt eine wichtige Faustregel: Ein Cluster aus drei Rechnern verkraftet einen Ausfall, einer aus fünf zwei. Ein vierter Rechner bringt nichts – für eine Mehrheit von vier braucht man drei, er verkraftet also ebenfalls nur einen Ausfall.</p>
+
+<h2 id="retries">Timeouts, Neuversuche und der Ansturm danach</h2>
+<p>Ohne Timeout wartet ein Aufruf im Zweifel ewig – und mit ihm ein Thread, eine Verbindung, ein Nutzer. Also: immer ein Timeout. Nach einem Timeout liegt ein Neuversuch nahe. Aber Vorsicht: Wenn ein Dienst wegen Überlastung ausfällt und alle Aufrufer im selben Takt neu versuchen, trifft ihn bei der Rückkehr eine Welle, die ihn gleich wieder umwirft.</p>
+
+<div class="widget">
+  <div class="widget-title">Ein Dienst kommt zurück</div>
+  <div class="seg" id="boS">
+    <button data-s="fix">Fest: jede Sekunde</button>
+    <button data-s="exp">Exponentiell: 1, 2, 4, 8 s</button>
+    <button data-s="jit" aria-pressed="true">Exponentiell mit Zufall (Jitter)</button>
+  </div>
+  <svg id="bo" viewBox="0 0 620 210" role="img" aria-label="Anfragen pro Zeitabschnitt und Kapazität"></svg>
+  <div class="bo-stats" id="boSt"></div>
+  <div class="note" id="boN"></div>
+  <p class="fine">200 Aufrufer, deren erste Anfrage bei Sekunde 0 scheitert. Der Dienst ist 5 Sekunden lang aus und schafft danach 40 Anfragen pro halbe Sekunde. Kommen mehr, schafft er sogar weniger – Überlast kostet ihn zusätzlich Kraft. Was scheitert, wird erneut versucht.</p>
+</div>
+
+<p>Dazu gehören zwei weitere Muster: Ein <strong>Circuit Breaker</strong> (Sicherung) zählt Fehler und hört nach zu vielen ganz auf, einen kranken Dienst anzurufen – er antwortet sofort mit einem Fehler oder einem Ersatzwert und probiert erst nach einer Weile wieder vorsichtig. Und ein <strong>Bulkhead</strong> (Schott) begrenzt, wie viele Threads oder Verbindungen ein einzelner Abhängiger belegen darf, damit ein langsamer Dienst nicht die ganze Anwendung blockiert.</p>
+
+<h2 id="uhren">Uhren lügen</h2>
+<p>Jeder Rechner hat seine eigene Uhr, und keine geht genau. Über NTP werden sie abgeglichen, aber Abweichungen von Millisekunden sind normal, manchmal mehr – und eine Uhr kann bei einer Korrektur sogar rückwärts springen. „Was zuerst passierte“ lässt sich deshalb über Rechnergrenzen hinweg nicht an Zeitstempeln ablesen. Verteilte Systeme benutzen stattdessen <strong>logische Uhren</strong>: Zähler, die mit jeder Nachricht weitergegeben werden und eine Reihenfolge garantieren, die zur Ursache-Wirkung-Beziehung passt (Lamport-Uhren, Versionsvektoren). Googles Datenbank Spanner geht einen anderen Weg: Atomuhren und GPS in jedem Rechenzentrum, und jede Zeitangabe hat ein ausdrückliches Unsicherheitsintervall.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">// Idempotenter Endpunkt: gleiche Kennung, gleiche Antwort – keine zweite Ausführung</span>
+@PostMapping(<span class="s">"/ueberweisungen"</span>)
+Ergebnis ueberweise(@RequestHeader(<span class="s">"Idempotency-Key"</span>) UUID key, @RequestBody Auftrag a) {
+    <span class="k">return</span> ergebnisse.findById(key)                 <span class="c">// schon verarbeitet?</span>
+            .orElseGet(() -&gt; service.fuehreAus(key, a)); <span class="c">// Buchung + Ergebnis mit Key in EINER Transaktion,</span>
+}                                                     <span class="c">// Key mit UNIQUE-Constraint gegen Gleichzeitiges</span>
+
+<span class="c">// Resilience4j: Neuversuch mit exponentiellem Backoff und Zufall, plus Sicherung</span>
+Retry retry = Retry.of(<span class="s">"zahlung"</span>, RetryConfig.custom()
+        .maxAttempts(<span class="s">4</span>)
+        .intervalFunction(IntervalFunction.ofExponentialRandomBackoff(Duration.ofMillis(<span class="s">200</span>), <span class="s">2.0</span>))
+        .build());
+CircuitBreaker cb = CircuitBreaker.ofDefaults(<span class="s">"zahlung"</span>);
+
+Supplier&lt;Ergebnis&gt; aufruf = Decorators.ofSupplier(() -&gt; zahlung.belaste(auftrag))
+        .withCircuitBreaker(cb).withRetry(retry).decorate();</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Muster</th><th>Wofür</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Transactional Outbox</strong></td><td>Datenbank ändern <em>und</em> ein Ereignis senden – zuverlässig: Das Ereignis wird in derselben Transaktion in eine Tabelle geschrieben und von dort verschickt. Sonst gibt es entweder Ereignisse ohne Änderung oder Änderungen ohne Ereignis.</td></tr>
+    <tr><td><strong>Saga</strong></td><td>Ein Ablauf über mehrere Dienste, bei dem jeder Schritt eine Ausgleichsaktion hat – statt einer verteilten Transaktion, die alle Dienste sperrt.</td></tr>
+    <tr><td><strong>Timeouts überall</strong></td><td>HTTP-Client, Datenbank, Nachrichtenvermittler – jeder Aufruf über das Netz. Und das Timeout des Aufrufers muss größer sein als die Summe dessen, was dahinter passiert.</td></tr>
+    <tr><td><strong>Zeit</strong></td><td><code>System.currentTimeMillis()</code> verschiedener Rechner nicht vergleichen, um eine Reihenfolge festzustellen. Für Dauern auf einem Rechner <code>System.nanoTime()</code> – das springt nicht.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Unser Nachrichtensystem garantiert exactly once.“</b> – Innerhalb eines Systems, mit Transaktionen und Deduplizierung, lässt sich das herstellen. Über Systemgrenzen hinweg – bis in die Datenbank des Empfängers oder zu einer externen API – muss der Empfänger Doppelte selbst erkennen.</div>
+  <div><b>„Timeout heißt: Es ist nicht passiert.“</b> – Timeout heißt: Man weiß es nicht. Die Anfrage kann ausgeführt worden sein, nur die Antwort fehlt.</div>
+  <div><b>„Mehr Rechner, mehr Ausfallsicherheit.“</b> – Bei Mehrheitsverfahren zählen ungerade Zahlen. Vier Rechner verkraften nicht mehr Ausfälle als drei, haben aber mehr, was ausfallen kann.</div>
+  <div><b>„Ein Neuversuch kann nicht schaden.“</b> – Ohne Idempotenz führt er zu Doppelbuchungen, ohne Backoff zu Lastwellen. Und wiederholt jede Schicht einer Aufrufkette dreimal, werden aus einem Fehler ganz unten 27 Aufrufe.</div>
+  <div><b>„Die Uhren sind ja per NTP synchron.“</b> – Auf Millisekunden ungefähr, manchmal schlechter, und sie können springen. Für die Reihenfolge von Ereignissen auf verschiedenen Rechnern taugen sie nicht.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/nosql-cap/">NoSQL und das CAP-Theorem</a>
+  <a href="/it-konzepte/api-stile/">API-Stile</a>
+  <a href="/it-konzepte/tcp-ip/">Schichtenmodell und TCP/IP</a>
+  <a href="/it-konzepte/relationale-datenbanken/">Relationale Datenbanken</a>
+  <a href="/it-konzepte/microservices/">Microservices und Monolith</a>
+  <a href="/it-konzepte/observability/">Observability</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

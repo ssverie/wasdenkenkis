@@ -1,0 +1,171 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>HTTP</strong> ist ein einfaches Frage-Antwort-Protokoll: Der Client schickt eine <strong>Anfrage</strong> – eine Methode wie <code>GET</code>, einen Pfad, ein paar Kopfzeilen und eventuell einen Inhalt. Der Server schickt eine <strong>Antwort</strong> – einen dreistelligen Statuscode, Kopfzeilen und meist einen Inhalt. Bis HTTP/1.1 war das alles lesbarer Text.</p>
+<p>HTTP ist <strong>zustandslos</strong>: Jede Anfrage steht für sich. Anmeldungen, Warenkörbe und Sitzungen entstehen erst durch Cookies oder Tokens. Die neueren Versionen ändern nicht die Bedeutung, sondern den Transport: <strong>HTTP/2</strong> bündelt viele Anfragen auf einer Verbindung, <strong>HTTP/3</strong> läuft über QUIC statt TCP.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#aufbau">Ein Gespräch in Textform</a></li>
+  <li><a href="#baukasten">Selbst eine Anfrage bauen</a></li>
+  <li><a href="#methoden">Methoden: sicher und idempotent</a></li>
+  <li><a href="#status">Statuscodes</a></li>
+  <li><a href="#zustand">Zustandslos: Cookies und Tokens</a></li>
+  <li><a href="#caching">Caching</a></li>
+  <li><a href="#versionen">HTTP/1.1, HTTP/2, HTTP/3</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="aufbau">Ein Gespräch in Textform</h2>
+<p>Unter der Haube von Browser, REST-Client und <code>curl</code> sieht ein Austausch in HTTP/1.1 so aus – genau so, Zeichen für Zeichen, über eine <a href="/it-konzepte/tcp-ip/">TCP-Verbindung</a>:</p>
+<div class="term"><span class="c"># Anfrage</span>
+<span class="m">GET</span> /api/bestellungen/42 HTTP/1.1
+<span class="h">Host:</span> <span class="v">shop.example.com</span>
+<span class="h">Accept:</span> <span class="v">application/json</span>
+<span class="h">User-Agent:</span> <span class="v">Java-http-client/21</span>
+
+<span class="c"># Antwort</span>
+HTTP/1.1 <span class="ok">200 OK</span>
+<span class="h">Content-Type:</span> <span class="v">application/json</span>
+<span class="h">Content-Length:</span> <span class="v">47</span>
+<span class="h">Cache-Control:</span> <span class="v">max-age=60</span>
+
+{"id":42,"status":"versandt","summe":"59.90"}</div>
+<p>Eine Zeile mit Methode, Pfad und Version, dann Kopfzeilen (<strong>Header</strong>) als <code>Name: Wert</code>, dann eine Leerzeile, dann der Inhalt (<strong>Body</strong>). Der <code>Host</code>-Header sagt, welche Website gemeint ist – so können Tausende Domains auf einem Server mit einer IP-Adresse wohnen. <code>Content-Type</code> sagt, was im Body steckt, <code>Content-Length</code>, wie lang er ist – denn TCP kennt keine Nachrichtengrenzen.</p>
+
+<h2 id="baukasten">Selbst eine Anfrage bauen</h2>
+<p>Hier ist eine kleine Bestell-API. Stell die Anfrage zusammen und schau, was der Server antwortet:</p>
+
+<div class="widget">
+  <div class="widget-title">Anfrage-Baukasten</div>
+  <div class="rb">
+    <label><span class="lbl">Methode</span><select id="rbM"><option>GET</option><option>POST</option><option>PUT</option><option>DELETE</option></select></label>
+    <label><span class="lbl">Pfad</span><select id="rbP"><option>/api/bestellungen/42</option><option>/api/bestellungen/99</option><option>/api/bestellungen</option></select></label>
+    <div class="chk" style="grid-column:1/-1">
+      <span class="lbl">Header</span>
+      <label class="toggle"><input type="checkbox" id="rbAuth"> <span><code>Authorization: Bearer eyJ…</code> (angemeldet)</span></label>
+      <label class="toggle"><input type="checkbox" id="rbEtag"> <span><code>If-None-Match: "v7"</code> (ich habe Version v7 schon im Cache)</span></label>
+      <label class="toggle"><input type="checkbox" id="rbXml"> <span><code>Accept: application/xml</code> statt JSON</span></label>
+    </div>
+  </div>
+  <div class="ex">
+    <div class="term" id="rbReq"></div>
+    <div class="term" id="rbRes"></div>
+  </div>
+  <div class="ex-note" id="rbNote"></div>
+  <p class="fine">Probier zum Beispiel: GET auf 42, dann mit <code>If-None-Match</code>. POST ohne und mit Anmeldung. DELETE auf die ganze Sammlung.</p>
+</div>
+
+<h2 id="methoden">Methoden: sicher und idempotent</h2>
+<p>Die Methode sagt, was der Client vorhat. Zwei Eigenschaften sind dabei wichtiger, als sie klingen:</p>
+<ul>
+  <li><strong>Sicher</strong> heißt: Die Anfrage ändert nichts. Ein Crawler, ein Vorab-Laden im Browser oder ein Cache darf sie jederzeit ausführen.</li>
+  <li><strong>Idempotent</strong> heißt: Zweimal ausgeführt hat dieselbe Wirkung wie einmal. Das ist entscheidend bei Netzproblemen: Kam keine Antwort, darf man eine idempotente Anfrage gefahrlos wiederholen. Ein doppeltes <code>POST</code> dagegen legt womöglich zwei Bestellungen an.</li>
+</ul>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Methode</th><th>Bedeutung</th><th>sicher</th><th>idempotent</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET</code></td><td>lesen</td><td>✓</td><td>✓</td></tr>
+    <tr><td><code>HEAD</code></td><td>wie GET, aber nur die Header</td><td>✓</td><td>✓</td></tr>
+    <tr><td><code>POST</code></td><td>etwas Neues anlegen oder eine Aktion auslösen</td><td>–</td><td>–</td></tr>
+    <tr><td><code>PUT</code></td><td>eine Ressource vollständig ersetzen oder unter bekanntem Namen anlegen</td><td>–</td><td>✓</td></tr>
+    <tr><td><code>PATCH</code></td><td>eine Ressource teilweise ändern</td><td>–</td><td>nicht garantiert</td></tr>
+    <tr><td><code>DELETE</code></td><td>löschen</td><td>–</td><td>✓</td></tr>
+    <tr><td><code>OPTIONS</code></td><td>fragen, was erlaubt ist – etwa für CORS-Prüfungen im Browser</td><td>✓</td><td>✓</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Das sind Zusagen, keine Durchsetzung: Ein Server <em>kann</em> bei <code>GET</code> etwas löschen. Er sollte es nur nie tun – sonst räumt der nächste Suchmaschinen-Crawler die Datenbank leer.</p>
+
+<h2 id="status">Statuscodes</h2>
+<p>Die erste Ziffer sagt, wer gefragt ist: 2 – alles gut, 3 – woanders schauen, 4 – der Client hat etwas falsch gemacht, 5 – der Server hat ein Problem. Klick auf einen Code:</p>
+<div class="widget">
+  <div class="widget-title">Die wichtigsten Statuscodes</div>
+  <div class="codes" id="codes"></div>
+  <div class="code-info" id="codeInfo">Code anklicken.</div>
+</div>
+
+<h2 id="zustand">Zustandslos: Cookies und Tokens</h2>
+<p>Für den Server ist jede Anfrage eine neue Begegnung. Damit er wiedererkennt, wer fragt, muss der Client es bei jeder Anfrage mitschicken. Zwei Wege:</p>
+<div class="cards">
+  <div class="card"><div class="num">🍪</div><h4>Cookie</h4><p>Der Server antwortet mit <code>Set-Cookie: sitzung=a81f…</code>, der Browser schickt es bei jeder weiteren Anfrage an diese Domain automatisch mit. Wichtige Zusätze: <code>HttpOnly</code> (kein Zugriff per JavaScript), <code>Secure</code> (nur über HTTPS), <code>SameSite</code> (nicht bei Anfragen von fremden Seiten).</p></div>
+  <div class="card"><div class="num">🔑</div><h4>Token</h4><p>Der Client schickt bei jeder Anfrage <code>Authorization: Bearer …</code>. Typisch für APIs und Apps. Oft ein JWT – ein signierter Datensatz, den der Server ohne Datenbankabfrage prüfen kann.</p></div>
+  <div class="card"><div class="num">⇄</div><h4>Warum zustandslos gut ist</h4><p>Jeder Server kann jede Anfrage beantworten. Ein Lastverteiler kann sie beliebig verteilen, ein ausgefallener Server ist sofort ersetzbar.</p></div>
+</div>
+
+<h2 id="caching">Caching</h2>
+<p>Das Schnellste ist eine Anfrage, die gar nicht erst gestellt wird. HTTP hat dafür zwei Mechanismen, beide im Baukasten oben zu sehen:</p>
+<ul>
+  <li><strong>Frische:</strong> <code>Cache-Control: max-age=60</code> erlaubt jedem Cache, die Antwort 60 Sekunden lang ohne Rückfrage wiederzuverwenden. Für Dateien, die sich nie ändern – etwa <code>app.3f9c2a.js</code> mit dem Inhalt im Namen –, setzt man ein Jahr.</li>
+  <li><strong>Prüfung:</strong> Danach fragt der Client: „Ich habe Version <code>"v7"</code> – gibt es Neues?“ (<code>If-None-Match</code>). Ist nichts neu, antwortet der Server mit <code>304 Not Modified</code>, ganz ohne Inhalt. Das <strong>ETag</strong> ist dabei ein Versionsstempel, den der Server frei wählt, etwa eine Prüfsumme.</li>
+</ul>
+
+<h2 id="versionen">HTTP/1.1, HTTP/2, HTTP/3</h2>
+<p>HTTP/1.1 von 1997 hat ein Problem: Auf einer Verbindung geht immer nur eine Anfrage zur Zeit. Browser öffnen deshalb bis zu sechs Verbindungen pro Server. <strong>HTTP/2</strong> (2015) verpackt alles in binäre Rahmen und schickt beliebig viele Anfragen gleichzeitig über eine Verbindung. <strong>HTTP/3</strong> (2022) macht dasselbe über QUIC. Eine Webseite mit zwölf kleinen Dateien:</p>
+
+<div class="widget">
+  <div class="widget-title">Zwölf Dateien laden</div>
+  <div class="seg" id="wfV">
+    <button data-v="h1">HTTP/1.1 · 6 Verbindungen</button>
+    <button data-v="h2" aria-pressed="true">HTTP/2</button>
+    <button data-v="h3">HTTP/3</button>
+  </div>
+  <label class="toggle" style="margin-bottom:8px"><input type="checkbox" id="wfLoss"> Ein Paket von Datei 3 geht verloren</label>
+  <div class="sl"><span>Rundreise (RTT)</span><input type="range" id="wfRtt" min="20" max="200" step="10" value="100"><output id="wfRttO"></output></div>
+  <div class="wf" id="wf"></div>
+  <div class="legend"><span><i style="background:var(--line)"></i>Verbindungsaufbau (TCP + TLS bzw. QUIC)</span><span><i style="background:var(--accent)"></i>Anfrage und Antwort</span><span><i style="background:var(--bad)"></i>Warten auf das verlorene Paket</span></div>
+  <div class="wsum" id="wsum"></div>
+  <div class="wf-note" id="wfNote"></div>
+  <p class="fine">Stark vereinfacht: Bandbreite unbegrenzt, Server antwortet sofort, Verlust kostet eine zusätzliche Rundreise.</p>
+</div>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code>HttpClient client = HttpClient.newBuilder()
+        .connectTimeout(Duration.ofSeconds(<span class="s">3</span>))
+        .version(HttpClient.Version.HTTP_2)        <span class="c">// fällt bei Bedarf auf 1.1 zurück</span>
+        .build();                                   <span class="c">// einmal bauen, wiederverwenden: hält Verbindungen offen</span>
+
+HttpRequest req = HttpRequest.newBuilder(URI.create(<span class="s">"https://shop.example.com/api/bestellungen/42"</span>))
+        .header(<span class="s">"Accept"</span>, <span class="s">"application/json"</span>)
+        .timeout(Duration.ofSeconds(<span class="s">5</span>))
+        .GET()
+        .build();
+
+HttpResponse&lt;String&gt; res = client.send(req, HttpResponse.BodyHandlers.ofString());
+<span class="k">if</span> (res.statusCode() != <span class="s">200</span>) {                  <span class="c">// 404 oder 500 werfen KEINE Exception</span>
+    <span class="k">throw new</span> IllegalStateException(<span class="s">"HTTP "</span> + res.statusCode());
+}
+System.out.println(res.version() + <span class="s">" "</span> + res.headers().firstValue(<span class="s">"etag"</span>).orElse(<span class="s">"-"</span>));</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Stolperstein</th><th>Was dahintersteckt</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Ein Client pro Anfrage</strong></td><td>Jeder neue <code>HttpClient</code> baut eigene Verbindungen auf – samt Handshakes. Einen Client für die ganze Anwendung halten.</td></tr>
+    <tr><td><strong>Fehler-Status ohne Exception</strong></td><td>Der JDK-Client wirft nur bei Netzproblemen. Den Statuscode muss man selbst prüfen – anders als etwa bei Springs <code>RestClient</code>, der bei 4xx und 5xx Exceptions wirft.</td></tr>
+    <tr><td><strong>Header-Namen</strong></td><td>Groß- und Kleinschreibung ist egal. In HTTP/2 und HTTP/3 werden sie immer kleingeschrieben übertragen.</td></tr>
+    <tr><td><strong>Wiederholen</strong></td><td>Nur idempotente Anfragen automatisch wiederholen. Für <code>POST</code> hilft ein Idempotenz-Schlüssel im Header, den der Server sich merkt.</td></tr>
+    <tr><td><strong>Roh anschauen</strong></td><td><code>curl -v https://…</code> zeigt Anfrage und Antwort samt Headern – meist der schnellste Weg, ein API-Problem einzugrenzen.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„POST ist sicherer als GET.“</b> – Ohne Verschlüsselung kann man beides mitlesen, mit HTTPS keins von beiden. Der echte Unterschied: GET-Parameter landen in Browserverlauf und Server-Logs. Passwörter gehören deshalb nie in die URL.</div>
+  <div><b>„Status 200 heißt: hat geklappt.“</b> – Manche APIs antworten auch bei Fehlern mit 200 und einer Fehlermeldung im Body. Guter Stil ist das nicht, aber man muss damit rechnen.</div>
+  <div><b>„PUT und POST sind austauschbar.“</b> – Der Unterschied zeigt sich bei Wiederholungen: PUT ist idempotent, POST nicht.</div>
+  <div><b>„HTTPS ist ein anderes Protokoll.“</b> – Es ist dasselbe HTTP, nur durch eine TLS-Verschlüsselung getunnelt. Mehr dazu im Eintrag zu TLS.</div>
+  <div><b>„HTTP/2 ist immer schneller.“</b> – Meist ja. Auf Verbindungen mit vielen Paketverlusten kann es aber schlechter sein als mehrere HTTP/1.1-Verbindungen, weil ein Verlust alle Anfragen auf der einen TCP-Verbindung aufhält.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/tcp-ip/">Schichtenmodell und TCP/IP</a>
+  <a href="/it-konzepte/dns/">DNS</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

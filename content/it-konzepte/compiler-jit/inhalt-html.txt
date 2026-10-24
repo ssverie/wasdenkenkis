@@ -1,0 +1,158 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein Prozessor versteht nur seine eigenen Maschinenbefehle. Ein <strong>Compiler</strong> übersetzt ein ganzes Programm vorab in solche Befehle – so arbeiten C, Rust und Go. Ein <strong>Interpreter</strong> liest das Programm zur Laufzeit und führt es Schritt für Schritt aus – flexibel, aber langsamer. Java geht einen dritten Weg: <code>javac</code> übersetzt in <strong>Bytecode</strong>, die JVM interpretiert ihn zunächst und übersetzt dann die häufig benutzten Teile <strong>zur Laufzeit</strong> in Maschinencode – das ist der <strong>JIT-Compiler</strong>.</p>
+<p>Der Vorteil: Der JIT sieht, wie das Programm tatsächlich läuft, und optimiert genau dafür – oft besser, als ein Compiler vorab es könnte. Der Nachteil: Ein Java-Programm braucht eine Aufwärmphase. Wo schneller Start zählt, gibt es mit <strong>GraalVM Native Image</strong> und <strong>Projekt Leyden</strong> Vorab-Übersetzung auch für Java.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#phasen">Was ein Compiler tut</a></li>
+  <li><a href="#interpreter">Compiler, Interpreter und alles dazwischen</a></li>
+  <li><a href="#hotspot">Was in der JVM passiert</a></li>
+  <li><a href="#optimierungen">Was der JIT wegoptimiert</a></li>
+  <li><a href="#aot">Vorab übersetzen: Native Image und Leyden</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="phasen">Was ein Compiler tut</h2>
+<p>Jeder Compiler – von <code>javac</code> bis zum C-Compiler – arbeitet in denselben Grundschritten:</p>
+<div class="pipeline">
+  <div class="stage"><b>Lexer</b>Zeichen → Wörter (Token)</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>Parser</b>Token → Syntaxbaum</div>
+  <div class="arrow">→</div>
+  <div class="stage"><b>Prüfung</b>Typen, Namen, Regeln</div>
+  <div class="arrow">→</div>
+  <div class="stage key"><b>Optimierung</b>umformen, vereinfachen</div>
+  <div class="arrow">→</div>
+  <div class="stage out"><b>Code&shy;erzeugung</b>Befehle für das Ziel</div>
+</div>
+<p>Hier ist ein echter, winziger Compiler für Rechenausdrücke. Er erzeugt Java-Bytecode, wie <code>javac</code> es für eine Methode <code>static int f(int a, int b, int c) { return …; }</code> täte, und führt ihn auf einer simulierten Stackmaschine aus. Tipp einen Ausdruck ein:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein Mini-Compiler</div>
+  <input class="inp" id="cIn" value="a * (b + 2) - c" aria-label="Ausdruck" spellcheck="false">
+  <div class="quick"><button>a + b * c</button><button>(a + b) * c</button><button>a * (b + 2) - c</button><button>100 / (a - b)</button><button>a + * b</button></div>
+  <div class="vars">a = <input type="number" id="va" value="7"> b = <input type="number" id="vb" value="3"> c = <input type="number" id="vc" value="5"></div>
+  <div class="lbl">1 · Lexer: Token</div>
+  <div class="toks" id="cTok"></div>
+  <div class="lbl">2 · Parser: Syntaxbaum</div>
+  <svg id="ast" viewBox="0 0 520 200" role="img" aria-label="Syntaxbaum"></svg>
+  <div class="cg">
+    <div><div class="lbl">3 · Codeerzeugung: Bytecode</div><div class="tbl-wrap" style="margin:0"><table class="bc" id="cBc"></table></div></div>
+    <div><div class="lbl">4 · Ausführung auf der Stackmaschine</div><div class="tbl-wrap" style="margin:0"><table class="bc" id="cRun"></table></div></div>
+  </div>
+  <div class="cres" id="cRes"></div>
+</div>
+
+<p>Der Parser kennt die Vorrangregeln – Punkt vor Strich, Klammern zuerst – und baut daraus einen Baum. Die Codeerzeugung läuft den Baum von unten nach oben ab: erst beide Operanden auf den Stapel, dann der Operator. Genau so sieht echter Java-Bytecode aus. Und ein Ausdruck wie <code>a + * b</code> scheitert schon am Parser – das ist ein Syntaxfehler, lange bevor irgendetwas läuft.</p>
+
+<h2 id="interpreter">Compiler, Interpreter und alles dazwischen</h2>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th></th><th>Vorab-Compiler (AOT)</th><th>Interpreter</th><th>JIT-Compiler</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Wann übersetzt?</strong></td><td>beim Bauen</td><td>gar nicht – führt direkt aus</td><td>zur Laufzeit, nur was häufig läuft</td></tr>
+    <tr><td><strong>Start</strong></td><td>sofort schnell</td><td>sofort</td><td>erst langsam, dann schnell</td></tr>
+    <tr><td><strong>Höchstleistung</strong></td><td>sehr gut</td><td>deutlich langsamer</td><td>sehr gut, teils besser als AOT</td></tr>
+    <tr><td><strong>Plattform</strong></td><td>ein Binärprogramm pro Prozessor und Betriebssystem</td><td>überall, wo der Interpreter läuft</td><td>überall, wo die VM läuft</td></tr>
+    <tr><td><strong>Beispiele</strong></td><td>C, C++, Rust, Go, GraalVM Native Image</td><td>Shell-Skripte, klassisch Python</td><td>Java (HotSpot), JavaScript (V8), C# (.NET)</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Die Grenzen verschwimmen: Python übersetzt intern ebenfalls in Bytecode, und seit Python 3.13 gibt es einen experimentellen JIT. .NET kann vorab und zur Laufzeit übersetzen. Und auch die JVM beginnt mit einem Interpreter.</p>
+
+<h2 id="hotspot">Was in der JVM passiert</h2>
+<p>Die Standard-JVM heißt <strong>HotSpot</strong> – nach ihrer Kernidee: die heißen Stellen finden. Sie startet jede Methode im <strong>Interpreter</strong> und zählt mit, wie oft sie aufgerufen wird und wie oft ihre Schleifen laufen. Wird eine Methode warm, übersetzt sie der schnelle Compiler <strong>C1</strong>, der nebenbei Profildaten sammelt: Welche Typen kommen hier vor? Welcher Zweig wird genommen? Wird sie richtig heiß, übersetzt sie der optimierende Compiler <strong>C2</strong> – mit allem, was die Profildaten erlauben. Das nennt man <strong>Tiered Compilation</strong>.</p>
+
+<div class="widget">
+  <div class="widget-title">Eine Methode wird heiß</div>
+  <div class="controls" style="margin-top:0">
+    <button class="primary" id="jRun">Aufrufe laufen lassen</button>
+    <button id="jDeopt">Plötzlich ein neuer Typ</button>
+    <button id="jReset">Neustart der JVM</button>
+  </div>
+  <svg id="jit" viewBox="0 0 620 220" role="img" aria-label="Zeit pro Aufruf über die Anzahl der Aufrufe"></svg>
+  <div class="jit-stats" id="jS"></div>
+  <div class="jit-note" id="jN"></div>
+  <p class="fine">Modellhaft. Die Schwellen liegen in echt bei einigen Hundert (C1) bzw. einigen Tausend Aufrufen (C2) und hängen auch von Schleifendurchläufen ab; die Zeiten sind Größenordnungen.</p>
+</div>
+
+<h2 id="optimierungen">Was der JIT wegoptimiert</h2>
+<p>Der JIT-Compiler darf <em>spekulieren</em>: Er optimiert für das, was er bisher gesehen hat, und lässt eine Falltür offen. Trifft die Annahme irgendwann nicht mehr zu, wird der optimierte Code verworfen und die Methode läuft wieder im Interpreter – das ist die <strong>Deoptimierung</strong> aus dem Widget. Einige seiner wichtigsten Tricks, sinngemäß in Java dargestellt:</p>
+
+<div class="widget">
+  <div class="widget-title">Vorher und nachher</div>
+  <div class="seg" id="oSel">
+    <button data-o="inline" aria-pressed="true">Inlining</button>
+    <button data-o="devirt">Devirtualisierung</button>
+    <button data-o="escape">Escape-Analyse</button>
+    <button data-o="fold">Konstanten falten</button>
+    <button data-o="bounds">Bereichsprüfung</button>
+  </div>
+  <div class="opt">
+    <div><h4>Was du schreibst</h4><pre id="oA"></pre></div>
+    <div><h4>Was der JIT daraus macht</h4><pre id="oB"></pre></div>
+  </div>
+  <div class="opt-note" id="oN"></div>
+</div>
+
+<h2 id="aot">Vorab übersetzen: Native Image und Leyden</h2>
+<p>Die Aufwärmphase ist auf einem Server, der wochenlang läuft, egal. In einem Container, der für jede Anfrage neu startet, oder bei einem Kommandozeilenwerkzeug ist sie ein Problem. Dafür gibt es zwei Wege:</p>
+<div class="cards">
+  <div class="card"><div class="num">N</div><h4>GraalVM Native Image</h4><p>Übersetzt die Anwendung samt benötigter JDK-Teile vorab in ein einzelnes Programm. Start in Millisekunden, wenig Speicher. Preis: Beim Bauen muss alles bekannt sein – Reflection, dynamisches Laden und Proxys brauchen Konfiguration. Spring Boot und Quarkus unterstützen das.</p></div>
+  <div class="card"><div class="num">L</div><h4>Projekt Leyden</h4><p>Der Weg im Standard-JDK: Ein Trainingslauf zeichnet auf, welche Klassen geladen und welche Methoden heiß werden; beim nächsten Start liegt das in einem AOT-Cache bereit. Seit Java 24 werden Klassen vorab geladen und verknüpft, seit Java 25 auch Profile mitgenommen. Volle Java-Dynamik bleibt erhalten.</p></div>
+  <div class="card"><div class="num">⚖</div><h4>Abwägung</h4><p>Native Image: bester Start, kleinster Speicher, aber Einschränkungen und lange Bauzeit. JIT: beste Höchstleistung bei langer Laufzeit, volle Flexibilität. Leyden: ein Mittelweg ohne Einschränkungen.</p></div>
+</div>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c"># Bytecode einer Klasse ansehen</span>
+javap -c -p MeineKlasse.class
+
+<span class="c"># zusehen, was der JIT übersetzt</span>
+java -XX:+PrintCompilation -jar app.jar
+
+<span class="c"># nur Interpreter – zum Staunen, wie viel der JIT ausmacht</span>
+java -Xint -jar app.jar
+
+<span class="c"># nur C1 – startet schneller, erreicht aber nicht die Spitzenleistung</span>
+java -XX:TieredStopAtLevel=1 -jar app.jar
+
+<span class="c"># Leyden: Trainingslauf, dann mit AOT-Cache starten (Java 25)</span>
+java -XX:AOTCacheOutput=app.aot -jar app.jar
+java -XX:AOTCache=app.aot -jar app.jar</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Folge für den Alltag</th><th>Warum</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Benchmarks nur mit JMH</strong></td><td>Ohne Aufwärmen misst man den Interpreter. Und der JIT entfernt Code, dessen Ergebnis niemand benutzt – dann misst man gar nichts. JMH kümmert sich um beides.</td></tr>
+    <tr><td><strong>Lesbar schreiben, nicht „schlau“</strong></td><td>Kleine Methoden, Getter, Interfaces kosten nach dem Inlining nichts. Handoptimierungen wie manuell entrollte Schleifen helfen dem JIT selten und dem Leser nie.</td></tr>
+    <tr><td><strong>Die ersten Anfragen sind langsamer</strong></td><td>Nach einem Deployment antwortet ein Dienst einige Sekunden lang träger. Lastverteiler mit langsamem Hochfahren oder ein kurzes Aufwärmen vor der Freigabe helfen.</td></tr>
+    <tr><td><strong>Gleichförmige Typen sind schneller</strong></td><td>Sieht eine Aufrufstelle immer dieselbe Klasse, wird der Aufruf direkt und eingebettet. Bei vielen verschiedenen Typen an derselben Stelle bleibt es ein echter virtueller Aufruf.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Java wird interpretiert, deshalb ist es langsam.“</b> – Nur in den ersten Sekunden. Heißer Code läuft als optimierter Maschinencode, oft auf Augenhöhe mit C++.</div>
+  <div><b>„Ein Native Image ist immer schneller.“</b> – Es startet schneller und braucht weniger Speicher. Die Spitzenleistung eines lange laufenden Dienstes erreicht der JIT oft besser, weil er mit echten Laufzeitdaten optimiert.</div>
+  <div><b>„<code>final</code> macht Methoden schneller.“</b> – Der JIT erkennt selbst, ob eine Methode überschrieben wird, und bindet sie direkt ein. <code>final</code> ist ein Werkzeug fürs Design, nicht für die Geschwindigkeit.</div>
+  <div><b>„Mit <code>System.nanoTime()</code> um eine Schleife misst man die Laufzeit.“</b> – Man misst Interpreter, Übersetzung, Garbage Collection und womöglich wegoptimierten Code durcheinander.</div>
+  <div><b>„Kompilierte Programme brauchen keine Laufzeitumgebung.“</b> – Auch ein C-Programm braucht seine Standardbibliothek, ein Go-Programm hat einen Garbage Collector eingebaut. Der Unterschied ist, wie viel davon man sieht.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/datenstrukturen/">Datenstrukturen</a>
+  <a href="/it-konzepte/programmierparadigmen/">Programmierparadigmen</a>
+  <a href="/it-konzepte/virtualisierung-container/">Virtualisierung und Container</a>
+  <a href="/it-konzepte/maschinensprache/">Maschinensprache</a>
+  <a href="/it-konzepte/formale-sprachen/">Formale Sprachen und Automaten</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

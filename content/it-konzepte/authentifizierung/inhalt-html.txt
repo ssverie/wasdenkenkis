@@ -1,0 +1,161 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Authentifizierung</strong> klärt, <em>wer</em> jemand ist. <strong>Autorisierung</strong> klärt, <em>was</em> er darf. Nachweisen kann man sich durch etwas, das man <strong>weiß</strong> (Passwort), <strong>hat</strong> (Handy, Sicherheitsschlüssel) oder <strong>ist</strong> (Fingerabdruck). Zwei davon zusammen ergeben Mehr-Faktor-Authentifizierung.</p>
+<p>Für Entwickler zählen vier Dinge: Passwörter nur mit einer <strong>absichtlich langsamen Hashfunktion</strong> speichern. Nach dem Login Sitzung oder <strong>Token</strong> sicher handhaben. Für „Anmelden mit …“ und API-Zugriffe <strong>OAuth 2</strong> und <strong>OpenID Connect</strong> verstehen. Und <strong>Passkeys</strong> kennen – sie ersetzen Passwörter durch Schlüsselpaare und sind immun gegen Phishing.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#faktoren">Wer bist du?</a></li>
+  <li><a href="#passwoerter">Passwörter speichern</a></li>
+  <li><a href="#sitzung">Nach dem Login: Sitzung oder Token</a></li>
+  <li><a href="#oauth">OAuth 2 und OpenID Connect</a></li>
+  <li><a href="#passkeys">Passkeys: Anmelden ohne Passwort</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="faktoren">Wer bist du?</h2>
+<div class="cards">
+  <div class="card"><div class="num">🧠</div><h4>Wissen</h4><p>Passwort, PIN. Kann erraten, ausgespäht, weitergegeben oder auf einer gefälschten Seite eingegeben werden.</p></div>
+  <div class="card"><div class="num">📱</div><h4>Besitz</h4><p>Handy mit Authenticator-App, Hardware-Schlüssel, Chipkarte. Ein Angreifer muss es physisch oder technisch in die Hand bekommen.</p></div>
+  <div class="card"><div class="num">👆</div><h4>Sein</h4><p>Fingerabdruck, Gesicht. Meist entsperrt es nur lokal ein Gerät, auf dem der eigentliche Schlüssel liegt.</p></div>
+</div>
+<p>Nicht jede Zwei-Faktor-Lösung ist gleich gut. <strong>SMS-Codes</strong> lassen sich durch das Umleiten der Telefonnummer abfangen (SIM-Swapping). <strong>Einmalcodes aus einer App</strong> (TOTP: aus einem gemeinsamen Geheimnis und der Uhrzeit berechnet, alle 30 Sekunden neu) sind besser – aber ein Nutzer kann sie auf einer Phishing-Seite eintippen. Wirklich phishing-resistent sind nur <strong>Hardware-Schlüssel und Passkeys</strong>.</p>
+
+<h2 id="passwoerter">Passwörter speichern</h2>
+<p>Die Grundregel: Ein Server speichert nie das Passwort selbst, sondern einen <strong>Hash</strong>. Beim Login wird die Eingabe gehasht und verglichen. Aber welcher Hash? Was passiert, wenn die Datenbank gestohlen wird – und das passiert ständig – zeigt das Experiment:</p>
+
+<div class="widget">
+  <div class="widget-title">Die gestohlene Benutzertabelle</div>
+  <div class="seg" id="pwM">
+    <button data-m="plain">Klartext</button>
+    <button data-m="sha">SHA-256</button>
+    <button data-m="salt">SHA-256 mit Salt</button>
+    <button data-m="bcrypt" aria-pressed="true">bcrypt</button>
+    <button data-m="argon">Argon2id</button>
+  </div>
+  <div class="tbl-wrap" style="margin:0"><table class="pwdb" id="pwT"></table></div>
+  <div class="sl"><span>Wie lange hält ein Passwort dieser Art?</span><select id="pwKind">
+    <option value="dict">Wort + Jahreszahl („sommer2026“)</option>
+    <option value="l6">6 Kleinbuchstaben, zufällig</option>
+    <option value="m8">8 Zeichen, zufällig aus allem</option>
+    <option value="w4">4 zufällige Wörter</option>
+    <option value="m12" selected>12 Zeichen, zufällig aus allem</option>
+  </select></div>
+  <div class="crack" id="pwC"></div>
+  <div class="pw-note" id="pwN"></div>
+  <p class="fine">Angreifer mit einer einzelnen Hochleistungs-Grafikkarte; Geschwindigkeiten als grobe Größenordnung. Durchschnittliche Zeit = halber Suchraum geteilt durch Versuche pro Sekunde.</p>
+</div>
+
+<p>Drei Lehren daraus:</p>
+<ul>
+  <li><strong>Salt:</strong> Ein zufälliger Wert pro Nutzer, der mitgehasht und neben dem Hash gespeichert wird. Gleiche Passwörter ergeben dann verschiedene Hashes, und vorberechnete Tabellen werden nutzlos. Der Angreifer muss jedes Konto einzeln angreifen.</li>
+  <li><strong>Langsam ist gut:</strong> SHA-256 ist für Geschwindigkeit gebaut – genau das Falsche für Passwörter. <strong>bcrypt</strong>, <strong>scrypt</strong>, <strong>PBKDF2</strong> und <strong>Argon2id</strong> sind absichtlich teuer, mit einstellbarem Aufwand. Argon2id braucht zusätzlich viel Speicher pro Versuch, was Grafikkarten ausbremst. Für einen Nutzer ist ein Login von 100 Millisekunden unmerklich – für einen Angreifer ist es das Ende.</li>
+  <li><strong>Länge schlägt Komplexität:</strong> Die aktuelle NIST-Empfehlung verlangt lange Passwörter statt Sonderzeichen-Regeln, verzichtet auf erzwungene regelmäßige Wechsel und prüft neue Passwörter gegen Listen bereits geleakter Passwörter.</li>
+</ul>
+
+<h2 id="sitzung">Nach dem Login: Sitzung oder Token</h2>
+<p>HTTP ist <a href="/it-konzepte/http/">zustandslos</a> – der Server muss den Nutzer bei jeder Anfrage wiedererkennen. Zwei Wege:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th></th><th>Sitzung (Session)</th><th>Token (z. B. JWT)</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Was der Client hat</strong></td><td>eine zufällige Sitzungs-ID im Cookie</td><td>ein signiertes Dokument mit Nutzer, Rechten und Ablaufzeit</td></tr>
+    <tr><td><strong>Was der Server prüft</strong></td><td>schlägt die ID im Sitzungsspeicher nach</td><td>prüft nur die Signatur – keine Datenbank nötig</td></tr>
+    <tr><td><strong>Abmelden, sperren</strong></td><td>sofort: Eintrag löschen</td><td>schwierig: Das Token bleibt bis zum Ablauf gültig</td></tr>
+    <tr><td><strong>Gut für</strong></td><td>klassische Web-Anwendungen</td><td>APIs, Microservices, mobile Apps</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Weil Tokens nicht zurückgerufen werden können, gibt man ihnen eine kurze Laufzeit – Minuten – und dazu ein langlebiges <strong>Refresh-Token</strong>, mit dem der Client sich neue holt. Das Refresh-Token kann der Server sperren.</p>
+
+<h3>Was in einem JWT steht</h3>
+<p>Ein <strong>JSON Web Token</strong> besteht aus drei Base64-kodierten Teilen, getrennt durch Punkte: Kopf, Inhalt, Signatur. Der Inhalt ist <em>nicht verschlüsselt</em> – jeder kann ihn lesen. Geschützt ist er nur gegen Veränderung:</p>
+
+<div class="widget">
+  <div class="widget-title">Ein JWT bauen und prüfen</div>
+  <div class="jwt" id="jwt"></div>
+  <div class="jparts">
+    <pre id="jh"></pre>
+    <pre id="jp"></pre>
+  </div>
+  <div class="jctl">
+    <label class="toggle"><input type="checkbox" id="jAdmin"> <span>Angreifer ändert im Inhalt <code>"rolle": "kunde"</code> zu <code>"admin"</code></span></label>
+    <label class="toggle"><input type="checkbox" id="jResign"> <span>… und signiert neu – mit einem geratenen Schlüssel</span></label>
+    <label class="toggle"><input type="checkbox" id="jExp"> <span>Das Token ist abgelaufen</span></label>
+  </div>
+  <div class="jres" id="jRes"></div>
+  <p class="fine">Echte HMAC-SHA256-Signatur, live berechnet. Der Server kennt das Geheimnis „server-geheimnis“.</p>
+</div>
+
+<h2 id="oauth">OAuth 2 und OpenID Connect</h2>
+<p>„Anmelden mit Google“, „Diese App möchte auf deinen Kalender zugreifen“ – dahinter steckt <strong>OAuth 2</strong>. Sein Zweck ist <em>delegierter Zugriff</em>: Eine Anwendung bekommt eingeschränkte Rechte, ohne je das Passwort zu sehen. Früher gab man Drittanbietern sein Passwort – und damit alles. <strong>OpenID Connect</strong> (OIDC) setzt darauf auf und liefert zusätzlich ein <strong>ID-Token</strong>, das sagt, wer sich angemeldet hat. Erst damit wird OAuth zum Login.</p>
+
+<div class="widget">
+  <div class="widget-title">Authorization Code Flow mit PKCE</div>
+  <svg id="oa" viewBox="0 0 620 270" role="img" aria-label="Ablauf zwischen Nutzer, App, Autorisierungsserver und API"></svg>
+  <div class="oa-txt" id="oaTxt"></div>
+  <div class="controls">
+    <button id="oaPrev">← Zurück</button>
+    <button class="primary" id="oaNext">Weiter →</button>
+  </div>
+</div>
+
+<p>Wichtige Begriffe auf einen Blick: Der <strong>Scope</strong> legt fest, was die App darf – etwa nur Kalender lesen. Das <strong>Access-Token</strong> öffnet die API, das <strong>ID-Token</strong> sagt der App, wer der Nutzer ist, das <strong>Refresh-Token</strong> holt neue Access-Tokens. Bekannte Autorisierungsserver sind Keycloak, Microsoft Entra ID, Okta, Auth0 sowie Google und Apple für Endkunden.</p>
+
+<h2 id="passkeys">Passkeys: Anmelden ohne Passwort</h2>
+<p><strong>Passkeys</strong> (technisch: WebAuthn und FIDO2) ersetzen das Passwort durch ein Schlüsselpaar, wie in der <a href="/it-konzepte/kryptografie/">Kryptografie</a> beschrieben. Bei der Registrierung erzeugt das Gerät für genau diese Website ein Paar; der Server bekommt nur den öffentlichen Schlüssel. Beim Login schickt der Server eine Zufallszahl, das Gerät signiert sie mit dem privaten Schlüssel – freigegeben per Fingerabdruck, Gesicht oder PIN.</p>
+<div class="cards">
+  <div class="card"><div class="num">🎣</div><h4>Phishing-sicher</h4><p>Der Schlüssel ist an die Domain gebunden. Auf <code>bank-login.example</code> funktioniert der Passkey von <code>bank.example</code> schlicht nicht – kein Nutzer kann sich vertun.</p></div>
+  <div class="card"><div class="num">🗄</div><h4>Nichts zu stehlen</h4><p>Der Server speichert nur öffentliche Schlüssel. Ein Datenbank-Leck verrät nichts, womit man sich anmelden könnte.</p></div>
+  <div class="card"><div class="num">☁</div><h4>Synchronisiert</h4><p>Passkeys werden über den Passwortmanager von Apple, Google, Microsoft oder anderen auf die eigenen Geräte verteilt – ein verlorenes Handy heißt nicht mehr: Konto weg.</p></div>
+</div>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<pre><code><span class="c">// Passwörter: Spring Security</span>
+PasswordEncoder enc = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+String gespeichert = enc.encode(<span class="s">"sommer2026"</span>);   <span class="c">// "{bcrypt}$2a$10$Xk9…" – Verfahren, Kosten, Salt, Hash</span>
+<span class="k">boolean</span> ok = enc.matches(eingabe, gespeichert);
+
+<span class="c">// API als OAuth-Resource-Server: Tokens prüft Spring anhand des Ausstellers</span>
+<span class="c">// application.yml:</span>
+<span class="c">//   spring.security.oauth2.resourceserver.jwt.issuer-uri: https://login.example.com/realms/shop</span>
+
+@GetMapping(<span class="s">"/api/bestellungen"</span>)
+@PreAuthorize(<span class="s">"hasAuthority('SCOPE_bestellungen.lesen')"</span>)
+List&lt;Bestellung&gt; meine(@AuthenticationPrincipal Jwt jwt) {
+    <span class="k">return</span> service.fuerKunde(jwt.getSubject());
+}</code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Regel</th><th>Warum</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Nicht selbst bauen</strong></td><td>Login, Passwort-Reset, Token-Prüfung sind voller Fallstricke. Spring Security und ein fertiger Autorisierungsserver wie Keycloak nehmen das ab.</td></tr>
+    <tr><td><strong>Präfix im Hash</strong></td><td>Der <code>{bcrypt}</code>-Präfix des <code>DelegatingPasswordEncoder</code> erlaubt, später auf ein stärkeres Verfahren umzusteigen: Alte Hashes funktionieren weiter und werden beim nächsten Login erneuert.</td></tr>
+    <tr><td><strong>Token immer vollständig prüfen</strong></td><td>Signatur, Aussteller, Zielgruppe (<code>aud</code>), Ablaufzeit. Und nur die erwarteten Algorithmen akzeptieren – nie <code>"alg": "none"</code>.</td></tr>
+    <tr><td><strong>Tokens im Browser</strong></td><td>Nicht in <code>localStorage</code> – dort kann jedes eingeschleuste Skript sie lesen. Besser ein <code>HttpOnly</code>-Cookie oder ein Backend, das die Tokens für den Browser verwahrt.</td></tr>
+    <tr><td><strong>Gleiche Fehlermeldung</strong></td><td>„Benutzer oder Passwort falsch“ – nie verraten, welches von beiden. Sonst lässt sich testen, welche Konten existieren.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Wir speichern die Passwörter verschlüsselt.“</b> – Dann kann sie jeder mit dem Schlüssel lesen. Richtig ist ein langsamer Hash mit Salt.</div>
+  <div><b>„Ein JWT ist verschlüsselt.“</b> – Es ist nur signiert. Den Inhalt kann jeder dekodieren. Persönliche Daten gehören nicht hinein.</div>
+  <div><b>„OAuth ist ein Login-Verfahren.“</b> – OAuth regelt Zugriffsrechte. Wer sich angemeldet hat, sagt erst OpenID Connect. Ein Access-Token als Login-Beweis zu benutzen, ist ein bekannter Fehler.</div>
+  <div><b>„Sonderzeichen-Regeln machen Passwörter sicher.“</b> – Sie führen zu „Sommer2026!“ – komplex aussehend, aber leicht zu erraten. Länge und echter Zufall zählen: Vier zufällig gewürfelte Wörter sind etwa so stark wie acht völlig zufällige Zeichen und viel leichter zu merken; fünf Wörter sind deutlich stärker.</div>
+  <div><b>„Nach dem Abmelden ist das Token ungültig.“</b> – Nur wenn der Server eine Sperrliste führt. Ein gestohlenes JWT funktioniert sonst bis zu seiner Ablaufzeit.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/kryptografie/">Kryptografie-Grundlagen</a>
+  <a href="/it-konzepte/tls/">TLS und Zertifikate</a>
+  <a href="/it-konzepte/http/">HTTP</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

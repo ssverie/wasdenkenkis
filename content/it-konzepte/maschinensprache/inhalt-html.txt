@@ -1,0 +1,140 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Maschinensprache</strong> ist die Sprache, die der Prozessor direkt ausführt: Jeder Befehl ist eine Zahl, die eine einfache Operation codiert – zwei Register addieren, ein Wort aus dem Speicher laden, zu einer Adresse springen. Ein <strong>Programmzähler</strong> zeigt auf den nächsten Befehl; die CPU holt ihn, dekodiert ihn, führt ihn aus, und alles beginnt von vorn.</p>
+<p>Alles, was höhere Sprachen bieten, entsteht aus wenigen Mustern: <strong>Schleifen</strong> und <strong>if</strong> aus bedingten Sprüngen, <strong>Methodenaufrufe</strong> aus einem Sprung, der sich die Rücksprungadresse merkt, <strong>Arrays und Zeiger</strong> aus Registern, die Adressen enthalten. Die JVM führt Bytecode aus, der ganz ähnlich aussieht – nur als Stapelmaschine statt mit Registern.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#maschine">Eine Lehrmaschine</a></li>
+  <li><a href="#simulator">Die Maschine zum Mitklicken</a></li>
+  <li><a href="#muster">Von Java zu Maschinenbefehlen</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="maschine">Eine Lehrmaschine</h2>
+<p>Echte Befehlssätze wie x86-64 haben tausende Varianten. Zum Verstehen reicht eine Maschine nach dem Vorbild der <strong>TOY</strong>-Maschine von Sedgewick und Wayne: 256 Speicherwörter zu je 16 Bit (Adressen 00 bis FF, hexadezimal), 16 Register R0 bis RF, wobei R0 immer 0 enthält, und ein 8-Bit-Programmzähler. Jeder Befehl ist ein 16-Bit-Wort aus vier Hex-Ziffern:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Ziffer 1</th><th>Bedeutung</th><th>Ziffer 1</th><th>Bedeutung</th></tr></thead>
+  <tbody>
+    <tr><td><code>0</code></td><td>anhalten</td><td><code>8 d aa</code></td><td>Rd ← M[aa] – aus dem Speicher laden</td></tr>
+    <tr><td><code>1 d s t</code></td><td>Rd ← Rs + Rt</td><td><code>9 d aa</code></td><td>M[aa] ← Rd – in den Speicher schreiben</td></tr>
+    <tr><td><code>2 d s t</code></td><td>Rd ← Rs − Rt</td><td><code>A d _ t</code></td><td>Rd ← M[Rt] – indirekt laden</td></tr>
+    <tr><td><code>3 d s t</code></td><td>Rd ← Rs &amp; Rt</td><td><code>B d _ t</code></td><td>M[Rt] ← Rd – indirekt schreiben</td></tr>
+    <tr><td><code>4 d s t</code></td><td>Rd ← Rs ^ Rt</td><td><code>C d aa</code></td><td>wenn Rd = 0: springe nach aa</td></tr>
+    <tr><td><code>5 d s t</code></td><td>Rd ← Rs &lt;&lt; Rt</td><td><code>D d aa</code></td><td>wenn Rd &gt; 0: springe nach aa</td></tr>
+    <tr><td><code>6 d s t</code></td><td>Rd ← Rs &gt;&gt; Rt</td><td><code>E d _ _</code></td><td>springe zur Adresse in Rd</td></tr>
+    <tr><td><code>7 d aa</code></td><td>Rd ← aa – Konstante laden</td><td><code>F d aa</code></td><td>Rd ← PC, springe nach aa – Aufruf</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Das Wort <code>1CAB</code> heißt also: RC ← RA + RB. Und <code>C013</code> heißt: wenn R0 = 0, springe nach 13 – da R0 immer 0 ist, ein unbedingter Sprung. Schreibt man nach Adresse FF, erscheint der Wert in der Ausgabe.</p>
+
+<h2 id="simulator">Die Maschine zum Mitklicken</h2>
+<p>Drei Programme stehen ab Adresse 10, ihre Daten ab 00. Links der Speicher mit dem dekodierten Befehl jeder Zeile, rechts Register, Programmzähler (PC) und Befehlsregister (IR):</p>
+
+<div class="widget">
+  <div class="widget-title">16 Register, 256 Wörter</div>
+  <div class="seg" id="tyP">
+    <button data-k="sum" aria-pressed="true">Schleife: 1 + … + n</button>
+    <button data-k="call">Methode: Quadrat</button>
+    <button data-k="arr">Array summieren</button>
+  </div>
+  <div class="toy">
+    <div><div class="lbl">Speicher</div><div class="mem" id="tyM"></div></div>
+    <div>
+      <div class="lbl">Steuerung</div>
+      <div class="pcbox" id="tyPC"></div>
+      <div class="lbl">Register</div>
+      <div class="regs" id="tyR"></div>
+      <div class="lbl">Ausgabe (M[FF])</div>
+      <div class="out" id="tyO"></div>
+    </div>
+  </div>
+  <div class="ctl"><button id="tyStep">Schritt</button><button id="tyRun">Bis zum Ende</button><button id="tyReset">Zurück</button><span id="tyC"></span></div>
+  <div class="note" id="tyN"></div>
+  <details class="edit"><summary>Programm bearbeiten</summary><textarea class="src" id="tySrc" spellcheck="false" aria-label="Speicherinhalt"></textarea><p class="fine">Format: <code>Adresse: Wort</code> in Hex, eine Zeile pro Wort; alles nach <code>//</code> ist Kommentar. Änderungen werden sofort geladen.</p></details>
+</div>
+
+<h2 id="muster">Von Java zu Maschinenbefehlen</h2>
+<p>Ein Compiler übersetzt jedes Sprachkonstrukt in ein festes Muster. Wähle eines:</p>
+
+<div class="widget">
+  <div class="widget-title">Fünf Konstrukte, fünf Muster</div>
+  <div class="seg" id="jmS">
+    <button data-k="expr" aria-pressed="true">Ausdruck</button>
+    <button data-k="if">if</button>
+    <button data-k="while">while</button>
+    <button data-k="call">Methode</button>
+    <button data-k="arr">Array</button>
+  </div>
+  <div class="jm" id="jmV"></div>
+  <div class="note" id="jmN"></div>
+</div>
+
+<p>Zwei Dinge fehlen der Lehrmaschine, die echte Prozessoren haben – und beide zeigen, was Hochsprachen leisten. Erstens ein <strong>Stack</strong>: Unser Aufruf merkt sich die Rücksprungadresse in einem Register. Ruft die Methode selbst eine andere auf, wäre die Adresse überschrieben – Rekursion geht so nur, wenn man die Adressen selbst im Speicher sichert. Echte Prozessoren legen Rücksprungadressen und lokale Variablen auf einen Stapel im Speicher; genau der läuft bei endloser Rekursion über (<code>StackOverflowError</code>). Zweitens <strong>Schutz</strong>: Bei uns kann ein Programm jede Adresse überschreiben, sogar seine eigenen Befehle. Programme, die sich selbst verändern, waren früher ein Trick, um Speicher zu sparen; heute verhindert das Betriebssystem, dass Speicher gleichzeitig beschreibbar und ausführbar ist.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Die JVM hat ihre eigene Maschinensprache: <strong>Bytecode</strong>. Anders als unsere Lehrmaschine ist sie eine <strong>Stapelmaschine</strong> – Befehle nehmen ihre Operanden vom Stapel und legen das Ergebnis darauf, statt Register zu benennen. So sieht die Summe von 1 bis n aus, wenn man sie mit <code>javap -c</code> ansieht:</p>
+<div class="jm">
+<pre><code><span class="k">static int</span> summe(<span class="k">int</span> n) {
+    <span class="k">int</span> s = <span class="n">0</span>;
+    <span class="k">for</span> (<span class="k">int</span> i = <span class="n">1</span>; i &lt;= n; i++)
+        s += i;
+    <span class="k">return</span> s;
+}</code></pre>
+<pre><code> <span class="n">0</span>: iconst_0          <span class="c">// 0 auf den Stapel</span>
+ <span class="n">1</span>: istore_1          <span class="c">// s = …</span>
+ <span class="n">2</span>: iconst_1
+ <span class="n">3</span>: istore_2          <span class="c">// i = 1</span>
+ <span class="n">4</span>: iload_2
+ <span class="n">5</span>: iload_0
+ <span class="n">6</span>: if_icmpgt <span class="n">19</span>      <span class="c">// i &gt; n? raus</span>
+ <span class="n">9</span>: iload_1
+<span class="n">10</span>: iload_2
+<span class="n">11</span>: iadd              <span class="c">// s + i</span>
+<span class="n">12</span>: istore_1
+<span class="n">13</span>: iinc <span class="n">2</span>, <span class="n">1</span>         <span class="c">// i++</span>
+<span class="n">16</span>: goto <span class="n">4</span>
+<span class="n">19</span>: iload_1
+<span class="n">20</span>: ireturn</code></pre>
+</div>
+<p>Man erkennt dasselbe Muster wie in unserem Simulator: Bedingung prüfen, bei Nichterfüllung hinausspringen, Rumpf, Sprung zurück. Der <a href="/it-konzepte/compiler-jit/">JIT-Compiler</a> übersetzt diesen Bytecode zur Laufzeit in echte Maschinenbefehle für die CPU – dabei werden die Stapelplätze wieder auf Register verteilt.</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Befehlssatz</th><th>Art</th><th>Wo</th></tr></thead>
+  <tbody>
+    <tr><td><strong>x86-64</strong></td><td>Register, sehr viele und komplexe Befehle (CISC)</td><td>die meisten PCs und Server</td></tr>
+    <tr><td><strong>ARM64</strong></td><td>Register, einfache Befehle fester Länge (RISC)</td><td>Smartphones, Apple-Rechner, viele Cloud-Server</td></tr>
+    <tr><td><strong>RISC-V</strong></td><td>Register, offener und lizenzfreier Standard</td><td>eingebettete Systeme, Forschung, zunehmend mehr</td></tr>
+    <tr><td><strong>JVM-Bytecode</strong></td><td>Stapelmaschine, plattformunabhängig</td><td>jede JVM – vom JIT in eine der obigen übersetzt</td></tr>
+    <tr><td><strong>WebAssembly</strong></td><td>Stapelmaschine für Browser und mehr</td><td>Browser, zunehmend auch Server</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Zum Anschauen: <code>javap -c Klasse.class</code> zeigt Bytecode, die JVM-Option <code>-XX:+PrintAssembly</code> (mit dem hsdis-Plugin) den Maschinencode, den der JIT daraus erzeugt.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Maschinensprache und Assembler sind dasselbe.“</b> – Maschinensprache sind die Zahlen, Assembler ist die lesbare Schreibweise dafür (<code>add rcx, rax</code> statt Bytes). Ein Assembler-Programm übersetzt eins zu eins.</div>
+  <div><b>„Java läuft interpretiert und ist deshalb langsam.“</b> – Bytecode wird anfangs interpretiert, häufig ausgeführter Code aber vom JIT in optimierten Maschinencode übersetzt – oft so schnell wie C.</div>
+  <div><b>„Ein Befehl dauert einen Takt.“</b> – Moderne CPUs zerlegen Befehle, führen mehrere gleichzeitig und außerhalb der Reihenfolge aus. Ein Speicherzugriff, der den Cache verfehlt, kostet dagegen hunderte Takte (siehe <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>).</div>
+  <div><b>„Register sind einfach schneller Speicher.“</b> – Sie sind Teil des Rechenwerks und haben keine Adressen im Speicher. Ihre Zahl ist im Befehlssatz festgelegt; echte CPUs haben intern noch weit mehr, auf die sie die sichtbaren Register verteilen.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/zahlendarstellung/">Zahlen im Rechner</a>
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/compiler-jit/">Compiler, Interpreter, JIT</a>
+  <a href="/it-konzepte/universalitaet/">Universalität</a>
+  <a href="/it-konzepte/speicherhierarchie/">Speicherhierarchie</a>
+  <a href="/it-konzepte/cpu/">Die CPU</a>
+  <a href="/it-konzepte/schaltnetze/">Schaltnetze</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>

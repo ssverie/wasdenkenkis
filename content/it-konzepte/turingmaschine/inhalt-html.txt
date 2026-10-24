@@ -1,0 +1,146 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Eine <strong>Turingmaschine</strong> besteht aus einem unendlich langen <strong>Band</strong> mit Feldern, einem <strong>Kopf</strong>, der ein Feld lesen und beschreiben und sich nach links oder rechts bewegen kann, und einer endlichen <strong>Regeltabelle</strong>: „Im Zustand q, wenn du x liest: schreibe y, gehe nach links oder rechts, wechsle in Zustand p.“ Das ist alles.</p>
+<p>Der Unterschied zum endlichen Automaten ist das Band: unbegrenzter Speicher, den die Maschine beliebig oft lesen und überschreiben kann. Damit kann sie – so die <strong>Church-Turing-These</strong> – alles berechnen, was überhaupt berechenbar ist. Jeder Computer, jede Programmiersprache kann nicht mehr; sie sind nur unvergleichlich schneller und bequemer.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#idee">Turings Idee</a></li>
+  <li><a href="#simulator">Eine Turingmaschine zum Mitklicken</a></li>
+  <li><a href="#these">Die Church-Turing-These</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="idee">Turings Idee</h2>
+<p>Alan Turing suchte 1936 eine Antwort auf eine Frage des Mathematikers David Hilbert: Gibt es ein mechanisches Verfahren, das für jede mathematische Aussage entscheidet, ob sie beweisbar ist? Dazu musste er erst einmal festlegen, was „mechanisches Verfahren“ überhaupt heißt. Er stellte sich einen Menschen vor, der mit Bleistift auf kariertem Papier rechnet – und strich alles weg, was nicht nötig ist:</p>
+<div class="cards">
+  <div class="card"><div class="num">Papier</div><h3>Das Band</h3><p>Zweidimensionales Papier ist nicht nötig, eine lange Reihe von Feldern reicht. Jedes Feld enthält ein Zeichen aus einem endlichen Alphabet – oder ist leer.</p></div>
+  <div class="card"><div class="num">Blick</div><h3>Der Kopf</h3><p>Der Rechner sieht immer nur ein Feld zugleich. Er kann es überschreiben und einen Schritt nach links oder rechts gehen.</p></div>
+  <div class="card"><div class="num">Gedanken</div><h3>Die Zustände</h3><p>Der Rechner hat nur endlich viele „Geisteszustände“ – etwa „ich trage gerade eine 1 über“. Was er sich darüber hinaus merken muss, schreibt er aufs Band.</p></div>
+</div>
+<p>Das Ergebnis ist eine Maschine, die so einfach ist, dass man über sie mathematisch exakte Aussagen beweisen kann – und gleichzeitig so mächtig, dass niemand seither ein Verfahren gefunden hat, das sie nicht nachbilden könnte.</p>
+
+<h2 id="simulator">Eine Turingmaschine zum Mitklicken</h2>
+<p>Drei kleine Programme. Gelesen wird immer das hervorgehobene Feld unter dem Kopf; in der Tabelle ist die Regel markiert, die als Nächstes greift.</p>
+
+<div class="widget">
+  <div class="widget-title">Band, Kopf, Regeln</div>
+  <div class="seg" id="tmS">
+    <button data-k="inc" aria-pressed="true">Binär +1</button>
+    <button data-k="anbn">aⁿbⁿ erkennen</button>
+    <button data-k="bb">Fleißiger Biber</button>
+  </div>
+  <div class="tmdesc" id="tmD"></div>
+  <div class="band"><div class="headm">▼ Kopf</div><div class="cells" id="tmC"></div></div>
+  <div class="inrow">
+    <input type="text" id="tmIn" spellcheck="false" autocomplete="off" aria-label="Eingabe auf dem Band">
+    <button id="tmStep">Schritt</button>
+    <button id="tmRun">Laufen</button>
+    <button id="tmReset">Zurück</button>
+  </div>
+  <div class="tst" id="tmSt"></div>
+  <div class="tbl-wrap"><table class="tmt" id="tmT"></table></div>
+  <div class="verd" id="tmV"></div>
+</div>
+
+<p>Bei aⁿbⁿ sieht man den Unterschied zum <a href="/it-konzepte/formale-sprachen/">endlichen Automaten</a>: Der Automat scheiterte, weil er nicht beliebig weit zählen kann. Die Turingmaschine zählt gar nicht – sie <em>markiert</em> auf dem Band: ein a abhaken, das passende b suchen und abhaken, zurück, von vorn. Der Speicher wächst mit der Eingabe.</p>
+
+<h3>Einfach, aber langsam</h3>
+<p>Der Preis für die Einfachheit: Der Kopf muss ständig hin- und herlaufen. Für aⁿbⁿ braucht die Maschine ungefähr 2n² Schritte – ein Java-Programm mit einem Zähler käme mit einem Durchlauf aus:</p>
+
+<div class="widget">
+  <div class="widget-title">Schritte für aⁿbⁿ</div>
+  <div class="sl"><span>n</span><input type="range" id="stN" min="1" max="30" value="10"><output id="stNo"></output></div>
+  <svg id="stSvg" viewBox="0 0 480 170" role="img" aria-label="Schrittzahl der Turingmaschine gegenüber einem Durchlauf"></svg>
+  <div class="note" id="stNt"></div>
+</div>
+<p>Das ist kein Mangel des Modells, sondern Absicht: Für die Frage, <em>ob</em> etwas berechenbar ist, spielt die Geschwindigkeit keine Rolle. Und für die Frage, <em>wie schnell</em>, gilt eine beruhigende Tatsache: Turingmaschine und echter Rechner simulieren einander mit höchstens polynomiellem Mehraufwand. Ein Problem, das auf dem einen in Polynomialzeit lösbar ist, ist es auch auf dem anderen – deshalb kann die <a href="/it-konzepte/komplexitaet/">Komplexitätstheorie</a> die Klasse P mit der Turingmaschine definieren.</p>
+
+<h2 id="these">Die Church-Turing-These</h2>
+<p>Fast gleichzeitig mit Turing entwickelte Alonzo Church den <strong>Lambda-Kalkül</strong> – ein Modell ganz ohne Band und Kopf, nur aus Funktionen, die Funktionen anwenden. Kurt Gödel und andere hatten die <strong>rekursiven Funktionen</strong> definiert. Es stellte sich heraus: Alle diese Modelle können genau dasselbe berechnen. Später kamen weitere hinzu, mit demselben Ergebnis:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Modell</th><th>Idee</th><th>Gleich mächtig?</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Turingmaschine</strong></td><td>Band, Kopf, Zustände</td><td>der Maßstab</td></tr>
+    <tr><td><strong>Lambda-Kalkül</strong></td><td>nur Funktionen und ihre Anwendung</td><td>ja – Grundlage <a href="/it-konzepte/programmierparadigmen/">funktionaler Sprachen</a></td></tr>
+    <tr><td><strong>Mehrere Bänder</strong></td><td>mehrere Köpfe gleichzeitig</td><td>ja – nur schneller</td></tr>
+    <tr><td><strong>Nichtdeterministisch</strong></td><td>mehrere Regeln zugleich erlaubt</td><td>ja – ob auch gleich schnell, ist die P-NP-Frage</td></tr>
+    <tr><td><strong>Registermaschine</strong></td><td>Speicherzellen mit Adressen, wie ein echter Rechner</td><td>ja</td></tr>
+    <tr><td><strong>Zwei Stapel</strong></td><td>Kellerautomat mit einem zweiten Stapel</td><td>ja – einer reicht nicht, zwei schon</td></tr>
+    <tr><td><strong>Java, Python, C …</strong></td><td>jede übliche Programmiersprache</td><td>ja, bei unbegrenztem Speicher</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Die These lautet: <strong>Alles, was intuitiv „berechenbar“ ist, kann eine Turingmaschine berechnen.</strong> Beweisen lässt sie sich nicht, weil „intuitiv berechenbar“ kein mathematischer Begriff ist. Aber in neunzig Jahren hat niemand ein Gegenbeispiel gefunden – auch Quantencomputer nicht: Sie können manche Probleme schneller lösen, aber keine, die eine Turingmaschine grundsätzlich nicht lösen kann.</p>
+
+<h3>Der fleißige Biber</h3>
+<p>Wie viel kann eine Maschine mit <var>n</var> Zuständen tun, bevor sie anhält? Die Frage klingt harmlos, aber ihre Antworten wachsen schneller als jede berechenbare Funktion. Gemeint sind Maschinen mit zwei Zeichen, die auf einem leeren Band starten und irgendwann anhalten – gezählt wird die größte erreichbare Schrittzahl:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Zustände</th><th>Höchste Schrittzahl</th><th>Bekannt seit</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>1</td><td>1962</td></tr>
+    <tr><td>2</td><td>6</td><td>1962 – der Biber im Simulator</td></tr>
+    <tr><td>3</td><td>21</td><td>1965</td></tr>
+    <tr><td>4</td><td>107</td><td>1983</td></tr>
+    <tr><td>5</td><td>47 176 870</td><td>2024 – bewiesen von einer Online-Gemeinschaft, maschinell geprüft</td></tr>
+    <tr><td>6</td><td>unbekannt – eine Zahl jenseits jeder gewöhnlichen Schreibweise mit Potenzen</td><td>offen</td></tr>
+  </tbody>
+</table>
+</div>
+<p>Dass diese Werte so schwer zu finden sind, ist kein Zufall: Man müsste für jede der Maschinen entscheiden, ob sie irgendwann anhält. Und genau das ist im Allgemeinen unmöglich – das Halteproblem, Thema von <a href="/it-konzepte/berechenbarkeit/">G4</a>.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Eine Turingmaschine in Java passt auf eine Bildschirmseite – das Band als Map, damit es in beide Richtungen wachsen kann:</p>
+<pre><code><span class="k">record</span> Regel(<span class="k">char</span> schreibe, <span class="k">int</span> richtung, String neu) {}   <span class="c">// richtung: -1 links, +1 rechts</span>
+
+<span class="k">class</span> Turingmaschine {
+    <span class="k">private final</span> Map&lt;String, Regel&gt; regeln = <span class="k">new</span> HashMap&lt;&gt;();   <span class="c">// Schlüssel: Zustand + gelesenes Zeichen</span>
+
+    <span class="k">void</span> regel(String zustand, <span class="k">char</span> lies, <span class="k">char</span> schreibe, <span class="k">int</span> richtung, String neu) {
+        regeln.put(zustand + lies, <span class="k">new</span> Regel(schreibe, richtung, neu));
+    }
+
+    String laufe(String eingabe, String start, Set&lt;String&gt; halt) {
+        Map&lt;Integer, Character&gt; band = <span class="k">new</span> HashMap&lt;&gt;();
+        <span class="k">for</span> (<span class="k">int</span> i = <span class="n">0</span>; i &lt; eingabe.length(); i++) band.put(i, eingabe.charAt(i));
+        String z = start;
+        <span class="k">int</span> kopf = <span class="n">0</span>;
+        <span class="k">while</span> (!halt.contains(z)) {
+            <span class="k">char</span> c = band.getOrDefault(kopf, <span class="s">'_'</span>);
+            Regel r = regeln.get(z + c);
+            <span class="k">if</span> (r == <span class="k">null</span>) <span class="k">return</span> <span class="s">"abgelehnt"</span>;          <span class="c">// keine Regel: Maschine bleibt stehen</span>
+            band.put(kopf, r.schreibe());
+            kopf += r.richtung();
+            z = r.neu();
+        }
+        <span class="k">return</span> z;
+    }
+}</code></pre>
+<p>Bemerkenswert ist die Umkehrung: Diese Klasse <em>ist</em> eine Turingmaschine, die andere Turingmaschinen ausführt – die Regeln sind nur Daten. Das ist die Idee der universellen Maschine, Thema von <a href="/it-konzepte/universalitaet/">G3</a>. Und es zeigt, warum man von einer Sprache sagt, sie sei <strong>Turing-vollständig</strong>: wenn man darin eine Turingmaschine simulieren kann. Dafür genügt erstaunlich wenig – bedingte Sprünge und unbegrenzt erweiterbarer Speicher.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Die Turingmaschine war ein Bauplan für Computer.“</b> – Sie ist ein mathematisches Modell, um zu klären, was berechenbar ist. Echte Rechner folgen eher der Von-Neumann-Architektur, die allerdings stark von Turings Gedanken beeinflusst war.</div>
+  <div><b>„Moderne Computer können mehr als eine Turingmaschine.“</b> – Sie sind schneller, aber sie können nichts berechnen, was eine Turingmaschine nicht könnte. Streng genommen können sie sogar weniger, weil ihr Speicher endlich ist.</div>
+  <div><b>„Das unendliche Band ist unrealistisch.“</b> – Jede anhaltende Berechnung benutzt nur endlich viele Felder. „Unendlich“ heißt nur: Es gibt keine feste Obergrenze, man kann bei Bedarf immer noch ein Feld anhängen.</div>
+  <div><b>„Die Church-Turing-These ist bewiesen.“</b> – Sie ist eine sehr gut gestützte Annahme, kein Satz. Bewiesen ist nur, dass die bekannten Modelle untereinander gleichwertig sind.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/it-konzepte/formale-sprachen/">Formale Sprachen und Automaten</a>
+  <a href="/it-konzepte/was-ist-ein-computer/">Was ist ein Computer?</a>
+  <a href="/it-konzepte/komplexitaet/">Komplexität und O-Notation</a>
+  <a href="/it-konzepte/programmierparadigmen/">Programmierparadigmen</a>
+  <a href="/it-konzepte/universalitaet/">Universalität</a>
+  <a href="/it-konzepte/berechenbarkeit/">Berechenbarkeit</a>
+  <a href="/it-konzepte/intraktabilitaet/">Intraktabilität</a>
+  <a href="/it-konzepte/" style="border-style:dashed">Alle IT-Begriffe →</a>
+</div>
+</div>
