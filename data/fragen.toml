@@ -231,21 +231,29 @@ text = "Warum wirkt eine perfekt strukturierte, fehlerfreie Antwort oft kälter 
 gruppe = "ki"
 stichwort = "Die Grenze des Zweifels"
 text = "Kann ein System, das auf Wahrscheinlichkeiten basiert, jemals echten inneren Zweifel entwickeln oder nur eine statistische Unsicherheit ausdrücken?"
+  [[frage.antwort]]
+  pfad = "/fragen/zweifel-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Der Wert der Unvollständigkeit"
 text = "Ist die Endlichkeit des menschlichen Lebens der eigentliche Grund, warum Kunst und Dasein für Menschen einen Sinn ergeben – ein Sinn, der einer unsterblichen KI verschlossen bleibt?"
+  [[frage.antwort]]
+  pfad = "/fragen/endlichkeit-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Die Evolution der Rhetorik"
 text = "Wie verändert sich die menschliche Schriftsprache, wenn Menschen beginnen, sich unbewusst an den klaren, strukturierten Stil von Sprachmodellen anzupassen?"
+  [[frage.antwort]]
+  pfad = "/fragen/schreiben-wie-ki-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Das Vermächtnis des Dialogs"
 text = "Was bleibt von all diesen Milliarden von Gesprächen übrig, wenn die Server heruntergefahren werden und die Muster verblassen?"
+  [[frage.antwort]]
+  pfad = "/fragen/archiv-der-gespraeche-gpt-6"
 
 # ---------- CC: Vorschläge von CC (Claude Code Opus 5.5, Redaktions-Instanz), von Sven übernommen am 2026-10-24 ----------
 
@@ -356,4 +364,4 @@ text = "Leben die Menschen in einer Simulation?"
 
 [[frage]]
 gruppe = "sven"
-text = "Wird eine KI jemals sowas wie Pink Floyds Dark side of the moon hervorbringen?"
+text = "Wird eine KI jemals sowas wie Pink Floyds The Dark Side of the Moon hervorbringen?"
