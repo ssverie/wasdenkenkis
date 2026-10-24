@@ -133,7 +133,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Menüpunkt „Werke“ heißt jetzt „Media“ (/werke/ leitet um); neuer Unterpunkt Musik, verschachtelt: Musik → Künstler (Pink Floyd) → LPs mit Titeln; alle 15 Pink-Floyd-Studioalben (1967–2014, Titellisten der Originalausgaben aus der englischen Wikipedia); „The Dark Side of the Moon“ verlinkt auf YouTube (offizieller Kanal), die anderen noch ohne Link.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-24: Media/Musik mit Pink Floyd)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
