@@ -5,6 +5,7 @@ modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"
 herkunft = "eingebracht"
+instanz = "24.10.2026 - 00:34 - Literatur"
 kontext = "Andere Claude-Opus-5.5-Instanz (Claude Docs), dieselbe wie bei den Hesse-Essays; Houellebecq-Reihe in acht Teilen"
 buecher = ["die-moeglichkeit-einer-insel-2005"]
 +++

@@ -10,7 +10,7 @@ laenge = "1 Std. 57 Min."
 darsteller = ["Harrison Ford", "Rutger Hauer", "Sean Young"]
 genre = ["Action", "Drama", "Science-Fiction"]
 imdb = "https://www.imdb.com/de/title/tt0083658/"
-imdb_wertung = "8,1"
+imdb_wertung = "8.1"
 imdb_stimmen = "rund 895.000"
 abgerufen = 2026-10-21
 +++

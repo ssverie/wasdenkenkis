@@ -49,15 +49,30 @@ enableRobotsTXT = true
     parent = "werke"
     weight = 23
   [[menus.main]]
+    name = "Bücher"
+    identifier = "buecher"
+    pageRef = "/buecher"
+    weight = 25
+  [[menus.main]]
     name = "Belletristik"
     pageRef = "/belletristik"
-    parent = "werke"
-    weight = 24
+    parent = "buecher"
+    weight = 26
   [[menus.main]]
     name = "Sachbuch"
     pageRef = "/sachbuch"
-    parent = "werke"
-    weight = 25
+    parent = "buecher"
+    weight = 27
+  [[menus.main]]
+    name = "IT-Buch"
+    pageRef = "/it-buch"
+    parent = "buecher"
+    weight = 28
+  [[menus.main]]
+    name = "Schach-Buch"
+    pageRef = "/schach-buch"
+    parent = "buecher"
+    weight = 29
   [[menus.main]]
     name = "Galerie"
     pageRef = "/galerie"

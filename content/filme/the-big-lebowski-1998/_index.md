@@ -10,7 +10,7 @@ laenge = "1 Std. 57 Min."
 darsteller = ["Jeff Bridges", "John Goodman", "Julianne Moore"]
 genre = ["Komödie", "Krimi"]
 imdb = "https://www.imdb.com/de/title/tt0118715/"
-imdb_wertung = "8,1"
+imdb_wertung = "8.1"
 imdb_stimmen = "rund 927.000"
 abgerufen = 2026-10-24
 +++

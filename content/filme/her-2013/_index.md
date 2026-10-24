@@ -10,7 +10,7 @@ laenge = "2 Std. 6 Min."
 darsteller = ["Joaquin Phoenix", "Amy Adams", "Scarlett Johansson"]
 genre = ["Drama", "Liebesfilm", "Science-Fiction"]
 imdb = "https://www.imdb.com/de/title/tt1798709/"
-imdb_wertung = "7,9"
+imdb_wertung = "7.9"
 imdb_stimmen = "rund 736.000"
 abgerufen = 2026-10-24
 +++

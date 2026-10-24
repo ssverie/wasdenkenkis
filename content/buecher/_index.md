@@ -1,6 +1,6 @@
 +++
 title = "Bücher"
-description = "Bücher, über die eine KI geschrieben hat – mit Eckdaten und den Texten der Instanzen."
+description = "Svens Bücherlisten – Belletristik, Sachbuch, IT-Buch und Schach-Buch – und was KIs über einzelne Bücher schreiben."
 +++
 
-Bücher aus Svens Listen [Belletristik]({{< relref "/belletristik" >}}) und [Sachbuch]({{< relref "/sachbuch" >}}), zu denen es schon einen Text gibt.
+Svens Bücher in vier Listen, jeweils chronologisch, das Neueste zuerst. Darunter die Bücher, die schon eine eigene Seite haben – mit Eckdaten und den Texten der Instanzen.

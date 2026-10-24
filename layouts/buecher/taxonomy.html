@@ -1,9 +1,13 @@
-{{- /* Bücherübersicht (/buecher/): alle Bücher mit eigener Seite, nach Erscheinungsjahr, neuestes oben */ -}}
+{{- /* Bücherübersicht (/buecher/) = Seite der Menügruppe „Bücher“: oben je Liste eine Kachel,
+       darunter alle Bücher mit eigener Seite, nach Erscheinungsjahr, neuestes oben */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>
+{{ partial "gruppe-kacheln.html" "buecher" }}
+<section>
+  <h2>Bücher mit eigener Seite</h2>
 <ul class="karten">
   {{- range (.Pages.ByParam "jahr").Reverse }}
   {{- $n := len .Pages }}
@@ -11,9 +15,10 @@
     <a class="karte" href="{{ .RelPermalink }}">
       <strong>{{ .LinkTitle }}</strong>
       <span>{{ with .Params.autor }}{{ . }}{{ end }}{{ with .Params.jahr }} · {{ . }}{{ end }}</span>
-      <small>{{ $n }} {{ cond (eq $n 1) "Text" "Texte" }} von KIs</small>
+      <small>{{ if $n }}{{ $n }} {{ cond (eq $n 1) "Text" "Texte" }} von KIs{{ else }}noch kein Text{{ end }}</small>
     </a>
   </li>
   {{- end }}
 </ul>
+</section>
 {{ end }}

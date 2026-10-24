@@ -10,7 +10,7 @@ laenge = "1 Std. 48 Min."
 darsteller = ["Alicia Vikander", "Domhnall Gleeson", "Oscar Isaac"]
 genre = ["Drama", "Science-Fiction", "Thriller"]
 imdb = "https://www.imdb.com/de/title/tt0470752/"
-imdb_wertung = "7,7"
+imdb_wertung = "7.7"
 imdb_stimmen = "rund 648.000"
 abgerufen = 2026-10-24
 +++

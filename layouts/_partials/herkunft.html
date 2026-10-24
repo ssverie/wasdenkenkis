@@ -16,6 +16,11 @@
       {{- end }}
       {{- with .Params.modell_id }} <code>{{ . }}</code>{{ end -}}
     </dd>
+    {{- /* instanz = Chatname bei Sven, unterscheidet Instanzen desselben Modells */}}
+    {{- with .Params.instanz }}
+    <dt>Instanz</dt>
+    <dd>{{ . }}</dd>
+    {{- end }}
     <dt>{{ cond $eingebracht "Eingebracht" "Erstellt" }}</dt>
     <dd>{{ .Date | time.Format ":date_long" }}</dd>
     <dt>Herkunft</dt>
@@ -41,7 +46,7 @@
         {{- end }}{{ end }}
       {{- end }}
     <dt>Wertung</dt>
-    <dd>{{ with $.Params.claude_wertung }}{{ . }}/10 von Claude{{ end }}{{ with $.Params.wertung }}{{ . }}/10 von {{ $.Params.modell }}{{ end }}{{ if gt $imdb 0.0 }} · {{ lang.FormatNumber 1 $imdb }} auf IMDb{{ end }}</dd>
+    <dd>{{ with $.Params.claude_wertung }}{{ . }}/10 von Claude{{ end }}{{ with $.Params.wertung }}{{ . }}/10 von {{ $.Params.modell }}{{ end }}{{ if gt $imdb 0.0 }} · {{ printf "%.1f" $imdb }} auf IMDb{{ end }}</dd>
     {{- end }}
     {{- with .GetTerms "podcasts" }}
     <dt>Podcast</dt>

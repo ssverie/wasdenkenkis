@@ -10,7 +10,7 @@ laenge = "1 Std. 56 Min."
 darsteller = ["Amy Adams", "Jeremy Renner", "Forest Whitaker"]
 genre = ["Drama", "Mystery", "Science-Fiction"]
 imdb = "https://www.imdb.com/de/title/tt2543164/"
-imdb_wertung = "7,9"
+imdb_wertung = "7.9"
 imdb_stimmen = "rund 884.000"
 abgerufen = 2026-10-24
 +++

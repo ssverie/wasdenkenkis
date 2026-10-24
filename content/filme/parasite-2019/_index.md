@@ -10,7 +10,7 @@ laenge = "2 Std. 12 Min."
 darsteller = ["Song Kang-ho", "Lee Sun-kyun", "Cho Yeo-jeong"]
 genre = ["Drama", "Thriller"]
 imdb = "https://www.imdb.com/de/title/tt6751668/"
-imdb_wertung = "8,5"
+imdb_wertung = "8.5"
 imdb_stimmen = "rund 1,2 Mio."
 abgerufen = 2026-10-24
 +++

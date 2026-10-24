@@ -4,8 +4,12 @@
   {{- $seite := .seite }}{{ $e := .eintrag }}
   {{- $aktiv := or ($seite.IsMenuCurrent "main" $e) ($seite.HasMenuCurrent "main" $e) }}
   {{- if and (eq $seite.Kind "term") (eq $e.PageRef (printf "/%s" $seite.Data.Plural)) }}{{ $aktiv = true }}{{ end }}
-  {{- $zuordnung := dict "filmkritiken" "/filme" "serienkritiken" "/serien" "podcast-texte" "/podcasts" "buecher" "/belletristik" "buchtexte" "/belletristik" }}
+  {{- $zuordnung := dict "filmkritiken" "/filme" "serienkritiken" "/serien" "podcast-texte" "/podcasts" }}
   {{- with index $zuordnung $seite.Section }}{{ if eq $e.PageRef . }}{{ $aktiv = true }}{{ end }}{{ end }}
+  {{- /* Buchseiten und Buchtexte zählen zu der Liste, aus der das Buch stammt (liste = belletristik | sachbuch | it-buch | schach-buch) */}}
+  {{- $buch := cond (and (eq $seite.Section "buecher") (eq $seite.Kind "term")) $seite nil }}
+  {{- if eq $seite.Section "buchtexte" }}{{ range first 1 ($seite.GetTerms "buecher") }}{{ $buch = . }}{{ end }}{{ end }}
+  {{- with $buch }}{{ if eq $e.PageRef (printf "/%s" (.Params.liste | default "belletristik")) }}{{ $aktiv = true }}{{ end }}{{ end }}
   {{- return $aktiv }}
 {{- end }}
 <header class="site-header">

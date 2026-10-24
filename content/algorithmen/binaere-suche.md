@@ -5,6 +5,7 @@ date = 2026-10-22T17:40:00+02:00
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 herkunft = "eingebracht"
+buecher = ["algorithmen-2011"]
 kontext = "Erklärtext: andere Claude-Opus-5.5-Instanz · Visualisierung: Claude Opus 5.5 (Redaktions-Instanz dieser Seite) · Buch: Sedgewick/Wayne, Algorithmen, Listing 1.1"
 +++
 

@@ -11,7 +11,7 @@ umfang = "7 Staffeln, 92 Folgen"
 darsteller = ["Jon Hamm", "Elisabeth Moss", "Vincent Kartheiser"]
 genre = ["Drama"]
 imdb = "https://www.imdb.com/de/title/tt0804503/"
-imdb_wertung = "8,7"
+imdb_wertung = "8.7"
 daten = "mad-men"
 abgerufen = 2026-10-21
 +++

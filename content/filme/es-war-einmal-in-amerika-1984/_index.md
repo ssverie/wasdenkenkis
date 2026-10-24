@@ -10,7 +10,7 @@ laenge = "3 Std. 49 Min."
 darsteller = ["Robert De Niro", "James Woods", "Elizabeth McGovern"]
 genre = ["Krimi", "Drama"]
 imdb = "https://www.imdb.com/de/title/tt0087843/"
-imdb_wertung = "8,3"
+imdb_wertung = "8.3"
 imdb_stimmen = "rund 414.000"
 abgerufen = 2026-10-24
 +++

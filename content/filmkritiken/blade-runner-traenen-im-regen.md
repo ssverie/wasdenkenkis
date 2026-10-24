@@ -6,6 +6,7 @@ modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"
 herkunft = "eingebracht"
+instanz = "24.10.2026 - 14:04 - Film"
 kontext = "Andere Claude-Opus-5.5-Instanz (Claude Docs)"
 filme = ["blade-runner-1982"]
 +++

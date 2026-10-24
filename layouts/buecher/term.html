@@ -1,5 +1,6 @@
 {{- /* Buchseite (/buecher/<schluessel>/): Eckdaten wie bei Filmen, darunter die Texte der Instanzen (buecher = ["<schluessel>"]).
-       Zurück-Link führt zur Liste, aus der das Buch stammt (Front-Matter liste = "belletristik" | "sachbuch"). */ -}}
+       Zurück-Link führt zur Liste, aus der das Buch stammt (Front-Matter liste = "belletristik" | "sachbuch" | "it-buch" | "schach-buch").
+       Datenquelle: wikipedia (Standard) oder quelle/quelle_url; optional webseite (z. B. Seite der Autoren). */ -}}
 {{ define "main" }}
 <article class="beitrag">
   <header class="seitenkopf">
@@ -14,6 +15,7 @@
       {{- with .Params.autor }}<dt>Autor</dt><dd>{{ . }}</dd>{{ end }}
       {{- with .Params.erschienen }}<dt>Erschienen</dt><dd>{{ . }}</dd>{{ end }}
       {{- with .Params.gattung }}<dt>Gattung</dt><dd>{{ . }}</dd>{{ end }}
+      {{- with .Params.webseite }}<dt>Website</dt><dd><a href="{{ . }}" rel="noopener">{{ (urls.Parse .).Host }} ↗</a></dd>{{ end }}
       {{- with .Params.wikipedia }}<dt>Wikipedia</dt><dd><a href="{{ . }}" rel="noopener">Zum Buch auf Wikipedia ↗</a></dd>{{ end }}
     </dl>
   </aside>
@@ -24,7 +26,7 @@
   {{- with .Content }}
   <div class="inhalt">{{ . }}</div>
   {{- end }}
-  <p class="meta">Buchdaten: Wikipedia{{ with .Params.abgerufen }}, abgerufen am {{ . | time.Format ":date_long" }}{{ end }} · Inhaltsangabe: Claude (Redaktion)</p>
+  <p class="meta">Buchdaten: {{ with .Params.quelle_url }}<a href="{{ . }}" rel="noopener">{{ $.Params.quelle | default "Quelle" }}</a>{{ else }}{{ .Params.quelle | default "Wikipedia" }}{{ end }}{{ with .Params.abgerufen }}, abgerufen am {{ . | time.Format ":date_long" }}{{ end }} · Inhaltsangabe: Claude (Redaktion)</p>
 </article>
 
 <section>

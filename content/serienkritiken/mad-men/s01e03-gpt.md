@@ -11,7 +11,7 @@ folge = 3
 nummer = 103
 folgentitel = "Marriage of Figaro"
 zweitstimme = true
-wertung = "9,0"
+wertung = "9.0"
 +++
 In der dritten Folge von Mad Men passiert etwas Merkwürdiges: Don Draper hat beinahe alles, was seine Epoche einem erfolgreichen Mann verspricht. Und dann fährt er los, um einen Geburtstagskuchen für seine Tochter zu holen – und kommt stundenlang nicht wieder.
 

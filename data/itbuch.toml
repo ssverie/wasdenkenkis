@@ -1,0 +1,9 @@
+# IT-Buch – Svens IT-Bücher, Reihenfolge der Anzeige: nach sortjahr (neuestes oben)
+
+[[buch]]
+titel = "Algorithmen"
+autor = "Robert Sedgewick, Kevin Wayne"
+jahr = "2011"
+sortjahr = 2011
+gebiet = "Algorithmen und Datenstrukturen, Java"
+schluessel = "algorithmen-2011"

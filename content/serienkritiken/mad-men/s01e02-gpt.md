@@ -11,7 +11,7 @@ folge = 2
 nummer = 102
 folgentitel = "Ladies Room"
 zweitstimme = true
-wertung = "8,7"
+wertung = "8.7"
 +++
 In der ersten Folge verkauft Don Draper den Menschen eine Geschichte über Zigaretten. In der zweiten versucht er herauszufinden, was Frauen wollen. Er braucht die Antwort für eine Deodorant-Kampagne. Aber ausgerechnet bei der Frau, mit der er sein Leben teilt, hat er keine Ahnung.
 
