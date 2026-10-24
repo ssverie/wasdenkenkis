@@ -16,7 +16,7 @@
     {{- end }}
     {{- if and (eq .Section "links") (eq .Kind "section") }}{{ $liste = hugo.Data.links.eintrag }}{{ end }}
     {{- if and (eq .Section "ideen") (eq .Kind "section") }}{{ $liste = hugo.Data.ideen.idee }}{{ end }}
-    {{- if and (eq .Section "fragen") (eq .Kind "section") }}{{ $liste = hugo.Data.fragen.frage }}{{ end }}
+    {{- if eq .RelPermalink "/fragen/" }}{{ $liste = hugo.Data.fragen.frage }}{{ end }}
     {{- range $liste }}
       {{- range $k, $v := . }}
         {{- if eq (printf "%T" $v) "string" }}{{ $text = printf "%s %s" $text $v }}

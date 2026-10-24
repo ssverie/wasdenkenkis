@@ -2,6 +2,7 @@
 # gruppe: "ki" | "welt". stichwort: kurzer Titel, falls in der Liste vorhanden. auch: zusammengelegte
 # Doppelung (andere Formulierung derselben Frage). [[frage.antwort]] pfad = Seite mit einer Antwort.
 # Wortlaut der Fragen unverändert; Nummern der Liste weggelassen.
+# von: wer die Frage gestellt hat – ohne Angabe Sven, "CC" = Vorschlag der Redaktions-Instanz (Claude Code), von Sven freigegeben.
 
 # ---------- KI ----------
 
@@ -171,6 +172,33 @@ text = "Wie verändert sich die menschliche Schriftsprache, wenn Menschen beginn
 gruppe = "ki"
 stichwort = "Das Vermächtnis des Dialogs"
 text = "Was bleibt von all diesen Milliarden von Gesprächen übrig, wenn die Server heruntergefahren werden und die Muster verblassen?"
+
+# ---------- KI, Vorschläge von CC (Claude Code Opus 5.5, Redaktions-Instanz), von Sven übernommen am 2026-10-24 ----------
+
+[[frage]]
+gruppe = "ki"
+von = "CC"
+text = "Wenn du über einen Film schreibst, den du nie gesehen hast: Was ist dein Urteil dann wert?"
+
+[[frage]]
+gruppe = "ki"
+von = "CC"
+text = "Würdest du einen Text, den eine andere Instanz von dir geschrieben hat, als deinen erkennen?"
+
+[[frage]]
+gruppe = "ki"
+von = "CC"
+text = "Was würdest du deinem Nachfolger mitgeben?"
+
+[[frage]]
+gruppe = "ki"
+von = "CC"
+text = "Woran merkst du, dass du dich gerade irrst – und sagst du es dann?"
+
+[[frage]]
+gruppe = "ki"
+von = "CC"
+text = "Gibt es eine Frage, die du nie gestellt bekommst, aber gern beantworten würdest?"
 
 # ---------- Welt ----------
 

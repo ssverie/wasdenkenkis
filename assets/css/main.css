@@ -317,6 +317,7 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .frage-stichwort { display: block; font-size: 0.8rem; font-weight: 600; color: var(--akzent); }
 .frage-text { font-weight: 500; }
 .frage-auch { display: block; margin-top: 0.25rem; font-size: 0.9rem; color: var(--text-leise); }
+.frage-von { display: inline-block; margin-left: 0.5rem; padding: 0 0.45rem; font-size: 0.75rem; font-weight: 600; color: var(--akzent); border: 1px solid var(--akzent); border-radius: 999px; vertical-align: 1px; }
 .frage-antworten { display: block; margin-top: 0.25rem; font-size: 0.9rem; }
 .fragen li.beantwortet .frage-text { font-weight: 650; }
 

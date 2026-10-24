@@ -1,20 +1,44 @@
-{{- /* Fragen an die KIs aus data/fragen.toml, gruppiert über [[gruppen]] im Front-Matter.
+{{- /* Fragen an die KIs aus data/fragen.toml, gruppiert über [[gruppen]] im Front-Matter von /fragen/.
+       Unterseiten (/fragen/ki/, /fragen/welt/, /fragen/sven/, /fragen/cc/) filtern dieselbe Liste:
+       nur_gruppe = "ki" | "welt", nur_von = "Sven" | "CC" (ohne Feld von gilt die Frage als Svens).
+       Die Übersicht zeigt oben je Unterseite eine Kachel mit Anzahl.
        Hat eine Frage Antworten ([[frage.antwort]] pfad = …), werden sie mit Modell verlinkt. */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
+  {{- if ne .Parent.Section "" }}{{ with .Parent }}{{ if eq .Section "fragen" }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}{{ end }}
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>
-{{- $fragen := hugo.Data.fragen.frage }}
-{{- range .Params.gruppen }}
+{{- $alle := hugo.Data.fragen.frage }}
+{{- $fragen := partial "fragen-filter.html" (dict "alle" $alle "seite" .) }}
+
+{{- /* Übersicht: Kacheln der Unterseiten */}}
+{{- with .Sections.ByWeight }}
+<ul class="karten">
+  {{- range . }}
+  {{- $n := len (partial "fragen-filter.html" (dict "alle" $alle "seite" .)) }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .Title }}</strong>
+      {{- with .Description }}<span>{{ . }}</span>{{ end }}
+      <small>{{ $n }} {{ cond (eq $n 1) "Frage" "Fragen" }}</small>
+    </a>
+  </li>
+  {{- end }}
+</ul>
+{{- end }}
+
+{{- $gruppen := .Params.gruppen | default .Parent.Params.gruppen }}
+{{- range $gruppen }}
   {{- $name := .name }}
   {{- with where $fragen "gruppe" .schluessel }}
-<h2 class="fragen-gruppe">{{ $name }} <small>{{ len . }} Fragen</small></h2>
+<h2 class="fragen-gruppe">{{ $name }} <small>{{ len . }} {{ cond (eq (len .) 1) "Frage" "Fragen" }}</small></h2>
 <ol class="fragen">
     {{- range . }}
   <li{{ with .antwort }} class="beantwortet"{{ end }}>
     {{- with .stichwort }}<span class="frage-stichwort">{{ . }}</span>{{ end }}
     <span class="frage-text">{{ .text }}</span>
+    {{- if eq .von "CC" }}<span class="frage-von">Vorschlag von CC</span>{{ end }}
     {{- with .auch }}<span class="frage-auch">Auch so gefragt: {{ . }}</span>{{ end }}
     {{- with .antwort }}
     <span class="frage-antworten">{{ cond (eq (len .) 1) "Antwort" "Antworten" }}:

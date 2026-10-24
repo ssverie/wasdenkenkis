@@ -1,0 +1,11 @@
+{{- /* Fragen aus data/fragen.toml nach den Filtern einer Seite: nur_gruppe ("ki" | "welt"), nur_von ("Sven" | "CC").
+       Ohne Feld von gilt eine Frage als Svens. Aufruf: partial "fragen-filter.html" (dict "alle" … "seite" …) */ -}}
+{{- $s := .seite }}
+{{- $ergebnis := slice }}
+{{- range .alle }}
+  {{- $von := .von | default "Sven" }}
+  {{- if and (or (not $s.Params.nur_gruppe) (eq .gruppe $s.Params.nur_gruppe)) (or (not $s.Params.nur_von) (eq $von $s.Params.nur_von)) }}
+    {{- $ergebnis = $ergebnis | append . }}
+  {{- end }}
+{{- end }}
+{{- return $ergebnis }}
