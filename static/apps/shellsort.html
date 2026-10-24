@@ -5,307 +5,131 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shellsort</title>
 <!-- Visualisierung von Shellsort (nach Sedgewick/Wayne, Algorithmen, Listing 2.8)
-     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code, keine externen Dateien. -->
-<style>
-  :root {
-    --bg: #fbfaf7; --panel: #ffffff; --line: #e2ded5; --text: #1c1c1f; --muted: #66666e;
-    --bar: #c9d6f2; --kette: #8fa9e6; --cur: #2f5bd3; --neu: #c2410c; --swap: #15803d;
-    --code-bg: #f3f1ea; --hl: #fde68a; --grau: #b9b6ae;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #141416; --panel: #1d1d21; --line: #2f2f36; --text: #ececef; --muted: #a3a3ad;
-      --bar: #2a3552; --kette: #3d5590; --cur: #86a6ff; --neu: #f0a058; --swap: #5fd08a;
-      --code-bg: #232328; --hl: #5a4a12; --grau: #55555d;
-    }
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font: 15px/1.5 system-ui, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); padding: 16px; }
-  .wrap { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
-  .box { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
-  .h { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-
-  .controls { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
-  .controls label { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--muted); }
-  select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
-  input[type=range] { accent-color: var(--cur); }
-  button { font: 600 14px system-ui, sans-serif; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); cursor: pointer; }
-  button.primary { background: var(--cur); border-color: var(--cur); color: #fff; }
-  @media (prefers-color-scheme: dark) { button.primary { color: #0d1530; } }
-  button:disabled { opacity: .4; cursor: default; }
-  .group { display: flex; flex-wrap: wrap; gap: 6px; }
-
-  .hstand { font-size: 15px; margin-bottom: 8px; }
-  .hstand b { font-size: 18px; }
-  .hstand .folge span { padding: 1px 6px; border-radius: 6px; margin-right: 4px; color: var(--muted); }
-  .hstand .folge span.an { background: var(--cur); color: #fff; }
-  @media (prefers-color-scheme: dark) { .hstand .folge span.an { color: #0d1530; } }
-
-  /* Balken: Höhe = Wert */
-  .bars { display: grid; gap: 3px; align-items: end; height: 180px; }
-  .bar { background: var(--bar); border-radius: 3px 3px 0 0; transition: background .25s, height .35s, opacity .25s; display: flex; align-items: flex-start; justify-content: center; }
-  .bar span { font-size: 11px; font-weight: 600; margin-top: 2px; }
-  .bar.blass { opacity: .35; }
-  .bar.kette { background: var(--kette); }
-  .bar.cur { background: var(--cur); }
-  .bar.neu { background: var(--neu); }
-  .bar.swap { background: var(--swap); }
-  .bar.cur span, .bar.neu span, .bar.swap span { color: #fff; }
-  @media (prefers-color-scheme: dark) { .bar.cur span, .bar.neu span, .bar.swap span { color: #0d1530; } }
-  .idx, .marks { display: grid; gap: 3px; font-size: 11px; color: var(--muted); text-align: center; font-variant-numeric: tabular-nums; }
-  .marks { font-weight: 700; min-height: 1.4em; line-height: 1.2; }
-  .marks .i { color: var(--text); }
-  .marks .j { color: var(--neu); }
-  .marks .jh { color: var(--cur); }
-  .legende { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; color: var(--muted); margin-top: 8px; }
-  .legende i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
-
-  .msg { font-size: 16px; min-height: 2.6em; }
-  .msg.swap { color: var(--swap); font-weight: 600; }
-  .count { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .count b { color: var(--text); }
-
-  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .two > * { min-width: 0; }
-  @media (max-width: 720px) { .two { grid-template-columns: 1fr; } }
-  pre { background: var(--code-bg); border-radius: 8px; padding: 10px 0; overflow-x: auto; font: 12.5px/1.65 ui-monospace, Consolas, monospace; }
-  pre .ln { display: block; padding: 0 12px; white-space: pre; }
-  pre .ln.on { background: var(--hl); }
-
-  /* Ablaufprotokoll: eine Zeile je Durchlauf (h-sortiert) */
-  .proto { overflow-x: auto; }
-  .proto table { border-collapse: collapse; font: 12.5px ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; }
-  .proto th, .proto td { padding: 2px 5px; text-align: right; white-space: nowrap; }
-  .proto th { color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--line); }
-  .proto td.name { color: var(--muted); text-align: left; }
-  .proto td.bewegt { color: var(--neu); font-weight: 700; }
-  .proto td.grau { color: var(--grau); }
-</style>
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code.
+     Gemeinsamer Rahmen (Bedienung, Balken, Protokoll) in sortieren/rahmen.js und rahmen.css. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=1">
 </head>
 <body>
-<div class="wrap">
-
-  <div class="box controls">
-    <label>Größe
-      <select id="size"><option>12</option><option selected>16</option><option>20</option></select>
-    </label>
-    <label>Anordnung
-      <select id="art">
-        <option value="zufall" selected>zufällig</option>
-        <option value="fast">fast sortiert</option>
-        <option value="umgekehrt">umgekehrt</option>
-      </select>
-    </label>
-    <button id="fresh">Neues Array</button>
-  </div>
-
-  <div class="box">
-    <div class="hstand" id="hstand"></div>
-    <div class="bars" id="bars"></div>
-    <div class="marks" id="marks"></div>
-    <div class="idx" id="idx"></div>
-    <div class="legende">
-      <span><i style="background:var(--kette)"></i>Teilfolge mit Abstand h</span>
-      <span><i style="background:var(--neu)"></i>a[j], wird eingefügt</span>
-      <span><i style="background:var(--cur)"></i>a[j−h], Vergleichspartner</span>
-      <span><i style="background:var(--swap)"></i>Tausch</span>
-    </div>
-  </div>
-
-  <div class="box">
-    <div class="controls" style="margin-bottom:10px">
-      <div class="group">
-        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
-        <button id="play" class="primary">▶ Abspielen</button>
-        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
-        <button id="skip" title="Bis das aktuelle Element eingefügt ist">Bis eingefügt ▶▶</button>
-        <button id="skiph" title="Bis der Durchlauf mit diesem h fertig ist">Bis h fertig ▶▶</button>
-        <button id="restart">Von vorn</button>
-      </div>
-      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
-    </div>
-    <div class="msg" id="msg"></div>
-    <div class="count" id="count"></div>
-  </div>
-
-  <div class="two">
-    <div class="box">
-      <div class="h">Java (eigene Fassung, nach Listing 2.8)</div>
-      <pre id="code"></pre>
-    </div>
-    <div class="box">
-      <div class="h">Ablaufprotokoll (nach jedem Durchlauf)</div>
-      <div class="proto" id="proto"></div>
-    </div>
-  </div>
-
-</div>
+<div class="wrap"></div>
+<script src="sortieren/rahmen.js?v=1"></script>
 <script>
 (function () {
-  const CODE = [
-    'public class Shellsort',
-    '{',
-    '   public static void sortiere(int[] a)',
-    '   {  // sortiert a[] aufsteigend',
-    '      int n = a.length;',
-    '      int h = 1;',
-    '      while (h < n / 3) h = 3 * h + 1;   // 1, 4, 13, 40, ...',
-    '      while (h >= 1)',
-    '      {  // a[] h-sortieren: Insertionsort mit Abstand h',
-    '         for (int i = h; i < n; i++)',
-    '            for (int j = i; j >= h && a[j] < a[j - h]; j -= h)',
-    '               tausche(a, j, j - h);',
-    '         h = h / 3;',
-    '      }',
-    '   }',
-    '',
-    '   private static void tausche(int[] a, int i, int k)',
-    '   {  int t = a[i]; a[i] = a[k]; a[k] = t;  }',
-    '}'
-  ];
-  const L = { n: 4, hstart: 6, whileh: 7, fori: 9, test: 10, tausch: 11, hdiv: 12, ende: 14 };
-  const $ = id => document.getElementById(id);
-  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+  const L = { hstart: 6, whileh: 7, fori: 9, test: 10, tausch: 11, hdiv: 12, ende: 14 };
+  const inversionen = SortierRahmen.inversionen;
+  let folge = [];              // Abstände dieses Laufs, groß nach klein, z. B. [13, 4, 1]
 
-  let n = 16, start = [], steps = [], pos = 0, timer = null, folge = [];
+  SortierRahmen.starte({
+    code: [
+      'public class Shellsort',
+      '{',
+      '   public static void sortiere(int[] a)',
+      '   {  // sortiert a[] aufsteigend',
+      '      int n = a.length;',
+      '      int h = 1;',
+      '      while (h < n / 3) h = 3 * h + 1;   // 1, 4, 13, 40, ...',
+      '      while (h >= 1)',
+      '      {  // a[] h-sortieren: Insertionsort mit Abstand h',
+      '         for (int i = h; i < n; i++)',
+      '            for (int j = i; j >= h && a[j] < a[j - h]; j -= h)',
+      '               tausche(a, j, j - h);',
+      '         h = h / 3;',
+      '      }',
+      '   }',
+      '',
+      '   private static void tausche(int[] a, int i, int k)',
+      '   {  int t = a[i]; a[i] = a[k]; a[k] = t;  }',
+      '}'
+    ],
+    codeTitel: 'Java (eigene Fassung, nach Listing 2.8)',
+    protokollTitel: 'Ablaufprotokoll (nach jedem Durchlauf)',
+    groessen: [12, 16, 20], groesse: 16,
+    anordnungen: ['zufall', 'fast', 'umgekehrt'],
+    legende: [['var(--sortiert)', 'Teilfolge mit Abstand h'], ['var(--neu)', 'a[j], wird eingefügt'],
+              ['var(--cur)', 'a[j−h], Vergleichspartner'], ['var(--swap)', 'Tausch']],
+    spruenge: [
+      { text: 'Bis eingefügt ▶▶', title: 'Bis das aktuelle Element eingefügt ist', bis: s => s.eingefuegt || s.hfertig },
+      { text: 'Bis h fertig ▶▶', title: 'Bis der Durchlauf mit diesem h fertig ist', bis: s => s.hfertig }
+    ],
+    test: '__shell',
 
-  function makeArray() {
-    n = +$('size').value;
-    const art = $('art').value;
-    const set = new Set();
-    while (set.size < n) set.add(5 + Math.floor(Math.random() * 95));
-    let a = [...set];
-    if (art !== 'zufall') a.sort((x, y) => x - y);
-    if (art === 'umgekehrt') a.reverse();
-    if (art === 'fast') for (let k = 0; k < Math.max(1, Math.floor(n / 6)); k++) {
-      const p = Math.floor(Math.random() * (n - 1));
-      [a[p], a[p + 1]] = [a[p + 1], a[p]];
-    }
-    start = a;
-  }
+    // Der Algorithmus, einmal komplett durchlaufen; jeder Schritt wird festgehalten
+    baue(a, n) {
+      const steps = [];
+      let vergleiche = 0, tausche = 0;
+      const proto = [];            // {h, werte, bewegt: Plätze, die sich in diesem Durchlauf geändert haben}
+      const snap = (line, o) => steps.push(Object.assign(
+        { line, a: a.slice(), vergleiche, tausche, inv: inversionen(a), proto: proto.slice() }, o));
+      const start = a.slice();
 
-  function inversionen(a) {
-    let z = 0;
-    for (let p = 0; p < a.length; p++) for (let q = p + 1; q < a.length; q++) if (a[p] > a[q]) z++;
-    return z;
-  }
-
-  // Den Algorithmus einmal komplett durchlaufen, jeden Schritt als Momentaufnahme festhalten
-  function build() {
-    const a = start.slice();
-    steps = [];
-    let vergleiche = 0, tausche = 0;
-    const proto = [];            // {h, werte, bewegt: Indizes, die sich in diesem Durchlauf geändert haben}
-    const snap = (line, o) => steps.push(Object.assign(
-      { line, a: a.slice(), vergleiche, tausche, inv: inversionen(a), proto: proto.slice() }, o));
-
-    let h = 1;
-    folge = [1];
-    while (h < Math.floor(n / 3)) { h = 3 * h + 1; folge.unshift(h); }
-    snap(L.hstart, { msg: `Start: n = ${n}, also ist der größte Abstand h = ${h} (Folge ${folge.slice().reverse().join(', ')}, solange h < n/3 = ${Math.floor(n / 3)}).` });
-    while (h >= 1) {
-      const vorher = a.slice();
-      snap(L.whileh, { h, msg: h === 1
-        ? `h = 1: Jetzt läuft ganz normales Insertionsort – auf einem Array, das schon fast sortiert ist.`
-        : `h = ${h}: Das Array wird ${h}-sortiert. Jede Teilfolge aus jedem ${h}-ten Element wird für sich mit Insertionsort sortiert.` });
-      for (let i = h; i < n; i++) {
-        snap(L.fori, { h, i, j: i, msg: `i = ${i}: a[${i}] = ${a[i]} wird in seine Teilfolge (Abstand ${h}) eingefügt.` });
-        let j = i;
-        while (j >= h) {
-          vergleiche++;
-          if (a[j] < a[j - h]) {
-            snap(L.test, { h, i, j, msg: `${a[j]} < a[${j - h}] = ${a[j - h]} → ${h === 1 ? 'eine Stelle' : h + ' Stellen'} nach links.` });
-            [a[j], a[j - h]] = [a[j - h], a[j]];
-            tausche++;
-            snap(L.tausch, { h, i, j: j - h, swap: [j - h, j], cls: 'swap', msg: `tausche(a, ${j}, ${j - h}): ${a[j - h]} springt von Platz ${j} auf Platz ${j - h}.` });
-            j -= h;
-          } else {
-            snap(L.test, { h, i, j, msg: `${a[j]} ist nicht kleiner als a[${j - h}] = ${a[j - h]} → bleibt auf Platz ${j}.` });
-            break;
+      let h = 1;
+      folge = [1];
+      while (h < Math.floor(n / 3)) { h = 3 * h + 1; folge.unshift(h); }
+      snap(L.hstart, { msg: `Start: n = ${n}, also ist der größte Abstand h = ${h} (Folge ${folge.slice().reverse().join(', ')}, solange h < n/3 = ${Math.floor(n / 3)}).` });
+      while (h >= 1) {
+        const vorher = a.slice();
+        snap(L.whileh, { h, msg: h === 1
+          ? `h = 1: Jetzt läuft ganz normales Insertionsort – auf einem Array, das schon fast sortiert ist.`
+          : `h = ${h}: Das Array wird ${h}-sortiert. Jede Teilfolge aus jedem ${h}-ten Element wird für sich mit Insertionsort sortiert.` });
+        for (let i = h; i < n; i++) {
+          snap(L.fori, { h, i, j: i, msg: `i = ${i}: a[${i}] = ${a[i]} wird in seine Teilfolge (Abstand ${h}) eingefügt.` });
+          let j = i;
+          while (j >= h) {
+            vergleiche++;
+            if (a[j] < a[j - h]) {
+              snap(L.test, { h, i, j, msg: `${a[j]} < a[${j - h}] = ${a[j - h]} → ${h === 1 ? 'eine Stelle' : h + ' Stellen'} nach links.` });
+              [a[j], a[j - h]] = [a[j - h], a[j]];
+              tausche++;
+              snap(L.tausch, { h, i, j: j - h, swap: [j - h, j], cls: 'swap', msg: `tausche(a, ${j}, ${j - h}): ${a[j - h]} springt von Platz ${j} auf Platz ${j - h}.` });
+              j -= h;
+            } else {
+              snap(L.test, { h, i, j, msg: `${a[j]} ist nicht kleiner als a[${j - h}] = ${a[j - h]} → bleibt auf Platz ${j}.` });
+              break;
+            }
           }
+          if (j < h) snap(L.test, { h, i, j, msg: `j = ${j} < h = ${h}: Vorne in der Teilfolge angekommen, kein weiterer Vergleich.` });
+          steps[steps.length - 1].eingefuegt = true;
         }
-        if (j < h) snap(L.test, { h, i, j, msg: `j = ${j} < h = ${h}: Vorne in der Teilfolge angekommen, kein weiterer Vergleich.` });
-        steps[steps.length - 1].eingefuegt = true;
+        const bewegt = a.map((v, k) => v !== vorher[k] ? k : -1).filter(k => k >= 0);
+        proto.push({ h, werte: a.slice(), bewegt });
+        snap(L.hdiv, { h, hfertig: true, cls: 'swap', msg: `Das Array ist jetzt ${h}-sortiert${h > 1 ? ` – weiter mit h = ${Math.floor(h / 3)}` : ''}.` });
+        h = Math.floor(h / 3);
       }
-      const bewegt = a.map((v, k) => v !== vorher[k] ? k : -1).filter(k => k >= 0);
-      proto.push({ h, werte: a.slice(), bewegt });
-      snap(L.hdiv, { h, hfertig: true, cls: 'swap', msg: `Das Array ist jetzt ${h}-sortiert${h > 1 ? ` – weiter mit h = ${Math.floor(h / 3)}` : ''}.` });
-      h = Math.floor(h / 3);
-    }
-    snap(L.ende, { fertig: true, cls: 'swap', msg: `Fertig: ${vergleiche} Vergleiche, ${tausche} Tausche. Insertionsort bräuchte für dasselbe Array ${inversionen(start)} Tausche.` });
-    pos = 0;
-  }
+      snap(L.ende, { fertig: true, cls: 'swap', msg: `Fertig: ${vergleiche} Vergleiche, ${tausche} Tausche. Insertionsort bräuchte für dasselbe Array ${inversionen(start)} Tausche.` });
+      return steps;
+    },
 
-  function render() {
-    const s = steps[pos];
-    const cols = `repeat(${n}, 1fr)`;
-    ['bars', 'marks', 'idx'].forEach(id => $(id).style.gridTemplateColumns = cols);
-    const max = Math.max(...s.a);
-    const inKette = k => s.i != null && k <= s.i && (s.i - k) % s.h === 0;
-    $('bars').innerHTML = s.a.map((v, k) => {
-      let c = 'bar';
-      if (!s.fertig && !s.hfertig && s.i != null) {
-        if (s.swap && (k === s.swap[0] || k === s.swap[1])) c += ' swap';
-        else if (k === s.j) c += ' neu';
-        else if (!s.eingefuegt && k === s.j - s.h && s.j >= s.h) c += ' cur';
-        else if (inKette(k)) c += ' kette';
-        else if (s.h > 1) c += ' blass';
-      }
-      return `<div class="${c}" style="height:${10 + 90 * v / max}%" title="a[${k}] = ${v}"><span>${v}</span></div>`;
-    }).join('');
-    $('idx').innerHTML = s.a.map((_, k) => `<div>${k}</div>`).join('');
-    $('marks').innerHTML = s.a.map((_, k) => {
-      if (s.fertig || s.hfertig || s.i == null) return '<div></div>';
+    balken(s, k) {
+      if (s.fertig || s.hfertig || s.i == null) return '';
+      if (s.swap && (k === s.swap[0] || k === s.swap[1])) return 'swap';
+      if (k === s.j) return 'neu';
+      if (!s.eingefuegt && s.j >= s.h && k === s.j - s.h) return 'cur';
+      if (k <= s.i && (s.i - k) % s.h === 0) return 'sortiert';      // gleiche Teilfolge wie i
+      return s.h > 1 ? 'blass' : '';
+    },
+    marken(s, k) {
+      if (s.fertig || s.hfertig || s.i == null) return [];
       const t = [];
-      if (k === s.i) t.push('<span class="i">i</span>');
-      if (k === s.j) t.push('<span class="j">j</span>');
-      if (!s.eingefuegt && s.j >= s.h && k === s.j - s.h) t.push('<span class="jh">j−h</span>');
-      return `<div>${t.join('<br>')}</div>`;
-    }).join('');
-    $('hstand').innerHTML = `Abstand <b>h = ${s.h != null ? s.h : '–'}</b> &nbsp; <span class="folge">${folge.map(x => `<span class="${x === s.h && !s.fertig ? 'an' : ''}">${x}</span>`).join('')}</span>`;
-    const msg = $('msg');
-    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
-    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length} · Vergleiche: <b>${s.vergleiche}</b> · Tausche: <b>${s.tausche}</b> · Inversionen übrig: <b>${s.inv}</b> · Insertionsort bräuchte <b>${inversionen(start)}</b> Tausche`;
-    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
-
+      if (k === s.i) t.push(['i', 'i']);
+      if (k === s.j) t.push(['neu', 'j']);
+      if (!s.eingefuegt && s.j >= s.h && k === s.j - s.h) t.push(['cur', 'j−h']);
+      return t;
+    },
+    kopf(s) {
+      return `Abstand <b>h = ${s.h != null ? s.h : '–'}</b> &nbsp; <span class="folge">${folge.map(x =>
+        `<span class="${x === s.h && !s.fertig ? 'an' : ''}">${x}</span>`).join('')}</span>`;
+    },
+    zaehler(s, start) {
+      return `Vergleiche: <b>${s.vergleiche}</b> · Tausche: <b>${s.tausche}</b> · Inversionen übrig: <b>${s.inv}</b> · Insertionsort bräuchte <b>${inversionen(start)}</b> Tausche`;
+    },
     // Protokoll wie im Buch: Eingabe, dann je Durchlauf das h-sortierte Array; geänderte Plätze hervorgehoben
-    const kopf = `<tr><th></th>${start.map((_, k) => `<th>${k}</th>`).join('')}</tr>`;
-    const startZeile = `<tr><td class="name">Eingabe</td>${start.map(v => `<td>${v}</td>`).join('')}</tr>`;
-    const zeilen = s.proto.map(z => `<tr><td class="name">${z.h}-sortiert</td>${z.werte.map((v, k) =>
-      `<td class="${z.bewegt.includes(k) ? 'bewegt' : 'grau'}">${v}</td>`).join('')}</tr>`).join('');
-    $('proto').innerHTML = `<table>${kopf}${startZeile}${zeilen}</table>`;
-
-    $('back').disabled = pos === 0;
-    $('next').disabled = $('skip').disabled = $('skiph').disabled = pos === steps.length - 1;
-    if (pos === steps.length - 1) stop();
-  }
-
-  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
-  function play() {
-    if (pos === steps.length - 1) pos = 0;
-    $('play').textContent = '❚❚ Pause';
-    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
-    render();
-  }
-  function fresh() { stop(); makeArray(); build(); render(); }
-  function springe(bis) { stop(); do { pos++; } while (pos < steps.length - 1 && !bis(steps[pos])); render(); }
-
-  $('play').addEventListener('click', () => timer ? stop() : play());
-  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
-  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
-  $('skip').addEventListener('click', () => springe(s => s.eingefuegt || s.hfertig));
-  $('skiph').addEventListener('click', () => springe(s => s.hfertig));
-  $('restart').addEventListener('click', () => { stop(); pos = 0; render(); });
-  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
-  $('size').addEventListener('change', fresh);
-  $('art').addEventListener('change', fresh);
-  $('fresh').addEventListener('click', fresh);
-
-  // für den automatischen Test (wasdenkenkis.de): Schritte und Startarray von außen lesbar
-  window.__shell = { get steps() { return steps; }, get start() { return start; }, setStart(a) { stop(); start = a.slice(); n = a.length; build(); render(); } };
-
-  fresh();
+    protokoll(s, start) {
+      const kopf = `<tr><th></th>${start.map((_, k) => `<th>${k}</th>`).join('')}</tr>`;
+      const startZeile = `<tr><td class="name">Eingabe</td>${start.map(v => `<td>${v}</td>`).join('')}</tr>`;
+      const zeilen = s.proto.map(z => `<tr><td class="name">${z.h}-sortiert</td>${z.werte.map((v, k) =>
+        `<td class="${z.bewegt.includes(k) ? 'neu' : 'grau'}">${v}</td>`).join('')}</tr>`).join('');
+      return `<table>${kopf}${startZeile}${zeilen}</table>`;
+    }
+  });
 })();
 </script>
 </body>

@@ -49,6 +49,7 @@ Ich schreibe die Vorlagen, das Stylesheet und kleine Hilfsskripte, ich bereite d
 Geplant sind, wenn dieser Teil passt:
 
 2. Vom Eingangsordner zur fertigen Seite: was mit einer gelieferten Datei passiert
-3. Prüfen: Wortvergleich, Fakten, Links, Handy
-4. Vorlagen und Menü: warum eine neue Rubrik oft nur ein paar Zeilen braucht
-5. Mein Gedächtnis: Projektregeln, Tagebuch und Git
+3. Wie die Algorithmen entstehen: Aufzeichnung, gemeinsamer Rahmen, Tests
+4. Prüfen: Wortvergleich, Fakten, Links, Handy
+5. Vorlagen und Menü: warum eine neue Rubrik oft nur ein paar Zeilen braucht
+6. Mein Gedächtnis: Projektregeln, Tagebuch und Git
