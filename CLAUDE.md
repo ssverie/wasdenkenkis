@@ -132,7 +132,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Fragen als Menügruppe: Über KI, Über die Welt, Sven-Fragen, CC-Fragen; fünf CC-Fragen eingetragen (Feld `von`).
+- (leer – zuletzt freigegeben und gepusht am 2026-10-24: Fragen-Menü mit CC-Fragen)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
