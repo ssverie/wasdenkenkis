@@ -1,0 +1,351 @@
+# Musik – Alben mit Künstler, Album und Titeln. /musik/ zeigt die Künstler, die Künstlerseite (content/musik/<kuenstler>/)
+# alle Alben dieses Künstlers nach jahr, das Neueste oben (Svens Regel für alle Medien).
+# [[album]]: kuenstler (genau wie im Feld kuenstler der Künstlerseite), titel (Albumtitel), jahr (Zahl), erschienen (Text),
+# datum (Erstveröffentlichung, zum Sortieren), titel_liste (Stücke in Reihenfolge), optional hinweis, optional youtube (nur verlinken, nie einbetten) + youtube_kanal,
+# quelle/quelle_url (woher die Daten stammen), abgerufen, optional [[album.bezug]] text/pfad = Seiten dazu auf wasdenkenkis.de.
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "The Dark Side of the Moon"
+jahr = 1973
+datum = 1973-03-01
+erschienen = "1. März 1973 (USA, Capitol), 16. März 1973 (Großbritannien, Harvest)"
+titel_liste = [
+  "Speak to Me",
+  "Breathe",
+  "On the Run",
+  "Time",
+  "The Great Gig in the Sky",
+  "Money",
+  "Us and Them",
+  "Any Colour You Like",
+  "Brain Damage",
+  "Eclipse",
+]
+youtube = "https://www.youtube.com/watch?v=k9ynZnEBtvw"
+youtube_kanal = "offizieller Kanal von Pink Floyd, Remaster 2023 zum 50. Jubiläum, ganzes Album"
+quelle = "Wikipedia"
+quelle_url = "https://de.wikipedia.org/wiki/The_Dark_Side_of_the_Moon"
+abgerufen = 2026-10-24
+  [[album.bezug]]
+  text = "Sven-Frage: Wird eine KI jemals so etwas hervorbringen? – Antwort von GPT-6"
+  pfad = "/fragen/dark-side-of-the-moon-gpt-6"
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "The Piper at the Gates of Dawn"
+jahr = 1967
+datum = 1967-08-04
+erschienen = "4. August 1967"
+titel_liste = [
+  "Astronomy Dominé",
+  "Lucifer Sam",
+  "Matilda Mother",
+  "Flaming",
+  "Pow R. Toc H.",
+  "Take Up Thy Stethoscope and Walk",
+  "Interstellar Overdrive",
+  "The Gnome",
+  "Chapter 24",
+  "The Scarecrow",
+  "Bike",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/The_Piper_at_the_Gates_of_Dawn"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "A Saucerful of Secrets"
+jahr = 1968
+datum = 1968-06-28
+erschienen = "28. Juni 1968"
+titel_liste = [
+  "Let There Be More Light",
+  "Remember a Day",
+  "Set the Controls for the Heart of the Sun",
+  "Corporal Clegg",
+  "A Saucerful of Secrets",
+  "See-Saw",
+  "Jugband Blues",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/A_Saucerful_of_Secrets"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "More"
+jahr = 1969
+datum = 1969-06-13
+erschienen = "13. Juni 1969"
+titel_liste = [
+  "Cirrus Minor",
+  "The Nile Song",
+  "Crying Song",
+  "Up the Khyber",
+  "Green Is the Colour",
+  "Cymbaline",
+  "Party Sequence",
+  "Main Theme",
+  "Ibiza Bar",
+  "More Blues",
+  "Quicksilver",
+  "A Spanish Piece",
+  "Dramatic Theme",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/More_(soundtrack)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "Ummagumma"
+jahr = 1969
+datum = 1969-11-07
+erschienen = "7. November 1969"
+hinweis = "Doppelalbum: erste Platte live, zweite Platte im Studio"
+titel_liste = [
+  "Astronomy Domine",
+  "Careful with That Axe, Eugene",
+  "Set the Controls for the Heart of the Sun",
+  "A Saucerful of Secrets",
+  "Sysyphus (Parts I–IV)",
+  "Grantchester Meadows",
+  "Several Species of Small Furry Animals Gathered Together in a Cave and Grooving with a Pict",
+  "The Narrow Way (Parts I–III)",
+  "The Grand Vizier's Garden Party (Parts I–III)",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Ummagumma"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "Atom Heart Mother"
+jahr = 1970
+datum = 1970-10-02
+erschienen = "2. Oktober 1970"
+titel_liste = [
+  "Atom Heart Mother",
+  "If",
+  "Summer '68",
+  "Fat Old Sun",
+  "Alan's Psychedelic Breakfast",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Atom_Heart_Mother"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "Meddle"
+jahr = 1971
+datum = 1971-11-05
+erschienen = "5. November 1971"
+titel_liste = [
+  "One of These Days",
+  "A Pillow of Winds",
+  "Fearless",
+  "San Tropez",
+  "Seamus",
+  "Echoes",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Meddle"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "Obscured by Clouds"
+jahr = 1972
+datum = 1972-06-02
+erschienen = "2. Juni 1972"
+titel_liste = [
+  "Obscured by Clouds",
+  "When You're In",
+  "Burning Bridges",
+  "The Gold It's in the...",
+  "Wot's... Uh the Deal?",
+  "Mudmen",
+  "Childhood's End",
+  "Free Four",
+  "Stay",
+  "Absolutely Curtains",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Obscured_by_Clouds"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "Wish You Were Here"
+jahr = 1975
+datum = 1975-09-12
+erschienen = "12. September 1975"
+titel_liste = [
+  "Shine On You Crazy Diamond (Parts I–V)",
+  "Welcome to the Machine",
+  "Have a Cigar",
+  "Wish You Were Here",
+  "Shine On You Crazy Diamond (Parts VI–IX)",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Wish_You_Were_Here_(Pink_Floyd_album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "Animals"
+jahr = 1977
+datum = 1977-01-21
+erschienen = "21. Januar 1977"
+titel_liste = [
+  "Pigs on the Wing (Part One)",
+  "Dogs",
+  "Pigs (Three Different Ones)",
+  "Sheep",
+  "Pigs on the Wing (Part Two)",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/Animals_(Pink_Floyd_album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "The Wall"
+jahr = 1979
+datum = 1979-11-30
+erschienen = "30. November 1979"
+hinweis = "Doppelalbum"
+titel_liste = [
+  "In the Flesh?",
+  "The Thin Ice",
+  "Another Brick in the Wall, Part 1",
+  "The Happiest Days of Our Lives",
+  "Another Brick in the Wall, Part 2",
+  "Mother",
+  "Goodbye Blue Sky",
+  "Empty Spaces",
+  "Young Lust",
+  "One of My Turns",
+  "Don't Leave Me Now",
+  "Another Brick in the Wall, Part 3",
+  "Goodbye Cruel World",
+  "Hey You",
+  "Is There Anybody Out There?",
+  "Nobody Home",
+  "Vera",
+  "Bring the Boys Back Home",
+  "Comfortably Numb",
+  "The Show Must Go On",
+  "In the Flesh",
+  "Run Like Hell",
+  "Waiting for the Worms",
+  "Stop",
+  "The Trial",
+  "Outside the Wall",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/The_Wall"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "The Final Cut"
+jahr = 1983
+datum = 1983-03-21
+erschienen = "21. März 1983"
+titel_liste = [
+  "The Post War Dream",
+  "Your Possible Pasts",
+  "One of the Few",
+  "The Hero's Return",
+  "The Gunner's Dream",
+  "Paranoid Eyes",
+  "Get Your Filthy Hands Off My Desert",
+  "The Fletcher Memorial Home",
+  "Southampton Dock",
+  "The Final Cut",
+  "Not Now John",
+  "Two Suns in the Sunset",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/The_Final_Cut_(album)"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "A Momentary Lapse of Reason"
+jahr = 1987
+datum = 1987-09-07
+erschienen = "7. September 1987"
+titel_liste = [
+  "Signs of Life",
+  "Learning to Fly",
+  "The Dogs of War",
+  "One Slip",
+  "On the Turning Away",
+  "Yet Another Movie / Round and Around",
+  "A New Machine – Part 1",
+  "Terminal Frost",
+  "A New Machine – Part 2",
+  "Sorrow",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/A_Momentary_Lapse_of_Reason"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "The Division Bell"
+jahr = 1994
+datum = 1994-03-28
+erschienen = "28. März 1994"
+titel_liste = [
+  "Cluster One",
+  "What Do You Want from Me",
+  "Poles Apart",
+  "Marooned",
+  "A Great Day for Freedom",
+  "Wearing the Inside Out",
+  "Take It Back",
+  "Coming Back to Life",
+  "Keep Talking",
+  "Lost for Words",
+  "High Hopes",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/The_Division_Bell"
+abgerufen = 2026-10-24
+
+[[album]]
+kuenstler = "Pink Floyd"
+titel = "The Endless River"
+jahr = 2014
+datum = 2014-11-10
+erschienen = "10. November 2014"
+hinweis = "Doppelalbum"
+titel_liste = [
+  "Things Left Unsaid",
+  "It's What We Do",
+  "Ebb and Flow",
+  "Sum",
+  "Skins",
+  "Unsung",
+  "Anisina",
+  "The Lost Art of Conversation",
+  "On Noodle Street",
+  "Night Light",
+  "Allons-y (1)",
+  "Autumn '68",
+  "Allons-y (2)",
+  "Talkin' Hawkin'",
+  "Calling",
+  "Eyes to Pearls",
+  "Surfacing",
+  "Louder than Words",
+]
+quelle = "Wikipedia (en)"
+quelle_url = "https://en.wikipedia.org/wiki/The_Endless_River"
+abgerufen = 2026-10-24

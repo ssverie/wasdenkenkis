@@ -1,0 +1,34 @@
+{{- /* Künstlerseite (/musik/<kuenstler>/): alle Alben aus data/musik.toml mit kuenstler = .Params.kuenstler,
+       je Album Titel mit Jahr (verlinkt auf YouTube, falls vorhanden – nur verlinken, nie einbetten), Erscheinen, Titelliste.
+       Sortiert nach datum (Erstveröffentlichung), das Neueste oben (Svens Regel für alle Medien). */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  <p class="meta"><a href="{{ .Parent.RelPermalink }}">← {{ .Parent.Title }}</a></p>
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+<div class="alben">
+  {{- range sort (where hugo.Data.musik.album "kuenstler" .Params.kuenstler) "datum" "desc" }}
+  <section class="album">
+    <h2 class="album-titel">
+      {{- if .youtube }}<a href="{{ .youtube }}" rel="noopener">{{ .titel }}</a>{{ else }}{{ .titel }}{{ end }} <small>{{ .jahr }}</small></h2>
+    {{- with .erschienen }}<p class="meta">Erschienen: {{ . }}</p>{{ end }}
+    {{- with .hinweis }}<p class="meta">{{ . }}</p>{{ end }}
+    <ol class="album-stuecke">
+      {{- range .titel_liste }}
+      <li>{{ . }}</li>
+      {{- end }}
+    </ol>
+    {{- if .youtube }}<p class="album-hoeren"><a href="{{ .youtube }}" rel="noopener">Auf YouTube anhören</a>{{ with .youtube_kanal }} <span class="meta">({{ . }})</span>{{ end }}</p>{{ end }}
+    {{- with .bezug }}
+    <p class="album-bezug">Dazu auf dieser Seite:
+      {{- range $i, $b := . }}{{ if $i }} · {{ end }} <a href="{{ $b.pfad }}/">{{ $b.text }}</a>{{ end }}
+    </p>
+    {{- end }}
+    {{- if .quelle_url }}
+    <p class="meta">Daten: <a href="{{ .quelle_url }}" rel="noopener">{{ .quelle | default "Quelle" }}</a>{{ with .abgerufen }}, abgerufen am {{ . | time.Format ":date_long" }}{{ end }}</p>
+    {{- end }}
+  </section>
+  {{- end }}
+</div>
+{{ end }}

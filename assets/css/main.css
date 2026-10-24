@@ -440,3 +440,15 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .suche-treffer li { padding: .9rem 0; border-bottom: 1px solid var(--linie); }
 .suche-treffer p { margin: .3rem 0 0; color: var(--text-leise); }
 .suche-treffer mark { background: var(--akzent-leise); color: var(--text); padding: 0 .1em; border-radius: 3px; }
+
+/* Musik (layouts/musik.html): je Album Künstler, Titel mit Jahr, Stücke */
+.alben { display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: 1rem; margin-top: 1rem; }
+.album { padding: 1rem 1.1rem; border: 1px solid var(--linie); border-radius: var(--radius); background: var(--fläche); }
+.album-kuenstler { margin: 0; font-size: 0.85rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--akzent); }
+.album-titel { margin: 0.2rem 0 0.3rem; font-size: 1.25rem; }
+.album-titel small { font-size: 0.9rem; font-weight: 400; color: var(--text-leise); margin-left: 0.3rem; }
+.album-stuecke { margin: 0.6rem 0; padding-left: 1.6rem; }
+.album-stuecke li { padding: 0.1rem 0; }
+.album-bezug { font-size: 0.95rem; }
+.album-titel a { color: inherit; text-decoration-color: var(--akzent); }
+.album-hoeren { margin: 0.3rem 0; }

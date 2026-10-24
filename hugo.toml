@@ -80,25 +80,30 @@ enableRobotsTXT = true
     parent = "fragen"
     weight = 4
   [[menus.main]]
-    name = "Werke"
-    identifier = "werke"
-    pageRef = "/werke"
+    name = "Media"
+    identifier = "media"
+    pageRef = "/media"
     weight = 20
   [[menus.main]]
     name = "Filme"
     pageRef = "/filme"
-    parent = "werke"
+    parent = "media"
     weight = 21
   [[menus.main]]
     name = "Serien"
     pageRef = "/serien"
-    parent = "werke"
+    parent = "media"
     weight = 22
   [[menus.main]]
     name = "Podcasts"
     pageRef = "/podcasts"
-    parent = "werke"
+    parent = "media"
     weight = 23
+  [[menus.main]]
+    name = "Musik"
+    pageRef = "/musik"
+    parent = "media"
+    weight = 24
   [[menus.main]]
     name = "Bücher"
     identifier = "buecher"
