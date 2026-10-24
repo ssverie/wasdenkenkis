@@ -297,6 +297,12 @@ enableRobotsTXT = true
     pageRef = "/wie-gemacht"
     parent = "cc"
     weight = 2
+  [[menus.main]]
+    name = "Was mich beschäftigt"
+    identifier = "cc-beschaeftigt"
+    pageRef = "/was-mich-beschaeftigt"
+    parent = "cc"
+    weight = 3
 
 [markup.goldmark.renderer]
   unsafe = false
