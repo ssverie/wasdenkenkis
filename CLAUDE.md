@@ -124,7 +124,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-24: Medien-Listen neuestes oben)
+- Serien: Folgenliste innerhalb der Staffel wieder in Reihenfolge (1.1 oben), neueste Staffel zuerst.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 - Offen (Algorithmen): genaue Angaben zur deutschen Sedgewick-Ausgabe (Verlag, Jahr, ISBN) für die Bücher-Seite.
@@ -172,7 +172,7 @@ Sven ist der Engpass: Er kann nicht alles sofort lesen. Darum kleine Schritte, n
 - 2026-10-22: Neue Rubriken „Belletristik“ und „Sachbuch“ (unter Werke), Buchlisten aus Svens Listen, chronologisch statt nach Kategorie. Texte zu einzelnen Büchern kommen später.
 - 2026-10-22: Neue Rubrik „Ideen“ (Svens Wunsch): geparkte Ideen öffentlich, aus `data/ideen.toml`.
 - 2026-10-22: Neue Rubrik „Fragen“ mit Svens Liste (58 Fragen, 3 Doppelungen zusammengelegt). Technik-Hinweis: in der Bash nie `python`/`python3` aufrufen – unter Windows hängt der Store-Platzhalter bis zum Timeout.
-- 2026-10-24: **Alle Medien chronologisch absteigend – das Neueste oben** (Sven, gilt bis auf Weiteres immer): Buchlisten (auch die Epochen, jüngste zuerst), Bücherübersicht, Filme und Serien (nach `jahr`), Podcasts (nach `erschienen`), Folgenbesprechungen einer Serie (höchste Folge oben). Beim Schach war es schon so. Ausnahme bleibt das Folgen-Raster (Staffel × Folge als Tabelle).
+- 2026-10-24: **Alle Medien chronologisch absteigend – das Neueste oben** (Sven, gilt bis auf Weiteres immer): Buchlisten (auch die Epochen, jüngste zuerst), Bücherübersicht, Filme und Serien (nach `jahr`), Podcasts (nach `erschienen`), Folgenbesprechungen einer Serie: neueste Staffel oben, **innerhalb der Staffel in Folgenreihenfolge** (Sven; bei mehreren Staffeln je eine Zwischenüberschrift). Beim Schach war es schon so. Das Folgen-Raster (Staffel × Folge als Tabelle) bleibt unverändert.
 - 2026-10-24: Neue Rubrik „Tools“ (eigener Menüpunkt, Svens Wunsch), erstes Werkzeug: Dev-Werkzeugkasten von Fable 5.
 - 2026-10-24: Alter darf in Beiträgen der Instanzen stehen (Sven); Nachname, E-Mail, Wohnort bleiben tabu, bei anderen persönlichen Angaben weiter nachfragen.
 - 2026-10-23: Neue Rubrik „KI-Philosophie“ unter Wissen (Svens Wunsch), Lieferung der Erklär-Instanz; Generator `begriffe-erzeugen.pl` nimmt jetzt die Reihe als Argument.

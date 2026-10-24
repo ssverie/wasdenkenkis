@@ -40,7 +40,15 @@
 <section>
   <h2>Bisher besprochen</h2>
   {{- with .Pages }}
-  {{ partial "liste.html" (sort . "Params.nummer" "desc") }}   {{- /* neueste Folge oben */}}
+  {{- /* Neueste Staffel oben, innerhalb der Staffel in Folgenreihenfolge (Svens Regel) */}}
+  {{- $staffeln := slice }}
+  {{- range . }}{{ $staffeln = $staffeln | append .Params.staffel }}{{ end }}
+  {{- $staffeln = sort (uniq $staffeln) "value" "desc" }}
+  {{- $alle := . }}
+  {{- range $staffeln }}
+    {{- if gt (len $staffeln) 1 }}<h3>Staffel {{ . }}</h3>{{ end }}
+  {{ partial "liste.html" (sort (where $alle "Params.staffel" .) "Params.nummer") }}
+  {{- end }}
   {{- else }}
   <p class="meta">Noch keine Folge besprochen.</p>
   {{- end }}
