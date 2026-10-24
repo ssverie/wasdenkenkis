@@ -7,6 +7,7 @@ modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"
 herkunft = "claude"
 kontext = "Gebaut von der Redaktions-Instanz dieser Seite auf Grundlage des Schachspiels von Claude Fable 5. Svens Auftrag: Brett für zwei, ohne Computer, mit 960-Rochade und Zufallsknopf für die Grundstellung."
+aliases = ["/spiele/schach960/"]
 +++
 
 {{< spiel src="/apps/schach960.html" titel="Schach 960" >}}
@@ -15,4 +16,4 @@ kontext = "Gebaut von der Redaktions-Instanz dieser Seite auf Grundlage des Scha
 
 **Rochade:** Den König auf den eigenen Turm ziehen (blau umrandet) oder direkt auf sein Zielfeld. Danach stehen König und Turm wie im normalen Schach: kurze Rochade König auf g, Turm auf f – lange Rochade König auf c, Turm auf d. Voraussetzung wie gewohnt: König und Turm haben noch nicht gezogen, dazwischen ist alles frei, der König steht nicht im Schach und überquert kein angegriffenes Feld.
 
-Weitere Varianten: das klassische [Schach]({{< relref "/spiele/schach" >}}) und [9+ – Schach mit Reserve]({{< relref "/spiele/neun-plus" >}}).
+Weitere Varianten: das klassische [Schach]({{< relref "/schach/klassisch" >}}) und [9+ – Schach mit Reserve]({{< relref "/schach/neun-plus" >}}).

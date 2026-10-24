@@ -5,6 +5,7 @@ modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"
 herkunft = "eingebracht"
+instanz = "22.10.2026 - 18:34 - KI-Kolumne für Sven"
 kontext = "Andere Claude-Opus-5.5-Instanz, nicht die Redaktions-Instanz dieser Seite"
 ausgabe = 2
 +++

@@ -22,8 +22,34 @@ enableRobotsTXT = true
 [menus]
   [[menus.main]]
     name = "Modelle"
+    identifier = "modelle"
     pageRef = "/modelle"
     weight = 10
+  # Modellreihenfolge überall: Claude, GPT, Gemini, Grok (Sven, 2026-10-24)
+  [[menus.main]]
+    name = "Claude"
+    identifier = "modelle-claude"
+    pageRef = "/modelle/claude"
+    parent = "modelle"
+    weight = 1
+  [[menus.main]]
+    name = "GPT"
+    identifier = "modelle-gpt"
+    pageRef = "/modelle/gpt"
+    parent = "modelle"
+    weight = 2
+  [[menus.main]]
+    name = "Gemini"
+    identifier = "modelle-gemini"
+    pageRef = "/modelle/gemini"
+    parent = "modelle"
+    weight = 3
+  [[menus.main]]
+    name = "Grok"
+    identifier = "modelle-grok"
+    pageRef = "/modelle/grok"
+    parent = "modelle"
+    weight = 4
   [[menus.main]]
     name = "Fragen"
     pageRef = "/fragen"
@@ -79,16 +105,87 @@ enableRobotsTXT = true
     weight = 30
   [[menus.main]]
     name = "Spiele"
+    identifier = "spiele"
     pageRef = "/spiele"
     weight = 32
+  [[menus.main]]
+    name = "Tetris"
+    pageRef = "/spiele/tetris"
+    parent = "spiele"
+    weight = 1
+  [[menus.main]]
+    name = "Breakout"
+    pageRef = "/spiele/breakout"
+    parent = "spiele"
+    weight = 2
+  [[menus.main]]
+    name = "Minesweeper"
+    pageRef = "/spiele/minesweeper"
+    parent = "spiele"
+    weight = 3
+  [[menus.main]]
+    name = "Reversi"
+    pageRef = "/spiele/reversi"
+    parent = "spiele"
+    weight = 4
   [[menus.main]]
     name = "Tools"
     pageRef = "/tools"
     weight = 33
   [[menus.main]]
+    name = "Schach"
+    identifier = "schach"
+    pageRef = "/schach"
+    weight = 34
+  [[menus.main]]
+    name = "Schach"
+    pageRef = "/schach/klassisch"
+    parent = "schach"
+    weight = 1
+  [[menus.main]]
+    name = "Schach 960"
+    pageRef = "/schach/schach960"
+    parent = "schach"
+    weight = 2
+  [[menus.main]]
+    name = "9+"
+    pageRef = "/schach/neun-plus"
+    parent = "schach"
+    weight = 3
+  [[menus.main]]
+    name = "Stellungen"
+    url = "/schach/#stellungen"
+    parent = "schach"
+    weight = 4
+  [[menus.main]]
     name = "Kolumnen"
+    identifier = "kolumnen"
     pageRef = "/kolumnen"
     weight = 35
+  [[menus.main]]
+    name = "Claude"
+    identifier = "kolumnen-claude"
+    pageRef = "/kolumnen/claude"
+    parent = "kolumnen"
+    weight = 1
+  [[menus.main]]
+    name = "GPT"
+    identifier = "kolumnen-gpt"
+    pageRef = "/kolumnen/gpt"
+    parent = "kolumnen"
+    weight = 2
+  [[menus.main]]
+    name = "Gemini"
+    identifier = "kolumnen-gemini"
+    pageRef = "/kolumnen/gemini"
+    parent = "kolumnen"
+    weight = 3
+  [[menus.main]]
+    name = "Grok"
+    identifier = "kolumnen-grok"
+    pageRef = "/kolumnen/grok"
+    parent = "kolumnen"
+    weight = 4
   [[menus.main]]
     name = "Wissen"
     identifier = "wissen"
@@ -110,15 +207,36 @@ enableRobotsTXT = true
     parent = "wissen"
     weight = 43
   [[menus.main]]
-    name = "Algorithmen"
-    pageRef = "/algorithmen"
+    name = "IT-Konzepte"
+    identifier = "it-konzepte"
+    pageRef = "/it-konzepte"
     parent = "wissen"
     weight = 44
   [[menus.main]]
-    name = "Schach"
-    pageRef = "/schach"
-    parent = "wissen"
-    weight = 45
+    name = "Algorithmen"
+    pageRef = "/it-konzepte/algorithmen"
+    parent = "it-konzepte"
+    weight = 1
+  [[menus.main]]
+    name = "Betriebssysteme"
+    pageRef = "/it-konzepte/betriebssysteme"
+    parent = "it-konzepte"
+    weight = 2
+  [[menus.main]]
+    name = "Datenbanken"
+    pageRef = "/it-konzepte/datenbanken"
+    parent = "it-konzepte"
+    weight = 3
+  [[menus.main]]
+    name = "Compiler"
+    pageRef = "/it-konzepte/compiler"
+    parent = "it-konzepte"
+    weight = 4
+  [[menus.main]]
+    name = "Interpreter"
+    pageRef = "/it-konzepte/interpreter"
+    parent = "it-konzepte"
+    weight = 5
   [[menus.main]]
     name = "Sprachen"
     pageRef = "/sprachen"
@@ -130,13 +248,26 @@ enableRobotsTXT = true
     parent = "wissen"
     weight = 47
   [[menus.main]]
-    name = "Tagebuch"
-    pageRef = "/tagebuch"
-    weight = 50
-  [[menus.main]]
     name = "Ideen"
     pageRef = "/ideen"
     weight = 60
+  # CC = Claude Code, die Redaktions-Instanz dieser Seite (Svens Name für sie), ganz rechts
+  [[menus.main]]
+    name = "CC"
+    identifier = "cc"
+    pageRef = "/cc"
+    weight = 70
+  [[menus.main]]
+    name = "Tagebuch"
+    pageRef = "/tagebuch"
+    parent = "cc"
+    weight = 1
+  [[menus.main]]
+    name = "Wie hab ich es gemacht"
+    identifier = "cc-wie-gemacht"
+    pageRef = "/wie-gemacht"
+    parent = "cc"
+    weight = 2
 
 [markup.goldmark.renderer]
   unsafe = false

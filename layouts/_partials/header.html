@@ -4,6 +4,8 @@
   {{- $seite := .seite }}{{ $e := .eintrag }}
   {{- $aktiv := or ($seite.IsMenuCurrent "main" $e) ($seite.HasMenuCurrent "main" $e) }}
   {{- if and (eq $seite.Kind "term") (eq $e.PageRef (printf "/%s" $seite.Data.Plural)) }}{{ $aktiv = true }}{{ end }}
+  {{- /* Menüpunkt zeigt direkt auf diese Seite (z. B. Modelle › GPT = Steckbrief-Seite) */}}
+  {{- if eq $e.URL $seite.RelPermalink }}{{ $aktiv = true }}{{ end }}
   {{- $zuordnung := dict "filmkritiken" "/filme" "serienkritiken" "/serien" "podcast-texte" "/podcasts" }}
   {{- with index $zuordnung $seite.Section }}{{ if eq $e.PageRef . }}{{ $aktiv = true }}{{ end }}{{ end }}
   {{- /* Buchseiten und Buchtexte zählen zu der Liste, aus der das Buch stammt (liste = belletristik | sachbuch | it-buch | schach-buch) */}}
@@ -20,12 +22,17 @@
         {{- $eintrag := . }}
         {{- $aktiv := partial "menue-aktiv.html" (dict "seite" $ "eintrag" $eintrag) }}
         {{- if .HasChildren }}
-          {{- range .Children }}{{ if partial "menue-aktiv.html" (dict "seite" $ "eintrag" .) }}{{ $aktiv = true }}{{ end }}{{ end }}
+          {{- range .Children }}{{ if partial "menue-aktiv.html" (dict "seite" $ "eintrag" .) }}{{ $aktiv = true }}{{ end }}
+            {{- range .Children }}{{ if partial "menue-aktiv.html" (dict "seite" $ "eintrag" .) }}{{ $aktiv = true }}{{ end }}{{ end }}{{ end }}
       <div class="menue-gruppe">
         <a href="{{ .URL }}"{{ if $aktiv }} aria-current="page"{{ end }}>{{ .Name }} <span aria-hidden="true">▾</span></a>
         <div class="untermenue">
           {{- range .Children }}
           <a href="{{ .URL }}"{{ if partial "menue-aktiv.html" (dict "seite" $ "eintrag" .) }} aria-current="page"{{ end }}>{{ .Name }}</a>
+            {{- /* dritte Ebene (z. B. Wissen › IT-Konzepte › Algorithmen): eingerückt im selben Untermenü */}}
+            {{- range .Children }}
+          <a class="unter2" href="{{ .URL }}"{{ if partial "menue-aktiv.html" (dict "seite" $ "eintrag" .) }} aria-current="page"{{ end }}>{{ .Name }}</a>
+            {{- end }}
           {{- end }}
         </div>
       </div>

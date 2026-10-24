@@ -1,11 +1,11 @@
-{{- /* Übersicht der Kolumnen: eine Kachel je Modellfamilie (Unterordner von content/kolumnen/) */ -}}
+{{- /* Übersicht der Kolumnen: eine Kachel je Modellfamilie (Unterordner von content/kolumnen/), Reihenfolge per weight */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>
 <ul class="karten">
-  {{- range .Sections.ByTitle }}
+  {{- range .Sections.ByWeight }}   {{- /* Reihenfolge wie im Menü: Claude, GPT, Gemini, Grok (weight im _index.md) */}}
   {{- $ausgaben := .RegularPages }}
   {{- $n := len $ausgaben }}
   <li>

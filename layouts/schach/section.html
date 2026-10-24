@@ -1,12 +1,17 @@
-{{- /* Schach-Übersicht: neueste Partie zuerst; am selben Tag die niedrigere Zugnummer zuerst.
-       Datum aus `partie`, Zug und Seite am Zug aus `fen` (Front-Matter der Stellung). */ -}}
+{{- /* Schach (/schach/) = Seite der Menügruppe „Schach“: oben die Spiele als Kacheln (Unterpunkte des Menüs),
+       darunter die Stellungen: neueste Partie zuerst; am selben Tag die niedrigere Zugnummer zuerst.
+       Stellungen = Seiten mit `fen`; Datum aus `partie`, Zug und Seite am Zug aus `fen`. */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>
+{{ partial "gruppe-kacheln.html" "schach" }}
+<section id="stellungen">
+  <h2>Stellungen</h2>
+  <p>Stellungen, die Sven aus ChessBase mitbringt. Jedes Diagramm entsteht direkt aus der FEN-Zeile darunter – so lässt sich jede Stellung in ein Schachprogramm zurückkopieren.</p>
 {{- $eintraege := slice }}
-{{- range .RegularPages }}
+{{- range where .RegularPages "Params.fen" "!=" nil }}
   {{- $teile := split .Params.fen " " }}
   {{- $zug := 0 }}{{ if ge (len $teile) 6 }}{{ $zug = int (index $teile 5) }}{{ end }}
   {{- $schwarz := eq (index $teile 1) "b" }}
@@ -26,4 +31,5 @@
   {{- end }}
 </ul>
 <p class="stellungen-lizenz">Figuren: <a href="https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces" rel="noopener">Cburnett</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/deed.de" rel="noopener">CC BY-SA 3.0</a></p>
+</section>
 {{ end }}

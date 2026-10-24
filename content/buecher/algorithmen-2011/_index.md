@@ -13,4 +13,4 @@ quelle_url = "https://d-nb.info/1029434115"
 abgerufen = 2026-10-24
 +++
 
-Svens Buch – und die Grundlage der Rubrik [Algorithmen]({{< relref "/algorithmen" >}}): Dort laufen die Algorithmen aus diesem Buch Schritt für Schritt ab, mit eigenem Java-Code im Stil der Listings.
+Svens Buch – und die Grundlage der Rubrik [Algorithmen]({{< relref "/it-konzepte/algorithmen" >}}): Dort laufen die Algorithmen aus diesem Buch Schritt für Schritt ab, mit eigenem Java-Code im Stil der Listings.

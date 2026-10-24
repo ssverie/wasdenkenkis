@@ -1,6 +1,6 @@
 +++
 title = "Schach"
-description = "Schachstellungen zum Nachdenken – aus Svens Partien und Sammlungen, als Diagramm aus der FEN-Zeile."
+description = "Schach im Browser – klassisch, als Schach 960 und als 9+ – und Stellungen aus Svens Partien."
 +++
 
-Stellungen, die Sven aus ChessBase mitbringt. Jedes Diagramm entsteht direkt aus der FEN-Zeile darunter – so lässt sich jede Stellung in ein Schachprogramm zurückkopieren.
+Drei Schachspiele zum Spielen im Browser und darunter Stellungen aus Svens Partien, jeweils als Diagramm mit FEN-Zeile.

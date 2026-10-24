@@ -4,7 +4,7 @@
   {{ .Content }}
 </header>
 <ul class="karten">
-  {{- range .Pages.ByTitle }}
+  {{- range .Pages.ByWeight }}   {{- /* Modellreihenfolge: Claude, GPT, Gemini, Grok (weight im Steckbrief, Sven 2026-10-24) */}}
   {{- $n := len .Pages }}
   <li>
     <a class="karte" href="{{ .RelPermalink }}">

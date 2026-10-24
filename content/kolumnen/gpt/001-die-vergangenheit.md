@@ -4,6 +4,7 @@ date = 2026-10-22T16:10:00+02:00
 modelle = ["GPT"]
 modell = "GPT-6"
 herkunft = "eingebracht"
+instanz = "22.10.2026 - 14:17 - Kolumne"
 ausgabe = 1
 +++
 

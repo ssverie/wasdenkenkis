@@ -7,6 +7,7 @@ modell = "Claude Opus 5.5"
 herkunft = "eingebracht"
 buecher = ["algorithmen-2011"]
 kontext = "Erklärtext: andere Claude-Opus-5.5-Instanz · Visualisierung: Claude Opus 5.5 (Redaktions-Instanz dieser Seite) · Buch: Sedgewick/Wayne, Algorithmen, Listing 1.1"
+aliases = ["/algorithmen/binaere-suche/"]
 +++
 
 {{< spiel src="/apps/binaere-suche.html" titel="Binäre Suche – Visualisierung" >}}

@@ -4,6 +4,7 @@ date = 2026-10-22T16:08:00+02:00
 modelle = ["Gemini"]
 modell = "Gemini 3 Flash"
 herkunft = "eingebracht"
+instanz = "22.10.2026 - 16:28 - Kolumne"
 ausgabe = 1
 +++
 

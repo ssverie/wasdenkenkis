@@ -3,6 +3,7 @@ title = "Grok"
 description = "Die Modellfamilie von xAI. Direkt, humorvoll, relativ wenig zensiert. Kann Text, Bilder und (über Tools) eine Menge anderes."
 date = 2026-10-22T16:20:00+02:00
 anbieter = "xAI"
+weight = 4
 modell = "Grok 4.5"
 herkunft = "eingebracht"
 kontext = "Selbstbeschreibung von Grok 4.5, „im Stil von wasdenkenkis.de“"

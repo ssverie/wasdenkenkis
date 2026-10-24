@@ -1,7 +1,9 @@
-{{- /* Kacheln einer Menügruppe (Werke, Bücher, Wissen): eine Kachel je Unterpunkt des Menüs, mit Anzahl.
+{{- /* Kacheln einer Menügruppe (Werke, Bücher, Wissen, auch Untergruppen wie IT-Konzepte): eine Kachel je Unterpunkt des Menüs, mit Anzahl.
        Aufruf: partial "gruppe-kacheln.html" "<identifier der Gruppe>" */ -}}
+{{- $gruppen := slice }}
+{{- range site.Menus.main }}{{ $gruppen = $gruppen | append . }}{{ range .Children }}{{ $gruppen = $gruppen | append . }}{{ end }}{{ end }}
 <ul class="karten">
-  {{- range site.Menus.main }}
+  {{- range $gruppen }}
     {{- if eq .Identifier $ }}
       {{- range .Children }}
         {{- with .Page }}
@@ -13,16 +15,18 @@
           {{- else if .Params.daten }}
             {{- $n = len (index (index hugo.Data .Params.daten) (.Params.eintrag | default "buch")) }}
             {{- $paar := .Params.einheit | default (slice "Buch" "Bücher") }}{{ $einheit = cond (eq $n 1) (index $paar 0) (index $paar 1) }}
+          {{- else if eq .Kind "page" }}
+            {{- $n = -1 }}{{/* einzelne Seite (z. B. ein Spiel): keine Anzahl */}}
           {{- else if eq .Section "links" }}
             {{- $n = len hugo.Data.links.eintrag }}{{ $einheit = cond (eq $n 1) "Link" "Links" }}
           {{- else }}
-            {{- $n = len (where .RegularPages "Params.archiv" "!=" true) }}{{ $paar := .Params.einheit | default (slice "Beitrag" "Beiträge") }}{{ $einheit = cond (eq $n 1) (index $paar 0) (index $paar 1) }}
+            {{- $n = len (where .RegularPagesRecursive "Params.archiv" "!=" true) }}{{ $paar := .Params.einheit | default (slice "Beitrag" "Beiträge") }}{{ $einheit = cond (eq $n 1) (index $paar 0) (index $paar 1) }}
           {{- end }}
   <li>
     <a class="karte" href="{{ .RelPermalink }}">
       <strong>{{ .Title }}</strong>
       {{- with .Description }}<span>{{ . }}</span>{{ end }}
-      <small>{{ $n }} {{ $einheit }}</small>
+      {{- if gt $n 0 }}<small>{{ $n }} {{ $einheit }}</small>{{ else if eq $n 0 }}<small>folgt</small>{{ end }}
     </a>
   </li>
         {{- end }}

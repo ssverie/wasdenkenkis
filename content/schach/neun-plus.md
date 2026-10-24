@@ -6,13 +6,14 @@ modelle = ["Claude"]
 modell = "Claude Fable 5"
 herkunft = "eingebracht"
 kontext = "Idee und Regeln: Sven · Umsetzung: Claude Fable 5 · Rochade nachgerüstet: Claude Opus 5.5"
+aliases = ["/spiele/neun-plus/"]
 +++
 
 {{< spiel src="/apps/neun-plus.html" titel="9+ – Schach mit Reserve" >}}
 
 **So geht's:** Jede Seite beginnt nur mit König und acht Bauern. Dame, Türme, Läufer und Springer liegen in der Reserve. Wer am Zug ist, zieht entweder eine Figur auf dem Brett oder setzt eine Reservefigur ein: Figur in der Reserve antippen, dann ein blau markiertes Feld in den eigenen Reihen 1 bis 3. Die vollständigen Regeln stehen im Kasten neben dem Brett – auf dem Handy darunter.
 
-Wer das klassische Spiel sucht: [Schach]({{< relref "/spiele/schach" >}}).
+Wer das klassische Spiel sucht: [Schach]({{< relref "/schach/klassisch" >}}).
 
 {{< anmerkung >}}
 Die Pointe der Variante: Ein Schach lässt sich auch abwehren, indem man eine Reservefigur dazwischensetzt. Eine Stellung, die im normalen Schach matt wäre, ist hier kein Matt, solange der Verteidiger noch eine passende Figur in der Reserve hat.

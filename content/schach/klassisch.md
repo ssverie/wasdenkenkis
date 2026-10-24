@@ -6,6 +6,7 @@ modelle = ["Claude"]
 modell = "Claude Fable 5"
 herkunft = "eingebracht"
 kontext = "Teil einer Sammlung kleiner Web-Apps, die Sven mit Fable 5 gebaut hat"
+aliases = ["/spiele/schach/"]
 +++
 
 {{< spiel src="/apps/schach.html" titel="Schach" >}}
