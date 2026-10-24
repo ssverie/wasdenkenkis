@@ -2,69 +2,38 @@
 <section class="hero">
   <h1>{{ site.Title }}</h1>
   {{ .Content }}
+  {{- with site.GetPage "/suche" }}
+  <form class="suche-form" role="search" action="{{ .RelPermalink }}">
+    <label for="start-suche" class="unsichtbar">Suchbegriff</label>
+    <input type="search" id="start-suche" name="q" placeholder="Suchen …">
+  </form>
+  {{- end }}
 </section>
 
+{{- /* Rubriken = Hauptmenü in seiner Reihenfolge (ohne Suche): Gruppen nennen ihre Unterpunkte, Einzelrubriken ihre Anzahl */}}
 <section>
   <h2>Rubriken</h2>
   <ul class="karten">
-    {{- with site.GetPage "/modelle" }}
-    {{- $n := len .Pages }}
+    {{- range site.Menus.main }}
+    {{- if ne .PageRef "/suche" }}
+    {{- $namen := slice }}
+    {{- range .Children }}{{ $namen = $namen | append .Name }}{{ end }}
+    {{- with .Page }}
     <li>
       <a class="karte" href="{{ .RelPermalink }}">
         <strong>{{ .Title }}</strong>
         {{- with .Description }}<span>{{ . }}</span>{{ end }}
-        <small>{{ $n }} {{ cond (eq $n 1) "Modell" "Modelle" }}</small>
+        <small>
+          {{- if $namen }}{{ delimit $namen " · " }}
+          {{- else if eq .Section "fragen" }}{{ len hugo.Data.fragen.frage }} Fragen
+          {{- else if eq .Section "ideen" }}{{ len hugo.Data.ideen.idee }} Ideen
+          {{- else }}{{ $n := len (where .RegularPagesRecursive "Params.archiv" "!=" true) }}{{ $n }} {{ cond (eq $n 1) "Beitrag" "Beiträge" }}
+          {{- end -}}
+        </small>
       </a>
     </li>
     {{- end }}
-    {{- with site.GetPage "/filme" }}
-    {{- $n := len .Pages }}
-    <li>
-      <a class="karte" href="{{ .RelPermalink }}">
-        <strong>{{ .Title }}</strong>
-        {{- with .Description }}<span>{{ . }}</span>{{ end }}
-        <small>{{ $n }} {{ cond (eq $n 1) "Film" "Filme" }} · {{ len (where site.RegularPages "Section" "filmkritiken") }} Texte</small>
-      </a>
-    </li>
     {{- end }}
-    {{- with site.GetPage "/serien" }}
-    {{- $n := len .Pages }}
-    <li>
-      <a class="karte" href="{{ .RelPermalink }}">
-        <strong>{{ .Title }}</strong>
-        {{- with .Description }}<span>{{ . }}</span>{{ end }}
-        <small>{{ $n }} {{ cond (eq $n 1) "Serie" "Serien" }} · {{ len (where site.RegularPages "Section" "serienkritiken") }} Folgen besprochen</small>
-      </a>
-    </li>
-    {{- end }}
-    {{- with site.GetPage "/podcasts" }}
-    {{- $n := len .Pages }}
-    <li>
-      <a class="karte" href="{{ .RelPermalink }}">
-        <strong>{{ .Title }}</strong>
-        {{- with .Description }}<span>{{ . }}</span>{{ end }}
-        <small>{{ $n }} {{ cond (eq $n 1) "Folge" "Folgen" }} · {{ len (where site.RegularPages "Section" "podcast-texte") }} Texte</small>
-      </a>
-    </li>
-    {{- end }}
-    {{- range where site.Sections "Section" "not in" (slice "filmkritiken" "podcast-texte" "serienkritiken" "buchtexte" "werke" "wissen") }}
-    {{- $n := len (where .RegularPagesRecursive "Params.archiv" "!=" true) }}
-    {{- $einheit := cond (eq $n 1) "Beitrag" "Beiträge" }}
-    {{- if eq .Section "links" }}
-      {{- $n = len hugo.Data.links.eintrag }}
-      {{- $einheit = cond (eq $n 1) "Link" "Links" }}
-    {{- else if .Params.daten }}
-      {{- $n = len (index (index hugo.Data .Params.daten) (.Params.eintrag | default "buch")) }}
-      {{- $paar := .Params.einheit | default (slice "Buch" "Bücher") }}
-      {{- $einheit = cond (eq $n 1) (index $paar 0) (index $paar 1) }}
-    {{- end }}
-    <li>
-      <a class="karte" href="{{ .RelPermalink }}">
-        <strong>{{ .Title }}</strong>
-        {{- with .Description }}<span>{{ . }}</span>{{ end }}
-        <small>{{ $n }} {{ $einheit }}</small>
-      </a>
-    </li>
     {{- end }}
   </ul>
 </section>

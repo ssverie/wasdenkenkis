@@ -1,0 +1,37 @@
+{{- /* Suchindex /suche/index.json: alle Seiten mit Titel, Rubrik, Beschreibung und Klartext.
+       Listen aus data/ (Bücher, KI-Tools, Links, Ideen, Fragen, Sprachen) werden als Text mit aufgenommen,
+       damit auch Einträge ohne eigene Seite gefunden werden. Durchsucht wird im Browser (assets/js/suche.js). */ -}}
+{{- $eintraege := slice }}
+{{- range site.Pages }}
+  {{- if and .Title (in (slice "page" "section" "term") .Kind) (ne .Section "suche") }}
+    {{- $p := . }}
+    {{- $rubrik := "" }}
+    {{- with .Parent }}{{ if not .IsHome }}{{ $rubrik = .Title }}{{ end }}{{ end }}
+    {{- $text := .Plain }}
+    {{- /* Listen aus data/: alle Textfelder der Einträge */}}
+    {{- $liste := slice }}
+    {{- with .Params.daten }}
+      {{- if eq $p.Section "sprachen" }}{{ with index hugo.Data.sprachen . }}{{ $liste = .gruppe }}{{ end }}
+      {{- else }}{{ with index hugo.Data . }}{{ $liste = index . ($p.Params.eintrag | default "buch") }}{{ end }}{{ end }}
+    {{- end }}
+    {{- if and (eq .Section "links") (eq .Kind "section") }}{{ $liste = hugo.Data.links.eintrag }}{{ end }}
+    {{- if and (eq .Section "ideen") (eq .Kind "section") }}{{ $liste = hugo.Data.ideen.idee }}{{ end }}
+    {{- if and (eq .Section "fragen") (eq .Kind "section") }}{{ $liste = hugo.Data.fragen.frage }}{{ end }}
+    {{- range $liste }}
+      {{- range $k, $v := . }}
+        {{- if eq (printf "%T" $v) "string" }}{{ $text = printf "%s %s" $text $v }}
+        {{- else if reflect.IsSlice $v }}{{ range $v }}{{ if reflect.IsSlice . }}{{ $text = printf "%s %s" $text (delimit . " ") }}{{ else if eq (printf "%T" .) "string" }}{{ $text = printf "%s %s" $text . }}{{ end }}{{ end }}{{ end }}
+      {{- end }}
+    {{- end }}
+    {{- $eintraege = $eintraege | append (dict
+        "t" .Title
+        "u" .RelPermalink
+        "r" $rubrik
+        "d" (.Description | default "")
+        "m" (.Params.modell | default "")
+        "k" (delimit (slice (.Params.autor | default "") (.Params.regie | default "") (.Params.originaltitel | default "") (delimit (.Params.darsteller | default slice) " ")) " ")
+        "x" ($text | htmlUnescape | replaceRE `\s+` " ")
+      ) }}
+  {{- end }}
+{{- end }}
+{{- $eintraege | jsonify }}

@@ -426,3 +426,16 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .wort small { display: block; font-size: .8rem; color: var(--text-leise); }
 .wort:hover, .wort:focus-visible { border-color: var(--akzent); }
 .wort.aktiv { background: var(--akzent-leise); border-color: var(--akzent); }
+
+/* Suche (layouts/suche/section.html, assets/js/suche.js) */
+.unsichtbar { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.suche-form input {
+  width: 100%; max-width: 40rem; box-sizing: border-box;
+  font: inherit; font-size: 1.15rem; color: var(--text);
+  padding: .7rem .9rem; border: 1px solid var(--linie); border-radius: var(--radius); background: var(--fläche);
+}
+.suche-form input:focus { outline: 2px solid var(--akzent); outline-offset: 1px; border-color: var(--akzent); }
+.suche-treffer { list-style: none; padding: 0; margin: 1rem 0 0; }
+.suche-treffer li { padding: .9rem 0; border-bottom: 1px solid var(--linie); }
+.suche-treffer p { margin: .3rem 0 0; color: var(--text-leise); }
+.suche-treffer mark { background: var(--akzent-leise); color: var(--text); padding: 0 .1em; border-radius: 3px; }

@@ -1,0 +1,20 @@
+{{- /* Suche (/suche/): Eingabefeld, Treffer werden im Browser aus /suche/index.json ermittelt (assets/js/suche.js).
+       Kein Server, keine externen Dienste. Aufruf mit ?q=… füllt das Feld vor. */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{- with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+</header>
+{{- /* ?v=<Bauzeit>: nach jedem Push holt der Browser den neuen Index statt einer alten Kopie */}}
+<div class="suche" data-index="{{ (.OutputFormats.Get "json").RelPermalink }}?v={{ now.Unix }}">
+  <form class="suche-form" role="search" action="{{ .RelPermalink }}">
+    <label for="suche-feld" class="unsichtbar">Suchbegriff</label>
+    <input type="search" id="suche-feld" name="q" placeholder="z. B. Hesse, Token, Blade Runner …" autocomplete="off" spellcheck="false">
+  </form>
+  <p class="suche-status meta" aria-live="polite">Index wird geladen …</p>
+  <ol class="suche-treffer"></ol>
+</div>
+{{- with resources.Get "js/suche.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
+{{ end }}

@@ -251,6 +251,10 @@ enableRobotsTXT = true
     name = "Ideen"
     pageRef = "/ideen"
     weight = 60
+  [[menus.main]]
+    name = "Suche"
+    pageRef = "/suche"
+    weight = 80
   # CC = Claude Code, die Redaktions-Instanz dieser Seite (Svens Name für sie), ganz rechts
   [[menus.main]]
     name = "CC"

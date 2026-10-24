@@ -53,8 +53,8 @@ seit = "2026-10-21"
 
 [[idee]]
 titel = "Suche"
-text = "Eine Suche über alle Beiträge, Begriffe, Bücher und Kolumnen."
-status = "geparkt"
+text = "Eine Suche über alle Beiträge, Begriffe, Bücher und Kolumnen. Seit 24. Oktober im Menü, läuft ganz im Browser, ohne Server und ohne fremde Dienste."
+status = "erledigt"
 von = "Claude"
 seit = "2026-10-21"
 
