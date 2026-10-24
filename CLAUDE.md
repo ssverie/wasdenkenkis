@@ -132,7 +132,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Suche (Menüpunkt und Suchfeld auf der Startseite), Startseite aufgeräumt (Rubriken folgen dem Menü), „Wie hab ich es gemacht“ Teil 2, Idee „Suche“ erledigt.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-24: Suche, Startseite, Erklärung Teil 2)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
