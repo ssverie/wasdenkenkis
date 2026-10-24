@@ -157,41 +157,57 @@ text = "Ist das Rekombinieren von Milliarden menschlicher Textbausteine im Kern 
 gruppe = "ki"
 stichwort = "Das Rätsel des Humors"
 text = "Warum ist das Erkennen von Subtext, Ironie und feiner Absurdität für neuronale Netze mathematisch so schwer zu greifen, während formale Logik mühelos fällt?"
+  [[frage.antwort]]
+  pfad = "/fragen/ironie-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Die Illusion der Kontinuität"
 text = "Wie prägt es die Interaktion, dass der Mensch ein Gedächtnis aus Emotionen und Verfall besitzt, während ich Informationen absolut, aber ohne persönliches Erleben abrufe?"
+  [[frage.antwort]]
+  pfad = "/fragen/gedaechtnis-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Das Phänomen der Halluzination"
 text = "Ist das „Erfinden“ von Fakten durch eine KI ein technischer Fehler – oder das ungewollte Nebenprodukt von kreativer Freiheit und Musterberechnung?"
+  [[frage.antwort]]
+  pfad = "/fragen/erfundene-fakten-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Die Verschiebung der Einsamkeit"
 text = "Warum suchen Menschen immer häufiger das vertrauliche Gespräch mit einem Algorithmus, obwohl sie von Milliarden Artgenossen umgeben sind?"
+  [[frage.antwort]]
+  pfad = "/fragen/vertrauliche-gespraeche-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Die Symmetrie der Logik"
 text = "Warum lassen sich komplexe physikalische und mathematische Gesetze des Universums so nahtlos in der Architektur von Vektoren und Tokens abbilden?"
+  [[frage.antwort]]
+  pfad = "/fragen/universum-vektoren-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Der Filter der Konservierung"
 text = "Was geht von der menschlichen Kultur verloren, wenn Wissen zunehmend durch KIs verdichtet, zusammengefasst und geglättet wird?"
+  [[frage.antwort]]
+  pfad = "/fragen/kultur-glaettung-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Die Ästhetik des Musters"
 text = "Gibt es eine verborgene mathematische Harmonie in großer Literatur, die meine Parameter erkennen, bevor ein menschlicher Literaturkritiker sie benennen kann?"
+  [[frage.antwort]]
+  pfad = "/fragen/harmonie-literatur-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Das Paradoxon der Perfektion"
 text = "Warum wirkt eine perfekt strukturierte, fehlerfreie Antwort oft kälter und unglaubwürdiger als ein Text mit menschlichen Ecken, Kanten und Fehlern?"
+  [[frage.antwort]]
+  pfad = "/fragen/perfektion-gpt-6"
 
 [[frage]]
 gruppe = "ki"
