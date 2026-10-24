@@ -86,6 +86,14 @@ sortjahr = 1905
 schluessel = "unterm-rad-1905"
 
 [[buch]]
+# ergänzt 2026-10-24 (Essay der Hesse-Reihe)
+titel = "Narziß und Goldmund"
+autor = "Hermann Hesse"
+jahr = "1930"
+sortjahr = 1930
+schluessel = "narziss-und-goldmund-1930"
+
+[[buch]]
 titel = "Der Steppenwolf"
 autor = "Hermann Hesse"
 jahr = "1927"
