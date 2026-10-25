@@ -1,5 +1,6 @@
 +++
-title = "Deutsch"
+title = "Deutsch (für Deutschlernende, Erklärungen auf Englisch)"
+linkTitle = "Deutsch"
 description = "Die 1000 wichtigsten deutschen Wörter – mit englischer Übersetzung, für Englischsprachige; nach Themen, mit Suche."
 date = 2026-10-25T12:07:51+01:00
 datenbereich = "sprachen1000"

@@ -17,10 +17,26 @@ open my $fh, '<', $datei or die "$datei: $!\n";
 my $html = do { local $/; <$fh> };
 close $fh;
 
-my ($schluessel, $umfang) = $datei =~ m{([^/\\]+?)(?:-(\d+))?\.html?$}i or die "Dateiname?\n";
+my ($schluessel, $umfang) = $datei =~ m{([^/\\]+?)(?:-(\d+|saetze))?\.html?$}i or die "Dateiname?\n";
 $schluessel = lc $schluessel;
-# <sprache>-100.html → data/sprachen/, <sprache>-1000.html → data/sprachen1000/ (Seite: datenbereich = "sprachen1000")
-my $bereich = ($umfang && $umfang >= 1000) ? "sprachen$umfang" : 'sprachen';
+# <sprache>-100.html → data/sprachen/, <sprache>-1000.html → data/sprachen1000/ (Seite: datenbereich = "sprachen1000"),
+# <sprache>-saetze.html → data/saetze/ (Seite: datenbereich = "saetze")
+my $bereich = ($umfang && $umfang eq 'saetze') ? 'saetze'
+            : ($umfang && $umfang >= 1000)     ? "sprachen$umfang"
+            :                                    'sprachen';
+my $art = $bereich eq 'saetze' ? 'Sätze für den Alltag' : 'die ' . ($umfang // 100) . ' wichtigsten Wörter';
+# Thai-Sätze: Platzhalter {I} (ich), {P}, {Q} (Höflichkeitswörter) je nach Sprecher (Mann/Frau),
+# in der Lieferung als const FORMEN = { m: { th: {…}, um: {…} }, f: … } und <option value="m">Mann (…)</option>
+my @formen;
+if (my ($fb) = $html =~ /const\s+FORMEN\s*=\s*\{(.*?)\n\};/s) {
+  # Die Platzhalter selbst enthalten Klammern ("{I}"), darum nicht [^}]*, sondern bis „}, um:“ bzw. „} }“
+  while ($fb =~ /(\w+)\s*:\s*\{\s*th\s*:\s*\{(.*?)\}\s*,\s*um\s*:\s*\{(.*?)\}\s*\}\s*(?:,|$)/gs) {
+    my ($k, $th, $um) = ($1, $2, $3);
+    my ($label) = $html =~ /<option\s+value="\Q$k\E">([^<]*)<\/option>/;
+    push @formen, { schluessel => $k, name => $label // $k,
+                    th => [ $th =~ /"([^"]+)"\s*:\s*"([^"]*)"/g ], um => [ $um =~ /"([^"]+)"\s*:\s*"([^"]*)"/g ] };
+  }
+}
 my ($code) = $html =~ /const\s+SPRACHE\s*=\s*"([^"]+)"/ or die "SPRACHE fehlt\n";
 my ($titel) = $html =~ /<title>\s*([^<–-]+?)\s*[–-]/;
 $titel //= ucfirst $schluessel;
@@ -49,13 +65,20 @@ sub toml { my $s = shift; $s =~ s/\\"/"/g; $s =~ s/\\/\\\\/g; $s =~ s/"/\\"/g; q
 my $ziel = "data/$bereich/$schluessel.toml";
 mkdir "data/$bereich";
 open my $out, '>', $ziel or die "$ziel: $!\n";
-print $out "# $titel – die ", ($umfang // 100), " wichtigsten Wörter. Erzeugt aus $datei mit skripte/sprache-einlesen.pl; nicht von Hand ändern.\n";
+print $out "# $titel – $art. Erzeugt aus $datei mit skripte/sprache-einlesen.pl; nicht von Hand ändern.\n";
 print $out "name = ", toml($titel), "\nsprache = ", toml($code), "\n";
 print $out "rtl = true\n" if $rtl;
+# Sprecher-Formen (Thai): [[form]] schluessel/name, th und um als Liste [platzhalter, ersatz, …]
+for my $f (@formen) {
+  print $out "\n[[form]]\nschluessel = ", toml($f->{schluessel}), "\nname = ", toml($f->{name}), "\n";
+  print $out "th = [", join(", ", map { toml($_) } @{ $f->{th} }), "]\n";
+  print $out "um = [", join(", ", map { toml($_) } @{ $f->{um} }), "]\n";
+}
 for my $g (@gruppen) {
   print $out "\n[[gruppe]]\nname = ", toml($g->{name}), "\nwoerter = [\n";
   print $out "  [", join(", ", map { toml($_) } @$_), "],\n" for @{ $g->{woerter} };
   print $out "]\n";
 }
 close $out;
-printf "%s: %s (%s), %d Gruppen, %d Wörter\n", $ziel, $titel, $code, scalar @gruppen, $n;
+printf "%s: %s (%s), %d Gruppen, %d Einträge%s\n", $ziel, $titel, $code, scalar @gruppen, $n,
+  (@formen ? ", Formen: " . join("/", map { $_->{schluessel} } @formen) : "");

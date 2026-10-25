@@ -492,3 +492,42 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .sprache-gruppe > summary small { font-weight: 400; color: var(--text-leise); }
 .sprache-gruppe .woerter { padding: 0 .7rem .8rem; }
 .wort[hidden], .sprache-gruppe[hidden] { display: none; }
+/* Sprachen, Sätze: ganze Sätze als breite Knöpfe, linksbündig */
+.sprache-saetze .wort { flex: 1 1 20rem; text-align: left; }
+.sprache-saetze .wort span[lang^="th"] { font-size: 1.2rem; }
+#sprache-form { font: inherit; padding: .3rem .4rem; border: 1px solid var(--linie); border-radius: var(--radius); background: var(--fläche); color: var(--text); }
+/* Sprachen: Lernmodus (Karteikasten) über der Seite – assets/js/sprachen.js, nach der Vorlage der Sprachen-Instanz */
+.sprache-leiste .lern-start { background: var(--akzent); border-color: var(--akzent); color: var(--bg); font-weight: 600; }
+.lern-box { display: none; position: fixed; inset: 0; z-index: 50; overflow-y: auto; background: var(--bg); color: var(--text); }
+.lern-box.offen { display: block; }
+.lern-innen { max-width: 35rem; margin: 0 auto; padding: 1rem; min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
+.lern-kopf { display: flex; justify-content: space-between; align-items: center; gap: .5rem; color: var(--text-leise); }
+.lern-kopf h2 { margin: 0; font-size: 1.3rem; color: var(--text); }
+.lern-box button { font: inherit; color: var(--text); background: var(--fläche); border: 1px solid var(--linie); border-radius: var(--radius); padding: .45rem .8rem; cursor: pointer; }
+.lern-feld { display: block; margin: .9rem 0; font-size: .9rem; color: var(--text-leise); }
+.lern-feld select { display: block; width: 100%; margin-top: .25rem; font: inherit; font-size: 1rem; padding: .6rem; border-radius: var(--radius); border: 1px solid var(--linie); background: var(--fläche); color: var(--text); }
+.lern-statistik { display: grid; grid-template-columns: repeat(3, 1fr); gap: .5rem; margin: .9rem 0; }
+.lern-statistik.lern-zwei { grid-template-columns: 1fr 1fr; }
+.lern-statistik div { background: var(--fläche); border: 1px solid var(--linie); border-radius: var(--radius); padding: .6rem; text-align: center; }
+.lern-statistik b { display: block; font-size: 1.4rem; }
+.lern-statistik span { font-size: .8rem; color: var(--text-leise); }
+.lern-faecher { display: flex; gap: 4px; align-items: flex-end; height: 60px; margin: .4rem 0 .1rem; }
+.lern-faecher div { flex: 1; background: var(--akzent-leise); border: 1px solid var(--akzent); border-radius: 4px 4px 0 0; min-height: 2px; box-sizing: border-box; }
+.lern-faecher-text { display: flex; gap: 4px; font-size: .7rem; color: var(--text-leise); }
+.lern-faecher-text span { flex: 1; text-align: center; }
+.lern-box .lern-gross { width: 100%; font-size: 1.1rem; padding: .85rem; margin-top: .6rem; }
+.lern-box .lern-blau { background: var(--akzent); border-color: var(--akzent); color: var(--bg); font-weight: 600; }
+.lern-box .lern-rot { background: #f3d6d6; border-color: #e3b5b5; color: #7a1f1f; }
+.lern-box .lern-gruen { background: #d4efd9; border-color: #a9d8b3; color: #1d5e2b; }
+.lern-zweier { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.lern-fortschritt { height: 6px; background: var(--linie); border-radius: 3px; margin: .75rem 0; overflow: hidden; }
+.lern-fortschritt div { height: 100%; background: var(--akzent); transition: width .2s; }
+.lern-karte { flex: 1; background: var(--fläche); border: 1px solid var(--linie); border-radius: 14px; padding: 1.5rem 1.1rem; margin: .5rem 0; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; min-height: 16rem; cursor: pointer; }
+.lern-frage { font-size: 1.5rem; line-height: 1.35; }
+.lern-hinweis { font-size: .85rem; color: var(--text-leise); margin-top: .6rem; }
+.lern-trenner { width: 60%; border-top: 1px dashed var(--linie); margin: 1.1rem 0; }
+.lern-antwort { font-size: 1.6rem; line-height: 1.35; color: var(--akzent); }
+.lern-umschrift { font-size: 1rem; color: var(--akzent); margin-top: .25rem; }
+.lern-fach { font-size: .75rem; color: var(--text-leise); margin-top: .9rem; }
+.lern-box .lern-klein { margin-top: .75rem; font-size: .95rem; border-radius: 20px; }
+.lern-info { font-size: .85rem; color: var(--text-leise); line-height: 1.45; margin-top: 1rem; }

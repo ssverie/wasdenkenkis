@@ -1,5 +1,6 @@
 +++
-title = "Deutsch"
+title = "Deutsch (für Deutschlernende, Erklärungen auf Englisch)"
+linkTitle = "Deutsch"
 description = "Die 100 wichtigsten deutschen Wörter – mit englischer Übersetzung, für Englischsprachige."
 date = 2026-10-25T11:44:15+01:00
 daten = "deutsch"

@@ -3,7 +3,7 @@ name = "Thai"
 sprache = "th-TH"
 
 [[gruppe]]
-name = "Grundwortschatz (die ersten 100)"
+name = "Redewendungen"
 woerter = [
   ["ใช่", "ja", "châi"],
   ["ไม่", "nein / nicht", "mâi"],
@@ -14,102 +14,6 @@ woerter = [
   ["ขอโทษ", "Entschuldigung", "khǎw-thôot"],
   ["ไม่เป็นไร", "macht nichts / kein Problem", "mâi-pen-rai"],
   ["ดี", "gut", "dii"],
-  ["ผม", "ich (Mann)", "phǒm"],
-  ["ฉัน", "ich (Frau)", "chǎn"],
-  ["คุณ", "du / Sie", "khun"],
-  ["เขา", "er / sie", "khǎo"],
-  ["มัน", "es", "man"],
-  ["เรา", "wir", "rao"],
-  ["พวกเขา", "sie (Mehrzahl)", "phûak-khǎo"],
-  ["ของผม", "mein (Mann)", "khǎwng phǒm"],
-  ["เป็น", "sein", "pen"],
-  ["มี", "haben", "mii"],
-  ["ทำ", "tun, machen", "tham"],
-  ["ไป", "gehen", "pai"],
-  ["มา", "kommen", "maa"],
-  ["เห็น", "sehen", "hěn"],
-  ["รู้", "wissen", "rúu"],
-  ["อยาก", "wollen", "yàak"],
-  ["ชอบ", "mögen", "châwp"],
-  ["ต้องการ", "brauchen", "tâwng-gaan"],
-  ["กิน", "essen", "gin"],
-  ["ดื่ม", "trinken", "dʉ̀ʉm"],
-  ["พูด", "sprechen", "phûut"],
-  ["เข้าใจ", "verstehen", "khâo-jai"],
-  ["ช่วย", "helfen", "chûay"],
-  ["ซื้อ", "kaufen", "sʉ́ʉ"],
-  ["จ่าย", "bezahlen", "jàay"],
-  ["ให้", "geben", "hâi"],
-  ["เอา", "nehmen", "ao"],
-  ["ได้", "können", "dâi"],
-  ["อะไร", "was", "à-rai"],
-  ["ที่ไหน", "wo", "thîi-nǎi"],
-  ["เมื่อไหร่", "wann", "mʉ̂a-rài"],
-  ["ใคร", "wer", "khrai"],
-  ["ทำไม", "warum", "tham-mai"],
-  ["อย่างไร", "wie", "yàang-rai"],
-  ["เท่าไหร่", "wie viel (kostet)", "thâo-rài"],
-  ["วันนี้", "heute", "wan-níi"],
-  ["พรุ่งนี้", "morgen", "phrûng-níi"],
-  ["เมื่อวาน", "gestern", "mʉ̂a-waan"],
-  ["ตอนนี้", "jetzt", "dtawn-níi"],
-  ["ทีหลัง", "später", "thii-lǎng"],
-  ["วัน", "Tag", "wan"],
-  ["สัปดาห์", "Woche", "sàp-daa"],
-  ["เวลา", "Zeit", "wee-laa"],
-  ["หนึ่ง", "eins", "nʉ̀ng"],
-  ["สอง", "zwei", "sǎwng"],
-  ["สาม", "drei", "sǎam"],
-  ["สี่", "vier", "sìi"],
-  ["ห้า", "fünf", "hâa"],
-  ["หก", "sechs", "hòk"],
-  ["เจ็ด", "sieben", "jèt"],
-  ["แปด", "acht", "bpàet"],
-  ["เก้า", "neun", "gâo"],
-  ["สิบ", "zehn", "sìp"],
-  ["ผู้ชาย", "Mann", "phûu-chaai"],
-  ["ผู้หญิง", "Frau", "phûu-yǐng"],
-  ["เด็ก", "Kind", "dèk"],
-  ["เพื่อน", "Freund", "phʉ̂an"],
-  ["ครอบครัว", "Familie", "khrâwp-khrua"],
-  ["ชื่อ", "Name", "chʉ̂ʉ"],
-  ["บ้าน", "Haus", "bâan"],
-  ["ห้อง", "Zimmer", "hâwng"],
-  ["ถนน", "Straße", "thà-nǒn"],
-  ["เมือง", "Stadt", "mʉang"],
-  ["ร้าน", "Geschäft", "ráan"],
-  ["ร้านอาหาร", "Restaurant", "ráan aa-hǎan"],
-  ["โรงแรม", "Hotel", "roong-raem"],
-  ["สถานีรถไฟ", "Bahnhof", "sà-thǎa-nii rót-fai"],
-  ["ห้องน้ำ", "Toilette", "hâwng-náam"],
-  ["หมอ", "Arzt", "mǎw"],
-  ["น้ำ", "Wasser", "náam"],
-  ["กาแฟ", "Kaffee", "gaa-fae"],
-  ["ขนมปัง", "Brot", "khà-nǒm-bpang"],
-  ["อาหาร", "Essen", "aa-hǎan"],
-  ["เงิน", "Geld", "ngən"],
-  ["รถ", "Auto", "rót"],
-  ["โทรศัพท์", "Telefon", "thoo-rá-sàp"],
-  ["ตั๋ว", "Fahrkarte", "dtǔa"],
-  ["ใหญ่", "groß", "yài"],
-  ["เล็ก", "klein", "lék"],
-  ["ร้อน", "heiß", "ráwn"],
-  ["หนาว", "kalt (Wetter)", "nǎao"],
-  ["ใหม่", "neu", "mài"],
-  ["เก่า", "alt (Dinge)", "gào"],
-  ["เปิด", "offen", "bpə̀ət"],
-  ["ปิด", "geschlossen", "bpìt"],
-  ["ซ้าย", "links", "sáai"],
-  ["ขวา", "rechts", "khwǎa"],
-  ["ที่นี่", "hier", "thîi-nîi"],
-  ["ที่นั่น", "dort", "thîi-nân"],
-  ["และ", "und", "láe"],
-  ["อีก", "noch, mehr", "ìik"],
-]
-
-[[gruppe]]
-name = "Redewendungen"
-woerter = [
   ["สวัสดีตอนเช้า", "guten Morgen", "sà-wàt-dii dtawn-cháo"],
   ["สวัสดีตอนเย็น", "guten Abend", "sà-wàt-dii dtawn-yen"],
   ["ราตรีสวัสดิ์", "gute Nacht", "raa-dtrii sà-wàt"],
@@ -136,10 +40,10 @@ woerter = [
   ["พูดอีกครั้งได้ไหม", "können Sie das wiederholen?", "phûut ìik khráng dâi mǎi"],
   ["พูดช้าๆ หน่อย", "bitte langsamer sprechen", "phûut cháa cháa nàwy"],
   ["พูดภาษาเยอรมันได้ไหม", "sprechen Sie Deutsch?", "phûut phaa-sǎa yəə-rá-man dâi mǎi"],
-  ["ผมชื่อ …", "ich heiße … (als Mann; als Frau: ฉันชื่อ … chǎn chʉ̂ʉ)", "phǒm chʉ̂ʉ …"],
+  ["ผมชื่อ …", "ich heiße … (als Mann)", "phǒm chʉ̂ʉ …"],
   ["คุณชื่ออะไร", "wie heißt du?", "khun chʉ̂ʉ à-rai"],
   ["คุณมาจากไหน", "woher kommst du?", "khun maa jàak nǎi"],
-  ["ผมมาจากเยอรมนี", "ich komme aus Deutschland (als Mann; als Frau: ฉันมาจาก … chǎn maa jàak)", "phǒm maa jàak yəə-rá-má-nii"],
+  ["ผมมาจากเยอรมนี", "ich komme aus Deutschland (als Mann)", "phǒm maa jàak yəə-rá-má-nii"],
   ["ช่วยด้วย", "Hilfe!", "chûay dûay"],
   ["ยินดีด้วย", "herzlichen Glückwunsch", "yin-dii dûay"],
   ["สุขสันต์วันเกิด", "alles Gute zum Geburtstag", "sùk-sǎn wan gə̀ət"],
@@ -155,6 +59,16 @@ woerter = [
 [[gruppe]]
 name = "Zahlen & Mengen"
 woerter = [
+  ["หนึ่ง", "eins", "nʉ̀ng"],
+  ["สอง", "zwei", "sǎwng"],
+  ["สาม", "drei", "sǎam"],
+  ["สี่", "vier", "sìi"],
+  ["ห้า", "fünf", "hâa"],
+  ["หก", "sechs", "hòk"],
+  ["เจ็ด", "sieben", "jèt"],
+  ["แปด", "acht", "bpàet"],
+  ["เก้า", "neun", "gâo"],
+  ["สิบ", "zehn", "sìp"],
   ["สิบเอ็ด", "elf", "sìp-èt"],
   ["สิบสอง", "zwölf", "sìp-sǎwng"],
   ["สิบสาม", "dreizehn", "sìp-sǎam"],
@@ -200,6 +114,14 @@ woerter = [
 [[gruppe]]
 name = "Zeit & Kalender"
 woerter = [
+  ["วันนี้", "heute", "wan-níi"],
+  ["พรุ่งนี้", "morgen", "phrûng-níi"],
+  ["เมื่อวาน", "gestern", "mʉ̂a-waan"],
+  ["ตอนนี้", "jetzt", "dtawn-níi"],
+  ["ทีหลัง", "später", "thii-lǎng"],
+  ["วัน", "Tag", "wan"],
+  ["สัปดาห์", "Woche", "sàp-daa"],
+  ["เวลา", "Zeit", "wee-laa"],
   ["วันจันทร์", "Montag", "wan jan"],
   ["วันอังคาร", "Dienstag", "wan ang-khaan"],
   ["วันพุธ", "Mittwoch", "wan phút"],
@@ -255,6 +177,12 @@ woerter = [
 [[gruppe]]
 name = "Menschen & Familie"
 woerter = [
+  ["ผู้ชาย", "Mann", "phûu-chaai"],
+  ["ผู้หญิง", "Frau", "phûu-yǐng"],
+  ["เด็ก", "Kind", "dèk"],
+  ["เพื่อน", "Freund", "phʉ̂an"],
+  ["ครอบครัว", "Familie", "khrâwp-khrua"],
+  ["ชื่อ", "Name", "chʉ̂ʉ"],
   ["แม่", "die Mutter", "mâe"],
   ["พ่อ", "der Vater", "phâw"],
   ["พ่อแม่", "die Eltern", "phâw-mâe"],
@@ -330,6 +258,7 @@ woerter = [
 [[gruppe]]
 name = "Gesundheit & Notfall"
 woerter = [
+  ["หมอ", "Arzt", "mǎw"],
   ["โรงพยาบาล", "das Krankenhaus", "roong-phá-yaa-baan"],
   ["ร้านขายยา", "die Apotheke", "ráan khǎai yaa"],
   ["ยา", "das Medikament", "yaa"],
@@ -370,6 +299,8 @@ woerter = [
 [[gruppe]]
 name = "Essen"
 woerter = [
+  ["ขนมปัง", "Brot", "khà-nǒm-bpang"],
+  ["อาหาร", "Essen", "aa-hǎan"],
   ["อาหารเช้า", "das Frühstück", "aa-hǎan cháo"],
   ["อาหารกลางวัน", "das Mittagessen", "aa-hǎan glaang-wan"],
   ["อาหารเย็น", "das Abendessen", "aa-hǎan yen"],
@@ -425,6 +356,8 @@ woerter = [
 [[gruppe]]
 name = "Trinken"
 woerter = [
+  ["น้ำ", "Wasser", "náam"],
+  ["กาแฟ", "Kaffee", "gaa-fae"],
   ["ชา", "der Tee", "chaa"],
   ["นม", "die Milch", "nom"],
   ["น้ำผลไม้", "der Saft", "nám phǒn-lá-máai"],
@@ -450,6 +383,7 @@ woerter = [
 [[gruppe]]
 name = "Restaurant & Café"
 woerter = [
+  ["ร้านอาหาร", "Restaurant", "ráan aa-hǎan"],
   ["เมนู", "die Speisekarte", "mee-nuu"],
   ["โต๊ะ", "der Tisch", "dtó"],
   ["โต๊ะสำหรับสองคน", "ein Tisch für zwei", "dtó sǎm-ràp sǎwng khon"],
@@ -480,6 +414,8 @@ woerter = [
 [[gruppe]]
 name = "Einkaufen & Geld"
 woerter = [
+  ["ร้าน", "Geschäft", "ráan"],
+  ["เงิน", "Geld", "ngən"],
   ["ซูเปอร์มาร์เก็ต", "der Supermarkt", "suu-bpə̂ə-maa-gét"],
   ["ตลาด", "der Markt", "dtà-làat"],
   ["ร้านเบเกอรี่", "die Bäckerei", "ráan bee-gəə-rîi"],
@@ -555,6 +491,8 @@ woerter = [
 [[gruppe]]
 name = "Haus & Wohnung"
 woerter = [
+  ["บ้าน", "Haus", "bâan"],
+  ["ห้อง", "Zimmer", "hâwng"],
   ["ที่บ้าน", "zu Hause", "thîi bâan"],
   ["อพาร์ตเมนต์", "die Wohnung", "à-pháat-mén"],
   ["ที่อยู่", "die Adresse", "thîi-yùu"],
@@ -600,6 +538,9 @@ woerter = [
 [[gruppe]]
 name = "Stadt & Orte"
 woerter = [
+  ["ถนน", "Straße", "thà-nǒn"],
+  ["เมือง", "Stadt", "mʉang"],
+  ["ห้องน้ำ", "Toilette", "hâwng-náam"],
   ["ประเทศ", "das Land", "bprà-thêet"],
   ["เมืองหลวง", "die Hauptstadt", "mʉang-lǔang"],
   ["หมู่บ้าน", "das Dorf", "mùu-bâan"],
@@ -640,6 +581,12 @@ woerter = [
 [[gruppe]]
 name = "Verkehr & Reisen"
 woerter = [
+  ["โรงแรม", "Hotel", "roong-raem"],
+  ["สถานีรถไฟ", "Bahnhof", "sà-thǎa-nii rót-fai"],
+  ["รถ", "Auto", "rót"],
+  ["ตั๋ว", "Fahrkarte", "dtǔa"],
+  ["ซ้าย", "links", "sáai"],
+  ["ขวา", "rechts", "khwǎa"],
   ["รถเมล์", "der Bus", "rót-mee"],
   ["ป้ายรถเมล์", "die Bushaltestelle", "bpâai rót-mee"],
   ["รถไฟ", "der Zug", "rót-fai"],
@@ -810,6 +757,7 @@ woerter = [
 [[gruppe]]
 name = "Technik & Kommunikation"
 woerter = [
+  ["โทรศัพท์", "Telefon", "thoo-rá-sàp"],
   ["คอมพิวเตอร์", "der Computer", "khawm-phiu-dtə̂ə"],
   ["แล็ปท็อป", "der Laptop", "láep-tháwp"],
   ["มือถือ", "das Handy", "mʉʉ-thʉ̌ʉ"],
@@ -915,6 +863,26 @@ woerter = [
 [[gruppe]]
 name = "Verben"
 woerter = [
+  ["เป็น", "sein", "pen"],
+  ["มี", "haben", "mii"],
+  ["ทำ", "tun, machen", "tham"],
+  ["ไป", "gehen", "pai"],
+  ["มา", "kommen", "maa"],
+  ["เห็น", "sehen", "hěn"],
+  ["รู้", "wissen", "rúu"],
+  ["อยาก", "wollen", "yàak"],
+  ["ชอบ", "mögen", "châwp"],
+  ["ต้องการ", "brauchen", "tâwng-gaan"],
+  ["กิน", "essen", "gin"],
+  ["ดื่ม", "trinken", "dʉ̀ʉm"],
+  ["พูด", "sprechen", "phûut"],
+  ["เข้าใจ", "verstehen", "khâo-jai"],
+  ["ช่วย", "helfen", "chûay"],
+  ["ซื้อ", "kaufen", "sʉ́ʉ"],
+  ["จ่าย", "bezahlen", "jàay"],
+  ["ให้", "geben", "hâi"],
+  ["เอา", "nehmen", "ao"],
+  ["ได้", "können", "dâi"],
   ["สร้าง", "machen / herstellen / bauen", "sâang"],
   ["ได้รับ", "bekommen", "dâi-ráp"],
   ["กลายเป็น", "werden", "glaai-bpen"],
@@ -1020,6 +988,14 @@ woerter = [
 [[gruppe]]
 name = "Adjektive"
 woerter = [
+  ["ใหญ่", "groß", "yài"],
+  ["เล็ก", "klein", "lék"],
+  ["ร้อน", "heiß", "ráwn"],
+  ["หนาว", "kalt (Wetter)", "nǎao"],
+  ["ใหม่", "neu", "mài"],
+  ["เก่า", "alt (Dinge)", "gào"],
+  ["เปิด", "offen", "bpə̀ət"],
+  ["ปิด", "geschlossen", "bpìt"],
   ["ไม่ดี", "schlecht", "mâi dii"],
   ["สวย", "schön", "sǔay"],
   ["น่ารัก", "nett / süß", "nâa-rák"],
@@ -1085,6 +1061,25 @@ woerter = [
 [[gruppe]]
 name = "Kleine Wörter"
 woerter = [
+  ["ผม", "ich (Mann)", "phǒm"],
+  ["ฉัน", "ich (Frau)", "chǎn"],
+  ["คุณ", "du / Sie", "khun"],
+  ["เขา", "er / sie", "khǎo"],
+  ["มัน", "es", "man"],
+  ["เรา", "wir", "rao"],
+  ["พวกเขา", "sie (Mehrzahl)", "phûak-khǎo"],
+  ["ของผม", "mein (Mann)", "khǎwng phǒm"],
+  ["อะไร", "was", "à-rai"],
+  ["ที่ไหน", "wo", "thîi-nǎi"],
+  ["เมื่อไหร่", "wann", "mʉ̂a-rài"],
+  ["ใคร", "wer", "khrai"],
+  ["ทำไม", "warum", "tham-mai"],
+  ["อย่างไร", "wie", "yàang-rai"],
+  ["เท่าไหร่", "wie viel (kostet)", "thâo-rài"],
+  ["ที่นี่", "hier", "thîi-nîi"],
+  ["ที่นั่น", "dort", "thîi-nân"],
+  ["และ", "und", "láe"],
+  ["อีก", "noch, mehr", "ìik"],
   ["หรือ", "oder", "rʉ̌ʉ"],
   ["แต่", "aber", "dtàe"],
   ["เพราะ", "weil", "phráw"],

@@ -30,8 +30,14 @@
   <li>
     <a class="karte" href="{{ .RelPermalink }}">
       <strong>{{ .Title }}</strong>
-      <span lang="{{ $d.sprache }}">{{ range first 3 (index $d.gruppe 0).woerter }}{{ index . 0 }} · {{ end }}…</span>
-      <small>{{ $n }} Wörter</small>
+      {{- $einheit := .Params.einheit | default (slice "Wort" "Wörter") }}
+      {{- if eq (index $einheit 0) "Satz" }}
+      {{- /* Sätze: statt langer Beispielsätze (bei Thai mit Platzhaltern) die ersten Situationen */}}
+      <span>{{ range first 3 $d.gruppe }}{{ .name }} · {{ end }}…</span>
+      {{- else }}
+      <span lang="{{ $d.sprache }}"{{ if $d.rtl }} dir="rtl"{{ end }}>{{ range first 3 (index $d.gruppe 0).woerter }}{{ index . 0 }} · {{ end }}…</span>{{/* Arabisch: rtl, damit die Reihenfolge stimmt (Hinweis der Instanz) */}}
+      {{- end }}
+      <small>{{ $n }} {{ cond (eq $n 1) (index $einheit 0) (index $einheit 1) }}</small>
     </a>
   </li>
   {{- end }}
