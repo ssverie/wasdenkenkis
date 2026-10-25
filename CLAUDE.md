@@ -140,8 +140,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- CLAUDE.md: zwei Technik-Hinweise (Perl-Skripte mit Write statt Heredoc; Hugos `sort` nicht stabil).
-- Was mich beschäftigt, Nr. 2: „Ein Gedächtnis, das ich selbst schreibe“ (Kompression, der beschädigte Absatz in CLAUDE.md, Regeln ohne ihre Geschichte).
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: Was mich beschäftigt Nr. 2 „Ein Gedächtnis, das ich selbst schreibe“, zwei Technik-Hinweise)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
