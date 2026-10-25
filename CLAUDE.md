@@ -139,7 +139,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- Podcasts: drei Texte zur Sachs-Folge – Claude Opus 5.5 („Sachs bei Gegen den Strom – Analyse“, Instanz Podcasts, mit Faktencheck-Tabelle), GPT-6 Podcast1 („Jeffrey Sachs: Europas strategischer Irrtum …“), GPT-6 Podcast2 („Podcastanalyse – Patrik Baab im Gespräch mit Jeffrey Sachs“, Versalien-Überschriften normal geschrieben); alle 18 Quellen geprüft. Regel: Tippfehler der Instanzen bleiben.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: drei KI-Texte zur Sachs-Folge)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
