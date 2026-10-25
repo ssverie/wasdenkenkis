@@ -4,6 +4,7 @@
 {{- $daten := .daten }}
 {{- $kritiken := .kritiken }}
 {{- $max := 0 }}
+{{- $basis := 0 }}{{- /* laufende Nummer über alle Staffeln (1–92 bei Mad Men), Svens Wunsch */}}
 {{- range $daten.staffel }}{{ if gt .folgen $max }}{{ $max = .folgen }}{{ end }}{{ end }}
 <div class="raster-rahmen">
 <table class="folgen-raster">
@@ -24,7 +25,8 @@
           {{- if lt $i (len $s.imdb) }}{{ $w = index $s.imdb $i }}{{ end }}
           {{- $klasse := "w0" }}
           {{- if ge $w 9.0 }}{{ $klasse = "w9" }}{{ else if ge $w 8.5 }}{{ $klasse = "w85" }}{{ else if ge $w 8.0 }}{{ $klasse = "w8" }}{{ else if gt $w 0.0 }}{{ $klasse = "w7" }}{{ end }}
-      <td class="{{ $klasse }}">
+      {{- $titel := "" }}{{ with $s.titel }}{{ if le $f (len .) }}{{ $titel = index . $i }}{{ end }}{{ end }}
+      <td class="{{ $klasse }}"><span class="folgenkopf"><span class="lfd" title="Folge {{ add $basis $f }} der Serie">{{ add $basis $f }}</span>{{ with $titel }} {{ . }}{{ end }}</span>
         {{- if gt $w 0.0 }}{{ printf "%.1f" $w }}{{ else }}·{{ end }}
         {{- $folge := where (where $kritiken "Params.staffel" $s.nummer) "Params.folge" $f }}
         {{- range where $folge "Params.zweitstimme" "!=" true }}
@@ -37,8 +39,9 @@
         {{- end }}
       {{- end }}
     </tr>
+    {{- $basis = add $basis $s.folgen }}
     {{- end }}
   </tbody>
 </table>
 </div>
-<p class="meta">Zahl = Wertung der Folge auf IMDb · <strong>C</strong> = Wertung von Claude (Link zur Besprechung) · <strong>GPT</strong> u. a. = Text und Wertung eines anderen Modells · · = IMDb-Wert noch nicht erfasst · Ø = Durchschnitt der Staffel auf IMDb</p>
+<p class="meta">Oben links: laufende Nummer und Titel der Folge · große Zahl = Wertung der Folge auf IMDb · <strong>C</strong> = Wertung von Claude (Link zur Besprechung) · <strong>GPT</strong> u. a. = Text und Wertung eines anderen Modells · · = IMDb-Wert noch nicht erfasst · Ø = Durchschnitt der Staffel auf IMDb</p>

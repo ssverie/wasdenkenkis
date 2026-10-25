@@ -193,6 +193,9 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
   font-variant-numeric: tabular-nums;
 }
 .folgen-raster td a { display: block; font-weight: 700; text-decoration: none; }
+.folgen-raster td:not(.leer) { min-width: 6.5rem; max-width: 8rem; vertical-align: top; }
+.folgen-raster .folgenkopf { display: block; text-align: left; font-size: 0.68rem; font-weight: 400; line-height: 1.25; color: var(--text-leise); margin-bottom: 0.25rem; hyphens: auto; }
+.folgen-raster .folgenkopf .lfd { font-weight: 700; }
 .folgen-raster td.leer { background: transparent; border-color: transparent; }
 .folgen-raster td.w0 { color: var(--text-leise); }
 .folgen-raster td.w8 { background: var(--heat-1); }
