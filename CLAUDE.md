@@ -137,9 +137,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
 
-- Links: YouTube-Thema „Politik“ mit Kanal Patrik Baab – Gegen den Strom. Podcasts: Folgenseite „Gegen den Strom mit Andrej Fursow“ mit zwei Texten – Analyse von Claude Opus 5.5 („Fursow bei Gegen den Strom – Analyse“, mit Faktencheck-Tabelle) und Einordnung von GPT-6 („Die neue Weltordnung – und die Angst vor dem Ende des Menschen als souveränem Wesen“; Überschrift „# 10.“ mechanisch auf `##` gesetzt), dazu „Podcastanalyse – Patrik Baab / Andrej Fursow“ der zweiten GPT-6-Instanz „Podcast2“ (alle Quellen geprüft, auch Fursows Zavtra-Text von 2023). Ladish-Texte: Instanzen nachgetragen. Transkript bleibt privat in `transkripte\`, Vorschlag Kapitelliste mit Sprungmarken offen.
-- Technik: `skripte/transkript-bereinigen.pl`, `.gitignore` um `/transkripte/` ergänzt.
-- Umbau: YouTube-Kanäle von Links nach Media › Podcasts (Kachel „Kanäle“, `/podcasts/kanaele/`, alte Adressen leiten um); Folgen ebenfalls als eigene Kachel (`/podcasts/folgen/`), die Podcast-Seite zeigt nur noch die zwei Kacheln.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: Podcasts mit Kanälen und Folgen, Fursow-Folge mit drei Texten, Thema Politik)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
