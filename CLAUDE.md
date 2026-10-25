@@ -137,7 +137,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
 
-- Serien: Mad Men Staffel 3 (13 Folgen, Claude Opus 5.5, Instanz „21.10.2026 - 22:08 - Mad Men episode summaries“).
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: Mad Men Staffel 3)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
