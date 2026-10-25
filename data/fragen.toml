@@ -400,6 +400,92 @@ text = "Leben die Menschen in einer Simulation?"
   [[frage.antwort]]
   pfad = "/fragen/simulation-gpt-6"
 
+# ---------- Menschheit: Fragen über die Menschheit (25 geplant; Wortlaut aus den Köpfen der Antworten von GPT-6) ----------
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist Gleichheit überhaupt ein erstrebenswertes Ideal, oder ist Gerechtigkeit etwas grundsätzlich anderes? Was wäre eine Gesellschaft, in der niemand benachteiligt wird, aber auch niemand herausragen darf?"
+  [[frage.antwort]]
+  pfad = "/fragen/gleichheit-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum sehnen sich Menschen nach Autoritäten, obwohl sie behaupten, frei sein zu wollen? Ist Gehorsam eine Schwäche oder manchmal eine vernünftige Entscheidung?"
+  [[frage.antwort]]
+  pfad = "/fragen/autoritaet-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Kann eine Gesellschaft zu tolerant werden? Wo endet Offenheit, und wo beginnt die Selbstauflösung ihrer eigenen Grundlagen?"
+  [[frage.antwort]]
+  pfad = "/fragen/toleranz-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist der Wunsch nach Anerkennung die eigentliche Triebkraft der menschlichen Zivilisation? Wie viel von Wissenschaft, Kunst und Politik entsteht aus Eitelkeit?"
+  [[frage.antwort]]
+  pfad = "/fragen/anerkennung-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum wiederholen Gesellschaften historische Fehler, obwohl sie deren Folgen kennen? Ist kollektives Lernen vielleicht eine Illusion?"
+  [[frage.antwort]]
+  pfad = "/fragen/historische-fehler-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist Liebe eine Entscheidung, ein biologischer Zustand oder eine Geschichte, die zwei Menschen gemeinsam erfinden? Was bleibt, wenn die Leidenschaft verschwindet?"
+  [[frage.antwort]]
+  pfad = "/fragen/liebe-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Wie viel Selbsttäuschung braucht ein Mensch, um glücklich zu sein? Könnte ein vollkommen illusionsfreies Leben überhaupt erträglich sein?"
+  [[frage.antwort]]
+  pfad = "/fragen/selbsttaeuschung-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum wollen Menschen Spuren hinterlassen, obwohl sie wissen, dass irgendwann alles verschwinden wird? Ist das Streben nach Bedeutung eine Form des Widerstands gegen den Tod?"
+  [[frage.antwort]]
+  pfad = "/fragen/spuren-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist ein langes Leben zwangsläufig besser als ein kurzes? Könnte eine unbegrenzte Lebenszeit dem Leben gerade das nehmen, was es wertvoll macht?"
+  [[frage.antwort]]
+  pfad = "/fragen/lebenszeit-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Kann man einen Menschen wirklich kennen, oder kennen wir immer nur unsere eigene Version von ihm? Was bedeutet das für Freundschaft, Liebe und Vertrauen?"
+  [[frage.antwort]]
+  pfad = "/fragen/einen-menschen-kennen-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist es moralisch vertretbar, einen unschuldigen Menschen zu opfern, um tausend andere zu retten? Gibt es Grenzen, die selbst das beste Ergebnis nicht rechtfertigen kann?"
+  [[frage.antwort]]
+  pfad = "/fragen/opfer-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum korrumpiert Macht so häufig – und würden wir selbst tatsächlich anders handeln? Verändert Macht den Charakter, oder zeigt sie nur, was vorher verborgen war?"
+  [[frage.antwort]]
+  pfad = "/fragen/macht-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Haben Menschen ein Recht darauf, nicht mit der Wahrheit konfrontiert zu werden? Wann ist Aufklärung eine Befreiung und wann eine Zumutung?"
+  [[frage.antwort]]
+  pfad = "/fragen/wahrheit-zumutung-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Sind gute Absichten moralisch etwas wert, wenn ihre Folgen katastrophal sind? Was zählt mehr: Motivation, Handlung oder Ergebnis?"
+  [[frage.antwort]]
+  pfad = "/fragen/absichten-gpt-6"
+
 # ---------- Sven: Svens eigene Fragen ----------
 
 [[frage]]
