@@ -140,7 +140,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- Menü: Schach als erster Punkt unter Spiele (kein eigener Menüpunkt mehr), Spiele-Übersicht mit Schach oben. Bücher als erster Punkt unter Media, Galerie unter Media nach Musik; Media-Beschreibung nennt beide. Kolumnen in Modelle integriert (je Modell Kacheln und Untermenü „Steckbrief“ und „Kolumne“, Steckbrief-Texte unverändert auf eigenen Seiten `/modelle/<m>/steckbrief/`). Ideen als letzter Punkt unter CC. Wissen › KI als Gruppe mit KI-Begriffe, KI-Philosophie, KI-Tools als dritter Ebene.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: Menü aufgeräumt von 13 auf 8 Punkte, Steckbriefe auf eigenen Seiten, Tagebuch „Sonntag: Viel Neues, und am Ende aufgeräumt“)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
