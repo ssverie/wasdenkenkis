@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heapsort</title>
+<!-- Visualisierung von Heapsort (nach Sedgewick/Wayne, Algorithmen, Algorithmus 2.7, Listing 2.21)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code (sink, kleiner, tausche ebenfalls eigene Fassung).
+     Gemeinsamer Rahmen (Bedienung, Balken, Protokoll) in sortieren/rahmen.js und rahmen.css. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  .phase { font-size: 14px; margin-bottom: 4px; }
+  .phase code { font: 600 14px ui-monospace, Consolas, monospace; }
+  svg.baum { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto 6px; }
+  svg.baum line { stroke: var(--grau); stroke-width: 2; }
+  svg.baum circle { fill: var(--bar); }
+  svg.baum circle.neu { fill: var(--neu); }
+  svg.baum circle.cur { fill: var(--cur); }
+  svg.baum circle.swap { fill: var(--swap); }
+  svg.baum circle.sortiert { fill: none; stroke: var(--sortiert); stroke-width: 2; stroke-dasharray: 4 3; }
+  svg.baum text.wert { font: 600 14px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg.baum text.wert.hell { fill: #fff; }
+  svg.baum text.wert.sortiert { fill: var(--muted); font-weight: 400; }
+  svg.baum text.idx { font: 10px system-ui, sans-serif; fill: var(--muted); text-anchor: middle; }
+  @media (prefers-color-scheme: dark) { svg.baum text.wert.hell { fill: #0d1530; } }
+  .proto td.zahl { color: var(--muted); }
+  .proto tr.zuletzt td.zahl { color: var(--neu); font-weight: 700; }
+  .proto tr.marke td.name { color: var(--text); font-style: italic; }
+</style>
+</head>
+<body>
+<div class="wrap"></div>
+<script src="sortieren/rahmen.js?v=3"></script>
+<script>
+(function () {
+  const CODE = [
+    'public class Heapsort',
+    '{',
+    '   public static void sortiere(int[] a)',
+    '   {',
+    '      int n = a.length;',
+    '      for (int k = n / 2; k >= 1; k--)   // Phase 1: Heap bauen',
+    '         sink(a, k, n);',
+    '      while (n > 1)                      // Phase 2: Sortdown',
+    '      {',
+    '         tausche(a, 1, n--);             // Maximum nach hinten',
+    '         sink(a, 1, n);                  // Heap reparieren',
+    '      }',
+    '   }',
+    '',
+    '   private static void sink(int[] a, int k, int n)',
+    '   {  // Platz k sinkt ab, solange ein Kind größer ist',
+    '      while (2 * k <= n)',
+    '      {',
+    '         int j = 2 * k;                             // linkes Kind',
+    '         if (j < n && kleiner(a, j, j + 1)) j++;   // größeres Kind',
+    '         if (!kleiner(a, k, j)) break;             // Ordnung stimmt',
+    '         tausche(a, k, j);',
+    '         k = j;',
+    '      }',
+    '   }',
+    '',
+    '   // Heap-Plätze 1..n, Java-Array 0..n-1: darum jeweils - 1',
+    '   private static boolean kleiner(int[] a, int i, int j)',
+    '   {  return a[i - 1] < a[j - 1];  }',
+    '',
+    '   private static void tausche(int[] a, int i, int j)',
+    '   {  int t = a[i - 1]; a[i - 1] = a[j - 1]; a[j - 1] = t;  }',
+    '}'
+  ];
+  const zeile = s => CODE.findIndex(l => l.includes(s));
+  const L = { start: zeile('int n = a.length'), forK: zeile('for (int k = n / 2'), sinkAufruf1: zeile('sink(a, k, n);'),
+              whileN: zeile('while (n > 1)'), tausch1: zeile('tausche(a, 1, n--)'), sinkAufruf2: zeile('sink(a, 1, n);'),
+              sinkWhile: zeile('while (2 * k <= n)'), kinder: zeile('if (j < n &&'), ordnung: zeile('if (!kleiner(a, k, j))'),
+              sinkTausch: zeile('tausche(a, k, j);'), ende: zeile('   }') };
+  const lg = x => Math.floor(Math.log2(x));
+
+  SortierRahmen.starte({
+    code: CODE,
+    codeTitel: 'Java (eigene Fassung, nach Algorithmus 2.7, Listing 2.21)',
+    protokollTitel: 'Ablaufprotokoll (nach jedem sink, wie Abbildung 2.32)',
+    groessen: [10, 11, 12, 15], groesse: 11,
+    anordnungen: ['zufall', 'fast', 'sortiert', 'umgekehrt'],
+    indexAb: 1,
+    legende: [['var(--neu)', 'Element, das absinkt'], ['var(--cur)', 'Kind, mit dem verglichen wird'],
+              ['var(--swap)', 'Tausch'], ['var(--sortiert)', 'hinten: endgültig sortiert']],
+    spruenge: [
+      { text: 'Bis sink fertig ▶▶', title: 'Bis der aktuelle sink-Aufruf fertig ist', bis: s => s.sinkFertig },
+      { text: 'Bis Heap fertig ▶▶', title: 'Bis zum Ende von Phase 1 (Heap gebaut)', bis: s => s.heapFertig }
+    ],
+    test: '__heapsort',
+
+    // Der Algorithmus, einmal komplett durchlaufen; jeder Schritt wird festgehalten.
+    // Gerechnet wird wie im Java-Code mit Heap-Plätzen 1..n; get/set ziehen 1 ab.
+    baue(a, laenge) {
+      const steps = [];
+      const proto = [];
+      let n = laenge, v1 = 0, v2 = 0, tausche = 0, phase = 1;
+      const get = h => a[h - 1];
+      const kleiner = (i, j) => { if (phase === 1) v1++; else v2++; return get(i) < get(j); };
+      const tausch = (i, j) => { const t = a[i - 1]; a[i - 1] = a[j - 1]; a[j - 1] = t; tausche++; };
+      const snap = (line, o) => steps.push(Object.assign(
+        { line, a: a.slice(), n, phase, v1, v2, tausche, proto: proto.slice() }, o));
+
+      function sink(k, aufrufK, aufrufLine) {
+        const vorher = a.slice();
+        let grund;
+        snap(aufrufLine, { k, aufrufK, msg: phase === 1
+          ? `sink(a, ${k}, ${n}): Platz ${k} (${get(k)}) und alles darunter wird zum Heap.`
+          : `sink(a, 1, ${n}): Das neue Wurzelelement ${get(1)} sinkt ab, bis die Heap-Ordnung wieder stimmt.` });
+        while (true) {
+          if (2 * k > n) { grund = `Platz ${k} hat im Heap keine Kinder – sink endet.`; break; }
+          let j = 2 * k;
+          if (j < n) {
+            const rechts = kleiner(j, j + 1);
+            snap(L.kinder, { k, j: rechts ? j + 1 : j, j2: rechts ? j : j + 1, aufrufK,
+              msg: `Kinder von Platz ${k}: ${get(j)} (Platz ${j}) und ${get(j + 1)} (Platz ${j + 1}) → das größere ist ${rechts ? get(j + 1) : get(j)}.` });
+            if (rechts) j++;
+          } else {
+            snap(L.kinder, { k, j, aufrufK, msg: `Platz ${k} hat nur ein Kind im Heap: ${get(j)} auf Platz ${j} (kein Vergleich nötig).` });
+          }
+          if (!kleiner(k, j)) {
+            grund = `${get(k)} ist nicht kleiner als sein größeres Kind ${get(j)} → die Ordnung stimmt, sink endet.`;
+            snap(L.ordnung, { k, j, aufrufK, msg: `Vergleich mit dem größeren Kind: ${get(k)} ist nicht kleiner als ${get(j)}.` });
+            break;
+          }
+          snap(L.ordnung, { k, j, aufrufK, msg: `Vergleich mit dem größeren Kind: ${get(k)} < ${get(j)} → ${get(k)} sinkt eine Ebene tiefer.` });
+          tausch(k, j);
+          snap(L.sinkTausch, { k, j, aufrufK, swap: true, msg: `tausche(a, ${k}, ${j}): ${get(k)} steht jetzt auf Platz ${k}, ${get(j)} auf Platz ${j}.` });
+          k = j;
+        }
+        const bewegt = a.map((v, i) => v !== vorher[i] ? i : -1).filter(i => i >= 0);
+        proto.push({ n, k: aufrufK, werte: a.slice(), bewegt });
+        snap(L.sinkWhile, { k, aufrufK, sinkFertig: true, cls: 'swap', msg: grund });
+      }
+
+      snap(L.start, { msg: `Start: n = ${n}. Phase 1 baut den Heap von unten: Die Plätze ${Math.floor(n / 2) + 1} bis ${n} sind Blätter und für sich schon Heaps. Los geht es bei k = ${Math.floor(n / 2)}.` });
+      for (let k = Math.floor(n / 2); k >= 1; k--) sink(k, k, L.sinkAufruf1);
+      steps[steps.length - 1].heapFertig = true;
+      snap(L.whileN, { heapGeordnet: true, cls: 'swap', msg: `Phase 1 fertig: heap-geordnet, das Maximum ${get(1)} steht vorn auf Platz 1. ${v1} Vergleiche (weniger als 2n = ${2 * laenge}).` });
+      phase = 2;
+      while (n > 1) {
+        const max = get(1);
+        tausch(1, n); n--;
+        snap(L.tausch1, { tausch1: n + 1, swap: true, msg: `tausche(a, 1, ${n + 1}): Das Maximum ${max} kommt nach hinten auf Platz ${n + 1} und steht dort endgültig. Der Heap hat jetzt ${n} Elemente.` });
+        sink(1, 1, L.sinkAufruf2);
+      }
+      snap(L.whileN, { fertig: true, cls: 'swap', n: 0,
+        msg: `Fertig: ${v1 + v2} Vergleiche (Heap bauen ${v1}, Sortdown ${v2}), ${tausche} Tausche. Garantiert weniger als 2n lg n + 2n ≈ ${Math.round(2 * laenge * Math.log2(laenge) + 2 * laenge)}.` });
+      return steps;
+    },
+
+    // k: Platz, der absinkt; j: Kind, mit dem verglichen wird; Plätze > n sind endgültig sortiert
+    balken(s, i) {
+      const h = i + 1;
+      if (s.fertig) return 'sortiert';
+      if (s.tausch1 && (h === 1 || h === s.tausch1)) return 'swap';
+      if (h > s.n) return 'sortiert';
+      if (s.k == null || s.heapGeordnet) return '';
+      if (s.swap && (h === s.k || h === s.j)) return 'swap';
+      if (h === s.k) return 'neu';
+      if (h === s.j || h === s.j2) return 'cur';
+      return '';
+    },
+    marken(s, i) {
+      const h = i + 1;
+      if (s.fertig || s.k == null) return h === s.n && !s.fertig ? [['i', 'n']] : [];
+      const t = [];
+      if (h === s.k) t.push(['neu', 'k']);
+      if (h === s.j) t.push(['cur', 'j']);
+      if (h === s.n) t.push(['i', 'n']);
+      return t;
+    },
+    // Phase und der Heap als Baum (Plätze 1..n); Plätze hinter n gestrichelt mit ihrem endgültigen Wert
+    kopf(s) {
+      const N = s.a.length, ebenen = lg(N) + 1, breite = 480, hoehe = 24 + (ebenen - 1) * 52 + 30;
+      const p = h => { const d = lg(h), w = breite / (1 << d); return [(h - (1 << d) + 0.5) * w, 22 + d * 52]; };
+      let linien = '', knoten = '';
+      for (let h = 2; h <= N; h++) if (h <= s.n) { const [x, y] = p(h), [px, py] = p(h >> 1); linien += `<line x1="${px}" y1="${py}" x2="${x}" y2="${y}"/>`; }
+      for (let h = 1; h <= N; h++) {
+        const [x, y] = p(h), c = this.balken(s, h - 1);
+        const tc = c === 'sortiert' ? ' sortiert' : c ? ' hell' : '';
+        knoten += `<circle class="${c}" cx="${x}" cy="${y}" r="16"/><text class="wert${tc}" x="${x}" y="${y}">${s.a[h - 1]}</text><text class="idx" x="${x}" y="${y + 27}">${h}</text>`;
+      }
+      const phaseText = s.fertig ? 'fertig'
+        : s.phase === 1 ? `Phase 1: Heap bauen${s.aufrufK ? ` · <code>sink(a, ${s.aufrufK}, ${s.n})</code>` : ''}`
+        : `Phase 2: Sortdown · Heap: Plätze 1 bis ${s.n}${s.aufrufK ? ` · <code>sink(a, 1, ${s.n})</code>` : ''}`;
+      return `<div class="phase">${phaseText}</div><svg class="baum" viewBox="0 0 ${breite} ${hoehe}" role="img" aria-label="Heap als Baum">${linien}${knoten}</svg>`;
+    },
+    zaehler(s, start) {
+      const N = start.length;
+      return `Vergleiche: <b>${s.v1 + s.v2}</b> (Heap bauen <b>${s.v1}</b>, unter 2n = ${2 * N} · Sortdown <b>${s.v2}</b>) · Tausche: <b>${s.tausche}</b> · garantiert unter 2n lg n + 2n ≈ <b>${Math.round(2 * N * Math.log2(N) + 2 * N)}</b>`;
+    },
+    // Protokoll wie Abbildung 2.32: n und k des sink-Aufrufs, dann a[1..n]; von sink bewegt hervorgehoben, sortiert grau
+    protokoll(s, start) {
+      const kopf = `<tr><th>n</th><th>k</th>${start.map((_, i) => `<th>${i + 1}</th>`).join('')}</tr>`;
+      const startZeile = `<tr class="marke"><td class="name" colspan="2">Anfang</td>${start.map(v => `<td>${v}</td>`).join('')}</tr>`;
+      const zeilen = s.proto.map((z, nr) => {
+        const cls = [nr === s.proto.length - 1 && !s.fertig ? 'zuletzt' : ''].join(' ').trim();
+        return `<tr${cls ? ` class="${cls}"` : ''}><td class="zahl">${z.n}</td><td class="zahl">${z.k}</td>${z.werte.map((v, i) =>
+          `<td class="${i + 1 > z.n ? 'grau' : z.bewegt.includes(i) ? 'neu' : ''}">${v}</td>`).join('')}</tr>`;
+      }).join('');
+      const ende = s.fertig ? `<tr class="marke"><td class="name" colspan="2">sortiert</td>${s.a.map(v => `<td>${v}</td>`).join('')}</tr>` : '';
+      return `<table>${kopf}${startZeile}${zeilen}${ende}</table>`;
+    }
+  });
+})();
+</script>
+</body>
+</html>

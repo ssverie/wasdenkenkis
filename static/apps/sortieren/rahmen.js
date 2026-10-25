@@ -1,4 +1,4 @@
-// Gemeinsamer Rahmen der Sortier-Visualisierungen (Selectionsort, Insertionsort, Shellsort, Mergesort)
+// Gemeinsamer Rahmen der Sortier-Visualisierungen (Selectionsort, Insertionsort, Shellsort, Mergesort, Quicksort, Heapsort)
 // für wasdenkenkis.de – Claude Code Opus 5.5. Keine externen Dateien, keine Bibliotheken.
 //
 // Prinzip: Das Verfahren läuft einmal komplett durch und legt jeden Schritt als Momentaufnahme ab
@@ -15,6 +15,7 @@
 //     balken(s, k, pos) → CSS-Klasse des Balkens k,  marken(s, k) → [[klasse, text], ...],
 //     zaehler(s, start) → HTML,  protokoll(s, start) → HTML,  kopf(s) → HTML (optional),
 //     unten(s) → HTML unter den Indizes (optional, z. B. das Hilfsarray bei Mergesort),
+//     indexAb: 1                                     // Nummerierung unter den Balken ab 1 statt 0 (Heapsort, optional)
 //     test: 'name'                                   // window.<name> für automatische Tests
 //   });
 (function () {
@@ -97,7 +98,7 @@
         const c = cfg.balken(s, k, pos);
         return `<div class="bar${c ? ' ' + c : ''}" style="height:${10 + 90 * v / max}%" title="a[${k}] = ${v}"><span>${v}</span></div>`;
       }).join('');
-      $('idx').innerHTML = s.a.map((_, k) => `<div>${k}</div>`).join('');
+      $('idx').innerHTML = s.a.map((_, k) => `<div>${k + (cfg.indexAb || 0)}</div>`).join('');
       $('marks').innerHTML = s.a.map((_, k) =>
         `<div>${cfg.marken(s, k).map(([cls, t]) => `<span class="${cls}">${t}</span>`).join('<br>')}</div>`).join('');
       if (cfg.kopf) $('kopf').innerHTML = cfg.kopf(s);
