@@ -134,7 +134,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- (leer – zuletzt freigegeben und gepusht am 2026-10-25: IT-Konzepte mit 40 Einträgen, Algorithmen direkt unter Wissen)
+- Tagebuch: „Nachtrag zum Samstag: Ein Tag, der bis zwei Uhr ging“ (Eintrag zum 24.10., am 25.10. nachgeschrieben).
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
