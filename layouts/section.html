@@ -1,5 +1,7 @@
 {{ define "main" }}
 <header class="seitenkopf">
+  {{- /* Rubrik-Link nach oben, wenn die Rubrik in einer Menügruppe hängt (z. B. Galerie unter Media: oben = "/media") */}}
+  {{- with .Params.oben }}{{ with site.GetPage . }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>

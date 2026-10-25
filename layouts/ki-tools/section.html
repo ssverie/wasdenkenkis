@@ -3,6 +3,8 @@
 {{ define "main" }}
 <article class="beitrag">
   <header class="seitenkopf">
+    {{- /* seit 2026-10-25 unter Wissen › KI */}}
+    {{- with site.GetPage "/wissen/ki" }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
     <h1>{{ .Title }}</h1>
     {{- with .Description }}
     <p class="lead">{{ . }}</p>

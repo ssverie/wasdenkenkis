@@ -3,6 +3,8 @@
        Stellungen = Seiten mit `fen`; Datum aus `partie`, Zug und Seite am Zug aus `fen`. */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
+  {{- /* seit 2026-10-25 unter Spiele (Sven) */}}
+  {{- with site.GetPage "/spiele" }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>

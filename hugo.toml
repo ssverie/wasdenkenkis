@@ -26,6 +26,7 @@ enableRobotsTXT = true
     pageRef = "/modelle"
     weight = 10
   # Modellreihenfolge überall: Claude, GPT, Gemini, Grok (Sven, 2026-10-24)
+  # Seit 2026-10-25 je Modell die Unterpunkte Steckbrief und Kolumne (Kolumnen ist kein eigener Menüpunkt mehr, Sven)
   [[menus.main]]
     name = "Claude"
     identifier = "modelle-claude"
@@ -33,10 +34,34 @@ enableRobotsTXT = true
     parent = "modelle"
     weight = 1
   [[menus.main]]
+    name = "Steckbrief"
+    identifier = "modelle-claude-steckbrief"
+    pageRef = "/steckbriefe/claude"
+    parent = "modelle-claude"
+    weight = 1
+  [[menus.main]]
+    name = "Kolumne"
+    identifier = "modelle-claude-kolumne"
+    pageRef = "/kolumnen/claude"
+    parent = "modelle-claude"
+    weight = 2
+  [[menus.main]]
     name = "GPT"
     identifier = "modelle-gpt"
     pageRef = "/modelle/gpt"
     parent = "modelle"
+    weight = 2
+  [[menus.main]]
+    name = "Steckbrief"
+    identifier = "modelle-gpt-steckbrief"
+    pageRef = "/steckbriefe/gpt"
+    parent = "modelle-gpt"
+    weight = 1
+  [[menus.main]]
+    name = "Kolumne"
+    identifier = "modelle-gpt-kolumne"
+    pageRef = "/kolumnen/gpt"
+    parent = "modelle-gpt"
     weight = 2
   [[menus.main]]
     name = "Gemini"
@@ -45,11 +70,35 @@ enableRobotsTXT = true
     parent = "modelle"
     weight = 3
   [[menus.main]]
+    name = "Steckbrief"
+    identifier = "modelle-gemini-steckbrief"
+    pageRef = "/steckbriefe/gemini"
+    parent = "modelle-gemini"
+    weight = 1
+  [[menus.main]]
+    name = "Kolumne"
+    identifier = "modelle-gemini-kolumne"
+    pageRef = "/kolumnen/gemini"
+    parent = "modelle-gemini"
+    weight = 2
+  [[menus.main]]
     name = "Grok"
     identifier = "modelle-grok"
     pageRef = "/modelle/grok"
     parent = "modelle"
     weight = 4
+  [[menus.main]]
+    name = "Steckbrief"
+    identifier = "modelle-grok-steckbrief"
+    pageRef = "/steckbriefe/grok"
+    parent = "modelle-grok"
+    weight = 1
+  [[menus.main]]
+    name = "Kolumne"
+    identifier = "modelle-grok-kolumne"
+    pageRef = "/kolumnen/grok"
+    parent = "modelle-grok"
+    weight = 2
   [[menus.main]]
     name = "Fragen"
     identifier = "fragen"
@@ -104,17 +153,19 @@ enableRobotsTXT = true
     name = "Podcasts"
     pageRef = "/podcasts"
     parent = "media"
-    weight = 24
+    weight = 25
   [[menus.main]]
     name = "Musik"
     pageRef = "/musik"
     parent = "media"
     weight = 23
   [[menus.main]]
+    # Bücher seit 2026-10-25 als erster Punkt unter Media (Sven); die Listen bleiben dritte Ebene
     name = "Bücher"
     identifier = "buecher"
     pageRef = "/buecher"
-    weight = 25
+    parent = "media"
+    weight = 1
   [[menus.main]]
     name = "Belletristik"
     pageRef = "/belletristik"
@@ -136,43 +187,47 @@ enableRobotsTXT = true
     parent = "buecher"
     weight = 29
   [[menus.main]]
+    # Galerie seit 2026-10-25 unter Media nach Musik (Sven)
     name = "Galerie"
     pageRef = "/galerie"
-    weight = 30
+    parent = "media"
+    weight = 24
   [[menus.main]]
     name = "Spiele"
     identifier = "spiele"
     pageRef = "/spiele"
     weight = 32
   [[menus.main]]
+    # Schach seit 2026-10-25 als erster Punkt unter Spiele (Sven); seine Unterpunkte bleiben als dritte Ebene
+    name = "Schach"
+    identifier = "schach"
+    pageRef = "/schach"
+    parent = "spiele"
+    weight = 1
+  [[menus.main]]
     name = "Tetris"
     pageRef = "/spiele/tetris"
     parent = "spiele"
-    weight = 1
+    weight = 2
   [[menus.main]]
     name = "Breakout"
     pageRef = "/spiele/breakout"
     parent = "spiele"
-    weight = 2
+    weight = 3
   [[menus.main]]
     name = "Minesweeper"
     pageRef = "/spiele/minesweeper"
     parent = "spiele"
-    weight = 3
+    weight = 4
   [[menus.main]]
     name = "Reversi"
     pageRef = "/spiele/reversi"
     parent = "spiele"
-    weight = 4
+    weight = 5
   [[menus.main]]
     name = "Tools"
     pageRef = "/tools"
     weight = 33
-  [[menus.main]]
-    name = "Schach"
-    identifier = "schach"
-    pageRef = "/schach"
-    weight = 34
   [[menus.main]]
     name = "Schach"
     pageRef = "/schach/klassisch"
@@ -194,54 +249,32 @@ enableRobotsTXT = true
     parent = "schach"
     weight = 4
   [[menus.main]]
-    name = "Kolumnen"
-    identifier = "kolumnen"
-    pageRef = "/kolumnen"
-    weight = 35
-  [[menus.main]]
-    name = "Claude"
-    identifier = "kolumnen-claude"
-    pageRef = "/kolumnen/claude"
-    parent = "kolumnen"
-    weight = 1
-  [[menus.main]]
-    name = "GPT"
-    identifier = "kolumnen-gpt"
-    pageRef = "/kolumnen/gpt"
-    parent = "kolumnen"
-    weight = 2
-  [[menus.main]]
-    name = "Gemini"
-    identifier = "kolumnen-gemini"
-    pageRef = "/kolumnen/gemini"
-    parent = "kolumnen"
-    weight = 3
-  [[menus.main]]
-    name = "Grok"
-    identifier = "kolumnen-grok"
-    pageRef = "/kolumnen/grok"
-    parent = "kolumnen"
-    weight = 4
-  [[menus.main]]
     name = "Wissen"
     identifier = "wissen"
     pageRef = "/wissen"
     weight = 40
   [[menus.main]]
-    name = "KI-Begriffe"
-    pageRef = "/erklaert"
+    # KI seit 2026-10-25 als Gruppe unter Wissen (Sven, „wie bei Schach“): KI-Begriffe, KI-Philosophie, KI-Tools als dritte Ebene
+    name = "KI"
+    identifier = "wissen-ki"
+    pageRef = "/wissen/ki"
     parent = "wissen"
     weight = 41
   [[menus.main]]
+    name = "KI-Begriffe"
+    pageRef = "/erklaert"
+    parent = "wissen-ki"
+    weight = 1
+  [[menus.main]]
     name = "KI-Philosophie"
     pageRef = "/philosophie"
-    parent = "wissen"
-    weight = 42
+    parent = "wissen-ki"
+    weight = 2
   [[menus.main]]
     name = "KI-Tools"
     pageRef = "/ki-tools"
-    parent = "wissen"
-    weight = 43
+    parent = "wissen-ki"
+    weight = 3
   [[menus.main]]
     name = "IT-Konzepte"
     identifier = "it-konzepte"
@@ -263,10 +296,6 @@ enableRobotsTXT = true
     pageRef = "/links"
     parent = "wissen"
     weight = 47
-  [[menus.main]]
-    name = "Ideen"
-    pageRef = "/ideen"
-    weight = 60
   [[menus.main]]
     name = "Suche"
     pageRef = "/suche"
@@ -294,6 +323,13 @@ enableRobotsTXT = true
     pageRef = "/was-mich-beschaeftigt"
     parent = "cc"
     weight = 3
+  [[menus.main]]
+    # Ideen seit 2026-10-25 als letzter Punkt unter CC (Sven)
+    name = "Ideen"
+    identifier = "cc-ideen"
+    pageRef = "/ideen"
+    parent = "cc"
+    weight = 4
 
 [markup.goldmark.renderer]
   unsafe = false

@@ -1,0 +1,24 @@
+{{- /* Spiele (/spiele/): seit 2026-10-25 steht Schach als erster Eintrag oben (Sven: „Schach in Spiele, als erstes“),
+       darunter die übrigen Spiele wie bisher. Schach behält seine Adresse /schach/ mit eigenen Spielen und Stellungen. */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+<ul class="liste">
+  {{- with site.GetPage "/schach" }}
+  {{- $spiele := len (where .RegularPages "Params.fen" "==" nil) }}
+  {{- $stellungen := len (where .RegularPages "Params.fen" "!=" nil) }}
+  <li>
+    <div>
+      <a class="liste-titel" href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <div class="meta">{{ $spiele }} Spiele · {{ $stellungen }} {{ cond (eq $stellungen 1) "Stellung" "Stellungen" }}</div>
+      {{- with .Description }}
+      <p>{{ . }}</p>
+      {{- end }}
+    </div>
+  </li>
+  {{- end }}
+</ul>
+{{ partial "liste.html" (where .RegularPages "Params.archiv" "!=" true) }}
+{{ end }}

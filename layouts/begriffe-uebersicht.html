@@ -2,6 +2,8 @@
 {{ define "main" }}
 <article class="beitrag">
   <header class="seitenkopf">
+    {{- /* KI-Begriffe und KI-Philosophie seit 2026-10-25 unter Wissen › KI (im Template statt im _index.md, das der Generator neu schreibt) */}}
+    {{- if in (slice "erklaert" "philosophie") .Section }}{{ with site.GetPage "/wissen/ki" }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}
     <h1>{{ .Title }}</h1>
     {{- with .Description }}
     <p class="lead">{{ . }}</p>

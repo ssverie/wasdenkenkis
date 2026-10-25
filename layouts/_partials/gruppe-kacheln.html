@@ -14,6 +14,10 @@
             {{- $einheiten := dict "filme" (slice "Film" "Filme") "serien" (slice "Serie" "Serien") "podcasts" (slice "Folge" "Folgen") "modelle" (slice "Modell" "Modelle") }}
             {{- $paar := index $einheiten .Data.Plural | default (slice "Eintrag" "Einträge") }}
             {{- $n = len .Pages }}{{ $einheit = cond (eq $n 1) (index $paar 0) (index $paar 1) }}
+          {{- else if and .Params.menu_gruppe (eq .Layout "gruppe") }}
+            {{- /* Untergruppe (z. B. Wissen › KI): statt einer Anzahl ihre Unterpunkte nennen */}}
+            {{- $id := .Params.menu_gruppe }}{{ $n = -1 }}
+            {{- range $gruppen }}{{ if eq .Identifier $id }}{{ $namen := slice }}{{ range .Children }}{{ $namen = $namen | append .Name }}{{ end }}{{ $text = delimit $namen " · " }}{{ end }}{{ end }}
           {{- else if .Params.daten }}
             {{- $n = len (index (index hugo.Data .Params.daten) (.Params.eintrag | default "buch")) }}
             {{- $paar := .Params.einheit | default (slice "Buch" "Bücher") }}{{ $einheit = cond (eq $n 1) (index $paar 0) (index $paar 1) }}

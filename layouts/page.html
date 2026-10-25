@@ -1,7 +1,10 @@
 {{ define "main" }}
 <article class="beitrag">
   <header class="seitenkopf">
-    {{- with .Parent }}
+    {{- /* Rückweg: Elternbereich, bei Steckbriefen das Modell (der Bereich /steckbriefe/ selbst wird nicht ausgegeben) */}}
+    {{- $oben := .Parent }}
+    {{- if eq .Section "steckbriefe" }}{{ range first 1 (.GetTerms "modelle") }}{{ $oben = . }}{{ end }}{{ end }}
+    {{- with $oben }}
     <a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>
     {{- end }}
     <h1>{{ .Title }}</h1>

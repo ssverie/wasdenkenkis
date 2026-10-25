@@ -2,6 +2,8 @@
        darunter alle Bücher mit eigener Seite, nach Erscheinungsjahr, neuestes oben */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
+  {{- /* seit 2026-10-25 unter Media (Sven) */}}
+  {{- with site.GetPage "/media" }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>

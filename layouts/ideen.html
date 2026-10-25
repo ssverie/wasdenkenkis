@@ -1,6 +1,8 @@
 {{- /* Geparkte Ideen aus data/ideen.toml, gruppiert nach status */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
+  {{- /* seit 2026-10-25 unter CC (Sven) */}}
+  {{- with site.GetPage "/cc" }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>

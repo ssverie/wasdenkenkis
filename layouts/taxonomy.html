@@ -14,5 +14,16 @@
     </a>
   </li>
   {{- end }}
+  {{- /* Modelle: zusätzlich die Übersicht aller Kolumnen (seit 2026-10-25 kein eigener Menüpunkt mehr) */}}
+  {{- if eq .Data.Plural "modelle" }}{{ with site.GetPage "/kolumnen" }}
+  {{- $n := len .Sections }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>Alle Kolumnen</strong>
+      {{- with .Description }}<span>{{ . }}</span>{{ end }}
+      <small>{{ $n }} {{ cond (eq $n 1) "Kolumne" "Kolumnen" }} · {{ len .RegularPagesRecursive }} Ausgaben</small>
+    </a>
+  </li>
+  {{- end }}{{ end }}
 </ul>
 {{ end }}

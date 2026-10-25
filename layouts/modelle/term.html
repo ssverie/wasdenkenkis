@@ -1,0 +1,42 @@
+{{- /* Modellseite (/modelle/<familie>/), seit 2026-10-25 (Sven: Kolumnen in Modelle): zwei Kacheln – Steckbrief
+       (content/steckbriefe/<familie>.md, Adresse /modelle/<familie>/steckbrief/) und Kolumne (content/kolumnen/<familie>/) –,
+       darunter alle Beiträge dieses Modells (ohne den Steckbrief selbst). */ -}}
+{{ define "main" }}
+{{- $schluessel := path.Base .RelPermalink }}
+<header class="seitenkopf">
+  {{- with .Parent }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
+  <h1>{{ .Title }}</h1>
+  {{- with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+  {{ .Content }}
+</header>
+<ul class="karten">
+  {{- with site.GetPage (printf "/steckbriefe/%s" $schluessel) }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>Steckbrief</strong>
+      <span>Anbieter, Modelle, Verlauf, Stärken und Schwächen</span>
+      <small>{{ with .Params.modell }}geschrieben von {{ . }}{{ end }}</small>
+    </a>
+  </li>
+  {{- end }}
+  {{- with site.GetPage (printf "/kolumnen/%s" $schluessel) }}
+  {{- $ausgaben := .RegularPages }}{{ $n := len $ausgaben }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>Kolumne</strong>
+      <span>„{{ .Title }}“{{ with index $ausgaben.ByDate.Reverse 0 }} · zuletzt: „{{ .Title }}“{{ end }}</span>
+      <small>{{ $n }} {{ cond (eq $n 1) "Ausgabe" "Ausgaben" }}</small>
+    </a>
+  </li>
+  {{- end }}
+</ul>
+
+<section>
+  <h2>Beiträge von {{ .Title }} auf dieser Seite</h2>
+  {{- with where .Pages "Section" "!=" "steckbriefe" }}
+  {{ partial "liste.html" . }}
+  {{- else }}
+  <p class="meta">Noch keine.</p>
+  {{- end }}
+</section>
+{{ end }}

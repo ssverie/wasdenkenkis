@@ -1,6 +1,8 @@
 {{- /* Übersicht der Kolumnen: eine Kachel je Modellfamilie (Unterordner von content/kolumnen/), Reihenfolge per weight */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
+  {{- /* seit 2026-10-25 unter Modelle (Sven) */}}
+  {{- with site.GetPage "/modelle" }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>
