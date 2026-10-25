@@ -136,10 +136,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Fragen: neue Gruppe „Über die Menschheit“ vorbereitet (Kachel, Menüpunkt, Unterseite „Die Fragen folgen.“).
-- Links: YouTube-Kanäle Manuel Haase (Bewusstsein, Philosophie des Geistes, KI-Risiken; Verweis auf KI-Philosophie) und Decoded Genius (Interview-Podcast, reißerische Titel – so beschrieben), Dottie (kleiner Kanal mit KI-Szenarien, unter Wissen), {ungeskriptet} by Ben (Interview-Podcast, kontroverse Gäste, unter Allgemein), Nicholas Thompson (KI-Nachrichten und Gespräche, unter KI) und Vast Catalyst (Zusammenschnitte fremder KI-Interviews, unter KI).
-- Links: Umbau zur Kachelseite (Paper & Forschung, KI-Sicherheit, Plattformen, YouTube-Kanäle); YouTube nach Thema (Allgemein, KI, Wissen) und Reichweite geordnet. Bei YouTube je Thema eine Unterkachel mit eigener Seite.
-- Technik: Dubletten-Prüfung beim Bauen (Links, Alben, Musik-Titel, Fragen).
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: Links-Kacheln, neue YouTube-Kanäle, Fragen-Gruppe Menschheit, Dubletten-Prüfung)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
