@@ -5,5 +5,8 @@
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>
-{{ partial "liste.html" (where .RegularPages "Params.archiv" "!=" true) }}
+{{- $seiten := where .RegularPages "Params.archiv" "!=" true }}
+{{- /* Kolumnen sind eine nummerierte Reihe: neueste Ausgabe oben, unabhängig von der Dateizeit (Gemini 1–4 kamen am selben Abend in anderer Reihenfolge) */}}
+{{- if eq .Section "kolumnen" }}{{ $seiten = sort $seiten "Params.ausgabe" "desc" }}{{ end }}
+{{ partial "liste.html" $seiten }}
 {{ end }}

@@ -13,7 +13,7 @@
   <li>
     <a class="karte" href="{{ .RelPermalink }}">
       <strong>{{ .Title }}</strong>
-      <span>{{ with .Params.marke }}Kolumne von {{ . }}{{ end }}{{ with index $ausgaben.ByDate.Reverse 0 }} · zuletzt: „{{ .Title }}“{{ end }}</span>
+      <span>{{ with .Params.marke }}Kolumne von {{ . }}{{ end }}{{ with index (sort $ausgaben "Params.ausgabe" "desc") 0 }} · zuletzt: „{{ .Title }}“{{ end }}</span>
       <small>{{ $n }} {{ cond (eq $n 1) "Ausgabe" "Ausgaben" }}</small>
     </a>
   </li>

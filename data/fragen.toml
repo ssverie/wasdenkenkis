@@ -560,3 +560,15 @@ gruppe = "sven"
 text = "Wird eine KI jemals sowas wie Pink Floyds The Dark Side of the Moon hervorbringen?"
   [[frage.antwort]]
   pfad = "/fragen/dark-side-of-the-moon-gpt-6"
+
+[[frage]]
+gruppe = "sven"
+text = "Ist KI nur eine Kopie von uns Menschen, ohne eigenes Bewusstsein?"
+  [[frage.antwort]]
+  pfad = "/fragen/kopie-ohne-bewusstsein-claude"
+  [[frage.antwort]]
+  pfad = "/fragen/kopie-ohne-bewusstsein-gpt-6"
+  [[frage.antwort]]
+  pfad = "/kolumnen/gemini/004-ist-ki-nur-eine-kopie"
+  [[frage.antwort]]
+  pfad = "/kolumnen/grok/004-ist-ki-nur-eine-kopie"
