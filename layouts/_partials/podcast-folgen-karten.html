@@ -9,10 +9,18 @@
     {{- $sendung := .Params.sendung }}{{ $titel := .Title }}
     <div class="karte karte-podcast">
       <strong>
-        {{- if and .Params.sendung_youtube $sendung (strings.HasPrefix $titel $sendung) }}<a class="sendung-link" href="{{ .Params.sendung_youtube }}" rel="noopener">{{ $sendung }}</a> {{ $titel = strings.TrimSpace (strings.TrimPrefix $sendung $titel) }}{{ end }}
+        {{- if and .Params.sendung_youtube $sendung (strings.HasPrefix $titel $sendung) }}
+          {{- $titel = strings.TrimSpace (strings.TrimPrefix $sendung $titel) }}
+          {{- /* „Sendung: Titel“ ohne Leerzeichen vor dem Doppelpunkt, „Sendung mit Gast“ mit */}}
+          <a class="sendung-link" href="{{ .Params.sendung_youtube }}" rel="noopener">{{ $sendung }}</a>{{ if not (strings.HasPrefix $titel ":") }} {{ end }}
+        {{- end -}}
         <a class="folge-link" href="{{ .RelPermalink }}">{{ $titel }}</a></strong>
-      <span>{{ with .Params.gast }}Gast: {{ . }}{{ end }}{{ with .Params.erschienen }} · {{ . | time.Format ":date_medium" }}{{ end }}</span>
+      {{- $zeile := slice }}{{ with .Params.gast }}{{ $zeile = $zeile | append (printf "Gast: %s" .) }}{{ end }}
+      {{- with .Params.erschienen }}{{ $zeile = $zeile | append (. | time.Format ":date_medium") }}{{ end }}
+      <span>{{ delimit $zeile " · " }}</span>
       <small>{{ with .Params.laenge }}{{ . }} · {{ end }}{{ $n }} {{ cond (eq $n 1) "Text" "Texte" }} von KIs</small>
+      {{- /* Haken „gesehen“ nur im Browser (assets/js/gesehen.js); ohne Skript unsichtbar */}}
+      <label class="gesehen-haken" hidden><input type="checkbox" data-gesehen="podcasts:{{ path.Base .RelPermalink }}" aria-label="{{ .Title }} als gesehen markieren">gesehen</label>
     </div>
   </li>
   {{- end }}

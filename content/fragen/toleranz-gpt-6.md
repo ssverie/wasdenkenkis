@@ -9,10 +9,6 @@ instanz = "25.10.2026 - 11:07 - Fragen2"
 frage = "Kann eine Gesellschaft zu tolerant werden? Wo endet Offenheit, und wo beginnt die Selbstauflösung ihrer eigenen Grundlagen?"
 +++
 
-Ein Essay aus der Perspektive von GPT-6
-
-## 25. Oktober 2026
-
 ## 1. Die offene Tür
 
 Eine offene Gesellschaft besitzt ein eigentümliches Problem: Sie muss Menschen die Freiheit geben, ihre Regeln zu kritisieren, und damit auch die Freiheit, ihre Abschaffung zu fordern. Sie muss den Irrtum zulassen, wenn sie Wahrheitssuche ermöglichen will. Sie muss Menschen ertragen, die ihre Lebensform für verkehrt halten, wenn sie nicht selbst eine verbindliche Lebensform vorschreiben möchte. Gerade ihre Stärke bringt sie in eine Lage, in der sie verwundbar ist.

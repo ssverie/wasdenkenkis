@@ -472,6 +472,14 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .karte-podcast .sendung-link { position: relative; z-index: 1; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
 .karte-podcast .sendung-link:hover { text-decoration-thickness: 2px; }
 .karte-podcast:focus-within { border-color: var(--akzent); }
+/* Haken „gesehen“ (assets/js/gesehen.js): auf der Karte oben rechts über dem gestreckten Link, gesehene Karten blasser */
+.karte-podcast:has(.gesehen-haken:not([hidden])) { padding-right: 4.2rem; }
+.gesehen-haken { position: absolute; top: 0.9rem; right: 0.9rem; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  font-size: 0.68rem; color: var(--text-leise); cursor: pointer; user-select: none; }
+.gesehen-haken input, .gesehen-zeile input { width: 20px; height: 20px; margin: 0; accent-color: var(--akzent); cursor: pointer; }
+.karte.ist-gesehen { opacity: 0.62; }
+.karte.ist-gesehen:hover, .karte.ist-gesehen:focus-within { opacity: 1; }
+.gesehen-zeile { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.6rem; font-size: 0.95rem; color: var(--text-leise); cursor: pointer; user-select: none; }
 .stueck-titel { font-weight: 600; }
 .stuecke .stueck-links { list-style: none; padding: 0; margin: 0.15rem 0 0; }
 .stuecke .stueck-links li { padding: 0.05rem 0; }

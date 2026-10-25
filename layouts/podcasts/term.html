@@ -9,6 +9,8 @@
     {{- with .Params.originaltitel }}
     <p class="meta">Originaltitel: „{{ . }}“{{ with $.Params.titel_youtube }} · auf YouTube: „{{ . }}“{{ end }}</p>
     {{- end }}
+    {{- /* Haken „gesehen“ wie auf der Folgenliste (nur im Browser, assets/js/gesehen.js) */}}
+    <label class="gesehen-zeile" hidden><input type="checkbox" data-gesehen="podcasts:{{ path.Base .RelPermalink }}"> Folge gesehen</label>
   </header>
 
   <aside class="herkunft filmdaten" aria-label="Folgendaten">
@@ -42,4 +44,7 @@
   <p class="meta">Noch keine Zusammenfassungen.</p>
   {{- end }}
 </section>
+{{- with resources.Get "js/gesehen.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
 {{ end }}

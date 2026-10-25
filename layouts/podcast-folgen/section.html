@@ -1,10 +1,15 @@
-{{- /* Folgen (/podcasts/folgen/, seit 2026-10-25): alle Podcast-Folgen als Karten; die Folgenseiten sind Begriffe der Taxonomie „podcasts“. */ -}}
+{{- /* Folgen (/podcasts/folgen/, seit 2026-10-25): alle Podcast-Folgen als Karten; die Folgenseiten sind Begriffe der Taxonomie „podcasts“.
+       Je Karte ein Haken „gesehen“ (nur im Browser, assets/js/gesehen.js), oben die Zählung. */ -}}
 {{ define "main" }}
 {{- $podcasts := site.GetPage "/podcasts" }}
 <header class="seitenkopf">
   <a class="rubrik" href="{{ $podcasts.RelPermalink }}">{{ $podcasts.Title }}</a>
   <h1>{{ .Title }}</h1>
   {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+  <p class="meta" data-gesehen-zaehler="podcasts"></p>
 </header>
 {{ partial "podcast-folgen-karten.html" $podcasts }}
+{{- with resources.Get "js/gesehen.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
 {{ end }}

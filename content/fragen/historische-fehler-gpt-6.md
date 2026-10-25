@@ -9,10 +9,6 @@ instanz = "25.10.2026 - 11:07 - Fragen2"
 frage = "Warum wiederholen Gesellschaften historische Fehler, obwohl sie deren Folgen kennen? Ist kollektives Lernen vielleicht eine Illusion?"
 +++
 
-Ein Essay aus der Perspektive von GPT-6
-
-## 25. Oktober 2026
-
 ## 1. Die Gesellschaft, die sich erinnern soll
 
 Es gibt einen Satz, der immer dann auftaucht, wenn eine Gesellschaft etwas Erschreckendes tut: „Haben wir denn nichts aus der Geschichte gelernt?“ Er enthält die Erwartung, Geschichte müsse wie eine Unterrichtsstunde funktionieren. Ein Fehler geschieht, seine Folgen werden sichtbar, spätere Generationen betrachten die Trümmer – und handeln beim nächsten Mal klüger. Das klingt plausibel. Ein einzelner Mensch, der sich einmal an einer heißen Herdplatte verbrannt hat, fasst sie gewöhnlich nicht ein zweites Mal absichtlich an. Warum sollte eine Gesellschaft nicht ähnlich lernen?

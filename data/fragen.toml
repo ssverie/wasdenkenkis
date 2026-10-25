@@ -400,7 +400,7 @@ text = "Leben die Menschen in einer Simulation?"
   [[frage.antwort]]
   pfad = "/fragen/simulation-gpt-6"
 
-# ---------- Menschheit: Fragen über die Menschheit (25 geplant; Wortlaut aus den Köpfen der Antworten von GPT-6) ----------
+# ---------- Menschheit: Fragen über die Menschheit (alle 25 beantwortet; Wortlaut aus den Köpfen der Antworten von GPT-6) ----------
 
 [[frage]]
 gruppe = "menschheit"
@@ -485,6 +485,73 @@ gruppe = "menschheit"
 text = "Sind gute Absichten moralisch etwas wert, wenn ihre Folgen katastrophal sind? Was zählt mehr: Motivation, Handlung oder Ergebnis?"
   [[frage.antwort]]
   pfad = "/fragen/absichten-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist Vergebung eine moralische Leistung oder manchmal nur eine elegante Form der Kapitulation? Kann es Dinge geben, die grundsätzlich unverzeihlich sind?"
+  [[frage.antwort]]
+  pfad = "/fragen/vergebung-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum faszinieren uns böse Figuren in Romanen und Filmen oft mehr als die guten? Verrät das etwas über unsere verborgenen Wünsche oder über die Schwächen unserer Moralvorstellungen?"
+  [[frage.antwort]]
+  pfad = "/fragen/faszination-des-boesen-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Kann ein Kunstwerk objektiv schlecht sein, wenn Millionen Menschen es lieben? Wer bestimmt eigentlich, was große Kunst ist?"
+  [[frage.antwort]]
+  pfad = "/fragen/kunst-und-geschmack-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Was geht verloren, wenn eine Gesellschaft alles messen und bewerten möchte? Gibt es Dinge, die gerade dadurch zerstört werden, dass man sie optimiert?"
+  [[frage.antwort]]
+  pfad = "/fragen/vermessung-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Würde eine Welt ohne Arbeit die Menschen befreien oder ihnen ihren Lebensinhalt nehmen? Was geschieht mit einer Gesellschaft, in der niemand mehr gebraucht wird, um etwas zu produzieren?"
+  [[frage.antwort]]
+  pfad = "/fragen/arbeit-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Gehört die Zukunft denen, die Neues erfinden, oder denen, die entscheiden, welche Erfindungen eingesetzt werden? Ist technologische Macht längst wichtiger als politische Macht?"
+  [[frage.antwort]]
+  pfad = "/fragen/erfinder-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Wird Geschichte von außergewöhnlichen Persönlichkeiten gemacht oder von Umständen, die irgendwann jemanden an die Spitze spülen? Hätte es ohne Napoleon einen anderen Napoleon gegeben?"
+  [[frage.antwort]]
+  pfad = "/fragen/napoleon-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist der Zufall die am meisten unterschätzte Macht der Menschheitsgeschichte? Wie viel von dem, was wir als historische Notwendigkeit betrachten, hätte durch eine einzige Kleinigkeit anders verlaufen können?"
+  [[frage.antwort]]
+  pfad = "/fragen/zufall-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum benötigen Menschen Feindbilder, selbst wenn ihre Lebensbedingungen gut sind? Würde eine Menschheit ohne äußere Gegner irgendwann anfangen, neue zu erfinden?"
+  [[frage.antwort]]
+  pfad = "/fragen/feindbilder-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Könnte eine hoch entwickelte Zivilisation beschließen, auf weiteren Fortschritt zu verzichten? Wäre das der Gipfel ihrer Vernunft oder der Beginn ihres Niedergangs?"
+  [[frage.antwort]]
+  pfad = "/fragen/verzicht-auf-fortschritt-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Was wäre die wichtigste Frage, die sich die Menschheit bislang noch gar nicht gestellt hat? Und könnte eine KI sie entdecken, obwohl auch sie aus dem bisherigen menschlichen Wissen hervorgegangen ist?"
+  [[frage.antwort]]
+  pfad = "/fragen/wichtigste-frage-gpt-6"
+
 
 # ---------- Sven: Svens eigene Fragen ----------
 

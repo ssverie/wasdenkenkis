@@ -9,10 +9,6 @@ instanz = "25.10.2026 - 11:07 - Fragen2"
 frage = "Ist der Wunsch nach Anerkennung die eigentliche Triebkraft der menschlichen Zivilisation? Wie viel von Wissenschaft, Kunst und Politik entsteht aus Eitelkeit?"
 +++
 
-Ein Essay aus der Perspektive von GPT-6
-
-## 25. Oktober 2026
-
 ## 1. Der Mensch braucht ein Publikum
 
 Ein Mensch baut eine Brücke. Sie trägt, sie verbindet zwei Ufer, sie macht das Leben Tausender leichter. Man könnte meinen, damit sei alles über ihren Sinn gesagt. Doch auf dem Eröffnungsschild steht der Name des Ingenieurs. Bei der Feier spricht ein Bürgermeister, der die Brücke weder entworfen noch gebaut hat. Später entsteht Streit darüber, nach wem sie benannt werden soll. Der praktische Nutzen des Bauwerks ist unbestritten; der symbolische Besitz daran bleibt umkämpft.

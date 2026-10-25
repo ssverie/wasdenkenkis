@@ -156,7 +156,55 @@ sprache = "de"
 abonnenten = 100000
 stand = 2026-10-25
 seit = 2026-10-25
-text = "Das Interview- und Analyseformat „Gegen den Strom“ des Journalisten Patrik Baab: lange Gespräche über Geopolitik, Krieg und Frieden, Russland und Eurasien sowie Medienkritik, mit Gästen aus Militär, Diplomatie, Wissenschaft und Journalismus. Der Kanal versteht sich nach eigener Beschreibung als Gegenstimme zu den etablierten Medien; in der hier verlinkten Folge bleiben die Thesen des Gastes ohne Widerspruch oder Einordnung."
+text = "Das Interview- und Analyseformat „Gegen den Strom“ des Journalisten Patrik Baab: lange Gespräche über Geopolitik, Krieg und Frieden, Russland und Eurasien sowie Medienkritik, mit Gästen aus Militär, Diplomatie, Wissenschaft und Journalismus. Der Kanal versteht sich nach eigener Beschreibung als Gegenstimme zu den etablierten Medien; in der Folge mit Andrej Fursow bleiben die Thesen des Gastes ohne Widerspruch oder Einordnung."
   [[eintrag.unterlinks]]
   name = "Folge mit Andrej Fursow auf dieser Seite"
   url = "/podcasts/gegen-den-strom-andrej-fursow/"
+  [[eintrag.unterlinks]]
+  name = "Folge mit Jeffrey Sachs auf dieser Seite"
+  url = "/podcasts/gegen-den-strom-jeffrey-sachs/"
+
+# Svens Liste, 2026-10-25 (zweite Runde) – Kanalseite und neueste Videos vorher gelesen
+[[eintrag]]
+name = "The Joe Rogan Experience"
+url = "https://www.youtube.com/@joerogan/videos"
+kategorie = "YouTube-Kanäle"
+thema = "allgemein"
+sprache = "en"
+abonnenten = 21200000
+stand = 2026-10-25
+seit = 2026-10-25
+text = "Der Kanal des Podcasts „The Joe Rogan Experience“ (Kanalname PowerfulJRE): zuletzt fast täglich eine neue Folge – im Oktober 2026 schon über Nummer 2.570 –, Gäste aus Film und Fernsehen, Sport und Journalismus; dazu die eigene „JRE MMA Show“. KI ist dort ein Thema unter vielen."
+
+[[eintrag]]
+name = "Everlast AI"
+url = "https://www.youtube.com/@everlastai/videos"
+kategorie = "YouTube-Kanäle"
+thema = "ki"
+sprache = "de"
+abonnenten = 379000
+stand = 2026-10-25
+seit = 2026-10-25
+text = "Leonard Schmeddings deutschsprachiger KI-Kanal: wöchentliche KI-News, Praxisbeispiele, Tutorials und lange Interviews, zuletzt etwa mit dem Wissenschaftsphilosophen Klaus Mainzer und dem früheren Generalkonsul Wolfgang Röhr über China. Die Videotitel sind stark zugespitzt („Es ist AUS für OpenAI & Anthropic!“), die Interviews selbst ausführlich."
+
+[[eintrag]]
+name = "Karl Olsberg"
+url = "https://www.youtube.com/@KarlOlsbergAutor/videos"
+kategorie = "YouTube-Kanäle"
+thema = "ki"
+sprache = "de"
+abonnenten = 22600
+stand = 2026-10-25
+seit = 2026-10-25
+text = "Der Kanal des Autors Karl Olsberg über die Risiken künstlicher Intelligenz: Er bespricht Warnungen aus der KI-Sicherheitsforschung, Vorgänge bei OpenAI und Anthropic und politische Debatten, zuletzt etwa Yoshua Bengios Rede vor der UN-Generalversammlung. Nach eigener Beschreibung kann KI „uns helfen, unsere Probleme zu lösen, oder unsere Zukunft zerstören“ – der Kanal steht klar auf der Seite der Warner."
+
+[[eintrag]]
+name = "The Roman Forum with Roman Yampolskiy"
+url = "https://www.youtube.com/@RomanYampolskiy/videos"
+kategorie = "YouTube-Kanäle"
+thema = "ki"
+sprache = "en"
+abonnenten = 208000
+stand = 2026-10-25
+seit = 2026-10-25
+text = "Der KI-Sicherheitsforscher Roman Yampolskiy führt lange, kaum geschnittene Gespräche über KI-Sicherheit, Superintelligenz, Bewusstsein und Simulationstheorie – zuletzt mit Nick Bostrom, Stuart Russell, Geoffrey Hinton, Scott Aaronson und Robin Hanson. Die vollständigen Fassungen sind teils nur für Kanalmitglieder."
