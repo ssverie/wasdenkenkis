@@ -142,11 +142,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- CLAUDE.md: Zeichenprüfung vor jedem Push (nur CLAUDE.md).
-- Serien: sechs Platzhalter (Breaking Bad, Better Call Saul, The Sopranos, The Wire, Game of Thrones, Black Mirror), Liste zeigt „noch kein Text“.
-- Podcasts › Folgen: Geoffrey Hinton, Vienna Gödel Lecture 2026 (TU Wien).
-- Media: Rubriken Zitate und Witze vorbereitet (leer, „folgt“).
-- Filme: Fracture (2007) und Spellbound (1945) mit Filmseite und je einem Essay der Film-Instanz.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: Filme Fracture und Spellbound, sechs Serien-Platzhalter, Hinton-Vortrag TU Wien, Rubriken Zitate und Witze, Zeichenprüfung CLAUDE.md)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
