@@ -137,7 +137,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
 
-- Algorithmen: Heap-Vorrangwarteschlange (Algorithmus 2.6) zum Selbstbedienen, Baum und Array.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: Heap-Vorrangwarteschlange)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
