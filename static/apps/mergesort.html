@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top-Down-Mergesort</title>
+<!-- Visualisierung von Top-Down-Mergesort (nach Sedgewick/Wayne, Algorithmen, Algorithmus 2.4, Listing 2.10)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code (merge ebenfalls eigene Fassung).
+     Gemeinsamer Rahmen (Bedienung, Balken, Protokoll) in sortieren/rahmen.js und rahmen.css. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=2">
+<style>
+  /* Rekursionsbaum über den Balken: jeder Aufruf sortiere(a, lo, hi) ein Streifen über den Spalten lo..hi */
+  .baumtitel { font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 2px 12px; }
+  .baumtitel i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+  .baum { display: grid; gap: 3px; grid-auto-rows: 9px; margin: 6px 0 8px; }
+  .knoten { background: var(--rest); border-radius: 3px; }
+  .knoten.fertig { background: var(--sortiert); }
+  .knoten.offen { background: transparent; box-shadow: inset 0 0 0 2px var(--cur); }
+  .knoten.aktiv { background: var(--neu); }
+  .aktuell { font-size: 14px; }
+  .aktuell code { font: 600 14px ui-monospace, Consolas, monospace; }
+
+  /* Hilfsarray aux unter den Balken, gleiche Spalten wie a[] */
+  .unten { margin-top: 8px; }
+  .aux-titel { font-size: 12px; color: var(--muted); margin-bottom: 3px; }
+  .auxreihe, .auxmarken { display: grid; gap: 3px; text-align: center; font-variant-numeric: tabular-nums; }
+  .auxreihe div { height: 24px; line-height: 24px; font-size: 11px; font-weight: 600; border-radius: 4px; }
+  .auxreihe .aux { background: var(--bar); }
+  .auxreihe .weg { color: var(--grau); text-decoration: line-through; }
+  .auxreihe .neu { background: var(--neu); color: #fff; }
+  .auxreihe .cur { background: var(--cur); color: #fff; }
+  .auxreihe .trenn { border-left: 2px solid var(--muted); }
+  @media (prefers-color-scheme: dark) { .auxreihe .neu, .auxreihe .cur { color: #0d1530; } }
+  .auxmarken { font-size: 11px; font-weight: 700; min-height: 1.3em; color: var(--text); }
+  .proto td.an { font-weight: 700; }
+  .proto tr.zuletzt td.name { color: var(--neu); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap"></div>
+<script src="sortieren/rahmen.js?v=2"></script>
+<script>
+(function () {
+  const L = { anlegen: 6, basis: 12, mid: 13, merge: 16, kopie: 21,
+              linksLeer: 24, rechtsLeer: 25, rechtsKleiner: 26, linksKleiner: 27, ende: 7 };
+  let aufrufe = [];            // alle Aufrufe sortiere(a, lo, hi) dieses Laufs: {lo, hi, tiefe, fertigNr}
+  let tiefeMax = 0;
+
+  // genaue Grenzen der Vergleiche für diese Größe (mid wie im Code: linke Hälfte ist die größere)
+  function grenzen(n) {
+    if (n <= 1) return [0, 0];
+    const l = Math.ceil(n / 2), r = Math.floor(n / 2);
+    const [lmin, lmax] = grenzen(l), [rmin, rmax] = grenzen(r);
+    return [lmin + rmin + r, lmax + rmax + n - 1];
+  }
+
+  SortierRahmen.starte({
+    code: [
+      'public class Mergesort',
+      '{',
+      '   private static int[] aux;   // Hilfsarray für merge',
+      '',
+      '   public static void sortiere(int[] a)',
+      '   {',
+      '      aux = new int[a.length];   // Speicher nur einmal anlegen',
+      '      sortiere(a, 0, a.length - 1);',
+      '   }',
+      '',
+      '   private static void sortiere(int[] a, int lo, int hi)',
+      '   {  // sortiert a[lo..hi]',
+      '      if (hi <= lo) return;        // ein Element: schon sortiert',
+      '      int mid = lo + (hi - lo) / 2;',
+      '      sortiere(a, lo, mid);        // linke Hälfte',
+      '      sortiere(a, mid + 1, hi);    // rechte Hälfte',
+      '      merge(a, lo, mid, hi);       // beide zusammenführen',
+      '   }',
+      '',
+      '   private static void merge(int[] a, int lo, int mid, int hi)',
+      '   {  // a[lo..mid] und a[mid+1..hi] sind schon sortiert',
+      '      for (int k = lo; k <= hi; k++) aux[k] = a[k];   // kopieren',
+      '      int i = lo, j = mid + 1;',
+      '      for (int k = lo; k <= hi; k++)',
+      '         if      (i > mid)          a[k] = aux[j++];   // links leer',
+      '         else if (j > hi)           a[k] = aux[i++];   // rechts leer',
+      '         else if (aux[j] < aux[i])  a[k] = aux[j++];   // rechts kleiner',
+      '         else                       a[k] = aux[i++];   // links kleiner oder gleich',
+      '   }',
+      '}'
+    ],
+    codeTitel: 'Java (eigene Fassung, nach Algorithmus 2.4, Listing 2.10)',
+    protokollTitel: 'Ablaufprotokoll (nach jedem merge)',
+    groessen: [10, 12, 16, 20], groesse: 16,
+    anordnungen: ['zufall', 'fast', 'sortiert', 'umgekehrt'],
+    legende: [['var(--neu)', 'ein Element (schon sortiert)'], ['var(--rest)', 'nach aux kopiert, wird überschrieben'],
+              ['var(--swap)', 'a[k], gerade geschrieben'], ['var(--sortiert)', 'sortiert']],
+    spruenge: [
+      { text: 'Bis gemergt ▶▶', title: 'Bis der nächste merge-Aufruf fertig ist', bis: s => s.mergeFertig }
+    ],
+    test: '__merge',
+
+    // Der Algorithmus, einmal komplett durchlaufen; jeder Schritt wird festgehalten
+    baue(a, n) {
+      const steps = [];
+      const aux = new Array(n).fill(null);
+      const stapel = [], proto = [];
+      let vergleiche = 0, erledigt = 0;
+      aufrufe = []; tiefeMax = 0;
+      const snap = (line, o) => steps.push(Object.assign(
+        { line, a: a.slice(), vergleiche, erledigt, stapel: stapel.slice(), proto: proto.slice() }, o));
+      const liste = (lo, hi) => a.slice(lo, hi + 1).join(' ');
+
+      function merge(lo, mid, hi) {
+        for (let k = lo; k <= hi; k++) aux[k] = a[k];
+        const auxv = a.map((v, k) => k >= lo && k <= hi ? v : null);   // Ansicht: nur aux[lo..hi]
+        const m = { lo, mid, hi, auxv };
+        snap(L.kopie, Object.assign({ phase: 'kopie', i: lo, j: mid + 1 }, m, {
+          msg: `merge(a, ${lo}, ${mid}, ${hi}): Die sortierten Hälften [${liste(lo, mid)}] und [${liste(mid + 1, hi)}] werden nach aux kopiert. Zeiger i steht am Anfang der linken, j am Anfang der rechten Hälfte.` }));
+        let i = lo, j = mid + 1;
+        for (let k = lo; k <= hi; k++) {
+          let line, genommen, partner = null, msg;
+          if (i > mid) {
+            line = L.linksLeer; genommen = j;
+            msg = `Links ist nichts mehr übrig → a[${k}] = aux[${j}] = ${aux[j]}, j rückt weiter.`;
+            a[k] = aux[j++];
+          } else if (j > hi) {
+            line = L.rechtsLeer; genommen = i;
+            msg = `Rechts ist nichts mehr übrig → a[${k}] = aux[${i}] = ${aux[i]}, i rückt weiter.`;
+            a[k] = aux[i++];
+          } else {
+            vergleiche++;
+            if (aux[j] < aux[i]) {
+              line = L.rechtsKleiner; genommen = j; partner = i;
+              msg = `Vergleich: aux[${j}] = ${aux[j]} < aux[${i}] = ${aux[i]} → das rechte ist kleiner: a[${k}] = ${aux[j]}, j rückt weiter.`;
+              a[k] = aux[j++];
+            } else {
+              line = L.linksKleiner; genommen = i; partner = j;
+              msg = aux[i] === aux[j]
+                ? `Vergleich: aux[${i}] = aux[${j}] = ${aux[i]}, gleich → das linke kommt zuerst (darum ist Mergesort stabil): a[${k}] = ${aux[i]}, i rückt weiter.`
+                : `Vergleich: aux[${i}] = ${aux[i]} < aux[${j}] = ${aux[j]} → das linke ist kleiner: a[${k}] = ${aux[i]}, i rückt weiter.`;
+              a[k] = aux[i++];
+            }
+          }
+          snap(line, Object.assign({ phase: 'nimm', k, i, j, genommen, partner }, m, { msg }));
+        }
+      }
+
+      function sortiere(lo, hi, tiefe) {
+        const c = { lo, hi, tiefe, fertigNr: -1 };
+        const id = aufrufe.push(c) - 1;
+        tiefeMax = Math.max(tiefeMax, tiefe);
+        stapel.push(id);
+        if (hi <= lo) {
+          snap(L.basis, { phase: 'basis', lo, hi, msg: `sortiere(a, ${lo}, ${hi}): nur ein Element (${a[lo]}) – schon sortiert, zurück.` });
+        } else {
+          const mid = lo + Math.floor((hi - lo) / 2);
+          snap(L.mid, { phase: 'sort', lo, mid, hi, msg: `sortiere(a, ${lo}, ${hi}): mid = ${mid}. Erst die linke Hälfte a[${lo}..${mid}] sortieren, dann die rechte a[${mid + 1}..${hi}], dann beide mergen.` });
+          sortiere(lo, mid, tiefe + 1);
+          sortiere(mid + 1, hi, tiefe + 1);
+          merge(lo, mid, hi);
+          proto.push({ lo, mid, hi, tiefe, werte: a.slice() });
+          c.fertigNr = erledigt++;
+          snap(L.merge, { phase: 'gemergt', mergeFertig: true, lo, mid, hi, cls: 'swap',
+            msg: `a[${lo}..${hi}] ist sortiert: [${liste(lo, hi)}]${tiefe > 0 ? ' – zurück zum Aufrufer.' : '.'}` });
+          stapel.pop();
+          return;
+        }
+        c.fertigNr = erledigt++;
+        stapel.pop();
+      }
+
+      snap(L.anlegen, { phase: 'start', msg: `Start: Das Hilfsarray aux wird einmal mit ${n} Plätzen angelegt, dann sortiere(a, 0, ${n - 1}).` });
+      sortiere(0, n - 1, 0);
+      const [gmin, gmax] = grenzen(n);
+      snap(L.ende, { phase: 'ende', fertig: true, cls: 'swap',
+        msg: `Fertig: ${vergleiche} Vergleiche (bei ${n} Zahlen mindestens ${gmin}, höchstens ${gmax}), ${proto.length} merge-Aufrufe auf ${tiefeMax} Ebenen.` });
+      return steps;
+    },
+
+    balken(s, k) {
+      if (s.fertig || s.lo == null) return '';
+      if (k < s.lo || k > s.hi) return 'blass';
+      switch (s.phase) {
+        case 'basis': return 'neu';
+        case 'kopie': return 'rest';
+        case 'nimm': return k < s.k ? 'sortiert' : k === s.k ? 'swap' : 'rest';
+        case 'gemergt': return 'sortiert';
+        default: return '';
+      }
+    },
+    marken(s, k) {
+      if (s.fertig || s.lo == null) return [];
+      if (s.phase === 'nimm') return k === s.k ? [['neu', 'k']] : [];
+      if (s.phase === 'basis') return k === s.lo ? [['i', 'lo=hi']] : [];
+      if (s.phase === 'gemergt') return [];
+      const t = [];
+      if (k === s.lo) t.push(['i', 'lo']);
+      if (k === s.mid) t.push(['cur', 'mid']);
+      if (k === s.hi) t.push(['i', 'hi']);
+      return t;
+    },
+    kopf(s) {
+      const n = s.a.length;
+      const oben = s.stapel.length ? s.stapel[s.stapel.length - 1] : -1;
+      const knoten = aufrufe.map((c, id) => {
+        let cls = 'knoten';
+        if (c.fertigNr >= 0 && c.fertigNr < s.erledigt) cls += ' fertig';
+        if (id === oben) cls += ' aktiv';
+        else if (s.stapel.includes(id)) cls += ' offen';
+        return `<div class="${cls}" style="grid-column:${c.lo + 1}/${c.hi + 2};grid-row:${c.tiefe + 1}" title="sortiere(a, ${c.lo}, ${c.hi})"></div>`;
+      }).join('');
+      let jetzt = '–';
+      if (s.phase === 'kopie' || s.phase === 'nimm') jetzt = `merge(a, ${s.lo}, ${s.mid}, ${s.hi})`;
+      else if (s.lo != null) jetzt = `sortiere(a, ${s.lo}, ${s.hi})`;
+      else if (s.fertig) jetzt = 'fertig';
+      return `<div class="baumtitel"><span>Rekursionsbaum – jeder Streifen ein Aufruf sortiere(a, lo, hi):</span>
+          <span><i style="background:var(--neu)"></i>aktuell</span>
+          <span><i style="box-shadow:inset 0 0 0 2px var(--cur)"></i>wartet auf Rückkehr</span>
+          <span><i style="background:var(--sortiert)"></i>fertig</span>
+          <span><i style="background:var(--rest)"></i>noch nicht dran</span></div>
+        <div class="baum" style="grid-template-columns:repeat(${n}, 1fr)">${knoten}</div>
+        <div class="aktuell">Aktuell: <code>${jetzt}</code>${s.stapel.length ? ` · Tiefe ${aufrufe[oben].tiefe} von ${tiefeMax}` : ''}</div>`;
+    },
+    // Hilfsarray aux[lo..hi] mit den Zeigern i und j
+    unten(s) {
+      const n = s.a.length, cols = `grid-template-columns:repeat(${n}, 1fr)`;
+      if (!s.auxv) return `<div class="aux-titel">aux[] – wird erst in merge benutzt</div>
+        <div class="auxreihe" style="${cols}"><div></div></div><div class="auxmarken"></div>`;
+      const verbraucht = k => (k <= s.mid && k < s.i) || (k > s.mid && k < s.j);
+      const zellen = s.auxv.map((v, k) => {
+        if (v == null) return '<div></div>';
+        let c = 'aux';
+        if (k === s.genommen) c = 'neu';
+        else if (k === s.partner) c = 'cur';
+        else if (verbraucht(k)) c = 'weg';
+        if (k === s.mid + 1) c += ' trenn';
+        return `<div class="${c}">${v}</div>`;
+      }).join('');
+      const marken = s.auxv.map((_, k) => {
+        const t = [];
+        if (k === s.i && s.i <= s.mid) t.push('i');
+        if (k === s.j && s.j <= s.hi) t.push('j');
+        return `<div>${t.join(' ')}</div>`;
+      }).join('');
+      return `<div class="aux-titel">aux[${s.lo}..${s.hi}] – Kopie, links a[${s.lo}..${s.mid}], rechts a[${s.mid + 1}..${s.hi}] · orange: genommen · blau: Vergleichspartner</div>
+        <div class="auxreihe" style="${cols}">${zellen}</div>
+        <div class="auxmarken" style="${cols}">${marken}</div>`;
+    },
+    zaehler(s, start) {
+      const [gmin, gmax] = grenzen(start.length);
+      return `Vergleiche: <b>${s.vergleiche}</b> · bei ${start.length} Zahlen mindestens <b>${gmin}</b>, höchstens <b>${gmax}</b> · Hilfsarray: <b>${start.length}</b> Plätze`;
+    },
+    // Protokoll wie Abbildung 2.11: Eingabe, dann je merge das Array; der gemergte Bereich hervorgehoben
+    protokoll(s, start) {
+      const kopf = `<tr><th></th>${start.map((_, k) => `<th>${k}</th>`).join('')}</tr>`;
+      const startZeile = `<tr><td class="name">Eingabe</td>${start.map(v => `<td>${v}</td>`).join('')}</tr>`;
+      const zeilen = s.proto.map((z, nr) => `<tr${nr === s.proto.length - 1 && !s.fertig ? ' class="zuletzt"' : ''}><td class="name">${'&nbsp;'.repeat(z.tiefe)}merge(a, ${z.lo}, ${z.mid}, ${z.hi})</td>${z.werte.map((v, k) =>
+        `<td class="${k >= z.lo && k <= z.hi ? 'an' : 'grau'}">${v}</td>`).join('')}</tr>`).join('');
+      return `<table>${kopf}${startZeile}${zeilen}</table>`;
+    }
+  });
+})();
+</script>
+</body>
+</html>

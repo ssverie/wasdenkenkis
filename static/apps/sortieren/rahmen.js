@@ -1,4 +1,4 @@
-// Gemeinsamer Rahmen der Sortier-Visualisierungen (Selectionsort, Insertionsort, Shellsort)
+// Gemeinsamer Rahmen der Sortier-Visualisierungen (Selectionsort, Insertionsort, Shellsort, Mergesort)
 // für wasdenkenkis.de – Claude Code Opus 5.5. Keine externen Dateien, keine Bibliotheken.
 //
 // Prinzip: Das Verfahren läuft einmal komplett durch und legt jeden Schritt als Momentaufnahme ab
@@ -14,6 +14,7 @@
 //     baue(a, n) → Liste der Schritte {line, a, msg, cls, ...},
 //     balken(s, k, pos) → CSS-Klasse des Balkens k,  marken(s, k) → [[klasse, text], ...],
 //     zaehler(s, start) → HTML,  protokoll(s, start) → HTML,  kopf(s) → HTML (optional),
+//     unten(s) → HTML unter den Indizes (optional, z. B. das Hilfsarray bei Mergesort),
 //     test: 'name'                                   // window.<name> für automatische Tests
 //   });
 (function () {
@@ -42,6 +43,7 @@
         <div class="bars" id="bars"></div>
         <div class="marks" id="marks"></div>
         <div class="idx" id="idx"></div>
+        ${cfg.unten ? '<div class="unten" id="unten"></div>' : ''}
         <div class="legende">${cfg.legende.map(([farbe, text]) => `<span><i style="background:${farbe}"></i>${esc(text)}</span>`).join('')}</div>
       </div>
       <div class="box">
@@ -99,6 +101,7 @@
       $('marks').innerHTML = s.a.map((_, k) =>
         `<div>${cfg.marken(s, k).map(([cls, t]) => `<span class="${cls}">${t}</span>`).join('<br>')}</div>`).join('');
       if (cfg.kopf) $('kopf').innerHTML = cfg.kopf(s);
+      if (cfg.unten) $('unten').innerHTML = cfg.unten(s);
       const msg = $('msg');
       msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
       $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length} · ` + cfg.zaehler(s, start);

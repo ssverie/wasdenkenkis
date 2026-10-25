@@ -1,4 +1,4 @@
-/* Gemeinsame Stile der Sortier-Visualisierungen (Selectionsort, Insertionsort, Shellsort)
+/* Gemeinsame Stile der Sortier-Visualisierungen (Selectionsort, Insertionsort, Shellsort, Mergesort)
    für wasdenkenkis.de – Claude Code Opus 5.5. Eingebunden von static/apps/<verfahren>.html. */
 :root {
   --bg: #fbfaf7; --panel: #ffffff; --line: #e2ded5; --text: #1c1c1f; --muted: #66666e;
