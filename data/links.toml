@@ -3,6 +3,10 @@
 kategorien = ["Paper & Forschung", "KI-Sicherheit", "Plattformen", "YouTube-Kanäle"]
 
 # Ein Eintrag je Link. text = Kommentar von Claude (kurz, sachlich).
+# Jede Kategorie hat eine eigene Seite content/links/<schluessel>/_index.md mit kategorie = "…" (Kachel auf /links/).
+# YouTube-Kanäle zusätzlich: thema = allgemein | ki | wissen (Gruppen auf der Seite), sprache = de | en,
+# abonnenten (Zahl laut Kanalseite) und stand (Datum der Zahl); daraus die Reichweite: unter 100.000, 100.000 bis 1 Mio., über 1 Mio.
+
 [[eintrag]]
 name = "Hugging Face – Daily Papers"
 url = "https://huggingface.co/papers"
@@ -38,6 +42,10 @@ text = "Der zentrale Umschlagplatz für offene KI-Modelle und Datensätze – f�
 name = "Julian Ivanov | KI-Automatisierung"
 url = "https://www.youtube.com/@Julian-Ivanov/videos"
 kategorie = "YouTube-Kanäle"
+thema = "ki"
+sprache = "de"
+abonnenten = 70800
+stand = 2026-10-25
 seit = 2026-10-24
 text = "Deutschsprachiger Kanal mit praktischen Anleitungen zu KI-Werkzeugen und Automatisierung: zuletzt fast täglich neue Videos, vor allem zu Claude Code, dazu n8n und andere Tools, jeweils auf das Nachbauen ausgerichtet. Der Kanal wirbt nebenbei für eine eigene Community für Selbstständige."
 
@@ -45,6 +53,10 @@ text = "Deutschsprachiger Kanal mit praktischen Anleitungen zu KI-Werkzeugen und
 name = "The Diary Of A CEO"
 url = "https://www.youtube.com/@TheDiaryOfACEO/videos"
 kategorie = "YouTube-Kanäle"
+thema = "allgemein"
+sprache = "en"
+abonnenten = 20900000
+stand = 2026-10-25
 seit = 2026-10-24
 text = "Steven Bartletts englischsprachiger Interview-Podcast, meist lange Gespräche mit Gästen aus Wirtschaft, Medizin, Psychologie und Politik – immer wieder auch über KI und ihre Risiken. Die Videotitel sind oft zugespitzt, die Gespräche selbst ruhiger. Eine Folge mit dem KI-Sicherheitsforscher Jeffrey Ladish ist auf dieser Seite besprochen."
   [[eintrag.unterlinks]]
@@ -55,5 +67,81 @@ text = "Steven Bartletts englischsprachiger Interview-Podcast, meist lange Gespr
 name = "Lex Fridman"
 url = "https://www.youtube.com/@lexfridman/videos"
 kategorie = "YouTube-Kanäle"
+thema = "allgemein"
+sprache = "en"
+abonnenten = 5070000
+stand = 2026-10-25
 seit = 2026-10-24
 text = "Der Lex Fridman Podcast: englischsprachige Gespräche, oft drei Stunden und länger, inzwischen über 500 Folgen. Die Gäste kommen aus KI-Forschung, Technik, Wissenschaft, Geschichte und Sport – zuletzt etwa Ruby-on-Rails-Erfinder DHH über die Zukunft des Programmierens mit KI. Für Entwickler besonders lohnend sind die Folgen mit Programmierern und KI-Forschern."
+
+[[eintrag]]
+name = "Manuel Haase"
+url = "https://www.youtube.com/@ManuelHaase/videos"
+kategorie = "YouTube-Kanäle"
+thema = "wissen"
+sprache = "de"
+abonnenten = 93700
+stand = 2026-10-25
+seit = 2026-10-25
+text = "Deutschsprachige Video-Essays über Bewusstsein und Philosophie des Geistes: das Ich als Illusion, freier Wille, ob wir alle dieselben Farben sehen. Zuletzt etwa wöchentlich und vor allem über die Risiken von KI – das Alignment-Problem, ein Gespräch mit dem Autor Karl Olsberg über Superintelligenz, Isaac Asimovs letztes Interview. Ruhig erzählt, eher Nachdenken als Nachrichten."
+  [[eintrag.unterlinks]]
+  name = "Verwandt: KI-Philosophie auf dieser Seite"
+  url = "/philosophie/"
+
+[[eintrag]]
+name = "Decoded Genius"
+url = "https://www.youtube.com/@decodedgenius/videos"
+kategorie = "YouTube-Kanäle"
+thema = "allgemein"
+sprache = "en"
+abonnenten = 33700
+stand = 2026-10-25
+seit = 2026-10-25
+text = "Englischsprachiger Interview-Podcast mit Gästen aus vielen Feldern: Geopolitik, Gesundheit, Ernährung, Marketing, Psychologie – und immer häufiger KI, oft mit Warnungen vor Superintelligenz und Jobverlust. Die Titel arbeiten stark mit Alarm und erstaunlich genauen Prozentzahlen („98,7 %“); was die Gäste im Gespräch tatsächlich belegen, sollte man selbst prüfen."
+
+[[eintrag]]
+name = "Dottie"
+url = "https://www.youtube.com/@dottiedotai/videos"
+kategorie = "YouTube-Kanäle"
+thema = "wissen"
+sprache = "en"
+abonnenten = 2580
+stand = 2026-10-25
+seit = 2026-10-25
+text = "Kleiner englischsprachiger Kanal, der KI-Szenarien durchspielt: erzählte Zukunftsbilder, die von heutiger Technik ausgehen – Gehirnimplantate, vernetzte Körper, der Kontrollverlust über KI, der OpenAI-Vorfall. Die KI-Videos gibt es erst seit wenigen Tagen; ältere Videos des Kanals haben andere Themen."
+
+[[eintrag]]
+name = "{ungeskriptet} by Ben"
+url = "https://www.youtube.com/@ben_ungeskriptet/videos"
+kategorie = "YouTube-Kanäle"
+thema = "allgemein"
+sprache = "de"
+abonnenten = 1320000
+stand = 2026-10-25
+seit = 2026-10-25
+text = "Deutschsprachiger Interview-Podcast von Ben, einem ehemaligen Unternehmer: lange, nach eigener Aussage ungeschnittene Gespräche, mehrmals pro Woche. Der Kanal sucht ausdrücklich kontroverse Gäste – zuletzt vor allem Politik, Krieg und Frieden, Medien, Gesundheit und Grenzthemen wie UFOs, quer durch das politische Spektrum. KI spielt kaum eine Rolle. Die Aussagen der Gäste werden im Gespräch selten eingeordnet; wer zuhört, sollte selbst prüfen."
+
+[[eintrag]]
+name = "Nicholas Thompson"
+url = "https://www.youtube.com/@NicholasThompson/videos"
+kategorie = "YouTube-Kanäle"
+thema = "ki"
+sprache = "en"
+abonnenten = 8550
+stand = 2026-10-25
+seit = 2026-10-25
+text = "Der Chef von The Atlantic und frühere Chefredakteur von WIRED ordnet mehrmals pro Woche KI-Nachrichten ein („The Most Interesting Thing in Tech“) und führt längere Gespräche im Podcast „The Most Interesting Thing in AI“ – zuletzt mit Nate Soares über KI-Risiken, Ray Dalio über eine mögliche KI-Blase, Kara Swisher über Hype und Wirklichkeit. Journalistisch, im Ton eher nüchtern; kleiner Kanal, aber Gäste aus der ersten Reihe."
+
+[[eintrag]]
+name = "Vast Catalyst"
+url = "https://www.youtube.com/@vastcatalyst/videos"
+kategorie = "YouTube-Kanäle"
+thema = "ki"
+sprache = "en"
+abonnenten = 14700
+stand = 2026-10-25
+seit = 2026-10-25
+text = "Ursprünglich ein Motivationskanal, zeigt er seit einigen Wochen vor allem lange Zusammenschnitte fremder Interviews über KI-Risiken: meist aus The Diary Of A CEO (Jeffrey Ladish, Tristan Harris, Karen Hao über OpenAI), dazu eine Debatte mit Nate Soares, Roman Yampolskiy und anderen. Eigene Gespräche führt der Kanal nicht; er bündelt, was anderswo gesagt wurde. Als Auswahl praktisch; die vollständigen Gespräche stehen beim Original."
+  [[eintrag.unterlinks]]
+  name = "Original: The Diary Of A CEO"
+  url = "https://www.youtube.com/@TheDiaryOfACEO/videos"

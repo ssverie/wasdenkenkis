@@ -14,7 +14,11 @@
       {{- if eq $p.Section "sprachen" }}{{ with index hugo.Data.sprachen . }}{{ $liste = .gruppe }}{{ end }}
       {{- else }}{{ with index hugo.Data . }}{{ $liste = index . ($p.Params.eintrag | default "buch") }}{{ end }}{{ end }}
     {{- end }}
-    {{- if and (eq .Section "links") (eq .Kind "section") }}{{ $liste = hugo.Data.links.eintrag }}{{ end }}
+    {{- /* Links: nur Seiten ohne Unterseiten nehmen ihre Einträge mit (kategorie, ggf. thema), Kachelseiten keine */}}
+    {{- if and (eq .Section "links") (eq .Kind "section") .Params.kategorie (not .Sections) }}
+      {{- $liste = where hugo.Data.links.eintrag "kategorie" .Params.kategorie }}
+      {{- with .Params.thema }}{{ $liste = where $liste "thema" . }}{{ end }}
+    {{- end }}
     {{- if and (eq .Section "ideen") (eq .Kind "section") }}{{ $liste = hugo.Data.ideen.idee }}{{ end }}
     {{- if eq .RelPermalink "/fragen/" }}{{ $liste = hugo.Data.fragen.frage }}{{ end }}
     {{- range $liste }}

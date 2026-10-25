@@ -477,3 +477,5 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 /* Sprachen mit eigener Schrift (Thai): Wort größer, Umschrift darunter */
 .wort span[lang^="th"] { font-size: 1.45rem; line-height: 1.5; }
 .wort .umschrift { display: block; font-size: .85rem; color: var(--akzent); }
+/* Links: Reichweite der YouTube-Kanäle (Größenklasse) */
+.reichweite { display: inline-block; margin-left: .4rem; padding: 0 .45rem; border-radius: 999px; background: var(--akzent-leise); color: var(--akzent); font-size: .8rem; }

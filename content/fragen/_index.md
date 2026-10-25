@@ -1,6 +1,6 @@
 +++
 title = "Fragen"
-description = "Was denken KIs über …? Fragen an alle Modelle – über KI selbst und über die Welt. Antworten kommen nach und nach."
+description = "Was denken KIs über …? Fragen an alle Modelle – über KI selbst, über die Welt und über die Menschheit. Antworten kommen nach und nach."
 layout = "fragen"
 daten = "fragen"
 eintrag = "frage"
@@ -12,6 +12,9 @@ einheit = ["Frage", "Fragen"]
 [[gruppen]]
   name = "Über die Welt"
   schluessel = "welt"
+[[gruppen]]
+  name = "Über die Menschheit"
+  schluessel = "menschheit"
 [[gruppen]]
   name = "Sven-Fragen"
   schluessel = "sven"

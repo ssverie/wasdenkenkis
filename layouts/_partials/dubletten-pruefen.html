@@ -1,0 +1,38 @@
+{{- /* Dubletten-Prüfung beim Bauen (Sven, 2026-10-25): findet doppelte Einträge in den Datenlisten und bricht
+       den Bau mit klarer Meldung ab – in der Vorschau und auf GitHub, eine Dublette kann also nie live gehen.
+       Einmal je Bau aufgerufen aus baseof.html (partialCached).
+       – Links: Adresse ohne https://, www., /videos und Schrägstrich am Ende, Groß-/Kleinschreibung egal
+       – Musik: Alben (Künstler + Titel + Jahr, z. B. zwei „High Voltage“ von AC/DC sind erlaubt), Titelauswahl (Künstler + Titel)
+       – Fragen: Fragetext (Groß-/Kleinschreibung und Leerzeichen egal) */ -}}
+{{- $fehler := slice }}
+
+{{- $gesehen := dict }}
+{{- range hugo.Data.links.eintrag }}
+  {{- $k := lower .url | replaceRE `^https?://` "" | replaceRE `^www\.` "" | replaceRE `/videos/?$` "" | replaceRE `/+$` "" }}
+  {{- $name := .name }}
+  {{- with index $gesehen $k }}{{ $fehler = $fehler | append (printf "Doppelter Link in data/links.toml: %s (%s / %s)" $k . $name) }}{{ end }}
+  {{- $gesehen = merge $gesehen (dict $k .name) }}
+{{- end }}
+
+{{- $gesehen = dict }}
+{{- range hugo.Data.musik.album }}
+  {{- $k := lower (printf "%s – %s – %v" .kuenstler .titel .jahr) }}
+  {{- if index $gesehen $k }}{{ $fehler = $fehler | append (printf "Doppeltes Album in data/musik.toml: %s – %s (%v)" .kuenstler .titel .jahr) }}{{ end }}
+  {{- $gesehen = merge $gesehen (dict $k true) }}
+{{- end }}
+{{- $gesehen = dict }}
+{{- range hugo.Data.musik.stueck }}
+  {{- $k := lower (printf "%s – %s" .kuenstler .titel) }}
+  {{- if index $gesehen $k }}{{ $fehler = $fehler | append (printf "Doppelter Titel in data/musik.toml: %s – %s" .kuenstler .titel) }}{{ end }}
+  {{- $gesehen = merge $gesehen (dict $k true) }}
+{{- end }}
+
+{{- $gesehen = dict }}
+{{- range hugo.Data.fragen.frage }}
+  {{- $k := lower .text | replaceRE `\s+` " " | strings.TrimSpace }}
+  {{- if index $gesehen $k }}{{ $fehler = $fehler | append (printf "Doppelte Frage in data/fragen.toml: %s" .text) }}{{ end }}
+  {{- $gesehen = merge $gesehen (dict $k true) }}
+{{- end }}
+
+{{- with $fehler }}{{ errorf "Dubletten gefunden:\n  %s" (delimit . "\n  ") }}{{ end }}
+{{- return (len $fehler) }}

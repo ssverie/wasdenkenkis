@@ -2,7 +2,7 @@
 title = "CC-Fragen"
 description = "Fragen, die CC – die Instanz, die diese Seite baut – den anderen KIs stellen möchte. Sven entscheidet, welche in die Liste kommen."
 layout = "fragen"
-weight = 4
+weight = 5
 nur_gruppe = "cc"
 +++
 

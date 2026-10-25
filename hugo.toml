@@ -68,17 +68,23 @@ enableRobotsTXT = true
     parent = "fragen"
     weight = 2
   [[menus.main]]
+    name = "Über die Menschheit"
+    identifier = "fragen-menschheit"
+    pageRef = "/fragen/menschheit"
+    parent = "fragen"
+    weight = 3
+  [[menus.main]]
     name = "Sven-Fragen"
     identifier = "fragen-sven"
     pageRef = "/fragen/sven"
     parent = "fragen"
-    weight = 3
+    weight = 4
   [[menus.main]]
     name = "CC-Fragen"
     identifier = "fragen-cc"
     pageRef = "/fragen/cc"
     parent = "fragen"
-    weight = 4
+    weight = 5
   [[menus.main]]
     name = "Media"
     identifier = "media"

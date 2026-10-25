@@ -11,6 +11,9 @@
 </header>
 {{- $alle := hugo.Data.fragen.frage }}
 {{- $fragen := partial "fragen-filter.html" (dict "alle" $alle "seite" .) }}
+{{- if and .Params.nur_gruppe (not $fragen) }}
+<p class="meta">Die Fragen folgen.</p>
+{{- end }}
 
 {{- /* Übersicht: Kacheln der Unterseiten */}}
 {{- with .Sections.ByWeight }}
@@ -21,7 +24,7 @@
     <a class="karte" href="{{ .RelPermalink }}">
       <strong>{{ .Title }}</strong>
       {{- with .Description }}<span>{{ . }}</span>{{ end }}
-      <small>{{ $n }} {{ cond (eq $n 1) "Frage" "Fragen" }}</small>
+      <small>{{ if $n }}{{ $n }} {{ cond (eq $n 1) "Frage" "Fragen" }}{{ else }}folgt{{ end }}</small>
     </a>
   </li>
   {{- end }}

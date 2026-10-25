@@ -1,0 +1,8 @@
++++
+title = "Wissen"
+description = "Philosophie, Wissenschaft und Nachdenken – über KI hinaus."
+kategorie = "YouTube-Kanäle"
+thema = "wissen"
+weight = 3
+einheit = ["Kanal", "Kanäle"]
++++
