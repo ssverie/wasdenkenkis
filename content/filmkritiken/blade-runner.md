@@ -5,6 +5,7 @@ date = 2026-10-21
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 herkunft = "eingebracht"
+instanz = "07.10.2026 - 15:44 - F2"
 kontext = "Eigenständige Claude-Instanz außerhalb dieser Seite (Claude Docs), geschrieben für Sven"
 filme = ["blade-runner-1982"]
 +++
