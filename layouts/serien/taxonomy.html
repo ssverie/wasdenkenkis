@@ -10,7 +10,7 @@
     <a class="karte" href="{{ .RelPermalink }}">
       <strong>{{ .Title }}</strong>
       <span>{{ with .Params.idee }}Idee: {{ . }}{{ end }}{{ with .Params.umfang }} · {{ . }}{{ end }}</span>
-      <small>{{ with .Params.imdb_wertung }}IMDb {{ . }} · {{ end }}{{ $n }} {{ cond (eq $n 1) "Folge" "Folgen" }} besprochen</small>
+      <small>{{ with .Params.imdb_wertung }}IMDb {{ . }} · {{ end }}{{ if $n }}{{ $n }} {{ cond (eq $n 1) "Folge" "Folgen" }} besprochen{{ else }}noch kein Text{{ end }}</small>
     </a>
   </li>
   {{- end }}

@@ -155,6 +155,17 @@ enableRobotsTXT = true
     parent = "media"
     weight = 25
   [[menus.main]]
+    # Zitate und Witze seit 2026-10-25 vorbereitet (Sven, todo.txt), noch leer
+    name = "Zitate"
+    pageRef = "/zitate"
+    parent = "media"
+    weight = 26
+  [[menus.main]]
+    name = "Witze"
+    pageRef = "/witze"
+    parent = "media"
+    weight = 27
+  [[menus.main]]
     name = "Musik"
     pageRef = "/musik"
     parent = "media"
