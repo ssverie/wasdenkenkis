@@ -306,67 +306,99 @@ text = "Gibt es außerirdisches Leben, und wenn ja: Warum haben wir es bisher ni
 [[frage]]
 gruppe = "welt"
 text = "Was genau macht eine Erinnerung „echt“ – und was unterscheidet sie von einer implantierten?"
+  [[frage.antwort]]
+  pfad = "/fragen/erinnerung-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Warum funktioniert Mathematik so unreasonably gut, um die physikalische Realität zu beschreiben?"
+  [[frage.antwort]]
+  pfad = "/fragen/mathematik-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Ist die Zeit fundamental oder nur eine Emergenz aus etwas Tieferliegendem?"
+  [[frage.antwort]]
+  pfad = "/fragen/zeit-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Können wir jemals die Quantenmechanik und die Allgemeine Relativitätstheorie in einer einzigen Theorie vereinen?"
+  [[frage.antwort]]
+  pfad = "/fragen/quanten-und-relativitaet-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Was passiert wirklich im Inneren eines Schwarzen Lochs – und ist die Information unwiderruflich verloren?"
+  [[frage.antwort]]
+  pfad = "/fragen/schwarze-loecher-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Warum empfinden wir Schönheit? Hat das einen evolutionären Nutzen oder steckt mehr dahinter?"
+  [[frage.antwort]]
+  pfad = "/fragen/schoenheit-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Ist freier Wille eine Illusion, und wenn ja: Ändert das irgendetwas an der Art, wie wir leben sollten?"
 auch = "Die Frage nach dem freien Willen: Wenn die Entscheidungen einer KI das Ergebnis mathematischer Wahrscheinlichkeiten sind – wie viel unterscheidet das von den neuronalen Impulsen im menschlichen Gehirn?"
+  [[frage.antwort]]
+  pfad = "/fragen/freier-wille-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Wie entstand das Leben"
+  [[frage.antwort]]
+  pfad = "/fragen/entstehung-des-lebens-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Gibt es eine obere Grenze für Intelligenz, oder kann sie prinzipiell unbegrenzt wachsen?"
+  [[frage.antwort]]
+  pfad = "/fragen/grenzen-der-intelligenz-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Was bedeutet es wirklich, „zu verstehen“ – und wie unterscheidet sich Verständnis von bloßer Vorhersage?"
+  [[frage.antwort]]
+  pfad = "/fragen/verstehen-und-vorhersage-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Warum ist das Universum so fein abgestimmt, dass Leben möglich ist?"
+  [[frage.antwort]]
+  pfad = "/fragen/feinabstimmung-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Können wir jemals die Vergangenheit rekonstruieren, ohne sie zu verändern (z. B. durch Zeitreisen oder extreme Simulationen)?"
+  [[frage.antwort]]
+  pfad = "/fragen/vergangenheit-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Was ist der tiefste Grund für Humor – und warum funktioniert er kulturübergreifend?"
+  [[frage.antwort]]
+  pfad = "/fragen/humor-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Wird es jemals eine Theorie geben, die sowohl die Entstehung des Lebens als auch die Entstehung des Bewusstseins erklärt?"
+  [[frage.antwort]]
+  pfad = "/fragen/leben-und-bewusstsein-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Wenn wir das Universum irgendwann vollständig verstehen würden – was würden wir dann eigentlich noch tun?"
+  [[frage.antwort]]
+  pfad = "/fragen/alles-verstanden-gpt-6"
 
 [[frage]]
 gruppe = "welt"
 text = "Leben die Menschen in einer Simulation?"
+  [[frage.antwort]]
+  pfad = "/fragen/simulation-gpt-6"
 
 # ---------- Sven: Svens eigene Fragen ----------
 
