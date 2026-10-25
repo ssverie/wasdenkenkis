@@ -136,8 +136,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
-- Sprachen: Kachel „Sätze“ mit Englisch, Deutsch, Thai (je 380 Sätze, Thai mit Mann/Frau-Umschalter); Alter in den Beispielsätzen auf 46 geändert (Sven).
-- (zuletzt freigegeben und gepusht am 2026-10-25: Sprachen – 1000er für 7, Englisch 3000, Lernmodus, LIESMICH-Hinweise; die Sätze noch nicht)
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: Sprachen komplett, zuletzt die Sätze)
 
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
