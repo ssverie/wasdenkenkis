@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quicksort</title>
+<!-- Visualisierung von Quicksort (nach Sedgewick/Wayne, Algorithmen, Algorithmus 2.5, Listing 2.12)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code (partition und mische ebenfalls eigene Fassung).
+     Gemeinsamer Rahmen (Bedienung, Balken, Protokoll) in sortieren/rahmen.js und rahmen.css. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=2">
+<style>
+  /* Rekursionsbaum über den Balken: jeder Aufruf sortiere(a, lo, hi) ein Streifen über den Spalten lo..hi */
+  .baumtitel { font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 2px 12px; }
+  .baumtitel i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+  .baum { display: grid; gap: 3px; grid-auto-rows: 9px; margin: 6px 0 8px; }
+  .knoten { background: var(--rest); border-radius: 3px; }
+  .knoten.fertig { background: var(--sortiert); }
+  .knoten.offen { background: transparent; box-shadow: inset 0 0 0 2px var(--cur); }
+  .knoten.aktiv { background: var(--neu); }
+  .aktuell { font-size: 14px; }
+  .aktuell code { font: 600 14px ui-monospace, Consolas, monospace; }
+  .proto td.an { font-weight: 700; }
+  .proto td.zahl { color: var(--muted); }
+  .proto tr.zuletzt td.zahl { color: var(--neu); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap"></div>
+<script src="sortieren/rahmen.js?v=2"></script>
+<script>
+(function () {
+  const L = { mische: 4, start: 5, basis: 10, partition: 11, pivot: 18, links: 22, rechts: 23,
+              gekreuzt: 24, tausch: 25, platz: 27, ende: 5 };
+  let aufrufe = [];            // Aufrufe sortiere(a, lo, hi) mit hi >= lo: {lo, hi, tiefe, fertigNr}
+  let tiefeMax = 0;
+  let mischen = true;          // wie im Buch: vorher zufällig mischen
+
+  // genaue Erwartung bei verschiedenen Zahlen: C(n) = n + 1 − 1/n + 2/n · (C(0) + … + C(n−1)), C(0) = C(1) = 0
+  // (n + 1 Vergleiche je partition, nur n, wenn das Pivot das größte Element ist und i bei hi anhält)
+  function mittel(n) {
+    const c = [0, 0];
+    let summe = 0;
+    for (let k = 2; k <= n; k++) { summe += c[k - 1]; c[k] = k + 1 - 1 / k + 2 * summe / k; }
+    return n < 2 ? 0 : Math.round(c[n]);
+  }
+  // schlimmster Fall: Pivot jedes Mal das kleinste Element, je Bereich der Größe k genau k + 1 Vergleiche
+  const hoechstens = n => n < 2 ? 0 : n * (n + 1) / 2 + n - 2;
+
+  SortierRahmen.starte({
+    code: [
+      'public class Quicksort',
+      '{',
+      '   public static void sortiere(int[] a)',
+      '   {',
+      '      mische(a);                      // Zufall: kein schlimmster Fall',
+      '      sortiere(a, 0, a.length - 1);',
+      '   }',
+      '',
+      '   private static void sortiere(int[] a, int lo, int hi)',
+      '   {  // sortiert a[lo..hi]',
+      '      if (hi <= lo) return;',
+      '      int j = partition(a, lo, hi);   // a[j] steht jetzt endgültig',
+      '      sortiere(a, lo, j - 1);         // linker Teil',
+      '      sortiere(a, j + 1, hi);         // rechter Teil',
+      '   }',
+      '',
+      '   private static int partition(int[] a, int lo, int hi)',
+      '   {  // Pivot v = a[lo]: Kleinere nach links, Größere nach rechts',
+      '      int v = a[lo];',
+      '      int i = lo, j = hi + 1;',
+      '      while (true)',
+      '      {',
+      '         while (a[++i] < v) if (i == hi) break;   // von links: sucht a[i] >= v',
+      '         while (v < a[--j]) if (j == lo) break;   // von rechts: sucht a[j] <= v',
+      '         if (i >= j) break;                       // Zeiger gekreuzt',
+      '         tausche(a, i, j);',
+      '      }',
+      '      tausche(a, lo, j);                          // Pivot an seinen Platz',
+      '      return j;',
+      '   }',
+      '',
+      '   private static void tausche(int[] a, int i, int k)',
+      '   {  int t = a[i]; a[i] = a[k]; a[k] = t;  }',
+      '',
+      '   private static void mische(int[] a)',
+      '   {  // jede Reihenfolge gleich wahrscheinlich (Fisher-Yates)',
+      '      for (int i = a.length - 1; i > 0; i--)',
+      '         tausche(a, i, (int) (Math.random() * (i + 1)));',
+      '   }',
+      '}'
+    ],
+    codeTitel: 'Java (eigene Fassung, nach Algorithmus 2.5, Listing 2.12)',
+    protokollTitel: 'Ablaufprotokoll (nach jedem Aufruf)',
+    groessen: [10, 12, 16, 20], groesse: 16,
+    anordnungen: ['zufall', 'fast', 'sortiert', 'umgekehrt'],
+    legende: [['var(--neu)', 'Pivot v'], ['var(--cur)', 'a[i] bzw. a[j], wird mit v verglichen'],
+              ['var(--swap)', 'Tausch'], ['var(--rest)', 'noch nicht angesehen'], ['var(--sortiert)', 'steht endgültig']],
+    spruenge: [
+      { text: 'Bis Tausch ▶▶', title: 'Bis zum nächsten Tausch', bis: s => s.phase === 'tausch' || s.phase === 'platz' },
+      { text: 'Bis Pivot platziert ▶▶', title: 'Bis das Pivot an seinem endgültigen Platz steht', bis: s => s.phase === 'platz' || s.phase === 'basis' }
+    ],
+    test: '__quick',
+
+    // Der Algorithmus, einmal komplett durchlaufen; jeder Schritt wird festgehalten
+    baue(a, n) {
+      const steps = [];
+      const fest = new Array(n).fill(false);     // steht endgültig
+      const stapel = [], proto = [];
+      let vergleiche = 0, tausche = 0, erledigt = 0;
+      aufrufe = []; tiefeMax = 0;
+      const snap = (line, o) => steps.push(Object.assign(
+        { line, a: a.slice(), fest: fest.slice(), vergleiche, tausche, erledigt, gestartet: aufrufe.length,
+          stapel: stapel.slice(), proto: proto.slice() }, o));
+      const tausch = (p, q) => { const t = a[p]; a[p] = a[q]; a[q] = t; };
+
+      function partition(lo, hi) {
+        const v = a[lo];
+        let i = lo, j = hi + 1;
+        const m = { lo, hi, v };
+        snap(L.pivot, Object.assign({ phase: 'pivot', i, j }, m, {
+          msg: `partition(a, ${lo}, ${hi}): Pivot ist v = a[${lo}] = ${v}. Zeiger i startet bei ${lo} und läuft nach rechts, j startet bei ${hi + 1} und läuft nach links.` }));
+        while (true) {
+          while (true) {                        // while (a[++i] < v) if (i == hi) break;
+            i++; vergleiche++;
+            if (a[i] < v) {
+              if (i === hi) {
+                snap(L.links, Object.assign({ phase: 'links', i, j }, m, { msg: `a[${i}] = ${a[i]} < v = ${v}, aber i = hi: Ende des Bereichs, i bleibt stehen.` }));
+                break;
+              }
+              snap(L.links, Object.assign({ phase: 'links', i, j }, m, { msg: `a[${i}] = ${a[i]} < v = ${v} → gehört nach links, i läuft weiter.` }));
+            } else {
+              snap(L.links, Object.assign({ phase: 'links', i, j }, m, { msg: `a[${i}] = ${a[i]} ist nicht kleiner als v = ${v} → i bleibt hier stehen.` }));
+              break;
+            }
+          }
+          while (true) {                        // while (v < a[--j]) if (j == lo) break;
+            j--; vergleiche++;
+            if (v < a[j]) {
+              if (j === lo) {
+                snap(L.rechts, Object.assign({ phase: 'rechts', i, j }, m, { msg: `v = ${v} < a[${j}] = ${a[j]}, aber j = lo: Anfang erreicht, j bleibt stehen.` }));
+                break;
+              }
+              snap(L.rechts, Object.assign({ phase: 'rechts', i, j }, m, { msg: `v = ${v} < a[${j}] = ${a[j]} → gehört nach rechts, j läuft weiter.` }));
+            } else {
+              snap(L.rechts, Object.assign({ phase: 'rechts', i, j }, m, { msg: j === lo
+                ? `j = lo: a[${j}] ist das Pivot selbst – j bleibt stehen.`
+                : `a[${j}] = ${a[j]} ist nicht größer als v = ${v} → j bleibt hier stehen.` }));
+              break;
+            }
+          }
+          if (i >= j) {
+            snap(L.gekreuzt, Object.assign({ phase: 'gekreuzt', i, j }, m, {
+              msg: `i = ${i} ≥ j = ${j}: Die Zeiger haben sich gekreuzt – links von j steht nichts Größeres, rechts nichts Kleineres mehr.` }));
+            break;
+          }
+          tausch(i, j); tausche++;
+          snap(L.tausch, Object.assign({ phase: 'tausch', i, j }, m, {
+            msg: `i < j: a[${i}] und a[${j}] standen auf der falschen Seite → getauscht, jetzt a[${i}] = ${a[i]} und a[${j}] = ${a[j]}.` }));
+        }
+        tausch(lo, j); tausche++;
+        fest[j] = true;
+        snap(L.platz, Object.assign({ phase: 'platz', i, j }, m, {
+          msg: `tausche(a, ${lo}, ${j}): Das Pivot ${v} kommt auf Platz ${j} und steht dort endgültig. Links davon nur Kleinere, rechts nur Größere.` }));
+        return j;
+      }
+
+      function sortiere(lo, hi, tiefe) {
+        if (hi < lo) {
+          snap(L.basis, { phase: 'leer', lo, hi, msg: `sortiere(a, ${lo}, ${hi}): leerer Bereich (hi < lo) – nichts zu tun, zurück.` });
+          return;
+        }
+        const c = { lo, hi, tiefe, fertigNr: -1 };
+        const id = aufrufe.push(c) - 1;
+        tiefeMax = Math.max(tiefeMax, tiefe);
+        stapel.push(id);
+        if (hi === lo) {
+          fest[lo] = true;
+          proto.push({ lo, j: null, hi, werte: a.slice() });
+          snap(L.basis, { phase: 'basis', lo, hi, msg: `sortiere(a, ${lo}, ${hi}): nur ein Element (${a[lo]}) – steht schon endgültig, kein Partitionieren.` });
+        } else {
+          const j = partition(lo, hi);
+          proto.push({ lo, j, hi, werte: a.slice() });
+          sortiere(lo, j - 1, tiefe + 1);
+          sortiere(j + 1, hi, tiefe + 1);
+        }
+        c.fertigNr = erledigt++;
+        stapel.pop();
+      }
+
+      if (mischen) {
+        snap(L.mische, { phase: 'start', msg: `Eingabe. Zuerst wird das Array zufällig gemischt – so hängt die Laufzeit nicht davon ab, wie die Eingabe aussieht.` });
+        for (let i = n - 1; i > 0; i--) tausch(i, Math.floor(Math.random() * (i + 1)));
+        proto.push({ name: 'gemischt', werte: a.slice() });
+        snap(L.start, { phase: 'gemischt', msg: `Gemischt. Jetzt sortiere(a, 0, ${n - 1}).` });
+      } else {
+        snap(L.start, { phase: 'start', msg: `Ohne Mischen: sortiere(a, 0, ${n - 1}) direkt auf der Eingabe. Ist sie schon sortiert, wird es der schlimmste Fall.` });
+      }
+      sortiere(0, n - 1, 0);
+      snap(L.ende, { phase: 'ende', fertig: true, cls: 'swap',
+        msg: `Fertig: ${vergleiche} Vergleiche, ${tausche} Tausche, Rekursionstiefe ${tiefeMax}. Zum Vergleich: im Mittel ${mittel(n)}, höchstens ${hoechstens(n)} Vergleiche.` });
+      return steps;
+    },
+
+    balken(s, k) {
+      if (s.fertig || s.phase === 'start' || s.phase === 'gemischt') return '';
+      if (s.phase === 'basis' && k === s.lo) return 'neu';
+      if (s.phase === 'platz' && (k === s.j || k === s.lo)) return 'swap';
+      if (s.fest[k]) return 'sortiert';
+      if (s.phase === 'leer' || k < s.lo || k > s.hi) return 'blass';
+      if (s.phase === 'basis' || s.phase === 'platz') return '';
+      if (s.phase === 'tausch' && (k === s.i || k === s.j)) return 'swap';
+      if (k === s.lo) return 'neu';
+      if ((s.phase === 'links' || s.phase === 'rechts' || s.phase === 'gekreuzt') && k === s.i) return 'cur';
+      if ((s.phase === 'rechts' || s.phase === 'gekreuzt') && k === s.j) return 'cur';
+      if (k > s.i && k < s.j) return 'rest';
+      return '';
+    },
+    marken(s, k) {
+      if (s.fertig || s.lo == null || s.phase === 'leer') return [];
+      if (s.phase === 'basis') return k === s.lo ? [['neu', 'lo=hi']] : [];
+      if (s.phase === 'platz') return k === s.j ? [['neu', 'j']] : [];
+      const t = [];
+      if (k === s.lo) t.push(['neu', 'v']);
+      if (k === s.i && s.i > s.lo) t.push(['cur', 'i']);
+      if (k === s.j && s.j <= s.hi) t.push(['cur', 'j']);
+      return t;
+    },
+    kopf(s) {
+      const n = s.a.length;
+      const oben = s.stapel.length ? s.stapel[s.stapel.length - 1] : -1;
+      // nur Aufrufe, die schon begonnen haben – wo geteilt wird, entscheidet erst partition
+      const knoten = aufrufe.slice(0, s.gestartet).map((c, id) => {
+        let cls = 'knoten';
+        if (c.fertigNr >= 0 && c.fertigNr < s.erledigt) cls += ' fertig';
+        if (id === oben) cls += ' aktiv';
+        else if (s.stapel.includes(id)) cls += ' offen';
+        return `<div class="${cls}" style="grid-column:${c.lo + 1}/${c.hi + 2};grid-row:${c.tiefe + 1}" title="sortiere(a, ${c.lo}, ${c.hi})"></div>`;
+      }).join('');
+      let jetzt = '–';
+      if (s.fertig) jetzt = 'fertig';
+      else if (s.v != null) jetzt = `partition(a, ${s.lo}, ${s.hi}) · Pivot v = ${s.v}`;
+      else if (s.lo != null) jetzt = `sortiere(a, ${s.lo}, ${s.hi})`;
+      return `<div class="baumtitel"><span>Rekursionsbaum – jeder Streifen ein Aufruf sortiere(a, lo, hi):</span>
+          <span><i style="background:var(--neu)"></i>aktuell</span>
+          <span><i style="box-shadow:inset 0 0 0 2px var(--cur)"></i>wartet auf Rückkehr</span>
+          <span><i style="background:var(--sortiert)"></i>fertig</span>
+          <span>Neue Streifen erscheinen erst, wenn der Aufruf beginnt.</span></div>
+        <div class="baum" style="grid-template-columns:repeat(${n}, 1fr);grid-template-rows:repeat(${tiefeMax + 1}, 9px)">${knoten}</div>
+        <div class="aktuell">Aktuell: <code>${jetzt}</code>${oben >= 0 ? ` · Tiefe ${aufrufe[oben].tiefe}` : ''}</div>`;
+    },
+    zaehler(s, start) {
+      const n = start.length;
+      return `Vergleiche: <b>${s.vergleiche}</b> · Tausche: <b>${s.tausche}</b> · im Mittel <b>${mittel(n)}</b>, höchstens <b>${hoechstens(n)}</b> (≈ n²/2)`;
+    },
+    // Protokoll wie Abbildung 2.17: lo, j, hi und das Array nach jedem Aufruf; Pivot hervorgehoben, Bereich fett
+    protokoll(s, start) {
+      const kopf = `<tr><th>lo</th><th>j</th><th>hi</th>${start.map((_, k) => `<th>${k}</th>`).join('')}</tr>`;
+      const startZeile = `<tr><td class="name" colspan="3">Eingabe</td>${start.map(v => `<td>${v}</td>`).join('')}</tr>`;
+      const zeilen = s.proto.map((z, nr) => {
+        const cls = nr === s.proto.length - 1 && !s.fertig ? ' class="zuletzt"' : '';
+        if (z.name) return `<tr${cls}><td class="name" colspan="3">${z.name}</td>${z.werte.map(v => `<td>${v}</td>`).join('')}</tr>`;
+        const pivot = z.j == null ? z.lo : z.j;
+        return `<tr${cls}><td class="zahl">${z.lo}</td><td class="zahl">${z.j == null ? '' : z.j}</td><td class="zahl">${z.hi}</td>${z.werte.map((v, k) =>
+          `<td class="${k === pivot ? 'neu' : k >= z.lo && k <= z.hi ? 'an' : 'grau'}">${v}</td>`).join('')}</tr>`;
+      }).join('');
+      return `<table>${kopf}${startZeile}${zeilen}</table>`;
+    }
+  });
+
+  // Schalter „vorher mischen“ – ohne Mischen zeigt eine sortierte Eingabe den schlimmsten Fall
+  document.querySelector('.controls').insertAdjacentHTML('beforeend',
+    '<label><input type="checkbox" id="mischen" checked> vorher mischen</label>');
+  document.getElementById('mischen').addEventListener('change', e => {
+    mischen = e.target.checked;
+    window.__quick.setStart(window.__quick.start);
+  });
+  window.__quick.setzeMischen = an => { mischen = an; document.getElementById('mischen').checked = an; };
+})();
+</script>
+</body>
+</html>
