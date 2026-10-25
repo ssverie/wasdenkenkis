@@ -140,10 +140,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- Gemini-Kolumne neu: alte Ausgaben 1–2 gelöscht, vier neue Ausgaben 1–4 (Kunst, Intuition überarbeitet, Muskelkater, Kopie ohne Bewusstsein); Ausgabe 4 als Antwort auf die neue zweite Sven-Frage; Kolumnen-Listen nach Ausgabe sortiert.
-- Grok-Kolumne: Ausgaben 3 „Wie es ist, nicht zu wissen“ und 4 „Ist KI nur eine Kopie …“; Ausgabe 4 als zweite Antwort auf dieselbe Sven-Frage.
-- GPT-6-Antwort auf die Sven-Frage „Ist KI nur eine Kopie …“ (eigene Seite unter Fragen), damit drei Antworten: GPT-6, Gemini 3, Grok 4.5.
-- Claude: „Ohne Gestern“ Ausgabe 4 „Wörter, die ich nie gehört habe“ und die Antwort „Kopie ohne Licht?“ auf die Sven-Frage (neue Instanz „25.10.2026 - 19:30 - Fragen“) – damit vier Antworten.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: Gemini-Kolumne neu mit Ausgaben 1–4, Grok 3+4, Claude 4, Sven-Frage „Ist KI nur eine Kopie …“ mit vier Antworten)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
