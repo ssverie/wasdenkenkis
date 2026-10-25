@@ -1,0 +1,158 @@
+# Italienisch – die 100 wichtigsten Wörter. Erzeugt aus input/italienisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Italienisch"
+sprache = "it-IT"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["sì", "ja"],
+  ["no", "nein"],
+  ["per favore", "bitte"],
+  ["grazie", "danke"],
+  ["ciao", "hallo / tschüss"],
+  ["arrivederci", "auf Wiedersehen"],
+  ["scusi", "Entschuldigung"],
+  ["prego", "bitte sehr / gern geschehen"],
+  ["bene", "gut"],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["io", "ich"],
+  ["tu", "du"],
+  ["Lei", "Sie (höflich)"],
+  ["lui", "er"],
+  ["lei", "sie"],
+  ["noi", "wir"],
+  ["loro", "sie (Mehrzahl)"],
+  ["mio", "mein"],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["essere", "sein"],
+  ["avere", "haben"],
+  ["fare", "machen"],
+  ["andare", "gehen"],
+  ["venire", "kommen"],
+  ["vedere", "sehen"],
+  ["sapere", "wissen"],
+  ["volere", "wollen"],
+  ["piacere", "gefallen / mögen"],
+  ["avere bisogno", "brauchen"],
+  ["mangiare", "essen"],
+  ["bere", "trinken"],
+  ["parlare", "sprechen"],
+  ["capire", "verstehen"],
+  ["aiutare", "helfen"],
+  ["comprare", "kaufen"],
+  ["pagare", "bezahlen"],
+  ["dare", "geben"],
+  ["prendere", "nehmen"],
+  ["potere", "können"],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["che cosa", "was"],
+  ["dove", "wo"],
+  ["quando", "wann"],
+  ["chi", "wer"],
+  ["perché", "warum"],
+  ["come", "wie"],
+  ["quanto", "wie viel"],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["oggi", "heute"],
+  ["domani", "morgen"],
+  ["ieri", "gestern"],
+  ["adesso", "jetzt"],
+  ["dopo", "später"],
+  ["il giorno", "der Tag"],
+  ["la settimana", "die Woche"],
+  ["il tempo", "die Zeit / das Wetter"],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["uno", "eins"],
+  ["due", "zwei"],
+  ["tre", "drei"],
+  ["quattro", "vier"],
+  ["cinque", "fünf"],
+  ["sei", "sechs"],
+  ["sette", "sieben"],
+  ["otto", "acht"],
+  ["nove", "neun"],
+  ["dieci", "zehn"],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["l'uomo", "der Mann"],
+  ["la donna", "die Frau"],
+  ["il bambino", "das Kind"],
+  ["l'amico", "der Freund"],
+  ["la famiglia", "die Familie"],
+  ["il nome", "der Name"],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["la casa", "das Haus"],
+  ["la camera", "das Zimmer"],
+  ["la strada", "die Straße"],
+  ["la città", "die Stadt"],
+  ["il negozio", "das Geschäft"],
+  ["il ristorante", "das Restaurant"],
+  ["l'albergo", "das Hotel"],
+  ["la stazione", "der Bahnhof"],
+  ["il bagno", "die Toilette"],
+  ["il medico", "der Arzt"],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["l'acqua", "das Wasser"],
+  ["il caffè", "der Kaffee"],
+  ["il pane", "das Brot"],
+  ["il cibo", "das Essen"],
+  ["i soldi", "das Geld"],
+  ["la macchina", "das Auto"],
+  ["il cellulare", "das Handy"],
+  ["il biglietto", "die Fahrkarte"],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["grande", "groß"],
+  ["piccolo", "klein"],
+  ["caldo", "heiß"],
+  ["freddo", "kalt"],
+  ["nuovo", "neu"],
+  ["vecchio", "alt"],
+  ["aperto", "offen"],
+  ["chiuso", "geschlossen"],
+  ["sinistra", "links"],
+  ["destra", "rechts"],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["qui", "hier"],
+  ["lì", "dort"],
+  ["e", "und"],
+  ["più", "mehr"],
+]

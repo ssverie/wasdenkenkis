@@ -1,0 +1,158 @@
+# Vietnamesisch – die 100 wichtigsten Wörter. Erzeugt aus input/vietnamesisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Vietnamesisch"
+sprache = "vi-VN"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["vâng", "ja (höflich)", ""],
+  ["không", "nein / nicht", ""],
+  ["làm ơn", "bitte", ""],
+  ["cảm ơn", "danke", ""],
+  ["xin chào", "hallo", ""],
+  ["tạm biệt", "auf Wiedersehen", ""],
+  ["xin lỗi", "Entschuldigung", ""],
+  ["không có gì", "gern geschehen", ""],
+  ["tốt", "gut", ""],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["tôi", "ich", ""],
+  ["bạn", "du / Sie (unter Gleichaltrigen)", ""],
+  ["ông", "Sie (zu einem älteren Mann)", ""],
+  ["anh ấy", "er", ""],
+  ["cô ấy", "sie", ""],
+  ["chúng tôi", "wir", ""],
+  ["họ", "sie (Mehrzahl)", ""],
+  ["của tôi", "mein", ""],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["là", "sein (ist)", ""],
+  ["có", "haben", ""],
+  ["làm", "machen", ""],
+  ["đi", "gehen", ""],
+  ["đến", "kommen", ""],
+  ["nhìn", "sehen / schauen", ""],
+  ["biết", "wissen", ""],
+  ["muốn", "wollen", ""],
+  ["thích", "mögen", ""],
+  ["cần", "brauchen", ""],
+  ["ăn", "essen", ""],
+  ["uống", "trinken", ""],
+  ["nói", "sprechen", ""],
+  ["hiểu", "verstehen", ""],
+  ["giúp", "helfen", ""],
+  ["mua", "kaufen", ""],
+  ["trả tiền", "bezahlen", ""],
+  ["cho", "geben", ""],
+  ["lấy", "nehmen", ""],
+  ["có thể", "können", ""],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["cái gì", "was", ""],
+  ["ở đâu", "wo", ""],
+  ["khi nào", "wann", ""],
+  ["ai", "wer", ""],
+  ["tại sao", "warum", ""],
+  ["như thế nào", "wie", ""],
+  ["bao nhiêu", "wie viel", ""],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["hôm nay", "heute", ""],
+  ["ngày mai", "morgen", ""],
+  ["hôm qua", "gestern", ""],
+  ["bây giờ", "jetzt", ""],
+  ["sau", "später", ""],
+  ["ngày", "der Tag", ""],
+  ["tuần", "die Woche", ""],
+  ["thời gian", "die Zeit", ""],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["một", "eins", ""],
+  ["hai", "zwei", ""],
+  ["ba", "drei", ""],
+  ["bốn", "vier", ""],
+  ["năm", "fünf (auch: Jahr)", ""],
+  ["sáu", "sechs", ""],
+  ["bảy", "sieben", ""],
+  ["tám", "acht", ""],
+  ["chín", "neun", ""],
+  ["mười", "zehn", ""],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["đàn ông", "der Mann", ""],
+  ["phụ nữ", "die Frau", ""],
+  ["trẻ em", "das Kind", ""],
+  ["bạn bè", "der Freund / die Freunde", ""],
+  ["gia đình", "die Familie", ""],
+  ["tên", "der Name", ""],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["nhà", "das Haus", ""],
+  ["phòng", "das Zimmer", ""],
+  ["đường", "die Straße", ""],
+  ["thành phố", "die Stadt", ""],
+  ["cửa hàng", "das Geschäft", ""],
+  ["nhà hàng", "das Restaurant", ""],
+  ["khách sạn", "das Hotel", ""],
+  ["nhà ga", "der Bahnhof", ""],
+  ["nhà vệ sinh", "die Toilette", ""],
+  ["bác sĩ", "der Arzt", ""],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["nước", "das Wasser", ""],
+  ["cà phê", "der Kaffee", ""],
+  ["bánh mì", "das Brot", ""],
+  ["đồ ăn", "das Essen", ""],
+  ["tiền", "das Geld", ""],
+  ["ô tô", "das Auto", ""],
+  ["điện thoại", "das Handy", ""],
+  ["vé", "die Fahrkarte", ""],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["lớn", "groß", ""],
+  ["nhỏ", "klein", ""],
+  ["nóng", "heiß", ""],
+  ["lạnh", "kalt", ""],
+  ["mới", "neu", ""],
+  ["cũ", "alt", ""],
+  ["mở", "offen", ""],
+  ["đóng", "geschlossen", ""],
+  ["trái", "links", ""],
+  ["phải", "rechts (auch: müssen)", ""],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["ở đây", "hier", ""],
+  ["ở đó", "dort", ""],
+  ["và", "und", ""],
+  ["nhiều hơn", "mehr", ""],
+]

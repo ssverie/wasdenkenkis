@@ -1,0 +1,158 @@
+# Koreanisch – die 100 wichtigsten Wörter. Erzeugt aus input/koreanisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Koreanisch"
+sprache = "ko-KR"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["네", "ja", "ne"],
+  ["아니요", "nein", "aniyo"],
+  ["주세요", "bitte (geben Sie mir …)", "juseyo"],
+  ["감사합니다", "danke", "gamsahamnida"],
+  ["안녕하세요", "hallo", "annyeonghaseyo"],
+  ["안녕히 가세요", "auf Wiedersehen (zum Gehenden)", "annyeonghi gaseyo"],
+  ["죄송합니다", "Entschuldigung", "joesonghamnida"],
+  ["괜찮아요", "macht nichts / alles okay", "gwaenchanayo"],
+  ["좋아요", "gut", "joayo"],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["저", "ich (höflich)", "jeo"],
+  ["너", "du (vertraut)", "neo"],
+  ["당신", "Sie / du (selten benutzt)", "dangsin"],
+  ["그", "er", "geu"],
+  ["그녀", "sie", "geunyeo"],
+  ["우리", "wir", "uri"],
+  ["그들", "sie (Mehrzahl)", "geudeul"],
+  ["제", "mein (höflich)", "je"],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["이다", "sein (ist)", "ida"],
+  ["있다", "haben / es gibt", "itda"],
+  ["하다", "machen", "hada"],
+  ["가다", "gehen", "gada"],
+  ["오다", "kommen", "oda"],
+  ["보다", "sehen", "boda"],
+  ["알다", "wissen", "alda"],
+  ["원하다", "wollen", "wonhada"],
+  ["좋아하다", "mögen", "joahada"],
+  ["필요하다", "brauchen", "piryohada"],
+  ["먹다", "essen", "meokda"],
+  ["마시다", "trinken", "masida"],
+  ["말하다", "sprechen", "malhada"],
+  ["이해하다", "verstehen", "ihaehada"],
+  ["돕다", "helfen", "dopda"],
+  ["사다", "kaufen", "sada"],
+  ["계산하다", "bezahlen (die Rechnung)", "gyesanhada"],
+  ["주다", "geben", "juda"],
+  ["가지다", "nehmen / besitzen", "gajida"],
+  ["할 수 있다", "können", "hal su itda"],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["무엇", "was", "mueot"],
+  ["어디", "wo", "eodi"],
+  ["언제", "wann", "eonje"],
+  ["누구", "wer", "nugu"],
+  ["왜", "warum", "wae"],
+  ["어떻게", "wie", "eotteoke"],
+  ["얼마", "wie viel", "eolma"],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["오늘", "heute", "oneul"],
+  ["내일", "morgen", "naeil"],
+  ["어제", "gestern", "eoje"],
+  ["지금", "jetzt", "jigeum"],
+  ["나중에", "später", "najunge"],
+  ["날", "der Tag", "nal"],
+  ["주", "die Woche", "ju"],
+  ["시간", "die Zeit / die Stunde", "sigan"],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["일", "eins", "il"],
+  ["이", "zwei", "i"],
+  ["삼", "drei", "sam"],
+  ["사", "vier", "sa"],
+  ["오", "fünf", "o"],
+  ["육", "sechs", "yuk"],
+  ["칠", "sieben", "chil"],
+  ["팔", "acht", "pal"],
+  ["구", "neun", "gu"],
+  ["십", "zehn", "sip"],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["남자", "der Mann", "namja"],
+  ["여자", "die Frau", "yeoja"],
+  ["아이", "das Kind", "ai"],
+  ["친구", "der Freund", "chingu"],
+  ["가족", "die Familie", "gajok"],
+  ["이름", "der Name", "ireum"],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["집", "das Haus", "jip"],
+  ["방", "das Zimmer", "bang"],
+  ["길", "die Straße / der Weg", "gil"],
+  ["도시", "die Stadt", "dosi"],
+  ["가게", "das Geschäft", "gage"],
+  ["식당", "das Restaurant", "sikdang"],
+  ["호텔", "das Hotel", "hotel"],
+  ["역", "der Bahnhof", "yeok"],
+  ["화장실", "die Toilette", "hwajangsil"],
+  ["의사", "der Arzt", "uisa"],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["물", "das Wasser", "mul"],
+  ["커피", "der Kaffee", "keopi"],
+  ["빵", "das Brot", "ppang"],
+  ["음식", "das Essen", "eumsik"],
+  ["돈", "das Geld", "don"],
+  ["차", "das Auto (auch: Tee)", "cha"],
+  ["휴대폰", "das Handy", "hyudaepon"],
+  ["표", "die Fahrkarte", "pyo"],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["크다", "groß", "keuda"],
+  ["작다", "klein", "jakda"],
+  ["뜨겁다", "heiß", "tteugeopda"],
+  ["차갑다", "kalt", "chagapda"],
+  ["새", "neu", "sae"],
+  ["오래되다", "alt (Dinge)", "oraedoeda"],
+  ["열려 있다", "offen", "yeollyeo itda"],
+  ["닫혀 있다", "geschlossen", "dachyeo itda"],
+  ["왼쪽", "links", "oenjjok"],
+  ["오른쪽", "rechts", "oreunjjok"],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["여기", "hier", "yeogi"],
+  ["거기", "dort", "geogi"],
+  ["그리고", "und (am Satzanfang)", "geurigo"],
+  ["더", "mehr", "deo"],
+]

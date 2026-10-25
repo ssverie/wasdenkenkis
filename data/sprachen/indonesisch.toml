@@ -1,0 +1,158 @@
+# Indonesisch – die 100 wichtigsten Wörter. Erzeugt aus input/indonesisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Indonesisch"
+sprache = "id-ID"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["ya", "ja", ""],
+  ["tidak", "nein / nicht", ""],
+  ["tolong", "bitte (um etwas bitten)", ""],
+  ["terima kasih", "danke", ""],
+  ["halo", "hallo", ""],
+  ["sampai jumpa", "auf Wiedersehen", ""],
+  ["maaf", "Entschuldigung", ""],
+  ["sama-sama", "gern geschehen", ""],
+  ["baik", "gut", ""],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["saya", "ich", ""],
+  ["kamu", "du (vertraut)", ""],
+  ["Anda", "Sie (höflich)", ""],
+  ["dia", "er / sie", ""],
+  ["ini", "dies / das hier", ""],
+  ["kita", "wir", ""],
+  ["mereka", "sie (Mehrzahl)", ""],
+  ["milik saya", "mein (gehört mir)", ""],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["adalah", "sein (ist)", ""],
+  ["punya", "haben", ""],
+  ["membuat", "machen", ""],
+  ["pergi", "gehen", ""],
+  ["datang", "kommen", ""],
+  ["melihat", "sehen", ""],
+  ["tahu", "wissen", ""],
+  ["mau", "wollen", ""],
+  ["suka", "mögen", ""],
+  ["perlu", "brauchen", ""],
+  ["makan", "essen", ""],
+  ["minum", "trinken", ""],
+  ["berbicara", "sprechen", ""],
+  ["mengerti", "verstehen", ""],
+  ["membantu", "helfen", ""],
+  ["membeli", "kaufen", ""],
+  ["membayar", "bezahlen", ""],
+  ["memberi", "geben", ""],
+  ["mengambil", "nehmen", ""],
+  ["bisa", "können", ""],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["apa", "was", ""],
+  ["di mana", "wo", ""],
+  ["kapan", "wann", ""],
+  ["siapa", "wer", ""],
+  ["mengapa", "warum", ""],
+  ["bagaimana", "wie", ""],
+  ["berapa", "wie viel", ""],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["hari ini", "heute", ""],
+  ["besok", "morgen", ""],
+  ["kemarin", "gestern", ""],
+  ["sekarang", "jetzt", ""],
+  ["nanti", "später", ""],
+  ["hari", "der Tag", ""],
+  ["minggu", "die Woche (auch: Sonntag)", ""],
+  ["waktu", "die Zeit", ""],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["satu", "eins", ""],
+  ["dua", "zwei", ""],
+  ["tiga", "drei", ""],
+  ["empat", "vier", ""],
+  ["lima", "fünf", ""],
+  ["enam", "sechs", ""],
+  ["tujuh", "sieben", ""],
+  ["delapan", "acht", ""],
+  ["sembilan", "neun", ""],
+  ["sepuluh", "zehn", ""],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["laki-laki", "der Mann", ""],
+  ["perempuan", "die Frau", ""],
+  ["anak", "das Kind", ""],
+  ["teman", "der Freund", ""],
+  ["keluarga", "die Familie", ""],
+  ["nama", "der Name", ""],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["rumah", "das Haus", ""],
+  ["kamar", "das Zimmer", ""],
+  ["jalan", "die Straße", ""],
+  ["kota", "die Stadt", ""],
+  ["toko", "das Geschäft", ""],
+  ["restoran", "das Restaurant", ""],
+  ["hotel", "das Hotel", ""],
+  ["stasiun", "der Bahnhof", ""],
+  ["toilet", "die Toilette", ""],
+  ["dokter", "der Arzt", ""],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["air", "das Wasser", ""],
+  ["kopi", "der Kaffee", ""],
+  ["roti", "das Brot", ""],
+  ["makanan", "das Essen", ""],
+  ["uang", "das Geld", ""],
+  ["mobil", "das Auto", ""],
+  ["ponsel", "das Handy", ""],
+  ["tiket", "die Fahrkarte", ""],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["besar", "groß", ""],
+  ["kecil", "klein", ""],
+  ["panas", "heiß", ""],
+  ["dingin", "kalt", ""],
+  ["baru", "neu", ""],
+  ["lama", "alt (Dinge)", ""],
+  ["buka", "offen", ""],
+  ["tutup", "geschlossen", ""],
+  ["kiri", "links", ""],
+  ["kanan", "rechts", ""],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["di sini", "hier", ""],
+  ["di sana", "dort", ""],
+  ["dan", "und", ""],
+  ["lebih", "mehr", ""],
+]

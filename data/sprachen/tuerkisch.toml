@@ -1,0 +1,158 @@
+# Türkisch – die 100 wichtigsten Wörter. Erzeugt aus input/tuerkisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Türkisch"
+sprache = "tr-TR"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["evet", "ja", ""],
+  ["hayır", "nein", ""],
+  ["lütfen", "bitte", ""],
+  ["teşekkürler", "danke", ""],
+  ["merhaba", "hallo", ""],
+  ["görüşürüz", "auf Wiedersehen / bis bald", ""],
+  ["özür dilerim", "Entschuldigung", ""],
+  ["rica ederim", "gern geschehen", ""],
+  ["iyi", "gut", ""],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["ben", "ich", ""],
+  ["sen", "du", ""],
+  ["siz", "Sie / ihr", ""],
+  ["o", "er / sie / es", ""],
+  ["bu", "dies / das hier", ""],
+  ["biz", "wir", ""],
+  ["onlar", "sie (Mehrzahl)", ""],
+  ["benim", "mein", ""],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["olmak", "sein", ""],
+  ["var", "es gibt / haben (vorhanden)", ""],
+  ["yapmak", "machen", ""],
+  ["gitmek", "gehen", ""],
+  ["gelmek", "kommen", ""],
+  ["görmek", "sehen", ""],
+  ["bilmek", "wissen", ""],
+  ["istemek", "wollen", ""],
+  ["sevmek", "mögen / lieben", ""],
+  ["ihtiyacım var", "ich brauche", ""],
+  ["yemek", "essen (auch: das Essen)", ""],
+  ["içmek", "trinken", ""],
+  ["konuşmak", "sprechen", ""],
+  ["anlamak", "verstehen", ""],
+  ["yardım etmek", "helfen", ""],
+  ["satın almak", "kaufen", ""],
+  ["ödemek", "bezahlen", ""],
+  ["vermek", "geben", ""],
+  ["almak", "nehmen / bekommen", ""],
+  ["yapabilirim", "ich kann (es)", ""],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["ne", "was", ""],
+  ["nerede", "wo", ""],
+  ["ne zaman", "wann", ""],
+  ["kim", "wer", ""],
+  ["neden", "warum", ""],
+  ["nasıl", "wie", ""],
+  ["ne kadar", "wie viel", ""],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["bugün", "heute", ""],
+  ["yarın", "morgen", ""],
+  ["dün", "gestern", ""],
+  ["şimdi", "jetzt", ""],
+  ["sonra", "später", ""],
+  ["gün", "der Tag", ""],
+  ["hafta", "die Woche", ""],
+  ["zaman", "die Zeit", ""],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["bir", "eins", ""],
+  ["iki", "zwei", ""],
+  ["üç", "drei", ""],
+  ["dört", "vier", ""],
+  ["beş", "fünf", ""],
+  ["altı", "sechs", ""],
+  ["yedi", "sieben", ""],
+  ["sekiz", "acht", ""],
+  ["dokuz", "neun", ""],
+  ["on", "zehn", ""],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["adam", "der Mann", ""],
+  ["kadın", "die Frau", ""],
+  ["çocuk", "das Kind", ""],
+  ["arkadaş", "der Freund", ""],
+  ["aile", "die Familie", ""],
+  ["isim", "der Name", ""],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["ev", "das Haus", ""],
+  ["oda", "das Zimmer", ""],
+  ["sokak", "die Straße", ""],
+  ["şehir", "die Stadt", ""],
+  ["dükkan", "das Geschäft", ""],
+  ["restoran", "das Restaurant", ""],
+  ["otel", "das Hotel", ""],
+  ["istasyon", "der Bahnhof", ""],
+  ["tuvalet", "die Toilette", ""],
+  ["doktor", "der Arzt", ""],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["su", "das Wasser", ""],
+  ["kahve", "der Kaffee", ""],
+  ["ekmek", "das Brot", ""],
+  ["yiyecek", "das Essen / Lebensmittel", ""],
+  ["para", "das Geld", ""],
+  ["araba", "das Auto", ""],
+  ["cep telefonu", "das Handy", ""],
+  ["bilet", "die Fahrkarte", ""],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["büyük", "groß", ""],
+  ["küçük", "klein", ""],
+  ["sıcak", "heiß", ""],
+  ["soğuk", "kalt", ""],
+  ["yeni", "neu", ""],
+  ["eski", "alt", ""],
+  ["açık", "offen", ""],
+  ["kapalı", "geschlossen", ""],
+  ["sol", "links", ""],
+  ["sağ", "rechts", ""],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["burada", "hier", ""],
+  ["orada", "dort", ""],
+  ["ve", "und", ""],
+  ["daha", "mehr", ""],
+]

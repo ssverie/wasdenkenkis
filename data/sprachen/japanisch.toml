@@ -1,0 +1,158 @@
+# Japanisch – die 100 wichtigsten Wörter. Erzeugt aus input/japanisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Japanisch"
+sprache = "ja-JP"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["はい", "ja", "hai", "はい"],
+  ["いいえ", "nein", "iie", "いいえ"],
+  ["お願いします", "bitte", "onegaishimasu", "おねがいします"],
+  ["ありがとう", "danke", "arigatō", "ありがとう"],
+  ["こんにちは", "hallo / guten Tag", "konnichiwa", "こんにちは"],
+  ["さようなら", "auf Wiedersehen", "sayōnara", "さようなら"],
+  ["すみません", "Entschuldigung", "sumimasen", "すみません"],
+  ["大丈夫", "alles okay / kein Problem", "daijōbu", "だいじょうぶ"],
+  ["いい", "gut", "ii", "いい"],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["私", "ich", "watashi", "わたし"],
+  ["あなた", "du / Sie", "anata", "あなた"],
+  ["彼", "er", "kare", "かれ"],
+  ["彼女", "sie", "kanojo", "かのじょ"],
+  ["私たち", "wir", "watashitachi", "わたしたち"],
+  ["彼ら", "sie (Mehrzahl)", "karera", "かれら"],
+  ["私の", "mein", "watashi no", "わたしの"],
+  ["これ", "das hier", "kore", "これ"],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["です", "sein", "desu", "です"],
+  ["ある", "haben / es gibt", "aru", "ある"],
+  ["する", "machen", "suru", "する"],
+  ["行く", "gehen", "iku", "いく"],
+  ["来る", "kommen", "kuru", "くる"],
+  ["見る", "sehen", "miru", "みる"],
+  ["知る", "wissen", "shiru", "しる"],
+  ["欲しい", "(haben) wollen", "hoshii", "ほしい"],
+  ["好き", "mögen", "suki", "すき"],
+  ["要る", "brauchen", "iru", "いる"],
+  ["食べる", "essen", "taberu", "たべる"],
+  ["飲む", "trinken", "nomu", "のむ"],
+  ["話す", "sprechen", "hanasu", "はなす"],
+  ["分かる", "verstehen", "wakaru", "わかる"],
+  ["手伝う", "helfen", "tetsudau", "てつだう"],
+  ["買う", "kaufen", "kau", "かう"],
+  ["払う", "bezahlen", "harau", "はらう"],
+  ["あげる", "geben", "ageru", "あげる"],
+  ["取る", "nehmen", "toru", "とる"],
+  ["できる", "können", "dekiru", "できる"],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["何", "was", "nani", "なに"],
+  ["どこ", "wo", "doko", "どこ"],
+  ["いつ", "wann", "itsu", "いつ"],
+  ["誰", "wer", "dare", "だれ"],
+  ["なぜ", "warum", "naze", "なぜ"],
+  ["どう", "wie", "dō", "どう"],
+  ["いくら", "wie viel (kostet)", "ikura", "いくら"],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["今日", "heute", "kyō", "きょう"],
+  ["明日", "morgen", "ashita", "あした"],
+  ["昨日", "gestern", "kinō", "きのう"],
+  ["今", "jetzt", "ima", "いま"],
+  ["後で", "später", "ato de", "あとで"],
+  ["日", "Tag", "hi", "ひ"],
+  ["週", "Woche", "shū", "しゅう"],
+  ["時間", "Zeit", "jikan", "じかん"],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["一", "eins", "ichi", "いち"],
+  ["二", "zwei", "ni", "に"],
+  ["三", "drei", "san", "さん"],
+  ["四", "vier", "yon", "よん"],
+  ["五", "fünf", "go", "ご"],
+  ["六", "sechs", "roku", "ろく"],
+  ["七", "sieben", "nana", "なな"],
+  ["八", "acht", "hachi", "はち"],
+  ["九", "neun", "kyū", "きゅう"],
+  ["十", "zehn", "jū", "じゅう"],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["男の人", "Mann", "otoko no hito", "おとこのひと"],
+  ["女の人", "Frau", "onna no hito", "おんなのひと"],
+  ["子供", "Kind", "kodomo", "こども"],
+  ["友達", "Freund", "tomodachi", "ともだち"],
+  ["家族", "Familie", "kazoku", "かぞく"],
+  ["名前", "Name", "namae", "なまえ"],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["家", "Haus", "ie", "いえ"],
+  ["部屋", "Zimmer", "heya", "へや"],
+  ["道", "Straße / Weg", "michi", "みち"],
+  ["町", "Stadt", "machi", "まち"],
+  ["店", "Geschäft", "mise", "みせ"],
+  ["レストラン", "Restaurant", "resutoran", "レストラン"],
+  ["ホテル", "Hotel", "hoteru", "ホテル"],
+  ["駅", "Bahnhof", "eki", "えき"],
+  ["トイレ", "Toilette", "toire", "トイレ"],
+  ["医者", "Arzt", "isha", "いしゃ"],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["水", "Wasser", "mizu", "みず"],
+  ["コーヒー", "Kaffee", "kōhī", "コーヒー"],
+  ["パン", "Brot", "pan", "パン"],
+  ["ご飯", "Essen / Reis", "gohan", "ごはん"],
+  ["お金", "Geld", "okane", "おかね"],
+  ["車", "Auto", "kuruma", "くるま"],
+  ["電話", "Telefon", "denwa", "でんわ"],
+  ["切符", "Fahrkarte", "kippu", "きっぷ"],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["大きい", "groß", "ōkii", "おおきい"],
+  ["小さい", "klein", "chiisai", "ちいさい"],
+  ["暑い", "heiß (Wetter)", "atsui", "あつい"],
+  ["寒い", "kalt (Wetter)", "samui", "さむい"],
+  ["新しい", "neu", "atarashii", "あたらしい"],
+  ["古い", "alt (Dinge)", "furui", "ふるい"],
+  ["開いている", "offen", "aite iru", "あいている"],
+  ["閉まっている", "geschlossen", "shimatte iru", "しまっている"],
+  ["左", "links", "hidari", "ひだり"],
+  ["右", "rechts", "migi", "みぎ"],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["ここ", "hier", "koko", "ここ"],
+  ["そこ", "dort", "soko", "そこ"],
+  ["と", "und", "to", "と"],
+  ["もっと", "mehr", "motto", "もっと"],
+]

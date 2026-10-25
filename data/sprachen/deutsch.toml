@@ -1,0 +1,158 @@
+# Deutsch – die 100 wichtigsten Wörter. Erzeugt aus input/deutsch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Deutsch"
+sprache = "de-DE"
+
+[[gruppe]]
+name = "Basics"
+woerter = [
+  ["ja", "yes"],
+  ["nein", "no"],
+  ["bitte", "please"],
+  ["danke", "thank you"],
+  ["hallo", "hello"],
+  ["tschüss", "bye"],
+  ["Entschuldigung", "sorry / excuse me"],
+  ["kein Problem", "no problem"],
+  ["gut", "good"],
+]
+
+[[gruppe]]
+name = "People (pronouns)"
+woerter = [
+  ["ich", "I"],
+  ["du", "you (informal)"],
+  ["Sie", "you (formal)"],
+  ["er", "he"],
+  ["sie", "she"],
+  ["wir", "we"],
+  ["sie (Plural)", "they"],
+  ["mein", "my"],
+]
+
+[[gruppe]]
+name = "Verbs"
+woerter = [
+  ["sein", "to be"],
+  ["haben", "to have"],
+  ["machen", "to do / make"],
+  ["gehen", "to go"],
+  ["kommen", "to come"],
+  ["sehen", "to see"],
+  ["wissen", "to know"],
+  ["wollen", "to want"],
+  ["mögen", "to like"],
+  ["brauchen", "to need"],
+  ["essen", "to eat"],
+  ["trinken", "to drink"],
+  ["sprechen", "to speak"],
+  ["verstehen", "to understand"],
+  ["helfen", "to help"],
+  ["kaufen", "to buy"],
+  ["bezahlen", "to pay"],
+  ["geben", "to give"],
+  ["nehmen", "to take"],
+  ["können", "can"],
+]
+
+[[gruppe]]
+name = "Question words"
+woerter = [
+  ["was", "what"],
+  ["wo", "where"],
+  ["wann", "when"],
+  ["wer", "who"],
+  ["warum", "why"],
+  ["wie", "how"],
+  ["wie viel", "how much"],
+]
+
+[[gruppe]]
+name = "Time"
+woerter = [
+  ["heute", "today"],
+  ["morgen", "tomorrow"],
+  ["gestern", "yesterday"],
+  ["jetzt", "now"],
+  ["später", "later"],
+  ["der Tag", "day"],
+  ["die Woche", "week"],
+  ["die Zeit", "time"],
+]
+
+[[gruppe]]
+name = "Numbers"
+woerter = [
+  ["eins", "one"],
+  ["zwei", "two"],
+  ["drei", "three"],
+  ["vier", "four"],
+  ["fünf", "five"],
+  ["sechs", "six"],
+  ["sieben", "seven"],
+  ["acht", "eight"],
+  ["neun", "nine"],
+  ["zehn", "ten"],
+]
+
+[[gruppe]]
+name = "People"
+woerter = [
+  ["der Mann", "man"],
+  ["die Frau", "woman"],
+  ["das Kind", "child"],
+  ["der Freund", "friend"],
+  ["die Familie", "family"],
+  ["der Name", "name"],
+]
+
+[[gruppe]]
+name = "Places"
+woerter = [
+  ["das Haus", "house"],
+  ["das Zimmer", "room"],
+  ["die Straße", "street"],
+  ["die Stadt", "city"],
+  ["das Geschäft", "shop"],
+  ["das Restaurant", "restaurant"],
+  ["das Hotel", "hotel"],
+  ["der Bahnhof", "train station"],
+  ["die Toilette", "toilet"],
+  ["der Arzt", "doctor"],
+]
+
+[[gruppe]]
+name = "Things"
+woerter = [
+  ["das Wasser", "water"],
+  ["der Kaffee", "coffee"],
+  ["das Brot", "bread"],
+  ["das Essen", "food"],
+  ["das Geld", "money"],
+  ["das Auto", "car"],
+  ["das Handy", "mobile phone"],
+  ["die Fahrkarte", "ticket"],
+]
+
+[[gruppe]]
+name = "Adjectives"
+woerter = [
+  ["groß", "big"],
+  ["klein", "small"],
+  ["heiß", "hot"],
+  ["kalt", "cold"],
+  ["neu", "new"],
+  ["alt", "old"],
+  ["offen", "open"],
+  ["geschlossen", "closed"],
+  ["links", "left"],
+  ["rechts", "right"],
+]
+
+[[gruppe]]
+name = "Small words"
+woerter = [
+  ["hier", "here"],
+  ["dort", "there"],
+  ["und", "and"],
+  ["mehr", "more"],
+]

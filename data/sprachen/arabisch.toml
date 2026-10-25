@@ -1,0 +1,159 @@
+# Arabisch – die 100 wichtigsten Wörter. Erzeugt aus input/arabisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Arabisch"
+sprache = "ar-SA"
+rtl = true
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["نعم", "ja", "naʿam"],
+  ["لا", "nein", "lā"],
+  ["من فضلك", "bitte", "min faḍlak"],
+  ["شكرا", "danke", "shukran"],
+  ["مرحبا", "hallo", "marḥaban"],
+  ["مع السلامة", "auf Wiedersehen", "maʿa s-salāma"],
+  ["آسف", "Entschuldigung / es tut mir leid", "āsif"],
+  ["لا مشكلة", "kein Problem", "lā mushkila"],
+  ["جيد", "gut", "jayyid"],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["أنا", "ich", "anā"],
+  ["أنت", "du (zu einem Mann)", "anta"],
+  ["حضرتك", "Sie (höflich)", "ḥaḍratak"],
+  ["هو", "er", "huwa"],
+  ["هي", "sie", "hiya"],
+  ["نحن", "wir", "naḥnu"],
+  ["هم", "sie (Mehrzahl)", "hum"],
+  ["لي", "mein / gehört mir", "lī"],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["كان", "sein (er war)", "kāna"],
+  ["عندي", "ich habe", "ʿindī"],
+  ["عمل", "machen (er machte)", "ʿamila"],
+  ["ذهب", "gehen (er ging)", "dhahaba"],
+  ["جاء", "kommen (er kam)", "jāʾa"],
+  ["رأى", "sehen (er sah)", "raʾā"],
+  ["عرف", "wissen (er wusste)", "ʿarafa"],
+  ["أراد", "wollen (er wollte)", "arāda"],
+  ["أحب", "mögen / lieben (er mochte)", "aḥabba"],
+  ["احتاج", "brauchen (er brauchte)", "iḥtāja"],
+  ["أكل", "essen (er aß)", "akala"],
+  ["شرب", "trinken (er trank)", "shariba"],
+  ["تكلم", "sprechen (er sprach)", "takallama"],
+  ["فهم", "verstehen (er verstand)", "fahima"],
+  ["ساعد", "helfen (er half)", "sāʿada"],
+  ["اشترى", "kaufen (er kaufte)", "ishtarā"],
+  ["دفع", "bezahlen (er bezahlte)", "dafaʿa"],
+  ["أعطى", "geben (er gab)", "aʿṭā"],
+  ["أخذ", "nehmen (er nahm)", "akhadha"],
+  ["استطاع", "können (er konnte)", "istaṭāʿa"],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["ماذا", "was", "mādhā"],
+  ["أين", "wo", "ayna"],
+  ["متى", "wann", "matā"],
+  ["من", "wer", "man"],
+  ["لماذا", "warum", "limādhā"],
+  ["كيف", "wie", "kayfa"],
+  ["كم", "wie viel", "kam"],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["اليوم", "heute", "al-yawm"],
+  ["غدا", "morgen", "ghadan"],
+  ["أمس", "gestern", "ams"],
+  ["الآن", "jetzt", "al-ān"],
+  ["لاحقا", "später", "lāḥiqan"],
+  ["يوم", "der Tag", "yawm"],
+  ["أسبوع", "die Woche", "usbūʿ"],
+  ["وقت", "die Zeit", "waqt"],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["واحد", "eins", "wāḥid"],
+  ["اثنان", "zwei", "ithnān"],
+  ["ثلاثة", "drei", "thalātha"],
+  ["أربعة", "vier", "arbaʿa"],
+  ["خمسة", "fünf", "khamsa"],
+  ["ستة", "sechs", "sitta"],
+  ["سبعة", "sieben", "sabʿa"],
+  ["ثمانية", "acht", "thamāniya"],
+  ["تسعة", "neun", "tisʿa"],
+  ["عشرة", "zehn", "ʿashara"],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["رجل", "der Mann", "rajul"],
+  ["امرأة", "die Frau", "imraʾa"],
+  ["طفل", "das Kind", "ṭifl"],
+  ["صديق", "der Freund", "ṣadīq"],
+  ["عائلة", "die Familie", "ʿāʾila"],
+  ["اسم", "der Name", "ism"],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["بيت", "das Haus", "bayt"],
+  ["غرفة", "das Zimmer", "ghurfa"],
+  ["شارع", "die Straße", "shāriʿ"],
+  ["مدينة", "die Stadt", "madīna"],
+  ["محل", "das Geschäft", "maḥall"],
+  ["مطعم", "das Restaurant", "maṭʿam"],
+  ["فندق", "das Hotel", "funduq"],
+  ["محطة القطار", "der Bahnhof", "maḥaṭṭat al-qiṭār"],
+  ["حمام", "die Toilette / das Bad", "ḥammām"],
+  ["طبيب", "der Arzt", "ṭabīb"],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["ماء", "das Wasser", "māʾ"],
+  ["قهوة", "der Kaffee", "qahwa"],
+  ["خبز", "das Brot", "khubz"],
+  ["طعام", "das Essen", "ṭaʿām"],
+  ["مال", "das Geld", "māl"],
+  ["سيارة", "das Auto", "sayyāra"],
+  ["هاتف", "das Telefon", "hātif"],
+  ["تذكرة", "die Fahrkarte", "tadhkira"],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["كبير", "groß", "kabīr"],
+  ["صغير", "klein", "ṣaghīr"],
+  ["حار", "heiß", "ḥārr"],
+  ["بارد", "kalt", "bārid"],
+  ["جديد", "neu", "jadīd"],
+  ["قديم", "alt", "qadīm"],
+  ["مفتوح", "offen", "maftūḥ"],
+  ["مغلق", "geschlossen", "mughlaq"],
+  ["يسار", "links", "yasār"],
+  ["يمين", "rechts", "yamīn"],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["هنا", "hier", "hunā"],
+  ["هناك", "dort", "hunāka"],
+  ["و", "und", "wa"],
+  ["أكثر", "mehr", "akthar"],
+]

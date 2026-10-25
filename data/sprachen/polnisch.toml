@@ -1,0 +1,158 @@
+# Polnisch – die 100 wichtigsten Wörter. Erzeugt aus input/polnisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Polnisch"
+sprache = "pl-PL"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["tak", "ja", ""],
+  ["nie", "nein / nicht", ""],
+  ["proszę", "bitte / gern geschehen", ""],
+  ["dziękuję", "danke", ""],
+  ["cześć", "hallo / tschüss (vertraut)", ""],
+  ["do widzenia", "auf Wiedersehen", ""],
+  ["przepraszam", "Entschuldigung", ""],
+  ["nie ma za co", "gern geschehen", ""],
+  ["dobrze", "gut / okay", ""],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["ja", "ich", ""],
+  ["ty", "du", ""],
+  ["pan", "Sie (zu einem Mann; zur Frau: pani)", ""],
+  ["on", "er", ""],
+  ["ona", "sie", ""],
+  ["my", "wir", ""],
+  ["oni", "sie (Mehrzahl)", ""],
+  ["mój", "mein", ""],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["być", "sein", ""],
+  ["mieć", "haben", ""],
+  ["robić", "machen", ""],
+  ["iść", "gehen", ""],
+  ["przychodzić", "kommen", ""],
+  ["widzieć", "sehen", ""],
+  ["wiedzieć", "wissen", ""],
+  ["chcieć", "wollen", ""],
+  ["lubić", "mögen", ""],
+  ["potrzebować", "brauchen", ""],
+  ["jeść", "essen", ""],
+  ["pić", "trinken", ""],
+  ["mówić", "sprechen", ""],
+  ["rozumieć", "verstehen", ""],
+  ["pomagać", "helfen", ""],
+  ["kupować", "kaufen", ""],
+  ["płacić", "bezahlen", ""],
+  ["dawać", "geben", ""],
+  ["brać", "nehmen", ""],
+  ["móc", "können", ""],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["co", "was", ""],
+  ["gdzie", "wo", ""],
+  ["kiedy", "wann", ""],
+  ["kto", "wer", ""],
+  ["dlaczego", "warum", ""],
+  ["jak", "wie", ""],
+  ["ile", "wie viel", ""],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["dzisiaj", "heute", ""],
+  ["jutro", "morgen", ""],
+  ["wczoraj", "gestern", ""],
+  ["teraz", "jetzt", ""],
+  ["później", "später", ""],
+  ["dzień", "der Tag", ""],
+  ["tydzień", "die Woche", ""],
+  ["czas", "die Zeit", ""],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["jeden", "eins", ""],
+  ["dwa", "zwei", ""],
+  ["trzy", "drei", ""],
+  ["cztery", "vier", ""],
+  ["pięć", "fünf", ""],
+  ["sześć", "sechs", ""],
+  ["siedem", "sieben", ""],
+  ["osiem", "acht", ""],
+  ["dziewięć", "neun", ""],
+  ["dziesięć", "zehn", ""],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["mężczyzna", "der Mann", ""],
+  ["kobieta", "die Frau", ""],
+  ["dziecko", "das Kind", ""],
+  ["przyjaciel", "der Freund", ""],
+  ["rodzina", "die Familie", ""],
+  ["imię", "der (Vor-)Name", ""],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["dom", "das Haus", ""],
+  ["pokój", "das Zimmer", ""],
+  ["ulica", "die Straße", ""],
+  ["miasto", "die Stadt", ""],
+  ["sklep", "das Geschäft", ""],
+  ["restauracja", "das Restaurant", ""],
+  ["hotel", "das Hotel", ""],
+  ["dworzec", "der Bahnhof", ""],
+  ["toaleta", "die Toilette", ""],
+  ["lekarz", "der Arzt", ""],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["woda", "das Wasser", ""],
+  ["kawa", "der Kaffee", ""],
+  ["chleb", "das Brot", ""],
+  ["jedzenie", "das Essen", ""],
+  ["pieniądze", "das Geld", ""],
+  ["samochód", "das Auto", ""],
+  ["komórka", "das Handy", ""],
+  ["bilet", "die Fahrkarte", ""],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["duży", "groß", ""],
+  ["mały", "klein", ""],
+  ["gorący", "heiß", ""],
+  ["zimny", "kalt", ""],
+  ["nowy", "neu", ""],
+  ["stary", "alt", ""],
+  ["otwarte", "offen", ""],
+  ["zamknięte", "geschlossen", ""],
+  ["w lewo", "(nach) links", ""],
+  ["w prawo", "(nach) rechts", ""],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["tutaj", "hier", ""],
+  ["tam", "dort", ""],
+  ["i", "und", ""],
+  ["więcej", "mehr", ""],
+]

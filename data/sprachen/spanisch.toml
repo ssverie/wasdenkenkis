@@ -1,0 +1,158 @@
+# Spanisch – die 100 wichtigsten Wörter. Erzeugt aus input/spanisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Spanisch"
+sprache = "es-ES"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["sí", "ja"],
+  ["no", "nein"],
+  ["por favor", "bitte"],
+  ["gracias", "danke"],
+  ["hola", "hallo"],
+  ["adiós", "auf Wiedersehen"],
+  ["perdón", "Entschuldigung"],
+  ["de nada", "gern geschehen"],
+  ["bien", "gut"],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["yo", "ich"],
+  ["tú", "du"],
+  ["usted", "Sie (höflich)"],
+  ["él", "er"],
+  ["ella", "sie"],
+  ["nosotros", "wir"],
+  ["ellos", "sie (Mehrzahl)"],
+  ["mi", "mein"],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["ser", "sein (dauerhaft)"],
+  ["estar", "sein (Zustand, Ort)"],
+  ["tener", "haben"],
+  ["hacer", "machen"],
+  ["ir", "gehen"],
+  ["venir", "kommen"],
+  ["ver", "sehen"],
+  ["saber", "wissen"],
+  ["querer", "wollen"],
+  ["gustar", "gefallen / mögen"],
+  ["necesitar", "brauchen"],
+  ["comer", "essen"],
+  ["beber", "trinken"],
+  ["hablar", "sprechen"],
+  ["entender", "verstehen"],
+  ["ayudar", "helfen"],
+  ["comprar", "kaufen"],
+  ["pagar", "bezahlen"],
+  ["dar", "geben"],
+  ["poder", "können"],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["qué", "was"],
+  ["dónde", "wo"],
+  ["cuándo", "wann"],
+  ["quién", "wer"],
+  ["por qué", "warum"],
+  ["cómo", "wie"],
+  ["cuánto", "wie viel"],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["hoy", "heute"],
+  ["mañana", "morgen"],
+  ["ayer", "gestern"],
+  ["ahora", "jetzt"],
+  ["luego", "später"],
+  ["el día", "der Tag"],
+  ["la semana", "die Woche"],
+  ["el tiempo", "die Zeit / das Wetter"],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["uno", "eins"],
+  ["dos", "zwei"],
+  ["tres", "drei"],
+  ["cuatro", "vier"],
+  ["cinco", "fünf"],
+  ["seis", "sechs"],
+  ["siete", "sieben"],
+  ["ocho", "acht"],
+  ["nueve", "neun"],
+  ["diez", "zehn"],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["el hombre", "der Mann"],
+  ["la mujer", "die Frau"],
+  ["el niño", "das Kind"],
+  ["el amigo", "der Freund"],
+  ["la familia", "die Familie"],
+  ["el nombre", "der Name"],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["la casa", "das Haus"],
+  ["la habitación", "das Zimmer"],
+  ["la calle", "die Straße"],
+  ["la ciudad", "die Stadt"],
+  ["la tienda", "das Geschäft"],
+  ["el restaurante", "das Restaurant"],
+  ["el hotel", "das Hotel"],
+  ["la estación", "der Bahnhof"],
+  ["el baño", "die Toilette"],
+  ["el médico", "der Arzt"],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["el agua", "das Wasser"],
+  ["el café", "der Kaffee"],
+  ["el pan", "das Brot"],
+  ["la comida", "das Essen"],
+  ["el dinero", "das Geld"],
+  ["el coche", "das Auto"],
+  ["el móvil", "das Handy"],
+  ["el billete", "die Fahrkarte"],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["grande", "groß"],
+  ["pequeño", "klein"],
+  ["caliente", "heiß"],
+  ["frío", "kalt"],
+  ["nuevo", "neu"],
+  ["viejo", "alt"],
+  ["abierto", "offen"],
+  ["cerrado", "geschlossen"],
+  ["izquierda", "links"],
+  ["derecha", "rechts"],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["aquí", "hier"],
+  ["allí", "dort"],
+  ["y", "und"],
+  ["más", "mehr"],
+]

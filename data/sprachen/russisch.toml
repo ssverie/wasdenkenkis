@@ -1,0 +1,158 @@
+# Russisch – die 100 wichtigsten Wörter. Erzeugt aus input/russisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Russisch"
+sprache = "ru-RU"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["да", "ja", "da"],
+  ["нет", "nein / nicht", "njet"],
+  ["пожалуйста", "bitte / gern geschehen", "poshálujsta"],
+  ["спасибо", "danke", "spassíbo"],
+  ["привет", "hallo (vertraut)", "priwét"],
+  ["до свидания", "auf Wiedersehen", "do swidánija"],
+  ["извините", "Entschuldigung", "iswiníte"],
+  ["не за что", "gern geschehen", "né sa schto"],
+  ["хорошо", "gut / okay", "choroschó"],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["я", "ich", "ja"],
+  ["ты", "du (vertraut)", "ty"],
+  ["вы", "Sie / ihr", "wy"],
+  ["он", "er", "on"],
+  ["она", "sie", "oná"],
+  ["мы", "wir", "my"],
+  ["они", "sie (Mehrzahl)", "oní"],
+  ["мой", "mein", "moj"],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["быть", "sein", "byt'"],
+  ["у меня есть", "ich habe", "u menjá jest'"],
+  ["делать", "machen", "délat'"],
+  ["идти", "gehen", "idtí"],
+  ["приходить", "kommen", "prichodít'"],
+  ["видеть", "sehen", "wídet'"],
+  ["знать", "wissen", "snat'"],
+  ["хотеть", "wollen", "chotét'"],
+  ["любить", "mögen / lieben", "ljubít'"],
+  ["нужно", "brauchen (es ist nötig)", "núshno"],
+  ["есть", "essen (auch: es gibt)", "jest'"],
+  ["пить", "trinken", "pit'"],
+  ["говорить", "sprechen", "goworít'"],
+  ["понимать", "verstehen", "ponimát'"],
+  ["помогать", "helfen", "pomogát'"],
+  ["покупать", "kaufen", "pokupát'"],
+  ["платить", "bezahlen", "platít'"],
+  ["давать", "geben", "dawát'"],
+  ["брать", "nehmen", "brat'"],
+  ["мочь", "können", "motsch'"],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["что", "was", "schto"],
+  ["где", "wo", "gdje"],
+  ["когда", "wann", "kogdá"],
+  ["кто", "wer", "kto"],
+  ["почему", "warum", "potschemú"],
+  ["как", "wie", "kak"],
+  ["сколько", "wie viel", "skól'ko"],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["сегодня", "heute", "sewódnja"],
+  ["завтра", "morgen", "sáwtra"],
+  ["вчера", "gestern", "wtscherá"],
+  ["сейчас", "jetzt", "sejtschás"],
+  ["потом", "später", "potóm"],
+  ["день", "der Tag", "djen'"],
+  ["неделя", "die Woche", "nedélja"],
+  ["время", "die Zeit", "wrémja"],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["один", "eins", "odín"],
+  ["два", "zwei", "dwa"],
+  ["три", "drei", "tri"],
+  ["четыре", "vier", "tschetýre"],
+  ["пять", "fünf", "pjat'"],
+  ["шесть", "sechs", "schest'"],
+  ["семь", "sieben", "sem'"],
+  ["восемь", "acht", "wóssem'"],
+  ["девять", "neun", "déwjat'"],
+  ["десять", "zehn", "déssjat'"],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["мужчина", "der Mann", "muschtschína"],
+  ["женщина", "die Frau", "shénschtschina"],
+  ["ребёнок", "das Kind", "rebjónok"],
+  ["друг", "der Freund", "drug"],
+  ["семья", "die Familie", "sem'já"],
+  ["имя", "der (Vor-)Name", "ímja"],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["дом", "das Haus", "dom"],
+  ["комната", "das Zimmer", "kómnata"],
+  ["улица", "die Straße", "úliza"],
+  ["город", "die Stadt", "górod"],
+  ["магазин", "das Geschäft", "magasín"],
+  ["ресторан", "das Restaurant", "restorán"],
+  ["гостиница", "das Hotel", "gostíniza"],
+  ["вокзал", "der Bahnhof", "woksál"],
+  ["туалет", "die Toilette", "tualét"],
+  ["врач", "der Arzt", "wratsch"],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["вода", "das Wasser", "wodá"],
+  ["кофе", "der Kaffee", "kófe"],
+  ["хлеб", "das Brot", "chleb"],
+  ["еда", "das Essen", "jedá"],
+  ["деньги", "das Geld", "djén'gi"],
+  ["машина", "das Auto", "maschína"],
+  ["телефон", "das Handy", "telefón"],
+  ["билет", "die Fahrkarte", "bilét"],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["большой", "groß", "bol'schój"],
+  ["маленький", "klein", "málen'kij"],
+  ["горячий", "heiß", "gorjátschij"],
+  ["холодный", "kalt", "cholódnyj"],
+  ["новый", "neu", "nówyj"],
+  ["старый", "alt", "stáryj"],
+  ["открыто", "offen", "otkrýto"],
+  ["закрыто", "geschlossen", "sakrýto"],
+  ["налево", "links", "naléwo"],
+  ["направо", "rechts", "napráwo"],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["здесь", "hier", "sdjes'"],
+  ["там", "dort", "tam"],
+  ["и", "und", "i"],
+  ["больше", "mehr", "ból'sche"],
+]

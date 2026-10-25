@@ -1,7 +1,11 @@
-{{- /* Sprachseite (/sprachen/<sprache>/): Wörter aus data/sprachen/<daten>.toml als Knöpfe nach Gruppen.
-       Antippen spricht das Wort mit der Sprachausgabe des Browsers (assets/js/sprachen.js, ohne externe Dienste). */ -}}
+{{- /* Sprachseite (/sprachen/100/<sprache>/, /sprachen/1000/<sprache>/): Wörter aus data/<datenbereich>/<daten>.toml
+       als Knöpfe nach Gruppen. Antippen spricht das Wort mit der Sprachausgabe des Browsers (assets/js/sprachen.js,
+       ohne externe Dienste). Große Listen (1000 Wörter): Gruppen zum Aufklappen, Suche und „Alle auf/zu“ –
+       nach der Vorlage der Sprachen-Instanz. */ -}}
 {{ define "main" }}
-{{- $d := index hugo.Data.sprachen .Params.daten }}
+{{- $d := index (index hugo.Data (.Params.datenbereich | default "sprachen")) .Params.daten }}
+{{- $gesamt := 0 }}{{ range $d.gruppe }}{{ $gesamt = add $gesamt (len .woerter) }}{{ end }}
+{{- $gross := gt $gesamt 300 }}
 <article class="beitrag">
   <header class="seitenkopf">
     {{- with .Parent }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
@@ -11,21 +15,40 @@
   {{ partial "herkunft.html" . }}
   {{- with .Content }}<div class="inhalt">{{ . }}</div>{{ end }}
 
-  <div class="sprache" data-sprache="{{ $d.sprache }}" data-name="{{ $d.name }}">
+  <div class="sprache{{ if $gross }} sprache-gross{{ end }}" data-sprache="{{ $d.sprache }}" data-name="{{ $d.name }}">
     <div class="sprache-leiste">
+      {{- if $gross }}
+      <input type="search" id="sprache-suche" placeholder="Suchen (Deutsch oder {{ $d.name }}) …" autocomplete="off" aria-label="Wörter suchen">
+      <button type="button" id="sprache-alle-auf">Alle auf</button>
+      <button type="button" id="sprache-alle-zu">Alle zu</button>
+      {{- else }}
       <p class="meta">Auf ein Wort tippen, um es zu hören.</p>
+      {{- end }}
       <label class="sprache-langsam"><input type="checkbox" id="sprache-langsam"> langsam</label>
+      {{- if $gross }}<p class="meta sprache-treffer" id="sprache-treffer">{{ len $d.gruppe }} Gruppen, {{ $gesamt }} Wörter – Gruppe aufklappen, auf ein Wort tippen, um es zu hören.</p>{{ end }}
     </div>
     <p class="sprache-hinweis meta" hidden></p>
-    {{- range $d.gruppe }}
-    <h2>{{ .name }}</h2>
+    {{- range $i, $g := $d.gruppe }}
+    {{- if $gross }}
+    <details class="sprache-gruppe"{{ if eq $i 0 }} open{{ end }}>
+      <summary><span>{{ $g.name }}</span> <small>{{ len $g.woerter }} Wörter</small></summary>
+    {{- else }}
+    <h2>{{ $g.name }}</h2>
+    {{- end }}
     <div class="woerter">
-      {{- range .woerter }}
-      {{- /* [wort, deutsch] oder [wort, deutsch, umschrift] (Sprachen mit eigener Schrift, z. B. Thai) */}}
-      <button type="button" class="wort" data-wort="{{ index . 0 }}"><span lang="{{ $d.sprache }}">{{ index . 0 }}</span>
-        {{- if gt (len .) 2 }}<span class="umschrift">{{ index . 2 }}</span>{{ end }}<small>{{ index . 1 }}</small></button>
+      {{- range $g.woerter }}
+      {{- /* [wort, deutsch], [wort, deutsch, umschrift] (eigene Schrift, z. B. Thai, Chinesisch) oder
+             [wort, deutsch, umschrift, kana] (Japanisch: Kana-Lesung wird vorgelesen und steht unter Kanji) */}}
+      {{- $lesung := cond (gt (len .) 3) (index . 3) (index . 0) }}
+      {{- /* Umschrift ist bei Lateinschrift leer (z. B. Polnisch) und erscheint dann nicht; rtl = true (Arabisch) dreht nur das Wort */}}
+      <button type="button" class="wort" data-wort="{{ $lesung }}"><span lang="{{ $d.sprache }}"{{ if $d.rtl }} dir="rtl"{{ end }}>{{ index . 0 }}</span>
+        {{- if ne $lesung (index . 0) }}<span class="kana" lang="{{ $d.sprache }}">{{ $lesung }}</span>{{ end }}
+        {{- if and (gt (len .) 2) (index . 2) }}<span class="umschrift">{{ index . 2 }}</span>{{ end }}<small>{{ index . 1 }}</small></button>
       {{- end }}
     </div>
+    {{- if $gross }}
+    </details>
+    {{- end }}
     {{- end }}
   </div>
 </article>

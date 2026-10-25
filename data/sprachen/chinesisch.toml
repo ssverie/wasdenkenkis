@@ -1,0 +1,158 @@
+# Chinesisch – die 100 wichtigsten Wörter. Erzeugt aus input/chinesisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Chinesisch"
+sprache = "zh-CN"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["对", "ja / richtig", "duì"],
+  ["不", "nein / nicht", "bù"],
+  ["请", "bitte", "qǐng"],
+  ["谢谢", "danke", "xièxie"],
+  ["你好", "hallo", "nǐ hǎo"],
+  ["再见", "auf Wiedersehen", "zàijiàn"],
+  ["对不起", "Entschuldigung", "duìbuqǐ"],
+  ["没关系", "macht nichts", "méi guānxi"],
+  ["好", "gut", "hǎo"],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["我", "ich", "wǒ"],
+  ["你", "du", "nǐ"],
+  ["您", "Sie (höflich)", "nín"],
+  ["他", "er", "tā"],
+  ["她", "sie", "tā"],
+  ["我们", "wir", "wǒmen"],
+  ["他们", "sie (Mehrzahl)", "tāmen"],
+  ["我的", "mein", "wǒ de"],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["是", "sein", "shì"],
+  ["有", "haben", "yǒu"],
+  ["做", "machen", "zuò"],
+  ["去", "(hin)gehen", "qù"],
+  ["来", "kommen", "lái"],
+  ["看", "sehen", "kàn"],
+  ["知道", "wissen", "zhīdào"],
+  ["要", "wollen", "yào"],
+  ["喜欢", "mögen", "xǐhuan"],
+  ["需要", "brauchen", "xūyào"],
+  ["吃", "essen", "chī"],
+  ["喝", "trinken", "hē"],
+  ["说", "sprechen", "shuō"],
+  ["懂", "verstehen", "dǒng"],
+  ["帮", "helfen", "bāng"],
+  ["买", "kaufen", "mǎi"],
+  ["付钱", "bezahlen", "fù qián"],
+  ["给", "geben", "gěi"],
+  ["拿", "nehmen", "ná"],
+  ["能", "können", "néng"],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["什么", "was", "shénme"],
+  ["哪里", "wo", "nǎlǐ"],
+  ["什么时候", "wann", "shénme shíhou"],
+  ["谁", "wer", "shéi"],
+  ["为什么", "warum", "wèishénme"],
+  ["怎么", "wie", "zěnme"],
+  ["多少钱", "wie viel (kostet)", "duōshao qián"],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["今天", "heute", "jīntiān"],
+  ["明天", "morgen", "míngtiān"],
+  ["昨天", "gestern", "zuótiān"],
+  ["现在", "jetzt", "xiànzài"],
+  ["以后", "später", "yǐhòu"],
+  ["天", "Tag", "tiān"],
+  ["星期", "Woche", "xīngqī"],
+  ["时间", "Zeit", "shíjiān"],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["一", "eins", "yī"],
+  ["二", "zwei", "èr"],
+  ["三", "drei", "sān"],
+  ["四", "vier", "sì"],
+  ["五", "fünf", "wǔ"],
+  ["六", "sechs", "liù"],
+  ["七", "sieben", "qī"],
+  ["八", "acht", "bā"],
+  ["九", "neun", "jiǔ"],
+  ["十", "zehn", "shí"],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["男人", "Mann", "nánrén"],
+  ["女人", "Frau", "nǚrén"],
+  ["孩子", "Kind", "háizi"],
+  ["朋友", "Freund", "péngyou"],
+  ["家人", "Familie", "jiārén"],
+  ["名字", "Name", "míngzi"],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["房子", "Haus", "fángzi"],
+  ["房间", "Zimmer", "fángjiān"],
+  ["街", "Straße", "jiē"],
+  ["城市", "Stadt", "chéngshì"],
+  ["商店", "Geschäft", "shāngdiàn"],
+  ["餐厅", "Restaurant", "cāntīng"],
+  ["酒店", "Hotel", "jiǔdiàn"],
+  ["火车站", "Bahnhof", "huǒchēzhàn"],
+  ["厕所", "Toilette", "cèsuǒ"],
+  ["医生", "Arzt", "yīshēng"],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["水", "Wasser", "shuǐ"],
+  ["咖啡", "Kaffee", "kāfēi"],
+  ["面包", "Brot", "miànbāo"],
+  ["饭", "Essen / Reis", "fàn"],
+  ["钱", "Geld", "qián"],
+  ["车", "Auto", "chē"],
+  ["手机", "Handy", "shǒujī"],
+  ["票", "Fahrkarte", "piào"],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["大", "groß", "dà"],
+  ["小", "klein", "xiǎo"],
+  ["热", "heiß", "rè"],
+  ["冷", "kalt", "lěng"],
+  ["新", "neu", "xīn"],
+  ["旧", "alt (Dinge)", "jiù"],
+  ["开", "offen", "kāi"],
+  ["关", "geschlossen", "guān"],
+  ["左", "links", "zuǒ"],
+  ["右", "rechts", "yòu"],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["这里", "hier", "zhèlǐ"],
+  ["那里", "dort", "nàlǐ"],
+  ["和", "und", "hé"],
+  ["也", "auch", "yě"],
+]

@@ -1,8 +1,8 @@
 +++
-title = "Englisch"
-description = "Die 100 wichtigsten Wörter auf Englisch – zum Antippen und Anhören."
-date = 2026-10-24T15:35:21+02:00
-daten = "englisch"
+title = "Indonesisch"
+description = "Die 100 wichtigsten Wörter auf Indonesisch – zum Antippen und Anhören."
+date = 2026-10-25T11:55:35+01:00
+daten = "indonesisch"
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"

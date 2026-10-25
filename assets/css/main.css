@@ -475,7 +475,20 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .stuecke .stueck-links .meta { display: inline; }
 .musik-status { margin-top: 1rem; }
 /* Sprachen mit eigener Schrift (Thai): Wort größer, Umschrift darunter */
-.wort span[lang^="th"] { font-size: 1.45rem; line-height: 1.5; }
+.wort span[lang^="th"], .wort span[lang^="zh"], .wort span[lang^="ja"]:not(.kana), .wort span[lang^="ar"], .wort span[lang^="hi"], .wort span[lang^="ko"] { font-size: 1.45rem; line-height: 1.5; }
+.wort span[dir="rtl"] { display: block; text-align: right; }
+.wort .kana { display: block; font-size: .95rem; color: var(--text-leise); }
 .wort .umschrift { display: block; font-size: .85rem; color: var(--akzent); }
 /* Links: Reichweite der YouTube-Kanäle (Größenklasse) */
 .reichweite { display: inline-block; margin-left: .4rem; padding: 0 .45rem; border-radius: 999px; background: var(--akzent-leise); color: var(--akzent); font-size: .8rem; }
+/* Sprachen, große Listen (1000 Wörter): Leiste mit Suche bleibt oben, Gruppen zum Aufklappen */
+.sprache-gross .sprache-leiste { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: .6rem 0; border-bottom: 1px solid var(--linie); }
+#sprache-suche { flex: 1 1 14rem; font: inherit; padding: .5rem .7rem; border: 1px solid var(--linie); border-radius: var(--radius); background: var(--fläche); color: var(--text); }
+.sprache-leiste button { font: inherit; font-size: .95rem; padding: .45rem .8rem; border: 1px solid var(--linie); border-radius: var(--radius); background: var(--fläche); color: var(--text); cursor: pointer; }
+.sprache-leiste button:hover { border-color: var(--akzent); }
+.sprache-treffer { flex-basis: 100%; margin: .2rem 0 0; }
+.sprache-gruppe { margin: .7rem 0; border: 1px solid var(--linie); border-radius: var(--radius); background: var(--fläche); }
+.sprache-gruppe > summary { cursor: pointer; padding: .7rem .9rem; font-weight: 600; display: flex; justify-content: space-between; gap: 1rem; }
+.sprache-gruppe > summary small { font-weight: 400; color: var(--text-leise); }
+.sprache-gruppe .woerter { padding: 0 .7rem .8rem; }
+.wort[hidden], .sprache-gruppe[hidden] { display: none; }

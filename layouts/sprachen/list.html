@@ -1,12 +1,31 @@
-{{- /* Sprachen (/sprachen/): je Sprache eine Kachel mit Anzahl der Wörter (aus data/sprachen/<daten>.toml), alphabetisch */ -}}
+{{- /* Sprachen (/sprachen/): Kacheln „100 Wörter“ und „1000 Wörter“ (Unterseiten content/sprachen/100/ und /1000/).
+       Bereichsseite: je Sprache eine Kachel mit Anzahl der Wörter, alphabetisch. Die Wörter stehen in
+       data/<datenbereich>/<daten>.toml – datenbereich im Front-Matter der Sprachseite, Standard „sprachen“ (100 Wörter). */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
+  {{- if ne .Parent.Section "" }}{{ with .Parent }}{{ if eq .Section "sprachen" }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}{{ end }}
   <h1>{{ .Title }}</h1>
+  {{- if .Parent.Section }}{{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}{{ end }}
   {{ .Content }}
 </header>
+{{- with .Sections.ByWeight }}
 <ul class="karten">
-  {{- range .RegularPages.ByTitle }}
-  {{- $d := index hugo.Data.sprachen .Params.daten }}
+  {{- range . }}
+  {{- $n := len .RegularPages }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .Title }}</strong>
+      {{- with .Description }}<span>{{ . }}</span>{{ end }}
+      <small>{{ if $n }}{{ $n }} {{ cond (eq $n 1) "Sprache" "Sprachen" }}{{ else }}folgt{{ end }}</small>
+    </a>
+  </li>
+  {{- end }}
+</ul>
+{{- else }}
+  {{- with .RegularPages.ByTitle }}
+<ul class="karten">
+  {{- range . }}
+  {{- $d := index (index hugo.Data (.Params.datenbereich | default "sprachen")) .Params.daten }}
   {{- $n := 0 }}{{ range $d.gruppe }}{{ $n = add $n (len .woerter) }}{{ end }}
   <li>
     <a class="karte" href="{{ .RelPermalink }}">
@@ -17,4 +36,8 @@
   </li>
   {{- end }}
 </ul>
+  {{- else }}
+<p class="meta">Die Sprachen folgen.</p>
+  {{- end }}
+{{- end }}
 {{ end }}

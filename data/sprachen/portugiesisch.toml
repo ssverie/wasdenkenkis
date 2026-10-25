@@ -1,0 +1,158 @@
+# Portugiesisch – die 100 wichtigsten Wörter. Erzeugt aus input/portugiesisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Portugiesisch"
+sprache = "pt-BR"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["sim", "ja", ""],
+  ["não", "nein / nicht", ""],
+  ["por favor", "bitte", ""],
+  ["obrigado", "danke (als Mann; Frauen: obrigada)", ""],
+  ["olá", "hallo", ""],
+  ["tchau", "tschüss / auf Wiedersehen", ""],
+  ["desculpe", "Entschuldigung", ""],
+  ["de nada", "gern geschehen", ""],
+  ["bom", "gut", ""],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["eu", "ich", ""],
+  ["você", "du / Sie (Brasilien)", ""],
+  ["o senhor", "Sie (höflich, zu einem Mann)", ""],
+  ["ele", "er", ""],
+  ["ela", "sie", ""],
+  ["nós", "wir", ""],
+  ["eles", "sie (Mehrzahl)", ""],
+  ["meu", "mein", ""],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["ser", "sein (dauerhaft)", ""],
+  ["ter", "haben", ""],
+  ["fazer", "machen", ""],
+  ["ir", "gehen", ""],
+  ["vir", "kommen", ""],
+  ["ver", "sehen", ""],
+  ["saber", "wissen", ""],
+  ["querer", "wollen", ""],
+  ["gostar", "mögen", ""],
+  ["precisar", "brauchen", ""],
+  ["comer", "essen", ""],
+  ["beber", "trinken", ""],
+  ["falar", "sprechen", ""],
+  ["entender", "verstehen", ""],
+  ["ajudar", "helfen", ""],
+  ["comprar", "kaufen", ""],
+  ["pagar", "bezahlen", ""],
+  ["dar", "geben", ""],
+  ["pegar", "nehmen", ""],
+  ["poder", "können", ""],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["o que", "was", ""],
+  ["onde", "wo", ""],
+  ["quando", "wann", ""],
+  ["quem", "wer", ""],
+  ["por que", "warum", ""],
+  ["como", "wie", ""],
+  ["quanto", "wie viel", ""],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["hoje", "heute", ""],
+  ["amanhã", "morgen", ""],
+  ["ontem", "gestern", ""],
+  ["agora", "jetzt", ""],
+  ["depois", "später", ""],
+  ["o dia", "der Tag", ""],
+  ["a semana", "die Woche", ""],
+  ["o tempo", "die Zeit / das Wetter", ""],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["um", "eins", ""],
+  ["dois", "zwei", ""],
+  ["três", "drei", ""],
+  ["quatro", "vier", ""],
+  ["cinco", "fünf", ""],
+  ["seis", "sechs", ""],
+  ["sete", "sieben", ""],
+  ["oito", "acht", ""],
+  ["nove", "neun", ""],
+  ["dez", "zehn", ""],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["o homem", "der Mann", ""],
+  ["a mulher", "die Frau", ""],
+  ["a criança", "das Kind", ""],
+  ["o amigo", "der Freund", ""],
+  ["a família", "die Familie", ""],
+  ["o nome", "der Name", ""],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["a casa", "das Haus", ""],
+  ["o quarto", "das Zimmer", ""],
+  ["a rua", "die Straße", ""],
+  ["a cidade", "die Stadt", ""],
+  ["a loja", "das Geschäft", ""],
+  ["o restaurante", "das Restaurant", ""],
+  ["o hotel", "das Hotel", ""],
+  ["a estação", "der Bahnhof", ""],
+  ["o banheiro", "die Toilette", ""],
+  ["o médico", "der Arzt", ""],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["a água", "das Wasser", ""],
+  ["o café", "der Kaffee", ""],
+  ["o pão", "das Brot", ""],
+  ["a comida", "das Essen", ""],
+  ["o dinheiro", "das Geld", ""],
+  ["o carro", "das Auto", ""],
+  ["o celular", "das Handy", ""],
+  ["a passagem", "die Fahrkarte", ""],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["grande", "groß", ""],
+  ["pequeno", "klein", ""],
+  ["quente", "heiß", ""],
+  ["frio", "kalt", ""],
+  ["novo", "neu", ""],
+  ["velho", "alt", ""],
+  ["aberto", "offen", ""],
+  ["fechado", "geschlossen", ""],
+  ["esquerda", "links", ""],
+  ["direita", "rechts", ""],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["aqui", "hier", ""],
+  ["ali", "dort", ""],
+  ["e", "und", ""],
+  ["mais", "mehr", ""],
+]

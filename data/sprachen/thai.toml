@@ -7,7 +7,7 @@ name = "Grundlagen"
 woerter = [
   ["ใช่", "ja", "châi"],
   ["ไม่", "nein / nicht", "mâi"],
-  ["ครับ", "Höflichkeitswort (Mann, ans Satzende)", "khráp"],
+  ["ครับ / ค่ะ", "Höflichkeitswort am Satzende (Mann / Frau; Frau bei Fragen: คะ khá)", "khráp / khâ"],
   ["ขอบคุณ", "danke", "khàwp-khun"],
   ["สวัสดี", "hallo / tschüss", "sà-wàt-dii"],
   ["ลาก่อน", "auf Wiedersehen", "laa-gàwn"],

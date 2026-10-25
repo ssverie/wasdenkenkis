@@ -11,7 +11,7 @@
     {{- /* Listen aus data/: alle Textfelder der Einträge */}}
     {{- $liste := slice }}
     {{- with .Params.daten }}
-      {{- if eq $p.Section "sprachen" }}{{ with index hugo.Data.sprachen . }}{{ $liste = .gruppe }}{{ end }}
+      {{- if eq $p.Section "sprachen" }}{{ with index (index hugo.Data ($p.Params.datenbereich | default "sprachen")) . }}{{ $liste = .gruppe }}{{ end }}
       {{- else }}{{ with index hugo.Data . }}{{ $liste = index . ($p.Params.eintrag | default "buch") }}{{ end }}{{ end }}
     {{- end }}
     {{- /* Links: nur Seiten ohne Unterseiten nehmen ihre Einträge mit (kategorie, ggf. thema), Kachelseiten keine */}}

@@ -1,0 +1,158 @@
+# Hindi – die 100 wichtigsten Wörter. Erzeugt aus input/hindi-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Hindi"
+sprache = "hi-IN"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["हाँ", "ja", "hā̃"],
+  ["नहीं", "nein / nicht", "nahī̃"],
+  ["कृपया", "bitte", "kripayā"],
+  ["धन्यवाद", "danke", "dhanyavād"],
+  ["नमस्ते", "hallo / tschüss", "namaste"],
+  ["फिर मिलेंगे", "bis bald", "phir milenge"],
+  ["माफ़ कीजिए", "Entschuldigung", "māf kījie"],
+  ["कोई बात नहीं", "macht nichts", "koī bāt nahī̃"],
+  ["अच्छा", "gut / okay", "acchā"],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["मैं", "ich", "mãĩ"],
+  ["तुम", "du (vertraut)", "tum"],
+  ["आप", "Sie (höflich)", "āp"],
+  ["वह", "er / sie (dort)", "vah"],
+  ["यह", "dies / er, sie (hier)", "yah"],
+  ["हम", "wir", "ham"],
+  ["वे", "sie (Mehrzahl)", "ve"],
+  ["मेरा", "mein", "merā"],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["होना", "sein", "honā"],
+  ["के पास होना", "haben (wörtl. „bei jemandem sein“)", "ke pās honā"],
+  ["करना", "machen", "karnā"],
+  ["जाना", "gehen", "jānā"],
+  ["आना", "kommen", "ānā"],
+  ["देखना", "sehen", "dekhnā"],
+  ["जानना", "wissen", "jānnā"],
+  ["चाहना", "wollen", "cāhnā"],
+  ["पसंद करना", "mögen", "pasand karnā"],
+  ["ज़रूरत होना", "brauchen (Bedarf haben)", "zarūrat honā"],
+  ["खाना", "essen (auch: das Essen)", "khānā"],
+  ["पीना", "trinken", "pīnā"],
+  ["बोलना", "sprechen", "bolnā"],
+  ["समझना", "verstehen", "samajhnā"],
+  ["मदद करना", "helfen", "madad karnā"],
+  ["ख़रीदना", "kaufen", "kharīdnā"],
+  ["पैसे देना", "bezahlen (Geld geben)", "paise denā"],
+  ["देना", "geben", "denā"],
+  ["लेना", "nehmen", "lenā"],
+  ["सकना", "können", "saknā"],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["क्या", "was", "kyā"],
+  ["कहाँ", "wo", "kahā̃"],
+  ["कब", "wann", "kab"],
+  ["कौन", "wer", "kaun"],
+  ["क्यों", "warum", "kyõ"],
+  ["कैसे", "wie", "kaise"],
+  ["कितना", "wie viel", "kitnā"],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["आज", "heute", "āj"],
+  ["कल", "morgen (auch: gestern!)", "kal"],
+  ["परसों", "übermorgen / vorgestern", "parsõ"],
+  ["अभी", "jetzt", "abhī"],
+  ["बाद में", "später", "bād mẽ"],
+  ["दिन", "der Tag", "din"],
+  ["हफ़्ता", "die Woche", "haftā"],
+  ["समय", "die Zeit", "samay"],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["एक", "eins", "ek"],
+  ["दो", "zwei", "do"],
+  ["तीन", "drei", "tīn"],
+  ["चार", "vier", "cār"],
+  ["पाँच", "fünf", "pā̃c"],
+  ["छह", "sechs", "chah"],
+  ["सात", "sieben", "sāt"],
+  ["आठ", "acht", "āṭh"],
+  ["नौ", "neun", "nau"],
+  ["दस", "zehn", "das"],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["आदमी", "der Mann", "ādmī"],
+  ["औरत", "die Frau", "aurat"],
+  ["बच्चा", "das Kind", "baccā"],
+  ["दोस्त", "der Freund", "dost"],
+  ["परिवार", "die Familie", "parivār"],
+  ["नाम", "der Name", "nām"],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["घर", "das Haus / Zuhause", "ghar"],
+  ["कमरा", "das Zimmer", "kamrā"],
+  ["सड़क", "die Straße", "saṛak"],
+  ["शहर", "die Stadt", "śahar"],
+  ["दुकान", "das Geschäft", "dukān"],
+  ["रेस्टोरेंट", "das Restaurant", "resṭoranṭ"],
+  ["होटल", "das Hotel", "hoṭal"],
+  ["रेलवे स्टेशन", "der Bahnhof", "relve sṭeśan"],
+  ["शौचालय", "die Toilette", "śaucālay"],
+  ["डॉक्टर", "der Arzt", "ḍôkṭar"],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["पानी", "das Wasser", "pānī"],
+  ["कॉफ़ी", "der Kaffee", "kôfī"],
+  ["रोटी", "das Brot (Fladenbrot)", "roṭī"],
+  ["भोजन", "das Essen", "bhojan"],
+  ["पैसा", "das Geld", "paisā"],
+  ["गाड़ी", "das Auto / der Wagen", "gāṛī"],
+  ["फ़ोन", "das Handy", "fon"],
+  ["टिकट", "die Fahrkarte", "ṭikaṭ"],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["बड़ा", "groß", "baṛā"],
+  ["छोटा", "klein", "choṭā"],
+  ["गरम", "heiß", "garam"],
+  ["ठंडा", "kalt", "ṭhaṇḍā"],
+  ["नया", "neu", "nayā"],
+  ["पुराना", "alt", "purānā"],
+  ["खुला", "offen", "khulā"],
+  ["बंद", "geschlossen", "band"],
+  ["बाएँ", "links", "bāẽ"],
+  ["दाएँ", "rechts", "dāẽ"],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["यहाँ", "hier", "yahā̃"],
+  ["वहाँ", "dort", "vahā̃"],
+  ["और", "und", "aur"],
+  ["ज़्यादा", "mehr", "zyādā"],
+]

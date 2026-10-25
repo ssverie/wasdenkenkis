@@ -1,0 +1,158 @@
+# Französisch – die 100 wichtigsten Wörter. Erzeugt aus input/franzoesisch-100.html mit skripte/sprache-einlesen.pl; nicht von Hand ändern.
+name = "Französisch"
+sprache = "fr-FR"
+
+[[gruppe]]
+name = "Grundlagen"
+woerter = [
+  ["oui", "ja"],
+  ["non", "nein"],
+  ["s'il vous plaît", "bitte"],
+  ["merci", "danke"],
+  ["bonjour", "hallo / guten Tag"],
+  ["au revoir", "auf Wiedersehen"],
+  ["pardon", "Entschuldigung"],
+  ["de rien", "gern geschehen"],
+  ["bien", "gut"],
+]
+
+[[gruppe]]
+name = "Personen"
+woerter = [
+  ["je", "ich"],
+  ["tu", "du"],
+  ["vous", "Sie / ihr"],
+  ["il", "er"],
+  ["elle", "sie"],
+  ["nous", "wir"],
+  ["ils", "sie (Mehrzahl)"],
+  ["mon", "mein"],
+]
+
+[[gruppe]]
+name = "Verben"
+woerter = [
+  ["être", "sein"],
+  ["avoir", "haben"],
+  ["faire", "machen"],
+  ["aller", "gehen"],
+  ["venir", "kommen"],
+  ["voir", "sehen"],
+  ["savoir", "wissen"],
+  ["vouloir", "wollen"],
+  ["aimer", "mögen / lieben"],
+  ["avoir besoin", "brauchen"],
+  ["manger", "essen"],
+  ["boire", "trinken"],
+  ["parler", "sprechen"],
+  ["comprendre", "verstehen"],
+  ["aider", "helfen"],
+  ["acheter", "kaufen"],
+  ["payer", "bezahlen"],
+  ["donner", "geben"],
+  ["prendre", "nehmen"],
+  ["pouvoir", "können"],
+]
+
+[[gruppe]]
+name = "Fragewörter"
+woerter = [
+  ["quoi", "was"],
+  ["où", "wo"],
+  ["quand", "wann"],
+  ["qui", "wer"],
+  ["pourquoi", "warum"],
+  ["comment", "wie"],
+  ["combien", "wie viel"],
+]
+
+[[gruppe]]
+name = "Zeit"
+woerter = [
+  ["aujourd'hui", "heute"],
+  ["demain", "morgen"],
+  ["hier", "gestern"],
+  ["maintenant", "jetzt"],
+  ["plus tard", "später"],
+  ["le jour", "der Tag"],
+  ["la semaine", "die Woche"],
+  ["le temps", "die Zeit / das Wetter"],
+]
+
+[[gruppe]]
+name = "Zahlen"
+woerter = [
+  ["un", "eins"],
+  ["deux", "zwei"],
+  ["trois", "drei"],
+  ["quatre", "vier"],
+  ["cinq", "fünf"],
+  ["six", "sechs"],
+  ["sept", "sieben"],
+  ["huit", "acht"],
+  ["neuf", "neun"],
+  ["dix", "zehn"],
+]
+
+[[gruppe]]
+name = "Menschen"
+woerter = [
+  ["l'homme", "der Mann"],
+  ["la femme", "die Frau"],
+  ["l'enfant", "das Kind"],
+  ["l'ami", "der Freund"],
+  ["la famille", "die Familie"],
+  ["le nom", "der Name"],
+]
+
+[[gruppe]]
+name = "Orte"
+woerter = [
+  ["la maison", "das Haus"],
+  ["la chambre", "das Zimmer"],
+  ["la rue", "die Straße"],
+  ["la ville", "die Stadt"],
+  ["le magasin", "das Geschäft"],
+  ["le restaurant", "das Restaurant"],
+  ["l'hôtel", "das Hotel"],
+  ["la gare", "der Bahnhof"],
+  ["les toilettes", "die Toilette"],
+  ["le médecin", "der Arzt"],
+]
+
+[[gruppe]]
+name = "Dinge"
+woerter = [
+  ["l'eau", "das Wasser"],
+  ["le café", "der Kaffee"],
+  ["le pain", "das Brot"],
+  ["la nourriture", "das Essen"],
+  ["l'argent", "das Geld"],
+  ["la voiture", "das Auto"],
+  ["le portable", "das Handy"],
+  ["le billet", "die Fahrkarte"],
+]
+
+[[gruppe]]
+name = "Eigenschaften"
+woerter = [
+  ["grand", "groß"],
+  ["petit", "klein"],
+  ["chaud", "heiß"],
+  ["froid", "kalt"],
+  ["nouveau", "neu"],
+  ["vieux", "alt"],
+  ["ouvert", "offen"],
+  ["fermé", "geschlossen"],
+  ["à gauche", "links"],
+  ["à droite", "rechts"],
+]
+
+[[gruppe]]
+name = "Kleine Wörter"
+woerter = [
+  ["ici", "hier"],
+  ["là-bas", "dort"],
+  ["et", "und"],
+  ["plus", "mehr"],
+]
