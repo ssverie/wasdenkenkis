@@ -3,8 +3,9 @@
 kategorien = ["Paper & Forschung", "KI-Sicherheit", "Plattformen", "YouTube-Kanäle"]
 
 # Ein Eintrag je Link. text = Kommentar von Claude (kurz, sachlich).
-# Jede Kategorie hat eine eigene Seite content/links/<schluessel>/_index.md mit kategorie = "…" (Kachel auf /links/).
-# YouTube-Kanäle zusätzlich: thema = allgemein | ki | wissen (Gruppen auf der Seite), sprache = de | en,
+# Jede Kategorie hat eine eigene Seite content/links/<schluessel>/_index.md mit kategorie = "…" (Kachel auf /links/);
+# Ausnahme YouTube-Kanäle: Seiten in content/kanaele/ (Adresse /podcasts/kanaele/, Kachel auf der Podcast-Seite).
+# YouTube-Kanäle zusätzlich: thema = allgemein | ki | wissen | politik (Gruppen auf der Seite), sprache = de | en,
 # abonnenten (Zahl laut Kanalseite) und stand (Datum der Zahl); daraus die Reichweite: unter 100.000, 100.000 bis 1 Mio., über 1 Mio.
 
 [[eintrag]]
@@ -145,3 +146,17 @@ text = "Ursprünglich ein Motivationskanal, zeigt er seit einigen Wochen vor all
   [[eintrag.unterlinks]]
   name = "Original: The Diary Of A CEO"
   url = "https://www.youtube.com/@TheDiaryOfACEO/videos"
+
+[[eintrag]]
+name = "Patrik Baab – Gegen den Strom"
+url = "https://www.youtube.com/@PatrikBaab-Official/videos"
+kategorie = "YouTube-Kanäle"
+thema = "politik"
+sprache = "de"
+abonnenten = 100000
+stand = 2026-10-25
+seit = 2026-10-25
+text = "Das Interview- und Analyseformat „Gegen den Strom“ des Journalisten Patrik Baab: lange Gespräche über Geopolitik, Krieg und Frieden, Russland und Eurasien sowie Medienkritik, mit Gästen aus Militär, Diplomatie, Wissenschaft und Journalismus. Der Kanal versteht sich nach eigener Beschreibung als Gegenstimme zu den etablierten Medien; in der hier verlinkten Folge bleiben die Thesen des Gastes ohne Widerspruch oder Einordnung."
+  [[eintrag.unterlinks]]
+  name = "Folge mit Andrej Fursow auf dieser Seite"
+  url = "/podcasts/gegen-den-strom-andrej-fursow/"

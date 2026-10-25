@@ -1,22 +1,31 @@
+{{- /* Podcasts (/podcasts/): seit 2026-10-25 nur Kacheln (Sven) – links „Kanäle“ (/podcasts/kanaele/, Inhalt content/kanaele/,
+       Daten in data/links.toml), rechts „Folgen“ (/podcasts/folgen/, Inhalt content/podcast-folgen/). Die Folgenseiten selbst
+       bleiben Begriffe dieser Taxonomie unter /podcasts/<schluessel>/. */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>
 <ul class="karten">
-  {{- range sort .Pages "Params.erschienen" "desc" }}   {{- /* neuestes oben, nach Erscheinungsdatum (Svens Regel für alle Medien) */}}
-  {{- $n := len .Pages }}
+  {{- with site.GetPage "/kanaele" }}
+  {{- $n := len (where hugo.Data.links.eintrag "kategorie" .Params.kategorie) }}
   <li>
-    {{- /* Sendungsname am Titelanfang führt zum YouTube-Kanal (sendung_youtube), alles andere zur Folgenseite (Sven). Die Folge ist ein
-           „gestreckter“ Link über die ganze Karte, der Kanal-Link liegt darüber – verschachtelte Links sind in HTML nicht erlaubt. */}}
-    {{- $sendung := .Params.sendung }}{{ $titel := .Title }}
-    <div class="karte karte-podcast">
-      <strong>
-        {{- if and .Params.sendung_youtube $sendung (strings.HasPrefix $titel $sendung) }}<a class="sendung-link" href="{{ .Params.sendung_youtube }}" rel="noopener">{{ $sendung }}</a> {{ $titel = strings.TrimSpace (strings.TrimPrefix $sendung $titel) }}{{ end }}
-        <a class="folge-link" href="{{ .RelPermalink }}">{{ $titel }}</a></strong>
-      <span>{{ with .Params.gast }}Gast: {{ . }}{{ end }}{{ with .Params.erschienen }} · {{ . | time.Format ":date_medium" }}{{ end }}</span>
-      <small>{{ with .Params.laenge }}{{ . }} · {{ end }}{{ $n }} {{ cond (eq $n 1) "Text" "Texte" }} von KIs</small>
-    </div>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .Title }}</strong>
+      {{- with .Description }}<span>{{ . }}</span>{{ end }}
+      <small>{{ $n }} {{ cond (eq $n 1) "Kanal" "Kanäle" }}</small>
+    </a>
+  </li>
+  {{- end }}
+  {{- with site.GetPage "/podcast-folgen" }}
+  {{- $folgen := $.Pages }}{{ $n := len $folgen }}
+  {{- $texte := 0 }}{{ range $folgen }}{{ $texte = add $texte (len .Pages) }}{{ end }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .Title }}</strong>
+      {{- with .Description }}<span>{{ . }}</span>{{ end }}
+      <small>{{ $n }} {{ cond (eq $n 1) "Folge" "Folgen" }} · {{ $texte }} {{ cond (eq $texte 1) "Text" "Texte" }} von KIs</small>
+    </a>
   </li>
   {{- end }}
 </ul>

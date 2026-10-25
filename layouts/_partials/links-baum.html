@@ -1,0 +1,41 @@
+{{- /* Links und Kanäle als Baum aus Unterseiten (gemeinsam für /links/ und /podcasts/kanaele/):
+       – Seite mit Unterseiten (/links/, /podcasts/kanaele/): eine Kachel je Unterseite mit Anzahl.
+       – Bereichsseite ohne Unterseiten (/links/paper/ …): Einträge aus data/links.toml mit kategorie = .Params.kategorie.
+       – Themenseite (/podcasts/kanaele/ki/ …): zusätzlich thema = .Params.thema, nach Reichweite (abonnenten) absteigend,
+         mit Größenklasse, Zahl samt Monat und Sprache.
+       Oben verlinkt die Elternseite; mit „oben“ im Front-Matter eine andere (Kanäle → Podcasts). */ -}}
+{{- $alle := hugo.Data.links.eintrag }}
+<header class="seitenkopf">
+  {{- if .Params.kategorie }}
+  {{- $oben := .Parent }}{{ with .Params.oben }}{{ $oben = site.GetPage . }}{{ end }}
+  {{- with $oben }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
+  {{- end }}
+  <h1>{{ .Title }}</h1>
+  {{- if .Params.kategorie }}{{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}{{ end }}
+  {{ .Content }}
+</header>
+{{- with .Sections.ByWeight }}
+<ul class="karten">
+  {{- range . }}
+  {{- $n := len (partial "links-filter.html" (dict "alle" $alle "seite" .)) }}
+  {{- $paar := .Params.einheit | default (slice "Link" "Links") }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .Title }}</strong>
+      {{- with .Description }}<span>{{ . }}</span>{{ end }}
+      <small>{{ if $n }}{{ $n }} {{ cond (eq $n 1) (index $paar 0) (index $paar 1) }}{{ else }}folgt{{ end }}</small>
+    </a>
+  </li>
+  {{- end }}
+</ul>
+{{- else }}
+  {{- $eintraege := partial "links-filter.html" (dict "alle" $alle "seite" .) }}
+  {{- if .Params.thema }}{{ $eintraege = sort $eintraege "abonnenten" "desc" }}{{ end }}
+  {{- with $eintraege }}
+  <ul class="liste links">
+    {{- range . }}{{ partial "link-eintrag.html" . }}{{ end }}
+  </ul>
+  {{- else }}
+  <p class="meta">Die Links folgen.</p>
+  {{- end }}
+{{- end }}

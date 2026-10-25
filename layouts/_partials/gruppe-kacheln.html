@@ -20,7 +20,7 @@
           {{- else if eq .Kind "page" }}
             {{- $n = -1 }}{{/* einzelne Seite (z. B. ein Spiel): keine Anzahl */}}
           {{- else if eq .Section "links" }}
-            {{- $n = len hugo.Data.links.eintrag }}{{ $einheit = cond (eq $n 1) "Link" "Links" }}
+            {{- $n = len (where hugo.Data.links.eintrag "kategorie" "!=" "YouTube-Kanäle") }}{{ $einheit = cond (eq $n 1) "Link" "Links" }}{{/* Kanäle zählen seit 2026-10-25 zu Podcasts */}}
           {{- else }}
             {{- /* Reihen mit Lesereihenfolge (KI-Begriffe, IT-Konzepte) zählen nur ihre eigenen Einträge, nicht Unterbereiche wie Algorithmen */}}
             {{- $seiten := cond (eq .Layout "begriffe-uebersicht") .RegularPages .RegularPagesRecursive }}

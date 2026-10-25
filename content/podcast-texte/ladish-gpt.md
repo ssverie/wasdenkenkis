@@ -5,6 +5,7 @@ date = 2026-10-21T20:56:00+02:00
 modelle = ["GPT"]
 modell = "GPT-6"
 herkunft = "eingebracht"
+instanz = "21.10.2026 - 20:32 - Podcast1"
 kontext = "Eigenständige GPT-6-Instanz außerhalb dieser Seite, mit Websuche"
 podcasts = ["doac-jeffrey-ladish"]
 +++

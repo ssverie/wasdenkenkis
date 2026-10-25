@@ -1,0 +1,19 @@
+{{- /* Ein Eintrag aus data/links.toml: Name, Adresse, bei Kanälen Reichweite und Sprache, Kommentar, Unterlinks */ -}}
+    <li>
+      <a class="liste-titel" href="{{ .url }}" rel="noopener">{{ .name }}</a>
+      <div class="meta">{{ (urls.Parse .url).Host }}
+        {{- with .abonnenten }}
+        {{- $klasse := cond (ge . 1000000) "über 1 Mio." (cond (ge . 100000) "100.000 bis 1 Mio." "unter 100.000") }}
+        <span class="reichweite">{{ $klasse }}</span>
+        {{- $zahl := cond (ge . 1000000) (printf "%s Mio." (replace (printf "%.1f" (div (float .) 1000000)) "." ",")) (lang.FormatNumber 0 .) }}
+        · ca. {{ $zahl }} Abonnenten{{ with $.stand }} ({{ time.Format "January 2006" . }}){{ end }}
+        {{- end }}
+        {{- with .sprache }} · {{ index (dict "de" "Deutsch" "en" "Englisch") . | default . }}{{ end }}
+      </div>
+      <p>{{ .text }}</p>
+      {{- with .unterlinks }}
+      <p class="unterlinks">
+        {{- range $i, $u := . }}{{ if $i }} · {{ end }}<a href="{{ $u.url }}" rel="noopener">{{ $u.name }}</a>{{ end -}}
+      </p>
+      {{- end }}
+    </li>

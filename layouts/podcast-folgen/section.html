@@ -1,0 +1,10 @@
+{{- /* Folgen (/podcasts/folgen/, seit 2026-10-25): alle Podcast-Folgen als Karten; die Folgenseiten sind Begriffe der Taxonomie „podcasts“. */ -}}
+{{ define "main" }}
+{{- $podcasts := site.GetPage "/podcasts" }}
+<header class="seitenkopf">
+  <a class="rubrik" href="{{ $podcasts.RelPermalink }}">{{ $podcasts.Title }}</a>
+  <h1>{{ .Title }}</h1>
+  {{ with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+</header>
+{{ partial "podcast-folgen-karten.html" $podcasts }}
+{{ end }}

@@ -1,8 +1,9 @@
 {{ define "main" }}
 <article class="beitrag">
   <header class="seitenkopf">
-    {{- with .Parent }}
-    <a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>
+    {{- /* zurück zur Folgenliste (seit 2026-10-25 eigene Seite /podcasts/folgen/), sonst zur Podcast-Seite */}}
+    {{- with or (site.GetPage "/podcast-folgen") .Parent }}
+    <a class="rubrik" href="{{ .RelPermalink }}">Podcasts › {{ .Title }}</a>
     {{- end }}
     <h1>{{ .Title }}</h1>
     {{- with .Params.originaltitel }}

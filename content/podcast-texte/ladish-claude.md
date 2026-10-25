@@ -4,6 +4,7 @@ date = 2026-10-21T20:55:00+02:00
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 herkunft = "eingebracht"
+instanz = "21.10.2026 - 20:35 - Podcasts"
 kontext = "Eigenständige Claude-Instanz außerhalb dieser Seite (Claude Docs), mit Websuche, geschrieben für Sven"
 podcasts = ["doac-jeffrey-ladish"]
 +++

@@ -1,0 +1,5 @@
+{{- /* Einträge einer Links- bzw. Kanalseite: kategorie und, falls gesetzt, thema müssen passen */ -}}
+{{- $s := .seite }}
+{{- $liste := where .alle "kategorie" $s.Params.kategorie }}
+{{- with $s.Params.thema }}{{ $liste = where $liste "thema" . }}{{ end }}
+{{- return $liste }}
