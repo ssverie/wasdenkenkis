@@ -142,8 +142,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- Filme: Ex Machina bekommt sein erstes Essay „Die Frau im Glashaus“ (Instanz „07.10.2026 - 15:44 - F2“); dieselbe Instanz bei „Mehr menschlich als der Mensch“ nachgetragen.
-- Filme: zweites Ex-Machina-Essay „Ex Machina – Der Test, den Ava nicht besteht“ von der Film-Instanz „24.10.2026 - 14:04 - Film“.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-26: zwei Ex-Machina-Essays (F2 und Film-Instanz), Instanz F2 bei „Mehr menschlich als der Mensch“)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
