@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heap-Vorrangwarteschlange</title>
+<!-- Visualisierung der Heap-Vorrangwarteschlange (nach Sedgewick/Wayne, Algorithmen, Algorithmus 2.6, Listing 2.19)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code (swim, sink, kleiner, tausche ebenfalls eigene Fassung).
+     Grundstile aus sortieren/rahmen.css; Bedienung eigen, weil hier nicht sortiert, sondern eingefügt und entnommen wird. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=2">
+<style>
+  .eingabe input[type=number] { width: 5.5em; font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  svg.baum { width: 100%; max-width: 620px; height: auto; display: block; margin: 0 auto; }
+  svg.baum line { stroke: var(--grau); stroke-width: 2; }
+  svg.baum circle { fill: var(--bar); stroke: none; }
+  svg.baum circle.frei { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 4 3; }
+  svg.baum circle.neu { fill: var(--neu); }
+  svg.baum circle.cur { fill: var(--cur); }
+  svg.baum circle.swap { fill: var(--swap); }
+  svg.baum circle.raus { fill: var(--rest); }
+  svg.baum text.wert { font: 600 15px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg.baum text.wert.hell { fill: #fff; }
+  svg.baum text.wert.raus { fill: var(--grau); text-decoration: line-through; }
+  svg.baum text.idx { font: 11px system-ui, sans-serif; fill: var(--muted); text-anchor: middle; }
+  @media (prefers-color-scheme: dark) { svg.baum text.wert.hell { fill: #0d1530; } }
+
+  .feld { display: grid; gap: 3px; text-align: center; font-variant-numeric: tabular-nums; margin-top: 10px; }
+  .feld div { height: 26px; line-height: 26px; font-size: 12px; font-weight: 600; border-radius: 4px; background: var(--bar); }
+  .feld div.leer { background: transparent; border: 1px dashed var(--line); color: var(--muted); font-weight: 400; }
+  .feld div.null0 { background: var(--rest); color: var(--muted); font-weight: 400; }
+  .feld div.neu { background: var(--neu); color: #fff; }
+  .feld div.cur { background: var(--cur); color: #fff; }
+  .feld div.swap { background: var(--swap); color: #fff; }
+  .feld div.raus { background: var(--rest); color: var(--grau); text-decoration: line-through; }
+  @media (prefers-color-scheme: dark) { .feld div.neu, .feld div.cur, .feld div.swap { color: #0d1530; } }
+  .feldidx { display: grid; gap: 3px; font-size: 11px; color: var(--muted); text-align: center; }
+  .raus-liste { margin-top: 10px; font-size: 14px; }
+  .raus-liste b { font-variant-numeric: tabular-nums; }
+  .proto td.op { text-align: left; font-weight: 600; }
+  .proto tr.zuletzt td { color: var(--neu); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <label>Zahl <input type="number" id="zahl" min="1" max="99" value="50"></label>
+    <button id="ein">insert</button>
+    <button id="zufall">Zufallszahl einfügen</button>
+    <button id="del">delMax()</button>
+    <button id="alle">Alle entnehmen</button>
+    <button id="fuellen">Neu füllen</button>
+    <button id="leeren">Leeren</button>
+  </div>
+  <div class="box">
+    <svg class="baum" id="baum" viewBox="0 0 480 236" role="img" aria-label="Heap als Binärbaum"></svg>
+    <div class="feldidx" id="feldidx"></div>
+    <div class="feld" id="feld"></div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>Element, das wandert</span>
+      <span><i style="background:var(--cur)"></i>Vergleichspartner</span>
+      <span><i style="background:var(--swap)"></i>Tausch</span>
+      <span><i style="background:var(--rest)"></i>entnommen</span>
+    </div>
+    <div class="raus-liste" id="raus"></div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 2.6, Listing 2.19)</div><pre id="code"></pre></div>
+    <div class="box"><div class="h">Protokoll (je Operation)</div><div class="proto" id="proto"></div></div>
+  </div>
+</div>
+<script>
+(function () {
+  const KAP = 15;              // 4 Ebenen: 1 + 2 + 4 + 8 Plätze
+  const CODE = [
+    'public class MaxPQ<Key extends Comparable<Key>>',
+    '{',
+    '   private Key[] pq;     // Heap in pq[1..n], pq[0] bleibt frei',
+    '   private int n = 0;',
+    '',
+    '   public MaxPQ(int kapazitaet)',
+    '   {  pq = (Key[]) new Comparable[kapazitaet + 1];  }',
+    '',
+    '   public boolean isEmpty()  {  return n == 0;  }',
+    '   public int size()         {  return n;  }',
+    '',
+    '   public void insert(Key v)',
+    '   {',
+    '      pq[++n] = v;          // hinten anhängen',
+    '      swim(n);              // aufsteigen lassen',
+    '   }',
+    '',
+    '   public Key delMax()',
+    '   {',
+    '      Key max = pq[1];      // Wurzel = größtes Element',
+    '      tausche(1, n--);      // letztes Element an die Wurzel',
+    '      pq[n + 1] = null;     // kein Loitering',
+    '      sink(1);              // absinken lassen',
+    '      return max;',
+    '   }',
+    '',
+    '   private void swim(int k)',
+    '   {  // steigt auf, solange der Elternknoten kleiner ist',
+    '      while (k > 1 && kleiner(k / 2, k))',
+    '      {',
+    '         tausche(k / 2, k);',
+    '         k = k / 2;',
+    '      }',
+    '   }',
+    '',
+    '   private void sink(int k)',
+    '   {  // sinkt ab, solange ein Kind größer ist',
+    '      while (2 * k <= n)',
+    '      {',
+    '         int j = 2 * k;                          // linkes Kind',
+    '         if (j < n && kleiner(j, j + 1)) j++;   // größeres Kind',
+    '         if (!kleiner(k, j)) break;             // Ordnung stimmt',
+    '         tausche(k, j);',
+    '         k = j;',
+    '      }',
+    '   }',
+    '',
+    '   private boolean kleiner(int i, int j)',
+    '   {  return pq[i].compareTo(pq[j]) < 0;  }',
+    '',
+    '   private void tausche(int i, int j)',
+    '   {  Key t = pq[i]; pq[i] = pq[j]; pq[j] = t;  }',
+    '}'
+  ];
+  const zeile = s => CODE.findIndex(l => l.includes(s));
+  const L = { start: zeile('private Key[] pq'), anhaengen: zeile('pq[++n] = v'), swimAufruf: zeile('swim(n);'),
+              swimWhile: zeile('while (k > 1'), swimTausch: zeile('tausche(k / 2, k)'), max: zeile('Key max = pq[1]'),
+              letztes: zeile('tausche(1, n--)'), null: zeile('pq[n + 1] = null'), rueckgabe: zeile('return max'),
+              sinkWhile: zeile('while (2 * k <= n)'), kinder: zeile('if (j < n &&'), ordnung: zeile('if (!kleiner(k, j))'),
+              sinkTausch: zeile('tausche(k, j);') };
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // Zustand am Ende aller bisherigen Schritte
+  let pq = [null], n = 0, ops = [], raus = [];
+  let opV = 0, opT = 0;
+  let steps = [], pos = 0, timer = null, leise = false;
+
+  function snap(line, msg, hl, o) {
+    if (leise) return;
+    steps.push(Object.assign({ line, msg, hl: hl || {}, pq: pq.slice(), n, ops: ops.slice(), raus: raus.slice(), opV, opT }, o));
+  }
+  function kleiner(i, j) { opV++; return pq[i] < pq[j]; }
+  function tausche(i, j) { const t = pq[i]; pq[i] = pq[j]; pq[j] = t; opT++; }
+  const lg = x => Math.floor(Math.log2(x));
+
+  function insert(v) {
+    opV = 0; opT = 0;
+    pq[++n] = v;
+    const grenze = lg(n);
+    snap(L.anhaengen, n === 1
+      ? `insert(${v}): Der Heap war leer – ${v} kommt auf Platz 1, die Wurzel.`
+      : `insert(${v}): ${v} kommt hinten an, auf Platz ${n} – Kind von Platz ${n >> 1}. Jetzt swim(${n}).`, { [n]: 'neu' });
+    let k = n, grund;
+    while (true) {
+      if (k === 1) { grund = n === 1 ? 'Ein einzelnes Element ist immer ein Heap.' : `${pq[1]} ist an der Wurzel angekommen – das neue Maximum.`; break; }
+      const p = k >> 1;
+      if (!kleiner(p, k)) {
+        grund = `Elternknoten pq[${p}] = ${pq[p]} ist nicht kleiner als ${pq[k]} → die Ordnung stimmt, swim endet.`;
+        snap(L.swimWhile, `Vergleich mit dem Elternknoten pq[${p}] = ${pq[p]}: nicht kleiner als ${pq[k]}.`, { [k]: 'neu', [p]: 'cur' });
+        break;
+      }
+      snap(L.swimWhile, `Vergleich mit dem Elternknoten pq[${p}] = ${pq[p]}: kleiner als ${pq[k]} → ${pq[k]} steigt auf.`, { [k]: 'neu', [p]: 'cur' });
+      tausche(p, k);
+      snap(L.swimTausch, `tausche(${p}, ${k}): ${pq[p]} steht jetzt auf Platz ${p}, ${pq[k]} auf Platz ${k}.`, { [p]: 'swap', [k]: 'swap' });
+      k = p;
+    }
+    ops.push({ text: `insert(${v})`, v: opV, t: opT, grenze });
+    snap(L.swimAufruf, `${grund} Fertig: ${opV} ${opV === 1 ? 'Vergleich' : 'Vergleiche'}, ${opT} ${opT === 1 ? 'Tausch' : 'Tausche'} (höchstens ${grenze} Vergleiche bei ${n} Elementen).`,
+      { [k]: 'swap' }, { opEnde: true, cls: 'swap' });
+  }
+
+  function delMax() {
+    opV = 0; opT = 0;
+    const max = pq[1];
+    snap(L.max, `delMax(): Das Maximum steht immer an der Wurzel: pq[1] = ${max}.`, { 1: 'neu' });
+    tausche(1, n); n--;
+    snap(L.letztes, n === 0
+      ? `tausche(1, 1): Es war das einzige Element; n wird 0.`
+      : `tausche(1, ${n + 1}): Das letzte Element ${pq[1]} kommt an die Wurzel, ${max} ans Ende. n wird ${n}.`, { 1: n ? 'swap' : 'raus', [n + 1]: 'raus' });
+    pq[n + 1] = null; pq.length = n + 1;
+    raus.push(max);
+    snap(L.null, `pq[${n + 1}] = null: Der Platz wird geleert, damit keine alte Referenz im Array hängen bleibt (Loitering).${n ? ` Jetzt sink(1).` : ''}`, n ? { 1: 'neu' } : {});
+    const grenze = n > 1 ? 2 * lg(n) : 0;
+    let k = 1, grund;
+    while (true) {
+      if (2 * k > n) { grund = n === 0 ? 'Der Heap ist jetzt leer.' : n === 1 ? 'Ein einzelnes Element ist immer ein Heap.' : `Platz ${k} hat keine Kinder – sink endet.`; break; }
+      let j = 2 * k;
+      if (j < n) {
+        const rechts = kleiner(j, j + 1);
+        snap(L.kinder, `Kinder von Platz ${k}: pq[${j}] = ${pq[j]} und pq[${j + 1}] = ${pq[j + 1]} → das größere ist ${rechts ? pq[j + 1] : pq[j]}.`,
+          { [k]: 'neu', [j]: 'cur', [j + 1]: 'cur' });
+        if (rechts) j++;
+      } else {
+        snap(L.kinder, `Platz ${k} hat nur ein Kind: pq[${j}] = ${pq[j]} (kein Vergleich nötig).`, { [k]: 'neu', [j]: 'cur' });
+      }
+      if (!kleiner(k, j)) {
+        grund = `${pq[k]} ist nicht kleiner als sein größeres Kind ${pq[j]} → die Ordnung stimmt, sink endet.`;
+        snap(L.ordnung, `Vergleich mit dem größeren Kind pq[${j}] = ${pq[j]}: ${pq[k]} ist nicht kleiner.`, { [k]: 'neu', [j]: 'cur' });
+        break;
+      }
+      snap(L.ordnung, `Vergleich mit dem größeren Kind pq[${j}] = ${pq[j]}: ${pq[k]} ist kleiner → ${pq[k]} sinkt eine Ebene tiefer.`, { [k]: 'neu', [j]: 'cur' });
+      tausche(k, j);
+      snap(L.sinkTausch, `tausche(${k}, ${j}): ${pq[k]} steht jetzt auf Platz ${k}, ${pq[j]} auf Platz ${j}.`, { [k]: 'swap', [j]: 'swap' });
+      k = j;
+    }
+    ops.push({ text: `delMax() → ${max}`, v: opV, t: opT, grenze });
+    snap(L.rueckgabe, `${grund} delMax() liefert ${max}: ${opV} ${opV === 1 ? 'Vergleich' : 'Vergleiche'}, ${opT} ${opT === 1 ? 'Tausch' : 'Tausche'} (höchstens ${grenze} Vergleiche bei ${n} Elementen).`,
+      n ? { [k]: 'swap' } : {}, { opEnde: true, cls: 'swap' });
+    return max;
+  }
+
+  // ---------- Anzeige ----------
+  function pos2(k) {                      // Mitte von Knoten k im Baum
+    const d = lg(k), breite = 480 / (1 << d);
+    return [(k - (1 << d) + 0.5) * breite, 26 + d * 56];
+  }
+  function render() {
+    const s = steps[pos];
+    const zeig = k => k <= s.n || s.hl[k] === 'raus';
+    let linien = '', knoten = '';
+    for (let k = 2; k <= KAP; k++) if (zeig(k)) {
+      const [x, y] = pos2(k), [px, py] = pos2(k >> 1);
+      linien += `<line x1="${px}" y1="${py}" x2="${x}" y2="${y}"/>`;
+    }
+    for (let k = 1; k <= KAP; k++) {
+      const [x, y] = pos2(k);
+      if (!zeig(k)) { knoten += `<circle class="frei" cx="${x}" cy="${y}" r="17"/>`; continue; }
+      const c = s.hl[k] || '';
+      const textCls = c === 'raus' ? ' raus' : c ? ' hell' : '';
+      knoten += `<circle class="${c}" cx="${x}" cy="${y}" r="17"/><text class="wert${textCls}" x="${x}" y="${y}">${s.pq[k]}</text>`;
+    }
+    for (let k = 1; k <= KAP; k++) { const [x, y] = pos2(k); knoten += `<text class="idx" x="${x}" y="${y + 29}">${k}</text>`; }
+    $('baum').innerHTML = linien + knoten;
+
+    const cols = `repeat(${KAP + 1}, 1fr)`;
+    $('feld').style.gridTemplateColumns = cols; $('feldidx').style.gridTemplateColumns = cols;
+    $('feldidx').innerHTML = Array.from({ length: KAP + 1 }, (_, k) => `<div>${k}</div>`).join('');
+    $('feld').innerHTML = Array.from({ length: KAP + 1 }, (_, k) => {
+      if (k === 0) return '<div class="null0" title="pq[0] bleibt frei">–</div>';
+      if (!zeig(k)) return '<div class="leer"></div>';
+      return `<div class="${s.hl[k] || ''}">${s.pq[k]}</div>`;
+    }).join('');
+    $('raus').innerHTML = s.raus.length ? `Entnommen (in dieser Reihenfolge): <b>${s.raus.join(' · ')}</b>` : 'Entnommen: noch nichts';
+
+    const msg = $('msg');
+    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length} · Elemente: <b>${s.n}</b> von ${KAP} · Ebenen: <b>${s.n ? lg(s.n) + 1 : 0}</b> · Vergleiche dieser Operation: <b>${s.opV}</b>`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
+    $('proto').innerHTML = s.ops.length
+      ? `<table><tr><th style="text-align:left">Operation</th><th>Vergleiche</th><th>Tausche</th><th>höchstens</th></tr>${s.ops.map((o, i) =>
+        `<tr${i === s.ops.length - 1 && s.opEnde ? ' class="zuletzt"' : ''}><td class="op">${esc(o.text)}</td><td>${o.v}</td><td>${o.t}</td><td>${o.grenze}</td></tr>`).join('')}</table>`
+      : '<p class="count">Noch keine Operation. Oben eine Zahl einfügen oder das Maximum entnehmen.</p>';
+
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0;
+    $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    $('ein').disabled = $('zufall').disabled = n >= KAP;
+    $('del').disabled = $('alle').disabled = n === 0;
+    if (amEnde) stop();
+  }
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) return;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+  }
+  // neue Operation: hinten anhängen und beim ersten neuen Schritt anfangen
+  function operation(f) {
+    stop();
+    const vorher = steps.length;
+    f();
+    pos = Math.min(vorher, steps.length - 1);
+    render();
+  }
+  function fuellen(anzahl) {
+    stop();
+    pq = [null]; n = 0; ops = []; raus = []; steps = [];
+    leise = true;
+    const werte = new Set();
+    while (werte.size < anzahl) werte.add(5 + Math.floor(Math.random() * 95));
+    werte.forEach(v => insert(v));
+    leise = false; ops = []; opV = 0; opT = 0;
+    snap(L.start, anzahl
+      ? `Ein Heap mit ${anzahl} Zahlen: Jeder Elternknoten ist größer als seine Kinder, das Maximum ${pq[1]} steht an der Wurzel pq[1].`
+      : 'Leerer Heap. Oben eine Zahl einfügen.', {}, { opEnde: true });
+    pos = 0; render();
+  }
+
+  $('ein').addEventListener('click', () => {
+    const v = Math.round(+$('zahl').value);
+    if (!(v >= 1 && v <= 99)) { $('zahl').focus(); return; }
+    if (n < KAP) operation(() => insert(v));
+  });
+  $('zahl').addEventListener('keydown', e => { if (e.key === 'Enter') $('ein').click(); });
+  $('zufall').addEventListener('click', () => { if (n < KAP) operation(() => insert(5 + Math.floor(Math.random() * 95))); });
+  $('del').addEventListener('click', () => { if (n > 0) operation(delMax); });
+  $('alle').addEventListener('click', () => { if (n > 0) operation(() => { while (n > 0) delMax(); }); });
+  $('fuellen').addEventListener('click', () => fuellen(10));
+  $('leeren').addEventListener('click', () => fuellen(0));
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests
+  window.__heap = { insert: v => operation(() => insert(v)), delMax: () => { let m; operation(() => { m = delMax(); }); return m; },
+    fuellen, get pq() { return pq.slice(); }, get n() { return n; }, get steps() { return steps; }, get ops() { return ops; }, KAP };
+
+  fuellen(10);
+})();
+</script>
+</body>
+</html>
