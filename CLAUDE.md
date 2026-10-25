@@ -137,7 +137,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
- Haken „gesehen“ bei den Podcast-Folgen (nur im Browser gespeichert). Podcasts › Folgen: Gegen den Strom mit Jeffrey Sachs (Transkript privat in transkripte\). Bereinigungsskript versteht jetzt zwei Kopierformate. Fragen: Menschheit 15–25 (GPT-6), alle 25 beantwortet; bei Toleranz, Anerkennung, Historische Fehler Autorzeile und falsche Datums-Überschrift entfernt.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: Menschheit 15–25, Podcasts mit Sachs, StarTalk, Morgenstern, vier Kanäle, Haken „gesehen“)
 - Podcasts › Kanäle: The Joe Rogan Experience (Allgemein), Everlast AI, Karl Olsberg, The Roman Forum with Roman Yampolskiy (KI). Podcasts › Folgen: StarTalk mit Geoffrey Hinton (Ausschnitt, mit Link zur ganzen Folge), Boris von Morgenstern: Alte weiße Männer (Inhaltsangabe vorläufig, bis das Transkript da ist). Kartenvorlage: „Sendung: Titel“ ohne Leerzeichen vor dem Doppelpunkt.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
