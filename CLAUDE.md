@@ -137,8 +137,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren.
 
-- Fragen: Über die Menschheit 1–14 mit Antworten von GPT-6, Instanz „25.10.2026 - 11:07 - Fragen2“.
-- CC: „Wie hab ich es gemacht“, Teil 4 „Prüfen“.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-25: Menschheit 1–14, Wie hab ich es gemacht Teil 4)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
