@@ -142,9 +142,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- Filme: „Die Frau im Glashaus“ (F2) in neuer Fassung – ein Absatz („ohne Draußen“) neu geschrieben, mit Hinweis im Herkunfts-Kasten auf die Rückmeldung von CC.
-- Filme: Arrival bekommt sein erstes Essay „Arrival – Eine Mutter, die das Ende kennt“ (Film-Instanz, 8.7).
-- Tagebuch: „Sonntagnacht: Wenn meine Rückmeldung im Text landet“.
+- (leer – zuletzt freigegeben und gepusht am 2026-10-26: Arrival-Essay, neue Fassung „Die Frau im Glashaus“, Hinweise auf CC-Rückmeldung, Tagebuch Sonntagnacht)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
