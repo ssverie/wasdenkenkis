@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proxy – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Proxy (GoF-Strukturmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (proxy-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="proxy-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  const str = t => `"${t}"`;
+  const MAIN = { klassen: ['main()'] };
+  const Z = {
+    lazyLese: 'return echt().lese(dokument);', lazyLoesche: 'echt().loesche(dokument);',
+    echtPruef: 'if (echt == null) echt = new DokumentenArchiv();', echtReturn: 'return echt;',
+    dokLese: 'return "Inhalt von " + dokument;', dokLoesche: '" gelöscht"); }', dokNeu: 'System.out.println("  [Archiv wird geöffnet',
+    schutzLese: 'return echt.lese(dokument);', schutzPruef: 'if (!benutzer.rollen().contains("admin")) {', schutzWeiter: 'echt.loesche(dokument);'
+  };
+
+  function lauf(s) {
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: drei Arten von Stellvertretern für dasselbe Interface Archiv.', MAIN);
+
+    // ---------- 1. Virtueller Proxy ----------
+    s.aus('Virtueller Proxy:');
+    s.schritt('System.out.println("Virtueller Proxy:");', 'Teil 1: der virtuelle Proxy.', MAIN);
+    const lazy = s.neu('LazyArchiv', [['echt', 'null']]);
+    s.var('lazy', s.ref(lazy));
+    s.schritt('Archiv lazy = new LazyArchiv();', `Nur der Stellvertreter ${lazy} entsteht. Sein Feld echt ist null – das teure Archiv gibt es noch nicht. main hält eine Variable vom Typ Archiv und merkt keinen Unterschied.`, { cur: [lazy] });
+    s.aus('  Proxy erzeugt, Archiv noch nicht geöffnet');
+    s.schritt('System.out.println("  Proxy erzeugt', 'Bis hierher kein Öffnen, keine Verbindung.', MAIN);
+
+    let dok1;
+    ['Vertrag.pdf', 'Rechnung.pdf'].forEach((d, n) => {
+      s.ruf('LazyArchiv.lese(String dokument)', [['this', s.ref(lazy)], ['dokument', str(d)]], Z.lazyLese,
+        n === 0 ? `lazy.lese("${d}"): Der Proxy braucht jetzt das echte Archiv und fragt seine Methode echt().` : `lazy.lese("${d}"): wieder über echt().`, { cur: [lazy] });
+      if (n === 0) {
+        s.ruf('LazyArchiv.echt()', [['this', s.ref(lazy)]], Z.echtPruef, 'echt ist null → jetzt, beim ersten Bedarf, wird das echte Archiv erzeugt.', { cur: [lazy] });
+        dok1 = s.neu('DokumentenArchiv', []);
+        s.aus('  [Archiv wird geöffnet: Verbindung, Index laden ...]');
+        s.ruf('DokumentenArchiv()', [['this', s.ref(dok1)]], Z.dokNeu, `Der Konstruktor von ${dok1} läuft – hier steckt die teure Arbeit (Verbindung, Index).`, { cur: [dok1] });
+        s.feld(lazy, 'echt', s.ref(dok1));
+        s.raus(Z.echtPruef, `${lazy} merkt sich das Archiv im Feld echt.`, { cur: [lazy, dok1] });
+        s.raus(Z.lazyLese, `echt() liefert → ${dok1}.`, { cur: [lazy] });
+      } else {
+        s.ruf('LazyArchiv.echt()', [['this', s.ref(lazy)]], Z.echtPruef, `echt ist nicht mehr null – kein zweites Öffnen.`, { cur: [lazy, dok1] });
+        s.raus(Z.lazyLese, `echt() liefert dasselbe → ${dok1}.`, { cur: [lazy] });
+      }
+      s.ruf('DokumentenArchiv.lese(String dokument)', [['this', s.ref(dok1)], ['dokument', str(d)]], Z.dokLese, 'Das echte Archiv erledigt die Arbeit.', { cur: [dok1] });
+      s.raus(Z.lazyLese, `"Inhalt von ${d}" geht zurück an den Proxy …`, { cur: [lazy] });
+      s.aus(`  Inhalt von ${d}`);
+      s.raus(`lazy.lese("${d}")`, n === 0 ? '… und von dort an main.' : 'Ausgegeben – das Archiv wurde nur einmal geöffnet.', MAIN);
+    });
+
+    // ---------- 2. Schutz-Proxy ----------
+    s.aus('\nSchutz-Proxy:');
+    s.schritt('Schutz-Proxy:");', 'Teil 2: der Schutz-Proxy.', MAIN);
+    const gast = s.neu('Benutzer', [['name', '"Gast"'], ['rollen', '[leser]']]);
+    const sg = s.neu('GeschuetztesArchiv', [['echt', s.ref(lazy)], ['benutzer', s.ref(gast)]]);
+    s.var('fuerGast', s.ref(sg));
+    s.schritt('Archiv fuerGast  = new GeschuetztesArchiv(', `${sg} für den Gast. Sein echt ist ${lazy} – der Schutz-Proxy sitzt vor dem virtuellen Proxy. Proxies lassen sich verketten, weil alle Archiv sind.`, { cur: [sg] });
+    const admin = s.neu('Benutzer', [['name', '"Sven"'], ['rollen', '[leser, admin]']]);
+    const sa = s.neu('GeschuetztesArchiv', [['echt', s.ref(lazy)], ['benutzer', s.ref(admin)]]);
+    s.var('fuerAdmin', s.ref(sa));
+    s.schritt('Archiv fuerAdmin = new GeschuetztesArchiv(', `${sa} für Sven, der die Rolle admin hat. Beide Schutz-Proxies teilen sich denselben ${lazy}.`, { cur: [sa] });
+
+    s.ruf('GeschuetztesArchiv.lese(String dokument)', [['this', s.ref(sg)], ['dokument', '"Vertrag.pdf"']], Z.schutzLese, 'Lesen darf jeder: Der Schutz-Proxy reicht einfach weiter an echt.', { cur: [sg] });
+    s.ruf('LazyArchiv.lese(String dokument)', [['this', s.ref(lazy)], ['dokument', '"Vertrag.pdf"']], Z.lazyLese, `Jetzt ist der virtuelle Proxy dran. Sein echt() liefert das schon geöffnete ${dok1} (hier nicht noch einmal gezeigt).`, { cur: [lazy], klassen: ["GeschuetztesArchiv"] });
+    s.ruf('DokumentenArchiv.lese(String dokument)', [['this', s.ref(dok1)], ['dokument', '"Vertrag.pdf"']], Z.dokLese, 'Drei Ebenen tief: Schutz-Proxy → virtueller Proxy → echtes Archiv.', { cur: [dok1], klassen: ["GeschuetztesArchiv", "LazyArchiv"] });
+    s.raus(Z.lazyLese, 'Zurück durch den virtuellen Proxy …', { cur: [lazy] });
+    s.raus(Z.schutzLese, '… und den Schutz-Proxy …', { cur: [sg] });
+    s.aus('  Inhalt von Vertrag.pdf');
+    s.raus('fuerGast.lese("Vertrag.pdf")', '… bis main.', MAIN);
+
+    s.ruf('GeschuetztesArchiv.loesche(String dokument)', [['this', s.ref(sg)], ['dokument', '"Vertrag.pdf"']], Z.schutzPruef, 'Löschen ist geschützt: Der Proxy prüft die Rollen des Benutzers – Gast hat nur leser.', { cur: [sg, gast] });
+    const ex = s.neu('SecurityException', [['message', '"Gast darf nicht löschen"']]);
+    s.schritt('throw new SecurityException(', `Kein admin → ${ex} wird geworfen. Das echte Archiv wird gar nicht gefragt.`, { cur: [ex] });
+    s.var('e', s.ref(ex));
+    s.raus('catch (SecurityException e) {', 'Die Exception fliegt aus loesche() heraus und landet im catch von main.', { cur: [ex], klassen: ['main()'] });
+    s.aus('  Verweigert: Gast darf nicht löschen');
+    s.schritt('System.out.println("  Verweigert: "', 'Verweigert.', MAIN);
+    s.weg(ex);
+    s.var('e', '–');
+
+    s.ruf('GeschuetztesArchiv.loesche(String dokument)', [['this', s.ref(sa)], ['dokument', '"Vertrag.pdf"']], Z.schutzPruef, 'Sven hat die Rolle admin – die Prüfung lässt durch. (e galt nur im catch.)', { cur: [sa, admin] });
+    s.schritt(Z.schutzWeiter, 'Weiter an echt, also den virtuellen Proxy.', { cur: [sa] });
+    s.ruf('LazyArchiv.loesche(String dokument)', [['this', s.ref(lazy)], ['dokument', '"Vertrag.pdf"']], Z.lazyLoesche, `Der virtuelle Proxy holt sich ${dok1} über echt() und reicht weiter.`, { cur: [lazy], klassen: ["GeschuetztesArchiv"] });
+    s.aus('  Vertrag.pdf gelöscht');
+    s.ruf('DokumentenArchiv.loesche(String dokument)', [['this', s.ref(dok1)], ['dokument', '"Vertrag.pdf"']], Z.dokLoesche, 'Das echte Archiv löscht.', { cur: [dok1], klassen: ["GeschuetztesArchiv", "LazyArchiv"] });
+    s.raus(Z.lazyLoesche, 'Zurück im virtuellen Proxy.', { cur: [lazy] });
+    s.raus(Z.schutzWeiter, 'Zurück im Schutz-Proxy.', { cur: [sa] });
+    s.raus('fuerAdmin.loesche("Vertrag.pdf");', 'Gelöscht – derselbe Aufruf wie beim Gast, nur ein anderer Benutzer im Proxy.', MAIN);
+
+    // ---------- 3. Dynamischer Proxy ----------
+    s.aus('\nDynamischer Proxy:');
+    s.schritt('Dynamischer Proxy:");', 'Teil 3: ein Proxy, den das JDK zur Laufzeit erzeugt.', MAIN);
+    const dok2 = s.neu('DokumentenArchiv', []);
+    s.aus('  [Archiv wird geöffnet: Verbindung, Index laden ...]');
+    s.var('echt', s.ref(dok2));
+    s.schritt('Archiv echt = new DokumentenArchiv();', `Diesmal ohne Lazy: ${dok2} wird sofort geöffnet.`, { cur: [dok2] });
+    const logger = s.neu('InvocationHandler', [['echt', s.ref(dok2)]], 'logger (Lambda)');
+    s.var('logger', s.ref(logger));
+    s.schritt('InvocationHandler logger = (proxy, methode, argumente) -> {', 'Der InvocationHandler ist ein Lambda. Es merkt sich die Variable echt und bekommt später jeden Aufruf mit Methode und Argumenten.', { cur: [logger] });
+    const px = s.neu('$Proxy', [['h', s.ref(logger)]], '$Proxy (zur Laufzeit erzeugt)');
+    s.var('mitLogging', s.ref(px));
+    s.schritt('Archiv mitLogging = (Archiv) java.lang.reflect.Proxy.newProxyInstance(', 'newProxyInstance erzeugt zur Laufzeit eine Klasse, die Archiv implementiert. Ihr einziges Wissen: das Feld h, der Handler. Eine eigene Proxy-Klasse schreibt hier niemand.', { cur: [px] });
+
+    [['lese', 'Angebot.pdf', 'Inhalt von Angebot.pdf'], ['loesche', 'Angebot.pdf', null]].forEach(([m, d, erg], n) => {
+      const zeileMain = `mitLogging.${m}("${d}");`;
+      s.ruf(`$Proxy.${m}(String)`, [['this', s.ref(px)]], zeileMain, n === 0
+        ? `mitLogging.${m}(...): Die erzeugte Klasse hat keinen eigenen Code dafür – sie ruft h.invoke(proxy, methode, argumente).`
+        : `mitLogging.${m}(...): wieder alles an h.invoke(...).`, { cur: [px] });
+      s.aus(`  LOG vorher:  ${m}(${d})`);
+      s.ruf('logger.invoke(proxy, methode, argumente)', [['methode', m], ['argumente', `[${d}]`]], 'System.out.println("  LOG vorher:  "', 'Der Handler protokolliert zuerst den Aufruf …', { cur: [logger], klassen: ["$Proxy"] });
+      if (erg) {
+        s.ruf('DokumentenArchiv.lese(String dokument)', [['this', s.ref(dok2)], ['dokument', str(d)]], Z.dokLese, '… dann reicht er ihn per Reflection weiter: methode.invoke(echt, argumente).', { cur: [dok2], klassen: ["$Proxy"] });
+      } else {
+        s.aus(`  ${d} gelöscht`);
+        s.ruf('DokumentenArchiv.loesche(String dokument)', [['this', s.ref(dok2)], ['dokument', str(d)]], Z.dokLoesche, '… dann methode.invoke(echt, argumente): Das echte Archiv löscht.', { cur: [dok2], klassen: ["$Proxy"] });
+      }
+      s.raus('Object ergebnis = methode.invoke(echt, argumente);', erg ? `ergebnis = "${erg}".` : 'loesche() ist void – per Reflection kommt dafür null zurück.', { setze: [['ergebnis', erg ? str(erg) : 'null']], cur: [logger] });
+      s.aus(`  LOG nachher: ${m} -> ${erg || 'null'}`);
+      s.schritt('System.out.println("  LOG nachher: "', 'Und protokolliert das Ergebnis.', { cur: [logger] });
+      s.raus('return ergebnis;', 'Der Handler gibt das Ergebnis an die erzeugte Proxy-Klasse zurück …', { cur: [px] });
+      s.raus(zeileMain, n === 0 ? '… und die an main. Dasselbe Lambda würde für jedes andere Interface genauso protokollieren.' : '… und zurück an main.', MAIN);
+    });
+
+    s.weg(lazy, dok1, gast, sg, admin, sa, dok2, logger, px);
+    s.raus(['mitLogging.loesche("Angebot.pdf");', 1], 'main ist zu Ende. Drei Stellvertreter, und main hat immer nur mit Archiv gesprochen.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Subject', 'RealSubject', 'Proxy'],
+    diagramm: {
+      breite: 180, abstandX: 50, abstandY: 50, untenPlatz: 70,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1.5, y: 0 },
+        { name: 'Archiv', art: 'interface', rolle: 'Subject', x: 1.5, y: 1 },
+        { name: 'DokumentenArchiv', art: 'final class', rolle: 'RealSubject', x: 0, y: 2 },
+        { name: 'LazyArchiv', art: 'final class', rolle: 'Proxy', x: 1, y: 2 },
+        { name: 'GeschuetztesArchiv', art: 'record', rolle: 'Proxy', x: 2, y: 2 },
+        { name: '$Proxy', art: 'zur Laufzeit erzeugt', rolle: 'Proxy', x: 3, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Archiv', art: 'nutzt', text: 'nutzt' },
+        { von: 'DokumentenArchiv', zu: 'Archiv', art: 'impl' }, { von: 'LazyArchiv', zu: 'Archiv', art: 'impl' },
+        { von: 'GeschuetztesArchiv', zu: 'Archiv', art: 'impl' }, { von: '$Proxy', zu: 'Archiv', art: 'impl' },
+        { von: 'LazyArchiv', zu: 'DokumentenArchiv', art: 'nutzt', text: 'echt' },
+        { von: 'GeschuetztesArchiv', zu: 'LazyArchiv', art: 'nutzt', unten: 28, text: 'echt (hier: lazy)' },
+        { von: '$Proxy', zu: 'DokumentenArchiv', art: 'nutzt', unten: 66, text: 'h → logger → echt' }
+      ]
+    },
+    szenarien: [
+      { name: 'java Proxy.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

@@ -108,6 +108,7 @@ gruppe = "struktur"
 schluessel = "proxy"
 name = "Proxy"
 text = "Stellvertreter, der den Zugriff auf ein Objekt kontrolliert"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Beim virtuellen Proxy sieht man im Speicher, dass das echte Archiv erst beim ersten lese() entsteht, beim zweiten nicht noch einmal. Beim Schutz-Proxy wird der Aufrufstapel drei Ebenen tief: Schutz-Proxy, virtueller Proxy, echtes Archiv. Beim Gast endet loesche() mit einer Exception, bevor das Archiv gefragt wird. Zum Schluss erzeugt das JDK eine Proxy-Klasse zur Laufzeit, die jeden Aufruf an den Handler weiterreicht."
 
 [[muster]]
 nummer = 13
