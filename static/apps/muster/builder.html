@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Builder – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Builder (GoF-Erzeugungsmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (builder-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=3">
+</head>
+<body>
+<script src="builder-code.js?v=1"></script>
+<script src="rahmen.js?v=2"></script>
+<script>
+(function () {
+  const STANDARD = [['groesse', '"mittel"'], ['teig', '"klassisch"'], ['belag', '[]'], ['extraKaese', 'false']];
+  const liste = l => `[${l.join(', ')}]`;
+  const pizzaText = p => `Pizza[groesse=${p.groesse}, teig=${p.teig}, belag=${liste(p.belag)}, extraKaese=${p.extraKaese}]`;
+  // Zustand der Builder nebenher, damit build() und toString() mit echten Werten rechnen
+  const zustand = {};
+  let erklaert = false;
+
+  function neuerBuilder(s) {
+    const b = s.neu('PizzaBuilder', STANDARD);
+    zustand[b] = { groesse: 'mittel', teig: 'klassisch', belag: [], extraKaese: false };
+    return b;
+  }
+
+  // ein Bauschritt: Methode betreten, Feld setzen, this zurückgeben
+  function bau(s, b, methode, arg, aufruf, rahmen) {
+    const z = zustand[b];
+    const zeilen = { groesse: 'PizzaBuilder groesse(String groesse)', teig: 'PizzaBuilder teig(String teig)', belag: 'PizzaBuilder belag(String zutat)', extraKaese: 'PizzaBuilder extraKaese()' };
+    const param = { groesse: 'groesse', teig: 'teig', belag: 'zutat' }[methode];
+    s.ruf(`PizzaBuilder.${methode}(${arg !== undefined ? `"${arg}"` : ''})`, [['this', s.ref(b)], ...(param ? [[param, `"${arg}"`]] : [])], zeilen[methode],
+      methode === 'belag' ? `belag("${arg}"): Die Zutat kommt in die Liste des Builders.` : methode === 'extraKaese' ? 'extraKaese(): Das Feld wird true.' : `${methode}("${arg}"): Das Feld bekommt den neuen Wert, der Standardwert ist überschrieben.`, { cur: [b] });
+    if (methode === 'belag') { z.belag.push(arg); s.feld(b, 'belag', liste(z.belag)); }
+    else if (methode === 'extraKaese') { z.extraKaese = true; s.feld(b, 'extraKaese', 'true'); }
+    else { z[methode] = arg; s.feld(b, methode, `"${arg}"`); }
+    s.schritt(zeilen[methode], 'Geändert ist nur der Builder – eine Pizza gibt es noch nicht.', { cur: [b] });
+    s.raus(aufruf, erklaert ? `Wieder kommt this zurück, die Kette geht weiter.`
+      : `return this: Die Methode gibt den Builder selbst zurück. Darum kann direkt der nächste Punkt folgen – das Fluent Interface.`, { cur: [b] });
+    erklaert = true;
+  }
+
+  // build(): prüfen, dann das unveränderliche Record erzeugen – oder eine Ausnahme werfen
+  function build(s, b, aufruf) {
+    const z = zustand[b];
+    s.ruf('PizzaBuilder.build()', [['this', s.ref(b)]], 'Pizza build() {', 'build(): Erst wird geprüft, dann gebaut.', { cur: [b] });
+    s.schritt('if (belag.isEmpty()) {', z.belag.length ? `belag ist nicht leer (${liste(z.belag)}) – die Prüfung ist bestanden.` : 'belag ist leer – keine einzige Zutat.', { cur: [b] });
+    if (!z.belag.length) {
+      const ex = s.neu('IllegalStateException', [['message', '"Eine Pizza braucht mindestens einen Belag"']]);
+      s.schritt('throw new IllegalStateException', 'build() wirft eine IllegalStateException. Eine halbfertige Pizza entsteht gar nicht erst – das ist der Sinn der Prüfung.');
+      return { ex };
+    }
+    s.schritt('return new Pizza(groesse, teig, belag, extraKaese);', 'new Pizza(...) mit allen vier Werten des Builders.', { cur: [b] });
+    const werte = { groesse: z.groesse, teig: z.teig, belag: z.belag.slice(), extraKaese: z.extraKaese };
+    s.ruf('Pizza(…) – kompakter Konstruktor', [['belag', liste(werte.belag)]], 'belag = List.copyOf(belag);',
+      'Der kompakte Konstruktor des Records läuft, bevor die Felder gesetzt werden.', { klassen: ['Pizza'] });
+    const p = s.neu('Pizza', [['groesse', `"${werte.groesse}"`], ['teig', `"${werte.teig}"`], ['belag', `${liste(werte.belag)}  (Kopie, unveränderlich)`], ['extraKaese', String(werte.extraKaese)]]);
+    zustand[p] = werte;
+    s.schritt('belag = List.copyOf(belag);', 'List.copyOf macht eine unveränderliche Kopie der Liste. Ändert jemand später die Liste im Builder, merkt die Pizza davon nichts.');
+    s.raus('return new Pizza(groesse, teig, belag, extraKaese);', 'Das Record ist fertig – und bleibt so, es hat keine Setter.', { cur: [p] });
+    s.raus(aufruf, `build() liefert die fertige Pizza: ${p}.`, { cur: [p] });
+    return { p };
+  }
+
+  function lauf(s) {
+    erklaert = false;
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args)', 'Start: main baut eine eigene Pizza, zwei nach Rezept und eine absichtlich falsche.');
+
+    // 1. direkt mit dem Builder
+    const b1 = neuerBuilder(s);
+    s.schritt('Pizza eigene = new PizzaBuilder()', 'new PizzaBuilder(): Die Felder bekommen ihre Standardwerte – „mittel“, „klassisch“, leere Liste, kein Extra-Käse.', { klassen: ['main()'] });
+    bau(s, b1, 'groesse', 'klein', '.groesse("klein")');
+    bau(s, b1, 'teig', 'Vollkorn', '.teig("Vollkorn")');
+    bau(s, b1, 'belag', 'Spinat', '.belag("Spinat")');
+    bau(s, b1, 'belag', 'Feta', '.belag("Feta")');
+    const { p: eigene } = build(s, b1, '        .build();');
+    s.var('eigene', s.ref(eigene));
+    s.weg(b1);
+    s.schritt('Pizza eigene = new PizzaBuilder()', 'Die Pizza landet in der Variablen eigene. Den Builder braucht niemand mehr – er ist nicht mehr erreichbar.', { cur: [eigene] });
+    s.aus(`Eigene:     ${pizzaText(zustand[eigene])}`);
+    s.schritt('System.out.println("Eigene:     " + eigene);', 'println ruft toString() des Records auf. Das Format Pizza[...] erzeugt Java für Records automatisch.', { cur: [eigene] });
+
+    // 2. über den Director
+    for (const [rezept, zeileMain, zeileRezept, schritte, text] of [
+      ['margherita', 'System.out.println("Margherita: "', 'static Pizza margherita(PizzaBuilder b)',
+        [['belag', 'Tomate', 'return b.belag("Tomate")'], ['belag', 'Mozzarella', 'return b.belag("Tomate")'], ['belag', 'Basilikum', 'return b.belag("Tomate")'], ['build', null, 'return b.belag("Tomate")']], 'Margherita: '],
+      ['diavolo', 'System.out.println("Diavolo:    "', 'static Pizza diavolo(PizzaBuilder b)',
+        [['groesse', 'gross', 'return b.groesse("gross")'], ['belag', 'Tomate', 'return b.groesse("gross")'], ['belag', 'Salami', 'return b.groesse("gross")'], ['belag', 'Peperoni', 'return b.groesse("gross")'], ['extraKaese', undefined, '.extraKaese().build();'], ['build', null, '.extraKaese().build();']], 'Diavolo:    ']
+    ]) {
+      const b = neuerBuilder(s);
+      s.schritt(zeileMain, `new PizzaBuilder() wird direkt an den Director übergeben: Speisekarte.${rezept}(...).`, { klassen: ['main()'] });
+      s.ruf(`Speisekarte.${rezept}(PizzaBuilder b)`, [['b', s.ref(b)]], zeileRezept, `Der Director kennt das Rezept „${rezept}“ und ruft die Bauschritte in der richtigen Reihenfolge auf.`, { klassen: ['Speisekarte'], cur: [b] });
+      let p;
+      for (const [m, arg, zeile] of schritte) {
+        if (m === 'build') p = build(s, b, zeile).p; else bau(s, b, m, arg, zeile);
+      }
+      s.raus(zeileMain, `${rezept}() gibt die fertige Pizza an main zurück.`, { cur: [p] });
+      s.weg(b);
+      s.aus(text + pizzaText(zustand[p]));
+      s.schritt(zeileMain, `Ausgabe über toString(). Die Pizza wurde nur für die Ausgabe gebraucht – nach dieser Zeile ist auch sie nicht mehr erreichbar.`, { cur: [p] });
+      s.weg(p);
+    }
+
+    // 3. Validierung
+    s.schritt('try {', 'Zum Schluss ein absichtlicher Fehler: ein Builder ohne jeden Belag.');
+    const b4 = neuerBuilder(s);
+    s.schritt('new PizzaBuilder().build();', 'new PizzaBuilder() und sofort build() – ohne einen einzigen Bauschritt.', { klassen: ['main()'] });
+    const { ex } = build(s, b4, 'new PizzaBuilder().build();');
+    s.raus('} catch (IllegalStateException e) {', 'Die Ausnahme verlässt build() sofort und wird in main vom catch-Block gefangen.', { cur: [ex] });
+    s.var('e', s.ref(ex));
+    s.weg(b4);
+    s.schritt('} catch (IllegalStateException e) {', 'Die Ausnahme steckt jetzt in e. Der Builder ist nicht mehr erreichbar – eine Pizza gab es nie.', { cur: [ex] });
+    s.aus('Fehler:     Eine Pizza braucht mindestens einen Belag');
+    s.schritt('System.out.println("Fehler:     " + e.getMessage());', 'e.getMessage() liefert den Text, der beim Werfen mitgegeben wurde.', { cur: [ex] });
+    s.weg(ex);
+    s.raus(['System.out.println("Fehler:     " + e.getMessage());', 2], 'main ist zu Ende, das Programm endet. Übrig bleibt nur eigene – und auch die verschwindet mit dem Programm.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Director', 'Builder', 'Product'],
+    diagramm: {
+      breite: 170, abstandX: 60, abstandY: 50,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1, y: 0 },
+        { name: 'Speisekarte', art: 'class', rolle: 'Director', x: 0, y: 1 },
+        { name: 'PizzaBuilder', art: 'class', rolle: 'Builder', x: 1, y: 1 },
+        { name: 'Pizza', art: 'record', rolle: 'Product', x: 2, y: 1 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Speisekarte', art: 'nutzt', text: 'Rezept', dx: -24 },
+        { von: 'main()', zu: 'PizzaBuilder', art: 'nutzt', text: 'new', dx: 18 },
+        { von: 'Speisekarte', zu: 'PizzaBuilder', art: 'nutzt', text: 'Bauschritte', dy: -6 },
+        { von: 'PizzaBuilder', zu: 'Pizza', art: 'erzeugt', text: 'build()', dy: -6 }
+      ]
+    },
+    szenarien: [
+      { name: 'java Builder.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

@@ -11,6 +11,7 @@
 # Den Testordner (im Projekt, z. B. test-dp) danach löschen.
 use strict; use warnings; use utf8;
 use POSIX qw(strftime);
+use JSON::PP;
 binmode STDOUT, ':encoding(UTF-8)';
 
 my ($seite, $test) = @ARGV;
@@ -54,10 +55,10 @@ die "keine Ausgabe\n" unless defined $ausgabe;
 
 # Eintrag in data/designpatterns.toml über den Namen finden
 open my $t, '<:encoding(UTF-8)', 'data/designpatterns.toml' or die $!; my $toml = do { local $/; <$t> }; close $t;
-my ($schluessel, $text, $nummer, $gruppe);
+my ($schluessel, $text, $nummer, $gruppe, $sogehts);
 for my $block (split /\[\[muster\]\]/, $toml) {
   my %f = $block =~ /^(\w+) = "?(.*?)"?$/mg;
-  if (($f{name} // '') eq $titel) { ($schluessel, $text, $nummer, $gruppe) = @f{qw(schluessel text nummer gruppe)}; last; }
+  if (($f{name} // '') eq $titel) { ($schluessel, $text, $nummer, $gruppe, $sogehts) = @f{qw(schluessel text nummer gruppe sogehts)}; last; }
 }
 die "„$titel“ steht nicht in data/designpatterns.toml\n" unless $schluessel;
 
@@ -106,8 +107,21 @@ my $fm = "+++\n"
   . "modell_id = \"claude-opus-5-5\"\n"
   . "herkunft = \"eingebracht\"\n"
   . "instanz = \"26.10.2026 - 13:39 - GoF-Designmuster in Java\"\n"
-  . "kontext = \"Reihe „Die 23 GoF Design Patterns“ in Java 21, Muster $nummer von 23 · Kurzbeschreibung aus der Liste der Instanz\"\n"
+  . "kontext = \"Reihe „Die 23 GoF Design Patterns“ in Java 21, Muster $nummer von 23 · Kurzbeschreibung aus der Liste der Instanz"
+  . (-e "static/apps/muster/$schluessel.html" ? " · Ablauf-Visualisierung: Claude Code Opus 5.5 (Redaktions-Instanz dieser Seite)" : "") . "\"\n"
   . "+++\n\n";
+# Code der Instanz für die Ablauf-Visualisierung (static/apps/muster/<schluessel>.html liest ihn aus <schluessel>-code.js),
+# damit Seite und Visualisierung nachweislich denselben Code zeigen
+mkdir 'static/apps/muster' unless -d 'static/apps/muster';
+open my $cj, '>:encoding(UTF-8)', "static/apps/muster/$schluessel-code.js" or die $!;
+print $cj "// Java-Code der Instanz zu „$titel“, unverändert aus der Lieferung – geschrieben von skripte/pattern-einlesen.pl, nicht von Hand ändern\n",
+  "window.MUSTER_CODE = ", JSON::PP->new->encode([split /\n/, $java, -1]), ";\n";
+close $cj;
+# Gibt es schon eine Ablauf-Visualisierung, steht sie oben auf der Seite (wie bei den Algorithmen)
+if (-e "static/apps/muster/$schluessel.html") {
+  $fm .= "{{< spiel src=\"/apps/muster/$schluessel.html\" titel=\"$titel – Ablauf\" link=\"Im Vollbild öffnen\" >}}\n\n";
+  $fm .= "**So geht's:** $sogehts\n\n" if $sogehts;
+}
 my $anm = "{{< anmerkung >}}\nDen Quellcode habe ich unverändert mit Java $version ausgeführt (`java $name.java`, ohne Build-Tool). "
   . "Die Ausgabe stimmt Zeichen für Zeichen mit dem Abschnitt „Ausgabe“ überein.\n{{< /anmerkung >}}\n";
 my $ziel = "content/it-konzepte/design-patterns/$schluessel.md";

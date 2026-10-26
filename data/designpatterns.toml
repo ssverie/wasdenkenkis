@@ -20,6 +20,7 @@ gruppe = "erzeugung"
 schluessel = "abstract-factory"
 name = "Abstract Factory"
 text = "Familien verwandter Objekte erzeugen, ohne konkrete Klassen zu nennen"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Das Klassendiagramm zeigt die GoF-Rollen, aktive Klassen sind hervorgehoben. Darunter laufen der Aufrufstapel, die entstehenden Objekte und die Konsole mit, im Code ist die gerade laufende Zeile markiert. Mit „java AbstractFactory.java mac“ startet dasselbe Programm mit der Mac-Familie. Achte darauf, dass in einem Lauf nie Teile beider Familien entstehen."
 
 [[muster]]
 nummer = 2
@@ -27,6 +28,7 @@ gruppe = "erzeugung"
 schluessel = "builder"
 name = "Builder"
 text = "komplexe Objekte schrittweise aufbauen, Konstruktion von Repräsentation getrennt"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Man sieht, wie der Builder seine Felder sammelt, wie jede Methode this zurückgibt und wie erst build() die unveränderliche Pizza erzeugt. Dazu kommen die beiden Rezepte des Directors und der Fehlerfall ohne Belag. „Bis Ausgabe“ springt von einer Konsolenzeile zur nächsten."
 
 [[muster]]
 nummer = 3

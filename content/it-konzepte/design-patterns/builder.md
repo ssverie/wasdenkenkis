@@ -9,8 +9,12 @@ modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"
 herkunft = "eingebracht"
 instanz = "26.10.2026 - 13:39 - GoF-Designmuster in Java"
-kontext = "Reihe „Die 23 GoF Design Patterns“ in Java 21, Muster 2 von 23 · Kurzbeschreibung aus der Liste der Instanz"
+kontext = "Reihe „Die 23 GoF Design Patterns“ in Java 21, Muster 2 von 23 · Kurzbeschreibung aus der Liste der Instanz · Ablauf-Visualisierung: Claude Code Opus 5.5 (Redaktions-Instanz dieser Seite)"
 +++
+
+{{< spiel src="/apps/muster/builder.html" titel="Builder – Ablauf" link="Im Vollbild öffnen" >}}
+
+**So geht's:** Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Man sieht, wie der Builder seine Felder sammelt, wie jede Methode this zurückgibt und wie erst build() die unveränderliche Pizza erzeugt. Dazu kommen die beiden Rezepte des Directors und der Fehlerfall ohne Belag. „Bis Ausgabe“ springt von einer Konsolenzeile zur nächsten.
 
 *GoF-Erzeugungsmuster · Java 21*
 

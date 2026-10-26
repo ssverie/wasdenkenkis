@@ -9,8 +9,12 @@ modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"
 herkunft = "eingebracht"
 instanz = "26.10.2026 - 13:39 - GoF-Designmuster in Java"
-kontext = "Reihe „Die 23 GoF Design Patterns“ in Java 21, Muster 1 von 23 · Kurzbeschreibung aus der Liste der Instanz"
+kontext = "Reihe „Die 23 GoF Design Patterns“ in Java 21, Muster 1 von 23 · Kurzbeschreibung aus der Liste der Instanz · Ablauf-Visualisierung: Claude Code Opus 5.5 (Redaktions-Instanz dieser Seite)"
 +++
+
+{{< spiel src="/apps/muster/abstract-factory.html" titel="Abstract Factory – Ablauf" link="Im Vollbild öffnen" >}}
+
+**So geht's:** Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Das Klassendiagramm zeigt die GoF-Rollen, aktive Klassen sind hervorgehoben. Darunter laufen der Aufrufstapel, die entstehenden Objekte und die Konsole mit, im Code ist die gerade laufende Zeile markiert. Mit „java AbstractFactory.java mac“ startet dasselbe Programm mit der Mac-Familie. Achte darauf, dass in einem Lauf nie Teile beider Familien entstehen.
 
 *GoF-Erzeugungsmuster · Java 21*
 

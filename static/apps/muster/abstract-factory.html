@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abstract Factory – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Abstract Factory (GoF-Erzeugungsmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (abstract-factory-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=3">
+</head>
+<body>
+<script src="abstract-factory-code.js?v=1"></script>
+<script src="rahmen.js?v=2"></script>
+<script>
+(function () {
+  const RENDER = { WinButton: '[ Windows-Button ]', WinCheckbox: '[x] Windows-Checkbox', MacButton: '( Mac-Button )', MacCheckbox: '(v) Mac-Checkbox' };
+  const FAMILIE = { Win: 'Windows', Mac: 'Mac' };
+
+  // buildUi(factory): der Client kennt nur GuiFactory, Button und Checkbox
+  function buildUi(s, fabrik, aufruf, msg) {
+    const fam = fabrik.startsWith('Mac') ? 'Mac' : 'Win';
+    s.schritt(aufruf, msg, { cur: [fabrik], klassen: ['buildUi()'] });
+    s.ruf('buildUi(GuiFactory factory)', [['factory', s.ref(fabrik)]], 'static void buildUi(GuiFactory factory)',
+      'Jetzt läuft der Client. Sein Parameter hat den Typ GuiFactory – welche Familie dahintersteckt, weiß er nicht.', { klassen: ['buildUi()', 'GuiFactory'] });
+    let erstes = true;
+    for (const [produkt, methode, zeile] of [['Button', 'createButton', 'factory.createButton().render();'], ['Checkbox', 'createCheckbox', 'factory.createCheckbox().render();']]) {
+      const klasse = fam + produkt;
+      s.schritt(zeile, `factory.${methode}(): Der Client fragt nur „gib mir einen ${produkt}“. Welche Methode wirklich läuft, entscheidet das Objekt hinter factory – hier ${fabrik}.`, { cur: [fabrik], klassen: ['GuiFactory'] });
+      s.ruf(`${fam}Factory.${methode}()`, [['this', s.ref(fabrik)]], `{ return new ${klasse}(); }`, `${fam}Factory.${methode}() läuft.`, { cur: [fabrik] });
+      const obj = s.neu(klasse);
+      s.schritt(`{ return new ${klasse}(); }`, `new ${klasse}() – eine ${FAMILIE[fam]}-Fabrik baut nur ${FAMILIE[fam]}-Teile. Ein ${fam === 'Win' ? 'Mac' : 'Windows'}-Teil kann hier gar nicht entstehen.`);
+      s.raus(zeile, `${methode}() gibt das Objekt als ${produkt} zurück – der Client sieht nur das Interface, nicht ${klasse}.`, { cur: [obj], klassen: [produkt] });
+      s.ruf(`${klasse}.render()`, [['this', s.ref(obj)]], `System.out.println("${RENDER[klasse]}")`, `.render() – wieder entscheidet das Objekt: ${klasse}.render() läuft.`, { cur: [obj] });
+      s.aus(RENDER[klasse]);
+      s.schritt(`System.out.println("${RENDER[klasse]}")`, `Ausgabe: ${RENDER[klasse]}`, { cur: [obj] });
+      s.weg(obj);
+      s.raus(zeile, erstes
+        ? `Zurück im Client. Den ${produkt} hat niemand in einer Variablen gespeichert – er ist nicht mehr erreichbar, der Garbage Collector darf ihn wegräumen.`
+        : `Zurück im Client, auch die ${produkt} ist nicht mehr erreichbar.`);
+      erstes = false;
+    }
+    s.raus(aufruf, `buildUi ist fertig: Zwei Teile, beide aus der ${FAMILIE[fam]}-Familie – gemischt werden kann nicht, weil nur eine Fabrik im Spiel war.`);
+  }
+
+  function lauf(s, args) {
+    const os = args.length > 0 ? args[0] : 'win';
+    const erste = os === 'mac' ? 'MacFactory' : 'WinFactory';
+    s.ruf('main(String[] args)', [['args', args.length ? '["mac"]' : '[]']], 'public static void main(String[] args)',
+      args.length ? 'Start mit dem Argument „mac“: java AbstractFactory.java mac' : 'Start ohne Argument: java AbstractFactory.java');
+    s.var('os', `"${os}"`);
+    s.schritt('String os = args.length', args.length ? 'args[0] ist "mac", also wird os = "mac".' : 'Kein Argument – der Bedingungsoperator nimmt den Standardwert, os = "win".');
+    s.schritt('GuiFactory factory = switch (os)', 'Die switch-Expression wählt die Fabrik. Das ist die einzige Stelle im Programm, an der eine konkrete Fabrikklasse genannt wird.', { klassen: ['GuiFactory'] });
+    const f1 = s.neu(erste);
+    s.var('factory', s.ref(f1));
+    s.schritt(os === 'mac' ? 'case "mac" -> new MacFactory();' : 'default    -> new WinFactory();',
+      `${os === 'mac' ? 'case "mac"' : 'default'} → es entsteht ${f1}. Die Variable factory hat aber nur den Typ GuiFactory.`, { klassen: ['GuiFactory'] });
+    s.aus(`Fabrik: ${erste}`);
+    s.schritt('System.out.println("Fabrik: "', `getClass().getSimpleName() verrät zur Kontrolle, welche Fabrik es geworden ist: ${erste}.`, { cur: [f1] });
+    buildUi(s, f1, 'buildUi(factory);', 'buildUi(factory): Die Fabrik wird an den Client übergeben.');
+    s.aus('\nWechsel der ganzen Familie mit einer Zeile:');
+    s.schritt('Wechsel der ganzen Familie', 'Das \\n am Anfang erzeugt eine Leerzeile, dann kommt der Text.');
+    const f2 = s.neu('MacFactory');
+    buildUi(s, f2, 'buildUi(new MacFactory());', `new MacFactory() wird direkt übergeben, ohne Variable. Am Client ändert sich nichts – nur die Fabrik ist eine andere.`);
+    s.weg(f2);
+    s.raus(['buildUi(new MacFactory());', 1], `main ist zu Ende, das Programm endet. Die Familie zu wechseln hat genau eine Zeile gekostet: die, in der die Fabrik entsteht.`);
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'AbstractFactory', 'ConcreteFactory', 'AbstractProduct', 'ConcreteProduct'],
+    diagramm: {
+      breite: 160, rand: 60, abstandX: 46,
+      klassen: [
+        { name: 'buildUi()', art: 'Methode', rolle: 'Client', x: 1, y: 0 },
+        { name: 'WinFactory', art: 'class', rolle: 'ConcreteFactory', x: 0, y: 1 },
+        { name: 'GuiFactory', art: 'interface', rolle: 'AbstractFactory', x: 1, y: 1 },
+        { name: 'MacFactory', art: 'class', rolle: 'ConcreteFactory', x: 2, y: 1 },
+        { name: 'WinButton', art: 'record', rolle: 'ConcreteProduct', x: 0, y: 2 },
+        { name: 'Button', art: 'interface', rolle: 'AbstractProduct', x: 1, y: 2 },
+        { name: 'MacButton', art: 'record', rolle: 'ConcreteProduct', x: 2, y: 2 },
+        { name: 'WinCheckbox', art: 'record', rolle: 'ConcreteProduct', x: 0, y: 3 },
+        { name: 'Checkbox', art: 'interface', rolle: 'AbstractProduct', x: 1, y: 3 },
+        { name: 'MacCheckbox', art: 'record', rolle: 'ConcreteProduct', x: 2, y: 3 }
+      ],
+      kanten: [
+        { von: 'buildUi()', zu: 'GuiFactory', art: 'nutzt', text: 'nutzt', dx: 22 },
+        { von: 'WinFactory', zu: 'GuiFactory', art: 'impl' }, { von: 'MacFactory', zu: 'GuiFactory', art: 'impl' },
+        { von: 'WinButton', zu: 'Button', art: 'impl' }, { von: 'MacButton', zu: 'Button', art: 'impl' },
+        { von: 'WinCheckbox', zu: 'Checkbox', art: 'impl' }, { von: 'MacCheckbox', zu: 'Checkbox', art: 'impl' },
+        { von: 'WinFactory', zu: 'WinButton', art: 'erzeugt', text: 'erzeugt', dx: 30 },
+        { von: 'WinFactory', zu: 'WinCheckbox', art: 'erzeugt', bogen: -50 },
+        { von: 'MacFactory', zu: 'MacButton', art: 'erzeugt', text: 'erzeugt', dx: -30 },
+        { von: 'MacFactory', zu: 'MacCheckbox', art: 'erzeugt', bogen: 50 }
+      ]
+    },
+    szenarien: [
+      { name: 'java AbstractFactory.java', titel: 'ohne Argument – Windows-Familie, wie die Ausgabe auf der Seite', laufe: s => lauf(s, []) },
+      { name: 'java AbstractFactory.java mac', titel: 'mit Argument mac – Mac-Familie', laufe: s => lauf(s, ['mac']) }
+    ]
+  });
+})();
+</script>
+</body>
+</html>
