@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bag / Multimenge</title>
+<!-- Visualisierung der Multimenge (Bag) mit verketteter Liste (nach Sedgewick/Wayne, Algorithmen, Algorithmus 1.4, Listing 1.42)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code; der Client „Messwerte“ (Mittelwert, Standardabweichung)
+     ist eine eigene Fassung des Bag-Anwendungsfalls aus dem Erklärtext. Aufbau wie der Ketten-Stapel (stapel-liste.html). -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  .eingabe input[type=number] { width: 5.5em; font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .kette { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 22px 0; min-height: 64px; padding-top: 18px; }   /* Platz für die Etiketten über der ersten Zeile */
+  .glied { display: flex; align-items: flex-end; }
+  .knoten { position: relative; display: flex; border-radius: 7px; overflow: visible; }
+  .knoten .item, .knoten .next { background: var(--bar); padding: 6px 7px; font-size: 14px; font-weight: 600; min-width: 2.2em; text-align: center; font-variant-numeric: tabular-nums; }
+  .knoten .item { border-radius: 7px 0 0 7px; }
+  .knoten .next { border-radius: 0 7px 7px 0; border-left: 2px solid var(--bg); min-width: 1.4em; padding: 6px 5px; color: var(--muted); font-weight: 400; }
+  .knoten .item.leer { color: var(--muted); font-weight: 400; font-style: italic; }
+  .knoten.neu .item, .knoten.neu .next { background: var(--neu); color: #fff; }
+  .knoten.cur .item, .knoten.cur .next { background: var(--cur); color: #fff; }
+  .knoten.swap .item, .knoten.swap .next { background: var(--swap); color: #fff; }
+  .knoten.fertig .item { background: var(--sortiert); }
+  .knoten.fertig { opacity: .55; }   /* im Dunkelmodus ist --sortiert kaum von den übrigen Knoten zu unterscheiden */
+  @media (prefers-color-scheme: dark) {
+    .knoten.neu .item, .knoten.neu .next, .knoten.cur .item, .knoten.cur .next, .knoten.swap .item, .knoten.swap .next { color: #0d1530; }
+  }
+  .marken { position: absolute; left: 0; bottom: 100%; margin-bottom: 2px; display: flex; gap: 3px; white-space: nowrap; }
+  .marken span { font-size: 10px; line-height: 1; padding: 2px 4px; border-radius: 4px; background: var(--panel); border: 1px solid var(--line); color: var(--text); font-family: ui-monospace, Consolas, monospace; }
+  .marken span.first { border-color: var(--cur); color: var(--cur); font-weight: 700; }
+  .pfeil { padding: 0 4px 6px; color: var(--muted); font-size: 15px; line-height: 1; }
+  .pfeil.neu { color: var(--neu); font-weight: 700; }
+  .null { font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: var(--muted); padding-bottom: 7px; }
+  .luecke { width: 26px; }
+  .rechnung { margin-top: 12px; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .rechnung b { color: var(--text); }
+  .ergebnis { margin-top: 6px; font-size: 14px; }
+  .proto td.op { text-align: left; font-weight: 600; white-space: nowrap; }
+  .proto td.inhalt { text-align: left; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+  .proto tr.zuletzt td { color: var(--neu); font-weight: 700; }
+  @media (max-width: 480px) {
+    .knoten .item, .knoten .next { font-size: 12px; padding: 5px 4px; }
+    .pfeil { padding: 0 2px 5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <label>Zahl <input type="number" id="zahl" min="0" max="999" value="100"></label>
+    <button id="add">add</button>
+    <button id="zufall">Zufallszahl</button>
+    <button id="iter">for (x : bag)</button>
+    <button id="stat">Mittelwert &amp; Standardabweichung</button>
+    <button id="buch">Beispielwerte</button>
+    <button id="leeren">Leeren</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="kette" id="kette"></div>
+    <div class="rechnung" id="rechnung"></div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>neuer Knoten</span>
+      <span><i style="background:var(--cur)"></i>aktuell beim Durchlaufen</span>
+      <span><i style="background:var(--sortiert);opacity:.55"></i>schon durchlaufen</span>
+    </div>
+    <div class="ergebnis" id="ergebnis"></div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 1.4, Listing 1.42)</div><pre id="code"></pre></div>
+    <div class="box"><div class="h">Protokoll (je Operation)</div><div class="proto" id="proto"></div></div>
+  </div>
+</div>
+<script>
+(function () {
+  const KAP = 16;              // mehr Knoten passen nicht gut auf den Bildschirm – die Liste selbst hätte keine Grenze
+  const CODE = [
+    'import java.util.Iterator;',
+    '',
+    'public class Bag<Item> implements Iterable<Item>',
+    '{',
+    '   private Node first;      // zuletzt hineingelegter Knoten',
+    '   private int n;           // Anzahl der Elemente',
+    '',
+    '   private class Node',
+    '   {  // ein Glied der Kette',
+    '      Item item;',
+    '      Node next;',
+    '   }',
+    '',
+    '   public boolean isEmpty()  {  return first == null;  }',
+    '   public int size()         {  return n;  }',
+    '',
+    '   public void add(Item item)',
+    '   {  // wie push() beim Stapel: vorne dran',
+    '      Node altesErstes = first;',
+    '      first = new Node();',
+    '      first.item = item;',
+    '      first.next = altesErstes;',
+    '      n++;',
+    '   }',
+    '',
+    '   public Iterator<Item> iterator()',
+    '   {  return new KetteEntlang();  }',
+    '',
+    '   private class KetteEntlang implements Iterator<Item>',
+    '   {  // aktuell startet bei first und wandert über next',
+    '      private Node aktuell = first;',
+    '      public boolean hasNext()  {  return aktuell != null;  }',
+    '      public Item next()',
+    '      {',
+    '         Item item = aktuell.item;',
+    '         aktuell = aktuell.next;',
+    '         return item;',
+    '      }',
+    '      public void remove()      {  }',
+    '   }',
+    '}',
+    '',
+    'class Messwerte   // Client: erst sammeln, dann auswerten',
+    '{',
+    '   static void auswerten(Bag<Double> werte)',
+    '   {',
+    '      int n = werte.size();',
+    '      double summe = 0.0;',
+    '      for (double x : werte) summe += x;',
+    '      double mittel = summe / n;',
+    '      summe = 0.0;',
+    '      for (double x : werte) summe += (x - mittel) * (x - mittel);',
+    '      double std = Math.sqrt(summe / (n - 1));',
+    '   }',
+    '}'
+  ];
+  const zeile = s => CODE.findIndex(l => l.includes(s));
+  const L = { start: zeile('private Node first;'), merken: zeile('Node altesErstes = first'), neuerKnoten: zeile('first = new Node()'),
+              wert: zeile('first.item = item'), verketten: zeile('first.next = altesErstes'), plus: zeile('n++;'),
+              iterStart: zeile('private Node aktuell = first'), iterLesen: zeile('Item item = aktuell.item'), hasNext: zeile('return aktuell != null'),
+              statN: zeile('int n = werte.size()'), summe1: zeile('summe += x;'), mittel: zeile('double mittel'), null2: zeile('      summe = 0.0;'),
+              summe2: zeile('summe += (x - mittel)'), std: zeile('Math.sqrt') };
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const zahl = (x, st) => (st === undefined ? String(x) : x.toFixed(st)).replace('.', ',');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // Zustand: kette[0] ist first (der zuletzt hineingelegte Knoten)
+  let kette = [], ops = [], ergebnis = '', anzahlOps = 0;
+  let steps = [], pos = 0, timer = null;
+
+  const glied = (item, cls, marken, pfeilNeu) => ({ item, cls: cls || '', marken: marken || [], pfeilNeu: !!pfeilNeu });
+  function normal() { const g = kette.map(x => glied(x)); if (g.length) g[0].marken.push('first'); return g; }
+  function snap(line, msg, abschnitte, rechnung, o) {
+    steps.push(Object.assign({ line, msg, abschnitte, rechnung: rechnung || '', n: kette.length, ops: ops.slice(), ergebnis, anzahlOps }, o));
+  }
+  function zeileProto(text, aus) { ops.push({ text, aus, n: kette.length, inhalt: kette.slice() }); }
+
+  function add(x) {
+    anzahlOps++;
+    const vorher = normal();
+    if (vorher.length) vorher[0].marken.push('altesErstes');
+    snap(L.merken, kette.length
+      ? `add(${zahl(x)}): altesErstes merkt sich den bisherigen ersten Knoten ${zahl(kette[0])}. Genau wie push() beim Stapel.`
+      : `add(${zahl(x)}): Der Bag ist leer – altesErstes = first = null.`, [vorher]);
+    const alt = normal(); if (alt.length) alt[0].marken = ['altesErstes'];
+    snap(L.neuerKnoten, `first = new Node(): Ein neuer, leerer Knoten entsteht und wird first.`, [[glied(null, 'neu', ['first'])], alt]);
+    snap(L.wert, `first.item = ${zahl(x)}.`, [[glied(x, 'neu', ['first'])], alt]);
+    kette.unshift(x);
+    const verbunden = normal(); verbunden[0] = glied(x, 'neu', ['first'], true);
+    if (verbunden.length > 1) verbunden[1].marken = ['altesErstes'];
+    snap(L.verketten, kette.length > 1 ? `first.next = altesErstes: ${zahl(x)} zeigt auf ${zahl(kette[1])}.` : 'first.next = altesErstes = null: der einzige Knoten.', [verbunden]);
+    zeileProto(`add(${zahl(x)})`, '');
+    const fertig = normal(); fertig[0].cls = 'swap';
+    snap(L.plus, `n++ → n = ${kette.length}. Mehr kann ein Bag beim Hineinlegen nicht: Es gibt kein Herausnehmen, und die Reihenfolge spielt keine Rolle.`, [fertig], '', { opEnde: true, cls: 'swap' });
+  }
+
+  // ein Durchlauf mit dem Iterator; jeKnoten(i, x) liefert Meldung und Rechnung für Knoten i
+  function durchlauf(zeileLesen, jeKnoten) {
+    for (let i = 0; i < kette.length; i++) {
+      const a = normal();
+      for (let j = 0; j < i; j++) a[j].cls = 'fertig';
+      a[i].cls = 'cur'; a[i].marken.push('aktuell');
+      const r = jeKnoten(i, kette[i]);
+      snap(zeileLesen, r.msg, [a], r.rechnung);
+    }
+  }
+
+  function iterieren() {
+    const reihe = [];
+    const a0 = normal(); if (a0.length) a0[0].marken.push('aktuell');
+    snap(L.iterStart, `for (x : bag): Der Iterator beginnt bei aktuell = first${kette.length ? ` (${zahl(kette[0])})` : ' = null'}.`, [a0]);
+    durchlauf(L.iterLesen, (i, x) => { reihe.push(x); return { msg: `hasNext(): aktuell ≠ null → next() liefert ${zahl(x)}, dann aktuell = aktuell.next${i + 1 < kette.length ? ` (${zahl(kette[i + 1])})` : ' = null'}.`, rechnung: `durchlaufen: ${reihe.map(v => zahl(v)).join(' ')}` }; });
+    zeileProto('Iteration', reihe.map(v => zahl(v)).join(' '));
+    const ende = normal(); ende.forEach(g => g.cls = 'fertig');
+    snap(L.hasNext, kette.length
+      ? `hasNext(): aktuell = null → fertig. Die Werte kamen in umgekehrter Einfüge-Reihenfolge – beim Bag ist das egal, Hauptsache, jeder kommt genau einmal.`
+      : 'hasNext(): aktuell = first = null → der Bag ist leer, die Schleife läuft kein einziges Mal.', [ende], '', { opEnde: true, cls: 'swap' });
+  }
+
+  function statistik() {
+    const n = kette.length;
+    snap(L.statN, `auswerten(): n = werte.size() = ${n}. Der Client kennt nur add, size und for-each – mehr braucht er nicht.`, [normal()], '');
+    let summe = 0;
+    durchlauf(L.summe1, (i, x) => { summe += x; return { msg: `1. Schleife: x = ${zahl(x)} → summe = ${zahl(summe)}.`, rechnung: `summe = <b>${zahl(summe)}</b>` }; });
+    const mittel = summe / n;
+    const fertig1 = normal(); fertig1.forEach(g => g.cls = 'fertig');
+    snap(L.mittel, `mittel = summe / n = ${zahl(summe)} / ${n} = ${zahl(mittel, 2)}.`, [fertig1], `mittel = <b>${zahl(mittel, 2)}</b>`);
+    let q = 0;
+    snap(L.null2, 'summe = 0.0: Für die Standardabweichung läuft der Iterator ein zweites Mal über alle Werte.', [normal()], `mittel = <b>${zahl(mittel, 2)}</b> · summe = <b>0</b>`);
+    durchlauf(L.summe2, (i, x) => { q += (x - mittel) * (x - mittel); return { msg: `2. Schleife: x = ${zahl(x)}, (x − mittel)² = ${zahl((x - mittel) * (x - mittel), 2)} → summe = ${zahl(q, 2)}.`, rechnung: `mittel = <b>${zahl(mittel, 2)}</b> · summe = <b>${zahl(q, 2)}</b>` }; });
+    const std = n > 1 ? Math.sqrt(q / (n - 1)) : NaN;
+    ergebnis = n > 1 ? `Mittelwert <b>${zahl(mittel, 2)}</b> · Standardabweichung <b>${zahl(std, 2)}</b> (n = ${n})` : `Mittelwert <b>${zahl(mittel, 2)}</b> · für die Standardabweichung braucht es mindestens zwei Werte`;
+    zeileProto('auswerten()', n > 1 ? `${zahl(mittel, 2)} / ${zahl(std, 2)}` : zahl(mittel, 2));
+    const fertig2 = normal(); fertig2.forEach(g => g.cls = 'fertig');
+    snap(L.std, n > 1
+      ? `std = √(summe / (n − 1)) = √(${zahl(q, 2)} / ${n - 1}) = ${zahl(std, 2)}. Zweimal durch den ganzen Bag, die Reihenfolge war dabei egal.`
+      : 'Nur ein Wert: n − 1 wäre 0, die Standardabweichung ist nicht definiert.', [fertig2], '', { opEnde: true, cls: 'swap' });
+    return { mittel, std };
+  }
+
+  // ---------- Anzeige ----------
+  function abschnittHtml(gl) {
+    let h = '';
+    gl.forEach((g, i) => {
+      const marken = g.marken.length ? `<div class="marken">${g.marken.map(m => `<span class="${m === 'first' ? 'first' : ''}">${m}</span>`).join('')}</div>` : '';
+      const wert = g.item === null ? '<div class="item leer">?</div>' : `<div class="item">${esc(zahl(g.item))}</div>`;
+      h += `<div class="glied"><div class="knoten ${g.cls}">${marken}${wert}<div class="next">•</div></div><span class="pfeil${g.pfeilNeu ? ' neu' : ''}">→</span>`;
+      h += i === gl.length - 1 ? '<span class="null">null</span></div>' : '</div>';
+    });
+    return h;
+  }
+  function render() {
+    const s = steps[pos];
+    $('titel').innerHTML = `Verkettete Liste · n = <b>${s.n}</b> · nur hineinlegen und durchlaufen, kein Herausnehmen`;
+    let h = '';
+    const teile = s.abschnitte.filter(a => a.length);
+    if (!teile.length) h = '<span class="null">first → null</span>';
+    teile.forEach((a, i) => { if (i) h += '<div class="luecke"></div>'; h += abschnittHtml(a); });
+    $('kette').innerHTML = h;
+    $('rechnung').innerHTML = s.rechnung || '&nbsp;';
+    $('ergebnis').innerHTML = s.ergebnis || 'Auswertung: noch keine';
+
+    const msg = $('msg');
+    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length} · ${s.anzahlOps} add`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
+    $('proto').innerHTML = s.ops.length
+      ? `<table><tr><th style="text-align:left">Operation</th><th>Ergebnis</th><th>n</th><th style="text-align:left">Bag von first aus</th></tr>${s.ops.map((o, i) =>
+        `<tr${i === s.ops.length - 1 && s.opEnde ? ' class="zuletzt"' : ''}><td class="op">${esc(o.text)}</td><td>${esc(o.aus)}</td><td>${o.n}</td><td class="inhalt">${o.inhalt.map(x => esc(zahl(x))).join(' → ')}${o.inhalt.length ? ' → ' : ''}null</td></tr>`).join('')}</table>`
+      : '<p class="count">Noch keine Operation. Oben eine Zahl mit add hineinlegen oder die Beispielwerte nehmen.</p>';
+
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0;
+    $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    $('add').disabled = $('zufall').disabled = kette.length >= KAP;
+    $('stat').disabled = kette.length === 0;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  // Kästen werden nie wieder niedriger, sonst springen die Knöpfe darunter auf und ab
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  window.addEventListener('resize', () => ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }));
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;        // am Ende: von vorn abspielen
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  function operation(f) {
+    stop();
+    const vorher = steps.length;
+    f();
+    pos = Math.min(vorher, steps.length - 1);
+    render();
+  }
+  function leeren(text) {
+    stop();
+    kette = []; ops = []; ergebnis = ''; anzahlOps = 0; steps = [];
+    snap(L.start, text || 'Leerer Bag: first = null, n = 0. Oben eine Zahl mit add hineinlegen.', [[]], '', { opEnde: true });
+    pos = 0; render();
+  }
+  // Messwerte wie im Bag-Client Stats der englischen Buchausgabe (Mittelwert 100,60, Standardabweichung 10,51)
+  const BEISPIEL = [100, 99, 101, 120, 98, 107, 109, 81, 101, 90];
+  function beispiel() {
+    leeren(`Beispielwerte: ${BEISPIEL.join(' ')} – zehn Messwerte. Erst werden alle mit add gesammelt, dann wertet der Client sie aus. Mit „Abspielen“ oder „Schritt“ geht es los.`);
+    BEISPIEL.forEach(x => add(x));
+    statistik();
+    pos = 0; render();
+  }
+
+  $('add').addEventListener('click', () => {
+    const x = Math.round(+$('zahl').value);
+    if (!(x >= 0 && x <= 999) || $('zahl').value === '') { $('zahl').focus(); return; }
+    if (kette.length < KAP) operation(() => add(x));
+  });
+  $('zahl').addEventListener('keydown', e => { if (e.key === 'Enter') $('add').click(); });
+  $('zufall').addEventListener('click', () => { if (kette.length < KAP) operation(() => add(80 + Math.floor(Math.random() * 41))); });
+  $('iter').addEventListener('click', () => operation(iterieren));
+  $('stat').addEventListener('click', () => { if (kette.length) operation(statistik); });
+  $('buch').addEventListener('click', beispiel);
+  $('neu').addEventListener('click', beispiel);   // Neustart = Zustand beim ersten Öffnen
+  $('leeren').addEventListener('click', () => leeren());
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests
+  window.__bag = { add: x => operation(() => add(x)), iterieren: () => operation(iterieren), statistik: () => { let r; operation(() => { r = statistik(); }); return r; },
+    leeren: () => leeren(), beispiel, get kette() { return kette.slice(); }, get steps() { return steps; }, get ops() { return ops; }, KAP };
+
+  beispiel();
+})();
+</script>
+</body>
+</html>
