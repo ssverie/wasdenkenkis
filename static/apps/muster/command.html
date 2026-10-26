@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Command – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Command (GoF-Verhaltensmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (command-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="command-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  // Zeilen, die mehrfach vorkommen (b.ausfuehren(); undo.push(b); b.rueckgaengig();): über den genauen Zeileninhalt und die Nummer des Vorkommens
+  function Z(text, nr) {
+    const treffer = window.MUSTER_CODE.map((l, i) => l.trim() === text ? i : -1).filter(i => i >= 0);
+    if (treffer.length <= (nr || 0)) throw new Error(`Zeile „${text}“ (${nr || 0}) nicht gefunden`);
+    return treffer[nr || 0];
+  }
+  const str = t => `"${t}"`;
+  const MAIN = { klassen: ['main()'] };
+
+  function lauf(s) {
+    let text = '';
+    const undo = [], redo = [], protokoll = [];          // undo/redo: vorne = oben (push/pop wie ArrayDeque)
+    const liste = a => `[${a.map(x => '→ ' + x).join(', ')}]`;
+    const B = {};                                        // id → Befehl im Modell
+
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: ein Dokument, ein Editor und Befehle als Objekte.', MAIN);
+    const dok = s.neu('Dokument', [['text', '""']]);
+    s.var('dok', s.ref(dok));
+    s.schritt('Dokument dok = new Dokument();', `${dok} ist der Receiver: Es kann Text einfügen und löschen, mehr nicht.`, { cur: [dok] });
+    const ed = s.neu('Editor', [['undo', '[]'], ['redo', '[]'], ['protokoll', '[]']]);
+    s.var('editor', s.ref(ed));
+    s.schritt('Editor editor = new Editor();', `${ed} ist der Invoker: zwei Stapel für Undo und Redo und ein Protokoll. Das Dokument kennt er nicht.`, { cur: [ed] });
+
+    const setzeText = t => { text = t; s.feld(dok, 'text', str(t)); };
+    const stapel = () => { s.feld(ed, 'undo', liste(undo)); s.feld(ed, 'redo', liste(redo)); };
+
+    // Befehl selbst ausführen bzw. zurücknehmen (eine Ebene: der konkrete Befehl ändert das Dokument)
+    function fuehreAus(id, zurueck, extra) {
+      const b = B[id];
+      if (b.typ === 'Einfuegen') {
+        setzeText(text.slice(0, b.pos) + b.text + text.slice(b.pos));
+        s.ruf('Einfuegen.ausfuehren()', [['this', s.ref(id)]], '{ dok.einfuegen(pos, text); }', extra || `${id} ruft dok.einfuegen(${b.pos}, "${b.text}") – das Dokument heißt jetzt "${text}".`, { cur: [id, dok] });
+      } else if (b.typ === 'Loeschen') {
+        const weg = text.substr(b.pos, b.laenge);
+        setzeText(text.slice(0, b.pos) + text.slice(b.pos + b.laenge));
+        s.feld(id, 'geloescht', str(weg));
+        s.ruf('Loeschen.ausfuehren()', [['this', s.ref(id)]], 'geloescht = dok.loeschen(pos, laenge);', `${id} löscht ${b.laenge} Zeichen ab Position ${b.pos} – und merkt sich dabei im Feld geloescht, was weg ist: "${weg}". Ohne das gäbe es kein Undo.`, { cur: [id, dok] });
+      } else {
+        s.ruf('Makro.ausfuehren()', [['this', s.ref(id)]], '{ befehle.forEach(Befehl::ausfuehren); }', `${id} führt seine Befehle der Reihe nach aus – ein Makro ist selbst ein Befehl (Composite).`, { cur: [id] });
+        b.befehle.forEach(t => fuehreAus(t, '{ befehle.forEach(Befehl::ausfuehren); }'));
+      }
+      s.raus(zurueck, b.typ === 'Makro' ? `Das Makro ist durch: "${text}".` : 'Fertig.', {});
+    }
+    function nimmZurueck(id, zurueck) {
+      const b = B[id];
+      if (b.typ === 'Einfuegen') {
+        setzeText(text.slice(0, b.pos) + text.slice(b.pos + b.text.length));
+        s.ruf('Einfuegen.rueckgaengig()', [['this', s.ref(id)]], 'dok.loeschen(pos, text.length());', `${id} kennt Position und Text – es löscht genau die ${b.text.length} Zeichen wieder: "${text}".`, { cur: [id, dok] });
+      } else if (b.typ === 'Loeschen') {
+        setzeText(text.slice(0, b.pos) + b.geloescht + text.slice(b.pos));
+        s.ruf('Loeschen.rueckgaengig()', [['this', s.ref(id)]], 'dok.einfuegen(pos, geloescht);', `${id} fügt das Gemerkte wieder ein: "${b.geloescht}" an Position ${b.pos} → "${text}".`, { cur: [id, dok] });
+      } else {
+        s.ruf('Makro.rueckgaengig()', [['this', s.ref(id)]], 'for (Befehl b : befehle.reversed()) b.rueckgaengig();', `${id} nimmt seine Befehle in umgekehrter Reihenfolge zurück – befehle.reversed() ist neu in Java 21.`, { cur: [id] });
+        b.befehle.slice().reverse().forEach(t => nimmZurueck(t, 'for (Befehl b : befehle.reversed()) b.rueckgaengig();'));
+      }
+      s.raus(zurueck, b.typ === 'Makro' ? `Beide zurückgenommen: "${text}".` : 'Zurückgenommen.', {});
+    }
+
+    // editor.ausfuehren(b)
+    function editorAus(id, zeileMain, ausfuehrlich) {
+      const b = B[id];
+      s.ruf('Editor.ausfuehren(Befehl b)', [['this', s.ref(ed)], ['b', s.ref(id)]], Z('b.ausfuehren();', 0), ausfuehrlich
+        ? `editor.ausfuehren(b): Der Editor sagt nur b.ausfuehren() – was der Befehl tut, weiß er nicht.`
+        : `editor.ausfuehren(${id}).`, { cur: [ed, id] });
+      fuehreAus(id, Z('b.ausfuehren();', 0));
+      undo.unshift(id); stapel();
+      const leer = redo.splice(0);
+      if (ausfuehrlich) {
+        s.schritt(Z('undo.push(b);', 0), `${id} kommt oben auf den Undo-Stapel.`, { cur: [ed] });
+        s.feld(ed, 'redo', '[]');
+        s.schritt('redo.clear();', 'redo.clear(): Ein neuer Befehl macht alles ungültig, was man noch hätte wiederholen können.', { cur: [ed] });
+      }
+      s.feld(ed, 'redo', '[]');
+      protokoll.push(b.name);
+      s.feld(ed, 'protokoll', `${protokoll.length} Einträge`);
+      s.schritt('protokoll.add(b.name());', ausfuehrlich
+        ? `Ins Protokoll: „${b.name}“.`
+        : `Undo-Stapel: ${liste(undo)}${leer.length ? `. redo.clear() wirft ${leer.join(', ')} weg – nach einem neuen Befehl gibt es kein Redo mehr` : ''}. Protokoll: „${b.name}“.`, { cur: [ed] });
+      if (leer.length) s.weg(...leer);
+      s.raus(zeileMain, `Zurück in main.`, MAIN);
+    }
+
+    function editorUndo(zeileMain, erstes) {
+      s.ruf('Editor.rueckgaengig()', [['this', s.ref(ed)]], 'if (undo.isEmpty()) return;', erstes ? 'editor.rueckgaengig(): Ist der Undo-Stapel leer, passiert nichts.' : 'editor.rueckgaengig().', { cur: [ed] });
+      const id = undo.shift(); stapel();
+      s.var('b', s.ref(id));
+      s.schritt('Befehl b = undo.pop();', `pop() nimmt den obersten Befehl: ${id}.`, { cur: [ed, id] });
+      nimmZurueck(id, Z('b.rueckgaengig();', 0));
+      redo.unshift(id); stapel();
+      protokoll.push('Undo: ' + B[id].name);
+      s.feld(ed, 'protokoll', `${protokoll.length} Einträge`);
+      s.schritt('protokoll.add("Undo: " + b.name());', `${id} wandert auf den Redo-Stapel, ins Protokoll kommt „Undo: ${B[id].name}“.`, { cur: [ed] });
+      s.raus(zeileMain, 'Zurück in main.', MAIN);
+    }
+
+    const ausgabe = (z, label) => { s.aus(`${label}"${text}"`); s.schritt(z, `toString() setzt den Text in Anführungszeichen: "${text}".`, { cur: [dok], klassen: ['main()'] }); };
+
+    // --- zwei Einfügungen ---
+    const e1 = s.neu('Einfuegen', [['dok', s.ref(dok)], ['pos', '0'], ['text', '"Hallo"']]);
+    B[e1] = { typ: 'Einfuegen', pos: 0, text: 'Hallo', name: 'Einfügen "Hallo"' };
+    s.schritt('editor.ausfuehren(new Einfuegen(dok, 0, "Hallo"));', `Der Befehl ist ein Objekt: ${e1} kennt Dokument, Position und Text – alles, was zum Ausführen und Zurücknehmen nötig ist.`, { cur: [e1] });
+    editorAus(e1, 'editor.ausfuehren(new Einfuegen(dok, 0, "Hallo"));', true);
+    const e2 = s.neu('Einfuegen', [['dok', s.ref(dok)], ['pos', '5'], ['text', '" Welt"']]);
+    B[e2] = { typ: 'Einfuegen', pos: 5, text: ' Welt', name: 'Einfügen " Welt"' };
+    s.schritt('editor.ausfuehren(new Einfuegen(dok, 5, " Welt"));', `${e2}: " Welt" an Position 5.`, { cur: [e2] });
+    editorAus(e2, 'editor.ausfuehren(new Einfuegen(dok, 5, " Welt"));');
+    ausgabe('System.out.println("Nach zwei Einfügungen: " + dok);', 'Nach zwei Einfügungen: ');
+
+    // --- Löschen ---
+    const l1 = s.neu('Loeschen', [['dok', s.ref(dok)], ['pos', '0'], ['laenge', '6'], ['geloescht', '""']]);
+    B[l1] = { typ: 'Loeschen', pos: 0, laenge: 6, geloescht: 'Hallo ', name: 'Löschen 6 Zeichen' };
+    s.schritt('editor.ausfuehren(new Loeschen(dok, 0, 6));', `${l1}: 6 Zeichen ab Position 0. Das Feld geloescht ist noch leer.`, { cur: [l1] });
+    editorAus(l1, 'editor.ausfuehren(new Loeschen(dok, 0, 6));');
+    ausgabe('System.out.println("Nach Löschen:          " + dok);', 'Nach Löschen:          ');
+
+    // --- Undo, Undo, Redo ---
+    const undoZeilen = window.MUSTER_CODE.map((l, i) => l.trim() === 'editor.rueckgaengig();' ? i : -1).filter(i => i >= 0);
+    const undoAusgabe = window.MUSTER_CODE.map((l, i) => l.includes('System.out.println("Undo:') ? i : -1).filter(i => i >= 0);
+    editorUndo(undoZeilen[0], true);
+    ausgabe(undoAusgabe[0], 'Undo:                  ');
+    editorUndo(undoZeilen[1]);
+    ausgabe(undoAusgabe[1], 'Undo:                  ');
+
+    s.ruf('Editor.wiederholen()', [['this', s.ref(ed)]], 'if (redo.isEmpty()) return;', 'editor.wiederholen(): das Gegenstück zu Undo.', { cur: [ed] });
+    const r = redo.shift(); stapel();
+    s.var('b', s.ref(r));
+    s.schritt('Befehl b = redo.pop();', `Oben auf dem Redo-Stapel liegt ${r} – der zuletzt zurückgenommene Befehl.`, { cur: [ed, r] });
+    fuehreAus(r, Z('b.ausfuehren();', 1), `Derselbe Befehl ${r} noch einmal: dok.einfuegen(5, " Welt") → "${text.slice(0, 5)} Welt${text.slice(5)}".`);
+    undo.unshift(r); stapel();
+    protokoll.push('Redo: ' + B[r].name);
+    s.feld(ed, 'protokoll', `${protokoll.length} Einträge`);
+    s.schritt('protokoll.add("Redo: " + b.name());', `${r} zurück auf den Undo-Stapel, ins Protokoll „Redo: ${B[r].name}“. Auf dem Redo-Stapel liegt noch ${liste(redo)}.`, { cur: [ed] });
+    s.raus('editor.wiederholen();', 'Zurück in main.', MAIN);
+    ausgabe('System.out.println("Redo:                  " + dok);', 'Redo:                  ');
+
+    // --- Makro ---
+    const e3 = s.neu('Einfuegen', [['dok', s.ref(dok)], ['pos', String(text.length)], ['text', '","']]);
+    B[e3] = { typ: 'Einfuegen', pos: text.length, text: ',', name: 'Einfügen ","' };
+    s.schritt('new Einfuegen(dok, dok.laenge(), ","),', `Die Argumente werden jetzt schon ausgewertet: dok.laenge() = ${text.length}. ${e3} fügt später an Position ${text.length} ein Komma ein.`, { cur: [e3, dok] });
+    const e4 = s.neu('Einfuegen', [['dok', s.ref(dok)], ['pos', String(text.length + 1)], ['text', '" Sven!"']]);
+    B[e4] = { typ: 'Einfuegen', pos: text.length + 1, text: ' Sven!', name: 'Einfügen " Sven!"' };
+    s.schritt('new Einfuegen(dok, dok.laenge() + 1, " Sven!"))));', `${e4}: Position ${text.length + 1} rechnet das Komma schon mit, das es noch gar nicht gibt. Das klappt nur, weil das Makro die Befehle in dieser Reihenfolge ausführt.`, { cur: [e4] });
+    const mk = s.neu('Makro', [['name', '"Gruß ergänzen"'], ['befehle', liste([e3, e4])]]);
+    B[mk] = { typ: 'Makro', befehle: [e3, e4], name: 'Gruß ergänzen' };
+    s.schritt('editor.ausfuehren(new Makro("Gruß ergänzen", List.of(', `${mk}: ein record mit Name und zwei Befehlen. name() muss es nicht selbst schreiben – das liefert der record als Accessor.`, { cur: [mk] });
+    editorAus(mk, 'editor.ausfuehren(new Makro("Gruß ergänzen", List.of(');
+    ausgabe('System.out.println("Nach Makro:            " + dok);', 'Nach Makro:            ');
+    editorUndo(undoZeilen[2]);
+    ausgabe('System.out.println("Makro rückgängig:      " + dok);', 'Makro rückgängig:      ');
+
+    // --- Protokoll ---
+    s.aus('\nProtokoll:');
+    s.schritt('System.out.println("\\nProtokoll:");', 'Jetzt das Protokoll, das der Editor nebenbei geführt hat.', MAIN);
+    s.aus(protokoll.map(p => '  ' + p).join('\n'));
+    s.schritt('editor.protokoll().forEach(', `Alle ${protokoll.length} Einträge auf einmal: jede Aktion steht drin, auch Undo und Redo.`, { cur: [ed] });
+
+    // --- Lambdas ---
+    s.aus('\nWarteschlange mit Lambdas:');
+    s.schritt('System.out.println("\\nWarteschlange mit Lambdas:");', 'Die einfachste Form: Befehle ohne Undo sind in Java einfach Runnables.', MAIN);
+    const ws = s.neu('ArrayDeque', [['Inhalt', '[]']], 'warteschlange');
+    s.var('warteschlange', s.ref(ws));
+    s.schritt('Deque<Runnable> warteschlange = new ArrayDeque<>();', 'Eine leere Warteschlange.', MAIN);
+    const aufgaben = ['Speichern', 'Drucken', 'Per Mail senden'], lam = [];
+    aufgaben.forEach(a => {
+      const l = s.neu('Runnable', [['gibt aus', `"  ${a}"`]], `Lambda ${a}`);
+      lam.push(l);
+      s.feld(ws, 'Inhalt', liste(lam));
+      s.schritt(`System.out.println("  ${a}"));`, `Ein Befehl „${a}“ kommt hinten in die Schlange – noch wird nichts ausgeführt.`, { cur: [l] });
+    });
+    aufgaben.forEach((a, i) => {
+      s.feld(ws, 'Inhalt', liste(lam.slice(i + 1)));
+      s.weg(lam[i]);
+      s.aus(`  ${a}`);
+      s.schritt('while (!warteschlange.isEmpty()) warteschlange.poll().run();', i === 0 ? `poll() holt den vordersten Befehl, run() führt ihn aus: „${a}“. Erst jetzt passiert etwas.` : `Der nächste: „${a}“.`, { cur: [ws] });
+    });
+
+    s.weg(dok, ed, e1, e2, e3, e4, mk, ws);
+    s.raus(['while (!warteschlange.isEmpty()) warteschlange.poll().run();', 1], 'main ist zu Ende. Jede Aktion war ein Objekt – darum ließ sie sich speichern, zurücknehmen, wiederholen und protokollieren.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Invoker', 'Command', 'ConcreteCommand', 'Receiver'],
+    diagramm: {
+      breite: 170, abstandX: 40, abstandY: 50,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1.5, y: 0 },
+        { name: 'Dokument', art: 'final class', rolle: 'Receiver', x: 0, y: 1 },
+        { name: 'Befehl', art: 'interface', rolle: 'Command', x: 1.5, y: 1 },
+        { name: 'Editor', art: 'final class', rolle: 'Invoker', x: 3, y: 1 },
+        { name: 'Einfuegen', art: 'final class', rolle: 'ConcreteCommand', x: 0, y: 2 },
+        { name: 'Loeschen', art: 'final class', rolle: 'ConcreteCommand', x: 1, y: 2 },
+        { name: 'Makro', art: 'record', rolle: 'ConcreteCommand', x: 2, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Editor', art: 'nutzt', text: 'ausfuehren(b)' },
+        { von: 'Editor', zu: 'Befehl', art: 'nutzt', text: 'undo / redo' },
+        { von: 'Einfuegen', zu: 'Befehl', art: 'impl' }, { von: 'Loeschen', zu: 'Befehl', art: 'impl' }, { von: 'Makro', zu: 'Befehl', art: 'impl' },
+        { von: 'Einfuegen', zu: 'Dokument', art: 'nutzt', text: 'dok' },
+        { von: 'Loeschen', zu: 'Dokument', art: 'nutzt', text: 'dok' }
+      ]
+    },
+    szenarien: [
+      { name: 'java Command.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

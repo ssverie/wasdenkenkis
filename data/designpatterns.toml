@@ -124,6 +124,7 @@ gruppe = "verhalten"
 schluessel = "command"
 name = "Command"
 text = "Anfrage als Objekt kapseln (Undo, Queues, Logging)"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Jede Aktion ist ein eigenes Objekt im Speicher. Der Editor legt es nach dem Ausführen auf den Undo-Stapel, bei Undo wandert es auf den Redo-Stapel und zurück. Im Feld geloescht sieht man, was der Löschbefehl sich merkt, damit Undo funktioniert. Das Makro führt zwei Befehle aus und nimmt sie in umgekehrter Reihenfolge zurück. Am Ende stehen drei Lambdas in einer Warteschlange und laufen erst, wenn poll() sie holt."
 
 [[muster]]
 nummer = 15
