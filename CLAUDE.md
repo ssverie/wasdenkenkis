@@ -145,7 +145,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- IT-Übungen (neue Kachel) mit dem Blatt „Java: Was gibt der Code aus?“: `hugo.toml` (Menü), `layouts/_partials/header.html`, `layouts/uebung.html`, `assets/js/uebungen.js`, `assets/css/main.css` (Stile am Ende), `layouts/suche/section.json`, `data/uebungen/java-code-lesen.json`, `content/it-konzepte/uebungen/{_index,java-code-lesen}.md`, `skripte/uebungen-pruefen.pl`; dazu nach dem Prompt der Instanz: Sterne, Syntax-Hervorhebung (`assets/css/syntax.css`, `skripte/syntax-css.pl`), Weiter, Nochmal, gelöst, Themenfilter, 5 zufällige Aufgaben, größere Schrift; Herkunft Claude Opus 5.5 „26.10.2026 - 14:34 - IT-Übungen“
+- (leer – zuletzt freigegeben und gepusht am 2026-10-26: IT-Übungen mit dem Blatt „Java: Was gibt der Code aus?“)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
