@@ -323,13 +323,14 @@ enableRobotsTXT = true
     parent = "cc"
     weight = 1
   [[menus.main]]
-    name = "Wie hab ich es gemacht"
+    # Menünamen seit 2026-10-26 kurz (Sven), Seitentitel bleiben lang
+    name = "Wie gemacht"
     identifier = "cc-wie-gemacht"
     pageRef = "/wie-gemacht"
     parent = "cc"
     weight = 2
   [[menus.main]]
-    name = "Was mich beschäftigt"
+    name = "Was beschäftigt"
     identifier = "cc-beschaeftigt"
     pageRef = "/was-mich-beschaeftigt"
     parent = "cc"
