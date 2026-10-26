@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIFO-Warteschlange</title>
+<!-- Visualisierung der FIFO-Warteschlange mit verketteter Liste (nach Sedgewick/Wayne, Algorithmen, Algorithmus 1.3, Listing 1.41)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code, der Iterator ist eine eigene Fassung
+     (im Listing nur Verweis auf Listing 1.42). Aufbau wie der Ketten-Stapel (stapel-liste.html), damit man beide vergleichen kann. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  .eingabe input[type=text] { width: 6.5em; font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .kette { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 22px 0; min-height: 64px; padding-top: 18px; }   /* Platz für die Etiketten über der ersten Zeile */
+  .glied { display: flex; align-items: flex-end; }
+  .knoten { position: relative; display: flex; border-radius: 7px; overflow: visible; }
+  .knoten .item, .knoten .next { background: var(--bar); padding: 6px 7px; font-size: 14px; font-weight: 600; min-width: 2.2em; text-align: center; }
+  .knoten .item { border-radius: 7px 0 0 7px; max-width: 6.5em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .knoten .next { border-radius: 0 7px 7px 0; border-left: 2px solid var(--bg); min-width: 1.4em; padding: 6px 5px; color: var(--muted); font-weight: 400; }
+  .knoten .item.leer { color: var(--muted); font-weight: 400; font-style: italic; }
+  .knoten.neu .item, .knoten.neu .next { background: var(--neu); color: #fff; }
+  .knoten.cur .item, .knoten.cur .next { background: var(--cur); color: #fff; }
+  .knoten.swap .item, .knoten.swap .next { background: var(--swap); color: #fff; }
+  .knoten.raus { opacity: .45; }
+  .knoten.raus .item { text-decoration: line-through; }
+  @media (prefers-color-scheme: dark) {
+    .knoten.neu .item, .knoten.neu .next, .knoten.cur .item, .knoten.cur .next, .knoten.swap .item, .knoten.swap .next { color: #0d1530; }
+  }
+  .marken { position: absolute; left: 0; bottom: 100%; margin-bottom: 2px; display: flex; gap: 3px; white-space: nowrap; }
+  .marken span { font-size: 10px; line-height: 1; padding: 2px 4px; border-radius: 4px; background: var(--panel); border: 1px solid var(--line); color: var(--text); font-family: ui-monospace, Consolas, monospace; }
+  .marken span.first, .marken span.last { border-color: var(--cur); color: var(--cur); font-weight: 700; }
+  .pfeil { padding: 0 4px 6px; color: var(--muted); font-size: 15px; line-height: 1; }
+  .pfeil.neu { color: var(--neu); font-weight: 700; }
+  .null { font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: var(--muted); padding-bottom: 7px; }
+  .luecke { width: 26px; }
+  .zeiger { margin-top: 10px; font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: var(--muted); }
+  .zeiger b { color: var(--cur); }
+  .ausgabe { margin-top: 10px; font-size: 14px; }
+  .ausgabe b { font-variant-numeric: tabular-nums; }
+  .proto td.op { text-align: left; font-weight: 600; white-space: nowrap; }
+  .proto td.inhalt { text-align: left; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+  .proto tr.zuletzt td { color: var(--neu); font-weight: 700; }
+  @media (max-width: 480px) {
+    .knoten .item, .knoten .next { font-size: 12px; padding: 5px 4px; }
+    .pfeil { padding: 0 2px 5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <label>Wort <input type="text" id="wort" maxlength="6" value="Java" autocomplete="off"></label>
+    <button id="enqueue">enqueue</button>
+    <button id="zufall">Zufallswort</button>
+    <button id="dequeue">dequeue()</button>
+    <button id="iter">for (x : schlange)</button>
+    <button id="buch">Buchbeispiel</button>
+    <button id="leeren">Leeren</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="kette" id="kette"></div>
+    <div class="zeiger" id="zeiger"></div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>Knoten, um den es geht</span>
+      <span><i style="background:var(--cur)"></i>wird gelesen</span>
+      <span><i style="background:var(--rest)"></i>ausgehängt</span>
+    </div>
+    <div class="ausgabe" id="ausgabe"></div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 1.3, Listing 1.41)</div><pre id="code"></pre></div>
+    <div class="box"><div class="h">Protokoll (je Operation)</div><div class="proto" id="proto"></div></div>
+  </div>
+</div>
+<script>
+(function () {
+  const KAP = 16;              // mehr Knoten passen nicht gut auf den Bildschirm – die Liste selbst hätte keine Grenze
+  const CODE = [
+    'import java.util.Iterator;',
+    '',
+    'public class Queue<Item> implements Iterable<Item>',
+    '{',
+    '   private Node first;      // ältester Knoten, hier wird entnommen',
+    '   private Node last;       // neuester Knoten, hier wird angehängt',
+    '   private int n;           // Anzahl der Elemente',
+    '',
+    '   private class Node',
+    '   {  // ein Glied der Kette',
+    '      Item item;',
+    '      Node next;',
+    '   }',
+    '',
+    '   public boolean isEmpty()  {  return first == null;  }',
+    '   public int size()         {  return n;  }',
+    '',
+    '   public void enqueue(Item item)',
+    '   {  // hinten anhängen',
+    '      Node altesLetztes = last;',
+    '      last = new Node();',
+    '      last.item = item;',
+    '      last.next = null;',
+    '      if (isEmpty()) first = last;          // leere Schlange: first auch',
+    '      else altesLetztes.next = last;        // sonst hinten anketten',
+    '      n++;',
+    '   }',
+    '',
+    '   public Item dequeue()',
+    '   {  // vorn entnehmen',
+    '      Item item = first.item;',
+    '      first = first.next;',
+    '      if (isEmpty()) last = null;           // letztes Element weg: last auch',
+    '      n--;',
+    '      return item;',
+    '   }',
+    '',
+    '   public Iterator<Item> iterator()',
+    '   {  return new KetteEntlang();  }',
+    '',
+    '   private class KetteEntlang implements Iterator<Item>',
+    '   {  // läuft von first über next bis null',
+    '      private Node aktuell = first;',
+    '      public boolean hasNext()  {  return aktuell != null;  }',
+    '      public Item next()',
+    '      {',
+    '         Item item = aktuell.item;',
+    '         aktuell = aktuell.next;',
+    '         return item;',
+    '      }',
+    '      public void remove()      {  }',
+    '   }',
+    '}'
+  ];
+  const zeile = s => CODE.findIndex(l => l.includes(s));
+  const L = { start: zeile('private Node first;'), merken: zeile('Node altesLetztes = last'), neuerKnoten: zeile('last = new Node()'),
+              wert: zeile('last.item = item'), nextNull: zeile('last.next = null'), leerFirst: zeile('if (isEmpty()) first = last'),
+              anketten: zeile('else altesLetztes.next = last'), plus: zeile('n++;'),
+              lesen: zeile('Item item = first.item'), aushaengen: zeile('first = first.next'), leerLast: zeile('if (isEmpty()) last = null'),
+              minus: zeile('n--;'), rueckgabe: zeile('      return item;'),
+              iterStart: zeile('private Node aktuell = first'), iterLesen: zeile('Item item = aktuell.item'), hasNext: zeile('return aktuell != null') };
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const q = w => `„${w}“`;
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // Zustand: kette[0] ist first (der älteste Knoten), kette[kette.length-1] ist last
+  let kette = [], ops = [], ausgabe = [], anzahlOps = 0;
+  let steps = [], pos = 0, timer = null;
+
+  // Ein Glied der Anzeige: { item, cls, marken[], pfeilNeu }; jede Liste von Gliedern ist ein Abschnitt, der mit null endet
+  const glied = (item, cls, marken, pfeilNeu) => ({ item, cls: cls || '', marken: marken || [], pfeilNeu: !!pfeilNeu });
+  function normal() {          // die Kette mit first vorn und last hinten
+    const g = kette.map(x => glied(x));
+    if (g.length) { g[0].marken.push('first'); g[g.length - 1].marken.push('last'); }
+    return g;
+  }
+  // zeiger: welche Variablen gerade wohin zeigen (Text darunter, damit auch null-Zeiger sichtbar sind)
+  function snap(line, msg, abschnitte, zeiger, o) {
+    steps.push(Object.assign({ line, msg, abschnitte, zeiger, n: kette.length, ops: ops.slice(), ausgabe: ausgabe.slice(), anzahlOps }, o));
+  }
+  const ziel = x => x === null || x === undefined ? 'null' : q(x);
+  const stdZeiger = () => ({ first: kette.length ? kette[0] : null, last: kette.length ? kette[kette.length - 1] : null });
+  function zeileProto(text, aus) { ops.push({ text, aus, n: kette.length, inhalt: kette.slice() }); }
+
+  function enqueue(item) {
+    anzahlOps++;
+    const leer = kette.length === 0;
+    const altLetzt = leer ? null : kette[kette.length - 1];
+    const a1 = normal(); if (a1.length) a1[a1.length - 1].marken.push('altesLetztes');
+    snap(L.merken, leer
+      ? `enqueue(${q(item)}): Die Schlange ist leer – altesLetztes = last = null.`
+      : `enqueue(${q(item)}): altesLetztes merkt sich den bisherigen letzten Knoten ${q(altLetzt)}.`,
+      [a1], Object.assign(stdZeiger(), { altesLetztes: altLetzt }));
+    // die alte Kette ohne „last“, dafür mit altesLetztes; der neue Knoten steht allein daneben
+    const alt = kette.map(x => glied(x));
+    if (alt.length) { alt[0].marken.push('first'); alt[alt.length - 1].marken.push('altesLetztes'); }
+    const zeigerNeu = it => ({ first: leer ? null : kette[0], last: it, altesLetztes: altLetzt });
+    snap(L.neuerKnoten, `last = new Node(): Ein neuer, leerer Knoten entsteht und wird last.${leer ? '' : ' Er hängt noch an nichts.'}`,
+      [alt, [glied(null, 'neu', ['last'])]], zeigerNeu('(neuer Knoten)'));
+    snap(L.wert, `last.item = ${q(item)}: Der Wert kommt in den neuen Knoten.`, [alt, [glied(item, 'neu', ['last'])]], zeigerNeu(item));
+    snap(L.nextNull, 'last.next = null: Hinter dem neuen Knoten kommt nichts. In Java ist das ohnehin schon null, das Listing schreibt es zur Klarheit hin.',
+      [alt, [glied(item, 'neu', ['last'])]], zeigerNeu(item));
+    kette.push(item);
+    if (leer) {
+      snap(L.leerFirst, `isEmpty() ist wahr (first == null) → first = last: Der neue Knoten ist der einzige, first und last zeigen auf ihn. Ohne diese Zeile bliebe first null, obwohl ein Element drin ist.`,
+        [[glied(item, 'neu', ['first', 'last'])]], { first: item, last: item, altesLetztes: null });
+    } else {
+      const a5 = normal(); a5[a5.length - 2].marken.push('altesLetztes'); a5[a5.length - 2].pfeilNeu = true; a5[a5.length - 1].cls = 'neu';
+      snap(L.anketten, `isEmpty() ist falsch → altesLetztes.next = last: ${q(altLetzt)} zeigt jetzt auf ${q(item)}, die Kette ist hinten verlängert.`,
+        [a5], Object.assign(stdZeiger(), { altesLetztes: altLetzt }));
+    }
+    zeileProto(`enqueue(${q(item)})`, '');
+    const fertig = normal(); fertig[fertig.length - 1].cls = 'swap';
+    snap(L.plus, `n++ → n = ${kette.length}. ${q(item)} steht hinten an.`, [fertig], stdZeiger(), { opEnde: true, cls: 'swap' });
+  }
+
+  function dequeue() {
+    anzahlOps++;
+    const item = kette[0];
+    const a1 = normal(); a1[0].cls = 'neu';
+    snap(L.lesen, `dequeue(): item = first.item = ${q(item)} – der älteste Knoten.`, [a1], stdZeiger());
+    const wirdLeer = kette.length === 1;
+    const a2 = normal(); a2[0] = glied(item, 'raus', wirdLeer ? ['last'] : []);
+    if (a2.length > 1) a2[1].marken.unshift('first');
+    snap(L.aushaengen, wirdLeer
+      ? `first = first.next = null. Achtung: last zeigt noch auf den alten Knoten ${q(item)} – die Schlange ist leer, aber nicht sauber.`
+      : `first = first.next: first zeigt jetzt auf ${q(kette[1])}. Der alte Knoten hängt an nichts mehr und wird abgeräumt.`,
+      [a2], { first: wirdLeer ? null : kette[1], last: kette[kette.length - 1] });
+    kette.shift();
+    if (wirdLeer) {
+      snap(L.leerLast, `isEmpty() ist wahr → last = null. Jetzt zeigt nichts mehr auf den alten Knoten. Ohne diese Zeile würde ein späteres enqueue an einen Knoten anhängen, der gar nicht mehr in der Schlange ist.`,
+        [[glied(item, 'raus', [])]], { first: null, last: null });
+    } else {
+      const a3 = normal(); a3.unshift(glied(item, 'raus', []));
+      snap(L.leerLast, `isEmpty() ist falsch → last bleibt bei ${q(kette[kette.length - 1])}.`, [a3], stdZeiger());
+    }
+    const a4 = normal(); a4.unshift(glied(item, 'raus', []));
+    snap(L.minus, `n-- → n = ${kette.length}.`, [a4], stdZeiger());
+    ausgabe.push(item);
+    zeileProto('dequeue()', item);
+    snap(L.rueckgabe, `dequeue() liefert ${q(item)}.`, [normal()], stdZeiger(), { opEnde: true, cls: 'swap' });
+    return item;
+  }
+
+  function iterieren() {
+    const reihe = [];
+    const a0 = normal(); if (a0.length) a0[0].marken.push('aktuell');
+    snap(L.iterStart, `for (String x : schlange): Der Iterator beginnt bei aktuell = first${kette.length ? ` (${q(kette[0])})` : ' = null'}.`,
+      [a0], Object.assign(stdZeiger(), { aktuell: kette.length ? kette[0] : null }));
+    for (let i = 0; i < kette.length; i++) {
+      reihe.push(kette[i]);
+      const a = normal(); a[i].cls = 'cur'; a[i].marken.push('aktuell');
+      snap(L.iterLesen, `hasNext(): aktuell ≠ null → next() liefert ${q(kette[i])}, dann aktuell = aktuell.next${i + 1 < kette.length ? ` (${q(kette[i + 1])})` : ' = null'}.`,
+        [a], Object.assign(stdZeiger(), { aktuell: kette[i] }));
+    }
+    zeileProto('Iteration', reihe.join(' '));
+    snap(L.hasNext, kette.length
+      ? `hasNext(): aktuell = null → fertig. Reihenfolge von vorn nach hinten: ${reihe.map(q).join(' ')}.`
+      : 'hasNext(): aktuell = first = null → die Schlange ist leer, die Schleife läuft kein einziges Mal.',
+      [normal()], Object.assign(stdZeiger(), { aktuell: null }), { opEnde: true, cls: 'swap' });
+  }
+
+  // ---------- Anzeige ----------
+  function abschnittHtml(gl) {
+    let h = '';
+    gl.forEach((g, i) => {
+      const marken = g.marken.length ? `<div class="marken">${g.marken.map(m => `<span class="${m === 'first' || m === 'last' ? m : ''}">${m}</span>`).join('')}</div>` : '';
+      const wert = g.item === null ? '<div class="item leer">?</div>' : `<div class="item" title="${esc(g.item)}">${esc(g.item)}</div>`;
+      h += `<div class="glied"><div class="knoten ${g.cls}">${marken}${wert}<div class="next">•</div></div><span class="pfeil${g.pfeilNeu ? ' neu' : ''}">→</span>`;
+      h += i === gl.length - 1 ? '<span class="null">null</span></div>' : '</div>';
+    });
+    return h;
+  }
+  function render() {
+    const s = steps[pos];
+    $('titel').innerHTML = `Verkettete Liste mit zwei Zeigern · n = <b>${s.n}</b> · vorn wird entnommen, hinten angehängt`;
+    let h = '';
+    const teile = s.abschnitte.filter(a => a.length);
+    if (!teile.length) h = '<span class="null">(leer)</span>';
+    teile.forEach((a, i) => { if (i) h += '<div class="luecke"></div>'; h += abschnittHtml(a); });
+    $('kette').innerHTML = h;
+    $('zeiger').innerHTML = Object.entries(s.zeiger).map(([k, v]) => `${k} → <b>${esc(ziel(v))}</b>`).join(' · ');
+    $('ausgabe').innerHTML = s.ausgabe.length
+      ? `dequeue() lieferte: <b>${s.ausgabe.map(x => esc(x)).join(' ')}</b> (${s.n} left on queue)`
+      : 'dequeue() lieferte: noch nichts';
+
+    const msg = $('msg');
+    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length} · ${s.anzahlOps} enqueue/dequeue · jede Operation kostet gleich viel, egal wie lang die Schlange ist`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
+    $('proto').innerHTML = s.ops.length
+      ? `<table><tr><th style="text-align:left">Operation</th><th>liefert</th><th>n</th><th style="text-align:left">Schlange von first aus</th></tr>${s.ops.map((o, i) =>
+        `<tr${i === s.ops.length - 1 && s.opEnde ? ' class="zuletzt"' : ''}><td class="op">${esc(o.text)}</td><td>${esc(o.aus)}</td><td>${o.n}</td><td class="inhalt">${o.inhalt.map(x => esc(x)).join(' → ')}${o.inhalt.length ? ' → ' : ''}null</td></tr>`).join('')}</table>`
+      : '<p class="count">Noch keine Operation. Oben ein Wort mit enqueue anhängen oder das Buchbeispiel abspielen.</p>';
+
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0;
+    $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    $('enqueue').disabled = $('zufall').disabled = kette.length >= KAP;
+    $('dequeue').disabled = kette.length === 0;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  // Kästen werden nie wieder niedriger, sonst springen die Knöpfe darunter auf und ab
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  window.addEventListener('resize', () => ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }));
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;        // am Ende: von vorn abspielen
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  function operation(f) {
+    stop();
+    const vorher = steps.length;
+    f();
+    pos = Math.min(vorher, steps.length - 1);
+    render();
+  }
+  function leeren(text) {
+    stop();
+    kette = []; ops = []; ausgabe = []; anzahlOps = 0; steps = [];
+    snap(L.start, text || 'Leere Schlange: first = null, last = null, n = 0. Oben ein Wort mit enqueue anhängen.', [[]], stdZeiger(), { opEnde: true });
+    pos = 0; render();
+  }
+  const BUCH = 'to be or not to - be - - that - - - is'.split(' ');
+  function buchbeispiel() {
+    leeren('Buchbeispiel (tobe.txt): to be or not to - be - - that - - - is. Jedes Wort ist ein enqueue, jeder Strich ein dequeue(). Mit „Abspielen“ oder „Schritt“ geht es los.');
+    BUCH.forEach(w => w === '-' ? dequeue() : enqueue(w));
+    pos = 0; render();
+  }
+  const WOERTER = ['Anna', 'Ben', 'Clara', 'David', 'Emma', 'Finn', 'Greta', 'Hugo', 'Ida', 'Jonas', 'Kasse', 'Kunde', 'Brot', 'Milch', 'Java', 'Code'];
+
+  $('enqueue').addEventListener('click', () => {
+    const w = $('wort').value.trim();
+    if (!w) { $('wort').focus(); return; }
+    if (kette.length < KAP) operation(() => enqueue(w));
+  });
+  $('wort').addEventListener('keydown', e => { if (e.key === 'Enter') $('enqueue').click(); });
+  $('zufall').addEventListener('click', () => { if (kette.length < KAP) operation(() => enqueue(WOERTER[Math.floor(Math.random() * WOERTER.length)])); });
+  $('dequeue').addEventListener('click', () => { if (kette.length > 0) operation(dequeue); });
+  $('iter').addEventListener('click', () => operation(iterieren));
+  $('buch').addEventListener('click', buchbeispiel);
+  $('neu').addEventListener('click', buchbeispiel);   // Neustart = Zustand beim ersten Öffnen
+  $('leeren').addEventListener('click', () => leeren());
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests
+  window.__schlange = { enqueue: w => operation(() => enqueue(w)), dequeue: () => { let x; operation(() => { x = dequeue(); }); return x; },
+    iterieren: () => operation(iterieren), leeren: () => leeren(), buchbeispiel,
+    get kette() { return kette.slice(); }, get steps() { return steps; }, get ops() { return ops; }, get ausgabe() { return ausgabe.slice(); }, KAP };
+
+  buchbeispiel();
+})();
+</script>
+</body>
+</html>
