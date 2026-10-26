@@ -554,3 +554,50 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .lern-fach { font-size: .75rem; color: var(--text-leise); margin-top: .9rem; }
 .lern-box .lern-klein { margin-top: .75rem; font-size: .95rem; border-radius: 20px; }
 .lern-info { font-size: .85rem; color: var(--text-leise); line-height: 1.45; margin-top: 1rem; }
+
+/* IT-Übungen (layouts/uebung.html, assets/js/uebungen.js): Aufgabenkarten mit vier Antwortknöpfen.
+   Wunsch der Instanz: große Schrift, hoher Kontrast, auch auf dem Handy. Code-Farben in assets/css/syntax.css. */
+.uebung-leiste { display: flex; flex-direction: column; gap: .6rem; margin: 1rem 0; padding: .8rem 1rem; border: 1px solid var(--linie); border-radius: var(--radius); background: var(--fläche); position: sticky; top: 0; z-index: 2; }
+.uebung-leiste[hidden] { display: none; }
+.uebung-stand { display: flex; flex-wrap: wrap; gap: .3rem 1.4rem; font-size: 1.05rem; }
+.uebung-stand b { font-variant-numeric: tabular-nums; }
+.uebung-runde[hidden] { display: none; }
+.uebung-steuerung { display: flex; flex-wrap: wrap; gap: .5rem .8rem; align-items: center; }
+.uebung-filter { display: flex; flex-wrap: wrap; gap: .3rem; }
+.uebung-leiste button, .aufgabe-aktionen button, .uebung-thema select { font: inherit; font-size: .95rem; padding: .35rem .75rem; border-radius: 6px; border: 1px solid var(--linie); background: var(--bg); color: var(--text); cursor: pointer; }
+.uebung-leiste button[aria-pressed="true"] { background: var(--akzent); color: var(--bg); border-color: var(--akzent); }
+.uebung-leiste button[hidden], .aufgabe-aktionen[hidden] { display: none; }
+.uebung-thema { display: flex; align-items: center; gap: .4rem; font-size: .95rem; color: var(--text-leise); }
+.uebung-neu { margin-left: auto; }
+.aufgaben { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1.3rem; }
+.aufgabe { border: 1px solid var(--linie); border-radius: var(--radius); padding: 1.1rem 1.3rem; background: var(--fläche); font-size: 1.05rem; scroll-margin-top: 8.5rem; }
+.aufgabe[hidden] { display: none; }
+.aufgabe .frage { margin: .5rem 0; }
+.aufgabe-kopf { display: flex; flex-wrap: wrap; gap: .3rem .9rem; align-items: baseline; font-size: 1.1rem; }
+.aufgabe-kopf .stufe { color: #b45309; letter-spacing: .08em; }
+.aufgabe-kopf .themen { color: var(--text-leise); font-size: .9rem; }
+.geloest-marke { color: #15803d; font-weight: 700; font-size: .95rem; }
+.geloest-marke[hidden] { display: none; }
+@media (prefers-color-scheme: dark) { .aufgabe-kopf .stufe { color: #fbbf24; } .geloest-marke { color: #5fd08a; } }
+.aufgabe pre, .loesung pre { background: var(--code-bg); border: 1px solid var(--linie); border-radius: 8px; padding: .8rem 1rem; overflow-x: auto; line-height: 1.5; margin: .6rem 0; font-size: .95rem; }
+.aufgabe pre code { background: none; padding: 0; font-size: 1em; }
+.aufgabe .highlight pre.chroma { color: var(--text); }
+.optionen { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); gap: .6rem; margin: .8rem 0; }
+.option { text-align: left; font: inherit; color: var(--text); background: var(--bg); border: 2px solid var(--linie); border-radius: 8px; padding: .2rem; cursor: pointer; min-width: 0; }
+.option pre { margin: 0; border: 0; background: none; padding: .4rem .6rem; font-size: 1rem; }
+.option:not(:disabled):hover, .option:focus-visible { border-color: var(--akzent); }
+.option:disabled { cursor: default; }
+.option.richtig { border-color: #15803d; background: color-mix(in srgb, #15803d 14%, var(--bg)); }
+.option.falsch { border-color: #b91c1c; background: color-mix(in srgb, #b91c1c 14%, var(--bg)); }
+.option.richtig pre::after { content: "  ✓"; color: #15803d; font-weight: 700; }
+.option.falsch pre::after { content: "  ✗"; color: #b91c1c; font-weight: 700; }
+@media (prefers-color-scheme: dark) { .option.richtig pre::after { color: #5fd08a; } .option.falsch pre::after { color: #f87171; } .option.richtig { border-color: #5fd08a; } .option.falsch { border-color: #f87171; } }
+.aufgabe.beantwortet:not(.getroffen) { border-color: color-mix(in srgb, #b91c1c 45%, var(--linie)); }
+.aufgabe.getroffen { border-color: color-mix(in srgb, #15803d 45%, var(--linie)); }
+.loesung summary { cursor: pointer; color: var(--akzent); font-size: .95rem; }
+.loesung > p { margin: .45rem 0; line-height: 1.55; }
+.aufgabe-aktionen { display: flex; flex-wrap: wrap; gap: .5rem; justify-content: flex-end; margin-top: .6rem; }
+.aufgabe-aktionen .weiter { background: var(--akzent); color: var(--bg); border-color: var(--akzent); font-weight: 600; }
+.uebung-fertig { margin: 1.2rem 0; padding: .8rem 1rem; border-radius: var(--radius); background: var(--akzent-leise); font-size: 1.05rem; }
+.uebung-fertig[hidden] { display: none; }
+@media (max-width: 520px) { .aufgabe { padding: .85rem; font-size: 1rem; scroll-margin-top: 1rem; } .uebung-neu { margin-left: 0; } .uebung-leiste { position: static; } .option pre { font-size: .95rem; } .aufgabe pre, .loesung pre { font-size: .9rem; } }

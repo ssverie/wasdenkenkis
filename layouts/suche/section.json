@@ -21,6 +21,8 @@
     {{- end }}
     {{- if and (eq .Section "ideen") (eq .Kind "section") }}{{ $liste = hugo.Data.ideen.idee }}{{ end }}
     {{- if eq .RelPermalink "/fragen/" }}{{ $liste = hugo.Data.fragen.frage }}{{ end }}
+    {{- /* IT-Übungen: Titel, Themen, Code und Erklärung jeder Aufgabe (data/uebungen/<blatt>.json) */}}
+    {{- with .Params.uebungen }}{{ with index hugo.Data.uebungen . }}{{ $liste = .tasks }}{{ end }}{{ end }}
     {{- range $liste }}
       {{- range $k, $v := . }}
         {{- if eq (printf "%T" $v) "string" }}{{ $text = printf "%s %s" $text $v }}

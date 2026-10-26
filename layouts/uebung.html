@@ -1,0 +1,94 @@
+{{- /* Übungsblatt (IT-Konzepte › IT-Übungen): Aufgaben „Was gibt der Code aus?“ aus data/uebungen/<uebungen>.json
+       (Lieferformat: tasks[] mit id, title, difficulty 1–3, topics, question, code, options[4], correctIndex, answer, explanation).
+       Alles steht fertig im HTML – ohne Skript lässt sich die Lösung aufklappen. Mit Skript (assets/js/uebungen.js):
+       Antwort wählen, richtig/falsch, Erklärung, „Weiter“, „Nochmal“, Filter nach Schwierigkeit und Thema,
+       „5 zufällige Aufgaben“, Fortschritt im Browser (localStorage). Code-Hervorhebung macht Hugo beim Bauen (Chroma,
+       Farben in assets/css/syntax.css) – kein Prism, kein fremdes Skript. Wünsche der Instanz dazu: siehe kontext. */ -}}
+{{ define "main" }}
+{{- $blatt := index hugo.Data.uebungen .Params.uebungen }}
+{{- $aufgaben := $blatt.tasks }}
+{{- $sprache := .Params.sprache_code | default "java" }}
+{{- $themen := slice }}{{ range $aufgaben }}{{ range .topics }}{{ $themen = $themen | append . }}{{ end }}{{ end }}
+{{- $themen = $themen | uniq | sort }}
+{{- with resources.Get "css/syntax.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+{{- end }}
+<article class="beitrag uebung" data-uebung="{{ .Params.uebungen }}">
+  <header class="seitenkopf">
+    {{- with .CurrentSection }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
+    <h1>{{ .Title }}</h1>
+    {{- with .Description }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+  </header>
+  {{ partial "herkunft.html" . }}
+  <div class="uebung-leiste" hidden>
+    <div class="uebung-stand">
+      <span>Gelöst: <b data-zaehler="geloest">0</b> von {{ len $aufgaben }}</span>
+      <span class="uebung-runde" hidden>Runde: <b data-zaehler="runde-richtig">0</b> richtig, <b data-zaehler="runde-beantwortet">0</b> von <b data-zaehler="runde-anzahl">5</b> beantwortet<span data-zaehler="runde-fertig"></span></span>
+    </div>
+    <div class="uebung-steuerung">
+      <span class="uebung-filter" role="group" aria-label="Schwierigkeit">
+        <button type="button" data-stufe="0" aria-pressed="true">Alle</button>
+        <button type="button" data-stufe="1" aria-pressed="false">★☆☆</button>
+        <button type="button" data-stufe="2" aria-pressed="false">★★☆</button>
+        <button type="button" data-stufe="3" aria-pressed="false">★★★</button>
+      </span>
+      <label class="uebung-thema">Thema
+        <select>
+          <option value="">alle Themen</option>
+          {{- range $themen }}
+          <option value="{{ . }}">{{ . }}</option>
+          {{- end }}
+        </select>
+      </label>
+      <button type="button" class="uebung-zufall">🎲 5 zufällige Aufgaben</button>
+      <button type="button" class="uebung-alle" hidden>Alle Aufgaben zeigen</button>
+      <button type="button" class="uebung-neu">↺ Fortschritt löschen</button>
+    </div>
+  </div>
+  <ol class="aufgaben">
+    {{- range $aufgaben }}
+    <li class="aufgabe" id="{{ .id }}" data-id="{{ .id }}" data-stufe="{{ .difficulty }}" data-themen="{{ delimit .topics "|" }}" data-richtig="{{ .correctIndex }}">
+      <div class="aufgabe-kopf">
+        <strong>{{ .title }}</strong>
+        <span class="stufe" title="Schwierigkeit {{ .difficulty }} von 3" aria-label="Schwierigkeit {{ .difficulty }} von 3">{{ strings.Repeat (int .difficulty) "★" }}{{ strings.Repeat (sub 3 (int .difficulty)) "☆" }}</span>
+        <span class="themen">{{ delimit .topics " · " }}</span>
+        <span class="geloest-marke" hidden>✓ gelöst</span>
+      </div>
+      <p class="frage">{{ .question }}</p>
+      {{ transform.Highlight .code $sprache (dict "noClasses" false) }}
+      <div class="optionen">
+        {{- range $i, $o := .options }}
+        <button type="button" class="option" data-i="{{ $i }}" disabled><pre>{{ $o }}</pre></button>
+        {{- end }}
+      </div>
+      <details class="loesung">
+        <summary>Lösung anzeigen</summary>
+        <p><strong>Ausgabe:</strong></p>
+        <pre>{{ .answer }}</pre>
+        <p>{{ .explanation }}</p>
+      </details>
+      <div class="aufgabe-aktionen" hidden>
+        <button type="button" class="nochmal">↻ Nochmal versuchen</button>
+        <button type="button" class="weiter">Weiter ▶</button>
+      </div>
+    </li>
+    {{- end }}
+  </ol>
+  <p class="uebung-fertig" hidden></p>
+  <div class="inhalt">
+    {{ .Content }}
+  </div>
+</article>
+{{- with .CurrentSection }}
+<nav class="folgen-nav" aria-label="Zurück">
+  <span></span>
+  <a href="{{ .RelPermalink }}">← Alle {{ .Title }}</a>
+  <span></span>
+</nav>
+{{- end }}
+{{- with resources.Get "js/uebungen.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
+{{ end }}

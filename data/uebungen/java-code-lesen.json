@@ -1,0 +1,421 @@
+{
+  "version": 1,
+  "category": "java-code-lesen",
+  "language": "de",
+  "description": "Java: Was gibt der Code aus? Jede Lösung wurde mit OpenJDK 21 ausgeführt und geprüft.",
+  "tasks": [
+    {
+      "id": "java-001",
+      "category": "java-code-lesen",
+      "title": "String-Verkettung",
+      "difficulty": 1,
+      "topics": [
+        "Strings",
+        "Operatoren"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(1 + 2 + \"3\" + 4 + 5);\n    }\n}",
+      "options": [
+        "15",
+        "12345",
+        "339",
+        "3345"
+      ],
+      "correctIndex": 3,
+      "answer": "3345",
+      "explanation": "Auswertung von links nach rechts: 1 + 2 = 3 (Zahl), dann 3 + \"3\" = \"33\" (String). Ab da ist alles String-Verkettung: \"334\", dann \"3345\"."
+    },
+    {
+      "id": "java-002",
+      "category": "java-code-lesen",
+      "title": "Ganzzahldivision",
+      "difficulty": 1,
+      "topics": [
+        "Arithmetik"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(7 / 2);\n        System.out.println(7 / 2.0);\n        System.out.println(-7 / 2);\n        System.out.println(-7 % 3);\n    }\n}",
+      "options": [
+        "3\n3\n-3\n2",
+        "3.5\n3.5\n-3.5\n-1",
+        "3\n3.5\n-3\n-1",
+        "3\n3.5\n-4\n2"
+      ],
+      "correctIndex": 2,
+      "answer": "3\n3.5\n-3\n-1",
+      "explanation": "int / int schneidet die Nachkommastellen ab, und zwar Richtung 0 (also -3, nicht -4). Sobald ein Operand double ist, wird mit Komma gerechnet. Der Rest hat in Java immer das Vorzeichen des Dividenden: -7 % 3 = -1."
+    },
+    {
+      "id": "java-003",
+      "category": "java-code-lesen",
+      "title": "Switch ohne break",
+      "difficulty": 1,
+      "topics": [
+        "Kontrollfluss"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        int x = 2;\n        switch (x) {\n            case 1: System.out.print(\"1\");\n            case 2: System.out.print(\"2\");\n            case 3: System.out.print(\"3\");\n            default: System.out.print(\"d\");\n        }\n    }\n}",
+      "options": [
+        "2",
+        "123d",
+        "2d",
+        "23d"
+      ],
+      "correctIndex": 3,
+      "answer": "23d",
+      "explanation": "Ohne break \"fällt\" die Ausführung in alle folgenden Fälle durch (Fall-through). Einstieg bei case 2, dann weiter durch case 3 und default."
+    },
+    {
+      "id": "java-004",
+      "category": "java-code-lesen",
+      "title": "Gleitkomma",
+      "difficulty": 1,
+      "topics": [
+        "Arithmetik",
+        "double"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(0.1 + 0.2 == 0.3);\n        System.out.println(0.1 + 0.2);\n    }\n}",
+      "options": [
+        "true\n0.3",
+        "false\n0.3",
+        "false\n0.30000000000000004",
+        "true\n0.30000000000000004"
+      ],
+      "correctIndex": 2,
+      "answer": "false\n0.30000000000000004",
+      "explanation": "0.1 und 0.2 sind im Binärsystem nicht exakt darstellbar. Die Summe weicht minimal von 0.3 ab. Für Geld und exakte Vergleiche: BigDecimal oder Vergleich mit Toleranz."
+    },
+    {
+      "id": "java-005",
+      "category": "java-code-lesen",
+      "title": "Stream-Summe",
+      "difficulty": 1,
+      "topics": [
+        "Streams"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "import java.util.stream.IntStream;\n\npublic class Main {\n    public static void main(String[] args) {\n        int sum = IntStream.rangeClosed(1, 10)\n                .filter(x -> x % 2 == 1)\n                .map(x -> x * x)\n                .sum();\n        System.out.println(sum);\n    }\n}",
+      "options": [
+        "385",
+        "220",
+        "25",
+        "165"
+      ],
+      "correctIndex": 3,
+      "answer": "165",
+      "explanation": "rangeClosed schließt die 10 ein. Ungerade Zahlen: 1, 3, 5, 7, 9. Quadrate: 1 + 9 + 25 + 49 + 81 = 165. (385 wäre die Summe aller Quadrate 1–10, 220 die der geraden.)"
+    },
+    {
+      "id": "java-006",
+      "category": "java-code-lesen",
+      "title": "char plus int",
+      "difficulty": 2,
+      "topics": [
+        "Datentypen",
+        "Strings"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println('a' + 1);\n        System.out.println(\"\" + 'a' + 1);\n        char c = 'a';\n        c += 1;\n        System.out.println(c);\n    }\n}",
+      "options": [
+        "b\na1\nb",
+        "a1\na1\nb",
+        "98\n98\n98",
+        "98\na1\nb"
+      ],
+      "correctIndex": 3,
+      "answer": "98\na1\nb",
+      "explanation": "'a' + 1 ist eine int-Addition ('a' = 97). Mit \"\" vorne wird zur String-Verkettung. c += 1 enthält einen impliziten Cast zurück auf char, deshalb kommt 'b' heraus (c = c + 1 würde dagegen nicht kompilieren)."
+    },
+    {
+      "id": "java-007",
+      "category": "java-code-lesen",
+      "title": "Prä- und Post-Inkrement",
+      "difficulty": 2,
+      "topics": [
+        "Operatoren"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        int i = 5;\n        int j = i++ + ++i;\n        System.out.println(i + \" \" + j);\n    }\n}",
+      "options": [
+        "6 11",
+        "7 11",
+        "7 12",
+        "7 13"
+      ],
+      "correctIndex": 2,
+      "answer": "7 12",
+      "explanation": "i++ liefert 5 und erhöht i auf 6. ++i erhöht dann auf 7 und liefert 7. j = 5 + 7 = 12, i ist am Ende 7."
+    },
+    {
+      "id": "java-008",
+      "category": "java-code-lesen",
+      "title": "Kurzschluss-Auswertung",
+      "difficulty": 2,
+      "topics": [
+        "Operatoren",
+        "Logik"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    static int calls = 0;\n\n    static boolean check(boolean v) {\n        calls++;\n        return v;\n    }\n\n    public static void main(String[] args) {\n        if (check(false) && check(true)) { }\n        System.out.println(calls);\n        if (check(false) & check(true)) { }\n        System.out.println(calls);\n    }\n}",
+      "options": [
+        "2\n4",
+        "2\n3",
+        "1\n3",
+        "1\n2"
+      ],
+      "correctIndex": 2,
+      "answer": "1\n3",
+      "explanation": "&& wertet die rechte Seite nicht mehr aus, wenn links schon false steht (1 Aufruf). Das einfache & wertet immer beide Seiten aus (2 weitere Aufrufe, also 3)."
+    },
+    {
+      "id": "java-009",
+      "category": "java-code-lesen",
+      "title": "Integer-Überlauf",
+      "difficulty": 2,
+      "topics": [
+        "Datentypen",
+        "Arithmetik"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(Integer.MAX_VALUE + 1);\n        System.out.println(Math.abs(Integer.MIN_VALUE));\n        System.out.println((byte) 200);\n    }\n}",
+      "options": [
+        "-2147483648\n-2147483648\n-56",
+        "-2147483648\n2147483648\n-56",
+        "2147483648\n2147483648\n200",
+        "Exception\n2147483648\n127"
+      ],
+      "correctIndex": 0,
+      "answer": "-2147483648\n-2147483648\n-56",
+      "explanation": "int läuft still über: MAX_VALUE + 1 springt auf MIN_VALUE. Math.abs(MIN_VALUE) ist nicht darstellbar und bleibt negativ – ein klassischer Bug. (byte) 200 schneidet auf 8 Bit: 200 - 256 = -56. Sichere Alternative: Math.addExact wirft bei Überlauf eine Exception."
+    },
+    {
+      "id": "java-010",
+      "category": "java-code-lesen",
+      "title": "Rekursion",
+      "difficulty": 2,
+      "topics": [
+        "Rekursion"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    static int f(int n) {\n        if (n == 0) return 0;\n        return n % 2 + 10 * f(n / 2);\n    }\n\n    public static void main(String[] args) {\n        System.out.println(f(13));\n    }\n}",
+      "options": [
+        "13",
+        "31",
+        "1101",
+        "1011"
+      ],
+      "correctIndex": 2,
+      "answer": "1101",
+      "explanation": "Die Funktion wandelt n in seine Binärdarstellung um und schreibt sie als Dezimalzahl: 13 = 8 + 4 + 1 = 1101. Die niedrigste Stelle (n % 2) landet ganz rechts, weil das rekursive Ergebnis mit 10 multipliziert wird."
+    },
+    {
+      "id": "java-011",
+      "category": "java-code-lesen",
+      "title": "Labels mit break und continue",
+      "difficulty": 2,
+      "topics": [
+        "Kontrollfluss"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        int count = 0;\n        outer:\n        for (int i = 0; i < 3; i++) {\n            for (int j = 0; j < 3; j++) {\n                if (j == 2) continue outer;\n                if (i == 2) break outer;\n                count++;\n            }\n        }\n        System.out.println(count);\n    }\n}",
+      "options": [
+        "9",
+        "6",
+        "5",
+        "4"
+      ],
+      "correctIndex": 3,
+      "answer": "4",
+      "explanation": "Bei i = 0 und i = 1 zählen jeweils j = 0 und j = 1 (je 2), bei j = 2 geht es direkt zum nächsten i. Bei i = 2 bricht schon j = 0 die äußere Schleife ab. Ergebnis 2 + 2 = 4."
+    },
+    {
+      "id": "java-012",
+      "category": "java-code-lesen",
+      "title": "list.remove: Index oder Objekt?",
+      "difficulty": 2,
+      "topics": [
+        "Collections",
+        "Overloading"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "import java.util.ArrayList;\nimport java.util.List;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Integer> list = new ArrayList<>(List.of(1, 2, 3));\n        list.remove(1);\n        list.remove(Integer.valueOf(1));\n        System.out.println(list);\n    }\n}",
+      "options": [
+        "[]",
+        "[1, 3]",
+        "[2, 3]",
+        "[3]"
+      ],
+      "correctIndex": 3,
+      "answer": "[3]",
+      "explanation": "remove(1) mit int-Literal ruft remove(int index) auf und entfernt das Element an Position 1, also die 2. remove(Integer.valueOf(1)) ruft remove(Object) auf und entfernt den Wert 1. Übrig bleibt [3]."
+    },
+    {
+      "id": "java-013",
+      "category": "java-code-lesen",
+      "title": "Integer-Cache",
+      "difficulty": 3,
+      "topics": [
+        "Autoboxing",
+        "Gleichheit"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        Integer a = 127, b = 127;\n        Integer c = 128, d = 128;\n        System.out.println(a == b);\n        System.out.println(c == d);\n        System.out.println(c.equals(d));\n    }\n}",
+      "options": [
+        "true\nfalse\nfalse",
+        "true\ntrue\ntrue",
+        "true\nfalse\ntrue",
+        "false\nfalse\ntrue"
+      ],
+      "correctIndex": 2,
+      "answer": "true\nfalse\ntrue",
+      "explanation": "Autoboxing nutzt Integer.valueOf, das Werte von -128 bis 127 zwischenspeichert. Darum zeigen a und b auf dasselbe Objekt, c und d auf zwei verschiedene. == vergleicht Referenzen, equals den Wert. Lehre: Wrapper-Objekte immer mit equals vergleichen."
+    },
+    {
+      "id": "java-014",
+      "category": "java-code-lesen",
+      "title": "String-Pool",
+      "difficulty": 3,
+      "topics": [
+        "Strings",
+        "Gleichheit"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        String s1 = \"Java\";\n        String s2 = \"Java\";\n        String s3 = new String(\"Java\");\n        System.out.println(s1 == s2);\n        System.out.println(s1 == s3);\n        System.out.println(s1 == s3.intern());\n    }\n}",
+      "options": [
+        "true\nfalse\nfalse",
+        "false\nfalse\ntrue",
+        "true\ntrue\ntrue",
+        "true\nfalse\ntrue"
+      ],
+      "correctIndex": 3,
+      "answer": "true\nfalse\ntrue",
+      "explanation": "Literale landen im String-Pool, s1 und s2 sind dasselbe Objekt. new String erzeugt immer ein neues Objekt. intern() liefert die Pool-Instanz zurück, also wieder dieselbe wie s1."
+    },
+    {
+      "id": "java-015",
+      "category": "java-code-lesen",
+      "title": "return im finally",
+      "difficulty": 3,
+      "topics": [
+        "Exceptions",
+        "Kontrollfluss"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    static int test() {\n        try {\n            return 1;\n        } finally {\n            return 2;\n        }\n    }\n\n    public static void main(String[] args) {\n        System.out.println(test());\n    }\n}",
+      "options": [
+        "2",
+        "1",
+        "Compilerfehler",
+        "12"
+      ],
+      "correctIndex": 0,
+      "answer": "2",
+      "explanation": "finally läuft immer, auch nach einem return im try. Ein return im finally überschreibt den ursprünglichen Rückgabewert (und würde sogar eine Exception verschlucken). Kompiliert mit Warnung, gilt als schlechter Stil."
+    },
+    {
+      "id": "java-016",
+      "category": "java-code-lesen",
+      "title": "Overloading mit null",
+      "difficulty": 3,
+      "topics": [
+        "Overloading"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    static void m(Object o) { System.out.println(\"Object\"); }\n    static void m(String s) { System.out.println(\"String\"); }\n\n    public static void main(String[] args) {\n        m(null);\n        Object x = \"Hallo\";\n        m(x);\n    }\n}",
+      "options": [
+        "String\nString",
+        "String\nObject",
+        "Object\nObject",
+        "Object\nString"
+      ],
+      "correctIndex": 1,
+      "answer": "String\nObject",
+      "explanation": "Beim Overloading entscheidet der Compiler zur Übersetzungszeit anhand des statischen Typs. null passt zu beiden, gewählt wird die spezifischere Methode (String). x hat den statischen Typ Object, also wird m(Object) gewählt, auch wenn zur Laufzeit ein String drinsteckt."
+    },
+    {
+      "id": "java-017",
+      "category": "java-code-lesen",
+      "title": "Feld-Verdeckung vs. Überschreiben",
+      "difficulty": 3,
+      "topics": [
+        "Vererbung",
+        "Polymorphie"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        A a = new B();\n        System.out.println(a.name + a.getName());\n    }\n}\n\nclass A {\n    String name = \"A\";\n    String getName() { return name; }\n}\n\nclass B extends A {\n    String name = \"B\";\n    @Override\n    String getName() { return name; }\n}",
+      "options": [
+        "BB",
+        "BA",
+        "AA",
+        "AB"
+      ],
+      "correctIndex": 3,
+      "answer": "AB",
+      "explanation": "Felder sind nicht polymorph: a.name richtet sich nach dem statischen Typ A. Methoden werden dagegen zur Laufzeit dynamisch gebunden: getName() aus B liefert B.name."
+    },
+    {
+      "id": "java-018",
+      "category": "java-code-lesen",
+      "title": "Statische Methoden verdecken",
+      "difficulty": 3,
+      "topics": [
+        "Vererbung",
+        "static"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        Parent p = new Child();\n        System.out.println(p.hello() + \" \" + p.who());\n    }\n}\n\nclass Parent {\n    static String hello() { return \"Parent\"; }\n    String who() { return \"Parent\"; }\n}\n\nclass Child extends Parent {\n    static String hello() { return \"Child\"; }\n    String who() { return \"Child\"; }\n}",
+      "options": [
+        "Child Child",
+        "Child Parent",
+        "Parent Child",
+        "Parent Parent"
+      ],
+      "correctIndex": 2,
+      "answer": "Parent Child",
+      "explanation": "Statische Methoden werden nicht überschrieben, sondern nur verdeckt (hiding). Der Aufruf über eine Referenz vom Typ Parent ruft Parent.hello(). who() ist eine Instanzmethode und wird dynamisch gebunden."
+    },
+    {
+      "id": "java-019",
+      "category": "java-code-lesen",
+      "title": "HashSet ohne hashCode",
+      "difficulty": 3,
+      "topics": [
+        "Collections",
+        "equals/hashCode"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "import java.util.HashSet;\nimport java.util.Set;\n\npublic class Main {\n    public static void main(String[] args) {\n        Set<Point> set = new HashSet<>();\n        set.add(new Point(1, 2));\n        set.add(new Point(1, 2));\n        System.out.println(set.size());\n        System.out.println(new Point(1, 2).equals(new Point(1, 2)));\n    }\n}\n\nclass Point {\n    int x, y;\n    Point(int x, int y) { this.x = x; this.y = y; }\n\n    @Override\n    public boolean equals(Object o) {\n        if (!(o instanceof Point)) return false;\n        Point p = (Point) o;\n        return x == p.x && y == p.y;\n    }\n}",
+      "options": [
+        "1\nfalse",
+        "2\nfalse",
+        "1\ntrue",
+        "2\ntrue"
+      ],
+      "correctIndex": 3,
+      "answer": "2\ntrue",
+      "explanation": "equals ist überschrieben, hashCode nicht. HashSet sucht zuerst über hashCode den Bucket, und zwei verschiedene Objekte haben (praktisch immer) verschiedene Standard-Hashcodes. equals wird dann gar nicht erst gefragt. Regel: equals und hashCode immer gemeinsam überschreiben (oder record verwenden)."
+    },
+    {
+      "id": "java-020",
+      "category": "java-code-lesen",
+      "title": "Ternärer Operator und Unboxing",
+      "difficulty": 3,
+      "topics": [
+        "Autoboxing",
+        "Exceptions"
+      ],
+      "question": "Was gibt dieses Programm aus?",
+      "code": "public class Main {\n    public static void main(String[] args) {\n        Integer i = null;\n        try {\n            Integer r = true ? i : 0;\n            System.out.println(r);\n        } catch (Exception e) {\n            System.out.println(e.getClass().getSimpleName());\n        }\n    }\n}",
+      "options": [
+        "NullPointerException",
+        "null",
+        "0",
+        "ClassCastException"
+      ],
+      "correctIndex": 0,
+      "answer": "NullPointerException",
+      "explanation": "Weil ein Zweig int ist (0), wird der Ausdruck als int typisiert und i wird automatisch ausgepackt (i.intValue()). Auf null knallt das, obwohl das Ergebnis wieder einem Integer zugewiesen wird. Ein sehr realer Bug in Produktionscode."
+    }
+  ]
+}
