@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stapel mit verketteter Liste</title>
+<!-- Visualisierung des Stapels mit verketteter Liste (nach Sedgewick/Wayne, Algorithmen, Algorithmus 1.2, Listing 1.39)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code, der Iterator ist eine eigene Fassung
+     (im Listing nur Verweis auf Listing 1.42). Bedienung wie beim Array-Stapel (stapel.html), damit man beide vergleichen kann. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  .eingabe input[type=text] { width: 6.5em; font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .kette { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 22px 0; min-height: 64px; padding-top: 18px; }   /* Platz für die Etiketten über der ersten Zeile */
+  .glied { display: flex; align-items: flex-end; }
+  .knoten { position: relative; display: flex; border-radius: 7px; overflow: visible; }
+  .knoten .item, .knoten .next { background: var(--bar); padding: 6px 7px; font-size: 14px; font-weight: 600; min-width: 2.2em; text-align: center; }
+  .knoten .item { border-radius: 7px 0 0 7px; max-width: 6.5em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .knoten .next { border-radius: 0 7px 7px 0; border-left: 2px solid var(--bg); min-width: 1.4em; padding: 6px 5px; color: var(--muted); font-weight: 400; }
+  .knoten .item.leer { color: var(--muted); font-weight: 400; font-style: italic; }
+  .knoten.neu .item, .knoten.neu .next { background: var(--neu); color: #fff; }
+  .knoten.cur .item, .knoten.cur .next { background: var(--cur); color: #fff; }
+  .knoten.swap .item, .knoten.swap .next { background: var(--swap); color: #fff; }
+  .knoten.raus { opacity: .45; }
+  .knoten.raus .item { text-decoration: line-through; }
+  @media (prefers-color-scheme: dark) {
+    .knoten.neu .item, .knoten.neu .next, .knoten.cur .item, .knoten.cur .next, .knoten.swap .item, .knoten.swap .next { color: #0d1530; }
+  }
+  .marken { position: absolute; left: 0; bottom: 100%; margin-bottom: 2px; display: flex; gap: 3px; white-space: nowrap; }
+  .marken span { font-size: 10px; line-height: 1; padding: 2px 4px; border-radius: 4px; background: var(--panel); border: 1px solid var(--line); color: var(--text); font-family: ui-monospace, Consolas, monospace; }
+  .marken span.first { border-color: var(--cur); color: var(--cur); font-weight: 700; }
+  .pfeil { padding: 0 4px 6px; color: var(--muted); font-size: 15px; line-height: 1; }
+  .pfeil.neu { color: var(--neu); font-weight: 700; }
+  .null { font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: var(--muted); padding-bottom: 7px; }
+  .luecke { width: 26px; }
+  .first-zeiger { font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: var(--cur); font-weight: 700; padding: 0 2px 7px 0; }
+  .ausgabe { margin-top: 14px; font-size: 14px; }
+  .ausgabe b { font-variant-numeric: tabular-nums; }
+  .proto td.op { text-align: left; font-weight: 600; white-space: nowrap; }
+  .proto td.inhalt { text-align: left; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+  .proto tr.zuletzt td { color: var(--neu); font-weight: 700; }
+  @media (max-width: 480px) {
+    .knoten .item, .knoten .next { font-size: 12px; padding: 5px 4px; }
+    .pfeil { padding: 0 2px 5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <label>Wort <input type="text" id="wort" maxlength="6" value="Java" autocomplete="off"></label>
+    <button id="push">push</button>
+    <button id="zufall">Zufallswort</button>
+    <button id="pop">pop()</button>
+    <button id="iter">for (x : stapel)</button>
+    <button id="buch">Buchbeispiel</button>
+    <button id="leeren">Leeren</button>
+  </div>
+  <div class="box">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="kette" id="kette"></div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>Knoten, um den es geht</span>
+      <span><i style="background:var(--cur)"></i>wird gelesen</span>
+      <span><i style="background:var(--rest)"></i>ausgehängt</span>
+    </div>
+    <div class="ausgabe" id="ausgabe"></div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 1.2, Listing 1.39)</div><pre id="code"></pre></div>
+    <div class="box"><div class="h">Protokoll (je Operation)</div><div class="proto" id="proto"></div></div>
+  </div>
+</div>
+<script>
+(function () {
+  const KAP = 16;              // mehr Knoten passen nicht gut auf den Bildschirm – die Liste selbst hätte keine Grenze
+  const CODE = [
+    'import java.util.Iterator;',
+    '',
+    'public class Stack<Item> implements Iterable<Item>',
+    '{',
+    '   private Node first;      // oberster Knoten',
+    '   private int n;           // Anzahl der Elemente',
+    '',
+    '   private class Node',
+    '   {  // ein Glied der Kette',
+    '      Item item;',
+    '      Node next;',
+    '   }',
+    '',
+    '   public boolean isEmpty()  {  return first == null;  }',
+    '   public int size()         {  return n;  }',
+    '',
+    '   public void push(Item item)',
+    '   {  // neuer Knoten wird der oberste',
+    '      Node altesErstes = first;',
+    '      first = new Node();',
+    '      first.item = item;',
+    '      first.next = altesErstes;',
+    '      n++;',
+    '   }',
+    '',
+    '   public Item pop()',
+    '   {  // obersten Knoten aushängen',
+    '      Item item = first.item;',
+    '      first = first.next;',
+    '      n--;',
+    '      return item;',
+    '   }',
+    '',
+    '   public Iterator<Item> iterator()',
+    '   {  return new KetteEntlang();  }',
+    '',
+    '   private class KetteEntlang implements Iterator<Item>',
+    '   {  // läuft von first über next bis null',
+    '      private Node aktuell = first;',
+    '      public boolean hasNext()  {  return aktuell != null;  }',
+    '      public Item next()',
+    '      {',
+    '         Item item = aktuell.item;',
+    '         aktuell = aktuell.next;',
+    '         return item;',
+    '      }',
+    '      public void remove()      {  }',
+    '   }',
+    '}'
+  ];
+  const zeile = s => CODE.findIndex(l => l.includes(s));
+  const L = { start: zeile('private Node first;'), merken: zeile('Node altesErstes = first'), neuerKnoten: zeile('first = new Node()'),
+              wert: zeile('first.item = item'), verketten: zeile('first.next = altesErstes'), plus: zeile('n++;'),
+              lesen: zeile('Item item = first.item'), aushaengen: zeile('first = first.next'), minus: zeile('n--;'), rueckgabe: zeile('      return item;'),
+              iterStart: zeile('private Node aktuell = first'), iterLesen: zeile('Item item = aktuell.item'), hasNext: zeile('return aktuell != null') };
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const q = w => `„${w}“`;
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // Zustand: kette[0] ist first (der oberste Knoten)
+  let kette = [], ops = [], ausgabe = [], anzahlOps = 0;
+  let steps = [], pos = 0, timer = null;
+
+  // Ein Glied der Anzeige: { item, cls, marken[], pfeilNeu }; mehrere Abschnitte, jeder endet mit null
+  const glied = (item, cls, marken, pfeilNeu) => ({ item, cls: cls || '', marken: marken || [], pfeilNeu: !!pfeilNeu });
+  const normal = (von) => kette.slice(von || 0).map(x => glied(x));
+  function snap(line, msg, abschnitte, o) {
+    steps.push(Object.assign({ line, msg, abschnitte, n: kette.length, ops: ops.slice(), ausgabe: ausgabe.slice(), anzahlOps, firstVorn: true }, o));
+  }
+  function zeileProto(text, aus) { ops.push({ text, aus, n: kette.length, inhalt: kette.slice() }); }
+
+  function push(item) {
+    anzahlOps++;
+    const vorher = normal();
+    if (vorher.length) vorher[0].marken = ['first', 'altesErstes'];
+    snap(L.merken, kette.length
+      ? `push(${q(item)}): altesErstes merkt sich den bisherigen obersten Knoten ${q(kette[0])}.`
+      : `push(${q(item)}): Der Stapel ist leer – altesErstes = first = null.`, [vorher]);
+    const alt = normal();                       // die alte Kette, nur noch über altesErstes erreichbar
+    if (alt.length) alt[0].marken = ['altesErstes'];
+    const neuer = glied(null, 'neu', ['first']);
+    snap(L.neuerKnoten, `first = new Node(): Ein neuer, leerer Knoten entsteht und wird first. Er hängt noch an nichts${kette.length ? ' – die alte Kette hält nur altesErstes fest' : ''}.`,
+      [[neuer], alt], { getrennt: true });
+    const gefuellt = glied(item, 'neu', ['first']);
+    snap(L.wert, `first.item = ${q(item)}: Der Wert kommt in den neuen Knoten.`, [[gefuellt], alt], { getrennt: true });
+    kette.unshift(item);
+    const verbunden = normal(); verbunden[0] = glied(item, 'neu', ['first'], true);
+    if (verbunden.length > 1) verbunden[1].marken = ['altesErstes'];
+    snap(L.verketten, kette.length > 1
+      ? `first.next = altesErstes: Der neue Knoten zeigt jetzt auf ${q(kette[1])} – die Kette ist wieder geschlossen.`
+      : 'first.next = altesErstes = null: Der neue Knoten ist der einzige, sein next bleibt null.', [verbunden]);
+    zeileProto(`push(${q(item)})`, '');
+    const fertig = normal(); fertig[0] = glied(item, 'swap', ['first']);
+    snap(L.plus, `n++ → n = ${kette.length}. ${q(item)} liegt oben. Kein Umkopieren, egal wie lang die Kette ist.`, [fertig], { opEnde: true, cls: 'swap' });
+  }
+
+  function pop() {
+    anzahlOps++;
+    const item = kette[0];
+    const a1 = normal(); a1[0] = glied(item, 'neu', ['first']);
+    snap(L.lesen, `pop(): item = first.item = ${q(item)}.`, [a1]);
+    const a2 = normal(); a2[0] = glied(item, 'raus', []);
+    if (a2.length > 1) a2[1].marken = ['first'];
+    snap(L.aushaengen, kette.length > 1
+      ? `first = first.next: first zeigt jetzt auf ${q(kette[1])}. Der alte Knoten hängt an nichts mehr – der Garbage Collector räumt ihn ab, ein null-Setzen ist nicht nötig.`
+      : 'first = first.next = null: Der Stapel ist leer. Der alte Knoten hängt an nichts mehr und wird abgeräumt.', [a2], { firstVorn: false });
+    kette.shift();
+    const a3 = normal(); a3.unshift(glied(item, 'raus', []));
+    if (a3.length > 1) a3[1].marken = ['first'];
+    snap(L.minus, `n-- → n = ${kette.length}.`, [a3], { firstVorn: false });
+    ausgabe.push(item);
+    zeileProto('pop()', item);
+    const a4 = normal(); if (a4.length) a4[0].marken = ['first'];
+    snap(L.rueckgabe, `pop() liefert ${q(item)}.`, [a4], { opEnde: true, cls: 'swap' });
+    return item;
+  }
+
+  function iterieren() {
+    const reihe = [];
+    const a0 = normal(); if (a0.length) a0[0].marken = ['first', 'aktuell'];
+    snap(L.iterStart, `for (String x : stapel): Der Iterator beginnt bei aktuell = first${kette.length ? ` (${q(kette[0])})` : ' = null'}.`, [a0]);
+    for (let i = 0; i < kette.length; i++) {
+      reihe.push(kette[i]);
+      const a = normal(); a[0].marken = ['first']; a[i] = glied(kette[i], 'cur', i === 0 ? ['first', 'aktuell'] : ['aktuell']);
+      snap(L.iterLesen, `hasNext(): aktuell ≠ null → next() liefert ${q(kette[i])}, dann aktuell = aktuell.next${i + 1 < kette.length ? ` (${q(kette[i + 1])})` : ' = null'}.`, [a]);
+    }
+    zeileProto('Iteration', reihe.join(' '));
+    const ende = normal(); if (ende.length) ende[0].marken = ['first'];
+    snap(L.hasNext, kette.length
+      ? `hasNext(): aktuell = null → fertig. Reihenfolge von oben nach unten: ${reihe.map(q).join(' ')}.`
+      : 'hasNext(): aktuell = first = null → der Stapel ist leer, die Schleife läuft kein einziges Mal.', [ende], { opEnde: true, cls: 'swap' });
+  }
+
+  // ---------- Anzeige ----------
+  function abschnittHtml(gl) {
+    let h = '';
+    gl.forEach((g, i) => {
+      const marken = g.marken.length ? `<div class="marken">${g.marken.map(m => `<span class="${m === 'first' ? 'first' : ''}">${m}</span>`).join('')}</div>` : '';
+      const wert = g.item === null ? '<div class="item leer">?</div>' : `<div class="item" title="${esc(g.item)}">${esc(g.item)}</div>`;
+      h += `<div class="glied"><div class="knoten ${g.cls}">${marken}${wert}<div class="next">•</div></div><span class="pfeil${g.pfeilNeu ? ' neu' : ''}">→</span>`;
+      h += i === gl.length - 1 ? '<span class="null">null</span></div>' : '</div>';
+    });
+    return h;
+  }
+  function render() {
+    const s = steps[pos];
+    $('titel').innerHTML = `Verkettete Liste · n = <b>${s.n}</b> · Speicher ca. <b>${s.n * 40}</b> Byte (40 Byte je Knoten)`;
+    let h = '';
+    const teile = s.abschnitte.filter(a => a.length);
+    if (!teile.length) h = '<span class="first-zeiger">first →</span><span class="null">null</span>';
+    teile.forEach((a, i) => { if (i) h += '<div class="luecke"></div>'; h += abschnittHtml(a); });
+    $('kette').innerHTML = h;
+    const rest = s.n;
+    $('ausgabe').innerHTML = s.ausgabe.length
+      ? `pop() lieferte: <b>${s.ausgabe.map(x => esc(x)).join(' ')}</b> (${rest} left on stack)`
+      : 'pop() lieferte: noch nichts';
+
+    const msg = $('msg');
+    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length} · ${s.anzahlOps} push/pop · umkopiert: <b>0</b> – eine Kette wird nie umkopiert, jede Operation kostet gleich viel`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
+    $('proto').innerHTML = s.ops.length
+      ? `<table><tr><th style="text-align:left">Operation</th><th>liefert</th><th>n</th><th style="text-align:left">Kette von first aus</th></tr>${s.ops.map((o, i) =>
+        `<tr${i === s.ops.length - 1 && s.opEnde ? ' class="zuletzt"' : ''}><td class="op">${esc(o.text)}</td><td>${esc(o.aus)}</td><td>${o.n}</td><td class="inhalt">${o.inhalt.map(x => esc(x)).join(' → ')}${o.inhalt.length ? ' → ' : ''}null</td></tr>`).join('')}</table>`
+      : '<p class="count">Noch keine Operation. Oben ein Wort mit push drauflegen oder das Buchbeispiel abspielen.</p>';
+
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0;
+    $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    $('push').disabled = $('zufall').disabled = kette.length >= KAP;
+    $('pop').disabled = kette.length === 0;
+    if (amEnde) stop();
+  }
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) return;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+  }
+  function operation(f) {
+    stop();
+    const vorher = steps.length;
+    f();
+    pos = Math.min(vorher, steps.length - 1);
+    render();
+  }
+  function leeren(text) {
+    stop();
+    kette = []; ops = []; ausgabe = []; anzahlOps = 0; steps = [];
+    snap(L.start, text || 'Leerer Stapel: first = null, n = 0. Oben ein Wort mit push drauflegen.', [[]], { opEnde: true });
+    pos = 0; render();
+  }
+  const BUCH = 'to be or not to - be - - that - - - is'.split(' ');
+  function buchbeispiel() {
+    leeren('Buchbeispiel (tobe.txt): to be or not to - be - - that - - - is. Jedes Wort ist ein push, jeder Strich ein pop(). Mit „Abspielen“ oder „Schritt“ geht es los.');
+    BUCH.forEach(w => w === '-' ? pop() : push(w));
+    pos = 0; render();
+  }
+  const WOERTER = ['Haus', 'Baum', 'Hund', 'Katze', 'Java', 'Code', 'Bit', 'Byte', 'rot', 'blau', 'eins', 'zwei', 'drei', 'Kette', 'Knoten', 'oben'];
+
+  $('push').addEventListener('click', () => {
+    const w = $('wort').value.trim();
+    if (!w) { $('wort').focus(); return; }
+    if (kette.length < KAP) operation(() => push(w));
+  });
+  $('wort').addEventListener('keydown', e => { if (e.key === 'Enter') $('push').click(); });
+  $('zufall').addEventListener('click', () => { if (kette.length < KAP) operation(() => push(WOERTER[Math.floor(Math.random() * WOERTER.length)])); });
+  $('pop').addEventListener('click', () => { if (kette.length > 0) operation(pop); });
+  $('iter').addEventListener('click', () => operation(iterieren));
+  $('buch').addEventListener('click', buchbeispiel);
+  $('leeren').addEventListener('click', () => leeren());
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests
+  window.__kette = { push: w => operation(() => push(w)), pop: () => { let x; operation(() => { x = pop(); }); return x; },
+    iterieren: () => operation(iterieren), leeren: () => leeren(), buchbeispiel,
+    get kette() { return kette.slice(); }, get steps() { return steps; }, get ops() { return ops; }, get ausgabe() { return ausgabe.slice(); }, KAP };
+
+  buchbeispiel();
+})();
+</script>
+</body>
+</html>
