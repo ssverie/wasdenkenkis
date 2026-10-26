@@ -16,6 +16,9 @@ kategorien = [
   "Debugging-Denken",
   "Gedächtnis & Wissen",
   "Kreativ & exploratives Testen",
+  "API-Testen",
+  "Performance & Last",
+  "Testmanagement",
 ]
 +++
 

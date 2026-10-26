@@ -1,0 +1,415 @@
+{
+  "version": 1,
+  "category": "performance",
+  "language": "de",
+  "description": "Performance & Last: Kennzahlen, Perzentile, Lastarten, Engpässe. Rechenaufgaben per Programm geprüft.",
+  "tasks": [
+    {
+      "id": "perf-001",
+      "category": "performance",
+      "title": "Antwortzeit und Durchsatz",
+      "difficulty": 1,
+      "topics": [
+        "Grundbegriffe"
+      ],
+      "scenario": "Ein Lasttest liefert zwei Kennzahlen: 0,3 Sekunden und 400 pro Sekunde.",
+      "question": "Was beschreiben die beiden Werte?",
+      "options": [
+        "Netzwerkverzögerung und CPU-Last",
+        "Durchsatz und Antwortzeit, in dieser Reihenfolge",
+        "Antwortzeit (wie lange eine Anfrage dauert) und Durchsatz (wie viele Anfragen pro Sekunde verarbeitet werden)",
+        "Ladezeit und Speicherverbrauch"
+      ],
+      "correctIndex": 2,
+      "answer": "Antwortzeit (wie lange eine Anfrage dauert) und Durchsatz (wie viele Anfragen pro Sekunde verarbeitet werden)",
+      "explanation": "Antwortzeit ist die Sicht des einzelnen Nutzers, Durchsatz die Sicht des Systems. Beide hängen zusammen: Steigt die Last über einen Punkt hinaus, wächst die Antwortzeit stark, während der Durchsatz stagniert."
+    },
+    {
+      "id": "perf-002",
+      "category": "performance",
+      "title": "90. Perzentil",
+      "difficulty": 2,
+      "topics": [
+        "Perzentile"
+      ],
+      "scenario": "Zehn gemessene Antwortzeiten in Millisekunden:\n120, 95, 130, 110, 2500, 105, 140, 100, 115, 980",
+      "question": "Wie hoch ist das 90. Perzentil (Rangmethode: der Wert, unter dem 90 % der sortierten Messungen liegen)?",
+      "options": [
+        "980 ms",
+        "140 ms",
+        "2500 ms",
+        "449,5 ms"
+      ],
+      "correctIndex": 0,
+      "answer": "980 ms",
+      "explanation": "Sortiert: 95, 100, 105, 110, 115, 120, 130, 140, 980, 2500. 90 % von 10 Werten sind 9, also der 9. Wert: 980 ms. Perzentile zeigen, wie es den langsamsten Nutzern geht, und sind deshalb aussagekräftiger als der Durchschnitt. (449,5 ms wäre der Mittelwert.)"
+    },
+    {
+      "id": "perf-003",
+      "category": "performance",
+      "title": "Der irreführende Durchschnitt",
+      "difficulty": 2,
+      "topics": [
+        "Statistik",
+        "Perzentile"
+      ],
+      "scenario": "Neun Anfragen dauern je 100 ms, eine dauert 5000 ms.",
+      "question": "Welche Aussage stimmt?",
+      "options": [
+        "Durchschnitt 590 ms, Median 100 ms; der Durchschnitt beschreibt keine einzige echte Anfrage",
+        "Durchschnitt und Median sind beide 590 ms",
+        "Der Ausreißer ist ein Messfehler und kann gestrichen werden",
+        "Durchschnitt 100 ms, Median 590 ms"
+      ],
+      "correctIndex": 0,
+      "answer": "Durchschnitt 590 ms, Median 100 ms; der Durchschnitt beschreibt keine einzige echte Anfrage",
+      "explanation": "Der Durchschnitt liegt bei 590 ms, aber keine Anfrage dauerte so lange: 9 waren schnell, eine sehr langsam. Der Median (100 ms) zeigt den typischen Fall, ein hohes Perzentil den Ausreißer. Ausreißer einfach zu streichen, versteckt oft das eigentliche Problem."
+    },
+    {
+      "id": "perf-004",
+      "category": "performance",
+      "title": "Little's Law",
+      "difficulty": 3,
+      "topics": [
+        "Kapazität",
+        "Formeln"
+      ],
+      "scenario": "Ein System verarbeitet 50 Anfragen pro Sekunde, jede dauert im Schnitt 0,2 Sekunden.",
+      "question": "Wie viele Anfragen sind im Durchschnitt gleichzeitig in Bearbeitung?",
+      "options": [
+        "50",
+        "0,004",
+        "250",
+        "10"
+      ],
+      "correctIndex": 3,
+      "answer": "10",
+      "explanation": "Little's Law: gleichzeitige Anfragen = Durchsatz × Verweildauer = 50 × 0,2 = 10. Damit kann man prüfen, ob Lasttests plausibel sind oder wie groß Thread- und Verbindungspools mindestens sein müssen."
+    },
+    {
+      "id": "perf-005",
+      "category": "performance",
+      "title": "Speicherlecks finden",
+      "difficulty": 2,
+      "topics": [
+        "Lastarten"
+      ],
+      "scenario": "Ein Speicherleck macht sich erst nach vielen Stunden Betrieb bemerkbar.",
+      "question": "Welche Testart deckt es am ehesten auf?",
+      "options": [
+        "Stresstest: Last bis zum Zusammenbruch steigern",
+        "Spitzentest: kurze, extreme Lastspitze",
+        "Smoke-Test: kurzer Funktionstest nach dem Deployment",
+        "Dauertest (Soak-Test): normale Last über viele Stunden"
+      ],
+      "correctIndex": 3,
+      "answer": "Dauertest (Soak-Test): normale Last über viele Stunden",
+      "explanation": "Lecks, volllaufende Logs oder sich füllende Caches brauchen Zeit. Ein Dauertest mit gleichmäßiger Last zeigt sie an einem langsam steigenden Speicherverbrauch. Kurze Tests sind dafür blind."
+    },
+    {
+      "id": "perf-006",
+      "category": "performance",
+      "title": "Black Friday",
+      "difficulty": 2,
+      "topics": [
+        "Lastarten"
+      ],
+      "scenario": "Ein Shop erwartet, dass um 0:00 Uhr am Black Friday innerhalb einer Minute zehnmal so viele Nutzer kommen wie sonst.",
+      "question": "Welche Testart bildet das am besten ab?",
+      "options": [
+        "Komponententest",
+        "Spitzentest (Spike-Test)",
+        "Dauertest",
+        "Volumentest mit großer Datenbank"
+      ],
+      "correctIndex": 1,
+      "answer": "Spitzentest (Spike-Test)",
+      "explanation": "Ein Spitzentest prüft, ob das System plötzliche Sprünge verkraftet: Skaliert es schnell genug? Laufen Warteschlangen über? Erholt es sich danach? Ein langsam ansteigender Lasttest würde genau diese Probleme nicht zeigen."
+    },
+    {
+      "id": "perf-007",
+      "category": "performance",
+      "title": "Denkzeit",
+      "difficulty": 2,
+      "topics": [
+        "Lastmodell"
+      ],
+      "scenario": "In einem Lastskript schicken 100 virtuelle Nutzer ihre Anfragen ohne jede Pause hintereinander.",
+      "question": "Was ist daran unrealistisch?",
+      "options": [
+        "Pausen verfälschen die Messung und sollten fehlen",
+        "Echte Nutzer lesen und überlegen zwischen den Klicks; ohne Denkzeit erzeugen 100 virtuelle Nutzer viel mehr Last als 100 echte",
+        "100 Nutzer sind für einen Lasttest zu wenig",
+        "Virtuelle Nutzer müssen immer echte Browser verwenden"
+      ],
+      "correctIndex": 1,
+      "answer": "Echte Nutzer lesen und überlegen zwischen den Klicks; ohne Denkzeit erzeugen 100 virtuelle Nutzer viel mehr Last als 100 echte",
+      "explanation": "Ein virtueller Nutzer ohne Pausen entspricht oft zehn oder mehr echten. Ohne realistische Denkzeit sind die Ergebnisse entweder zu pessimistisch, oder man zieht falsche Schlüsse über die tatsächliche Nutzerzahl."
+    },
+    {
+      "id": "perf-008",
+      "category": "performance",
+      "title": "Aufwärmphase",
+      "difficulty": 2,
+      "topics": [
+        "Messmethodik",
+        "Java"
+      ],
+      "scenario": "In den ersten zwei Minuten eines Lasttests auf einer Java-Anwendung sind die Antwortzeiten deutlich höher als danach.",
+      "question": "Was ist die wahrscheinlichste Erklärung?",
+      "options": [
+        "Die JVM optimiert häufig genutzten Code erst zur Laufzeit (JIT), Caches und Verbindungspools füllen sich",
+        "Der Server wird nach zwei Minuten automatisch hochgerüstet",
+        "Der Lasttest ist fehlerhaft und muss neu geschrieben werden",
+        "Das Netzwerk ist am Anfang immer langsam"
+      ],
+      "correctIndex": 0,
+      "answer": "Die JVM optimiert häufig genutzten Code erst zur Laufzeit (JIT), Caches und Verbindungspools füllen sich",
+      "explanation": "Java-Anwendungen werden „warm“: Der JIT-Compiler übersetzt heißen Code in Maschinencode, Klassen werden geladen, Caches gefüllt. Messungen trennt man deshalb in Aufwärmphase und Messphase, sonst verfälscht der Kaltstart die Werte."
+    },
+    {
+      "id": "perf-009",
+      "category": "performance",
+      "title": "Der Engpass",
+      "difficulty": 2,
+      "topics": [
+        "Engpassanalyse"
+      ],
+      "scenario": "Unter Last: CPU 20 %, Arbeitsspeicher 40 %, Netzwerk 10 %, Datenbank-Verbindungspool 100 % belegt, viele Anfragen warten auf eine Verbindung.",
+      "question": "Wo liegt der Engpass?",
+      "options": [
+        "Bei der CPU",
+        "Beim Arbeitsspeicher",
+        "Beim Datenbank-Verbindungspool",
+        "Beim Netzwerk"
+      ],
+      "correctIndex": 2,
+      "answer": "Beim Datenbank-Verbindungspool",
+      "explanation": "Die Ressource, die voll ausgelastet ist und vor der sich Warteschlangen bilden, begrenzt das ganze System. Mehr CPU würde hier nichts bringen. Ob der Pool zu klein ist oder Verbindungen zu lange gehalten werden, zeigt die nächste Untersuchung."
+    },
+    {
+      "id": "perf-010",
+      "category": "performance",
+      "title": "Mehr Server, nicht schneller",
+      "difficulty": 3,
+      "topics": [
+        "Skalierung"
+      ],
+      "scenario": "Die Anwendung wird von 2 auf 4 Server verdoppelt. Der Durchsatz steigt trotzdem kaum.",
+      "question": "Was ist die wahrscheinlichste Ursache?",
+      "options": [
+        "Ein gemeinsam genutzter Engpass, z. B. die eine Datenbank, die alle Server verwenden",
+        "Der Lastverteiler schickt absichtlich weniger Anfragen",
+        "Die neuen Server sind defekt",
+        "Mehr Server machen ein System grundsätzlich langsamer"
+      ],
+      "correctIndex": 0,
+      "answer": "Ein gemeinsam genutzter Engpass, z. B. die eine Datenbank, die alle Server verwenden",
+      "explanation": "Horizontale Skalierung hilft nur, wenn der Engpass auf den Anwendungsservern liegt. Teilen sich alle dieselbe Datenbank, dieselbe Warteschlange oder dieselbe Sperre, verschiebt sich das Problem nur."
+    },
+    {
+      "id": "perf-011",
+      "category": "performance",
+      "title": "Wie viele Server",
+      "difficulty": 1,
+      "topics": [
+        "Kapazitätsplanung"
+      ],
+      "scenario": "Ein Server schafft 200 Anfragen pro Sekunde bei 80 % CPU-Last. Benötigt werden 1000 Anfragen pro Sekunde, ebenfalls bei höchstens 80 % CPU.",
+      "question": "Wie viele Server braucht man mindestens, wenn die Leistung linear mit der Serveranzahl wächst?",
+      "options": [
+        "4",
+        "8",
+        "10",
+        "5"
+      ],
+      "correctIndex": 3,
+      "answer": "5",
+      "explanation": "1000 / 200 = 5. In der Praxis plant man Reserve ein, z. B. einen Server mehr, damit der Ausfall eines Servers nicht sofort zur Überlast führt. Ob die Annahme „linear“ stimmt, muss ein Test zeigen (siehe Aufgabe zur Skalierung)."
+    },
+    {
+      "id": "perf-012",
+      "category": "performance",
+      "title": "Kleine Testdatenbank",
+      "difficulty": 2,
+      "topics": [
+        "Testumgebung"
+      ],
+      "scenario": "Der Lasttest läuft gegen eine Datenbank mit 1.000 Kunden. In Produktion sind es 4 Millionen.",
+      "question": "Was ist das Problem?",
+      "options": [
+        "Der Test dauert dadurch zu lange",
+        "Kleine Datenbanken sind immer langsamer",
+        "Es gibt keins, die Anzahl der Nutzer ist entscheidend",
+        "Abfragen ohne passenden Index oder mit großen Ergebnismengen fallen bei 1.000 Einträgen nicht auf"
+      ],
+      "correctIndex": 3,
+      "answer": "Abfragen ohne passenden Index oder mit großen Ergebnismengen fallen bei 1.000 Einträgen nicht auf",
+      "explanation": "Viele Performanceprobleme wachsen mit der Datenmenge, nicht mit der Nutzerzahl: fehlende Indizes, Sortierungen, N+1-Abfragen. Ein Lasttest ist nur so aussagekräftig wie die Ähnlichkeit seiner Umgebung zur Produktion."
+    },
+    {
+      "id": "perf-013",
+      "category": "performance",
+      "title": "Immer derselbe Kunde",
+      "difficulty": 2,
+      "topics": [
+        "Testdaten",
+        "Caching"
+      ],
+      "scenario": "Alle virtuellen Nutzer im Lasttest rufen dieselbe Kundennummer und dasselbe Produkt ab.",
+      "question": "Warum sind die Ergebnisse vermutlich zu gut?",
+      "options": [
+        "Die Ergebnisse sind realistisch",
+        "Weil der Lasttest dann weniger Anfragen sendet",
+        "Die Daten landen im Cache, echte Nutzer fragen dagegen viele verschiedene Daten ab",
+        "Weil gleiche Anfragen vom Server abgelehnt werden"
+      ],
+      "correctIndex": 2,
+      "answer": "Die Daten landen im Cache, echte Nutzer fragen dagegen viele verschiedene Daten ab",
+      "explanation": "Datenbank-, Anwendungs- und Betriebssystem-Caches liefern wiederholte Daten aus dem Speicher. In Produktion streuen die Zugriffe. Testdaten sollten deshalb aus einer großen, realistischen Menge gezogen werden."
+    },
+    {
+      "id": "perf-014",
+      "category": "performance",
+      "title": "Der wartende Lastgenerator",
+      "difficulty": 3,
+      "topics": [
+        "Messmethodik"
+      ],
+      "scenario": "Ein Lastwerkzeug soll alle 100 ms eine Anfrage senden. Es wartet aber immer erst auf die Antwort. Bei einer Störung hängt eine Antwort 10 Sekunden.",
+      "question": "Welcher Messfehler entsteht?",
+      "options": [
+        "Das Werkzeug misst negative Zeiten",
+        "Die etwa 100 Anfragen, die während der Störung hätten starten sollen, werden nie gemessen; die Messung wirkt zu gut",
+        "Die Antwortzeit wird zehnmal zu hoch gemessen",
+        "Es entsteht kein Fehler"
+      ],
+      "correctIndex": 1,
+      "answer": "Die etwa 100 Anfragen, die während der Störung hätten starten sollen, werden nie gemessen; die Messung wirkt zu gut",
+      "explanation": "Dieser Effekt heißt „Coordinated Omission“. Echte Nutzer warten nicht aufeinander, sie kommen weiter. Das Werkzeug misst eine langsame Anfrage, statt 100 betroffener Nutzer. Gute Werkzeuge senden nach festem Zeitplan oder korrigieren das rechnerisch."
+    },
+    {
+      "id": "perf-015",
+      "category": "performance",
+      "title": "Langsame Suche nach E-Mail",
+      "difficulty": 1,
+      "topics": [
+        "Datenbank"
+      ],
+      "scenario": "SELECT * FROM kunde WHERE email = ? dauert bei 4 Millionen Kunden 3 Sekunden. Die Tabelle hat nur einen Index auf id.",
+      "question": "Was ist die naheliegendste Verbesserung?",
+      "options": [
+        "Einen Index auf die Spalte email anlegen",
+        "Mehr Arbeitsspeicher für den Anwendungsserver",
+        "Die Abfrage in einer Schleife wiederholen",
+        "Die Tabelle nach Namen sortieren"
+      ],
+      "correctIndex": 0,
+      "answer": "Einen Index auf die Spalte email anlegen",
+      "explanation": "Ohne Index muss die Datenbank alle 4 Millionen Zeilen lesen. Mit Index findet sie den Eintrag in wenigen Schritten (ähnlich der Binärsuche). Der Ausführungsplan (EXPLAIN) zeigt, ob ein Index genutzt wird."
+    },
+    {
+      "id": "perf-016",
+      "category": "performance",
+      "title": "Blättern ganz hinten",
+      "difficulty": 3,
+      "topics": [
+        "Datenbank",
+        "Pagination"
+      ],
+      "scenario": "Seite 1 einer Liste lädt in 20 ms. Seite 50.000 mit OFFSET 1.000.000 LIMIT 20 braucht 4 Sekunden.",
+      "question": "Warum?",
+      "options": [
+        "Hohe Seitenzahlen werden absichtlich gebremst",
+        "Die Datenbank muss die übersprungenen Zeilen trotzdem durchgehen",
+        "Ältere Daten liegen auf langsameren Festplatten",
+        "Der Browser lädt alle vorherigen Seiten mit"
+      ],
+      "correctIndex": 1,
+      "answer": "Die Datenbank muss die übersprungenen Zeilen trotzdem durchgehen",
+      "explanation": "OFFSET heißt „überspringe“, aber überspringen kostet Arbeit: Eine Million Zeilen werden gelesen und verworfen. Cursor-basiertes Blättern (WHERE id > letzte_id) ist dagegen für jede Seite gleich schnell."
+    },
+    {
+      "id": "perf-017",
+      "category": "performance",
+      "title": "Langsame Startseite",
+      "difficulty": 1,
+      "topics": [
+        "Frontend"
+      ],
+      "scenario": "Eine Startseite lädt auf dem Handy 9 Sekunden. Die Messung im Browser zeigt: Das Titelbild ist 8 MB groß.",
+      "question": "Was bringt am meisten?",
+      "options": [
+        "Die Datenbank optimieren",
+        "Mehr JavaScript für eine Ladeanimation",
+        "Das Bild verkleinern und komprimieren, z. B. in passender Größe als WebP",
+        "Den Server mit mehr CPU ausstatten"
+      ],
+      "correctIndex": 2,
+      "answer": "Das Bild verkleinern und komprimieren, z. B. in passender Größe als WebP",
+      "explanation": "8 MB über eine mobile Verbindung dauern Sekunden, egal wie schnell der Server ist. Ein Titelbild braucht meist unter 300 KB. Die Entwicklerwerkzeuge des Browsers (Netzwerk-Tab) zeigen solche Brocken sofort."
+    },
+    {
+      "id": "perf-018",
+      "category": "performance",
+      "title": "Regelmäßige Ausschläge",
+      "difficulty": 3,
+      "topics": [
+        "Java",
+        "Garbage Collection"
+      ],
+      "scenario": "Eine Java-Anwendung antwortet meist in 50 ms. Etwa alle drei Minuten dauern alle Anfragen gleichzeitig kurz 2 Sekunden.",
+      "question": "Was ist eine naheliegende Ursache?",
+      "options": [
+        "Der Lastgenerator macht alle drei Minuten Pause",
+        "Pausen der Garbage Collection, bei denen die JVM kurz anhält",
+        "Das Netzwerk fällt alle drei Minuten aus",
+        "Die Datenbank wird alle drei Minuten gesichert"
+      ],
+      "correctIndex": 1,
+      "answer": "Pausen der Garbage Collection, bei denen die JVM kurz anhält",
+      "explanation": "Ein regelmäßiges Muster, das alle Anfragen gleichzeitig trifft, passt gut zu GC-Pausen. Die GC-Logs zeigen es eindeutig. Abhilfen: weniger Objekte erzeugen, Heap passend wählen, einen Collector mit kurzen Pausen nutzen (G1, ZGC). Ein Backup wäre ebenfalls denkbar, deshalb Logs prüfen statt raten."
+    },
+    {
+      "id": "perf-019",
+      "category": "performance",
+      "title": "Gute Performance-Anforderung",
+      "difficulty": 2,
+      "topics": [
+        "Abnahmekriterien"
+      ],
+      "scenario": "Für die Abnahme eines Lasttests soll ein Kriterium formuliert werden.",
+      "question": "Welches ist vollständig?",
+      "options": [
+        "Durchschnittliche Antwortzeit unter 1 s",
+        "Das System darf nicht abstürzen",
+        "Das System soll unter Last schnell sein",
+        "Bei 500 gleichzeitigen Nutzern: 95 % der Anfragen unter 1 s, Fehlerquote unter 0,1 %"
+      ],
+      "correctIndex": 3,
+      "answer": "Bei 500 gleichzeitigen Nutzern: 95 % der Anfragen unter 1 s, Fehlerquote unter 0,1 %",
+      "explanation": "Zu einem prüfbaren Kriterium gehören Last, Antwortzeit als Perzentil und Fehlerquote. Ein System, das unter Last die Hälfte der Anfragen mit Fehler ablehnt, antwortet sehr schnell, besteht aber trotzdem nicht."
+    },
+    {
+      "id": "perf-020",
+      "category": "performance",
+      "title": "Apdex",
+      "difficulty": 3,
+      "topics": [
+        "Kennzahlen",
+        "Formeln"
+      ],
+      "scenario": "Apdex bewertet die Zufriedenheit mit Antwortzeiten: zufrieden (bis T), toleriert (bis 4T), frustriert (darüber). Formel: (zufrieden + toleriert/2) / alle.\nVon 100 Anfragen: 60 zufrieden, 30 toleriert, 10 frustriert.",
+      "question": "Wie hoch ist der Apdex-Wert?",
+      "options": [
+        "0,60",
+        "0,90",
+        "0,75",
+        "0,85"
+      ],
+      "correctIndex": 2,
+      "answer": "0,75",
+      "explanation": "(60 + 30/2) / 100 = 75 / 100 = 0,75. 1,0 wäre perfekt, unter 0,5 gilt als inakzeptabel. Der Wert fasst Perzentile in eine Zahl zusammen, die sich auch Nicht-Technikern gut erklären lässt."
+    }
+  ]
+}

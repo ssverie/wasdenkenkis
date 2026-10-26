@@ -1,0 +1,424 @@
+{
+  "version": 1,
+  "category": "api",
+  "language": "de",
+  "description": "API-Testen: REST, JSON, Statuscodes, Pagination, Versionierung, Contract-Tests. Berechenbare Lösungen per Programm geprüft.",
+  "tasks": [
+    {
+      "id": "api-001",
+      "category": "api",
+      "title": "PUT oder PATCH",
+      "difficulty": 1,
+      "topics": [
+        "REST",
+        "HTTP-Methoden"
+      ],
+      "scenario": "Bei einem Kunden soll nur die Telefonnummer geändert werden, alle anderen Felder bleiben.",
+      "question": "Welche Methode passt dazu?",
+      "options": [
+        "POST – ersetzt den kompletten Kunden",
+        "PUT – ändert nur die mitgeschickten Felder",
+        "PATCH – ändert nur die mitgeschickten Felder",
+        "GET – mit der neuen Nummer als Parameter"
+      ],
+      "correctIndex": 2,
+      "answer": "PATCH – ändert nur die mitgeschickten Felder",
+      "explanation": "PUT ersetzt die ganze Ressource: Fehlende Felder können dabei geleert werden. PATCH ändert nur, was mitgeschickt wird. Guter Test: per PUT nur die Telefonnummer senden und prüfen, was mit den übrigen Feldern passiert."
+    },
+    {
+      "id": "api-002",
+      "category": "api",
+      "title": "GET ändert Daten",
+      "difficulty": 2,
+      "topics": [
+        "REST",
+        "HTTP-Methoden"
+      ],
+      "scenario": "Eine API bietet den Aufruf GET /newsletter/abmelden?email=… an, der den Nutzer sofort abmeldet.",
+      "question": "Was ist daran problematisch?",
+      "options": [
+        "GET darf keine Parameter haben",
+        "GET soll nur lesen; Vorschau-Funktionen oder Virenscanner, die Links aufrufen, melden Nutzer unbeabsichtigt ab",
+        "GET-Aufrufe sind langsamer als POST",
+        "Daran ist nichts problematisch"
+      ],
+      "correctIndex": 1,
+      "answer": "GET soll nur lesen; Vorschau-Funktionen oder Virenscanner, die Links aufrufen, melden Nutzer unbeabsichtigt ab",
+      "explanation": "GET gilt als „sicher“, also ohne Nebenwirkung. Mailprogramme, Link-Vorschauen und Suchmaschinen rufen solche Links automatisch auf. Ein Klick-Link sollte deshalb erst eine Bestätigungsseite zeigen, die eigentliche Abmeldung läuft per POST."
+    },
+    {
+      "id": "api-003",
+      "category": "api",
+      "title": "Statuscode bei Eingabefehler",
+      "difficulty": 1,
+      "topics": [
+        "HTTP",
+        "Fehlerbehandlung"
+      ],
+      "scenario": "Ein Client sendet beim Anlegen eines Kunden eine ungültige E-Mail-Adresse.",
+      "question": "Welcher Statuscode ist angemessen?",
+      "options": [
+        "400 Bad Request (oder 422) mit einer Beschreibung des Fehlers",
+        "200 OK mit einem Fehlertext im Inhalt",
+        "500 Internal Server Error",
+        "404 Not Found"
+      ],
+      "correctIndex": 0,
+      "answer": "400 Bad Request (oder 422) mit einer Beschreibung des Fehlers",
+      "explanation": "Fehler, die der Client verursacht, gehören in den 4xx-Bereich. 500 heißt „der Server hat ein Problem“ und löst oft falschen Alarm im Monitoring aus. 200 mit Fehlertext verwirrt jeden Client, der nur den Status prüft. Ein häufiger Befund in API-Tests."
+    },
+    {
+      "id": "api-004",
+      "category": "api",
+      "title": "Seitenweise abrufen",
+      "difficulty": 1,
+      "topics": [
+        "Pagination"
+      ],
+      "scenario": "Eine API liefert 20 Einträge pro Seite. Insgesamt gibt es 95 Kunden.",
+      "question": "Wie viele Seiten gibt es, und wie viele Einträge hat die letzte?",
+      "options": [
+        "5 Seiten, die letzte mit 19 Einträgen",
+        "4 Seiten, die letzte mit 15 Einträgen",
+        "5 Seiten, die letzte mit 15 Einträgen",
+        "5 Seiten, die letzte mit 20 Einträgen"
+      ],
+      "correctIndex": 2,
+      "answer": "5 Seiten, die letzte mit 15 Einträgen",
+      "explanation": "95 / 20 = 4,75, also 5 Seiten; auf der letzten bleiben 95 − 80 = 15. Gute Pagination-Tests: genau 0, 1, 20, 21 Einträge, die letzte Seite, eine Seite hinter der letzten und eine negative Seitenzahl."
+    },
+    {
+      "id": "api-005",
+      "category": "api",
+      "title": "Gültiges JSON",
+      "difficulty": 1,
+      "topics": [
+        "JSON"
+      ],
+      "scenario": "Vier Antworten einer API sollen auf gültiges JSON geprüft werden.",
+      "question": "Welche ist gültiges JSON?",
+      "options": [
+        "{\"name\": \"Anna\", \"alter\": 56,}",
+        "{\"name\": \"Anna\", \"alter\": 56}",
+        "{'name': 'Anna', 'alter': 56}",
+        "{name: \"Anna\", alter: 56}"
+      ],
+      "correctIndex": 1,
+      "answer": "{\"name\": \"Anna\", \"alter\": 56}",
+      "explanation": "JSON verlangt doppelte Anführungszeichen für Texte und Schlüssel und erlaubt kein Komma nach dem letzten Element. Was in JavaScript-Code funktioniert, ist deshalb noch kein gültiges JSON. Strenge Parser lehnen die anderen drei ab."
+    },
+    {
+      "id": "api-006",
+      "category": "api",
+      "title": "Große IDs in JSON",
+      "difficulty": 3,
+      "topics": [
+        "JSON",
+        "Datentypen"
+      ],
+      "scenario": "Eine API liefert {\"id\": 9007199254740993}. Im Browser (JavaScript) kommt 9007199254740992 an.",
+      "question": "Was ist die Ursache, und was ist die übliche Lösung?",
+      "options": [
+        "Der Browser rundet absichtlich auf gerade Zahlen",
+        "JSON erlaubt keine Zahlen über einer Milliarde",
+        "Die API hat sich verrechnet, sie muss die ID korrigieren",
+        "JavaScript speichert Zahlen als double und verliert ab 2⁵³ Genauigkeit; große IDs als Text übertragen"
+      ],
+      "correctIndex": 3,
+      "answer": "JavaScript speichert Zahlen als double und verliert ab 2⁵³ Genauigkeit; große IDs als Text übertragen",
+      "explanation": "In JavaScript sind alle Zahlen double. Ganzzahlen sind nur bis 2⁵³ (9.007.199.254.740.992) exakt. Java-long-IDs liegen schnell darüber. Deshalb liefern viele APIs IDs als String. Testidee: IDs nahe und über 2⁵³ verwenden."
+    },
+    {
+      "id": "api-007",
+      "category": "api",
+      "title": "Contract-Tests",
+      "difficulty": 2,
+      "topics": [
+        "Contract-Tests",
+        "Microservices"
+      ],
+      "scenario": "Ein Bestelldienst ruft einen Lagerdienst auf. Beide Teams entwickeln unabhängig voneinander.",
+      "question": "Wozu dienen Contract-Tests (z. B. mit Pact)?",
+      "options": [
+        "Sie prüfen die Performance der Schnittstelle",
+        "Sie prüfen die Verträge mit Kunden",
+        "Sie ersetzen alle Integrationstests vollständig",
+        "Sie prüfen, ob beide Seiten die vereinbarte Schnittstelle einhalten, ohne alles gemeinsam starten zu müssen"
+      ],
+      "correctIndex": 3,
+      "answer": "Sie prüfen, ob beide Seiten die vereinbarte Schnittstelle einhalten, ohne alles gemeinsam starten zu müssen",
+      "explanation": "Der Aufrufer beschreibt, welche Anfragen er stellt und welche Antworten er erwartet. Der Anbieter prüft in seinem Build, ob er das liefert. So fällt eine Änderung, die den Aufrufer bricht, schon vor dem Deployment auf."
+    },
+    {
+      "id": "api-008",
+      "category": "api",
+      "title": "Content-Type",
+      "difficulty": 1,
+      "topics": [
+        "HTTP",
+        "Header"
+      ],
+      "scenario": "Ein Client sendet einen Kunden als JSON im Rumpf einer POST-Anfrage.",
+      "question": "Welcher Header-Wert gehört dazu?",
+      "options": [
+        "Content-Type: application/json",
+        "Content-Type: text/html",
+        "Accept: application/xml",
+        "Content-Length: json"
+      ],
+      "correctIndex": 0,
+      "answer": "Content-Type: application/json",
+      "explanation": "Content-Type beschreibt das Format dessen, was gesendet wird. Accept sagt, was man zurückhaben möchte. Fehlt der richtige Content-Type, lehnen viele Server mit 415 Unsupported Media Type ab. Ein guter Negativtest."
+    },
+    {
+      "id": "api-009",
+      "category": "api",
+      "title": "304 Not Modified",
+      "difficulty": 2,
+      "topics": [
+        "HTTP",
+        "Caching"
+      ],
+      "scenario": "Ein Client fragt eine Ressource mit dem Header If-None-Match und einem ETag an. Die Antwort ist 304 ohne Inhalt.",
+      "question": "Was bedeutet das?",
+      "options": [
+        "Die Ressource wurde gelöscht",
+        "Die Ressource hat sich nicht geändert, der Client kann seine zwischengespeicherte Kopie verwenden",
+        "Der Server ist überlastet und antwortet später",
+        "Der Client ist nicht berechtigt"
+      ],
+      "correctIndex": 1,
+      "answer": "Die Ressource hat sich nicht geändert, der Client kann seine zwischengespeicherte Kopie verwenden",
+      "explanation": "Das ETag ist eine Art Fingerabdruck der Ressource. Stimmt er noch, spart der Server die Übertragung. Testidee: Ressource ändern und prüfen, ob sich das ETag ändert. Bleibt es gleich, sehen Clients veraltete Daten."
+    },
+    {
+      "id": "api-010",
+      "category": "api",
+      "title": "Breaking Change",
+      "difficulty": 2,
+      "topics": [
+        "Versionierung"
+      ],
+      "scenario": "Eine öffentliche API in Version 1 soll erweitert werden, ohne bestehende Clients zu stören.",
+      "question": "Welche Änderung bricht bestehende Clients?",
+      "options": [
+        "Ein neues, optionales Feld \"newsletter\" hinzufügen",
+        "Einen neuen Endpunkt /v1/gutscheine hinzufügen",
+        "Einen neuen optionalen Filterparameter hinzufügen",
+        "Das Feld \"telefon\" in \"telefonnummer\" umbenennen"
+      ],
+      "correctIndex": 3,
+      "answer": "Das Feld \"telefon\" in \"telefonnummer\" umbenennen",
+      "explanation": "Umbenennen ist für Clients dasselbe wie Löschen plus Neuanlegen, alte Clients finden \"telefon\" nicht mehr. Hinzufügen ist meist unkritisch, vorausgesetzt, Clients ignorieren unbekannte Felder. Auch das sollte man testen."
+    },
+    {
+      "id": "api-011",
+      "category": "api",
+      "title": "Zeitangaben in APIs",
+      "difficulty": 2,
+      "topics": [
+        "Datum",
+        "Formate"
+      ],
+      "scenario": "Ein Termin wird über eine API übertragen.",
+      "question": "Welches Format ist am eindeutigsten?",
+      "options": [
+        "2026-10-26T14:34:00+01:00",
+        "10/26/2026 2:34 PM",
+        "26.10.2026 14:34",
+        "2026-10-26 14:34"
+      ],
+      "correctIndex": 0,
+      "answer": "2026-10-26T14:34:00+01:00",
+      "explanation": "ISO 8601 mit Zeitzonenversatz ist eindeutig und maschinenlesbar. Die deutschen und US-Formate sind leicht zu verwechseln (10/11 = 10. November oder 11. Oktober?). Ohne Zeitzone bleibt offen, welche 14:34 gemeint sind."
+    },
+    {
+      "id": "api-012",
+      "category": "api",
+      "title": "Zu schwacher API-Test",
+      "difficulty": 1,
+      "topics": [
+        "Testqualität"
+      ],
+      "scenario": "Testcode:\nResponse r = api.get(\"/kunden/42\");\nassertEquals(200, r.status());",
+      "question": "Was fehlt diesem Test am meisten?",
+      "options": [
+        "Eine Prüfung der Antwortzeit in Nanosekunden",
+        "Ein zweiter identischer Aufruf",
+        "Nichts, Status 200 reicht",
+        "Eine Prüfung des Inhalts, z. B. Name, ID und Aufbau der Antwort"
+      ],
+      "correctIndex": 3,
+      "answer": "Eine Prüfung des Inhalts, z. B. Name, ID und Aufbau der Antwort",
+      "explanation": "Status 200 heißt nur, dass irgendetwas zurückkam. Ein leerer Kunde, ein falscher Kunde oder eine Fehlermeldung mit Status 200 würden den Test bestehen. Ein API-Test sollte mindestens die wichtigen Felder oder das Schema prüfen."
+    },
+    {
+      "id": "api-013",
+      "category": "api",
+      "title": "null oder weggelassen",
+      "difficulty": 3,
+      "topics": [
+        "JSON",
+        "PATCH"
+      ],
+      "scenario": "PATCH /kunden/42 mit {\"telefon\": null} im Vergleich zu PATCH mit {} (Feld weggelassen).",
+      "question": "Was ist üblicherweise der Unterschied?",
+      "options": [
+        "null löscht die Telefonnummer, weglassen lässt sie unverändert",
+        "Beides löscht die Telefonnummer",
+        "null ist in JSON nicht erlaubt",
+        "Beides lässt die Nummer unverändert"
+      ],
+      "correctIndex": 0,
+      "answer": "null löscht die Telefonnummer, weglassen lässt sie unverändert",
+      "explanation": "Bei PATCH muss eine API zwischen „nicht ändern“ und „leeren“ unterscheiden. In Java ist das tückisch, weil beim Einlesen beides oft zu null wird. Ein klassischer Testfall, der genau diesen Unterschied prüft."
+    },
+    {
+      "id": "api-014",
+      "category": "api",
+      "title": "Wann wiederholen",
+      "difficulty": 2,
+      "topics": [
+        "Robustheit",
+        "Fehlerbehandlung"
+      ],
+      "scenario": "Ein Client soll bei Fehlern automatisch einen zweiten Versuch starten.",
+      "question": "Bei welchem Status ist eine automatische Wiederholung sinnvoll?",
+      "options": [
+        "401 Unauthorized",
+        "404 Not Found",
+        "503 Service Unavailable",
+        "400 Bad Request"
+      ],
+      "correctIndex": 2,
+      "answer": "503 Service Unavailable",
+      "explanation": "503 meldet ein vorübergehendes Problem, ein späterer Versuch kann klappen (am besten mit wachsenden Abständen). Bei 400, 401 oder 404 ist die Anfrage selbst falsch, eine Wiederholung erzeugt nur zusätzliche Last."
+    },
+    {
+      "id": "api-015",
+      "category": "api",
+      "title": "Erfolgreiches Löschen",
+      "difficulty": 1,
+      "topics": [
+        "HTTP",
+        "REST"
+      ],
+      "scenario": "DELETE /kunden/42 war erfolgreich. Die Antwort enthält keinen Inhalt.",
+      "question": "Welcher Status passt am besten?",
+      "options": [
+        "204 No Content",
+        "202 Accepted",
+        "301 Moved Permanently",
+        "201 Created"
+      ],
+      "correctIndex": 0,
+      "answer": "204 No Content",
+      "explanation": "204 heißt: erfolgreich, aber nichts zurückzugeben. 200 mit Inhalt geht auch. Interessanter Folgetest: Was liefert ein zweites DELETE auf denselben Kunden? Meist 404, und das sollte dokumentiert sein."
+    },
+    {
+      "id": "api-016",
+      "category": "api",
+      "title": "Blättern bei neuen Daten",
+      "difficulty": 3,
+      "topics": [
+        "Pagination",
+        "Konsistenz"
+      ],
+      "scenario": "Ein Client lädt Bestellungen seitenweise, neueste zuerst, mit ?page=1, ?page=2 … Während er blättert, kommen neue Bestellungen hinzu.",
+      "question": "Was kann passieren?",
+      "options": [
+        "Die API liefert automatisch nur noch alte Daten",
+        "Neue Bestellungen werden abgelehnt",
+        "Einträge erscheinen doppelt, weil sich alles nach hinten verschiebt",
+        "Nichts, Seitennummern sind immer stabil"
+      ],
+      "correctIndex": 2,
+      "answer": "Einträge erscheinen doppelt, weil sich alles nach hinten verschiebt",
+      "explanation": "Kommt vorne ein neuer Eintrag hinzu, rutscht der letzte von Seite 1 auf Seite 2 und wird erneut geliefert. Beim Löschen fehlen umgekehrt Einträge. Abhilfe: Cursor-basiertes Blättern („gib mir die nächsten 20 nach Bestellung 4711“)."
+    },
+    {
+      "id": "api-017",
+      "category": "api",
+      "title": "Externe API simulieren",
+      "difficulty": 2,
+      "topics": [
+        "Test Doubles",
+        "Integrationstests"
+      ],
+      "scenario": "Eine Anwendung ruft den Zahlungsdienst eines Anbieters auf. Im Test soll auch geprüft werden, was bei Timeouts und Fehlern passiert.",
+      "question": "Wie testet man das am besten?",
+      "options": [
+        "Den Netzwerkstecker ziehen",
+        "Gegen den echten Zahlungsdienst testen und auf einen Fehler warten",
+        "Einen simulierten Dienst (z. B. WireMock) starten, der gezielt Fehler, Verzögerungen und Sonderfälle liefert",
+        "Diese Fälle nicht testen, der Anbieter ist zuverlässig"
+      ],
+      "correctIndex": 2,
+      "answer": "Einen simulierten Dienst (z. B. WireMock) starten, der gezielt Fehler, Verzögerungen und Sonderfälle liefert",
+      "explanation": "Ein simulierter Dienst kann auf Knopfdruck 500, langsame Antworten oder kaputtes JSON liefern. Gerade die Fehlerfälle, die beim echten Dienst selten sind, lassen sich so zuverlässig und wiederholbar testen."
+    },
+    {
+      "id": "api-018",
+      "category": "api",
+      "title": "JSON Schema",
+      "difficulty": 2,
+      "topics": [
+        "JSON",
+        "Validierung"
+      ],
+      "scenario": "Ein JSON Schema für Kunden enthält: \"required\": [\"id\", \"name\"]",
+      "question": "Was prüft diese Angabe?",
+      "options": [
+        "Dass id und name nicht leer sind",
+        "Dass die Felder id und name vorhanden sind",
+        "Dass id und name eindeutig sind",
+        "Dass nur id und name erlaubt sind"
+      ],
+      "correctIndex": 1,
+      "answer": "Dass die Felder id und name vorhanden sind",
+      "explanation": "required prüft nur das Vorhandensein. \"name\": \"\" besteht die Prüfung. Für Mindestlängen braucht es minLength, für das Verbot weiterer Felder additionalProperties: false. Typische Lücke in automatischen API-Prüfungen."
+    },
+    {
+      "id": "api-019",
+      "category": "api",
+      "title": "Zu großes Limit",
+      "difficulty": 2,
+      "topics": [
+        "Pagination",
+        "Robustheit"
+      ],
+      "scenario": "Eine API erlaubt den Parameter ?limit=… für die Seitengröße. Standard ist 20.",
+      "question": "Was sollte bei ?limit=1000000 passieren?",
+      "options": [
+        "Sie liefert eine zufällige Anzahl",
+        "Die API begrenzt auf ein festgelegtes Maximum oder lehnt mit 400 ab",
+        "Sie liefert 0 Einträge ohne Hinweis",
+        "Sie liefert alle Einträge, der Client hat es ja so gewollt"
+      ],
+      "correctIndex": 1,
+      "answer": "Die API begrenzt auf ein festgelegtes Maximum oder lehnt mit 400 ab",
+      "explanation": "Ohne Obergrenze kann ein einziger Aufruf den Server lahmlegen. Ob kappen oder ablehnen, muss festgelegt und dokumentiert sein. Ein Test mit einem sehr großen Wert gehört zu jeder Pagination-Prüfung."
+    },
+    {
+      "id": "api-020",
+      "category": "api",
+      "title": "Sonderzeichen in der URL",
+      "difficulty": 2,
+      "topics": [
+        "URL",
+        "Encoding"
+      ],
+      "scenario": "Ein Client sucht nach einer Straße: GET /adressen?strasse=Müller Str",
+      "question": "Wie muss der Wert in der URL kodiert werden (UTF-8)?",
+      "options": [
+        "M%FCller%20Str",
+        "Mueller+Str",
+        "Müller%Str",
+        "M%C3%BCller%20Str"
+      ],
+      "correctIndex": 3,
+      "answer": "M%C3%BCller%20Str",
+      "explanation": "Leerzeichen und Umlaute müssen in URLs prozentkodiert werden. ü wird in UTF-8 zu den Bytes C3 BC, also %C3%BC. %FC wäre die alte Latin-1-Kodierung, die auf dem Server wieder zu kaputten Umlauten führt."
+    }
+  ]
+}

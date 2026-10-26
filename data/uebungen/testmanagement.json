@@ -1,0 +1,413 @@
+{
+  "version": 1,
+  "category": "testmanagement",
+  "language": "de",
+  "description": "Testmanagement & ISTQB-Begriffe: Teststufen, Testarten, Kennzahlen, Risiko, Planung. Kennzahlen per Programm geprüft.",
+  "tasks": [
+    {
+      "id": "tm-001",
+      "category": "testmanagement",
+      "title": "Teststufen",
+      "difficulty": 1,
+      "topics": [
+        "Teststufen"
+      ],
+      "scenario": "Vier Teststufen nach ISTQB sollen in die übliche Reihenfolge gebracht werden.",
+      "question": "Welche Reihenfolge ist richtig?",
+      "options": [
+        "Komponententest → Integrationstest → Systemtest → Abnahmetest",
+        "Systemtest → Komponententest → Abnahmetest → Integrationstest",
+        "Abnahmetest → Systemtest → Integrationstest → Komponententest",
+        "Integrationstest → Komponententest → Systemtest → Abnahmetest"
+      ],
+      "correctIndex": 0,
+      "answer": "Komponententest → Integrationstest → Systemtest → Abnahmetest",
+      "explanation": "Von klein nach groß: einzelne Bausteine, ihr Zusammenspiel, das Gesamtsystem, schließlich die Abnahme durch Fachbereich oder Kunden. In agilen Teams laufen die Stufen oft parallel, die Unterscheidung hilft trotzdem bei der Frage „Was prüfen wir wo?“."
+    },
+    {
+      "id": "tm-002",
+      "category": "testmanagement",
+      "title": "Verifikation und Validierung",
+      "difficulty": 2,
+      "topics": [
+        "Grundbegriffe"
+      ],
+      "scenario": "Zwei Fragen: „Bauen wir das Produkt richtig?“ und „Bauen wir das richtige Produkt?“",
+      "question": "Welche Frage gehört zur Validierung?",
+      "options": [
+        "„Bauen wir das Produkt richtig?“ – entspricht es der Spezifikation",
+        "„Bauen wir das richtige Produkt?“ – erfüllt es den tatsächlichen Bedarf der Nutzer",
+        "Beide Fragen gehören zur Validierung",
+        "Keine, Validierung prüft nur den Code"
+      ],
+      "correctIndex": 1,
+      "answer": "„Bauen wir das richtige Produkt?“ – erfüllt es den tatsächlichen Bedarf der Nutzer",
+      "explanation": "Verifikation prüft gegen die Spezifikation, Validierung gegen den echten Bedarf. Ein Produkt kann perfekt verifiziert und trotzdem nutzlos sein, wenn die Spezifikation am Bedarf vorbeigeht."
+    },
+    {
+      "id": "tm-003",
+      "category": "testmanagement",
+      "title": "Fehlerkosten",
+      "difficulty": 1,
+      "topics": [
+        "Wirtschaftlichkeit",
+        "Shift-Left"
+      ],
+      "scenario": "Ein und derselbe Fehler kann in der Anforderung, im Code, im Systemtest oder erst in Produktion entdeckt werden.",
+      "question": "Wo ist er am günstigsten zu beheben?",
+      "options": [
+        "Im Systemtest, weil dann alles zusammen läuft",
+        "Überall gleich teuer",
+        "In Produktion, weil dann echte Daten vorliegen",
+        "In der Anforderung, bevor eine Zeile Code geschrieben ist"
+      ],
+      "correctIndex": 3,
+      "answer": "In der Anforderung, bevor eine Zeile Code geschrieben ist",
+      "explanation": "Je später ein Fehler gefunden wird, desto mehr hängt schon daran: Code, Tests, Dokumentation, im schlimmsten Fall Kunden. Deshalb lohnen sich Reviews von Anforderungen und frühe Tests („Shift Left“) so sehr."
+    },
+    {
+      "id": "tm-004",
+      "category": "testmanagement",
+      "title": "Fehlerdichte",
+      "difficulty": 1,
+      "topics": [
+        "Kennzahlen"
+      ],
+      "scenario": "In einem Modul mit 15.000 Codezeilen (15 KLOC) wurden 30 Fehler gefunden.",
+      "question": "Wie hoch ist die Fehlerdichte?",
+      "options": [
+        "30 Fehler pro 1.000 Zeilen",
+        "450 Fehler pro 1.000 Zeilen",
+        "2 Fehler pro 1.000 Zeilen",
+        "0,5 Fehler pro 1.000 Zeilen"
+      ],
+      "correctIndex": 2,
+      "answer": "2 Fehler pro 1.000 Zeilen",
+      "explanation": "30 / 15 = 2. Die Kennzahl hilft beim Vergleich von Modulen: Ein Modul mit auffällig hoher Dichte ist ein Kandidat für mehr Tests oder eine Überarbeitung. Allein bewertet sagt sie wenig, denn wer nicht testet, findet auch keine Fehler."
+    },
+    {
+      "id": "tm-005",
+      "category": "testmanagement",
+      "title": "Fehlerfindungsrate",
+      "difficulty": 2,
+      "topics": [
+        "Kennzahlen"
+      ],
+      "scenario": "Vor dem Release wurden im Test 90 Fehler gefunden. In den ersten drei Monaten Produktion meldeten Kunden weitere 10.",
+      "question": "Wie hoch ist die Fehlerfindungsrate (Defect Detection Percentage)?",
+      "options": [
+        "81 %",
+        "90 %",
+        "10 %",
+        "100 %"
+      ],
+      "correctIndex": 1,
+      "answer": "90 %",
+      "explanation": "90 / (90 + 10) = 90 %. Die Kennzahl misst, wie wirksam der Test war. Wichtig ist, sie über mehrere Releases zu verfolgen: Ein Absinken deutet darauf hin, dass sich der Test nicht mit dem Produkt weiterentwickelt hat."
+    },
+    {
+      "id": "tm-006",
+      "category": "testmanagement",
+      "title": "Fehlernachtest und Regressionstest",
+      "difficulty": 1,
+      "topics": [
+        "Testarten"
+      ],
+      "scenario": "Ein Fehler wurde behoben. Jetzt wird getestet.",
+      "question": "Was ist der Unterschied zwischen Fehlernachtest und Regressionstest?",
+      "options": [
+        "Der Fehlernachtest prüft, ob dieser Fehler behoben ist; der Regressionstest, ob die Änderung anderswo etwas kaputt gemacht hat",
+        "Der Regressionstest prüft nur den behobenen Fehler",
+        "Beides ist dasselbe",
+        "Der Fehlernachtest ist automatisiert, der Regressionstest immer manuell"
+      ],
+      "correctIndex": 0,
+      "answer": "Der Fehlernachtest prüft, ob dieser Fehler behoben ist; der Regressionstest, ob die Änderung anderswo etwas kaputt gemacht hat",
+      "explanation": "Beides gehört nach jeder Korrektur dazu. Gerade schnell gemachte Korrekturen verursachen gern Folgefehler an anderer Stelle. Den Fehlernachtest übernimmt man idealerweise gleich als neuen automatisierten Regressionstest."
+    },
+    {
+      "id": "tm-007",
+      "category": "testmanagement",
+      "title": "100 % Überdeckung",
+      "difficulty": 2,
+      "topics": [
+        "Testgrundsätze",
+        "Überdeckung"
+      ],
+      "scenario": "Die Unit-Tests eines Moduls erreichen 100 % Anweisungsüberdeckung.",
+      "question": "Was folgt daraus?",
+      "options": [
+        "Das Modul ist fehlerfrei",
+        "Weitere Tests sind überflüssig",
+        "Jede Anweisung wurde mindestens einmal ausgeführt; das Modul kann trotzdem Fehler enthalten",
+        "Alle Pfade durch das Modul sind getestet"
+      ],
+      "correctIndex": 2,
+      "answer": "Jede Anweisung wurde mindestens einmal ausgeführt; das Modul kann trotzdem Fehler enthalten",
+      "explanation": "Überdeckung zeigt, was ausgeführt wurde, nicht, ob das Ergebnis geprüft wurde. Tests ganz ohne Assertions können 100 % erreichen. Fehlende Funktionen (die gar nicht im Code stehen) findet Überdeckung nie."
+    },
+    {
+      "id": "tm-008",
+      "category": "testmanagement",
+      "title": "Ein- und Ausgangskriterien",
+      "difficulty": 2,
+      "topics": [
+        "Testplanung"
+      ],
+      "scenario": "Im Testkonzept stehen Eingangs- und Ausgangskriterien für den Systemtest.",
+      "question": "Was ist ein typisches Ausgangskriterium?",
+      "options": [
+        "Das Testteam ist vollständig besetzt",
+        "Die Testumgebung ist aufgebaut",
+        "Keine offenen Fehler der höchsten Schwere und alle Tests mit hohem Risiko durchgeführt",
+        "Die Anforderungen sind freigegeben"
+      ],
+      "correctIndex": 2,
+      "answer": "Keine offenen Fehler der höchsten Schwere und alle Tests mit hohem Risiko durchgeführt",
+      "explanation": "Eingangskriterien sagen, wann man sinnvoll mit Testen beginnen kann (Umgebung steht, Build läuft). Ausgangskriterien sagen, wann man aufhören darf. Ohne sie endet der Test meist dann, wenn die Zeit vorbei ist."
+    },
+    {
+      "id": "tm-009",
+      "category": "testmanagement",
+      "title": "Statischer Test",
+      "difficulty": 1,
+      "topics": [
+        "Statischer Test",
+        "Reviews"
+      ],
+      "scenario": "Ein Team prüft eine Spezifikation in einem Review und findet dabei 12 Unklarheiten.",
+      "question": "Was ist ein Review im Sinne des Testens?",
+      "options": [
+        "Eine Abnahme durch den Kunden",
+        "Kein Test, sondern nur ein Meeting",
+        "Ein dynamischer Test mit Testdaten",
+        "Ein statischer Test: Arbeitsergebnisse werden geprüft, ohne Software auszuführen"
+      ],
+      "correctIndex": 3,
+      "answer": "Ein statischer Test: Arbeitsergebnisse werden geprüft, ohne Software auszuführen",
+      "explanation": "Statische Tests (Reviews, statische Codeanalyse) finden Fehler, bevor es lauffähige Software gibt, und damit sehr günstig. Unklare Anforderungen zählen ausdrücklich als Fehler."
+    },
+    {
+      "id": "tm-010",
+      "category": "testmanagement",
+      "title": "Pestizid-Paradoxon",
+      "difficulty": 2,
+      "topics": [
+        "Testgrundsätze"
+      ],
+      "scenario": "Eine Regressionssuite läuft seit drei Jahren unverändert. Sie findet seit Monaten keine Fehler mehr, Kunden melden aber regelmäßig neue.",
+      "question": "Welcher Grundsatz des Testens beschreibt das?",
+      "options": [
+        "Vollständiges Testen ist unmöglich",
+        "Frühes Testen spart Zeit und Geld",
+        "Pestizid-Paradoxon: Immer gleiche Tests verlieren mit der Zeit ihre Wirkung",
+        "Fehler-Cluster: Fehler häufen sich in wenigen Modulen"
+      ],
+      "correctIndex": 2,
+      "answer": "Pestizid-Paradoxon: Immer gleiche Tests verlieren mit der Zeit ihre Wirkung",
+      "explanation": "Wie Schädlinge gegen dasselbe Gift unempfindlich werden, finden dieselben Tests keine neuen Fehler. Tests müssen regelmäßig überarbeitet und um neue Fälle ergänzt werden, etwa aus Kundenmeldungen."
+    },
+    {
+      "id": "tm-011",
+      "category": "testmanagement",
+      "title": "Fehlhandlung, Fehlerzustand, Fehlwirkung",
+      "difficulty": 3,
+      "topics": [
+        "Grundbegriffe"
+      ],
+      "scenario": "Ein Entwickler vertippt sich und schreibt > statt >=. Im Betrieb wird ein 18-jähriger Kunde abgelehnt.",
+      "question": "Wie heißen die drei Teile nach ISTQB in der richtigen Reihenfolge?",
+      "options": [
+        "Fehlhandlung → Fehlwirkung → Fehlerzustand",
+        "Fehlwirkung → Fehlerzustand → Fehlhandlung",
+        "Fehlhandlung (Vertippen) → Fehlerzustand (> im Code) → Fehlwirkung (Ablehnung im Betrieb)",
+        "Fehlerzustand → Fehlhandlung → Fehlwirkung"
+      ],
+      "correctIndex": 2,
+      "answer": "Fehlhandlung (Vertippen) → Fehlerzustand (> im Code) → Fehlwirkung (Ablehnung im Betrieb)",
+      "explanation": "Menschen machen Fehlhandlungen (error), die führen zu Fehlerzuständen im Produkt (defect, bug), und die können im Betrieb Fehlwirkungen (failure) auslösen. Nicht jeder Fehlerzustand wird sichtbar; tritt die Bedingung nie auf, schlummert er unbemerkt."
+    },
+    {
+      "id": "tm-012",
+      "category": "testmanagement",
+      "title": "Risiko priorisieren",
+      "difficulty": 2,
+      "topics": [
+        "Risikobasiertes Testen"
+      ],
+      "scenario": "Risiko = Eintrittswahrscheinlichkeit × Schadenshöhe (je 1–5):\nZahlung: Wahrscheinlichkeit 4, Schaden 5\nNewsletter-Anmeldung: Wahrscheinlichkeit 3, Schaden 1\nProduktsuche: Wahrscheinlichkeit 3, Schaden 3\nImpressum: Wahrscheinlichkeit 1, Schaden 2",
+      "question": "Welcher Bereich sollte zuerst und am gründlichsten getestet werden?",
+      "options": [
+        "Produktsuche",
+        "Zahlung",
+        "Impressum",
+        "Newsletter-Anmeldung"
+      ],
+      "correctIndex": 1,
+      "answer": "Zahlung",
+      "explanation": "Zahlung: 4 × 5 = 20. Produktsuche 9, Newsletter 3, Impressum 2. Risikobasiertes Testen verteilt die knappe Testzeit nach diesem Produkt, statt alles gleich intensiv zu prüfen."
+    },
+    {
+      "id": "tm-013",
+      "category": "testmanagement",
+      "title": "Smoke-Test",
+      "difficulty": 1,
+      "topics": [
+        "Testarten"
+      ],
+      "scenario": "Nach jedem Deployment läuft ein kurzer Test von 5 Minuten, bevor die eigentlichen Tests starten.",
+      "question": "Was prüft ein Smoke-Test?",
+      "options": [
+        "Alle Funktionen vollständig",
+        "Ob die wichtigsten Grundfunktionen überhaupt laufen, sodass weiteres Testen sinnvoll ist",
+        "Nur die Performance",
+        "Nur die Optik der Startseite"
+      ],
+      "correctIndex": 1,
+      "answer": "Ob die wichtigsten Grundfunktionen überhaupt laufen, sodass weiteres Testen sinnvoll ist",
+      "explanation": "Der Name kommt aus der Elektronik: einschalten und schauen, ob es raucht. Startet die Anwendung, klappt die Anmeldung, lädt die Hauptseite? Wenn nicht, spart man sich den stundenlangen Gesamttest."
+    },
+    {
+      "id": "tm-014",
+      "category": "testmanagement",
+      "title": "Inhalt eines Testkonzepts",
+      "difficulty": 2,
+      "topics": [
+        "Testplanung"
+      ],
+      "scenario": "Ein Testkonzept (Testplan) für ein neues Release wird geschrieben.",
+      "question": "Was gehört typischerweise nicht hinein?",
+      "options": [
+        "Der Quellcode der zu testenden Anwendung",
+        "Teststrategie, Risiken und Ausgangskriterien",
+        "Zeitplan, Rollen und Testumgebung",
+        "Umfang und Ziele des Tests"
+      ],
+      "correctIndex": 0,
+      "answer": "Der Quellcode der zu testenden Anwendung",
+      "explanation": "Ein Testkonzept beschreibt das Was, Wie, Wer und Wann des Testens. Es soll Entscheidungen festhalten und abstimmbar machen. Ein gutes Konzept ist kurz und wird gelesen, ein schlechtes ist lang und liegt in der Schublade."
+    },
+    {
+      "id": "tm-015",
+      "category": "testmanagement",
+      "title": "Shift Left",
+      "difficulty": 2,
+      "topics": [
+        "Teststrategie"
+      ],
+      "scenario": "Ein Team möchte „nach links verschieben“ (Shift Left).",
+      "question": "Was ist damit gemeint?",
+      "options": [
+        "Das Testteam räumlich näher an die Entwicklung setzen",
+        "Testen erst nach dem Release",
+        "Weniger testen, um schneller zu liefern",
+        "Testaktivitäten früher im Ablauf beginnen, z. B. Anforderungen prüfen und Tests vor dem Code entwerfen"
+      ],
+      "correctIndex": 3,
+      "answer": "Testaktivitäten früher im Ablauf beginnen, z. B. Anforderungen prüfen und Tests vor dem Code entwerfen",
+      "explanation": "Auf einer Zeitachse von links (Idee) nach rechts (Betrieb) wandert das Testen nach vorn. Tester sind bei der Formulierung der Anforderungen dabei, Akzeptanzkriterien entstehen vor dem Code. Das Gegenstück „Shift Right“ meint Beobachten und Testen im Betrieb."
+    },
+    {
+      "id": "tm-016",
+      "category": "testmanagement",
+      "title": "Aussagekräftiger Statusbericht",
+      "difficulty": 3,
+      "topics": [
+        "Berichtswesen",
+        "Kennzahlen"
+      ],
+      "scenario": "Ein Statusbericht meldet: „1.200 von 1.500 Testfällen ausgeführt (80 %).“",
+      "question": "Warum reicht das als Aussage über die Qualität nicht?",
+      "options": [
+        "Testfälle sollte man nicht zählen, sondern wiegen",
+        "Es sagt nichts über Ergebnisse, Risiko und offene schwere Fehler; die fehlenden 20 % könnten die wichtigsten sein",
+        "80 % ist zu niedrig, es müssen 100 % sein",
+        "Der Bericht ist zu kurz"
+      ],
+      "correctIndex": 1,
+      "answer": "Es sagt nichts über Ergebnisse, Risiko und offene schwere Fehler; die fehlenden 20 % könnten die wichtigsten sein",
+      "explanation": "Ein guter Bericht sagt: Welche Risiken sind abgedeckt, welche nicht? Wie viele schwere Fehler sind offen? Was bedeutet das für das Release? Die Anzahl ausgeführter Testfälle misst Fleiß, nicht Qualität."
+    },
+    {
+      "id": "tm-017",
+      "category": "testmanagement",
+      "title": "Black-Box oder White-Box",
+      "difficulty": 1,
+      "topics": [
+        "Testverfahren"
+      ],
+      "scenario": "Verschiedene Testverfahren sollen eingeordnet werden.",
+      "question": "Welches ist ein Black-Box-Verfahren?",
+      "options": [
+        "Anweisungsüberdeckung",
+        "MC/DC-Überdeckung",
+        "Zweigüberdeckung",
+        "Äquivalenzklassenbildung"
+      ],
+      "correctIndex": 3,
+      "answer": "Äquivalenzklassenbildung",
+      "explanation": "Black-Box-Verfahren leiten Tests aus der Spezifikation ab, ohne den Code zu kennen: Äquivalenzklassen, Grenzwerte, Entscheidungstabellen, Zustandsübergänge. Überdeckungsverfahren brauchen den Code und sind White-Box."
+    },
+    {
+      "id": "tm-018",
+      "category": "testmanagement",
+      "title": "Bestandteile eines Testfalls",
+      "difficulty": 1,
+      "topics": [
+        "Testfallentwurf"
+      ],
+      "scenario": "Ein Testfall soll so geschrieben werden, dass ihn auch ein Kollege ausführen kann.",
+      "question": "Was ist der wichtigste Bestandteil, der in schlechten Testfällen oft fehlt?",
+      "options": [
+        "Das erwartete Ergebnis",
+        "Der Name des Autors",
+        "Ein Screenshot der Startseite",
+        "Die Uhrzeit der Erstellung"
+      ],
+      "correctIndex": 0,
+      "answer": "Das erwartete Ergebnis",
+      "explanation": "Ohne erwartetes Ergebnis kann man nicht entscheiden, ob der Test bestanden ist. Dann prüft jeder nach Gefühl. Ein vollständiger Testfall hat Vorbedingungen, Schritte, Testdaten und das erwartete Ergebnis."
+    },
+    {
+      "id": "tm-019",
+      "category": "testmanagement",
+      "title": "Abnahmetest",
+      "difficulty": 2,
+      "topics": [
+        "Teststufen"
+      ],
+      "scenario": "Kurz vor dem Go-live testen Sachbearbeiter des Kunden die neue Software mit ihren echten Arbeitsabläufen.",
+      "question": "Welche Teststufe ist das, und was ist ihr Ziel?",
+      "options": [
+        "Komponententest: einzelne Klassen prüfen",
+        "Systemtest: möglichst viele Fehler finden",
+        "Integrationstest: Schnittstellen prüfen",
+        "Abnahmetest: Vertrauen gewinnen, dass das System für den Einsatz taugt"
+      ],
+      "correctIndex": 3,
+      "answer": "Abnahmetest: Vertrauen gewinnen, dass das System für den Einsatz taugt",
+      "explanation": "Beim Abnahmetest geht es weniger ums Fehlerfinden als um die Frage: Können wir damit arbeiten? Werden hier noch viele Fehler gefunden, ist in den Stufen davor etwas schiefgelaufen."
+    },
+    {
+      "id": "tm-020",
+      "category": "testmanagement",
+      "title": "Wann ist genug getestet",
+      "difficulty": 3,
+      "topics": [
+        "Testgrundsätze",
+        "Risiko"
+      ],
+      "scenario": "Ein Projektleiter fragt: „Wann sind wir mit dem Testen fertig?“",
+      "question": "Welche Antwort ist fachlich richtig?",
+      "options": [
+        "Wenn die vereinbarten Ausgangskriterien erfüllt sind und das verbleibende Risiko für die Beteiligten akzeptabel ist",
+        "Wenn keine Fehler mehr im System sind",
+        "Wenn das Budget aufgebraucht ist",
+        "Wenn alle denkbaren Eingaben getestet wurden"
+      ],
+      "correctIndex": 0,
+      "answer": "Wenn die vereinbarten Ausgangskriterien erfüllt sind und das verbleibende Risiko für die Beteiligten akzeptabel ist",
+      "explanation": "Fehlerfreiheit lässt sich nicht beweisen, und vollständiges Testen ist unmöglich. Testen liefert Informationen über das Risiko, die Entscheidung zum Release treffen die Verantwortlichen auf dieser Grundlage. Ist das Budget erschöpft, sollte man das verbleibende Risiko ausdrücklich benennen."
+    }
+  ]
+}
