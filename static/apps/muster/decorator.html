@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decorator – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Decorator (GoF-Strukturmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (decorator-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="decorator-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  // Die Klassen wie im Quellcode: Grundgetränke antworten selbst, Decorators fragen innen und ergänzen
+  const ART = {
+    Espresso:      { b: () => 'Espresso', p: () => 220,
+                     zb: 'public String beschreibung() { return "Espresso"; }', zp: '{ return 220; }' },
+    Filterkaffee:  { b: () => 'Filterkaffee', p: () => 180,
+                     zb: 'return "Filterkaffee";', zp: 'return 180;' },
+    MitMilch:      { b: (i) => i + ' + Milch', p: (i) => i + 40, tb: '„ + Milch“ anhängen', tp: '+ 40 Cent',
+                     zb: 'return innen.beschreibung() + " + Milch";', zp: 'return innen.preisCent() + 40;' },
+    MitSirup:      { b: (i, o) => i + ' + ' + o.sorte + '-Sirup', p: (i) => i + 60, tb: '„ + Karamell-Sirup“ anhängen', tp: '+ 60 Cent',
+                     zb: 'return innen.beschreibung() + " + " + sorte + "-Sirup";', zp: 'return innen.preisCent() + 60;' },
+    DoppelteMenge: { b: (i) => '2x (' + i + ')', p: (i) => i * 2, tb: 'in „2x (…)“ einpacken', tp: '× 2',
+                     zb: 'return "2x (" + innen.beschreibung() + ")";', zp: 'return innen.preisCent() * 2;' }
+  };
+  const ZEILE_PRINTF = 'System.out.printf(Locale.GERMANY';
+  const M = {};                                         // Modell nebenher: id → { typ, innen, sorte }
+  const euro = c => (c / 100).toFixed(2).replace('.', ',');
+  const str = t => `"${t}"`;
+  let erklaert;
+
+  // Wert ohne Aufzeichnung (für Schritte, die eine Delegation zusammenfassen)
+  const wert = (id, m) => { const o = M[id], a = ART[o.typ]; return o.innen ? a[m](wert(o.innen, m), o) : a[m](); };
+
+  // Eine Methode durch alle Schichten: jede Hülle fragt innen, dann ergänzt sie ihren Teil.
+  // kette = Klassen der Hüllen, die gerade auf dem Stapel warten – sie leuchten im Diagramm alle mit.
+  const kette = [];
+  const zurueckAn = eltern => eltern === 'bestelle' ? { klassen: ['bestelle()', ...kette] } : { cur: [eltern], klassen: kette.slice() };
+  function frage(s, id, m, zurueck, eltern) {
+    kette.push(M[id].typ);
+    const o = M[id], a = ART[o.typ], name = m === 'b' ? 'beschreibung' : 'preisCent', zeile = m === 'b' ? a.zb : a.zp;
+    const zeig = v => m === 'b' ? str(v) : `${v} Cent`;
+    if (!o.innen) {
+      const v = a[m]();
+      s.ruf(`${o.typ}.${name}()`, [['this', s.ref(id)]], zeile, erklaert['kern' + m]
+        ? `${id}: ${zeig(v)}.`
+        : `${id} ist der Kern ganz innen und antwortet selbst: ${zeig(v)}. Ein Grundgetränk weiß nichts von Hüllen.`, { cur: [id], klassen: kette.slice() });
+      erklaert['kern' + m] = true;
+      kette.pop();
+      s.raus(zurueck, `${zeig(v)} geht zurück an ${eltern}.`, zurueckAn(eltern));
+      return v;
+    }
+    s.ruf(`${o.typ}.${name}()`, [['this', s.ref(id)]], zeile, erklaert[o.typ + m]
+      ? `${id}.${name}(): erst innen fragen.`
+      : `${id}.${name}(): Der Decorator weiß das Ergebnis nicht allein – er fragt zuerst innen.${name}(), also ${o.innen}, und wird danach ${m === 'b' ? a.tb : a.tp}.`, { cur: [id], klassen: kette.slice() });
+    erklaert[o.typ + m] = true;
+    const innen = frage(s, o.innen, m, zeile, id);
+    const v = a[m](innen, o);
+    kette.pop();
+    s.raus(zurueck, `${id}: ${zeig(innen)} ${m === 'b' ? a.tb.replace('anhängen', 'angehängt').replace('einpacken', 'eingepackt') : a.tp} → ${zeig(v)}, zurück an ${eltern}.`, zurueckAn(eltern));
+    return v;
+  }
+
+  // Eine Bestellung: Objekte von innen nach außen bauen, bestelle(g) aufrufen
+  function bestellung(s, zeile, aufbau, voll, kommentar) {
+    let innen = null; const ids = [];
+    aufbau.forEach(([typ, sorte], i) => {
+      const felder = innen ? [['innen', s.ref(innen)]] : [];
+      if (sorte) felder.push(['sorte', str(sorte)]);
+      const id = s.neu(typ, felder);
+      M[id] = { typ, innen, sorte };
+      ids.push(id);
+      s.schritt(zeile, i === 0
+        ? (aufbau.length > 1 ? `Java baut von innen nach außen: zuerst ${id}${aufbau.length > 2 ? '' : ', das Grundgetränk'}.` : `${id}: ein Grundgetränk ohne Extras.`)
+        : `${id} umhüllt ${innen}${sorte ? ` (Sorte ${sorte})` : ''} – und ist selbst wieder ein Getraenk.`);
+      innen = id;
+    });
+    const g = innen;
+    s.ruf('bestelle(Getraenk g)', [['g', s.ref(g)]], 'static void bestelle(Getraenk g) {', kommentar || `bestelle() bekommt ${g}. Es kennt nur Getraenk – ob dahinter Hüllen stecken, sieht es nicht.`, { cur: [g], klassen: ['bestelle()'] });
+    const b = voll.b ? frage(s, g, 'b', ZEILE_PRINTF, 'bestelle') : wert(g, 'b');
+    if (!voll.b) s.schritt(ZEILE_PRINTF, `g.beschreibung() läuft wieder durch alle ${aufbau.length} Schichten (hier in einem Schritt): ${str(b)}.`, { cur: [g], klassen: ['bestelle()'] });
+    const p = voll.p ? frage(s, g, 'p', ZEILE_PRINTF, 'bestelle') : wert(g, 'p');
+    if (!voll.p) s.schritt(ZEILE_PRINTF, `g.preisCent() ebenso: ${p} Cent.`, { cur: [g], klassen: ['bestelle()'] });
+    const z = b.padEnd(42) + ' ' + euro(p).padStart(5) + ' €';
+    s.aus(z);
+    s.schritt(ZEILE_PRINTF, `printf mit Locale.GERMANY: Beschreibung links auf 42 Zeichen aufgefüllt, ${p} Cent als ${euro(p)} €.`, { klassen: ['bestelle()'] });
+    s.weg(...ids);
+    s.raus(zeile, `Die Bestellung ist fertig. ${ids.join(', ')} ${ids.length > 1 ? 'sind' : 'ist'} jetzt nicht mehr erreichbar.`);
+  }
+
+  function lauf(s) {
+    erklaert = {};
+    Object.keys(M).forEach(k => delete M[k]);
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: sechs Bestellungen, jede ein Grundgetränk mit null bis drei Hüllen.');
+
+    bestellung(s, 'bestelle(new Espresso());', [['Espresso']], { b: true, p: true });
+    bestellung(s, 'bestelle(new MitMilch(new Espresso()));', [['Espresso'], ['MitMilch']], { b: true, p: true });
+    bestellung(s, 'bestelle(new MitSirup(new MitMilch(new Filterkaffee()), "Karamell"));', [['Filterkaffee'], ['MitMilch'], ['MitSirup', 'Karamell']], { b: true, p: true },
+      'Drei Schichten wie eine Zwiebel: MitSirup außen, darin MitMilch, ganz innen der Filterkaffee. bestelle() sieht nur die äußerste.');
+    bestellung(s, 'bestelle(new MitMilch(new DoppelteMenge(new Espresso())));', [['Espresso'], ['DoppelteMenge'], ['MitMilch']], { b: false, p: true },
+      'Die Reihenfolge zählt: Hier liegt die Milch außen, die doppelte Menge innen. Achte auf den Preis.');
+    bestellung(s, 'bestelle(new DoppelteMenge(new MitMilch(new Espresso())));', [['Espresso'], ['MitMilch'], ['DoppelteMenge']], { b: false, p: true },
+      'Jetzt umgekehrt: DoppelteMenge liegt außen – und verdoppelt damit auch die Milch, die innen schon dazugekommen ist.');
+    bestellung(s, 'bestelle(new MitMilch(new MitMilch(new Espresso())));', [['Espresso'], ['MitMilch'], ['MitMilch']], { b: false, p: false },
+      'Derselbe Decorator zweimal: zwei MitMilch-Objekte, jedes mit eigenem innen.');
+
+    // Funktionale Variante
+    const tr = s.neu('UnaryOperator', [['Methode', 'String::strip']], 'trimmen');
+    s.var('trimmen', s.ref(tr));
+    s.schritt('UnaryOperator<String> trimmen   = String::strip;', 'Funktionale Variante: Hier ist die gemeinsame Schnittstelle eine Funktion String → String. Die erste ist String::strip.', { cur: [tr] });
+    const gr = s.neu('UnaryOperator', [['Methode', 'String::toUpperCase']], 'gross');
+    s.var('gross', s.ref(gr));
+    s.schritt('UnaryOperator<String> gross     = String::toUpperCase;', 'Die zweite macht Großbuchstaben.', { cur: [gr] });
+    const ra = s.neu('UnaryOperator', [['Lambda', 's -> "[ " + s + " ]"']], 'rahmen');
+    s.var('rahmen', s.ref(ra));
+    s.schritt('UnaryOperator<String> rahmen    = s -> "[ " + s + " ]";', 'Die dritte ist ein Lambda, das eckige Klammern herumsetzt.', { cur: [ra] });
+    const a1 = s.neu('UnaryOperator', [['innen', s.ref(tr)], ['after', s.ref(gr)]], 'andThen #1');
+    const a2 = s.neu('UnaryOperator', [['innen', s.ref(a1)], ['after', s.ref(ra)]], 'andThen #2');
+    s.var('pipeline', s.ref(a2));
+    s.schritt('var pipeline = trimmen.andThen(gross).andThen(rahmen);', 'andThen() legt eine Hülle um eine Funktion: andThen #1 merkt sich trimmen und danach gross, andThen #2 umhüllt das Ganze noch einmal mit rahmen. Dasselbe Prinzip wie die Records oben – nur ohne eigene Klassen.', { cur: [a2] });
+    s.aus('');
+    s.schritt('System.out.println();', 'Eine Leerzeile.');
+
+    const ein = '   cappuccino to go   ', z = 'System.out.println(pipeline.apply(';
+    s.ruf('UnaryOperator.apply(String t)', [['this', s.ref(a2)], ['t', str(ein)]], z, 'pipeline.apply(...): Die äußerste Hülle andThen #2 reicht den Text zuerst nach innen weiter.', { cur: [a2] });
+    s.ruf('UnaryOperator.apply(String t)', [['this', s.ref(a1)], ['t', str(ein)]], z, 'andThen #1 macht es genauso: erst ihr innen, also trimmen.', { cur: [a1] });
+    s.ruf('String.strip()', [['this', str(ein)]], 'UnaryOperator<String> trimmen   = String::strip;', 'trimmen entfernt die Leerzeichen am Rand.', { cur: [tr] });
+    s.raus(z, '"cappuccino to go" geht zurück an andThen #1 – die gibt es jetzt an gross weiter.', { cur: [a1] });
+    s.ruf('String.toUpperCase()', [['this', '"cappuccino to go"']], 'UnaryOperator<String> gross     = String::toUpperCase;', 'gross macht Großbuchstaben.', { cur: [gr] });
+    s.raus(z, '"CAPPUCCINO TO GO" geht zurück an andThen #1.', { cur: [a1] });
+    s.raus(z, 'andThen #1 ist fertig und liefert "CAPPUCCINO TO GO" an andThen #2 – die ruft jetzt ihr after, also rahmen.', { cur: [a2] });
+    s.ruf('rahmen.apply(String s)', [['s', '"CAPPUCCINO TO GO"']], 's -> "[ " + s + " ]";', 'rahmen setzt die Klammern.', { cur: [ra] });
+    s.raus(z, '"[ CAPPUCCINO TO GO ]" geht zurück an andThen #2.', { cur: [a2] });
+    s.aus('[ CAPPUCCINO TO GO ]');
+    s.raus(z, 'Drei Schichten, von innen nach außen ausgeführt – wie bei den Getränken.', { cur: [a2] });
+    s.weg(tr, gr, ra, a1, a2);
+    s.raus([z, 1], 'main ist zu Ende. Ein neues Extra wäre ein einziger neuer Record – kombinierbar mit allen anderen.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Component', 'ConcreteComponent', 'ConcreteDecorator'],
+    diagramm: {
+      breite: 156, abstandX: 24, abstandY: 50, rand: 60,
+      klassen: [
+        { name: 'bestelle()', art: 'Methode', rolle: 'Client', x: 1, y: 0 },
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 3, y: 0 },
+        { name: 'Getraenk', art: 'interface', rolle: 'Component', x: 2, y: 1 },
+        { name: 'UnaryOperator', art: 'interface', rolle: 'Component', x: 4, y: 1 },
+        { name: 'MitMilch', art: 'record', rolle: 'ConcreteDecorator', x: 0, y: 2 },
+        { name: 'MitSirup', art: 'record', rolle: 'ConcreteDecorator', x: 1, y: 2 },
+        { name: 'DoppelteMenge', art: 'record', rolle: 'ConcreteDecorator', x: 2, y: 2 },
+        { name: 'Espresso', art: 'record', rolle: 'ConcreteComponent', x: 3, y: 2 },
+        { name: 'Filterkaffee', art: 'record', rolle: 'ConcreteComponent', x: 4, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'bestelle()', art: 'nutzt', text: 'ruft' },
+        { von: 'bestelle()', zu: 'Getraenk', art: 'nutzt', text: 'nutzt' },
+        { von: 'main()', zu: 'UnaryOperator', art: 'nutzt', text: 'nutzt' },
+        { von: 'MitMilch', zu: 'Getraenk', art: 'impl' }, { von: 'MitSirup', zu: 'Getraenk', art: 'impl' }, { von: 'DoppelteMenge', zu: 'Getraenk', art: 'impl' },
+        { von: 'Espresso', zu: 'Getraenk', art: 'impl' }, { von: 'Filterkaffee', zu: 'Getraenk', art: 'impl' },
+        { von: 'MitMilch', zu: 'Getraenk', art: 'nutzt', bogen: -55, text: 'innen' }
+      ]
+    },
+    szenarien: [
+      { name: 'java Decorator.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

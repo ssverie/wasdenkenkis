@@ -84,6 +84,7 @@ gruppe = "struktur"
 schluessel = "decorator"
 name = "Decorator"
 text = "Verhalten dynamisch hinzufügen durch Umhüllen"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Jede Bestellung baut ihr Getränk von innen nach außen. Danach sieht man im Aufrufstapel, wie eine Frage durch die Hüllen nach innen wandert: Jeder Decorator fragt erst sein Feld innen und ergänzt dann seinen Teil auf dem Rückweg. Bei den Bestellungen 4 und 5 ist der Preis Schritt für Schritt zu sehen, dort zählt die Reihenfolge. Am Ende legt andThen() dieselben Hüllen um Funktionen."
 
 [[muster]]
 nummer = 10
