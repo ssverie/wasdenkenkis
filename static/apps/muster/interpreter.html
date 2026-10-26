@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interpreter – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Interpreter (GoF-Verhaltensmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (interpreter-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="interpreter-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  // Zeilen, die mehrfach vorkommen (return a; / Ausdruck a = summe();): genauer Zeileninhalt + Nummer des Vorkommens
+  function Z(text, nr) {
+    const t = window.MUSTER_CODE.map((l, i) => l.trim() === text ? i : -1).filter(i => i >= 0);
+    if (t.length <= (nr || 0)) throw new Error(`Zeile „${text}“ (${nr || 0}) nicht gefunden`);
+    return t[nr || 0];
+  }
+  const str = t => `"${t}"`;
+  const MAIN = { klassen: ['main()'] };
+  const OP = { Plus: '+', Minus: '-', Mal: '*' };
+  const FALL = { Zahl: 'case Zahl(int w)', Variable: 'case Variable(String n)', Plus: 'case Plus(Ausdruck l, Ausdruck r)', Minus: 'case Minus(Ausdruck l, Ausdruck r)', Mal: 'case Mal(Ausdruck l, Ausdruck r)' };
+  const INTERP = { Zahl: '{ return wert; }', Variable: 'Integer wert = kontext.get(name);',
+    Plus: 'return links.interpretiere(k) + rechts.interpretiere(k);', Minus: 'return links.interpretiere(k) - rechts.interpretiere(k);', Mal: 'return links.interpretiere(k) * rechts.interpretiere(k);' };
+
+  // Modell des Syntaxbaums
+  const text = n => n.typ === 'Zahl' ? String(n.wert) : n.typ === 'Variable' ? n.name : `(${text(n.l)} ${OP[n.typ]} ${text(n.r)})`;
+  const wert = (n, k) => n.typ === 'Zahl' ? n.wert : n.typ === 'Variable' ? k[n.name] : n.typ === 'Plus' ? wert(n.l, k) + wert(n.r, k) : n.typ === 'Minus' ? wert(n.l, k) - wert(n.r, k) : wert(n.l, k) * wert(n.r, k);
+  const toStr = n => n.typ === 'Zahl' ? `Zahl[wert=${n.wert}]` : n.typ === 'Variable' ? `Variable[name=${n.name}]` : `${n.typ}[links=${toStr(n.l)}, rechts=${toStr(n.r)}]`;
+
+  function lauf(s) {
+    const knoten = n => {                               // Knoten als Objekt im Speicher
+      const felder = n.typ === 'Zahl' ? [['wert', String(n.wert)]] : n.typ === 'Variable' ? [['name', str(n.name)]] : [['links', s.ref(n.l.id)], ['rechts', s.ref(n.r.id)]];
+      n.id = s.neu(n.typ, felder, n.typ === 'Variable' ? `Variable ${n.name}` : n.typ === 'Zahl' ? `Zahl ${n.wert}` : undefined);
+      return n;
+    };
+
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: Eine kleine Rechensprache wird als Baum aus Objekten dargestellt und ausgewertet.', MAIN);
+
+    // ---------- 1. Baum von Hand ----------
+    const preis = knoten({ typ: 'Variable', name: 'preis' });
+    s.schritt('new Mal(new Variable("preis"), new Variable("menge")),', `Der Baum für „preis * menge - rabatt“ entsteht von innen nach außen. Zuerst das Blatt ${preis.id} – eine TerminalExpression.`, { cur: [preis.id] });
+    const menge = knoten({ typ: 'Variable', name: 'menge' });
+    s.schritt('new Mal(new Variable("preis"), new Variable("menge")),', `Dann ${menge.id}.`, { cur: [menge.id] });
+    const mal = knoten({ typ: 'Mal', l: preis, r: menge });
+    s.schritt('new Mal(new Variable("preis"), new Variable("menge")),', `${mal.id} verbindet die beiden – ein innerer Knoten, eine NonterminalExpression.`, { cur: [mal.id] });
+    const rabatt = knoten({ typ: 'Variable', name: 'rabatt' });
+    s.schritt('new Variable("rabatt"));', `${rabatt.id}.`, { cur: [rabatt.id] });
+    const minus = knoten({ typ: 'Minus', l: mal, r: rabatt });
+    s.var('rechnung', s.ref(minus.id));
+    s.schritt('Ausdruck rechnung = new Minus(', `${minus.id} ist die Wurzel: links ${mal.id}, rechts ${rabatt.id}. Fünf Objekte bilden den Satz der Sprache.`, { cur: [minus.id] });
+    const k1 = { preis: 12, menge: 5, rabatt: 7 };
+    const kontext = s.neu('Map', [['preis', '12'], ['menge', '5'], ['rabatt', '7']], 'kontext');
+    s.var('kontext', s.ref(kontext));
+    s.schritt('Map<String, Integer> kontext = Map.of(', 'Der Kontext: die Werte der Variablen, getrennt vom Baum.', { cur: [kontext] });
+
+    s.aus('Baum:     ' + toStr(minus));
+    s.schritt('System.out.println("Baum:     " + rechnung);', 'Das automatische toString() der records zeigt die Baumstruktur – jeder record ruft dabei das toString() seiner Felder auf.', { cur: [minus.id], klassen: ['main()'] });
+
+    // alsText rekursiv
+    let erklaertText = {};
+    function alsText(n, zurueck, eltern) {
+      s.ruf('alsText(Ausdruck a)', [['a', s.ref(n.id)]], FALL[n.typ], erklaertText[n.typ]
+        ? `${n.id}: case ${n.typ}.`
+        : n.typ === 'Variable' ? `${n.id} passt auf case Variable(String n) – das Record Pattern holt den Namen heraus: „${n.name}“.`
+        : `switch mit Record Patterns: ${n.id} passt auf case ${n.typ}(Ausdruck l, Ausdruck r) – l und r sind sofort die beiden Kinder. Erst links, dann rechts.`, { cur: [n.id], klassen: ['alsText()'] });
+      erklaertText[n.typ] = true;
+      if (n.l) { alsText(n.l, FALL[n.typ], n); alsText(n.r, FALL[n.typ], n); }
+      s.raus(zurueck, `„${text(n)}“${eltern ? ` geht zurück an ${eltern.id}` : ' – fertig'}.`, eltern ? { cur: [eltern.id], klassen: ['alsText()'] } : MAIN);
+    }
+    alsText(minus, 'System.out.println("Als Text: " + alsText(rechnung));');
+    s.aus('Als Text: ' + text(minus));
+    s.schritt('System.out.println("Als Text: " + alsText(rechnung));', 'Vollständig geklammert: Man sieht, dass erst multipliziert und dann subtrahiert wird.', MAIN);
+
+    // interpretiere rekursiv
+    let erklaertWert = {};
+    function interpretiere(n, k, zurueck, eltern) {
+      const v = wert(n, k);
+      if (n.typ === 'Variable') {
+        s.ruf('Variable.interpretiere(Map kontext)', [['this', s.ref(n.id)]], INTERP.Variable, erklaertWert.Variable
+          ? `${n.id}: kontext.get("${n.name}") = ${v}.`
+          : `${n.id} ist ein Blatt: Es schlägt seinen Wert im Kontext nach – kontext.get("${n.name}") = ${v}.`, { cur: [n.id, kontext] });
+      } else {
+        s.ruf(`${n.typ}.interpretiere(Map k)`, [['this', s.ref(n.id)]], INTERP[n.typ], erklaertWert[n.typ]
+          ? `${n.id}: erst links, dann rechts.`
+          : `${n.id} wertet zuerst seine Kinder aus – links, dann rechts – und verknüpft dann mit „${OP[n.typ]}“.`, { cur: [n.id] });
+        interpretiere(n.l, k, INTERP[n.typ], n);
+        interpretiere(n.r, k, INTERP[n.typ], n);
+      }
+      erklaertWert[n.typ] = true;
+      const rechnung = n.l ? `${wert(n.l, k)} ${OP[n.typ]} ${wert(n.r, k)} = ${v}` : String(v);
+      s.raus(zurueck, `${n.id} liefert ${rechnung}${eltern ? ` an ${eltern.id}` : ''}.`, eltern ? { cur: [eltern.id] } : MAIN);
+      return v;
+    }
+    s.schritt('System.out.println("Ergebnis: " + rechnung.interpretiere(kontext));', 'rechnung.interpretiere(kontext): Ein einziger Aufruf an der Wurzel wertet den ganzen Baum aus.', { cur: [minus.id], klassen: ['main()'] });
+    const e1 = interpretiere(minus, k1, 'System.out.println("Ergebnis: " + rechnung.interpretiere(kontext));');
+    s.aus('Ergebnis: ' + e1);
+    s.schritt('System.out.println("Ergebnis: " + rechnung.interpretiere(kontext));', `12 * 5 - 7 = ${e1}.`, MAIN);
+
+    const k2 = { preis: 12, menge: 10, rabatt: 7 };
+    const kontext2 = s.neu('Map', [['preis', '12'], ['menge', '10'], ['rabatt', '7']], 'Map (menge=10)');
+    s.aus('Mit menge=10: ' + wert(minus, k2));
+    s.schritt('+ rechnung.interpretiere(Map.of(', `Derselbe Baum, ein anderer Kontext – die Auswertung läuft genauso durch alle Knoten (hier in einem Schritt): 12 * 10 - 7 = ${wert(minus, k2)}. Der Baum wird nicht neu gebaut.`, { cur: [minus.id, kontext2] });
+    s.weg(kontext2);
+
+    // ---------- 3. Parser ----------
+    s.aus('');
+    s.schritt('System.out.println();', 'Teil 3: Formeln aus Text.', MAIN);
+    const werte = { x: 4, y: 6 };
+    const werteId = s.neu('Map', [['x', '4'], ['y', '6']], 'werte');
+    s.var('werte', s.ref(werteId));
+    s.schritt('Map<String, Integer> werte = Map.of("x", 4, "y", 6);', 'Die Werte für x und y.', { cur: [werteId] });
+
+    const P = { klassen: ['Parser'] };
+    function erste(s) {
+      const formel = '2 + 3 * 4', ohne = '2+3*4';
+      s.var('formel', str(formel));
+      s.schritt('for (String formel : new String[]', `Erste Formel: „${formel}“. Den Parser zeige ich einmal ausführlich – er gehört nicht zum Muster, entscheidet aber, wie der Baum aussieht.`, MAIN);
+      const p = s.neu('Parser', [['s', str(ohne)], ['pos', '0']]);
+      s.schritt('Parser(String text) { this.s = text.replace(" ", ""); }', `${p}: Leerzeichen entfernt, pos = 0.`, { cur: [p], klassen: ['Parser'] });
+      const pos = n => s.feld(p, 'pos', String(n));
+      s.ruf('Parser.parse()', [['this', s.ref(p)]], Z('Ausdruck a = summe();', 0), 'parse() beginnt mit der Regel summe.', { cur: [p], ...P });
+      s.ruf('Parser.summe()', [['this', s.ref(p)]], 'Ausdruck a = produkt();', 'summe := produkt ((+|-) produkt)* – zuerst ein produkt.', { cur: [p], ...P });
+      s.ruf('Parser.produkt()', [['this', s.ref(p)]], 'Ausdruck a = faktor();', 'produkt := faktor (* faktor)* – zuerst ein faktor.', { cur: [p], ...P });
+      // faktor: 2
+      const zahl = (wertZ, posNach, zurueck, msg) => {
+        s.ruf('Parser.faktor()', [['this', s.ref(p)], ['c', `'${wertZ}'`]], 'char c = s.charAt(pos);', msg, { cur: [p], ...P });
+        pos(posNach);
+        const z = knoten({ typ: 'Zahl', wert: wertZ });
+        s.schritt('return new Zahl(Integer.parseInt(s.substring(start, pos)));', `Eine Ziffer – ${z.id} entsteht, pos steht jetzt auf ${posNach}.`, { cur: [z.id, p], ...P });
+        // a wird nur in „Ausdruck a = faktor();“ direkt gesetzt – bei „a = new Mal(a, faktor())“ erst, wenn Mal steht
+        s.raus(zurueck, `faktor() liefert → ${z.id}.`, { setze: zurueck === 'Ausdruck a = faktor();' ? [['a', s.ref(z.id)]] : [], cur: [p], ...P });
+        return z;
+      };
+      const z2 = zahl(2, 1, 'Ausdruck a = faktor();', 'faktor: Das Zeichen an pos 0 ist „2“, eine Ziffer.');
+      s.schritt("while (pos < s.length() && s.charAt(pos) == '*') {", 'Kommt ein „*“? Nein, an pos 1 steht „+“. produkt ist fertig.', { cur: [p], ...P });
+      s.raus('Ausdruck a = produkt();', `produkt() liefert → ${z2.id}.`, { setze: [['a', s.ref(z2.id)]], cur: [p], ...P });
+      s.schritt("while (pos < s.length() && (s.charAt(pos) == '+'", 'In summe: Kommt ein „+“ oder „-“? Ja, ein „+“.', { cur: [p], ...P });
+      pos(2); s.var('op', "'+'");
+      s.schritt('char op = s.charAt(pos++);', 'op = „+“, pos rückt auf 2.', { cur: [p], ...P });
+      // rechter Teil: produkt 3 * 4
+      s.ruf('Parser.produkt()', [['this', s.ref(p)]], 'Ausdruck a = faktor();', 'Für den rechten Teil wieder ein produkt – hier entsteht Punkt vor Strich.', { cur: [p], ...P });
+      const z3 = zahl(3, 3, 'Ausdruck a = faktor();', 'faktor: „3“.');
+      s.schritt("while (pos < s.length() && s.charAt(pos) == '*') {", 'Kommt ein „*“? Ja, an pos 3.', { cur: [p], ...P });
+      pos(4);
+      s.schritt(Z('pos++;', 0), 'Das „*“ wird übersprungen, pos = 4.', { cur: [p], ...P });
+      const z4 = zahl(4, 5, 'a = new Mal(a, faktor());', 'faktor: „4“.');
+      const mal2 = knoten({ typ: 'Mal', l: z3, r: z4 });
+      s.var('a', s.ref(mal2.id));
+      s.schritt('a = new Mal(a, faktor());', `${mal2.id} fasst 3 und 4 zusammen – das Produkt wird zum Teilbaum, bevor die Summe es bekommt.`, { cur: [mal2.id], ...P });
+      s.schritt("while (pos < s.length() && s.charAt(pos) == '*') {", 'Weiteres „*“? Nein, der Text ist zu Ende.', { cur: [p], ...P });
+      s.raus("a = op == '+' ? new Plus(a, produkt())", `produkt() liefert → ${mal2.id}.`, { cur: [p], ...P });
+      const plus = knoten({ typ: 'Plus', l: z2, r: mal2 });
+      s.var('a', s.ref(plus.id));
+      s.schritt("a = op == '+' ? new Plus(a, produkt())", `${plus.id}: links ${z2.id}, rechts ${mal2.id}. Darum ergibt „2 + 3 * 4“ den Baum (2 + (3 * 4)).`, { cur: [plus.id], ...P });
+      s.schritt("while (pos < s.length() && (s.charAt(pos) == '+'", 'Weiteres „+“ oder „-“? Nein.', { cur: [p], ...P });
+      s.raus(Z('Ausdruck a = summe();', 0), `summe() liefert → ${plus.id}.`, { setze: [['a', s.ref(plus.id)]], cur: [p], ...P });
+      s.schritt('if (pos < s.length()) throw', 'parse() prüft, ob noch Text übrig ist – nein, alles verbraucht.', { cur: [p], ...P });
+      s.weg(p);
+      s.raus('Ausdruck a = new Parser(formel).parse();', `Der Baum steht, der Parser wird nicht mehr gebraucht.`, { setze: [['a', s.ref(plus.id)]], cur: [plus.id], klassen: ['main()'] });
+      return [formel, plus];
+    }
+
+    const ausgabe = (formel, baum) => {
+      s.aus(`${formel.padEnd(18)} = ${String(wert(baum, werte)).padStart(3)}   Baum: ${text(baum)}`);
+    };
+    const [f1, b1] = erste(s);
+    ausgabe(f1, b1);
+    s.schritt('System.out.printf("%-18s', `a.interpretiere(werte) und alsText(a) laufen wie oben rekursiv durch den Baum (hier in einem Schritt): ${wert(b1, werte)} und „${text(b1)}“. Punkt vor Strich: 14, nicht 20.`, { cur: [b1.id], klassen: ['main()'] });
+    const loesche = n => { s.weg(n.id); if (n.l) { loesche(n.l); loesche(n.r); } };
+    loesche(b1);
+
+    // die beiden anderen Formeln in je zwei Schritten
+    const weitere = [
+      ['(2 + 3) * 4', { typ: 'Mal', l: { typ: 'Plus', l: { typ: 'Zahl', wert: 2 }, r: { typ: 'Zahl', wert: 3 } }, r: { typ: 'Zahl', wert: 4 } },
+        'Die Klammer ändert den Baum: faktor sieht „(“ und ruft summe auf – jetzt ist das Plus der Teilbaum und Mal die Wurzel.'],
+      ['x * (y - 1) + 10', { typ: 'Plus', l: { typ: 'Mal', l: { typ: 'Variable', name: 'x' }, r: { typ: 'Minus', l: { typ: 'Variable', name: 'y' }, r: { typ: 'Zahl', wert: 1 } } }, r: { typ: 'Zahl', wert: 10 } },
+        'Mit Variablen: Der Parser macht aus Buchstaben Variable-Knoten, ihre Werte kommen erst bei der Auswertung aus werte.']
+    ];
+    weitere.forEach(([formel, baum, msg]) => {
+      s.var('formel', str(formel));
+      const wurzel = s.neu(baum.typ, [['Baum', text(baum)]], `Baum „${formel}“`);
+      s.var('a', s.ref(wurzel));
+      s.schritt('Ausdruck a = new Parser(formel).parse();', `${msg} (Der Parser und die einzelnen Knoten sind hier zusammengefasst.)`, { cur: [wurzel], klassen: ['main()', 'Parser'] });
+      ausgabe(formel, baum);
+      s.schritt('System.out.printf("%-18s', `= ${wert(baum, werte)}.`, { cur: [wurzel], klassen: ['main()'] });
+      s.weg(wurzel);
+    });
+
+    s.weg(preis.id, menge.id, mal.id, rabatt.id, minus.id, kontext, werteId);
+    s.raus(['System.out.printf("%-18s', 2], 'main ist zu Ende. Eine neue Rechenart (etwa Geteilt) wäre ein neuer record – und der Compiler zeigte jede switch-Stelle, die ihn noch nicht kennt.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'AbstractExpression', 'TerminalExpression', 'NonterminalExpression'],
+    diagramm: {
+      breite: 150, abstandX: 30, abstandY: 50, rand: 44,
+      klassen: [
+        { name: 'alsText()', art: 'Methode', rolle: 'Client', x: 0.5, y: 0 },
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 2, y: 0 },
+        { name: 'Parser', art: 'final class', rolle: 'nicht Teil des Musters', x: 0, y: 1 },
+        { name: 'Ausdruck', art: 'sealed interface', rolle: 'AbstractExpression', x: 2, y: 1 },
+        { name: 'Zahl', art: 'record', rolle: 'TerminalExpression', x: 0, y: 2 },
+        { name: 'Variable', art: 'record', rolle: 'TerminalExpression', x: 1, y: 2 },
+        { name: 'Plus', art: 'record', rolle: 'NonterminalExpression', x: 2, y: 2 },
+        { name: 'Minus', art: 'record', rolle: 'NonterminalExpression', x: 3, y: 2 },
+        { name: 'Mal', art: 'record', rolle: 'NonterminalExpression', x: 4, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Ausdruck', art: 'nutzt', text: 'interpretiere()' },
+        { von: 'main()', zu: 'alsText()', art: 'nutzt', text: 'ruft' },
+        { von: 'main()', zu: 'Parser', art: 'nutzt', text: 'parse()' },
+        { von: 'Parser', zu: 'Ausdruck', art: 'erzeugt', text: 'baut' },
+        { von: 'Zahl', zu: 'Ausdruck', art: 'impl' }, { von: 'Variable', zu: 'Ausdruck', art: 'impl' }, { von: 'Plus', zu: 'Ausdruck', art: 'impl' },
+        { von: 'Minus', zu: 'Ausdruck', art: 'impl' }, { von: 'Mal', zu: 'Ausdruck', art: 'impl' },
+        { von: 'Mal', zu: 'Ausdruck', art: 'nutzt', bogen: 45, text: 'links, rechts', dx: -100 }
+      ]
+    },
+    szenarien: [
+      { name: 'java Interpreter.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

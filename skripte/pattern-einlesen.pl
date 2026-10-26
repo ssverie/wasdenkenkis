@@ -20,7 +20,8 @@ die "Aufruf: perl skripte/pattern-einlesen.pl input/<Muster>.html <testordner>\n
 open my $fh, '<:encoding(UTF-8)', $seite or die "$seite: $!"; my $h = do { local $/; <$fh> }; close $fh;
 my ($artikel) = $h =~ m{<article[^>]*>(.*?)</article>}s or die "kein <article>\n";
 
-sub ent { my $s = shift; $s =~ s/&lt;/</g; $s =~ s/&gt;/>/g; $s =~ s/&quot;/"/g; $s =~ s/&#39;/'/g; $s =~ s/&amp;/&/g; return $s; }
+# Zahl-Entities in beiden Schreibweisen (&#39; und &#x27; – bei Interpreter so geliefert), &amp; zuletzt
+sub ent { my $s = shift; $s =~ s/&lt;/</g; $s =~ s/&gt;/>/g; $s =~ s/&quot;/"/g; $s =~ s/&#x([0-9a-fA-F]+);/chr(hex $1)/ge; $s =~ s/&#(\d+);/chr($1)/ge; $s =~ s/&amp;/&/g; return $s; }
 # Inline-Auszeichnung: strong → **, em → *, code → `
 sub inline {
   my $s = shift;

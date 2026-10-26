@@ -132,6 +132,7 @@ gruppe = "verhalten"
 schluessel = "interpreter"
 name = "Interpreter"
 text = "Grammatik einer Sprache als Klassenhierarchie abbilden und auswerten"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Zuerst entsteht der Baum für „preis * menge - rabatt“ als fünf Objekte im Speicher. alsText() und interpretiere() laufen danach rekursiv durch alle Knoten, im Aufrufstapel sieht man, wie tief es gerade geht. Bei der ersten Formel aus Text zeigt der Ablauf auch den Parser Schritt für Schritt: Dort entsteht Punkt vor Strich, weil das Produkt zum Teilbaum wird, bevor die Summe es bekommt. Die beiden anderen Formeln folgen in je zwei Schritten."
 
 [[muster]]
 nummer = 16
