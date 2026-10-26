@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Composite – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Composite (GoF-Strukturmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (composite-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="composite-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  // Der Baum aus main(), in der Reihenfolge des Quellcodes; zeile = Codezeile, in der das Objekt entsteht
+  const BAUM = { name: 'projekt', zeile: 'Ordner projekt = new Ordner("projekt",', kinder: [
+    { name: 'README.md', g: 2048, zeile: 'new Datei("README.md", 2_048),' },
+    { name: 'src', zeile: 'new Ordner("src",', kinder: [
+      { name: 'Main.java', g: 4200, zeile: 'new Datei("Main.java", 4_200),' },
+      { name: 'Util.java', g: 1800, zeile: 'new Datei("Util.java", 1_800)),' }] },
+    { name: 'bilder', zeile: 'new Ordner("bilder",', kinder: [
+      { name: 'logo.png', g: 250000, zeile: 'new Datei("logo.png", 250_000),' },
+      { name: 'fotos', zeile: 'new Ordner("fotos",', kinder: [
+        { name: 'team.jpg', g: 3400000, zeile: 'new Datei("team.jpg", 3_400_000),' },
+        { name: 'buero.jpg', g: 2900000, zeile: 'new Datei("buero.jpg", 2_900_000))));' }] }] }] };
+
+  const ZEILE_SUMME = 'return kinder.stream().mapToLong(Eintrag::groesse).sum();';
+  const ZEILE_ORDNER_PRINTF = 'System.out.printf("%s%s/ (%s)%n"';
+  const ZEILE_DATEI_PRINTF = 'System.out.printf("%s%s (%s)%n"';
+  const ZEILE_FOREACH = 'kinder.forEach(k -> k.zeige(einrueckung + "    "));';
+  const ZEILE_FALL_ORDNER = 'case Ordner o -> o.kinder.stream()';
+  const ZEILE_DATEI = 'record Datei(String name, long groesse) implements Eintrag {';
+
+  const id = k => k.kinder ? k.name + '/' : k.name;
+  const groesse = k => k.kinder ? k.kinder.reduce((a, c) => a + groesse(c), 0) : k.g;
+  const dateien = k => k.kinder ? k.kinder.reduce((a, c) => a + dateien(c), 0) : 1;
+  const zahl = n => n.toLocaleString('de-DE');
+  // format() wie im Java-Code, Zahlen mit Punkt wie auf der Seite (englische Spracheinstellung)
+  const format = b => b < 1024 ? b + ' B' : b < 1024 * 1024 ? (b / 1024).toFixed(1) + ' KB' : (b / (1024 * 1024)).toFixed(1) + ' MB';
+  const kinderListe = k => `[${k.kinder.map(c => '→ ' + id(c)).join(', ')}]`;
+  const str = t => `"${t}"`;
+
+  let erklaert;
+
+  // Baum aufbauen: Java wertet die Argumente aus, bevor der Konstruktor läuft – also von innen nach außen
+  function baue(s, k) {
+    if (!k.kinder) {
+      s.neu('Datei', [['name', str(k.name)], ['groesse', String(k.g)]], id(k));
+      s.schritt(k.zeile, erklaert.datei
+        ? `Datei ${k.name} (${zahl(k.g)} Bytes).`
+        : `Java wertet die Argumente von innen nach außen aus: Bevor der Ordner „projekt“ entstehen kann, müssen seine Kinder fertig sein. Zuerst ${k.name} – ein record Datei, ein Blatt mit Name und Größe.`, { klassen: ['Datei'] });
+      erklaert.datei = true;
+      return;
+    }
+    k.kinder.forEach(c => baue(s, c));
+    const o = s.neu('Ordner', [['name', str(k.name)], ['kinder', kinderListe(k)]], id(k));
+    if (!erklaert.ordner) {
+      s.ruf('Ordner(String name, Eintrag... kinder)', [['name', str(k.name)], ['kinder', kinderListe(k)]], 'Ordner(String name, Eintrag... kinder) {',
+        `Beide Dateien sind da – jetzt erst der Ordner ${o}. Der Konstruktor bekommt sie als Eintrag..., er fragt nicht, was sie sind.`, { cur: [o] });
+      s.schritt('this.kinder.addAll(List.of(kinder));', `${o} merkt sich seine Kinder in der Liste kinder. Ein Ordner kennt nur Einträge – Dateien oder Ordner, das ist ihm gleich.`, { cur: [o] });
+      s.raus(k.zeile, `${o} ist fertig.`, { cur: [o] });
+      erklaert.ordner = true;
+    } else if (k === BAUM) {
+      s.var('projekt', s.ref(o));
+      s.schritt(k.zeile, `Als Letztes der äußerste Ordner ${o} mit drei Kindern. Der Baum ist komplett: 4 Ordner, 6 Dateien – und main kennt nur die Wurzel.`, { cur: [o] });
+    } else {
+      s.schritt(k.zeile, `Ordner ${o} mit ${k.kinder.length} Kindern${k.kinder.some(c => c.kinder) ? ' – eines davon ist selbst ein Ordner' : ''}.`, { cur: [o] });
+    }
+  }
+
+  // groesse() vollständig: jeder Ordner fragt seine Kinder, die Rekursion steckt in der Struktur
+  function groesseVoll(s, k, zurueck, eltern) {
+    const o = id(k);
+    if (!k.kinder) {
+      s.ruf('Datei.groesse()', [['this', s.ref(o)]], ZEILE_DATEI, erklaert.blatt
+        ? `${o}: ${zahl(k.g)} Bytes.`
+        : `${o} ist ein Blatt und antwortet direkt: ${zahl(k.g)} Bytes. Die Methode groesse() hat der record von selbst – sie liefert einfach das Feld.`, { cur: [o] });
+      erklaert.blatt = true;
+      s.raus(zurueck, `Zurück in ${eltern}.groesse().`, { cur: [eltern] });
+      return;
+    }
+    s.ruf('Ordner.groesse()', [['this', s.ref(o)]], ZEILE_SUMME, erklaert.summe
+      ? `${o}.groesse(): Auch dieser Ordner fragt seine ${k.kinder.length} Kinder – der Aufrufstapel wird tiefer.`
+      : `${o}.groesse(): Ein Ordner kennt seine Größe nicht, er fragt jedes Kind nach dessen groesse() und zählt zusammen. Ob ein Kind Datei oder Ordner ist, muss er nicht wissen.`, { cur: [o] });
+    erklaert.summe = true;
+    k.kinder.forEach(c => groesseVoll(s, c, ZEILE_SUMME, o));
+    const summe = groesse(k);
+    s.raus(zurueck, `${o} hat alle Kinder gefragt: ${k.kinder.map(c => zahl(groesse(c))).join(' + ')} = ${zahl(summe)} Bytes.`, { cur: [eltern || o] });
+  }
+
+  // zeige(): beim ersten Ordner mit vollständiger groesse()-Rekursion, danach groesse() in einem Schritt
+  function zeige(s, k, einr, zurueck, eltern) {
+    const o = id(k), g = groesse(k);
+    if (!k.kinder) {
+      s.aus(`${einr}${k.name} (${format(g)})`);
+      s.ruf('Datei.zeige(String einrueckung)', [['this', s.ref(o)], ['einrueckung', str(einr)]], ZEILE_DATEI_PRINTF,
+        `${o} gibt sich selbst aus – ${einr.length / 4} × 4 Leerzeichen eingerückt, ${zahl(g)} Bytes als „${format(g)}“.`, { cur: [o] });
+      s.raus(zurueck, `Zurück in ${eltern}.zeige(): das nächste Kind.`, { cur: [eltern] });
+      return;
+    }
+    const vars = [['this', s.ref(o)], ['einrueckung', str(einr)]];
+    if (k === BAUM) {
+      s.ruf('Ordner.zeige(String einrueckung)', vars, ZEILE_ORDNER_PRINTF,
+        `projekt.zeige(""): Für seine Zeile braucht der Ordner format(groesse()) – und groesse() ist schon die Rekursion. Hier einmal vollständig:`, { cur: [o] });
+      groesseVoll(s, k, ZEILE_ORDNER_PRINTF);
+      s.aus(`${einr}${k.name}/ (${format(g)})`);
+      s.schritt(ZEILE_ORDNER_PRINTF, `${zahl(g)} Bytes, als „${format(g)}“ ausgegeben. Der Aufrufer hat nur einmal groesse() gesagt.`, { cur: [o] });
+    } else {
+      s.aus(`${einr}${k.name}/ (${format(g)})`);
+      s.ruf('Ordner.zeige(String einrueckung)', vars, ZEILE_ORDNER_PRINTF, erklaert.neuRechnen
+        ? `${o}: groesse() läuft wieder rekursiv – ${zahl(g)} Bytes, „${format(g)}“.`
+        : `${o}.zeige(): Auch dieser Ordner ruft groesse() auf, und die fragt wieder alle seine Kinder (hier nicht noch einmal einzeln gezeigt) – ${zahl(g)} Bytes, „${format(g)}“. Gespeichert ist nichts, jede Anzeige rechnet neu.`, { cur: [o] });
+      erklaert.neuRechnen = true;
+    }
+    s.schritt(ZEILE_FOREACH, k === BAUM
+      ? 'Jetzt jedes Kind: k.zeige(...) mit 4 Leerzeichen mehr. Datei oder Ordner – derselbe Aufruf.'
+      : `Die ${k.kinder.length} Kinder von ${o}, wieder 4 Leerzeichen tiefer.`, { cur: [o] });
+    k.kinder.forEach(c => zeige(s, c, einr + '    ', ZEILE_FOREACH, o));
+    s.raus(zurueck, k === BAUM ? 'Der ganze Baum steht auf der Konsole. main hat einen einzigen Aufruf gemacht.' : `${o} ist fertig angezeigt.${eltern ? ` Zurück in ${eltern}.zeige().` : ''}`, { cur: eltern ? [eltern] : [] });
+  }
+
+  // zaehleDateien(): der Client mit Pattern Matching im switch
+  function zaehle(s, k, zurueck, eltern) {
+    const o = id(k);
+    if (!k.kinder) {
+      s.ruf('zaehleDateien(Eintrag e)', [['e', s.ref(o)]], 'case Datei d  -> 1;', erklaert.fallDatei
+        ? `${o}: Datei → 1.`
+        : `e ist ${o}, eine Datei → case Datei d: Ergebnis 1.`, { cur: [o], klassen: ['zaehleDateien()'] });
+      erklaert.fallDatei = true;
+      s.raus(zurueck, `Zurück zu ${eltern}: +1.`, { cur: [eltern], klassen: ['zaehleDateien()'] });
+      return;
+    }
+    s.ruf('zaehleDateien(Eintrag e)', [['e', s.ref(o)]], ZEILE_FALL_ORDNER, erklaert.fallOrdner
+      ? `${o}: Ordner → zaehleDateien() für jedes Kind.`
+      : `zaehleDateien() ist der Client: switch mit Pattern Matching. e ist ${o}, ein Ordner → case Ordner o, dann zaehleDateien() für jedes Kind. Weil Eintrag sealed ist, kennt der Compiler nur Datei und Ordner – kein default nötig.`, { cur: [o], klassen: ['zaehleDateien()'] });
+    erklaert.fallOrdner = true;
+    k.kinder.forEach(c => zaehle(s, c, ZEILE_FALL_ORDNER, o));
+    const n = dateien(k);
+    if (eltern) s.raus(zurueck, `${o} enthält ${n} Datei${n === 1 ? '' : 'en'}. Zurück zu ${eltern}.`, { cur: [eltern], klassen: ['zaehleDateien()'] });
+    else {
+      s.aus(`Dateien gesamt:  ${n}`);
+      s.raus(zurueck, `Ergebnis ${n}: Jede Datei hat 1 geliefert, jeder Ordner die Summe seiner Kinder.`, { cur: [o] });
+    }
+  }
+
+  function lauf(s) {
+    erklaert = {};
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: main baut einen kleinen Dateibaum und fragt ihn dann aus.');
+    baue(s, BAUM);
+
+    s.schritt('projekt.zeige("");', 'projekt.zeige(""): ein einziger Aufruf an die Wurzel. Wie tief der Baum ist, weiß main nicht.', { cur: ['projekt/'] });
+    zeige(s, BAUM, '', 'projekt.zeige("");');
+
+    const notiz = s.neu('Datei', [['name', '"notiz.txt"'], ['groesse', '300']], 'notiz.txt');
+    s.var('einzeln', s.ref(notiz));
+    s.schritt('Eintrag einzeln = new Datei("notiz.txt", 300);', 'Eine einzelne Datei, aber als Eintrag deklariert – derselbe Typ wie die Wurzel des Baums.');
+    s.aus('');
+    s.schritt('System.out.println();', 'Eine Leerzeile.');
+    s.ruf('Datei.groesse()', [['this', s.ref(notiz)]], ZEILE_DATEI, 'einzeln.groesse(): ein Blatt, 300 Bytes – sofort.', { cur: [notiz] });
+    s.aus('Größe notiz.txt: 300 B');
+    s.raus('System.out.println("Größe notiz.txt: "', 'format(300): unter 1024 Bytes, also „300 B“.', { cur: [notiz] });
+    s.aus(`Größe projekt:   ${format(groesse(BAUM))}`);
+    s.schritt('System.out.println("Größe projekt:   "', `projekt.groesse(): für main derselbe Aufruf wie eben bei der einzelnen Datei. Dahinter läuft die ganze Rekursion von oben noch einmal – ${zahl(groesse(BAUM))} Bytes, „${format(groesse(BAUM))}“. Genau das meint „einheitlich behandeln“.`, { cur: ['projekt/'] });
+
+    zaehle(s, BAUM, 'System.out.println("Dateien gesamt:  "');
+
+    const lic = s.neu('Datei', [['name', '"LICENSE"'], ['groesse', '1100']], 'LICENSE');
+    s.ruf('Ordner.hinzufuegen(Eintrag e)', [['this', s.ref('projekt/')], ['e', s.ref(lic)]], 'Ordner hinzufuegen(Eintrag e) { kinder.add(e); return this; }',
+      'Eine neue Datei LICENSE, und projekt.hinzufuegen(...) hängt sie an. hinzufuegen() gibt es nur bei Ordner, nicht in Eintrag – die „Sicherheit“ aus dem Text: Bei einer Datei würde der Compiler den Aufruf ablehnen.', { cur: ['projekt/'] });
+    BAUM.kinder.push({ name: 'LICENSE', g: 1100, zeile: '' });
+    s.feld('projekt/', 'kinder', kinderListe(BAUM));
+    s.raus('projekt.hinzufuegen(new Datei("LICENSE", 1_100));', 'projekt hat jetzt vier Kinder. Der Baum ist zur Laufzeit gewachsen.', { cur: ['projekt/'] });
+    s.aus(`Nach Hinzufügen: ${dateien(BAUM)} Dateien`);
+    s.schritt('System.out.println("Nach Hinzufügen: "', `zaehleDateien(projekt) läuft wieder durch den ganzen Baum (hier in einem Schritt): ${dateien(BAUM)}. Am Client-Code hat sich nichts geändert.`, { klassen: ['zaehleDateien()'] });
+    BAUM.kinder.pop();                                   // Baum für den nächsten Lauf wieder wie im Quellcode
+    s.weg('projekt/', 'README.md', 'src/', 'Main.java', 'Util.java', 'bilder/', 'logo.png', 'fotos/', 'team.jpg', 'buero.jpg', notiz, lic);
+    s.raus(['System.out.println("Nach Hinzufügen: "', 1], 'main ist zu Ende. Ein neuer Knotentyp (etwa ein Link) müsste in permits stehen – und der Compiler zeigte jede switch-Stelle, die ihn noch nicht kennt.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Component', 'Leaf', 'Composite'],
+    diagramm: {
+      breite: 170, abstandX: 40, abstandY: 50, rand: 20,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 0, y: 0 },
+        { name: 'zaehleDateien()', art: 'Methode', rolle: 'Client', x: 2, y: 0 },
+        { name: 'Eintrag', art: 'sealed interface', rolle: 'Component', x: 1, y: 1 },
+        { name: 'Datei', art: 'record', rolle: 'Leaf', x: 0.5, y: 2 },
+        { name: 'Ordner', art: 'final class', rolle: 'Composite', x: 1.5, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Eintrag', art: 'nutzt', text: 'nutzt' },
+        { von: 'zaehleDateien()', zu: 'Eintrag', art: 'nutzt', text: 'nutzt' },
+        { von: 'main()', zu: 'zaehleDateien()', art: 'nutzt', text: 'ruft' },
+        { von: 'Datei', zu: 'Eintrag', art: 'impl' }, { von: 'Ordner', zu: 'Eintrag', art: 'impl' },
+        { von: 'Ordner', zu: 'Eintrag', art: 'nutzt', bogen: 70, text: 'kinder' }
+      ]
+    },
+    szenarien: [
+      { name: 'java Composite.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

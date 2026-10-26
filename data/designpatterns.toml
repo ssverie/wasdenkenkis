@@ -76,6 +76,7 @@ gruppe = "struktur"
 schluessel = "composite"
 name = "Composite"
 text = "Teil-Ganzes-Hierarchien als Baum, Einzel- und Gruppenobjekte gleich behandeln"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Zuerst entsteht der Baum, und zwar von innen nach außen, weil Java die Argumente vor dem Konstruktor auswertet. Bei der ersten Zeile von zeige() ist die Rekursion vollständig zu sehen: Im Aufrufstapel fragt projekt den Ordner bilder, bilder fragt fotos, fotos fragt die Dateien. Danach laufen dieselben Rekursionen in einem Schritt, sonst würde der Ablauf sehr lang. Zum Schluss zählt zaehleDateien() mit Pattern Matching im switch. Die Zahlen stehen wie auf der Seite mit Punkt, auf einem deutsch eingestellten Rechner schreibt das Programm ein Komma."
 
 [[muster]]
 nummer = 9
