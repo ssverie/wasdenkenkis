@@ -1,4 +1,4 @@
-{{- /* Übungsblatt (IT-Konzepte › IT-Übungen): Aufgaben „Was gibt der Code aus?“ aus data/uebungen/<uebungen>.json
+{{- /* Übungsblatt (IT-Konzepte › IT-Übungen): Aufgaben aus data/uebungen/<uebungen>.json
        (Lieferformat: tasks[] mit id, title, difficulty 1–3, topics, question, code, options[4], correctIndex, answer, explanation).
        Alles steht fertig im HTML – ohne Skript lässt sich die Lösung aufklappen. Mit Skript (assets/js/uebungen.js):
        Antwort wählen, richtig/falsch, Erklärung, „Weiter“, „Nochmal“, Filter nach Schwierigkeit und Thema,
@@ -63,10 +63,15 @@
       {{- /* Szenario steht vor der Frage; enthält es „Code:“ + Zeilenumbruch, wird der Rest als Code eingefärbt */}}
       {{- with .scenario }}
       {{- $teile := split . "Code:\n" }}
-      <div class="szenario">
+      {{- /* Szenario, das selbst Java-Code ist (beginnt mit Deklaration, Zuweisung oder Methodenaufruf, z. B. „Gedächtnis & Wissen“):
+             ganz einfärben, ohne zusätzlichen Kasten. Geprüft an allen 113 Szenarien der ersten acht Blätter: trifft nur echten Code. */}}
+      {{- $nurCode := and (eq (len $teile) 1) (findRE `^(?:public|private|protected|class|interface|enum|record|final|static|abstract|import|package|@\w+|\w+(?:<[^>]*>)?(?:\[\])?\s+\w+\s*=|\w+(?:\.\w+)+\()` . 1) }}
+      <div class="szenario{{ if $nurCode }} szenario-code{{ end }}">
         {{- if gt (len $teile) 1 }}
         <p>{{ index $teile 0 }}Code:</p>
         {{ transform.Highlight (delimit (after 1 $teile) "Code:\n") $sprache (dict "noClasses" false) }}
+        {{- else if $nurCode }}
+        {{ transform.Highlight . $sprache (dict "noClasses" false) }}
         {{- else if or (strings.Contains . " | ") (findRE `(?m)^[ \t]+\S|;[ \t]*$|^\d\d:\d\d` . 1) }}
         {{- /* Technischer Text: Tabellen (z. B. SQL) mit Leerzeichen ausgerichtet, eingerückte Zeilen (Stacktrace, Code),
                Zeilen mit „;“ am Ende, Logzeilen mit Uhrzeit – nur in gleich breiter Schrift mit allen Leerzeichen lesbar */}}
@@ -74,6 +79,22 @@
         {{- else }}
         <p>{{ . }}</p>
         {{- end }}
+      </div>
+      {{- end }}
+      {{- /* Format „Kreativ & exploratives Testen“: erst eigene Testideen sammeln, dann mit der Musterliste vergleichen,
+             dann die Auswahlfrage. Eigene Ideen speichert das Skript im Browser (ohne Skript nur bis zum Neuladen). */}}
+      {{- with .brainstorm }}
+      <div class="testideen">
+        <p class="ideen-auftrag"><strong>Erst selbst überlegen:</strong> {{ .prompt }}</p>
+        <textarea class="ideen-eingabe" rows="4" placeholder="Deine Testideen, eine pro Zeile" aria-label="Eigene Testideen"></textarea>
+        <details class="ideen-muster">
+          <summary>Mit der Musterliste vergleichen ({{ len .exampleIdeas }} Ideen)</summary>
+          <ul>
+            {{- range .exampleIdeas }}
+            <li>{{ . }}</li>
+            {{- end }}
+          </ul>
+        </details>
       </div>
       {{- end }}
       <p class="frage">{{ .question }}</p>

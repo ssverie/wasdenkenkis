@@ -1,0 +1,417 @@
+{
+  "version": 1,
+  "category": "wissen",
+  "language": "de",
+  "description": "Gedächtnis & Wissen: HTTP, Java-Schlüsselwörter und -Verhalten, Design Patterns, Testbegriffe, Git.",
+  "tasks": [
+    {
+      "id": "wis-001",
+      "category": "wissen",
+      "title": "HTTP 201",
+      "difficulty": 1,
+      "topics": [
+        "HTTP"
+      ],
+      "scenario": "Ein REST-Aufruf POST /kunden antwortet mit Status 201.",
+      "question": "Was bedeutet 201?",
+      "options": [
+        "No Content – erfolgreich, aber ohne Antwortinhalt",
+        "OK – die Anfrage war erfolgreich, es wurde nichts angelegt",
+        "Created – eine neue Ressource wurde angelegt",
+        "Accepted – die Anfrage wird später bearbeitet"
+      ],
+      "correctIndex": 2,
+      "answer": "Created – eine neue Ressource wurde angelegt",
+      "explanation": "201 Created ist die korrekte Antwort auf ein erfolgreiches Anlegen, meist mit einem Location-Header auf die neue Ressource. 200 OK, 202 Accepted und 204 No Content sind die Nachbarn. Für Tests: Ein POST, der 200 statt 201 liefert, ist oft ein Hinweis auf eine unsaubere API."
+    },
+    {
+      "id": "wis-002",
+      "category": "wissen",
+      "title": "HTTP 410",
+      "difficulty": 2,
+      "topics": [
+        "HTTP"
+      ],
+      "scenario": "Ein Server antwortet auf eine alte Produktseite mit Status 410.",
+      "question": "Was bedeutet 410 im Unterschied zu 404?",
+      "options": [
+        "Gone – die Ressource gab es, sie wurde dauerhaft entfernt",
+        "Not Found – die Ressource gab es nie",
+        "Moved Permanently – die Ressource ist umgezogen",
+        "Locked – die Ressource ist vorübergehend gesperrt"
+      ],
+      "correctIndex": 0,
+      "answer": "Gone – die Ressource gab es, sie wurde dauerhaft entfernt",
+      "explanation": "404 sagt nur „nicht gefunden“, ohne Aussage, ob es die Seite je gab. 410 Gone sagt ausdrücklich: gab es, kommt nicht wieder. Suchmaschinen entfernen solche Seiten schneller. Für einen Umzug wäre 301 richtig."
+    },
+    {
+      "id": "wis-003",
+      "category": "wissen",
+      "title": "HTTP 502",
+      "difficulty": 2,
+      "topics": [
+        "HTTP",
+        "Infrastruktur"
+      ],
+      "scenario": "Nutzer erhalten Status 502. Die Anwendung läuft hinter einem Reverse Proxy (z. B. nginx).",
+      "question": "Worauf deutet 502 hin?",
+      "options": [
+        "Bad Gateway – der Proxy hat vom dahinterliegenden Server keine gültige Antwort bekommen",
+        "Die Anwendung selbst hat einen Programmfehler gemeldet",
+        "Die Anfrage war fehlerhaft formatiert",
+        "Der Nutzer hat keine Berechtigung"
+      ],
+      "correctIndex": 0,
+      "answer": "Bad Gateway – der Proxy hat vom dahinterliegenden Server keine gültige Antwort bekommen",
+      "explanation": "500 kommt von der Anwendung selbst. 502 kommt vom Vermittler davor: Der Anwendungsserver ist abgestürzt, nicht gestartet oder liefert Unsinn. 504 wäre ein Timeout dabei. Der Statuscode sagt also schon, auf welchem Server man suchen muss."
+    },
+    {
+      "id": "wis-004",
+      "category": "wissen",
+      "title": "HTTP 429",
+      "difficulty": 1,
+      "topics": [
+        "HTTP",
+        "Lasttests"
+      ],
+      "scenario": "Bei einem Lasttest liefert die API nach einigen Sekunden nur noch Status 429.",
+      "question": "Was bedeutet 429?",
+      "options": [
+        "Der Server ist abgestürzt",
+        "Too Many Requests – ein Limit für Anfragen pro Zeitraum wurde überschritten",
+        "Die Anfragen sind zu groß",
+        "Die Anmeldung ist abgelaufen"
+      ],
+      "correctIndex": 1,
+      "answer": "Too Many Requests – ein Limit für Anfragen pro Zeitraum wurde überschritten",
+      "explanation": "429 ist die Antwort einer Ratenbegrenzung (Rate Limiting). Oft gibt der Header Retry-After an, wann es wieder geht. Bei Lasttests muss man klären, ob man das Limit testen will oder ob es für den Test ausgenommen werden soll."
+    },
+    {
+      "id": "wis-005",
+      "category": "wissen",
+      "title": "Idempotenz",
+      "difficulty": 3,
+      "topics": [
+        "HTTP",
+        "REST"
+      ],
+      "scenario": "Eine Anfrage wird wegen eines Netzwerkfehlers automatisch zweimal gesendet.",
+      "question": "Bei welcher HTTP-Methode ist das am ehesten ein Problem, weil sie nicht idempotent ist?",
+      "options": [
+        "PUT",
+        "POST",
+        "DELETE",
+        "GET"
+      ],
+      "correctIndex": 1,
+      "answer": "POST",
+      "explanation": "Idempotent heißt: Zweimal ausgeführt hat dieselbe Wirkung wie einmal. GET liest nur, PUT setzt einen festen Zustand, DELETE löscht (beim zweiten Mal ist es schon weg). POST legt typischerweise etwas an, also zwei Bestellungen statt einer. Gute APIs lösen das mit einem Idempotenz-Schlüssel."
+    },
+    {
+      "id": "wis-006",
+      "category": "wissen",
+      "title": "transient",
+      "difficulty": 2,
+      "topics": [
+        "Java",
+        "Schlüsselwörter"
+      ],
+      "scenario": "class Benutzer implements Serializable {\n    String name;\n    transient String passwort;\n}",
+      "question": "Was bewirkt transient?",
+      "options": [
+        "Das Feld ist für alle Threads sofort sichtbar",
+        "Das Feld kann nach der Zuweisung nicht mehr geändert werden",
+        "Das Feld wird beim Programmende automatisch gelöscht",
+        "Das Feld wird beim Serialisieren nicht mitgespeichert"
+      ],
+      "correctIndex": 3,
+      "answer": "Das Feld wird beim Serialisieren nicht mitgespeichert",
+      "explanation": "Transiente Felder überspringt die Java-Serialisierung, nach dem Einlesen sind sie null (bzw. 0/false). Gedacht für Passwörter, Caches oder Werte, die sich neu berechnen lassen. „Nicht änderbar“ wäre final, „für Threads sichtbar“ wäre volatile."
+    },
+    {
+      "id": "wis-007",
+      "category": "wissen",
+      "title": "volatile",
+      "difficulty": 3,
+      "topics": [
+        "Java",
+        "Nebenläufigkeit"
+      ],
+      "scenario": "private volatile int zaehler;\n\npublic void erhoehe() {\n    zaehler++;\n}",
+      "question": "Ist erhoehe() damit sicher, wenn mehrere Threads gleichzeitig zählen?",
+      "options": [
+        "Ja, volatile macht alle Zugriffe atomar",
+        "Nein, volatile sorgt nur für Sichtbarkeit, zaehler++ bleibt nicht atomar",
+        "Ja, aber nur bei höchstens zwei Threads",
+        "Nein, volatile ist bei int-Feldern nicht erlaubt"
+      ],
+      "correctIndex": 1,
+      "answer": "Nein, volatile sorgt nur für Sichtbarkeit, zaehler++ bleibt nicht atomar",
+      "explanation": "zaehler++ sind drei Schritte: lesen, erhöhen, schreiben. Zwei Threads können denselben alten Wert lesen, dann geht eine Erhöhung verloren. volatile garantiert nur, dass jeder Thread den aktuellsten Wert sieht. Richtig: AtomicInteger.incrementAndGet() oder synchronized."
+    },
+    {
+      "id": "wis-008",
+      "category": "wissen",
+      "title": "final bei Klassen",
+      "difficulty": 1,
+      "topics": [
+        "Java",
+        "Schlüsselwörter"
+      ],
+      "scenario": "public final class Geldbetrag { … }",
+      "question": "Was bedeutet final an dieser Stelle?",
+      "options": [
+        "Von der Klasse kann keine Unterklasse gebildet werden",
+        "Die Objekte der Klasse sind automatisch unveränderlich",
+        "Alle Methoden der Klasse sind statisch",
+        "Die Klasse kann nur einmal instanziiert werden"
+      ],
+      "correctIndex": 0,
+      "answer": "Von der Klasse kann keine Unterklasse gebildet werden",
+      "explanation": "final an einer Klasse verhindert Vererbung (wie bei String). Unveränderlich wird die Klasse erst, wenn auch alle Felder final sind und keine Methoden den Zustand ändern. Nur einmal instanziierbar wäre ein Singleton."
+    },
+    {
+      "id": "wis-009",
+      "category": "wissen",
+      "title": "Standardwerte",
+      "difficulty": 1,
+      "topics": [
+        "Java",
+        "Datentypen"
+      ],
+      "scenario": "class Werte {\n    static int zahl;\n    static boolean flag;\n    static String text;\n    static double d;\n}",
+      "question": "Welche Werte haben die Felder, wenn sie nie zugewiesen wurden?",
+      "options": [
+        "undefiniert, der Compiler meldet einen Fehler",
+        "0 false \"\" 0",
+        "0 false null 0.0",
+        "0 true \"\" 0.0"
+      ],
+      "correctIndex": 2,
+      "answer": "0 false null 0.0",
+      "explanation": "Felder bekommen Standardwerte: Zahlen 0 bzw. 0.0, boolean false, Objekte (auch String) null. Lokale Variablen in Methoden dagegen haben keinen Standardwert, dort meldet der Compiler einen Fehler beim Lesen."
+    },
+    {
+      "id": "wis-010",
+      "category": "wissen",
+      "title": "null als Schlüssel",
+      "difficulty": 2,
+      "topics": [
+        "Java",
+        "Collections"
+      ],
+      "scenario": "Es soll map.put(null, 1) ausgeführt werden.",
+      "question": "Welche Map erlaubt null als Schlüssel?",
+      "options": [
+        "TreeMap",
+        "ConcurrentHashMap",
+        "HashMap",
+        "Hashtable"
+      ],
+      "correctIndex": 2,
+      "answer": "HashMap",
+      "explanation": "HashMap legt einen null-Schlüssel in einen eigenen Bucket. TreeMap muss Schlüssel vergleichen, ConcurrentHashMap und Hashtable lehnen null grundsätzlich ab, alle drei werfen eine NullPointerException. Wichtig beim Austausch von Implementierungen: Code, der mit HashMap lief, kann nach dem Wechsel scheitern."
+    },
+    {
+      "id": "wis-011",
+      "category": "wissen",
+      "title": "Checked Exceptions",
+      "difficulty": 2,
+      "topics": [
+        "Java",
+        "Exceptions"
+      ],
+      "scenario": "Vier Exceptions stehen zur Auswahl.",
+      "question": "Welche ist eine checked Exception, die man fangen oder mit throws deklarieren muss?",
+      "options": [
+        "IOException",
+        "NullPointerException",
+        "ArithmeticException",
+        "IllegalArgumentException"
+      ],
+      "correctIndex": 0,
+      "answer": "IOException",
+      "explanation": "Checked sind alle Exceptions, die nicht von RuntimeException (oder Error) erben. IOException gehört dazu, weil Ein- und Ausgabefehler auch bei korrektem Code auftreten können. Die anderen drei sind RuntimeExceptions und meist Programmierfehler."
+    },
+    {
+      "id": "wis-012",
+      "category": "wissen",
+      "title": "Pattern erkennen I",
+      "difficulty": 1,
+      "topics": [
+        "Design Patterns"
+      ],
+      "scenario": "public class Konfiguration {\n    private static final Konfiguration INSTANZ = new Konfiguration();\n\n    private Konfiguration() { }\n\n    public static Konfiguration getInstance() {\n        return INSTANZ;\n    }\n}",
+      "question": "Welches Entwurfsmuster ist das?",
+      "options": [
+        "Factory Method",
+        "Singleton",
+        "Prototype",
+        "Builder"
+      ],
+      "correctIndex": 1,
+      "answer": "Singleton",
+      "explanation": "Privater Konstruktor plus statische Methode, die immer dieselbe Instanz liefert: ein Singleton. Für Tests oft lästig, weil sich der Zustand nicht pro Test zurücksetzen lässt. Heute nutzt man dafür eher Dependency Injection."
+    },
+    {
+      "id": "wis-013",
+      "category": "wissen",
+      "title": "Pattern erkennen II",
+      "difficulty": 1,
+      "topics": [
+        "Design Patterns"
+      ],
+      "scenario": "Bestellung b = Bestellung.neu()\n    .kunde(\"Sven\")\n    .artikel(\"Buch\", 2)\n    .expressVersand()\n    .erstellen();",
+      "question": "Welches Entwurfsmuster ist das?",
+      "options": [
+        "Adapter",
+        "Builder",
+        "Chain of Responsibility",
+        "Decorator"
+      ],
+      "correctIndex": 1,
+      "answer": "Builder",
+      "explanation": "Ein Objekt wird schrittweise mit verketteten Methoden zusammengesetzt und am Ende mit erstellen() (oft build()) fertiggestellt. Praktisch bei vielen optionalen Werten, in Tests ideal für lesbare Testdaten („Test Data Builder“)."
+    },
+    {
+      "id": "wis-014",
+      "category": "wissen",
+      "title": "Pattern erkennen III",
+      "difficulty": 2,
+      "topics": [
+        "Design Patterns"
+      ],
+      "scenario": "button.addListener(e -> speichern());\nbutton.addListener(e -> protokollieren());\n\n// im Button:\nfor (Listener l : listeners) {\n    l.geklickt(event);\n}",
+      "question": "Welches Entwurfsmuster ist das?",
+      "options": [
+        "Command",
+        "Observer",
+        "Iterator",
+        "Strategy"
+      ],
+      "correctIndex": 1,
+      "answer": "Observer",
+      "explanation": "Mehrere Interessenten melden sich an und werden bei einem Ereignis benachrichtigt, ohne dass der Button sie kennen muss. Typischer Testfehler: Listener werden nie abgemeldet, was Speicherlecks verursacht."
+    },
+    {
+      "id": "wis-015",
+      "category": "wissen",
+      "title": "Pattern erkennen IV",
+      "difficulty": 2,
+      "topics": [
+        "Design Patterns"
+      ],
+      "scenario": "interface Versandkosten {\n    BigDecimal berechne(Bestellung b);\n}\n\nclass StandardVersand implements Versandkosten { … }\nclass ExpressVersand implements Versandkosten { … }\n\nkasse.setVersandkosten(new ExpressVersand());",
+      "question": "Welches Entwurfsmuster ist das?",
+      "options": [
+        "Strategy",
+        "Template Method",
+        "Singleton",
+        "Observer"
+      ],
+      "correctIndex": 0,
+      "answer": "Strategy",
+      "explanation": "Austauschbare Rechenwege hinter einer gemeinsamen Schnittstelle, die zur Laufzeit gesetzt werden. Für Tests ein Glücksfall: Jede Strategie lässt sich einzeln prüfen, und in der Kasse kann man eine feste Test-Strategie einsetzen. Auch ein Comparator ist eine Strategie."
+    },
+    {
+      "id": "wis-016",
+      "category": "wissen",
+      "title": "Pattern erkennen V",
+      "difficulty": 3,
+      "topics": [
+        "Design Patterns"
+      ],
+      "scenario": "Reader r = new BufferedReader(\n             new InputStreamReader(\n                 new FileInputStream(\"daten.txt\"),\n                 StandardCharsets.UTF_8));",
+      "question": "Welches Entwurfsmuster nutzt die Java-IO-Bibliothek hier?",
+      "options": [
+        "Composite",
+        "Proxy",
+        "Decorator",
+        "Facade"
+      ],
+      "correctIndex": 2,
+      "answer": "Decorator",
+      "explanation": "Jede Schicht umhüllt die nächste und ergänzt eine Fähigkeit: Pufferung, Zeichenumwandlung. Alle haben eine passende Schnittstelle, deshalb lassen sie sich beliebig stapeln. Ein Proxy steuert dagegen den Zugriff, statt Fähigkeiten hinzuzufügen."
+    },
+    {
+      "id": "wis-017",
+      "category": "wissen",
+      "title": "Testpyramide",
+      "difficulty": 1,
+      "topics": [
+        "Teststrategie"
+      ],
+      "scenario": "Die Testpyramide beschreibt die empfohlene Verteilung von Tests.",
+      "question": "Welche Tests sollten die breite Basis bilden, also am zahlreichsten sein?",
+      "options": [
+        "Integrationstests",
+        "UI-Tests (End-to-End)",
+        "Unit-Tests",
+        "Manuelle Tests"
+      ],
+      "correctIndex": 2,
+      "answer": "Unit-Tests",
+      "explanation": "Unit-Tests sind schnell, stabil und zeigen genau, wo ein Fehler liegt. Nach oben werden Tests langsamer, teurer und anfälliger, deshalb weniger. Das Gegenteil, viele UI-Tests und wenige Unit-Tests, nennt man „Eistüte“, ein bekanntes Anti-Muster."
+    },
+    {
+      "id": "wis-018",
+      "category": "wissen",
+      "title": "Mock und Stub",
+      "difficulty": 2,
+      "topics": [
+        "Test Doubles"
+      ],
+      "scenario": "In einem Test wird der E-Mail-Dienst ersetzt. Am Ende prüft der Test, dass sende() genau einmal mit der richtigen Adresse aufgerufen wurde.",
+      "question": "Wie nennt man ein solches Testobjekt?",
+      "options": [
+        "Fake – eine vereinfachte, funktionierende Implementierung",
+        "Dummy – es wird nur übergeben, nie benutzt",
+        "Stub – es liefert nur vorbereitete Antworten",
+        "Mock – es prüft, ob und wie es aufgerufen wurde"
+      ],
+      "correctIndex": 3,
+      "answer": "Mock – es prüft, ob und wie es aufgerufen wurde",
+      "explanation": "Ein Stub liefert feste Antworten, der Test prüft danach das Ergebnis. Ein Mock wird selbst geprüft: welche Methode, wie oft, mit welchen Werten. Ein Fake funktioniert wirklich, nur einfacher (z. B. eine Datenbank im Speicher). Ein Dummy füllt nur eine Parameterlücke."
+    },
+    {
+      "id": "wis-019",
+      "category": "wissen",
+      "title": "JUnit 5",
+      "difficulty": 1,
+      "topics": [
+        "JUnit"
+      ],
+      "scenario": "Vor jedem einzelnen Test soll ein frisches Testobjekt angelegt werden.",
+      "question": "Welche Annotation verwendet man in JUnit 5?",
+      "options": [
+        "@Setup",
+        "@BeforeAll",
+        "@BeforeEach",
+        "@Before"
+      ],
+      "correctIndex": 2,
+      "answer": "@BeforeEach",
+      "explanation": "@BeforeEach läuft vor jedem Test, @BeforeAll einmal vor allen (und muss statisch sein). @Before ist der Name aus JUnit 4, @Setup gibt es nicht. Eine typische Falle beim Umstieg von JUnit 4."
+    },
+    {
+      "id": "wis-020",
+      "category": "wissen",
+      "title": "git stash",
+      "difficulty": 2,
+      "topics": [
+        "Git"
+      ],
+      "scenario": "Mitten in einer Änderung muss schnell ein dringender Fehler auf einem anderen Branch behoben werden. Die halbfertige Arbeit soll nicht committet werden.",
+      "question": "Was macht git stash?",
+      "options": [
+        "Es löscht alle ungesicherten Änderungen endgültig",
+        "Es legt die ungesicherten Änderungen beiseite und stellt einen sauberen Arbeitsstand her",
+        "Es setzt den Branch auf den Stand des Servers zurück",
+        "Es committet die Änderungen auf einen temporären Branch auf dem Server"
+      ],
+      "correctIndex": 1,
+      "answer": "Es legt die ungesicherten Änderungen beiseite und stellt einen sauberen Arbeitsstand her",
+      "explanation": "git stash speichert die Änderungen lokal zwischen. Danach Branch wechseln, Fehler beheben, zurückwechseln und mit git stash pop weitermachen. Endgültig löschen würde git checkout -- . bzw. git restore, zurücksetzen git reset --hard."
+    }
+  ]
+}

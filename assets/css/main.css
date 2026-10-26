@@ -622,3 +622,13 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .aufgabe .szenario > p { margin: 0; white-space: pre-line; line-height: 1.55; }
 .aufgabe .szenario .highlight pre { margin: .5rem 0 0; }
 .aufgabe .szenario pre.szenario-tabelle { margin: 0; border: 0; padding: 0; background: none; white-space: pre; overflow-x: auto; font-size: .9rem; line-height: 1.5; }
+/* Szenario, das selbst Code ist: nur der Code-Kasten, kein Kasten drumherum */
+.aufgabe .szenario.szenario-code { padding: 0; border: 0; background: none; }
+.aufgabe .szenario.szenario-code .highlight pre { margin: 0; }
+/* Testideen sammeln (Kreativ & exploratives Testen) */
+.aufgabe .testideen { margin: .6rem 0; padding: .6rem .9rem; border: 1px dashed var(--linie); border-radius: 8px; }
+.ideen-auftrag { margin: 0 0 .5rem; line-height: 1.5; }
+.ideen-eingabe { display: block; width: 100%; box-sizing: border-box; font: inherit; font-size: .95rem; line-height: 1.5; padding: .5rem .6rem; border: 1px solid var(--linie); border-radius: 6px; background: var(--bg); color: var(--text); resize: vertical; }
+.ideen-muster { margin-top: .5rem; }
+.ideen-muster summary { cursor: pointer; color: var(--akzent); font-size: .95rem; }
+.ideen-muster ul { margin: .4rem 0 0; padding-left: 1.3rem; line-height: 1.55; }

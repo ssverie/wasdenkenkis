@@ -1,17 +1,18 @@
 /* IT-Übungen (layouts/uebung.html): Antwort wählen, richtig/falsch, Erklärung, „Weiter“, „Nochmal“, Filter nach
    Schwierigkeit und Thema, Runde mit 5 zufälligen Aufgaben. Fortschritt nur im Browser – localStorage
-   „wdk-uebungen:<blatt>“ = { geloest: [ids, die je richtig beantwortet wurden], antworten: { id: gewählter Index } }.
+   „wdk-uebungen:<blatt>“ = { geloest: [ids, die je richtig beantwortet wurden], antworten: { id: gewählter Index },
+   ideen: { id: eigene Testideen als Text } }.
    Ohne Skript bleiben die Antwortknöpfe gesperrt und die Lösung lässt sich über „Lösung anzeigen“ aufklappen. */
 (function () {
   const blatt = document.querySelector('[data-uebung]');
   if (!blatt) return;
   const schluessel = 'wdk-uebungen:' + blatt.dataset.uebung;
   const RUNDE = 5;
-  const leer = () => ({ geloest: [], antworten: {} });
+  const leer = () => ({ geloest: [], antworten: {}, ideen: {} });
   function lies() {
     try {
       const s = JSON.parse(localStorage.getItem(schluessel));
-      if (s && Array.isArray(s.geloest) && s.antworten) return s;
+      if (s && Array.isArray(s.geloest) && s.antworten) { s.ideen = s.ideen || {}; return s; }
     } catch (e) { /* kaputt oder gesperrt */ }
     return leer();
   }
@@ -42,6 +43,8 @@
       const zeilen = li.dataset.fehlerzeilen.split(',').map(Number);
       li.querySelectorAll('.highlight')[0].querySelectorAll('.line').forEach((z, i) => z.classList.toggle('fehlerzeile', beantwortet && zeilen.includes(i + 1)));
     }
+    const ideen = li.querySelector('.ideen-eingabe');
+    if (ideen) ideen.value = stand.ideen[id] || '';
     li.querySelector('.aufgabe-aktionen').hidden = !beantwortet;
     li.querySelector('.geloest-marke').hidden = !stand.geloest.includes(id);
   }
@@ -104,6 +107,12 @@
       const erste = li.querySelector('.option'); if (erste) erste.focus();
     });
     li.querySelector('.weiter').addEventListener('click', () => weiter(li));
+    // eigene Testideen: bleiben bei „Nochmal“ und in Runden stehen, nur „Fortschritt löschen“ leert sie
+    const ideen = li.querySelector('.ideen-eingabe');
+    if (ideen) ideen.addEventListener('input', () => {
+      if (ideen.value.trim()) stand.ideen[id] = ideen.value; else delete stand.ideen[id];
+      schreib();
+    });
     zeige(li);
   });
 

@@ -1,0 +1,646 @@
+{
+  "version": 1,
+  "category": "explorativ",
+  "language": "de",
+  "description": "Kreativ & exploratives Testen: erst eigene Testideen sammeln, dann mit der Musterliste vergleichen, dann die Auswahlfrage.",
+  "tasks": [
+    {
+      "id": "exp-001",
+      "category": "explorativ",
+      "title": "Getränkeautomat",
+      "difficulty": 1,
+      "topics": [
+        "Testideen",
+        "Alltagsgeräte"
+      ],
+      "scenario": "Ein Getränkeautomat nimmt Münzen, zeigt den eingeworfenen Betrag an und gibt das gewählte Getränk und Wechselgeld aus.",
+      "brainstorm": {
+        "prompt": "Nenne in 2 Minuten mindestens 8 Testideen.",
+        "exampleIdeas": [
+          "Genau passender Betrag",
+          "Zu viel Geld, Wechselgeld prüfen",
+          "Zu wenig Geld, dann Getränk wählen",
+          "Geld einwerfen, dann abbrechen",
+          "Ausverkauftes Getränk wählen",
+          "Kein Wechselgeld mehr im Automaten",
+          "Fremde Münzen",
+          "Stromausfall nach dem Einwurf",
+          "Zwei Tasten gleichzeitig drücken"
+        ]
+      },
+      "question": "Welche Testidee wird in der Praxis am häufigsten vergessen?",
+      "options": [
+        "Den Betrag in der Anzeige ablesen",
+        "Ein Getränk mit zu viel Geld kaufen",
+        "Geld einwerfen, dann abbrechen: Kommt der volle Betrag zurück?",
+        "Ein Getränk mit passendem Betrag kaufen"
+      ],
+      "correctIndex": 2,
+      "answer": "Geld einwerfen, dann abbrechen: Kommt der volle Betrag zurück?",
+      "explanation": "Die anderen drei sind der normale Ablauf, an den jeder denkt. Der Abbruch ist ein Seitenpfad: Der Nutzer ändert seine Meinung. Merksatz: Jeder Vorgang braucht einen Test für „mittendrin aufhören“."
+    },
+    {
+      "id": "exp-002",
+      "category": "explorativ",
+      "title": "Aufzug",
+      "difficulty": 1,
+      "topics": [
+        "Testideen",
+        "Alltagsgeräte"
+      ],
+      "scenario": "Ein Aufzug in einem Haus mit 6 Stockwerken, Ruftasten auf jeder Etage und Zieltasten in der Kabine.",
+      "brainstorm": {
+        "prompt": "Nenne mindestens 8 Testideen.",
+        "exampleIdeas": [
+          "Ruf aus jedem Stockwerk",
+          "Ziel = aktuelles Stockwerk",
+          "Mehrere Ziele in beliebiger Reihenfolge",
+          "Ruf während der Fahrt",
+          "Tür blockieren",
+          "Überladung",
+          "Notruf-Taste",
+          "Stromausfall zwischen zwei Etagen",
+          "Gleichzeitige Rufe von oben und unten"
+        ]
+      },
+      "question": "Welcher Fall ist ein typischer, oft vergessener Grenzfall?",
+      "options": [
+        "Aus dem 5. Stock den Aufzug rufen",
+        "Vom Erdgeschoss in den 3. Stock fahren",
+        "Im 2. Stock aussteigen",
+        "In der Kabine die Taste des Stockwerks drücken, in dem man gerade steht"
+      ],
+      "correctIndex": 3,
+      "answer": "In der Kabine die Taste des Stockwerks drücken, in dem man gerade steht",
+      "explanation": "„Von hier nach hier“ ist der Nullfall einer Bewegung. Soll sich die Tür öffnen? Nichts passieren? Fährt der Aufzug los und kommt zurück? Nullfälle (leere Liste, Betrag 0, Strecke 0) gehören in jede Testideenliste."
+    },
+    {
+      "id": "exp-003",
+      "category": "explorativ",
+      "title": "Suche ohne Treffer",
+      "difficulty": 1,
+      "topics": [
+        "Benutzererlebnis",
+        "Testideen"
+      ],
+      "scenario": "Ein Onlineshop hat ein Suchfeld für Produkte.",
+      "brainstorm": {
+        "prompt": "Nenne mindestens 6 Suchanfragen, die du ausprobieren würdest.",
+        "exampleIdeas": [
+          "Leere Suche",
+          "Nur Leerzeichen",
+          "Tippfehler (Kafeemaschine)",
+          "Umlaute und ihre Umschreibung (Müller / Mueller)",
+          "Groß-/Kleinschreibung",
+          "Sehr lange Eingabe",
+          "Suchbegriff ohne Treffer",
+          "Mehrere Wörter"
+        ]
+      },
+      "question": "Was sollte man bei einer Suche ohne Treffer vor allem prüfen?",
+      "options": [
+        "Ob die Suche schnell genug leer bleibt",
+        "Ob die URL den Suchbegriff enthält",
+        "Ob das Suchfeld danach gelöscht ist",
+        "Ob die Seite einen hilfreichen Hinweis oder Vorschläge zeigt statt einer leeren Seite"
+      ],
+      "correctIndex": 3,
+      "answer": "Ob die Seite einen hilfreichen Hinweis oder Vorschläge zeigt statt einer leeren Seite",
+      "explanation": "Eine leere Ergebnisseite ohne Erklärung lässt Nutzer ratlos zurück, sie denken oft, die Seite sei kaputt. Gute Shops schlagen ähnliche Begriffe vor oder korrigieren Tippfehler. Exploratives Testen prüft nicht nur „funktioniert es“, sondern auch „versteht der Nutzer es“."
+    },
+    {
+      "id": "exp-004",
+      "category": "explorativ",
+      "title": "Datei hochladen",
+      "difficulty": 2,
+      "topics": [
+        "Testdaten",
+        "Grenzfälle"
+      ],
+      "scenario": "Nutzer können ein PDF als Anhang zu einer Reklamation hochladen, maximal 5 MB.",
+      "brainstorm": {
+        "prompt": "Nenne mindestens 6 Dateien, die du zum Testen vorbereiten würdest.",
+        "exampleIdeas": [
+          "Normales kleines PDF",
+          "PDF knapp unter und knapp über 5 MB",
+          "Leere Datei (0 Byte)",
+          "Dateiname mit Umlauten und Leerzeichen",
+          "Sehr langer Dateiname",
+          "Gleicher Name zweimal hochladen",
+          "Andere Dateitypen",
+          "Upload abbrechen"
+        ]
+      },
+      "question": "Welche Testdatei wird am häufigsten vergessen?",
+      "options": [
+        "Eine leere Datei mit 0 Byte",
+        "Ein PDF mit 4 MB",
+        "Ein PDF mit 1 MB",
+        "Ein PDF mit wenigen Seiten"
+      ],
+      "correctIndex": 0,
+      "answer": "Eine leere Datei mit 0 Byte",
+      "explanation": "Alle denken an „zu groß“, kaum jemand an „zu klein“. Eine 0-Byte-Datei kann Vorschauen, Virenscanner oder Weiterverarbeitung zum Absturz bringen. Wieder der Nullfall."
+    },
+    {
+      "id": "exp-005",
+      "category": "explorativ",
+      "title": "Goldilocks-Heuristik",
+      "difficulty": 1,
+      "topics": [
+        "Heuristiken"
+      ],
+      "scenario": "Benannt nach dem Märchen, in dem ein Mädchen Brei probiert: zu heiß, zu kalt, genau richtig.",
+      "brainstorm": {
+        "prompt": "Wende die Idee auf ein Feld „Anzahl Personen“ bei einer Tischreservierung an.",
+        "exampleIdeas": [
+          "0 Personen",
+          "1 Person",
+          "Übliche Gruppengröße",
+          "Maximum des Restaurants",
+          "Ein Vielfaches davon",
+          "Negative Zahl",
+          "Kommazahl"
+        ]
+      },
+      "question": "Was beschreibt die Goldilocks-Heuristik?",
+      "options": [
+        "Mit drei verschiedenen Benutzerrollen testen",
+        "Jede Funktion dreimal hintereinander ausführen",
+        "Werte testen, die zu klein, zu groß und genau richtig sind",
+        "Erst die einfachsten Fälle, dann die schwierigsten"
+      ],
+      "correctIndex": 2,
+      "answer": "Werte testen, die zu klein, zu groß und genau richtig sind",
+      "explanation": "Eine einfache Merkhilfe, die die Grenzwertanalyse auf beliebige Dinge überträgt: Textlänge, Dateigröße, Wartezeit, Anzahl Einträge. Heuristiken wie diese sind Denkanstöße fürs Erkunden, keine starren Regeln."
+    },
+    {
+      "id": "exp-006",
+      "category": "explorativ",
+      "title": "SFDPOT: Zeit",
+      "difficulty": 2,
+      "topics": [
+        "Heuristiken"
+      ],
+      "scenario": "SFDPOT (gesprochen „San Francisco Depot“) ist eine Merkhilfe für Testideen: Structure, Function, Data, Platform, Operations, Time.",
+      "brainstorm": {
+        "prompt": "Sammle für einen Kalender-Export Ideen zu jedem der sechs Buchstaben.",
+        "exampleIdeas": [
+          "S: Format der Exportdatei",
+          "F: Termine anlegen und exportieren",
+          "D: Termin ohne Titel, ganztägige Termine",
+          "P: Import in Outlook und Google",
+          "O: Wie nutzen Leute es wirklich?",
+          "T: Termin über Mitternacht, Zeitumstellung, Jahreswechsel"
+        ]
+      },
+      "question": "Welche Testidee gehört zum T (Time)?",
+      "options": [
+        "Export als CSV statt ICS",
+        "Ein Termin, der vor Mitternacht beginnt und danach endet",
+        "Termin mit sehr langem Titel",
+        "Export auf einem Mac statt Windows"
+      ],
+      "correctIndex": 1,
+      "answer": "Ein Termin, der vor Mitternacht beginnt und danach endet",
+      "explanation": "Zeit ist die Kategorie, die am häufigsten fehlt: Mitternacht, Monatsende, Zeitumstellung, Zeitzonen, Ablauffristen, langsame Verbindungen. Die anderen Antworten gehören zu Platform, Data und Structure."
+    },
+    {
+      "id": "exp-007",
+      "category": "explorativ",
+      "title": "CRUD: Löschen",
+      "difficulty": 2,
+      "topics": [
+        "Heuristiken",
+        "Daten"
+      ],
+      "scenario": "Eine Kundenverwaltung erlaubt Anlegen, Anzeigen, Ändern und Löschen von Kunden (CRUD).",
+      "brainstorm": {
+        "prompt": "Nenne zu jedem der vier Buchstaben zwei Testideen.",
+        "exampleIdeas": [
+          "C: Kunde mit Pflichtfeldern, Dublette anlegen",
+          "R: Kunde suchen, Liste mit 0 und mit 10.000 Kunden",
+          "U: Gleichzeitiges Ändern durch zwei Personen",
+          "D: Kunde mit offenen Bestellungen löschen",
+          "D: Gelöschten Kunden erneut anlegen"
+        ]
+      },
+      "question": "Welcher Löschfall deckt am ehesten Fehler auf?",
+      "options": [
+        "Einen Kunden löschen und die Liste neu laden",
+        "Den Löschen-Button suchen",
+        "Einen frisch angelegten Kunden ohne Daten löschen",
+        "Einen Kunden löschen, zu dem es noch offene Bestellungen gibt"
+      ],
+      "correctIndex": 3,
+      "answer": "Einen Kunden löschen, zu dem es noch offene Bestellungen gibt",
+      "explanation": "Interessant wird Löschen dort, wo Daten miteinander verknüpft sind. Was passiert mit den Bestellungen? Werden sie mitgelöscht, verwaisen sie, oder wird das Löschen verhindert? Oft ist das fachlich gar nicht geklärt."
+    },
+    {
+      "id": "exp-008",
+      "category": "explorativ",
+      "title": "Unterbrechungen",
+      "difficulty": 2,
+      "topics": [
+        "Mobile",
+        "Robustheit"
+      ],
+      "scenario": "Eine Banking-App auf dem Smartphone, der Nutzer gibt gerade eine Überweisung frei.",
+      "brainstorm": {
+        "prompt": "Welche Unterbrechungen können im echten Leben passieren? Nenne mindestens 6.",
+        "exampleIdeas": [
+          "Anruf kommt rein",
+          "Netz bricht ab (Tunnel, Aufzug)",
+          "Wechsel zwischen WLAN und Mobilfunk",
+          "Akku fast leer, Energiesparmodus",
+          "App wird in den Hintergrund geschoben",
+          "Bildschirm dreht sich",
+          "Gerät wird gesperrt"
+        ]
+      },
+      "question": "Welche Unterbrechung ist bei einer Zahlung am kritischsten zu testen?",
+      "options": [
+        "Lautstärke wird geändert",
+        "Netzverlust genau nach dem Absenden, bevor die Bestätigung ankommt",
+        "Bildschirm dreht sich auf der Startseite",
+        "Benachrichtigung einer anderen App"
+      ],
+      "correctIndex": 1,
+      "answer": "Netzverlust genau nach dem Absenden, bevor die Bestätigung ankommt",
+      "explanation": "Der Nutzer weiß nicht, ob die Zahlung durch ist. Versucht er es erneut, droht eine Doppelzahlung. Die App muss beim nächsten Start den echten Status abfragen und anzeigen. Unterbrechungen im entscheidenden Moment sind auf Mobilgeräten der Normalfall, nicht die Ausnahme."
+    },
+    {
+      "id": "exp-009",
+      "category": "explorativ",
+      "title": "Zurück-Button",
+      "difficulty": 2,
+      "topics": [
+        "Web",
+        "Benutzerverhalten"
+      ],
+      "scenario": "Ein Bestellvorgang im Shop: Warenkorb, Adresse, Zahlung, Bestätigung.",
+      "brainstorm": {
+        "prompt": "Was können Nutzer mit dem Browser machen, das der Ablauf nicht vorsieht? Nenne mindestens 5 Dinge.",
+        "exampleIdeas": [
+          "Zurück-Button nach der Bestätigung",
+          "Seite neu laden (F5) beim Absenden",
+          "Doppelklick auf „Kaufen“",
+          "Link zu einem Zwischenschritt als Lesezeichen",
+          "Lange Pause, dann weiter",
+          "Mitten im Ablauf den Browser schließen"
+        ]
+      },
+      "question": "Welcher Fall führt am ehesten zu einer doppelten Bestellung?",
+      "options": [
+        "Im Warenkorb eine Menge ändern",
+        "Die Adresse korrigieren",
+        "Die Bestätigungsseite ausdrucken",
+        "Nach der Bestätigung zurückgehen und die Zahlungsseite erneut absenden"
+      ],
+      "correctIndex": 3,
+      "answer": "Nach der Bestätigung zurückgehen und die Zahlungsseite erneut absenden",
+      "explanation": "Der Browser bietet an, das Formular erneut zu senden. Ohne Schutz entsteht eine zweite Bestellung. Gegenmittel: nach dem Absenden auf eine neue Seite weiterleiten und doppelte Absendungen serverseitig erkennen."
+    },
+    {
+      "id": "exp-010",
+      "category": "explorativ",
+      "title": "Zwei Tabs",
+      "difficulty": 3,
+      "topics": [
+        "Web",
+        "Zustand"
+      ],
+      "scenario": "Ein Nutzer hat den Shop in zwei Browser-Tabs offen.",
+      "brainstorm": {
+        "prompt": "Was kann in zwei parallelen Tabs schiefgehen? Nenne mindestens 4 Ideen.",
+        "exampleIdeas": [
+          "Im einen Tab Artikel löschen, im anderen bestellen",
+          "In einem Tab abmelden, im anderen weiterarbeiten",
+          "Gutschein in beiden Tabs einlösen",
+          "Adresse in beiden Tabs unterschiedlich ändern"
+        ]
+      },
+      "question": "Welcher Fall prüft am besten, ob der Server den echten Stand verwendet?",
+      "options": [
+        "In einem Tab die Sprache ändern",
+        "Einen Tab schließen und neu öffnen",
+        "In beiden Tabs dieselbe Produktseite ansehen",
+        "Im ersten Tab den Warenkorb leeren, im zweiten Tab mit dem alten Warenkorb bestellen"
+      ],
+      "correctIndex": 3,
+      "answer": "Im ersten Tab den Warenkorb leeren, im zweiten Tab mit dem alten Warenkorb bestellen",
+      "explanation": "Der zweite Tab zeigt einen veralteten Stand. Bestellt er trotzdem die alten Artikel, verlässt sich der Server auf Daten aus dem Browser statt auf seinen eigenen Stand. Viele Nutzer arbeiten mit mehreren Tabs, Tests fast nie."
+    },
+    {
+      "id": "exp-011",
+      "category": "explorativ",
+      "title": "Annahmen über Namen",
+      "difficulty": 2,
+      "topics": [
+        "Testdaten",
+        "Internationalisierung"
+      ],
+      "scenario": "Ein Registrierungsformular prüft Vor- und Nachnamen.",
+      "brainstorm": {
+        "prompt": "Welche echten Namen könnten Probleme machen? Nenne mindestens 5.",
+        "exampleIdeas": [
+          "Sehr kurze Namen (Li, Ng)",
+          "Doppelnamen mit Bindestrich",
+          "Mehrteilige Namen (van der Berg)",
+          "Namen mit Umlauten oder Akzenten",
+          "Sehr lange Namen",
+          "Menschen mit nur einem Namen"
+        ]
+      },
+      "question": "Welche Prüfregel schließt echte Menschen aus?",
+      "options": [
+        "Nachnamen dürfen nicht leer sein",
+        "Namen dürfen höchstens 200 Zeichen haben",
+        "Namen werden ohne Leerzeichen am Rand gespeichert",
+        "Nachnamen müssen mindestens 3 Buchstaben haben"
+      ],
+      "correctIndex": 3,
+      "answer": "Nachnamen müssen mindestens 3 Buchstaben haben",
+      "explanation": "„Li“ und „Ng“ sind verbreitete Nachnamen. Solche Regeln entstehen aus Annahmen, die für den eigenen Bekanntenkreis stimmen. Beim explorativen Testen lohnt es sich, gezielt nach versteckten Annahmen zu suchen."
+    },
+    {
+      "id": "exp-012",
+      "category": "explorativ",
+      "title": "29. Februar",
+      "difficulty": 2,
+      "topics": [
+        "Datum",
+        "Grenzfälle"
+      ],
+      "scenario": "Ein Kalender erlaubt jährlich wiederkehrende Termine, z. B. Geburtstage.",
+      "brainstorm": {
+        "prompt": "Welche Datumsfälle würdest du ausprobieren? Nenne mindestens 5.",
+        "exampleIdeas": [
+          "29. Februar",
+          "31. eines Monats",
+          "Termin am Tag der Zeitumstellung",
+          "Silvester auf Neujahr",
+          "Termin weit in der Zukunft (2099)"
+        ]
+      },
+      "question": "Was ist bei einem jährlichen Termin am 29. Februar zu klären?",
+      "options": [
+        "Ob er in Schaltjahren doppelt erscheint",
+        "An welchem Tag er in Jahren ohne Schalttag erscheint, oder ob er dann ausfällt",
+        "Ob der Termin nur im Januar sichtbar ist",
+        "Ob der Februar 30 Tage bekommt"
+      ],
+      "correctIndex": 1,
+      "answer": "An welchem Tag er in Jahren ohne Schalttag erscheint, oder ob er dann ausfällt",
+      "explanation": "28. Februar, 1. März oder gar nicht? Alle drei Varianten gibt es in echter Software. Wichtig ist, dass es eine bewusste Entscheidung gibt und sich das System daran hält. Wer am 29. Februar Geburtstag hat, merkt den Fehler garantiert."
+    },
+    {
+      "id": "exp-013",
+      "category": "explorativ",
+      "title": "Gute Charter",
+      "difficulty": 2,
+      "topics": [
+        "Session-Based Testing"
+      ],
+      "scenario": "Beim sitzungsbasierten explorativen Testen gibt eine Charter jeder Sitzung (z. B. 60 Minuten) ein Ziel: was erkundet wird, womit und wozu.",
+      "brainstorm": {
+        "prompt": "Formuliere selbst eine Charter für den Checkout eines Shops.",
+        "exampleIdeas": [
+          "Erkunde den Checkout mit Gutscheinen, um Rechenfehler beim Rabatt zu finden",
+          "Erkunde die Adresseingabe mit ausländischen Adressen, um Validierungsprobleme zu finden",
+          "Erkunde den Checkout auf dem Smartphone mit schlechter Verbindung, um Abbrüche zu finden"
+        ]
+      },
+      "question": "Welche Charter ist am besten?",
+      "options": [
+        "Teste den Checkout",
+        "Finde alle Fehler im Shop",
+        "Erkunde den Checkout mit verschiedenen Gutscheinen, um Rechenfehler beim Rabatt zu finden",
+        "Klicke 60 Minuten lang auf alles im Checkout"
+      ],
+      "correctIndex": 2,
+      "answer": "Erkunde den Checkout mit verschiedenen Gutscheinen, um Rechenfehler beim Rabatt zu finden",
+      "explanation": "Eine gute Charter ist eng genug für eine Sitzung und nennt Bereich, Mittel und Ziel. „Teste den Checkout“ ist zu vage, „alle Fehler“ unmöglich. Die Charter lenkt den Blick, ohne jeden Schritt vorzuschreiben."
+    },
+    {
+      "id": "exp-014",
+      "category": "explorativ",
+      "title": "Wo zuerst suchen",
+      "difficulty": 2,
+      "topics": [
+        "Risikobasiertes Testen"
+      ],
+      "scenario": "Für ein Release bleiben nur zwei Stunden exploratives Testen.",
+      "brainstorm": {
+        "prompt": "Nach welchen Kriterien würdest du die Bereiche auswählen? Nenne mindestens 4.",
+        "exampleIdeas": [
+          "Kürzlich geänderte Bereiche",
+          "Bereiche mit vielen früheren Fehlern",
+          "Komplexe Logik",
+          "Geld- und Datenverarbeitung",
+          "Viel genutzte Funktionen",
+          "Neue Kollegen haben daran gearbeitet"
+        ]
+      },
+      "question": "Wo lohnt sich die Zeit am meisten?",
+      "options": [
+        "Gleichmäßig verteilt über alle Bereiche",
+        "In Bereichen, die geändert wurden und in denen es früher schon oft Fehler gab",
+        "In Bereichen, die seit Jahren stabil sind",
+        "Auf der Startseite, weil sie jeder sieht"
+      ],
+      "correctIndex": 1,
+      "answer": "In Bereichen, die geändert wurden und in denen es früher schon oft Fehler gab",
+      "explanation": "Fehler häufen sich: Wo es schon viele gab, kommen meist weitere hinzu. Änderungen sind die zweite große Fehlerquelle. Beides zusammen ergibt die besten Kandidaten. Gleichmäßiges Verteilen klingt fair, verschenkt aber Zeit."
+    },
+    {
+      "id": "exp-015",
+      "category": "explorativ",
+      "title": "Emoji im Namen",
+      "difficulty": 3,
+      "topics": [
+        "Zeichensätze",
+        "Testdaten"
+      ],
+      "scenario": "Ein Nutzer gibt als Anzeigenamen „Anna 😀“ ein.",
+      "brainstorm": {
+        "prompt": "Welche Stellen im System könnten mit dem Emoji Probleme haben? Nenne mindestens 4.",
+        "exampleIdeas": [
+          "Datenbankspalte",
+          "Längenprüfung des Feldes",
+          "E-Mail-Versand",
+          "PDF-Erzeugung",
+          "Export als CSV",
+          "Suche und Sortierung"
+        ]
+      },
+      "question": "Warum scheitert ein Emoji häufiger als ein Umlaut?",
+      "options": [
+        "Es braucht in UTF-8 vier Bytes, manche Datenbank-Einstellungen erlauben nur drei",
+        "Emojis sind in Namen gesetzlich nicht erlaubt",
+        "Emojis werden in UTF-8 gar nicht unterstützt",
+        "Emojis bestehen aus Bildern, nicht aus Zeichen"
+      ],
+      "correctIndex": 0,
+      "answer": "Es braucht in UTF-8 vier Bytes, manche Datenbank-Einstellungen erlauben nur drei",
+      "explanation": "Ein „ü“ belegt in UTF-8 zwei Bytes, ein Emoji vier. Die ältere MySQL-Einstellung „utf8“ kann nur bis drei Bytes, erst „utf8mb4“ kann alles. Auch Längenprüfungen zählen Emojis je nach Methode als ein oder zwei Zeichen."
+    },
+    {
+      "id": "exp-016",
+      "category": "explorativ",
+      "title": "Glückwunsch zur falschen Zeit",
+      "difficulty": 3,
+      "topics": [
+        "Zeitzonen"
+      ],
+      "scenario": "Ein Dienst verschickt um 0:00 Uhr Geburtstagsgrüße. Der Server steht in Frankfurt, die Nutzer leben weltweit.",
+      "brainstorm": {
+        "prompt": "Welche Fälle würdest du durchspielen? Nenne mindestens 4.",
+        "exampleIdeas": [
+          "Nutzer in New York",
+          "Nutzer in Tokio",
+          "Geburtstag am 1. Januar",
+          "Geburtstag am 29. Februar",
+          "Nutzer zieht in eine andere Zeitzone"
+        ]
+      },
+      "question": "Was passiert bei einer Nutzerin in New York?",
+      "options": [
+        "Sie bekommt den Gruß einen Tag zu spät",
+        "Sie bekommt den Gruß am Abend vor ihrem Geburtstag",
+        "Sie bekommt den Gruß zweimal",
+        "Sie bekommt den Gruß gar nicht"
+      ],
+      "correctIndex": 1,
+      "answer": "Sie bekommt den Gruß am Abend vor ihrem Geburtstag",
+      "explanation": "0 Uhr in Frankfurt ist 18 Uhr am Vortag in New York (6 Stunden Unterschied). Der Gruß kommt also zu früh. In Tokio wäre es 8 Uhr am Geburtstag selbst, also passend. Zeitpunkte, die „für den Nutzer“ gelten, müssen in seiner Zeitzone berechnet werden."
+    },
+    {
+      "id": "exp-017",
+      "category": "explorativ",
+      "title": "Rundungsdifferenzen",
+      "difficulty": 3,
+      "topics": [
+        "Geldbeträge",
+        "Rundung"
+      ],
+      "scenario": "Ein Shop gewährt 15 % Rabatt. Sieben Artikel zu je 0,99 € liegen im Warenkorb.\nRabatt pro Position gerundet: 5.88 €\nRabatt auf die Summe gerundet: 5.89 €",
+      "brainstorm": {
+        "prompt": "Welche Warenkörbe würdest du bauen, um Rundungsfehler zu finden? Nenne mindestens 4.",
+        "exampleIdeas": [
+          "Viele Positionen mit krummen Preisen",
+          "Ein Artikel mit hoher Menge",
+          "Prozentrabatt plus fester Rabatt",
+          "Verschiedene Mehrwertsteuersätze",
+          "Beträge, bei denen genau 0,5 Cent entsteht"
+        ]
+      },
+      "question": "Was zeigt das Beispiel?",
+      "options": [
+        "Der Unterschied verschwindet bei mehr Artikeln",
+        "Einer der beiden Rechenwege ist immer falsch",
+        "Mit Prozent darf man bei Geld nicht rechnen",
+        "Je nachdem, wo gerundet wird, entstehen unterschiedliche Endbeträge"
+      ],
+      "correctIndex": 3,
+      "answer": "Je nachdem, wo gerundet wird, entstehen unterschiedliche Endbeträge",
+      "explanation": "Beide Wege sind zulässig, aber Warenkorb, Rechnung und Buchhaltung müssen denselben verwenden. Sonst passen die Beträge um Cents nicht zusammen. Der Unterschied wächst eher mit der Zahl der Positionen. Entscheidend ist eine festgelegte Regel."
+    },
+    {
+      "id": "exp-018",
+      "category": "explorativ",
+      "title": "Ohne Spezifikation",
+      "difficulty": 3,
+      "topics": [
+        "Testorakel",
+        "Heuristiken"
+      ],
+      "scenario": "Es gibt keine Spezifikation für einen alten Bericht. Ein Wert sieht merkwürdig aus.",
+      "brainstorm": {
+        "prompt": "Womit kannst du vergleichen, um zu beurteilen, ob das Ergebnis richtig ist? Nenne mindestens 4 Quellen.",
+        "exampleIdeas": [
+          "Frühere Version der Software",
+          "Ähnliche Produkte",
+          "Andere Berichte im selben System",
+          "Erwartung der Nutzer",
+          "Gesetze und Normen",
+          "Werbeaussagen des Produkts",
+          "Eigene Nachrechnung"
+        ]
+      },
+      "question": "Was ist der sinnvollste Ansatz?",
+      "options": [
+        "Mit früheren Versionen, ähnlichen Berichten und der Erwartung der Nutzer vergleichen",
+        "Ohne Spezifikation kann man keinen Fehler melden",
+        "Den Wert akzeptieren, weil er vom System kommt",
+        "Nur prüfen, ob der Bericht ohne Absturz erscheint"
+      ],
+      "correctIndex": 0,
+      "answer": "Mit früheren Versionen, ähnlichen Berichten und der Erwartung der Nutzer vergleichen",
+      "explanation": "Das „Orakelproblem“: Woher weiß man, was richtig ist? Ohne Spezifikation helfen Vergleiche mit Bekanntem: Widerspricht das Ergebnis der Vorgängerversion, einem anderen Bericht oder dem gesunden Menschenverstand, ist das ein begründeter Verdacht, den man melden sollte."
+    },
+    {
+      "id": "exp-019",
+      "category": "explorativ",
+      "title": "Zoom auf 200 %",
+      "difficulty": 1,
+      "topics": [
+        "Barrierefreiheit",
+        "Benutzererlebnis"
+      ],
+      "scenario": "Eine Seite für eine Zielgruppe ab 60 Jahren soll gut bedienbar sein.",
+      "brainstorm": {
+        "prompt": "Was würdest du ausprobieren? Nenne mindestens 5 Ideen.",
+        "exampleIdeas": [
+          "Browser-Zoom auf 200 %",
+          "Nur mit Tastatur bedienen",
+          "Kontrast bei Sonnenlicht auf dem Handy",
+          "Große Schrift in den Systemeinstellungen",
+          "Zeitlimits bei Formularen",
+          "Fehlermeldungen verständlich?"
+        ]
+      },
+      "question": "Welcher einfache Test deckt am meisten Probleme für ältere Nutzer auf?",
+      "options": [
+        "Die Seite in einem anderen Browser öffnen",
+        "Die Seite mit 200 % Browser-Zoom bedienen",
+        "Die Seite auf einem großen Monitor öffnen",
+        "Die Ladezeit messen"
+      ],
+      "correctIndex": 1,
+      "answer": "Die Seite mit 200 % Browser-Zoom bedienen",
+      "explanation": "Viele Menschen vergrößern die Darstellung. Dabei überlappen Texte, Buttons verschwinden oder man muss seitlich scrollen. Der Test dauert eine Minute und zeigt oft mehrere Probleme. Die Richtlinien für Barrierefreiheit (WCAG) verlangen genau diese Vergrößerbarkeit."
+    },
+    {
+      "id": "exp-020",
+      "category": "explorativ",
+      "title": "Langes Formular",
+      "difficulty": 2,
+      "topics": [
+        "Sitzungen",
+        "Benutzerverhalten"
+      ],
+      "scenario": "Ein Antragsformular hat 40 Felder. Viele Nutzer füllen es in Ruhe aus, mit Pausen.",
+      "brainstorm": {
+        "prompt": "Was kann beim langsamen Ausfüllen schiefgehen? Nenne mindestens 4 Ideen.",
+        "exampleIdeas": [
+          "Sitzung läuft ab",
+          "Eingaben gehen beim Zurückgehen verloren",
+          "Pause von einer Stunde, dann absenden",
+          "Formular auf zwei Geräten beginnen",
+          "Browser stürzt ab"
+        ]
+      },
+      "question": "Welcher Test ist hier am wichtigsten?",
+      "options": [
+        "Nur die Pflichtfelder ausfüllen",
+        "Das Formular ausfüllen, 30 Minuten warten und dann absenden",
+        "Das Formular leer absenden",
+        "Das Formular so schnell wie möglich ausfüllen"
+      ],
+      "correctIndex": 1,
+      "answer": "Das Formular ausfüllen, 30 Minuten warten und dann absenden",
+      "explanation": "Tester sind schnell, echte Nutzer nicht. Läuft die Sitzung ab, sind im schlimmsten Fall alle Eingaben weg. Gute Anwendungen warnen vorher, speichern Zwischenstände oder übernehmen die Daten nach erneuter Anmeldung."
+    }
+  ]
+}
