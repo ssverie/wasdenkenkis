@@ -52,6 +52,7 @@ gruppe = "erzeugung"
 schluessel = "singleton"
 name = "Singleton"
 text = "genau eine Instanz mit globalem Zugriffspunkt"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Beim ersten getInstance() lädt die JVM erst die Klasse Holder, und nur dabei läuft der private Konstruktor. Beim zweiten Aufruf passiert nichts mehr davon. Von den 10.000 virtuellen Threads sind drei einzeln zu sehen: Jeder bekommt dieselbe Konfiguration und eine eigene ID. Der Rest folgt in einem Schritt."
 
 [[muster]]
 nummer = 6

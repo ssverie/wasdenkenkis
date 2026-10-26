@@ -63,9 +63,10 @@ window.MusterRahmen = (function () {
         // Methode verlassen: Rahmen vom Stapel; o.setze = [[name, wert]] weist den Rückgabewert im Aufrufer zu
         raus(z, msg, o) { st.stapel.pop(); ((o && o.setze) || []).forEach(([n, w]) => s.var(n, w)); s.schritt(z, msg, o); },
         var(name, wert) { const f = st.stapel[st.stapel.length - 1]; const v = f.vars.find(v => v[0] === name); if (v) v[1] = wert; else f.vars.push([name, wert]); },
-        neu(klasse, felder) {
-          st.zaehler[klasse] = (st.zaehler[klasse] || 0) + 1;
-          const id = `${klasse} #${st.zaehler[klasse]}`;
+        // name: eigener Anzeigename statt „Klasse #n“, z. B. „Klasse Holder“ für statische Felder oder „IdGenerator.INSTANCE“
+        neu(klasse, felder, name) {
+          if (!name) st.zaehler[klasse] = (st.zaehler[klasse] || 0) + 1;
+          const id = name || `${klasse} #${st.zaehler[klasse]}`;
           st.heap.push({ id, klasse, felder: (felder || []).map(f => f.slice()), weg: false }); neueObj.push(id);
           return id;
         },

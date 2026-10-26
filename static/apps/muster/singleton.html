@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Singleton – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Singleton (GoF-Erzeugungsmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (singleton-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt; von den 10.000 Threads
+     werden drei einzeln gezeigt, der Rest in einem Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="singleton-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  const EINZELN = 3, GESAMT = 10000;
+
+  function lauf(s) {
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) throws Exception {', 'Start: main prüft zuerst, wann die Konfiguration entsteht, dann, ob es wirklich nur eine gibt.');
+    s.aus('Vor dem ersten Zugriff');
+    s.schritt('System.out.println("Vor dem ersten Zugriff");', 'Bis hierher hat niemand Konfiguration benutzt. Es gibt noch kein Objekt – und die Klasse Holder ist noch nicht einmal geladen.');
+
+    // erster Zugriff: Holder wird geladen, der Konstruktor läuft genau einmal
+    s.schritt('Konfiguration k1 = Konfiguration.getInstance();', 'Erster Aufruf von getInstance(). Mit new geht es nicht, der Konstruktor ist privat.', { klassen: ['Konfiguration'] });
+    s.ruf('Konfiguration.getInstance()', [], 'static Konfiguration getInstance() { return Holder.INSTANCE; }', 'getInstance() greift auf Holder.INSTANCE zu – und das löst etwas aus.', { klassen: ['Konfiguration', 'Holder'] });
+    const holder = s.neu('Holder', [['INSTANCE', 'null']], 'Klasse Holder');
+    s.ruf('Holder: statische Initialisierung', [], 'static final Konfiguration INSTANCE = new Konfiguration();',
+      'Erst jetzt lädt die JVM die Klasse Holder und führt ihre statische Initialisierung aus. Die JVM erledigt das genau einmal und threadsicher – darum braucht das Holder-Idiom weder synchronized noch volatile.', { klassen: ['Holder'] });
+    s.ruf('Konfiguration() – privat', [], 'private Konfiguration() {', 'Der private Konstruktor läuft. Von innerhalb der Klasse darf er aufgerufen werden.', { klassen: ['Konfiguration'] });
+    const k = s.neu('Konfiguration', [['umgebung', 'null']]);
+    s.aus('  (Konfiguration wird geladen ...)');
+    s.schritt('System.out.println("  (Konfiguration wird geladen ...)");', `${k} entsteht. Die Meldung erscheint erst jetzt, nach „Vor dem ersten Zugriff“ – das ist lazy.`);
+    s.feld(k, 'umgebung', '"produktion"');
+    s.schritt('this.umgebung = System.getProperty("umgebung", "produktion");', 'Die System-Property „umgebung“ ist nicht gesetzt, also gilt der Standardwert „produktion“.', { cur: [k] });
+    s.raus('static final Konfiguration INSTANCE = new Konfiguration();', 'Der Konstruktor ist fertig.', { cur: [k] });
+    s.feld(holder, 'INSTANCE', s.ref(k));
+    s.schritt('static final Konfiguration INSTANCE = new Konfiguration();', `Holder.INSTANCE zeigt jetzt auf ${k}. Das Feld ist final – es wird nie wieder zugewiesen.`, { cur: [holder] });
+    s.raus('static Konfiguration getInstance() { return Holder.INSTANCE; }', 'Die Klasse Holder ist geladen und initialisiert.', { cur: [holder] });
+    s.raus('Konfiguration k1 = Konfiguration.getInstance();', `getInstance() liefert ${k}.`, { cur: [k], setze: [['k1', s.ref(k)]] });
+
+    // zweiter Zugriff: nichts mehr zu tun
+    s.schritt('Konfiguration k2 = Konfiguration.getInstance();', 'Zweiter Aufruf von getInstance().', { klassen: ['Konfiguration'] });
+    s.ruf('Konfiguration.getInstance()', [], 'static Konfiguration getInstance() { return Holder.INSTANCE; }',
+      'Diesmal ist Holder schon geladen: keine Initialisierung, kein Konstruktor, keine Meldung. getInstance() gibt nur das Feld zurück.', { cur: [holder] });
+    s.raus('Konfiguration k2 = Konfiguration.getInstance();', `k2 zeigt auf dasselbe Objekt wie k1: ${k}.`, { cur: [k], setze: [['k2', s.ref(k)]] });
+    s.aus('Umgebung: produktion');
+    s.schritt('System.out.println("Umgebung: " + k1.umgebung());', 'k1.umgebung() liest das Feld des einen Objekts.', { cur: [k] });
+    s.aus('k1 == k2: true');
+    s.schritt('System.out.println("k1 == k2: " + (k1 == k2));', '== vergleicht Referenzen, nicht Inhalte. true heißt: k1 und k2 sind dasselbe Objekt.', { cur: [k] });
+
+    // Threadsicherheit
+    const inst = s.neu('Set', [['Inhalt', '[]']], 'Set instanzen');
+    s.var('instanzen', s.ref(inst));
+    s.schritt('Set<Konfiguration> instanzen = ConcurrentHashMap.newKeySet();', 'Eine threadsichere Menge für alle Instanzen, die die Threads gleich sehen werden. Eine Menge enthält jedes Objekt höchstens einmal.');
+    const ids = s.neu('Set', [['Größe', '0']], 'Set ids');
+    s.var('ids', s.ref(ids));
+    s.schritt('Set<Long> ids = ConcurrentHashMap.newKeySet();', 'Eine zweite Menge für die IDs. Doppelte IDs würden darin zusammenfallen – die Größe verrät also, ob jede ID eindeutig war.');
+    s.var('executor', 'virtuelle Threads');
+    s.schritt('try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {', 'Ein Executor, der für jede Aufgabe einen eigenen virtuellen Thread startet – neu und final seit Java 21.');
+    let gen = null, zaehler = 0;
+    for (let i = 0; i < EINZELN; i++) {
+      s.var('i', String(i));
+      s.schritt('for (int i = 0; i < 10_000; i++) {', i === 0 ? 'Die Schleife reicht 10.000 Aufgaben ein. Drei davon sehen wir uns einzeln an.' : `i = ${i}.`);
+      s.schritt('executor.submit(() -> {', i === 0
+        ? 'submit() startet einen virtuellen Thread mit dem Lambda. In Wirklichkeit laufen die Threads gleichzeitig und in beliebiger Reihenfolge – hier nacheinander gezeigt.'
+        : `Thread ${i + 1} startet.`);
+      s.feld(inst, 'Inhalt', `[${s.ref(k)}]`);
+      s.schritt('instanzen.add(Konfiguration.getInstance());', i === 0
+        ? `Thread 1 holt sich die Instanz: wieder ${k}. Sie landet in der Menge.`
+        : `Thread ${i + 1} bekommt ebenfalls ${k}. Die Menge enthält es schon – sie bleibt bei einem Element.`, { cur: [k, inst] });
+      if (!gen) {
+        gen = s.neu('IdGenerator', [['zaehler', 'AtomicLong 0']], 'IdGenerator.INSTANCE');
+        s.schritt(['enum IdGenerator {', 1], 'Erster Zugriff auf IdGenerator.INSTANCE: Jetzt erst initialisiert die JVM das Enum und legt seine einzige Konstante an – auch das genau einmal und threadsicher.', { klassen: ['IdGenerator'] });
+      }
+      zaehler++;
+      s.feld(gen, 'zaehler', `AtomicLong ${zaehler}`);
+      s.feld(ids, 'Größe', String(zaehler));
+      s.schritt('ids.add(IdGenerator.INSTANCE.naechsteId());', i === 0
+        ? 'naechsteId() erhöht den AtomicLong atomar: Zwei Threads können nie dieselbe Zahl bekommen. ID 1 kommt in die Menge.'
+        : `ID ${zaehler} kommt in die Menge.`, { cur: [gen, ids] });
+    }
+    zaehler = GESAMT;
+    s.feld(gen, 'zaehler', `AtomicLong ${zaehler}`);
+    s.feld(ids, 'Größe', String(zaehler));
+    s.var('i', '(Schleife fertig)');
+    s.schritt('}   // close() wartet', `Die übrigen ${(GESAMT - EINZELN).toLocaleString('de-DE')} Threads machen dasselbe. Am Ende des try-Blocks wartet close(), bis alle fertig sind. Ergebnis: ein Objekt in instanzen, 10.000 verschiedene IDs.`, { cur: [inst, ids, gen] });
+    s.aus('Verschiedene Instanzen: 1');
+    s.schritt('System.out.println("Verschiedene Instanzen: " + instanzen.size());', '10.000 Threads, eine einzige Instanz.', { cur: [inst] });
+    s.aus('Eindeutige IDs:         10000');
+    s.schritt('System.out.println("Eindeutige IDs:', 'Und keine doppelte ID – der Enum-Singleton mit seinem AtomicLong hat gehalten.', { cur: [ids] });
+    s.weg(inst, ids);
+    s.raus(['System.out.println("Eindeutige IDs:', 1], 'main ist zu Ende. Die beiden Singletons leben bis zum Programmende – sie hängen an statischen Feldern, nicht an Variablen von main.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Singleton', 'Holder-Idiom'],
+    diagramm: {
+      breite: 170, rand: 80, abstandX: 70,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1, y: 0 },
+        { name: 'Konfiguration', art: 'class', rolle: 'Singleton', x: 0, y: 1 },
+        { name: 'IdGenerator', art: 'enum', rolle: 'Singleton', x: 2, y: 1 },
+        { name: 'Holder', art: 'static class', rolle: 'Holder-Idiom', x: 0, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Konfiguration', art: 'nutzt', text: 'getInstance()', dx: -46 },
+        { von: 'main()', zu: 'IdGenerator', art: 'nutzt', text: 'INSTANCE', dx: 34 },
+        { von: 'Konfiguration', zu: 'Holder', art: 'nutzt', text: 'Holder.INSTANCE', dx: 52 },
+        { von: 'Holder', zu: 'Konfiguration', art: 'erzeugt', bogen: -55, text: 'new (einmal)', dx: 10 }
+      ]
+    },
+    szenarien: [
+      { name: 'java Singleton.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>
