@@ -145,7 +145,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- IT-Übungen: Blatt „Java: Fehler finden“ (`data/uebungen/java-fehler-finden.json`, `content/it-konzepte/uebungen/java-fehler-finden.md`), Übersicht nach acht Kategorien (`_index.md`, `layouts/uebungen.html`, `kategorie` in beiden Blättern), Vorlage und Skript für das neue Format (`layouts/uebung.html`, `assets/js/uebungen.js`, `main.css`), Prüfskript für beide Formate, Ligaturen im Code aus – Herkunft laut Sven dieselbe Instanz „26.10.2026 - 14:34 - IT-Übungen“
+- (leer – zuletzt freigegeben und gepusht am 2026-10-26: IT-Übungen „Java: Fehler finden“ und Übersicht nach Kategorien)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
