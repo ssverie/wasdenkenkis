@@ -86,11 +86,27 @@ print "Wortvergleich: ", scalar(@a), " Wörter identisch\n";
 my ($name) = $java =~ /public\s+(?:final\s+)?class\s+(\w+)/ or die "keine public class\n";
 mkdir $test unless -d $test;
 open my $o, '>:encoding(UTF-8)', "$test/$name.java" or die $!; print $o $java, "\n"; close $o;
-my $ist = `cd "$test" && java -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 $name.java 2>&1`;
-die "java $name.java endete mit Fehler:\n$ist" if $?;
-utf8::decode($ist); $ist =~ s/\r//g; $ist =~ s/\s+\z//;
+sub starte_java {
+  my $extra = shift // '';
+  my $aus = `cd "$test" && java -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 $extra $name.java 2>&1`;
+  die "java $name.java endete mit Fehler:\n$aus" if $?;
+  utf8::decode($aus); $aus =~ s/\r//g; $aus =~ s/\s+\z//;
+  return $aus;
+}
+my $ist = starte_java();
 (my $soll = $ausgabe) =~ s/\r//g; $soll =~ s/\s+\z//;
-if ($ist ne $soll) { die "Ausgabe weicht ab.\n--- Seite:\n$soll\n--- java:\n$ist\n"; }
+# Zahlenformat: printf/String.format richten sich nach der Systemsprache. Sven hat Deutsch (21,5), die Instanz rechnete
+# offenbar mit Englisch (21.5). Dann ein zweiter Lauf mit englischer Einstellung – passt der, wird es in der Anmerkung offen gesagt.
+my $sprachhinweis = '';
+if ($ist ne $soll) {
+  my $en = starte_java('-Duser.language=en -Duser.country=US');
+  die "Ausgabe weicht ab (auch mit englischer Spracheinstellung).\n--- Seite:\n$soll\n--- java:\n$ist\n" if $en ne $soll;
+  my @d = split /\n/, $ist; my @s = split /\n/, $soll; my ($i) = grep { $d[$_] ne $s[$_] } 0 .. $#s;
+  (my $dz = $d[$i]) =~ s/^\s+|\s+$//g; (my $sz = $s[$i]) =~ s/^\s+|\s+$//g; $dz =~ s/\s+/ /g; $sz =~ s/\s+/ /g;
+  $sprachhinweis = " – allerdings erst mit englischer Spracheinstellung (`-Duser.language=en`). Auf einem deutsch eingestellten Rechner "
+    . "schreibt das Programm „${dz}“ statt „${sz}“, weil `printf` das Zahlenformat der Systemsprache nimmt";
+  print "Hinweis: Ausgabe nur mit englischer Spracheinstellung identisch (deutsch: „$dz“)\n";
+}
 my ($version) = `java -version 2>&1` =~ /version "([^"]+)"/;
 print "Java $version: Ausgabe von $name.java identisch mit der Seite\n";
 
@@ -123,7 +139,7 @@ if (-e "static/apps/muster/$schluessel.html") {
   $fm .= "**So geht's:** $sogehts\n\n" if $sogehts;
 }
 my $anm = "{{< anmerkung >}}\nDen Quellcode habe ich unverändert mit Java $version ausgeführt (`java $name.java`, ohne Build-Tool). "
-  . "Die Ausgabe stimmt Zeichen für Zeichen mit dem Abschnitt „Ausgabe“ überein.\n{{< /anmerkung >}}\n";
+  . "Die Ausgabe stimmt Zeichen für Zeichen mit dem Abschnitt „Ausgabe“ überein$sprachhinweis.\n{{< /anmerkung >}}\n";
 my $ziel = "content/it-konzepte/design-patterns/$schluessel.md";
 open $o, '>:encoding(UTF-8)', $ziel or die $!; print $o $fm, $md, $anm; close $o;
 print "geschrieben: $ziel\n";

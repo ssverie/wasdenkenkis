@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adapter – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Adapter (GoF-Strukturmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (adapter-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. Zahlen wie auf der Seite
+     mit Punkt (englische Spracheinstellung); auf einem deutschen System schreibt printf ein Komma. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="adapter-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  const PRINTF = 'System.out.printf("%-16s';
+  const zeile = (name, c) => `${name.padEnd(16)} ${c.toFixed(1).padStart(5)} °C`;    // printf("%-16s %5.1f °C%n")
+  const zuC = f => (f - 32) * 5 / 9;
+  const float = x => Math.fround(x);                                                    // 98.6f ist als float nicht genau 98.6
+  const zahl = x => Number.isInteger(x) ? x.toFixed(1) : String(x);
+  let erklaertPrintf = false;
+
+  // Client: anzeigen(name, s) – kennt nur Temperatursensor; celsius(s) spielt den jeweiligen celsius()-Aufruf nach und liefert den Wert
+  function anzeigen(s, name, sensor, aufruf, celsius) {
+    s.ruf('anzeigen(String name, Temperatursensor s)', [['name', `"${name}"`], ['s', s.ref(sensor)]], 'static void anzeigen(String name, Temperatursensor s) {',
+      `Der Client anzeigen() bekommt ${sensor} – als Temperatursensor. Mehr weiß er nicht über das Objekt.`, { cur: [sensor], klassen: ['anzeigen()', 'Temperatursensor'] });
+    s.schritt(PRINTF, 's.celsius(): Der Client ruft die eine Methode auf, die er kennt.', { cur: [sensor], klassen: ['Temperatursensor'] });
+    const c = celsius();
+    s.aus(zeile(name, c));
+    s.schritt(PRINTF, erklaertPrintf ? `Ausgabe: ${zeile(name, c).replace(/\s+/g, ' ')}`
+      : `printf formatiert: Name links auf 16 Zeichen, Wert mit einer Nachkommastelle. Hier wie auf der Seite mit Punkt – auf einem deutsch eingestellten Rechner stünde ${c.toFixed(1).replace('.', ',')}.`, { cur: [sensor] });
+    erklaertPrintf = true;
+    s.raus(aufruf, 'anzeigen() ist fertig.');
+  }
+
+  // fahrenheitZuCelsius(f) als eigener Rahmen
+  function umrechnen(s, f, zurueck) {
+    s.ruf('fahrenheitZuCelsius(double f)', [['f', zahl(f)]], 'static double fahrenheitZuCelsius(double f) { return (f - 32) * 5 / 9; }',
+      Number.isInteger(f) ? `(${f} − 32) · 5 / 9 = ${zuC(f)}` : `(${f} − 32) · 5 / 9 = ${zuC(f)} – 98.6f ist als float nicht genau 98.6, darum knapp unter 37. Gerundet wird erst bei der Ausgabe.`);
+    s.raus(zurueck, `Ergebnis: ${zuC(f)} °C.`);
+    return zuC(f);
+  }
+  function lies(s, sensor, f, zurueck, msg) {
+    s.ruf('UsWeatherSensor.readFahrenheit()', [['this', s.ref(sensor)]], 'public float readFahrenheit() { return fahrenheit; }', msg, { cur: [sensor], klassen: ['UsWeatherSensor'] });
+    s.raus(zurueck, `readFahrenheit() liefert ${zahl(f)} – in Fahrenheit, als float.`, { cur: [sensor] });
+  }
+
+  function lauf(s) {
+    erklaertPrintf = false;
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: Vier Sensoren werden angezeigt, dann wird der Mittelwert gebildet.');
+    const us = s.neu('UsWeatherSensor', [['fahrenheit', '77.0']]);
+    s.var('usSensor', s.ref(us));
+    s.schritt('UsWeatherSensor usSensor = new UsWeatherSensor(77f);',
+      `${us} aus der fremden Bibliothek misst 77 °F. Er hat readFahrenheit(), aber kein celsius() – zum Client passt er so nicht.`);
+
+    // 1. eigener Sensor, passt schon
+    const innen = s.neu('InnenSensor', [['wert', '21.5']]);
+    s.schritt('anzeigen("Innen:", new InnenSensor(21.5));', `${innen} implementiert Temperatursensor selbst – er braucht keinen Adapter.`);
+    anzeigen(s, 'Innen:', innen, 'anzeigen("Innen:", new InnenSensor(21.5));', () => {
+      s.ruf('InnenSensor.celsius()', [['this', s.ref(innen)]], 'public double celsius() { return wert; }', 'InnenSensor.celsius() gibt einfach seinen Wert zurück.', { cur: [innen] });
+      s.raus(PRINTF, 'celsius() liefert 21.5.', { cur: [innen] });
+      return 21.5;
+    });
+    s.weg(innen);
+
+    // 2. Objekt-Adapter
+    const oa = s.neu('UsSensorAdapter', [['sensor', s.ref(us)]]);
+    s.schritt('anzeigen("Objekt-Adapter:", new UsSensorAdapter(usSensor));',
+      `Der Objekt-Adapter ${oa} bekommt den fremden Sensor übergeben und hält ihn als Feld – Komposition. Zwei Objekte arbeiten zusammen.`, { cur: [us] });
+    anzeigen(s, 'Objekt-Adapter:', oa, 'anzeigen("Objekt-Adapter:", new UsSensorAdapter(usSensor));', () => {
+      s.ruf('UsSensorAdapter.celsius()', [['this', s.ref(oa)]], 'return fahrenheitZuCelsius(sensor.readFahrenheit());',
+        'Der Adapter übersetzt: Er fragt den fremden Sensor in dessen eigener Sprache.', { cur: [oa] });
+      lies(s, us, 77, 'return fahrenheitZuCelsius(sensor.readFahrenheit());', `Der Aufruf geht weiter an ${us} – das ist die Delegation.`);
+      const c = umrechnen(s, 77, 'return fahrenheitZuCelsius(sensor.readFahrenheit());');
+      s.raus(PRINTF, `celsius() liefert ${c.toFixed(1)}. Für den Client sah der fremde Sensor aus wie jeder andere.`, { cur: [oa] });
+      return c;
+    });
+    s.weg(oa);
+
+    // 3. Klassen-Adapter
+    const f98 = float(98.6);
+    s.schritt('anzeigen("Klassen-Adapter:", new UsSensorKlassenAdapter(98.6f));', 'Der Klassen-Adapter erbt vom fremden Sensor.', { klassen: ['UsSensorKlassenAdapter'] });
+    s.ruf('UsSensorKlassenAdapter(float fahrenheit)', [['fahrenheit', '98.6']], 'UsSensorKlassenAdapter(float fahrenheit) { super(fahrenheit); }',
+      'Sein Konstruktor reicht den Wert mit super(...) an den Konstruktor von UsWeatherSensor weiter.', { klassen: ['UsSensorKlassenAdapter', 'UsWeatherSensor'] });
+    const ka = s.neu('UsSensorKlassenAdapter', [['fahrenheit', '98.6  (geerbt)']]);
+    s.schritt('UsSensorKlassenAdapter(float fahrenheit) { super(fahrenheit); }', `${ka} ist ein einziges Objekt: zugleich UsWeatherSensor (geerbt) und Temperatursensor. Ein zweites Objekt gibt es hier nicht.`);
+    s.raus('anzeigen("Klassen-Adapter:", new UsSensorKlassenAdapter(98.6f));', 'Fertig gebaut.', { cur: [ka] });
+    anzeigen(s, 'Klassen-Adapter:', ka, 'anzeigen("Klassen-Adapter:", new UsSensorKlassenAdapter(98.6f));', () => {
+      s.ruf('UsSensorKlassenAdapter.celsius()', [['this', s.ref(ka)]], 'return fahrenheitZuCelsius(readFahrenheit());',
+        'Der Klassen-Adapter ruft readFahrenheit() auf sich selbst auf – die Methode hat er geerbt.', { cur: [ka] });
+      s.ruf('UsWeatherSensor.readFahrenheit() – geerbt', [['this', s.ref(ka)]], 'public float readFahrenheit() { return fahrenheit; }',
+        'Es läuft die geerbte Methode aus UsWeatherSensor, this ist derselbe Klassen-Adapter.', { cur: [ka], klassen: ['UsWeatherSensor'] });
+      s.raus('return fahrenheitZuCelsius(readFahrenheit());', 'readFahrenheit() liefert 98.6 (als float).', { cur: [ka] });
+      const c = umrechnen(s, f98, 'return fahrenheitZuCelsius(readFahrenheit());');
+      s.raus(PRINTF, `celsius() liefert ${c} – printf rundet auf 37.0.`, { cur: [ka] });
+      return c;
+    });
+    s.weg(ka);
+
+    // 4. Lambda als Adapter
+    const la = s.neu('Lambda', [['fängt ein', `usSensor ${s.ref(us)}`]], 'Lambda (Temperatursensor)');
+    s.var('lambdaAdapter', s.ref(la));
+    s.schritt('Temperatursensor lambdaAdapter =',
+      'Temperatursensor hat nur eine abstrakte Methode – ein funktionales Interface. Darum genügt ein Lambda als Adapter, ohne eigene Klasse. Es merkt sich usSensor.', { klassen: ['Lambda'] });
+    anzeigen(s, 'Lambda-Adapter:', la, 'anzeigen("Lambda-Adapter:", lambdaAdapter);', () => {
+      s.ruf('Lambda: celsius()', [['usSensor', s.ref(us)]], 'Temperatursensor lambdaAdapter =', 'Der Rumpf des Lambdas ist die Methode celsius().', { cur: [la] });
+      lies(s, us, 77, 'Temperatursensor lambdaAdapter =', `Wieder fragt jemand ${us} – derselbe Sensor wie beim Objekt-Adapter.`);
+      const c = umrechnen(s, 77, 'Temperatursensor lambdaAdapter =');
+      s.raus(PRINTF, `celsius() liefert ${c.toFixed(1)}.`, { cur: [la] });
+      return c;
+    });
+
+    // alle einheitlich
+    const i2 = s.neu('InnenSensor', [['wert', '19.0']]);
+    s.schritt('new InnenSensor(19.0),', `Für die Liste: ${i2}.`);
+    const u2 = s.neu('UsWeatherSensor', [['fahrenheit', '50.0']]);
+    const a2 = s.neu('UsSensorAdapter', [['sensor', s.ref(u2)]]);
+    s.schritt('new UsSensorAdapter(new UsWeatherSensor(50f)),', `${u2} misst 50 °F und steckt gleich in ${a2}.`);
+    const liste = [i2, a2, la];
+    s.var('alle', `[${liste.map(s.ref).join(', ')}]`);
+    s.schritt('List<Temperatursensor> alle = List.of(', 'Drei ganz verschiedene Objekte in einer Liste vom Typ Temperatursensor – dank der Adapter passen alle hinein.', { klassen: ['Temperatursensor'] });
+    const werte = [19.0, zuC(50), zuC(77)];
+    liste.forEach((o, i) => s.schritt('double mittel = alle.stream()', `celsius() von ${o}: ${werte[i].toFixed(1)} °C.`, { cur: [o] }));
+    const mittel = werte.reduce((a, b) => a + b, 0) / werte.length;
+    s.var('mittel', zahl(mittel));
+    s.schritt('double mittel = alle.stream()', `Mittelwert: (19.0 + 10.0 + 25.0) / 3 = ${mittel.toFixed(1)}.`);
+    s.aus(`Mittelwert:      ${mittel.toFixed(1).padStart(5)} °C`);
+    s.schritt('System.out.printf("Mittelwert:', 'Ausgabe des Mittelwerts.');
+    s.weg(i2, u2, a2, la);
+    s.raus(['System.out.printf("Mittelwert:', 1], 'main ist zu Ende. Weder die eigene Anwendung noch die fremde Bibliothek musste geändert werden.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Target', 'Adapter', 'Adaptee', 'passt schon'],
+    diagramm: {
+      breite: 190, abstandX: 30, abstandY: 50,
+      klassen: [
+        { name: 'anzeigen()', art: 'Methode', rolle: 'Client', x: 1.5, y: 0 },
+        { name: 'Temperatursensor', art: 'interface', rolle: 'Target', x: 1.5, y: 1 },
+        { name: 'InnenSensor', art: 'record', rolle: 'passt schon', x: 0, y: 2 },
+        { name: 'UsSensorAdapter', art: 'record', rolle: 'Adapter', x: 1, y: 2 },
+        { name: 'UsSensorKlassenAdapter', art: 'class', rolle: 'Adapter', x: 2, y: 2 },
+        { name: 'Lambda', art: 'Lambda', rolle: 'Adapter', x: 3, y: 2 },
+        { name: 'UsWeatherSensor', art: 'class', rolle: 'Adaptee', x: 1.5, y: 3 }
+      ],
+      kanten: [
+        { von: 'anzeigen()', zu: 'Temperatursensor', art: 'nutzt', text: 'nutzt', dx: 22 },
+        { von: 'InnenSensor', zu: 'Temperatursensor', art: 'impl' }, { von: 'UsSensorAdapter', zu: 'Temperatursensor', art: 'impl' },
+        { von: 'UsSensorKlassenAdapter', zu: 'Temperatursensor', art: 'impl' }, { von: 'Lambda', zu: 'Temperatursensor', art: 'impl' },
+        { von: 'UsSensorAdapter', zu: 'UsWeatherSensor', art: 'nutzt', text: 'sensor', dx: -26 },
+        { von: 'UsSensorKlassenAdapter', zu: 'UsWeatherSensor', art: 'erbt', text: 'extends', dx: 30 },
+        { von: 'Lambda', zu: 'UsWeatherSensor', art: 'nutzt', text: 'usSensor', dy: 14 }
+      ]
+    },
+    szenarien: [
+      { name: 'java Adapter.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

@@ -60,6 +60,7 @@ gruppe = "struktur"
 schluessel = "adapter"
 name = "Adapter"
 text = "inkompatible Schnittstelle an erwartete anpassen"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Der Client anzeigen() ruft immer nur celsius() auf. Was dahinter passiert, zeigt der Aufrufstapel: Beim Objekt-Adapter geht der Aufruf an ein zweites Objekt weiter, beim Klassen-Adapter läuft die geerbte Methode auf demselben Objekt, beim Lambda reicht ein einziger Ausdruck. Die Zahlen stehen wie auf der Seite mit Punkt, auf einem deutsch eingestellten Rechner schreibt printf ein Komma."
 
 [[muster]]
 nummer = 7
