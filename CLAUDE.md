@@ -144,7 +144,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- Design Patterns 6 Adapter mit Ablauf: `content/it-konzepte/design-patterns/adapter.md`, `static/apps/muster/adapter{.html,-code.js}`, `data/designpatterns.toml` (`sogehts`), `skripte/pattern-einlesen.pl` (zweiter Java-Lauf mit englischer Spracheinstellung)
+- (leer – zuletzt freigegeben und gepusht am 2026-10-26: Design Patterns 6 Adapter mit Ablauf)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
