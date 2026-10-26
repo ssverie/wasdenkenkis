@@ -143,7 +143,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- Umbau Wissen › IT-Konzepte mit drei Kacheln (Grundlagen, Algorithmen, Design Patterns): `hugo.toml`, `content/wissen/it/_index.md`, `content/it-konzepte/_index.md`, `content/it-konzepte/algorithmen/_index.md`, `content/it-konzepte/design-patterns/_index.md`, `layouts/begriffe-uebersicht.html`, `layouts/_partials/header.html`, `skripte/begriffe-erzeugen.pl`
+- (leer – zuletzt freigegeben und gepusht am 2026-10-26: Umbau Wissen › IT-Konzepte mit drei Kacheln)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
