@@ -1,0 +1,36 @@
+{{- /* Design Patterns (/it-konzepte/design-patterns/): die 23 GoF-Muster aus data/designpatterns.toml in drei Gruppen.
+       Ein Name wird zum Link, sobald die Seite /it-konzepte/design-patterns/<schluessel>/ existiert (wie bei den Buchlisten). */ -}}
+{{ define "main" }}
+<article class="beitrag">
+  <header class="seitenkopf">
+    {{- with .Params.oben }}{{ with site.GetPage . }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}
+    <h1>{{ .Title }}</h1>
+    {{- with .Description }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+  </header>
+  {{ partial "herkunft.html" . }}
+  <div class="inhalt">
+    {{ .Content }}
+    {{- $muster := hugo.Data.designpatterns.muster }}
+    {{- range hugo.Data.designpatterns.gruppe }}
+    <h2>{{ .name }}</h2>
+    <ol class="muster-liste">
+      {{- range where $muster "gruppe" .schluessel }}
+      <li value="{{ .nummer }}">
+        {{- with site.GetPage (printf "/it-konzepte/design-patterns/%s" .schluessel) }}
+        <strong><a href="{{ .RelPermalink }}">{{ .Title }}</a></strong>
+        {{- else }}
+        <strong>{{ .name }}</strong>
+        {{- end }}: {{ .text }}
+        {{- if not (site.GetPage (printf "/it-konzepte/design-patterns/%s" .schluessel)) }} <span class="meta">(folgt)</span>{{ end }}
+      </li>
+      {{- end }}
+    </ol>
+    {{- end }}
+    {{- with .Params.schluss }}
+    <p>{{ . }}</p>
+    {{- end }}
+  </div>
+</article>
+{{ end }}

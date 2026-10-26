@@ -44,12 +44,13 @@
   <span>{{ with $nach }}<a href="{{ .RelPermalink }}">{{ .Params.staffel }}.{{ .Params.folge }} {{ .Params.folgentitel }} →</a>{{ end }}</span>
 </nav>
 {{- end }}
-{{- /* Algorithmen: statt „Weitere Texte zu Algorithmen“ (Buch) nur der Rückweg zur Übersicht (Sven, 2026-10-26) */}}
-{{- $algo := eq .CurrentSection.RelPermalink "/it-konzepte/algorithmen/" }}
+{{- /* Algorithmen: statt „Weitere Texte zu Algorithmen“ (Buch) nur der Rückweg zur Übersicht (Sven, 2026-10-26); Design Patterns ebenso */}}
+{{- $rueckweg := dict "/it-konzepte/algorithmen/" "Alle Algorithmen" "/it-konzepte/design-patterns/" "Alle Design Patterns" }}
+{{- $algo := isset $rueckweg .CurrentSection.RelPermalink }}
 {{- if $algo }}
 <nav class="folgen-nav" aria-label="Zurück">
   <span></span>
-  <a href="{{ .CurrentSection.RelPermalink }}">← Alle Algorithmen</a>
+  <a href="{{ .CurrentSection.RelPermalink }}">← {{ index $rueckweg .CurrentSection.RelPermalink }}</a>
   <span></span>
 </nav>
 {{- end }}

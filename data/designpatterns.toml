@@ -1,0 +1,176 @@
+# Die 23 GoF-Entwurfsmuster – Liste der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (Claude Opus 5.5),
+# Wortlaut wie geliefert (input-arc/2026-10-26/Claude/design-patterns/toc.txt), Nummer = Reihenfolge der Liste.
+# Ein Name wird auf der Übersicht zum Link, sobald es die Seite /it-konzepte/design-patterns/<schluessel>/ gibt.
+
+[[gruppe]]
+schluessel = "erzeugung"
+name = "Erzeugungsmuster (Creational), 5"
+
+[[gruppe]]
+schluessel = "struktur"
+name = "Strukturmuster (Structural), 7"
+
+[[gruppe]]
+schluessel = "verhalten"
+name = "Verhaltensmuster (Behavioral), 11"
+
+[[muster]]
+nummer = 1
+gruppe = "erzeugung"
+schluessel = "abstract-factory"
+name = "Abstract Factory"
+text = "Familien verwandter Objekte erzeugen, ohne konkrete Klassen zu nennen"
+
+[[muster]]
+nummer = 2
+gruppe = "erzeugung"
+schluessel = "builder"
+name = "Builder"
+text = "komplexe Objekte schrittweise aufbauen, Konstruktion von Repräsentation getrennt"
+
+[[muster]]
+nummer = 3
+gruppe = "erzeugung"
+schluessel = "factory-method"
+name = "Factory Method"
+text = "Unterklassen entscheiden, welche Klasse instanziiert wird"
+
+[[muster]]
+nummer = 4
+gruppe = "erzeugung"
+schluessel = "prototype"
+name = "Prototype"
+text = "neue Objekte durch Klonen eines Prototyps"
+
+[[muster]]
+nummer = 5
+gruppe = "erzeugung"
+schluessel = "singleton"
+name = "Singleton"
+text = "genau eine Instanz mit globalem Zugriffspunkt"
+
+[[muster]]
+nummer = 6
+gruppe = "struktur"
+schluessel = "adapter"
+name = "Adapter"
+text = "inkompatible Schnittstelle an erwartete anpassen"
+
+[[muster]]
+nummer = 7
+gruppe = "struktur"
+schluessel = "bridge"
+name = "Bridge"
+text = "Abstraktion und Implementierung entkoppeln, beide unabhängig variierbar"
+
+[[muster]]
+nummer = 8
+gruppe = "struktur"
+schluessel = "composite"
+name = "Composite"
+text = "Teil-Ganzes-Hierarchien als Baum, Einzel- und Gruppenobjekte gleich behandeln"
+
+[[muster]]
+nummer = 9
+gruppe = "struktur"
+schluessel = "decorator"
+name = "Decorator"
+text = "Verhalten dynamisch hinzufügen durch Umhüllen"
+
+[[muster]]
+nummer = 10
+gruppe = "struktur"
+schluessel = "facade"
+name = "Facade"
+text = "vereinfachte Schnittstelle zu einem Subsystem"
+
+[[muster]]
+nummer = 11
+gruppe = "struktur"
+schluessel = "flyweight"
+name = "Flyweight"
+text = "viele feingranulare Objekte effizient teilen (intrinsischer vs. extrinsischer Zustand)"
+
+[[muster]]
+nummer = 12
+gruppe = "struktur"
+schluessel = "proxy"
+name = "Proxy"
+text = "Stellvertreter, der den Zugriff auf ein Objekt kontrolliert"
+
+[[muster]]
+nummer = 13
+gruppe = "verhalten"
+schluessel = "chain-of-responsibility"
+name = "Chain of Responsibility"
+text = "Anfrage entlang einer Kette von Handlern weiterreichen"
+
+[[muster]]
+nummer = 14
+gruppe = "verhalten"
+schluessel = "command"
+name = "Command"
+text = "Anfrage als Objekt kapseln (Undo, Queues, Logging)"
+
+[[muster]]
+nummer = 15
+gruppe = "verhalten"
+schluessel = "interpreter"
+name = "Interpreter"
+text = "Grammatik einer Sprache als Klassenhierarchie abbilden und auswerten"
+
+[[muster]]
+nummer = 16
+gruppe = "verhalten"
+schluessel = "iterator"
+name = "Iterator"
+text = "sequenzieller Zugriff auf Elemente ohne Offenlegung der Struktur"
+
+[[muster]]
+nummer = 17
+gruppe = "verhalten"
+schluessel = "mediator"
+name = "Mediator"
+text = "zentrales Objekt steuert die Kommunikation zwischen Kollegen"
+
+[[muster]]
+nummer = 18
+gruppe = "verhalten"
+schluessel = "memento"
+name = "Memento"
+text = "Zustand externalisieren und wiederherstellen, ohne Kapselung zu brechen"
+
+[[muster]]
+nummer = 19
+gruppe = "verhalten"
+schluessel = "observer"
+name = "Observer"
+text = "Abhängige werden bei Zustandsänderung automatisch benachrichtigt"
+
+[[muster]]
+nummer = 20
+gruppe = "verhalten"
+schluessel = "state"
+name = "State"
+text = "Verhalten ändert sich mit dem internen Zustand (Zustand als Objekt)"
+
+[[muster]]
+nummer = 21
+gruppe = "verhalten"
+schluessel = "strategy"
+name = "Strategy"
+text = "austauschbare Algorithmen hinter gemeinsamer Schnittstelle"
+
+[[muster]]
+nummer = 22
+gruppe = "verhalten"
+schluessel = "template-method"
+name = "Template Method"
+text = "Algorithmusgerüst in der Oberklasse, Schritte in Unterklassen"
+
+[[muster]]
+nummer = 23
+gruppe = "verhalten"
+schluessel = "visitor"
+name = "Visitor"
+text = "neue Operationen auf einer Objektstruktur definieren, ohne deren Klassen zu ändern"

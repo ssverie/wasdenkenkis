@@ -72,6 +72,18 @@ code {
   padding: 0.1em 0.35em;
   border-radius: 4px;
 }
+/* Codeblöcke im Text (seit 2026-10-26 für die Design Patterns): waagerecht scrollen statt umbrechen */
+.inhalt pre {
+  background: var(--code-bg);
+  border: 1px solid var(--linie);
+  border-radius: var(--radius);
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  line-height: 1.45;
+}
+.inhalt pre code { background: none; padding: 0; font-size: 0.85rem; }
+@media (max-width: 520px) { .inhalt pre { padding: 0.7rem 0.75rem; } .inhalt pre code { font-size: 0.75rem; } }
+.muster-liste li { margin: 0.35rem 0; }
 
 /* Kopf */
 .site-header {
