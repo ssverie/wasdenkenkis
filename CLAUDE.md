@@ -145,7 +145,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- IT-Übungen: Blätter „Gedächtnis & Wissen“ und „Kreativ & exploratives Testen“ (`data/uebungen/{wissen,explorativ}.json`, `content/it-konzepte/uebungen/{wissen,explorativ}.md`), Code-Szenarien eingefärbt, Testideen-Feld mit Musterliste (`layouts/uebung.html`, `assets/js/uebungen.js`, `main.css`), Herkunft wie bisher (Sven: „7+8“)
+- (leer – zuletzt freigegeben und gepusht am 2026-10-26: IT-Übungen „Gedächtnis & Wissen“ und „Kreativ & exploratives Testen“, alle 8 Kategorien belegt)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
