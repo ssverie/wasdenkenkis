@@ -1,0 +1,418 @@
+{
+  "version": 1,
+  "category": "grundlagen",
+  "language": "de",
+  "description": "Logik & Informatik-Grundlagen: Boolesche Ausdrücke, Big-O, Bit-Operationen, Regex, SQL. Geprüft per Wahrheitstabelle, Schleifenzählung, OpenJDK 21 und SQLite.",
+  "tasks": [
+    {
+      "id": "log-001",
+      "category": "grundlagen",
+      "title": "De Morgan",
+      "difficulty": 1,
+      "topics": [
+        "Boolesche Logik"
+      ],
+      "scenario": "Ausdruck: !(a && b)",
+      "question": "Welcher Ausdruck ist gleichwertig?",
+      "options": [
+        "!a || !b",
+        "!a && !b",
+        "!a && b",
+        "a || b"
+      ],
+      "correctIndex": 0,
+      "answer": "!a || !b",
+      "explanation": "Regel von De Morgan: Die Negation eines UND wird zum ODER der Negationen. „Nicht beide“ heißt „mindestens einer nicht“. Häufiger Fehler beim Umschreiben von if-Bedingungen: !a && !b, das wäre „keiner von beiden“."
+    },
+    {
+      "id": "log-002",
+      "category": "grundlagen",
+      "title": "Vereinfachen",
+      "difficulty": 2,
+      "topics": [
+        "Boolesche Logik"
+      ],
+      "scenario": "Ausdruck: (a && b) || (a && !b)",
+      "question": "Worauf lässt sich der Ausdruck vereinfachen?",
+      "options": [
+        "a && b",
+        "true",
+        "b",
+        "a"
+      ],
+      "correctIndex": 3,
+      "answer": "a",
+      "explanation": "a ausklammern: a && (b || !b). Da b || !b immer wahr ist, bleibt a. In echtem Code findet man so überflüssige Prüfungen, die nur die Lesbarkeit verschlechtern."
+    },
+    {
+      "id": "log-003",
+      "category": "grundlagen",
+      "title": "Absorption",
+      "difficulty": 2,
+      "topics": [
+        "Boolesche Logik"
+      ],
+      "scenario": "Ausdruck: a || (a && b)",
+      "question": "Welcher Ausdruck ist gleichwertig?",
+      "options": [
+        "a && b",
+        "a || b",
+        "b",
+        "a"
+      ],
+      "correctIndex": 3,
+      "answer": "a",
+      "explanation": "Absorptionsgesetz: Ist a wahr, ist das Ganze wahr. Ist a falsch, ist auch a && b falsch. Das Ergebnis hängt also nur von a ab, b ist bedeutungslos."
+    },
+    {
+      "id": "log-004",
+      "category": "grundlagen",
+      "title": "Wahrheitstabelle zählen",
+      "difficulty": 2,
+      "topics": [
+        "Boolesche Logik"
+      ],
+      "scenario": "Ausdruck: (a || b) && !c",
+      "question": "In wie vielen der 8 Zeilen der Wahrheitstabelle ist der Ausdruck wahr?",
+      "options": [
+        "6",
+        "3",
+        "4",
+        "2"
+      ],
+      "correctIndex": 1,
+      "answer": "3",
+      "explanation": "!c halbiert auf 4 Zeilen (c = falsch). Davon ist a || b in 3 Fällen wahr, nur a = b = falsch fällt weg. Ergebnis 3."
+    },
+    {
+      "id": "log-005",
+      "category": "grundlagen",
+      "title": "Zwei volle Schleifen",
+      "difficulty": 1,
+      "topics": [
+        "Komplexität",
+        "Big-O"
+      ],
+      "scenario": "Code:\nfor (int i = 0; i < n; i++) {\n    for (int j = 0; j < n; j++) {\n        count++;\n    }\n}",
+      "question": "Welche Laufzeitkomplexität hat der Code in Abhängigkeit von n?",
+      "options": [
+        "O(log n)",
+        "O(n²)",
+        "O(n)",
+        "O(n log n)"
+      ],
+      "correctIndex": 1,
+      "answer": "O(n²)",
+      "explanation": "Die innere Schleife läuft n-mal für jedes der n i. Insgesamt n · n Durchläufe. Doppelt so viele Daten bedeuten viermal so viel Arbeit."
+    },
+    {
+      "id": "log-006",
+      "category": "grundlagen",
+      "title": "Verdoppeln",
+      "difficulty": 2,
+      "topics": [
+        "Komplexität",
+        "Big-O"
+      ],
+      "scenario": "Code:\nfor (int i = 1; i < n; i *= 2) {\n    count++;\n}",
+      "question": "Welche Laufzeitkomplexität hat der Code in Abhängigkeit von n?",
+      "options": [
+        "O(n²)",
+        "O(n log n)",
+        "O(log n)",
+        "O(n)"
+      ],
+      "correctIndex": 2,
+      "answer": "O(log n)",
+      "explanation": "i verdoppelt sich in jedem Schritt: 1, 2, 4, 8 … Bis n erreicht ist, braucht es etwa log₂(n) Schritte. Bei einer Million sind das nur 20 Durchläufe. Genau so arbeitet die Binärsuche."
+    },
+    {
+      "id": "log-007",
+      "category": "grundlagen",
+      "title": "Dreieck-Schleife",
+      "difficulty": 2,
+      "topics": [
+        "Komplexität",
+        "Big-O"
+      ],
+      "scenario": "Code:\nfor (int i = 0; i < n; i++) {\n    for (int j = 0; j < i; j++) {\n        count++;\n    }\n}",
+      "question": "Welche Laufzeitkomplexität hat der Code in Abhängigkeit von n?",
+      "options": [
+        "O(n)",
+        "O(n²)",
+        "O(log n)",
+        "O(n log n)"
+      ],
+      "correctIndex": 1,
+      "answer": "O(n²)",
+      "explanation": "Die innere Schleife wird zwar immer länger, insgesamt sind es aber 0 + 1 + 2 + … + (n - 1) = n(n - 1)/2 Durchläufe. Konstante Faktoren wie ½ fallen bei Big-O weg, es bleibt O(n²). Der Code ist doppelt so schnell wie zwei volle Schleifen, wächst aber gleich."
+    },
+    {
+      "id": "log-008",
+      "category": "grundlagen",
+      "title": "Schleife mal Verdoppeln",
+      "difficulty": 3,
+      "topics": [
+        "Komplexität",
+        "Big-O"
+      ],
+      "scenario": "Code:\nfor (int i = 0; i < n; i++) {\n    for (int j = 1; j < n; j *= 2) {\n        count++;\n    }\n}",
+      "question": "Welche Laufzeitkomplexität hat der Code in Abhängigkeit von n?",
+      "options": [
+        "O(log n)",
+        "O(n)",
+        "O(n log n)",
+        "O(n²)"
+      ],
+      "correctIndex": 2,
+      "answer": "O(n log n)",
+      "explanation": "Außen n Durchläufe, innen jeweils log n. Zusammen n · log n. Das ist die Größenordnung guter Sortierverfahren wie Mergesort."
+    },
+    {
+      "id": "log-009",
+      "category": "grundlagen",
+      "title": "XOR",
+      "difficulty": 1,
+      "topics": [
+        "Bit-Operationen"
+      ],
+      "scenario": "Java-Ausdruck: 5 ^ 3",
+      "question": "Welchen Wert hat der Ausdruck?",
+      "options": [
+        "6",
+        "1",
+        "8",
+        "125"
+      ],
+      "correctIndex": 0,
+      "answer": "6",
+      "explanation": "^ ist in Java kein Potenzieren, sondern bitweises XOR. 101 XOR 011 = 110, also 6. Wer 125 erwartet, hat einen klassischen Denkfehler, der auch im echten Code vorkommt. Potenzen gehen mit Math.pow."
+    },
+    {
+      "id": "log-010",
+      "category": "grundlagen",
+      "title": "Vorzeichenloses Schieben",
+      "difficulty": 3,
+      "topics": [
+        "Bit-Operationen"
+      ],
+      "scenario": "Java-Ausdruck: -1 >>> 28",
+      "question": "Welchen Wert hat der Ausdruck?",
+      "options": [
+        "268435455",
+        "0",
+        "15",
+        "-1"
+      ],
+      "correctIndex": 2,
+      "answer": "15",
+      "explanation": "-1 besteht aus 32 Einsen. >>> schiebt nach rechts und füllt mit Nullen auf. Nach 28 Stellen bleiben 4 Einsen übrig: 1111 = 15. Mit >> (mit Vorzeichen) bliebe es -1."
+    },
+    {
+      "id": "log-011",
+      "category": "grundlagen",
+      "title": "Links schieben",
+      "difficulty": 2,
+      "topics": [
+        "Bit-Operationen",
+        "Überlauf"
+      ],
+      "scenario": "Java-Ausdruck: 1 << 31",
+      "question": "Welchen Wert hat der Ausdruck?",
+      "options": [
+        "2147483648",
+        "2147483647",
+        "0",
+        "-2147483648"
+      ],
+      "correctIndex": 3,
+      "answer": "-2147483648",
+      "explanation": "Die 1 landet im höchsten Bit, und das ist bei int das Vorzeichenbit. Ergebnis ist Integer.MIN_VALUE. 2147483648 passt nicht in einen int."
+    },
+    {
+      "id": "log-012",
+      "category": "grundlagen",
+      "title": "Bit-Trick",
+      "difficulty": 3,
+      "topics": [
+        "Bit-Operationen"
+      ],
+      "scenario": "Java-Ausdruck für n > 0:\n(n & (n - 1)) == 0",
+      "question": "Was prüft dieser Ausdruck?",
+      "options": [
+        "Ob n ungerade ist",
+        "Ob n kleiner als 1024 ist",
+        "Ob n eine Zweierpotenz ist",
+        "Ob n gerade ist"
+      ],
+      "correctIndex": 2,
+      "answer": "Ob n eine Zweierpotenz ist",
+      "explanation": "Eine Zweierpotenz hat genau ein gesetztes Bit, z. B. 8 = 1000. n - 1 = 0111 hat genau die anderen Bits. Das UND ergibt 0. Bei allen anderen Zahlen bleibt das höchste Bit stehen. Geprüft für alle n von 1 bis 4999."
+    },
+    {
+      "id": "log-013",
+      "category": "grundlagen",
+      "title": "Telefon-Muster",
+      "difficulty": 1,
+      "topics": [
+        "Regex"
+      ],
+      "scenario": "Regulärer Ausdruck: \\d{3}-\\d{4}\nGeprüft wird mit matches(), also die gesamte Zeichenkette.",
+      "question": "Welche Zeichenkette passt?",
+      "options": [
+        "12-34567",
+        "123 4567",
+        "123-4567",
+        "1234-567"
+      ],
+      "correctIndex": 2,
+      "answer": "123-4567",
+      "explanation": "\\d steht für eine Ziffer, {3} für genau drei Wiederholungen. Gefordert sind also exakt drei Ziffern, ein Bindestrich, vier Ziffern. Das Leerzeichen passt nicht auf den Bindestrich."
+    },
+    {
+      "id": "log-014",
+      "category": "grundlagen",
+      "title": "Großer Anfangsbuchstabe",
+      "difficulty": 2,
+      "topics": [
+        "Regex"
+      ],
+      "scenario": "Regulärer Ausdruck: [A-Z][a-z]+\nGeprüft wird mit matches(), also die gesamte Zeichenkette.",
+      "question": "Welche Zeichenkette passt?",
+      "options": [
+        "H",
+        "Hallo",
+        "HALLO",
+        "hallo"
+      ],
+      "correctIndex": 1,
+      "answer": "Hallo",
+      "explanation": "Ein Großbuchstabe, danach mindestens ein Kleinbuchstabe (+ heißt einmal oder öfter). „H“ scheitert am +, „HALLO“ an den großen Folgebuchstaben. Achtung: Umlaute wie „Ärger“ würden auch nicht passen, [A-Z] kennt nur A bis Z."
+    },
+    {
+      "id": "log-015",
+      "category": "grundlagen",
+      "title": "Punkt maskieren",
+      "difficulty": 2,
+      "topics": [
+        "Regex"
+      ],
+      "scenario": "Regulärer Ausdruck: .*\\.java\nGeprüft wird mit matches(), also die gesamte Zeichenkette.",
+      "question": "Welche Zeichenkette passt?",
+      "options": [
+        "Mainjava",
+        "Main.java",
+        "Main.javax",
+        "Main.JAVA"
+      ],
+      "correctIndex": 1,
+      "answer": "Main.java",
+      "explanation": "\\. ist ein echter Punkt, .* davor beliebige Zeichen. „Mainjava“ hat keinen Punkt, „Main.javax“ hört nicht auf .java auf (matches prüft die ganze Zeichenkette), „Main.JAVA“ scheitert an der Groß-/Kleinschreibung."
+    },
+    {
+      "id": "log-016",
+      "category": "grundlagen",
+      "title": "Gierige Quantoren",
+      "difficulty": 3,
+      "topics": [
+        "Regex"
+      ],
+      "scenario": "Regulärer Ausdruck: <.+>\nText: <b>fett</b>",
+      "question": "Was liefert der erste Treffer von find()?",
+      "options": [
+        "</b>",
+        "<b>fett</b>",
+        "<b>",
+        "fett"
+      ],
+      "correctIndex": 1,
+      "answer": "<b>fett</b>",
+      "explanation": "+ ist gierig: Es nimmt so viel wie möglich und gibt nur so weit nach, wie nötig. Vom ersten < bis zum letzten > passt alles. Für den kleinsten Treffer „<b>“ braucht man den genügsamen Quantor +? (also <.+?>)."
+    },
+    {
+      "id": "log-017",
+      "category": "grundlagen",
+      "title": "COUNT und NULL",
+      "difficulty": 1,
+      "topics": [
+        "SQL",
+        "NULL"
+      ],
+      "scenario": "Tabelle kunde:\nid | name  | email      | status   | bonus\n1  | Anna  | anna@x.de  | aktiv    | 100\n2  | Ben   | NULL       | inaktiv  | NULL\n3  | Clara | clara@x.de | NULL     | 200\n4  | David | NULL       | gesperrt | NULL\n5  | Eva   | eva@x.de   | aktiv    | NULL\n\nAbfrage:\nSELECT COUNT(*), COUNT(email) FROM kunde;",
+      "question": "Was liefert die Abfrage?",
+      "options": [
+        "3 und 3",
+        "5 und 3",
+        "5 und 2",
+        "5 und 5"
+      ],
+      "correctIndex": 1,
+      "answer": "5 und 3",
+      "explanation": "COUNT(*) zählt Zeilen, COUNT(spalte) nur Zeilen, in denen die Spalte nicht NULL ist. Zwei Kunden haben keine E-Mail, also 5 und 3."
+    },
+    {
+      "id": "log-018",
+      "category": "grundlagen",
+      "title": "Ungleich und NULL",
+      "difficulty": 3,
+      "topics": [
+        "SQL",
+        "NULL"
+      ],
+      "scenario": "Tabelle kunde:\nid | name  | email      | status   | bonus\n1  | Anna  | anna@x.de  | aktiv    | 100\n2  | Ben   | NULL       | inaktiv  | NULL\n3  | Clara | clara@x.de | NULL     | 200\n4  | David | NULL       | gesperrt | NULL\n5  | Eva   | eva@x.de   | aktiv    | NULL\n\nAbfrage:\nSELECT * FROM kunde WHERE status <> 'aktiv';",
+      "question": "Wie viele Zeilen liefert die Abfrage?",
+      "options": [
+        "5",
+        "2",
+        "3",
+        "1"
+      ],
+      "correctIndex": 1,
+      "answer": "2",
+      "explanation": "Ben (inaktiv) und David (gesperrt). Clara fehlt: NULL <> 'aktiv' ist nicht wahr, sondern UNKNOWN, und WHERE lässt nur wahre Zeilen durch. Wer auch Clara will, braucht OR status IS NULL. Einer der häufigsten SQL-Fehler."
+    },
+    {
+      "id": "log-019",
+      "category": "grundlagen",
+      "title": "Durchschnitt mit NULL",
+      "difficulty": 2,
+      "topics": [
+        "SQL",
+        "NULL",
+        "Aggregation"
+      ],
+      "scenario": "Tabelle kunde:\nid | name  | email      | status   | bonus\n1  | Anna  | anna@x.de  | aktiv    | 100\n2  | Ben   | NULL       | inaktiv  | NULL\n3  | Clara | clara@x.de | NULL     | 200\n4  | David | NULL       | gesperrt | NULL\n5  | Eva   | eva@x.de   | aktiv    | NULL\n\nAbfrage:\nSELECT AVG(bonus) FROM kunde;",
+      "question": "Was liefert die Abfrage?",
+      "options": [
+        "NULL",
+        "60",
+        "150",
+        "100"
+      ],
+      "correctIndex": 2,
+      "answer": "150",
+      "explanation": "AVG ignoriert NULL-Werte: (100 + 200) / 2 = 150, nicht (100 + 200) / 5 = 60. Sollen fehlende Boni als 0 zählen, braucht man AVG(COALESCE(bonus, 0)). Fachlich muss man klären, was gemeint ist."
+    },
+    {
+      "id": "log-020",
+      "category": "grundlagen",
+      "title": "LEFT JOIN zählen",
+      "difficulty": 2,
+      "topics": [
+        "SQL",
+        "JOIN"
+      ],
+      "scenario": "Tabelle kunde:\nid | name  | email      | status   | bonus\n1  | Anna  | anna@x.de  | aktiv    | 100\n2  | Ben   | NULL       | inaktiv  | NULL\n3  | Clara | clara@x.de | NULL     | 200\n4  | David | NULL       | gesperrt | NULL\n5  | Eva   | eva@x.de   | aktiv    | NULL\n\nTabelle bestellung:\nid | kunde_id\n1  | 1\n2  | 1\n3  | 3\n\nAbfrage:\nSELECT k.name, b.id\nFROM kunde k LEFT JOIN bestellung b ON b.kunde_id = k.id;",
+      "question": "Wie viele Zeilen liefert die Abfrage?",
+      "options": [
+        "6",
+        "8",
+        "5",
+        "3"
+      ],
+      "correctIndex": 0,
+      "answer": "6",
+      "explanation": "LEFT JOIN behält alle Kunden. Anna erscheint zweimal (zwei Bestellungen), Clara einmal, Ben, David und Eva je einmal mit NULL als Bestellung. 2 + 1 + 3 = 6. Ein INNER JOIN lieferte nur 3 Zeilen."
+    }
+  ]
+}

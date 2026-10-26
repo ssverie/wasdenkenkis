@@ -621,3 +621,4 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .aufgabe .szenario { margin: .5rem 0; padding: .6rem .9rem; border: 1px solid var(--linie); border-radius: 8px; background: var(--bg); }
 .aufgabe .szenario > p { margin: 0; white-space: pre-line; line-height: 1.55; }
 .aufgabe .szenario .highlight pre { margin: .5rem 0 0; }
+.aufgabe .szenario pre.szenario-tabelle { margin: 0; border: 0; padding: 0; background: none; white-space: pre; overflow-x: auto; font-size: .9rem; line-height: 1.5; }
