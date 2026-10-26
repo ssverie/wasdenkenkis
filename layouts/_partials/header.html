@@ -3,10 +3,10 @@
 {{- define "_partials/menue-aktiv.html" }}
   {{- $seite := .seite }}{{ $e := .eintrag }}
   {{- $aktiv := or ($seite.IsMenuCurrent "main" $e) ($seite.HasMenuCurrent "main" $e) }}
-  {{- /* Unterbereich mit eigenem Menüpunkt neben seinem Elternbereich (Wissen › Algorithmen liegt unter /it-konzepte/):
-         dort ist nur der eigene Punkt aktiv, nicht der Elternbereich */}}
-  {{- $eigene := dict "/it-konzepte" "/it-konzepte/algorithmen/" }}
-  {{- with index $eigene $e.PageRef }}{{ if hasPrefix $seite.RelPermalink . }}{{ $aktiv = false }}{{ end }}{{ end }}
+  {{- /* Unterbereiche mit eigenem Menüpunkt neben ihrem Elternbereich (IT-Konzepte › Algorithmen und › Design Patterns liegen
+         unter /it-konzepte/ = Grundlagen): dort ist nur der eigene Punkt aktiv, nicht die Grundlagen */}}
+  {{- $eigene := dict "/it-konzepte" (slice "/it-konzepte/algorithmen/" "/it-konzepte/design-patterns/") }}
+  {{- range index $eigene $e.PageRef }}{{ if hasPrefix $seite.RelPermalink . }}{{ $aktiv = false }}{{ end }}{{ end }}
   {{- if and (eq $seite.Kind "term") (eq $e.PageRef (printf "/%s" $seite.Data.Plural)) }}{{ $aktiv = true }}{{ end }}
   {{- /* Menüpunkt zeigt direkt auf diese Seite (z. B. Modelle › GPT = Steckbrief-Seite) */}}
   {{- if eq $e.URL $seite.RelPermalink }}{{ $aktiv = true }}{{ end }}

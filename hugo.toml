@@ -287,16 +287,30 @@ enableRobotsTXT = true
     parent = "wissen-ki"
     weight = 3
   [[menus.main]]
+    # IT-Konzepte seit 2026-10-26 als Gruppe unter Wissen (Sven: „3 Kacheln“): Grundlagen, Algorithmen, Design Patterns als dritte Ebene
     name = "IT-Konzepte"
     identifier = "it-konzepte"
-    pageRef = "/it-konzepte"
+    pageRef = "/wissen/it"
     parent = "wissen"
     weight = 44
   [[menus.main]]
+    name = "Grundlagen"
+    identifier = "it-grundlagen"
+    pageRef = "/it-konzepte"
+    parent = "it-konzepte"
+    weight = 1
+  [[menus.main]]
     name = "Algorithmen"
+    identifier = "it-algorithmen"
     pageRef = "/it-konzepte/algorithmen"
-    parent = "wissen"
-    weight = 45
+    parent = "it-konzepte"
+    weight = 2
+  [[menus.main]]
+    name = "Design Patterns"
+    identifier = "it-design-patterns"
+    pageRef = "/it-konzepte/design-patterns"
+    parent = "it-konzepte"
+    weight = 3
   [[menus.main]]
     name = "Sprachen"
     pageRef = "/sprachen"

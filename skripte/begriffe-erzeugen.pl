@@ -10,7 +10,7 @@ my $reihe  = shift // 'erklaert';
 my $quelle = "input/$reihe";
 # Die IT-Reihe der Instanz heißt „IT-Begriffe“ und verlinkt unter /it/ – auf der Seite ist das die Rubrik IT-Konzepte (/it-konzepte/)
 my %zielordner = (it => 'it-konzepte');
-my %titel_uebersicht = (erklaert => 'KI-Begriffe', it => 'IT-Konzepte');
+my %titel_uebersicht = (erklaert => 'KI-Begriffe', it => 'Grundlagen');   # IT: Kachel „Grundlagen“ unter IT-Konzepte (seit 2026-10-26)
 my $ziel   = "content/" . ($zielordner{$reihe} // $reihe);
 # Frühere Platzhalter-Unterbereiche von IT-Konzepte leiten auf den passenden Eintrag um (Adressen stabil halten)
 my %aliase = (
@@ -86,8 +86,8 @@ for my $b (@begriffe) {
   if (my $al = $aliase{$b}) { $fm .= "aliases = [" . join(', ', map { "\"$_\"" } @$al) . "]\n" if $reihe eq 'it'; }
   if ($istUebersicht) {
     $fm .= "aliases = [\"/erklaert/lesereihenfolge/\"]\n" if $reihe eq 'erklaert';
-    # Menügruppe bleibt (Wissen › IT-Konzepte › Algorithmen); die Übersicht nennt die Unterbereiche unter den Einträgen
-    $fm .= "menu_gruppe = \"it-konzepte\"\n" if $reihe eq 'it';
+    # Seit 2026-10-26 ist die IT-Übersicht die Kachel „Grundlagen“ unter Wissen › IT-Konzepte (/wissen/it/);
+    # Rückweg und Menü stehen im Template bzw. in hugo.toml, nicht hier
     $fm .= "layout = \"begriffe-uebersicht\"\n";
   }
   $fm .= "stile = [\"stil.css\"]\n" if defined $css;
