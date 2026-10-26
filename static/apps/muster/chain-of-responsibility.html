@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chain of Responsibility – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Chain of Responsibility (GoF-Verhaltensmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (chain-of-responsibility-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="chain-of-responsibility-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  const ANTRAEGE = [['Anna', 'Fachbuch', 60], ['Ben', 'Schulung', 1800], ['Cem', 'Server', 22000], ['Dora', 'Firmenwagen', 80000]];
+  const STUFEN = [
+    { typ: 'Teamleiter', grenze: 500, zeile: 'return a.betragEuro() <= 500; }', lambda: '<= 500    ?', name: 'Teamleiter' },
+    { typ: 'Abteilungsleiter', grenze: 5000, zeile: 'return a.betragEuro() <= 5_000; }', lambda: '<= 5_000  ?', name: 'Abteilungsleiter' },
+    { typ: 'Geschaeftsfuehrer', grenze: 50000, zeile: 'return a.betragEuro() <= 50_000; }', lambda: '<= 50_000 ?', name: 'Geschäftsführer' }
+  ];
+  const zahl = n => n.toLocaleString('de-DE');
+  const str = t => `"${t}"`;
+  const MAIN = { klassen: ['main()'] };
+  // „for (Antrag a : antraege) {“ steht zweimal im Code – darum über die Zeilennummer
+  const FOR1 = window.MUSTER_CODE.findIndex(l => l.includes('for (Antrag a : antraege) {'));
+  const FOR2 = window.MUSTER_CODE.length - 1 - window.MUSTER_CODE.slice().reverse().findIndex(l => l.includes('for (Antrag a : antraege) {'));
+
+  function lauf(s) {
+    const gesehen = {};
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: Vier Anträge gehen durch eine Kette von Genehmigern.', MAIN);
+
+    // Kette von hinten nach vorn
+    const gf = s.neu('Geschaeftsfuehrer', [['nachfolger', 'null']]);
+    s.ruf('Geschaeftsfuehrer(Genehmiger n)', [['n', 'null']], 'Geschaeftsfuehrer(Genehmiger n) { super(n); }', `Die Kette entsteht von hinten nach vorn – Java wertet das innerste new zuerst aus: ${gf}, das letzte Glied, ohne Nachfolger.`, { cur: [gf] });
+    s.schritt('this.nachfolger = nachfolger;', 'Der Konstruktor der Oberklasse setzt das final-Feld nachfolger – hier null: Ende der Kette.', { cur: [gf], klassen: ['Genehmiger'] });
+    s.raus('Genehmiger kette = new Teamleiter(', `${gf} ist fertig.`, { cur: [gf] });
+    const al = s.neu('Abteilungsleiter', [['nachfolger', s.ref(gf)]]);
+    s.schritt('Genehmiger kette = new Teamleiter(', `${al} mit Nachfolger ${gf}.`, { cur: [al] });
+    const tl = s.neu('Teamleiter', [['nachfolger', s.ref(al)]]);
+    s.var('kette', s.ref(tl));
+    s.schritt('Genehmiger kette = new Teamleiter(', `${tl} vorne. main merkt sich nur ihn – den Anfang der Kette. Wie lang sie ist, weiß main nicht.`, { cur: [tl] });
+    const glieder = [tl, al, gf];
+
+    const antragIds = ANTRAEGE.map(([m, z, b]) => s.neu('Antrag', [['mitarbeiter', str(m)], ['zweck', str(z)], ['betragEuro', String(b)]], `Antrag ${m}`));
+    s.var('antraege', `[${antragIds.map(s.ref).join(', ')}]`);
+    s.schritt('List<Antrag> antraege = List.of(', 'Vier Anträge als records: 60 €, 1.800 €, 22.000 € und 80.000 €.', MAIN);
+
+    // bearbeite() rekursiv durch die Kette
+    function bearbeite(s, stufe, aId, betrag, zurueck) {
+      const st = STUFEN[stufe], h = glieder[stufe];
+      const wartet = glieder.slice(0, stufe);            // Glieder, die auf die Antwort warten, leuchten mit
+      s.ruf('Genehmiger.bearbeite(Antrag a)', [['this', s.ref(h)], ['a', s.ref(aId)]], 'if (zustaendig(a)) {',
+        stufe === 0 ? `kette.bearbeite(a): Der Antrag landet beim ersten Glied, ${h}. bearbeite() steht in der Oberklasse und ist final – für alle gleich.` : `${h}.bearbeite(a): das nächste Glied.`, { cur: [h, aId, ...wartet], klassen: ['Genehmiger'] });
+      const ja = betrag <= st.grenze;
+      if (!gesehen[st.typ]) {
+        s.ruf(`${st.typ}.zustaendig(Antrag a)`, [['this', s.ref(h)], ['a', s.ref(aId)]], st.zeile,
+          `zustaendig() ist abstrakt – hier antwortet die Unterklasse ${st.typ}: ${zahl(betrag)} <= ${zahl(st.grenze)}? ${ja ? 'ja' : 'nein'}.`, { cur: [h, ...wartet] });
+        s.raus('if (zustaendig(a)) {', ja ? 'Zuständig.' : 'Nicht zuständig.', { cur: [h, ...wartet], klassen: ['Genehmiger'] });
+        gesehen[st.typ] = true;
+      } else {
+        s.schritt('if (zustaendig(a)) {', `${st.typ}.zustaendig(): ${zahl(betrag)} <= ${zahl(st.grenze)}? ${ja ? 'ja' : 'nein'}.`, { cur: [h, ...wartet], klassen: ['Genehmiger', st.typ] });
+      }
+      let erg;
+      if (ja) {
+        erg = `${st.typ} genehmigt`;
+        s.schritt('return getClass().getSimpleName() + " genehmigt";', `${h} genehmigt selbst – die Kette endet hier. getClass().getSimpleName() liefert den Klassennamen „${st.typ}“.`, { cur: [h, ...wartet] });
+      } else if (stufe === STUFEN.length - 1) {
+        s.schritt('if (nachfolger == null) {', `Nicht zuständig – und nachfolger ist null: ${h} ist das letzte Glied.`, { cur: [h, ...wartet] });
+        erg = 'abgelehnt, niemand zuständig';
+        s.schritt('return "abgelehnt, niemand zuständig";', 'Niemand in der Kette fühlt sich zuständig → abgelehnt.', { cur: [h, ...wartet] });
+      } else {
+        s.schritt('if (nachfolger == null) {', `Nicht zuständig, aber es gibt einen Nachfolger: ${glieder[stufe + 1]}.`, { cur: [h, glieder[stufe + 1], ...wartet] });
+        s.aus(`    ${st.typ} gibt weiter ...`);
+        s.schritt('" gibt weiter ...");', `${h} gibt den Antrag weiter – ohne zu wissen, wer danach kommt oder wie es ausgeht.`, { cur: [h, ...wartet] });
+        erg = bearbeite(s, stufe + 1, aId, betrag, 'return nachfolger.bearbeite(a);');
+        if (stufe === 0) s.aus(`    => ${erg}`);           // println läuft erst, wenn das Ergebnis zurück ist
+        s.raus(zurueck, stufe === 0 ? `Das Ergebnis „${erg}“ kommt durch die Kette zurück zu main.` : `„${erg}“ geht zurück an das vorige Glied.`, zurueck === 'return nachfolger.bearbeite(a);' ? { cur: [glieder[stufe - 1]] } : MAIN);
+        return erg;
+      }
+      if (stufe === 0) s.aus(`    => ${erg}`);
+      s.raus(zurueck, stufe === 0 ? `„${erg}“ geht direkt zurück an main.` : `„${erg}“ geht zurück an das vorige Glied.`, stufe === 0 ? MAIN : { cur: [glieder[stufe - 1]] });
+      return erg;
+    }
+
+    ANTRAEGE.forEach(([m, z, b], n) => {
+      const aId = antragIds[n];
+      s.var('a', s.ref(aId));
+      s.schritt(FOR1, n === 0 ? `Erster Antrag: ${m}, ${zahl(b)} €.` : `Nächster Antrag: ${m}, ${zahl(b)} €.`, { cur: [aId], klassen: ['main()'] });
+      s.aus(`${m}: ${z}, ${zahl(b)} €`);
+      s.schritt('System.out.printf(Locale.GERMANY, "%s: %s', `printf mit %,d: ${zahl(b)} mit Tausenderpunkt.`, MAIN);
+      bearbeite(s, 0, aId, b, 'System.out.println("    => " + kette.bearbeite(a));');
+    });
+
+    s.var('a', '–');
+    // ---------- funktionale Variante ----------
+    s.aus('\nFunktionale Kette:');
+    s.schritt('Funktionale Kette:");', 'Jetzt dieselbe Kette als Liste von Funktionen. (a galt nur in der Schleife.)', MAIN);
+    const lam = STUFEN.map(st => s.neu('Function', [['prüft', `≤ ${zahl(st.grenze)} → „${st.name}“`]], `Lambda ≤ ${zahl(st.grenze)}`));
+    s.var('handler', `[${lam.map(s.ref).join(', ')}]`);
+    s.schritt('List<Function<Antrag, Optional<String>>> handler = List.of(', 'Drei Lambdas. Jedes liefert ein Optional: gefüllt mit dem Namen, wenn es zuständig ist, sonst leer. Diesmal mit Umlauten im Namen – oben kam der Klassenname „Geschaeftsfuehrer“ von getClass().', { cur: lam });
+
+    ANTRAEGE.forEach(([m, z, b], n) => {
+      const aId = antragIds[n];
+      s.var('a', s.ref(aId));
+      s.schritt(FOR2, `${z}, ${zahl(b)} €.`, { cur: [aId], klassen: ['main()'] });
+      const treffer = STUFEN.findIndex(st => b <= st.grenze);
+      const detail = n === 0 || n === ANTRAEGE.length - 1;
+      if (detail) {
+        s.schritt('String ergebnis = handler.stream()', n === 0
+          ? 'Ein Stream über die Lambdas. Streams sind verzögert: Jedes Lambda läuft erst, wenn findFirst() nach dem nächsten Element fragt.'
+          : 'Wieder der Stream – diesmal ohne Treffer.', MAIN);
+        const bis = treffer < 0 ? STUFEN.length : treffer + 1;
+        for (let i = 0; i < bis; i++) {
+          const st = STUFEN[i], ok = b <= st.grenze;
+          s.schritt(st.lambda, `${lam[i]}: ${zahl(b)} <= ${zahl(st.grenze)}? ${ok ? `ja → Optional[${st.name}]` : 'nein → Optional.empty()'}.`, { cur: [lam[i]] });
+        }
+        if (treffer >= 0) {
+          s.schritt('.findFirst()', `findFirst() hat einen Treffer – ${STUFEN.length - 1 - treffer === 0 ? 'fertig' : `die übrigen ${STUFEN.length - 1 - treffer} Lambdas laufen gar nicht erst`}.`, MAIN);
+          s.var('ergebnis', str(`${STUFEN[treffer].name} genehmigt`));
+          s.schritt('.map(wer -> wer + " genehmigt")', `ergebnis = „${STUFEN[treffer].name} genehmigt“.`, MAIN);
+        } else {
+          s.schritt('.findFirst()', 'Alle drei Optionals waren leer – findFirst() liefert Optional.empty().', MAIN);
+          s.var('ergebnis', '"abgelehnt"');
+          s.schritt('.orElse("abgelehnt");', 'orElse greift: ergebnis = „abgelehnt“.', MAIN);
+        }
+      } else {
+        const erg = `${STUFEN[treffer].name} genehmigt`;
+        s.var('ergebnis', str(erg));
+        s.schritt('String ergebnis = handler.stream()', `Der Stream ruft ${treffer + 1} Lambda${treffer ? 's' : ''} auf, bis eines zuständig ist (hier in einem Schritt): ergebnis = „${erg}“.`, { cur: lam.slice(0, treffer + 1) });
+      }
+      const erg = treffer >= 0 ? `${STUFEN[treffer].name} genehmigt` : 'abgelehnt';
+      s.aus(`    ${(z + ':').padEnd(12)} ${erg}`);
+      s.schritt('System.out.printf("    %-12s %s%n"', '%-12s füllt den Zweck links auf 12 Zeichen auf, damit die Ergebnisse untereinander stehen.', MAIN);
+    });
+
+    s.weg(tl, al, gf, ...antragIds, ...lam);
+    s.raus(['System.out.printf("    %-12s %s%n"', 2], 'main ist zu Ende. Ein neues Glied (etwa ein Aufsichtsrat) wäre eine neue Klasse und eine Änderung an einer einzigen Zeile in main.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Handler', 'ConcreteHandler'],
+    diagramm: {
+      breite: 180, abstandX: 40, abstandY: 50, untenPlatz: 44,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1, y: 0 },
+        { name: 'Genehmiger', art: 'abstract class', rolle: 'Handler', x: 1, y: 1 },
+        { name: 'Teamleiter', art: 'final class', rolle: 'ConcreteHandler', x: 0, y: 2 },
+        { name: 'Abteilungsleiter', art: 'final class', rolle: 'ConcreteHandler', x: 1, y: 2 },
+        { name: 'Geschaeftsfuehrer', art: 'final class', rolle: 'ConcreteHandler', x: 2, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Genehmiger', art: 'nutzt', text: 'kette' },
+        { von: 'Teamleiter', zu: 'Genehmiger', art: 'erbt' }, { von: 'Abteilungsleiter', zu: 'Genehmiger', art: 'erbt' }, { von: 'Geschaeftsfuehrer', zu: 'Genehmiger', art: 'erbt' },
+        { von: 'Teamleiter', zu: 'Abteilungsleiter', art: 'nutzt', unten: 30, text: 'nachfolger' },
+        { von: 'Abteilungsleiter', zu: 'Geschaeftsfuehrer', art: 'nutzt', unten: 30, text: 'nachfolger' }
+      ]
+    },
+    szenarien: [
+      { name: 'java ChainOfResponsibility.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

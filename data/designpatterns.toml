@@ -116,6 +116,7 @@ gruppe = "verhalten"
 schluessel = "chain-of-responsibility"
 name = "Chain of Responsibility"
 text = "Anfrage entlang einer Kette von Handlern weiterreichen"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Die Kette entsteht von hinten nach vorn, main kennt danach nur ihren Anfang. Jeder Antrag wandert so weit, bis ein Glied zuständig ist: Im Aufrufstapel liegt pro Glied ein bearbeite(), beim Server sind es drei übereinander. Das Ergebnis läuft denselben Weg zurück. In der funktionalen Variante sieht man, dass der Stream nach dem ersten Treffer aufhört und die übrigen Lambdas gar nicht erst aufruft."
 
 [[muster]]
 nummer = 14
