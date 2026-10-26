@@ -13,4 +13,4 @@ instanz = "26.10.2026 - 13:39 - GoF-Designmuster in Java"
 schluss = "Zusätzlich unterscheidet das Buch klassenbasierte Muster (Vererbung, zur Compilezeit: Factory Method, Adapter-Klassenvariante, Interpreter, Template Method) von objektbasierten (Komposition, zur Laufzeit: alle übrigen)."
 +++
 
-Die 23 GoF Design Patterns (Gamma, Helm, Johnson, Vlissides, 1994):
+Die Entwurfsmuster aus dem Buch *Design Patterns* von Gamma, Helm, Johnson und Vlissides (1994), jeweils mit Erklärung und einem lauffähigen Beispiel in Java 21. Jede Beispieldatei lässt sich ohne Build-Tool direkt starten, etwa mit `java Singleton.java`.
