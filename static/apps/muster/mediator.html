@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mediator – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Mediator (GoF-Verhaltensmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (mediator-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="mediator-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  function Z(text, nr) {                                // mehrfach vorkommende Zeilen: genauer Inhalt + Nummer des Vorkommens
+    const t = window.MUSTER_CODE.map((l, i) => l.trim() === text ? i : -1).filter(i => i >= 0);
+    if (t.length <= (nr || 0)) throw new Error(`Zeile „${text}“ (${nr || 0}) nicht gefunden`);
+    return t[nr || 0];
+  }
+  const str = t => `"${t}"`;
+  const MAIN = { klassen: ['main()'] };
+  const EMAIL = 'sven@example.de', ADRESSE = 'Hafenstraße 7, Hamburg';
+
+  function lauf(s) {
+    // Modell der fünf Formular-Elemente
+    const E = {
+      email: { id: 'Textfeld E-Mail', typ: 'Textfeld', name: 'E-Mail', text: '', aktiv: true },
+      gleiche: { id: 'Checkbox Wie Rechnungsadr.', typ: 'Checkbox', name: 'Wie Rechnungsadr.', an: true, aktiv: true },
+      liefer: { id: 'Textfeld Lieferadresse', typ: 'Textfeld', name: 'Lieferadresse', text: '', aktiv: true },
+      agb: { id: 'Checkbox AGB', typ: 'Checkbox', name: 'AGB akzeptiert', an: false, aktiv: true },
+      bestellen: { id: 'Button Bestellen', typ: 'Button', name: 'Bestellen', aktiv: true }
+    };
+    const REIHE = ['email', 'gleiche', 'liefer', 'agb', 'bestellen'];
+    const felder = e => e.typ === 'Textfeld' ? [['text', str(e.text)], ['aktiv', String(e.aktiv)]] : e.typ === 'Checkbox' ? [['an', String(e.an)]] : [['aktiv', String(e.aktiv)]];
+    const sync = e => felder(e).forEach(([k, v]) => s.feld(e.id, k, v));
+    const anzeige = e => e.typ === 'Textfeld' ? `${e.name.padEnd(18)} [${e.text}]${e.aktiv ? '' : ' (gesperrt)'}`
+      : e.typ === 'Checkbox' ? `${e.name.padEnd(18)} [${e.an ? 'x' : ' '}]` : `${e.name.padEnd(18)} <${e.aktiv ? 'aktiv' : 'gesperrt'}>`;
+    let dlg;
+
+    // aktualisiere(): die ganze Abhängigkeitslogik an einer Stelle
+    function aktualisiere(zurueck, ausfuehrlich, rueckMsg) {
+      const vorher = { liefer: E.liefer.aktiv, best: E.bestellen.aktiv };
+      E.liefer.aktiv = !E.gleiche.an; sync(E.liefer);
+      const emailOk = /^[^@\s]+@[^@\s]+\.[a-z]{2,}$/.test(E.email.text);
+      const adresseOk = E.gleiche.an || E.liefer.text.trim() !== '';
+      E.bestellen.aktiv = emailOk && adresseOk && E.agb.an; sync(E.bestellen);
+      const satz = `emailOk = ${emailOk}, adresseOk = ${adresseOk}, agb = ${E.agb.an} → Bestellen ${E.bestellen.aktiv ? 'aktiv' : 'gesperrt'}`;
+      if (ausfuehrlich) {
+        s.ruf('BestellDialog.aktualisiere()', [['this', s.ref(dlg)]], 'lieferadresse.setAktiv(!gleicheAdresse.an());', `aktualisiere(): „Wie Rechnungsadr.“ ist ${E.gleiche.an ? 'an' : 'aus'} → Lieferadresse ${E.liefer.aktiv ? 'freigegeben' : 'gesperrt'}.`, { cur: [dlg, E.liefer.id, E.gleiche.id] });
+        s.var('emailOk', String(emailOk)); s.var('adresseOk', String(adresseOk));
+        s.schritt('boolean emailOk', `emailOk prüft das Format der E-Mail per regulärem Ausdruck: ${emailOk}. adresseOk: ${adresseOk}.`, { cur: [dlg, E.email.id] });
+        s.schritt('bestellen.setAktiv(emailOk && adresseOk && agb.an());', `Bestellen nur, wenn alles stimmt: ${satz}.`, { cur: [dlg, E.bestellen.id] });
+      } else {
+        s.ruf('BestellDialog.aktualisiere()', [['this', s.ref(dlg)]], 'bestellen.setAktiv(emailOk && adresseOk && agb.an());',
+          `aktualisiere() (in einem Schritt): Lieferadresse ${E.liefer.aktiv ? 'frei' : 'gesperrt'}${vorher.liefer !== E.liefer.aktiv ? ' (geändert)' : ''}; ${satz}${vorher.best !== E.bestellen.aktiv ? ' (geändert)' : ''}.`, { cur: [dlg, E.liefer.id, E.bestellen.id] });
+      }
+      s.raus(zurueck, rueckMsg, { cur: [dlg] });
+    }
+
+    // ein Element ändert sich und meldet es dem Mediator
+    function aendere(key, zeileMain, ausfuehrlich, wert) {
+      const e = E[key], art = e.typ === 'Textfeld' ? 'eingeben' : 'klicken';
+      if (e.typ === 'Textfeld') e.text = wert; else e.an = !e.an;
+      sync(e);
+      s.ruf(`${e.typ}.${art}(${e.typ === 'Textfeld' ? 'String t' : ''})`, [['this', s.ref(e.id)]].concat(e.typ === 'Textfeld' ? [['t', str(wert)]] : []),
+        e.typ === 'Textfeld' ? 'void eingeben(String t) { text = t; melden(); }' : 'void klicken() { an = !an; melden(); }',
+        e.typ === 'Textfeld' ? `${e.id} übernimmt den Text "${wert}" – und meldet die Änderung. Wen das betrifft, weiß das Feld nicht.` : `${e.id} wird umgeschaltet: an = ${e.an}. Dann meldet sie die Änderung.`, { cur: [e.id] });
+      if (ausfuehrlich) {
+        s.ruf('Element.melden()', [['this', s.ref(e.id)]], 'protected void melden()', 'melden() steht in der Oberklasse Element: Es ruft mediator.geaendert(this). Mehr kennt ein Element nicht – nur den Mediator.', { cur: [e.id, dlg], klassen: ['Element'] });
+      }
+      s.aus(`  Mediator: Änderung in "${e.name}"`);
+      s.ruf('BestellDialog.geaendert(Element quelle)', [['this', s.ref(dlg)], ['quelle', s.ref(e.id)]], 'System.out.println("  Mediator: Änderung in', ausfuehrlich
+        ? `Der Mediator ${dlg} bekommt die Meldung von ${e.id} und schreibt sie ins Protokoll.`
+        : `${dlg}.geaendert(${e.id}).`, { cur: [dlg, e.id] });
+      const leeren = key === 'gleiche' && E.gleiche.an;
+      s.schritt('if (quelle == gleicheAdresse && gleicheAdresse.an()) {', key === 'gleiche'
+        ? `Quelle ist die Checkbox – aber sie ist jetzt ${E.gleiche.an ? 'an' : 'aus'}${leeren ? ', die eigene Lieferadresse wird verworfen' : ', also nichts zu verwerfen'}.`
+        : 'Quelle ist nicht die Checkbox „Wie Rechnungsadr.“ – kein Sonderfall.', { cur: [dlg] });
+      aktualisiere(Z('aktualisiere();', 1), ausfuehrlich, 'Zurück in geaendert().');
+      if (ausfuehrlich) {
+        s.raus('protected void melden()', 'geaendert() ist fertig.', { cur: [e.id] });
+        s.raus(e.typ === 'Textfeld' ? 'void eingeben(String t) { text = t; melden(); }' : 'void klicken() { an = !an; melden(); }', 'melden() ist fertig.', { cur: [e.id] });
+      } else {
+        s.raus(e.typ === 'Textfeld' ? 'void eingeben(String t) { text = t; melden(); }' : 'void klicken() { an = !an; melden(); }', 'Der Mediator ist fertig.', { cur: [e.id] });
+      }
+      s.raus(zeileMain, 'Zurück in main.', MAIN);
+    }
+
+    function zeige(nr) {
+      s.aus(REIHE.map(k => '    ' + anzeige(E[k])).join('\n'));
+      s.ruf('BestellDialog.zeige()', [['this', s.ref(dlg)]], 'System.out.println("    " + e);', nr === 0
+        ? 'zeige() gibt alle fünf Elemente aus – jedes mit seinem toString().'
+        : 'zeige(): der aktuelle Stand des Formulars.', { cur: [dlg, ...REIHE.map(k => E[k].id)] });
+      s.raus(Z('dialog.zeige();', nr), 'Zurück in main.', MAIN);
+    }
+
+    // ---------- Aufbau ----------
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: ein Bestellformular mit fünf Elementen und einem Mediator, der sie koordiniert.', MAIN);
+    REIHE.forEach(k => s.neu(E[k].typ, [['name', str(E[k].name)]].concat(felder(E[k]), [['mediator', 'null']]), E[k].id));
+    dlg = s.neu('BestellDialog', REIHE.map(k => [k === 'gleiche' ? 'gleicheAdresse' : k === 'liefer' ? 'lieferadresse' : k, s.ref(E[k].id)]), 'Dialog');
+    s.ruf('BestellDialog()', [['this', s.ref(dlg)]], 'new Textfeld("E-Mail");', `new BestellDialog(): Zuerst laufen die Feld-Initialisierer – fünf Elemente entstehen. Der Dialog kennt sie alle, sie kennen einander nicht.`, { cur: [dlg] });
+    REIHE.forEach(k => s.feld(E[k].id, 'mediator', s.ref(dlg)));
+    s.schritt('e.setMediator(this);', 'Jedes Element bekommt den Dialog als Mediator – das ist seine einzige Verbindung nach außen.', { cur: [dlg, ...REIHE.map(k => E[k].id)] });
+    aktualisiere(Z('aktualisiere();', 0), true, 'Der Anfangszustand ist berechnet.');
+    s.raus('BestellDialog dialog = new BestellDialog();', `dialog = → ${dlg}.`, { ...MAIN, setze: [['dialog', s.ref(dlg)]] });
+
+    s.aus('Start:');
+    s.schritt('System.out.println("Start:");', 'Der Anfangszustand.', MAIN);
+    zeige(0);
+
+    // ---------- E-Mail ----------
+    s.aus('\nE-Mail eingeben:');
+    s.schritt('E-Mail eingeben:");', 'Erste Änderung: die E-Mail. Einmal ausführlich mit allen Aufrufen.', MAIN);
+    aendere('email', `dialog.email.eingeben("${EMAIL}");`, true, EMAIL);
+    zeige(1);
+
+    // ---------- Checkbox ----------
+    s.aus('\nAndere Lieferadresse:');
+    s.schritt('Andere Lieferadresse:");', 'Zweite Änderung: Die Checkbox wird ausgeschaltet.', MAIN);
+    aendere('gleiche', 'dialog.gleicheAdresse.klicken();', false);
+    zeige(2);
+
+    // ---------- Lieferadresse und AGB ----------
+    s.aus('\nLieferadresse und AGB:');
+    s.schritt('Lieferadresse und AGB:");', 'Zwei weitere Änderungen hintereinander.', MAIN);
+    aendere('liefer', 'dialog.lieferadresse.eingeben(', false, ADRESSE);
+    aendere('agb', 'dialog.agb.klicken();', false);
+    zeige(3);
+
+    s.weg(dlg, ...REIHE.map(k => E[k].id));
+    s.raus([Z('dialog.zeige();', 3), 1], 'main ist zu Ende. Keines der fünf Elemente kennt ein anderes – alle Regeln stehen in aktualisiere().');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Mediator', 'ConcreteMediator', 'Colleague', 'ConcreteColleague'],
+    diagramm: {
+      breite: 160, abstandX: 40, abstandY: 56, untenPlatz: 0,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1.5, y: 0 },
+        { name: 'DialogMediator', art: 'interface', rolle: 'Mediator', x: 0, y: 1 },
+        { name: 'BestellDialog', art: 'final class', rolle: 'ConcreteMediator', x: 1, y: 1 },
+        { name: 'Element', art: 'abstract class', rolle: 'Colleague', x: 3, y: 1 },
+        { name: 'Textfeld', art: 'final class', rolle: 'ConcreteColleague', x: 2, y: 2 },
+        { name: 'Checkbox', art: 'final class', rolle: 'ConcreteColleague', x: 3, y: 2 },
+        { name: 'Button', art: 'final class', rolle: 'ConcreteColleague', x: 4, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'BestellDialog', art: 'nutzt', text: 'dialog' },
+        { von: 'main()', zu: 'Element', art: 'nutzt', text: 'eingeben / klicken' },
+        { von: 'BestellDialog', zu: 'DialogMediator', art: 'impl' },
+        { von: 'BestellDialog', zu: 'Element', art: 'nutzt', text: 'kennt alle' },
+        { von: 'Element', zu: 'DialogMediator', art: 'nutzt', unten: 26, text: 'mediator' },
+        { von: 'Textfeld', zu: 'Element', art: 'erbt' }, { von: 'Checkbox', zu: 'Element', art: 'erbt' }, { von: 'Button', zu: 'Element', art: 'erbt' }
+      ]
+    },
+    szenarien: [
+      { name: 'java Mediator.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

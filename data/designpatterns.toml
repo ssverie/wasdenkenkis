@@ -148,6 +148,7 @@ gruppe = "verhalten"
 schluessel = "mediator"
 name = "Mediator"
 text = "zentrales Objekt steuert die Kommunikation zwischen Kollegen"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Im Speicher sieht man die fünf Formular-Elemente: Jedes kennt nur den Mediator, keines ein anderes. Ändert sich ein Element, meldet es das dem Dialog, und aktualisiere() legt fest, welche Elemente gesperrt oder freigegeben sind. Die erste Änderung (E-Mail) zeigt alle Aufrufe einzeln, die übrigen in kürzerer Form. Erst nach der letzten Änderung wird Bestellen aktiv."
 
 [[muster]]
 nummer = 18

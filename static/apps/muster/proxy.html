@@ -81,8 +81,7 @@
     s.ruf('GeschuetztesArchiv.loesche(String dokument)', [['this', s.ref(sg)], ['dokument', '"Vertrag.pdf"']], Z.schutzPruef, 'Löschen ist geschützt: Der Proxy prüft die Rollen des Benutzers – Gast hat nur leser.', { cur: [sg, gast] });
     const ex = s.neu('SecurityException', [['message', '"Gast darf nicht löschen"']]);
     s.schritt('throw new SecurityException(', `Kein admin → ${ex} wird geworfen. Das echte Archiv wird gar nicht gefragt.`, { cur: [ex] });
-    s.var('e', s.ref(ex));
-    s.raus('catch (SecurityException e) {', 'Die Exception fliegt aus loesche() heraus und landet im catch von main.', { cur: [ex], klassen: ['main()'] });
+    s.raus('catch (SecurityException e) {', 'Die Exception fliegt aus loesche() heraus und landet im catch von main.', { setze: [['e', s.ref(ex)]], cur: [ex], klassen: ['main()'] });
     s.aus('  Verweigert: Gast darf nicht löschen');
     s.schritt('System.out.println("  Verweigert: "', 'Verweigert.', MAIN);
     s.weg(ex);
