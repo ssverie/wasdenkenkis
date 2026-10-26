@@ -12,7 +12,7 @@
 #
 # Bei Abweichung wird ein zweites Mal mit englischer Spracheinstellung gerechnet (printf/String.format nehmen das
 # Zahlenformat der Systemsprache). Testordner danach löschen.
-use strict; use warnings;
+use strict; use warnings; use utf8;
 use JSON::PP;
 use File::Path qw(make_path);
 binmode STDOUT, ':encoding(UTF-8)';
@@ -75,7 +75,11 @@ for my $t (@{ $j->{tasks} }) {
   my %doppelt; $doppelt{$_}++ for @{ $t->{options} };
   push @probleme, "doppelte Antwort" if grep { $_ > 1 } values %doppelt;
   my $ordner = "$test/$t->{id}";
-  if (defined $t->{answer}) {
+  if (defined $t->{answer} && !defined $t->{code}) {
+    # Textaufgabe ohne Code (z. B. Testdesign: scenario + answer) – hier lässt sich nur die Stimmigkeit prüfen
+    push @probleme, "correctIndex zeigt nicht auf answer" if ($t->{options}[$t->{correctIndex}] // '') ne $t->{answer};
+    push @hinweise, 'ohne Code – nicht ausführbar, Lösung von Hand nachrechnen';
+  } elsif (defined $t->{answer}) {
     push @probleme, "correctIndex zeigt nicht auf answer" if ($t->{options}[$t->{correctIndex}] // '') ne $t->{answer};
     my ($klasse) = $t->{code} =~ /public\s+(?:final\s+)?class\s+(\w+)/;
     my ($de, $en) = starte($ordner, $klasse // 'Main', $t->{code});

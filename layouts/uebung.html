@@ -51,30 +51,46 @@
     {{- range $aufgaben }}
     {{- /* Format „Fehler finden“: spec, bugLines, fixedCode, demo – Antworten sind Sätze, nicht Ausgaben */}}
     {{- $fehler := isset . "fixedCode" }}
-    <li class="aufgabe{{ if $fehler }} fehler-finden{{ end }}" id="{{ .id }}" data-id="{{ .id }}" data-stufe="{{ .difficulty }}" data-themen="{{ delimit .topics "|" }}" data-richtig="{{ .correctIndex }}"{{ with .bugLines }} data-fehlerzeilen="{{ delimit . "," }}"{{ end }}>
+    {{- /* Textaufgabe (z. B. Testdesign): scenario statt code, answer ist eine der Antworten */}}
+    {{- $textaufgabe := not (isset . "code") }}
+    <li class="aufgabe{{ if $fehler }} fehler-finden{{ end }}{{ if $textaufgabe }} textaufgabe{{ end }}" id="{{ .id }}" data-id="{{ .id }}" data-stufe="{{ .difficulty }}" data-themen="{{ delimit .topics "|" }}" data-richtig="{{ .correctIndex }}"{{ with .bugLines }} data-fehlerzeilen="{{ delimit . "," }}"{{ end }}>
       <div class="aufgabe-kopf">
         <strong>{{ .title }}</strong>
         <span class="stufe" title="Schwierigkeit {{ .difficulty }} von 3" aria-label="Schwierigkeit {{ .difficulty }} von 3">{{ strings.Repeat (int .difficulty) "★" }}{{ strings.Repeat (sub 3 (int .difficulty)) "☆" }}</span>
         <span class="themen">{{ delimit .topics " · " }}</span>
         <span class="geloest-marke" hidden>✓ gelöst</span>
       </div>
+      {{- /* Szenario steht vor der Frage; enthält es „Code:“ + Zeilenumbruch, wird der Rest als Code eingefärbt */}}
+      {{- with .scenario }}
+      {{- $teile := split . "Code:\n" }}
+      <div class="szenario">
+        {{- if gt (len $teile) 1 }}
+        <p>{{ index $teile 0 }}Code:</p>
+        {{ transform.Highlight (delimit (after 1 $teile) "Code:\n") $sprache (dict "noClasses" false) }}
+        {{- else }}
+        <p>{{ . }}</p>
+        {{- end }}
+      </div>
+      {{- end }}
       <p class="frage">{{ .question }}</p>
       {{- with .spec }}
       <p class="spec"><strong>Spezifikation:</strong> {{ . }}</p>
       {{- end }}
-      {{ transform.Highlight .code $sprache (dict "noClasses" false) }}
+      {{- with .code }}
+      {{ transform.Highlight . $sprache (dict "noClasses" false) }}
+      {{- end }}
       <div class="optionen{{ if $fehler }} saetze{{ end }}">
         {{- range $i, $o := .options }}
-        <button type="button" class="option" data-i="{{ $i }}" disabled>{{ if $fehler }}<span>{{ $o }}</span>{{ else }}<pre>{{ $o }}</pre>{{ end }}</button>
+        <button type="button" class="option" data-i="{{ $i }}" disabled>{{ if or $fehler $textaufgabe }}<span>{{ $o }}</span>{{ else }}<pre>{{ $o }}</pre>{{ end }}</button>
         {{- end }}
       </div>
       <details class="loesung">
         <summary>Lösung anzeigen</summary>
-        {{- with .answer }}
+        {{- if and .answer (not $textaufgabe) }}
         <p><strong>Ausgabe:</strong></p>
-        <pre>{{ . }}</pre>
+        <pre>{{ .answer }}</pre>
         {{- end }}
-        {{- if $fehler }}
+        {{- if or $fehler $textaufgabe }}
         <p><strong>Richtig:</strong> {{ index .options (int .correctIndex) }}</p>
         {{- end }}
         <p>{{ .explanation }}</p>

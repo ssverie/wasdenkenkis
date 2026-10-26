@@ -1,0 +1,419 @@
+{
+  "version": 1,
+  "category": "testdesign",
+  "language": "de",
+  "description": "Testdesign: Grenzwerte, Äquivalenzklassen, Entscheidungstabellen, Zustandsübergänge, paarweises Testen, Überdeckung. Jede Lösung wurde per Programm nachgerechnet.",
+  "tasks": [
+    {
+      "id": "td-001",
+      "category": "testdesign",
+      "title": "Grenzwerte: Alter",
+      "difficulty": 1,
+      "topics": [
+        "Grenzwertanalyse"
+      ],
+      "scenario": "Ein Formularfeld akzeptiert ganzzahlige Alter von 18 bis 65 (jeweils einschließlich).",
+      "question": "Welche Testwerte liefert die Grenzwertanalyse mit zwei Werten pro Grenze?",
+      "options": [
+        "{17, 18, 65, 66}",
+        "{18, 65}",
+        "{0, 18, 65, 120}",
+        "{17, 18, 19, 64, 65, 66}"
+      ],
+      "correctIndex": 0,
+      "answer": "{17, 18, 65, 66}",
+      "explanation": "Pro Grenze testet man den letzten ungültigen und den ersten gültigen Wert: 17/18 unten, 65/66 oben. {18, 65} prüft nur die gültige Seite. {17 … 66} mit sechs Werten wäre die Drei-Werte-Variante."
+    },
+    {
+      "id": "td-002",
+      "category": "testdesign",
+      "title": "Grenzwerte: drei Werte",
+      "difficulty": 2,
+      "topics": [
+        "Grenzwertanalyse"
+      ],
+      "scenario": "Dasselbe Feld wie zuvor: gültig sind ganze Zahlen von 18 bis 65.",
+      "question": "Wie viele Testwerte ergibt die Grenzwertanalyse mit drei Werten pro Grenze (Grenze, darunter, darüber)?",
+      "options": [
+        "4",
+        "6",
+        "8",
+        "3"
+      ],
+      "correctIndex": 1,
+      "answer": "6",
+      "explanation": "Pro Grenze drei Werte: 17, 18, 19 und 64, 65, 66. Die Drei-Werte-Variante findet zusätzlich Fehler wie ein vertipptes == statt >=."
+    },
+    {
+      "id": "td-003",
+      "category": "testdesign",
+      "title": "Grenzwerte: Rabattstaffel",
+      "difficulty": 2,
+      "topics": [
+        "Grenzwertanalyse",
+        "Geldbeträge"
+      ],
+      "scenario": "Onlineshop: Ab 100,00 € Bestellwert gibt es 5 % Rabatt, ab 500,00 € 10 %. Beträge werden auf den Cent genau erfasst.",
+      "question": "Welche Bestellwerte prüfen die Grenzen am besten?",
+      "options": [
+        "99,99 €, 100,00 €, 499,99 €, 500,00 €",
+        "100,01 €, 500,01 €, 1.000,00 €",
+        "100,00 €, 500,00 €",
+        "99,00 €, 100,00 €, 499,00 €, 500,00 €"
+      ],
+      "correctIndex": 0,
+      "answer": "99,99 €, 100,00 €, 499,99 €, 500,00 €",
+      "explanation": "Bei Geldbeträgen ist die kleinste Einheit 1 Cent. Direkt unter der Grenze liegt also 99,99 €, nicht 99,00 €. Wer in ganzen Euro testet, übersieht z. B. einen Fehler, der erst bei 99,50 € greift."
+    },
+    {
+      "id": "td-004",
+      "category": "testdesign",
+      "title": "Grenzwerte: Lücke finden",
+      "difficulty": 1,
+      "topics": [
+        "Grenzwertanalyse"
+      ],
+      "scenario": "Ein Passwort muss 8 bis 20 Zeichen lang sein. Im Testplan stehen die Längen 7, 8, 15 und 20.",
+      "question": "Welche Länge fehlt für eine vollständige Grenzwertanalyse (zwei Werte pro Grenze)?",
+      "options": [
+        "0",
+        "9",
+        "21",
+        "19"
+      ],
+      "correctIndex": 2,
+      "answer": "21",
+      "explanation": "Die obere Grenze ist nur von der gültigen Seite (20) getestet. Ob 21 Zeichen wirklich abgelehnt werden, prüft niemand. 15 ist ein Repräsentant der gültigen Klasse, aber kein Grenzwert."
+    },
+    {
+      "id": "td-005",
+      "category": "testdesign",
+      "title": "Äquivalenzklassen: Monat",
+      "difficulty": 1,
+      "topics": [
+        "Äquivalenzklassen"
+      ],
+      "scenario": "Ein Feld erwartet einen Monat als ganze Zahl von 1 bis 12.",
+      "question": "In wie viele Äquivalenzklassen zerfallen die ganzzahligen Eingaben?",
+      "options": [
+        "2",
+        "4",
+        "3",
+        "12"
+      ],
+      "correctIndex": 2,
+      "answer": "3",
+      "explanation": "Eine gültige Klasse (1–12) und zwei ungültige: kleiner als 1 und größer als 12. Alle Werte einer Klasse sollte das System gleich behandeln, deshalb reicht je ein Repräsentant. Nicht-numerische Eingaben wären eine weitere Klasse, sind hier aber ausgeschlossen."
+    },
+    {
+      "id": "td-006",
+      "category": "testdesign",
+      "title": "Äquivalenzklassen: Versandkosten",
+      "difficulty": 2,
+      "topics": [
+        "Äquivalenzklassen"
+      ],
+      "scenario": "Versand: bis 2 kg kostet 5 €, bis 10 kg 8 €, darüber 15 €. Erlaubt sind Gewichte über 0 kg bis höchstens 31,5 kg.",
+      "question": "Wie viele Testfälle braucht man mindestens, um jede Äquivalenzklasse einmal abzudecken?",
+      "options": [
+        "6",
+        "3",
+        "4",
+        "5"
+      ],
+      "correctIndex": 3,
+      "answer": "5",
+      "explanation": "Drei gültige Klassen (bis 2 kg, bis 10 kg, bis 31,5 kg) und zwei ungültige (0 kg oder weniger, über 31,5 kg). Bei nur einem Eingabefeld braucht jede Klasse einen eigenen Testfall."
+    },
+    {
+      "id": "td-007",
+      "category": "testdesign",
+      "title": "Äquivalenzklassen: zwei Felder",
+      "difficulty": 3,
+      "topics": [
+        "Äquivalenzklassen",
+        "Testfallminimierung"
+      ],
+      "scenario": "Ein Formular hat zwei Felder. Feld A hat 3 gültige und 2 ungültige Klassen, Feld B hat 2 gültige und 1 ungültige Klasse.",
+      "question": "Wie viele Testfälle sind mindestens nötig, wenn jeder ungültige Wert einzeln getestet werden soll?",
+      "options": [
+        "5",
+        "6",
+        "8",
+        "12"
+      ],
+      "correctIndex": 1,
+      "answer": "6",
+      "explanation": "Gültige Klassen lassen sich kombinieren: max(3, 2) = 3 Testfälle decken alle gültigen Klassen beider Felder. Ungültige Klassen testet man einzeln (sonst verdeckt ein Fehler den anderen): 2 + 1 = 3. Zusammen 6."
+    },
+    {
+      "id": "td-008",
+      "category": "testdesign",
+      "title": "Entscheidungstabelle: Größe",
+      "difficulty": 1,
+      "topics": [
+        "Entscheidungstabellen"
+      ],
+      "scenario": "Eine Regel hängt von drei Ja/Nein-Bedingungen ab.",
+      "question": "Wie viele Spalten (Regeln) hat die vollständige Entscheidungstabelle?",
+      "options": [
+        "6",
+        "9",
+        "3",
+        "8"
+      ],
+      "correctIndex": 3,
+      "answer": "8",
+      "explanation": "Jede Bedingung verdoppelt die Kombinationen: 2 × 2 × 2 = 8. Bei n Bedingungen sind es 2ⁿ, deshalb lohnt es sich, zusammenfassbare Regeln zu suchen."
+    },
+    {
+      "id": "td-009",
+      "category": "testdesign",
+      "title": "Entscheidungstabelle: Rabatt",
+      "difficulty": 2,
+      "topics": [
+        "Entscheidungstabellen",
+        "Logik"
+      ],
+      "scenario": "Ein Kunde bekommt Rabatt, wenn er Neukunde ist ODER eine Treuekarte hat. Auf Artikel im Sonderangebot gibt es aber nie Rabatt.",
+      "question": "Wie viele der 8 Kombinationen aus Neukunde, Treuekarte und Sonderangebot führen zu Rabatt?",
+      "options": [
+        "4",
+        "2",
+        "6",
+        "3"
+      ],
+      "correctIndex": 3,
+      "answer": "3",
+      "explanation": "Mit Sonderangebot nie (4 Fälle fallen weg). Ohne Sonderangebot bleiben 4 Kombinationen, davon ist nur \"weder Neukunde noch Treuekarte\" ohne Rabatt. Also 3. Ein beliebter Fehler im Code: Das \"aber nie\" wird nur auf eine der beiden Bedingungen angewendet."
+    },
+    {
+      "id": "td-010",
+      "category": "testdesign",
+      "title": "Entscheidungstabelle: zusammenfassen",
+      "difficulty": 3,
+      "topics": [
+        "Entscheidungstabellen"
+      ],
+      "scenario": "Login-Regel: Ist das Konto gesperrt, wird immer abgelehnt. Sonst gibt es Zugang nur, wenn Passwort UND zweiter Faktor richtig sind.",
+      "question": "Auf wie viele Regeln (ohne Überschneidung) lässt sich die Tabelle mit \"egal\"-Einträgen mindestens reduzieren?",
+      "options": [
+        "2",
+        "4",
+        "8",
+        "3"
+      ],
+      "correctIndex": 1,
+      "answer": "4",
+      "explanation": "Gesperrt = Ja → egal was sonst (1 Regel statt 4). Nicht gesperrt: Passwort falsch → zweiter Faktor egal (1 Regel). Passwort richtig, zweiter Faktor falsch (1). Alles richtig → Zugang (1). Zusammen 4."
+    },
+    {
+      "id": "td-011",
+      "category": "testdesign",
+      "title": "Zustandsübergänge: Bestellung",
+      "difficulty": 2,
+      "topics": [
+        "Zustandsübergänge"
+      ],
+      "scenario": "Bestellstatus: Neu → Bezahlt → Versendet → Zugestellt. Storniert werden kann nur aus Neu oder Bezahlt. Zugestellt und Storniert sind Endzustände.",
+      "question": "Wie viele Testfälle (jeder startet bei Neu und endet in einem Endzustand) braucht man mindestens, um jeden gültigen Übergang einmal zu durchlaufen?",
+      "options": [
+        "3",
+        "2",
+        "5",
+        "4"
+      ],
+      "correctIndex": 0,
+      "answer": "3",
+      "explanation": "Neu→Bezahlt→Versendet→Zugestellt deckt drei Übergänge. Neu→Storniert und Neu→Bezahlt→Storniert decken die beiden Stornierungen. Weil beide in Endzuständen enden, braucht jede einen eigenen Durchlauf."
+    },
+    {
+      "id": "td-012",
+      "category": "testdesign",
+      "title": "Zustandsübergänge: Negativtest",
+      "difficulty": 1,
+      "topics": [
+        "Zustandsübergänge",
+        "Negativtests"
+      ],
+      "scenario": "Gleicher Bestellprozess: Neu → Bezahlt → Versendet → Zugestellt, Stornierung nur aus Neu oder Bezahlt.",
+      "question": "Welcher Übergang muss das System ablehnen?",
+      "options": [
+        "Bezahlt → Storniert",
+        "Versendet → Storniert",
+        "Bezahlt → Versendet",
+        "Neu → Storniert"
+      ],
+      "correctIndex": 1,
+      "answer": "Versendet → Storniert",
+      "explanation": "Nach dem Versand ist keine Stornierung mehr vorgesehen. Solche ungültigen Übergänge werden oft vergessen, weil Testfälle meist nur den \"Happy Path\" abbilden. Genau dort stecken aber häufig Fehler, etwa ein Storno-Button, der nach dem Versand noch aktiv ist."
+    },
+    {
+      "id": "td-013",
+      "category": "testdesign",
+      "title": "Zustandsübergänge: Kontosperre",
+      "difficulty": 2,
+      "topics": [
+        "Zustandsübergänge"
+      ],
+      "scenario": "Nach 3 Fehlversuchen in Folge wird ein Konto gesperrt. Ein erfolgreicher Login setzt den Zähler auf 0 zurück.",
+      "question": "Eingaben: falsch, falsch, richtig, falsch, falsch. Wie ist der Zustand danach?",
+      "options": [
+        "Nicht gesperrt, 0 Fehlversuche",
+        "Nicht gesperrt, 2 Fehlversuche",
+        "Gesperrt",
+        "Nicht gesperrt, 4 Fehlversuche"
+      ],
+      "correctIndex": 1,
+      "answer": "Nicht gesperrt, 2 Fehlversuche",
+      "explanation": "Der richtige Login an dritter Stelle setzt den Zähler zurück. Danach folgen nur zwei Fehlversuche. Ein guter Testfall, weil er prüft, ob der Zähler wirklich zurückgesetzt wird und nicht einfach alle Fehlversuche addiert."
+    },
+    {
+      "id": "td-014",
+      "category": "testdesign",
+      "title": "Paarweise: 3 × 2 Werte",
+      "difficulty": 2,
+      "topics": [
+        "Paarweises Testen",
+        "Kombinatorik"
+      ],
+      "scenario": "Eine Webanwendung soll getestet werden mit Browser (Chrome, Firefox), Betriebssystem (Windows, macOS) und Sprache (Deutsch, Englisch).",
+      "question": "Alle Kombinationen wären 8 Tests. Wie viele braucht man mindestens, damit jedes Wertepaar einmal vorkommt?",
+      "options": [
+        "2",
+        "3",
+        "6",
+        "4"
+      ],
+      "correctIndex": 3,
+      "answer": "4",
+      "explanation": "Mit 4 geschickt gewählten Kombinationen kommt jedes Paar (z. B. Chrome + macOS, macOS + Englisch) mindestens einmal vor. Mit 3 geht es nicht: Allein Browser × Betriebssystem ergibt schon 4 Paare. Die meisten Fehler entstehen durch das Zusammenspiel von höchstens zwei Faktoren."
+    },
+    {
+      "id": "td-015",
+      "category": "testdesign",
+      "title": "Paarweise: 3 × 2 × 2",
+      "difficulty": 2,
+      "topics": [
+        "Paarweises Testen",
+        "Kombinatorik"
+      ],
+      "scenario": "Parameter: Zahlungsart (Karte, PayPal, Rechnung), Kundentyp (privat, Firma), Versand (Standard, Express).",
+      "question": "Wie viele Testfälle sind für paarweise Abdeckung mindestens nötig?",
+      "options": [
+        "4",
+        "6",
+        "12",
+        "5"
+      ],
+      "correctIndex": 1,
+      "answer": "6",
+      "explanation": "Untergrenze ist das Produkt der beiden größten Wertebereiche: 3 × 2 = 6, sonst können nicht alle Paare aus Zahlungsart und Kundentyp vorkommen. Mit 6 Tests lässt sich auch der Versand so verteilen, dass alle übrigen Paare abgedeckt sind (statt 12 für alle Kombinationen)."
+    },
+    {
+      "id": "td-016",
+      "category": "testdesign",
+      "title": "Paarweise: 4 × 3 Werte",
+      "difficulty": 3,
+      "topics": [
+        "Paarweises Testen",
+        "Orthogonale Arrays"
+      ],
+      "scenario": "Vier Parameter mit je drei Werten, z. B. Browser, Betriebssystem, Bildschirmgröße und Sprache.",
+      "question": "Alle Kombinationen sind 81 Tests. Wie viele braucht man mindestens für paarweise Abdeckung?",
+      "options": [
+        "6",
+        "9",
+        "12",
+        "27"
+      ],
+      "correctIndex": 1,
+      "answer": "9",
+      "explanation": "Jedes Parameterpaar hat 3 × 3 = 9 Wertepaare, also sind mindestens 9 Tests nötig. Ein orthogonales Array (L9) schafft genau das: 9 Zeilen, in denen jedes Paar exakt einmal vorkommt. Statt 81 also 9 Tests, eine Einsparung von 89 %."
+    },
+    {
+      "id": "td-017",
+      "category": "testdesign",
+      "title": "Zweigüberdeckung",
+      "difficulty": 2,
+      "topics": [
+        "Überdeckung",
+        "White-Box"
+      ],
+      "scenario": "Code:\nif (a > 0) {\n    x++;\n}\nif (b > 0) {\n    y++;\n}",
+      "question": "Für Anweisungsüberdeckung reicht 1 Testfall (a > 0, b > 0). Wie viele braucht man mindestens für Zweigüberdeckung?",
+      "options": [
+        "4",
+        "1",
+        "2",
+        "3"
+      ],
+      "correctIndex": 2,
+      "answer": "2",
+      "explanation": "Zweigüberdeckung verlangt, dass jedes if einmal wahr und einmal falsch ist. Test 1: a > 0, b > 0. Test 2: a ≤ 0, b ≤ 0. Die leeren else-Zweige, die bei Anweisungsüberdeckung unsichtbar bleiben, werden so auch durchlaufen."
+    },
+    {
+      "id": "td-018",
+      "category": "testdesign",
+      "title": "Pfadüberdeckung",
+      "difficulty": 2,
+      "topics": [
+        "Überdeckung",
+        "White-Box"
+      ],
+      "scenario": "Gleicher Code:\nif (a > 0) {\n    x++;\n}\nif (b > 0) {\n    y++;\n}",
+      "question": "Wie viele Testfälle braucht man für vollständige Pfadüberdeckung?",
+      "options": [
+        "3",
+        "8",
+        "2",
+        "4"
+      ],
+      "correctIndex": 3,
+      "answer": "4",
+      "explanation": "Jedes if verdoppelt die Pfade: 2 × 2 = 4 (beide wahr, nur erstes, nur zweites, keines). Bei 10 hintereinander stehenden ifs wären es schon 1024 Pfade, deshalb ist Pfadüberdeckung in der Praxis selten vollständig erreichbar."
+    },
+    {
+      "id": "td-019",
+      "category": "testdesign",
+      "title": "MC/DC-Überdeckung",
+      "difficulty": 3,
+      "topics": [
+        "Überdeckung",
+        "MC/DC"
+      ],
+      "scenario": "Code:\nif (istAngemeldet && hatRecht) {\n    zeigeDaten();\n}",
+      "question": "Bei MC/DC muss jede Teilbedingung nachweislich allein das Ergebnis ändern können. Wie viele Testfälle sind mindestens nötig?",
+      "options": [
+        "1",
+        "3",
+        "2",
+        "4"
+      ],
+      "correctIndex": 1,
+      "answer": "3",
+      "explanation": "(wahr, wahr) → zeigen. (falsch, wahr) → nicht zeigen: beweist den Einfluss von istAngemeldet. (wahr, falsch) → nicht zeigen: beweist den Einfluss von hatRecht. Allgemein reichen bei n Teilbedingungen n + 1 Tests. MC/DC ist z. B. in der Luftfahrt-Software (DO-178C) Pflicht."
+    },
+    {
+      "id": "td-020",
+      "category": "testdesign",
+      "title": "Mutationstest",
+      "difficulty": 2,
+      "topics": [
+        "Mutationstests",
+        "Grenzwerte"
+      ],
+      "scenario": "Originalcode: return age >= 18;\nEin Mutationstest-Werkzeug erzeugt die Mutante: return age > 18;",
+      "question": "Mit welchem Testwert wird die Mutante \"getötet\", also von einem Test erkannt?",
+      "options": [
+        "17",
+        "0",
+        "30",
+        "18"
+      ],
+      "correctIndex": 3,
+      "answer": "18",
+      "explanation": "Nur bei genau 18 liefern Original (true) und Mutante (false) unterschiedliche Ergebnisse. Überlebt die Mutante alle Tests, fehlt ein Grenzwerttest. Mutationstests messen so die Qualität der Tests selbst, nicht die des Codes."
+    }
+  ]
+}
