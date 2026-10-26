@@ -144,7 +144,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- Design Patterns 3 Factory Method und 4 Prototype mit Ablauf: `content/it-konzepte/design-patterns/{factory-method,prototype}.md`, `static/apps/muster/{factory-method,prototype}{.html,-code.js}`, Rahmen erweitert (`rahmen.js`, `rahmen.css`, Versionen in allen vier Apps hochgezählt), `data/designpatterns.toml` (`sogehts`)
+- (leer – zuletzt freigegeben und gepusht am 2026-10-26: Design Patterns 3 Factory Method und 4 Prototype mit Ablauf)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
