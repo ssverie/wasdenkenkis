@@ -1,0 +1,426 @@
+{
+  "version": 1,
+  "category": "anforderungen",
+  "language": "de",
+  "description": "Anforderungen & Analyse: unklare Anforderungen, User Stories, Given/When/Then, Bug-Reports, Priorisierung.",
+  "tasks": [
+    {
+      "id": "anf-001",
+      "category": "anforderungen",
+      "title": "Schnell ist kein Maß",
+      "difficulty": 1,
+      "topics": [
+        "Anforderungen",
+        "Messbarkeit"
+      ],
+      "scenario": "Anforderung: „Die Suche soll schnell reagieren.“",
+      "question": "Was ist das Hauptproblem dieser Anforderung?",
+      "options": [
+        "Sie beschreibt eine Lösung statt eines Ziels",
+        "Sie gehört nicht in eine Anforderung, sondern in den Code",
+        "Sie ist nicht messbar, es fehlt ein konkreter Zielwert",
+        "Sie ist zu technisch formuliert"
+      ],
+      "correctIndex": 2,
+      "answer": "Sie ist nicht messbar, es fehlt ein konkreter Zielwert",
+      "explanation": "„Schnell“ bedeutet für jeden etwas anderes. Ohne Zahl kann kein Test bestehen oder scheitern. Erst „unter 2 Sekunden“ macht daraus etwas Prüfbares."
+    },
+    {
+      "id": "anf-002",
+      "category": "anforderungen",
+      "title": "Performance richtig formulieren",
+      "difficulty": 2,
+      "topics": [
+        "Anforderungen",
+        "Nicht-funktional"
+      ],
+      "scenario": "Die Anforderung „Die Suche soll schnell reagieren“ soll prüfbar werden.",
+      "question": "Welche Formulierung ist am besten testbar?",
+      "options": [
+        "95 % der Suchanfragen werden bei 500 gleichzeitigen Nutzern in unter 2 Sekunden beantwortet",
+        "Die Suche antwortet in unter 2 Sekunden",
+        "Die Suche antwortet immer sofort",
+        "Die Suche ist schneller als beim Wettbewerber"
+      ],
+      "correctIndex": 0,
+      "answer": "95 % der Suchanfragen werden bei 500 gleichzeitigen Nutzern in unter 2 Sekunden beantwortet",
+      "explanation": "Eine gute Performance-Anforderung nennt Zielwert, Anteil (Perzentil) und Lastbedingung. „Unter 2 Sekunden“ allein lässt offen, ob das für einen Nutzer im leeren System oder unter Volllast gilt, und ob ein einziger Ausreißer schon ein Fehler ist."
+    },
+    {
+      "id": "anf-003",
+      "category": "anforderungen",
+      "title": "Mehrdeutige Grenze",
+      "difficulty": 1,
+      "topics": [
+        "Anforderungen",
+        "Mehrdeutigkeit"
+      ],
+      "scenario": "Anforderung: „Der Nutzer kann bis zu 5 Dateien mit maximal 10 MB hochladen.“",
+      "question": "Welche Frage muss vor dem Testen geklärt werden?",
+      "options": [
+        "Welche Programmiersprache verwendet der Upload?",
+        "Ob 5 Dateien eine gute Obergrenze sind",
+        "Gelten die 10 MB pro Datei oder für alle Dateien zusammen?",
+        "Ob der Upload-Button blau oder grau sein soll"
+      ],
+      "correctIndex": 2,
+      "answer": "Gelten die 10 MB pro Datei oder für alle Dateien zusammen?",
+      "explanation": "Beide Lesarten sind plausibel und führen zu völlig anderen Testfällen (5 × 10 MB = 50 MB erlaubt oder nicht). Mehrdeutigkeiten früh zu finden ist einer der günstigsten Wege, Fehler zu vermeiden. Zusatzfrage für Grenzwerte: Sind 10 MB = 10.000.000 oder 10.485.760 Bytes?"
+    },
+    {
+      "id": "anf-004",
+      "category": "anforderungen",
+      "title": "Die wichtigste Rückfrage",
+      "difficulty": 2,
+      "topics": [
+        "User Stories",
+        "Klärung"
+      ],
+      "scenario": "User Story: „Als Kunde möchte ich mein Passwort zurücksetzen können, damit ich wieder Zugang zu meinem Konto bekomme.“",
+      "question": "Welche Rückfrage deckt die meisten fehlenden Testfälle auf?",
+      "options": [
+        "Wie viele Kunden nutzen die Funktion voraussichtlich?",
+        "Wie lange ist der Link gültig, und was passiert bei einer unbekannten E-Mail-Adresse?",
+        "In welcher Schriftart soll die E-Mail erscheinen?",
+        "Soll der Button „Zurücksetzen“ oder „Neu setzen“ heißen?"
+      ],
+      "correctIndex": 1,
+      "answer": "Wie lange ist der Link gültig, und was passiert bei einer unbekannten E-Mail-Adresse?",
+      "explanation": "Gültigkeitsdauer und unbekannte Adressen betreffen Sicherheit und Fehlerfälle. Daraus folgen gleich mehrere Tests: abgelaufener Link, Link zweimal benutzt, unbekannte Adresse (ohne zu verraten, ob es das Konto gibt). Textdetails sind wichtig, aber nicht kritisch."
+    },
+    {
+      "id": "anf-005",
+      "category": "anforderungen",
+      "title": "Given/When/Then",
+      "difficulty": 1,
+      "topics": [
+        "Akzeptanzkriterien",
+        "BDD"
+      ],
+      "scenario": "Ein Akzeptanzkriterium für den Warenkorb soll im Given/When/Then-Format geschrieben werden.",
+      "question": "Welche Formulierung ist korrekt aufgebaut?",
+      "options": [
+        "Given ein leerer Warenkorb, When ich einen Artikel für 20 € hinzufüge, Then beträgt die Summe 20 €",
+        "When ich einen Artikel hinzufüge, Then klicke ich auf Kasse, Given ich bin angemeldet",
+        "Given die Summe ist 20 €, When der Warenkorb leer ist, Then füge ich einen Artikel hinzu",
+        "Given ich füge einen Artikel hinzu, When die Summe 20 € ist, Then ist der Warenkorb leer"
+      ],
+      "correctIndex": 0,
+      "answer": "Given ein leerer Warenkorb, When ich einen Artikel für 20 € hinzufüge, Then beträgt die Summe 20 €",
+      "explanation": "Given beschreibt den Ausgangszustand, When die eine auslösende Aktion, Then das beobachtbare Ergebnis. In den falschen Varianten sind die Rollen vertauscht: Aktionen stehen im Given oder Then, Ergebnisse im When."
+    },
+    {
+      "id": "anf-006",
+      "category": "anforderungen",
+      "title": "Then beschreibt Verhalten",
+      "difficulty": 2,
+      "topics": [
+        "Akzeptanzkriterien",
+        "BDD"
+      ],
+      "scenario": "Akzeptanzkriterium:\nGiven ein Nutzer hat 3 falsche Passwörter eingegeben\nWhen er ein viertes falsches Passwort eingibt\nThen wird in der Tabelle users das Feld locked auf 1 gesetzt",
+      "question": "Was ist an diesem Kriterium problematisch?",
+      "options": [
+        "Given müsste die Anzahl der Versuche weglassen",
+        "When darf keine falsche Eingabe enthalten",
+        "Es fehlt ein zweites When",
+        "Then beschreibt die Implementierung statt des sichtbaren Verhaltens"
+      ],
+      "correctIndex": 3,
+      "answer": "Then beschreibt die Implementierung statt des sichtbaren Verhaltens",
+      "explanation": "Akzeptanzkriterien sollen beschreiben, was der Nutzer oder das System von außen erlebt, z. B. „Then erscheint die Meldung, dass das Konto gesperrt ist, und auch das richtige Passwort wird abgelehnt“. Ändert sich das Datenbankschema, bliebe das Kriterium sonst falsch, obwohl das Verhalten stimmt."
+    },
+    {
+      "id": "anf-007",
+      "category": "anforderungen",
+      "title": "Nicht testbares Kriterium",
+      "difficulty": 1,
+      "topics": [
+        "Akzeptanzkriterien",
+        "Messbarkeit"
+      ],
+      "scenario": "Mehrere Akzeptanzkriterien für ein neues Formular.",
+      "question": "Welches Kriterium ist so nicht testbar?",
+      "options": [
+        "Bei fehlender E-Mail erscheint eine Fehlermeldung unter dem Feld",
+        "Das Formular soll benutzerfreundlich sein",
+        "Pflichtfelder sind mit * markiert",
+        "Das Formular lässt sich vollständig per Tastatur bedienen"
+      ],
+      "correctIndex": 1,
+      "answer": "Das Formular soll benutzerfreundlich sein",
+      "explanation": "„Benutzerfreundlich“ ist ein Ziel, kein Kriterium. Prüfbar wird es erst über konkrete Merkmale, wie sie in den anderen drei Antworten stehen, oder über messbare Werte (z. B. 8 von 10 Testpersonen schaffen das Formular ohne Hilfe in unter 2 Minuten)."
+    },
+    {
+      "id": "anf-008",
+      "category": "anforderungen",
+      "title": "INVEST: zu groß",
+      "difficulty": 2,
+      "topics": [
+        "User Stories",
+        "INVEST"
+      ],
+      "scenario": "User Story: „Als Händler möchte ich ein komplettes Bestellsystem mit Lager, Versand, Rechnung und Retouren.“",
+      "question": "Welches INVEST-Kriterium ist am deutlichsten verletzt?",
+      "options": [
+        "Valuable – die Story hat keinen Nutzen",
+        "Small – die Story ist viel zu groß für einen Sprint",
+        "Independent – die Story hängt von anderen ab",
+        "Negotiable – die Story ist zu genau festgelegt"
+      ],
+      "correctIndex": 1,
+      "answer": "Small – die Story ist viel zu groß für einen Sprint",
+      "explanation": "INVEST steht für Independent, Negotiable, Valuable, Estimable, Small, Testable. Hier stecken mindestens vier Stories in einer. Das ist kaum schätzbar und nicht in einem Sprint testbar. Aufteilen, z. B. „Als Händler möchte ich eine Retoure erfassen …“."
+    },
+    {
+      "id": "anf-009",
+      "category": "anforderungen",
+      "title": "Widersprüchliche Anforderungen",
+      "difficulty": 3,
+      "topics": [
+        "Anforderungen",
+        "Widersprüche"
+      ],
+      "scenario": "Anforderung A: „Löscht ein Kunde sein Konto, werden alle seine Daten sofort entfernt.“\nAnforderung B: „Rechnungen müssen 10 Jahre lang inklusive Kundenname und Adresse aufbewahrt werden.“",
+      "question": "Wie sollte man als Tester reagieren?",
+      "options": [
+        "Anforderung B testen, gesetzliche Pflichten gehen immer vor",
+        "Beide getrennt testen, das Zusammenspiel ist Sache der Entwicklung",
+        "Den Widerspruch melden und vor dem Testen klären lassen",
+        "Anforderung A testen, sie steht zuerst"
+      ],
+      "correctIndex": 2,
+      "answer": "Den Widerspruch melden und vor dem Testen klären lassen",
+      "explanation": "Beide Anforderungen können nicht gleichzeitig erfüllt sein. Welche Lösung richtig ist (z. B. Daten sperren statt löschen), entscheidet nicht der Tester, sondern Fachbereich und gegebenenfalls Datenschutz. Ein gefundener Widerspruch vor der Entwicklung ist einer der wertvollsten Beiträge der QA."
+    },
+    {
+      "id": "anf-010",
+      "category": "anforderungen",
+      "title": "Implizite Anforderung",
+      "difficulty": 2,
+      "topics": [
+        "Anforderungen",
+        "Implizites Wissen"
+      ],
+      "scenario": "In einem Formular gibt es ein Feld „Geburtsdatum“. Die Spezifikation sagt nur: „Pflichtfeld, Format TT.MM.JJJJ.“",
+      "question": "Welche nicht ausdrücklich genannte Anforderung sollte man trotzdem testen?",
+      "options": [
+        "Das Feld darf nur Schaltjahre enthalten",
+        "Ein Datum in der Zukunft wird abgelehnt",
+        "Das Datum wird rückwärts gespeichert",
+        "Das Feld akzeptiert auch Uhrzeiten"
+      ],
+      "correctIndex": 1,
+      "answer": "Ein Datum in der Zukunft wird abgelehnt",
+      "explanation": "Implizite Anforderungen sind die, die jeder für selbstverständlich hält und deshalb niemand aufschreibt. Weitere Kandidaten: 31.02. ablehnen, 29.02. nur in Schaltjahren, unrealistisch alte Daten. Am besten fragt man nach und lässt sie ergänzen."
+    },
+    {
+      "id": "anf-011",
+      "category": "anforderungen",
+      "title": "Bug-Report: das Wichtigste fehlt",
+      "difficulty": 1,
+      "topics": [
+        "Bug-Reports"
+      ],
+      "scenario": "Bug-Report:\nTitel: Login geht nicht\nBeschreibung: Kann mich nicht einloggen. Bitte schnell fixen!",
+      "question": "Was fehlt am dringendsten?",
+      "options": [
+        "Schritte zur Reproduktion sowie erwartetes und tatsächliches Ergebnis",
+        "Ein Screenshot des Firmenlogos",
+        "Der Name des Entwicklers, der den Login gebaut hat",
+        "Ein Vorschlag, wie der Code zu ändern ist"
+      ],
+      "correctIndex": 0,
+      "answer": "Schritte zur Reproduktion sowie erwartetes und tatsächliches Ergebnis",
+      "explanation": "Ohne Schritte, Testdaten und Ergebnis (z. B. „Meldung ‚Unbekannter Fehler‘ statt Weiterleitung zum Dashboard“) kann niemand den Fehler nachstellen. Dazu gehören Umgebung (Browser, Version, Testsystem) und der verwendete Benutzer."
+    },
+    {
+      "id": "anf-012",
+      "category": "anforderungen",
+      "title": "Schwere und Priorität I",
+      "difficulty": 2,
+      "topics": [
+        "Bug-Reports",
+        "Priorisierung"
+      ],
+      "scenario": "Auf der Startseite steht im Firmennamen ein Tippfehler. Morgen wird die Seite auf einer großen Messe vorgeführt.",
+      "question": "Wie sind Schwere (Severity) und Priorität einzuordnen?",
+      "options": [
+        "Niedrige Schwere, hohe Priorität",
+        "Hohe Schwere, hohe Priorität",
+        "Hohe Schwere, niedrige Priorität",
+        "Niedrige Schwere, niedrige Priorität"
+      ],
+      "correctIndex": 0,
+      "answer": "Niedrige Schwere, hohe Priorität",
+      "explanation": "Die Schwere beschreibt die technische Auswirkung: Hier funktioniert alles, es ist nur ein Text. Die Priorität beschreibt, wie dringend es behoben werden muss: wegen der Messe sehr. Die beiden Werte sind unabhängig voneinander und werden oft verwechselt."
+    },
+    {
+      "id": "anf-013",
+      "category": "anforderungen",
+      "title": "Schwere und Priorität II",
+      "difficulty": 2,
+      "topics": [
+        "Bug-Reports",
+        "Priorisierung"
+      ],
+      "scenario": "Der Export in ein veraltetes Dateiformat bringt die Anwendung zum Absturz. Die Funktion nutzt nur ein Kunde einmal im Jahr, und es gibt einen einfachen Ausweg über ein anderes Format.",
+      "question": "Wie sind Schwere und Priorität einzuordnen?",
+      "options": [
+        "Hohe Schwere, hohe Priorität",
+        "Niedrige Schwere, niedrige Priorität",
+        "Niedrige Schwere, hohe Priorität",
+        "Hohe Schwere, niedrige Priorität"
+      ],
+      "correctIndex": 3,
+      "answer": "Hohe Schwere, niedrige Priorität",
+      "explanation": "Ein Absturz ist technisch schwerwiegend. Weil kaum jemand betroffen ist und ein Workaround existiert, kann die Behebung aber warten. Das Gegenstück zur vorherigen Aufgabe."
+    },
+    {
+      "id": "anf-014",
+      "category": "anforderungen",
+      "title": "Guter Bug-Titel",
+      "difficulty": 1,
+      "topics": [
+        "Bug-Reports"
+      ],
+      "scenario": "Im Warenkorb kann man die Menge auf 0 setzen. Dann wird der Gesamtpreis negativ angezeigt.",
+      "question": "Welcher Titel ist am besten?",
+      "options": [
+        "Warenkorb: Menge 0 führt zu negativem Gesamtpreis",
+        "Fehler im Warenkorb!!!",
+        "Preisberechnung kaputt, bitte prüfen",
+        "Ticket von Sven, Montag"
+      ],
+      "correctIndex": 0,
+      "answer": "Warenkorb: Menge 0 führt zu negativem Gesamtpreis",
+      "explanation": "Ein guter Titel nennt Bereich, Auslöser und Auswirkung. Man findet ihn später in der Suche wieder und erkennt Duplikate. Ausrufezeichen und allgemeine Wörter wie „kaputt“ helfen niemandem."
+    },
+    {
+      "id": "anf-015",
+      "category": "anforderungen",
+      "title": "Sporadischer Fehler",
+      "difficulty": 3,
+      "topics": [
+        "Bug-Reports",
+        "Debugging"
+      ],
+      "scenario": "Ein Fehler tritt nur gelegentlich auf: Etwa jede zehnte Bestellung bleibt im Status „In Bearbeitung“ hängen. Nachstellen ließ er sich bisher nicht.",
+      "question": "Welche Angaben helfen der Entwicklung am meisten?",
+      "options": [
+        "Eine Liste aller Bestellungen, die korrekt funktioniert haben",
+        "Eine Schätzung, welcher Entwickler den Fehler verursacht hat",
+        "Genaue Zeitpunkte, betroffene Bestellnummern, Logauszüge und die beobachtete Häufigkeit",
+        "Den Hinweis „nicht reproduzierbar“ und das Ticket schließen"
+      ],
+      "correctIndex": 2,
+      "answer": "Genaue Zeitpunkte, betroffene Bestellnummern, Logauszüge und die beobachtete Häufigkeit",
+      "explanation": "Bei sporadischen Fehlern ersetzen Daten die fehlende Reproduzierbarkeit: Mit Zeitpunkt und Bestellnummer findet man die passenden Logs, mit der Häufigkeit lässt sich ein Fix überprüfen. Häufige Ursachen solcher Muster sind Nebenläufigkeit, Timeouts oder Lastspitzen."
+    },
+    {
+      "id": "anf-016",
+      "category": "anforderungen",
+      "title": "Rückverfolgbarkeit",
+      "difficulty": 2,
+      "topics": [
+        "Traceability",
+        "Testmanagement"
+      ],
+      "scenario": "Eine Anforderung zur Rabattberechnung wurde geändert. Das Testteam hat rund 800 Testfälle.",
+      "question": "Wie findet man am schnellsten die Testfälle, die angepasst werden müssen?",
+      "options": [
+        "Alle 800 Testfälle durchlesen",
+        "Über die Verknüpfung von Anforderungen und Testfällen (Traceability-Matrix)",
+        "Den Entwickler fragen, welche Tests er für relevant hält",
+        "Nur die Testfälle mit „Rabatt“ im Titel ändern"
+      ],
+      "correctIndex": 1,
+      "answer": "Über die Verknüpfung von Anforderungen und Testfällen (Traceability-Matrix)",
+      "explanation": "Sind Testfälle mit den Anforderungen verknüpft, zeigt ein Blick, welche Tests betroffen sind, und umgekehrt, welche Anforderungen noch gar keinen Test haben. Die Titelsuche übersieht Tests, in denen Rabatte nur am Rande vorkommen."
+    },
+    {
+      "id": "anf-017",
+      "category": "anforderungen",
+      "title": "Umfang des Regressionstests",
+      "difficulty": 3,
+      "topics": [
+        "Regressionstests",
+        "Risikoanalyse"
+      ],
+      "scenario": "Eine zentrale Hilfsklasse zur Datumsformatierung wurde geändert. Sie wird in Rechnungen, Berichten, im Kalender und in der Benutzerverwaltung verwendet.",
+      "question": "Welcher Regressionsansatz ist angemessen?",
+      "options": [
+        "Nur die Hilfsklasse selbst testen",
+        "Nur die Funktion testen, für die die Änderung beauftragt wurde",
+        "Keinen Test, Formatierungen sind unkritisch",
+        "Alle Funktionen testen, die die Hilfsklasse nutzen, mit Schwerpunkt auf Grenzfällen wie dem Jahreswechsel"
+      ],
+      "correctIndex": 3,
+      "answer": "Alle Funktionen testen, die die Hilfsklasse nutzen, mit Schwerpunkt auf Grenzfällen wie dem Jahreswechsel",
+      "explanation": "Je zentraler eine Komponente, desto größer der Wirkungsbereich einer Änderung. Rechnungen mit falschem Datum können rechtliche Folgen haben. Grenzfälle wie Silvester, Schaltjahre und Zeitzonen sind bei Datumslogik die typischen Fehlerquellen."
+    },
+    {
+      "id": "anf-018",
+      "category": "anforderungen",
+      "title": "Muss, soll, kann",
+      "difficulty": 1,
+      "topics": [
+        "Anforderungen",
+        "Sprache"
+      ],
+      "scenario": "In einem Lastenheft finden sich die Formulierungen „muss“, „sollte“ und „kann“.",
+      "question": "Welches Wort kennzeichnet eine verbindliche Anforderung?",
+      "options": [
+        "kann",
+        "sollte",
+        "muss",
+        "wird gewünscht"
+      ],
+      "correctIndex": 2,
+      "answer": "muss",
+      "explanation": "„Muss“ ist verpflichtend, „sollte“ eine dringende Empfehlung, von der man begründet abweichen darf, „kann“ ist optional. Verwechselt man das, wird entweder zu viel gebaut oder es fehlt Pflichtumfang. Im Englischen sind die Begriffe (MUST, SHOULD, MAY) sogar genormt (RFC 2119)."
+    },
+    {
+      "id": "anf-019",
+      "category": "anforderungen",
+      "title": "Vergessenes Negativszenario",
+      "difficulty": 2,
+      "topics": [
+        "Negativtests",
+        "User Stories"
+      ],
+      "scenario": "User Story: „Als Kunde möchte ich einen Gutscheincode einlösen, um Rabatt zu erhalten.“ Getestet wurde: gültiger Code wird angenommen, unbekannter Code wird abgelehnt.",
+      "question": "Welcher Testfall fehlt und wird in der Praxis besonders oft vergessen?",
+      "options": [
+        "Einen bereits eingelösten Gutschein ein zweites Mal einlösen",
+        "Einen gültigen Code eingeben",
+        "Einen Code in Großbuchstaben bei einem gültigen Gutschein eingeben",
+        "Die Seite mit dem Gutscheinfeld öffnen"
+      ],
+      "correctIndex": 0,
+      "answer": "Einen bereits eingelösten Gutschein ein zweites Mal einlösen",
+      "explanation": "Mehrfacheinlösung kostet direkt Geld und wird oft übersehen, gerade wenn zwei Bestellungen parallel abgeschickt werden. Weitere Kandidaten: abgelaufener Gutschein, Mindestbestellwert nicht erreicht, zwei Gutscheine kombinieren."
+    },
+    {
+      "id": "anf-020",
+      "category": "anforderungen",
+      "title": "Akzeptanzkriterien und Definition of Done",
+      "difficulty": 2,
+      "topics": [
+        "Agile",
+        "Qualitätskriterien"
+      ],
+      "scenario": "Im Team wird diskutiert, ob „Code wurde reviewt und alle automatisierten Tests laufen grün“ ein Akzeptanzkriterium ist.",
+      "question": "Was ist der Unterschied zwischen Akzeptanzkriterien und Definition of Done?",
+      "options": [
+        "Akzeptanzkriterien sind technisch, die Definition of Done fachlich",
+        "Die Definition of Done schreibt der Kunde, Akzeptanzkriterien der Tester",
+        "Beides ist dasselbe, nur unterschiedlich benannt",
+        "Akzeptanzkriterien gelten für eine einzelne Story, die Definition of Done für jede Story"
+      ],
+      "correctIndex": 3,
+      "answer": "Akzeptanzkriterien gelten für eine einzelne Story, die Definition of Done für jede Story",
+      "explanation": "Akzeptanzkriterien beschreiben das fachliche Verhalten genau dieser Story. Die Definition of Done ist der allgemeine Qualitätsstandard des Teams (Review, Tests, Dokumentation). Das genannte Beispiel gehört also in die Definition of Done."
+    }
+  ]
+}
