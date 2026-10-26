@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flyweight – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Flyweight (GoF-Strukturmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (flyweight-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="flyweight-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  // java.util.Random nachgebaut (48-Bit-Kongruenzgenerator, nextInt mit Verwerfen wie im JDK),
+  // damit die Bäume genau die sind, die Java mit new Random(42) pflanzt
+  function JavaRandom(seed) {
+    const MASKE = (1n << 48n) - 1n;
+    let s = (BigInt(seed) ^ 0x5DEECE66Dn) & MASKE;
+    const next = bits => { s = (s * 0x5DEECE66Dn + 0xBn) & MASKE; return Number(s >> BigInt(48 - bits)); };
+    return {
+      nextInt(bound) {
+        const m = bound - 1;
+        let r = next(31);
+        if ((bound & m) === 0) return Number((BigInt(bound) * BigInt(r)) >> 31n);
+        let u = r; r = u % bound;
+        while (u - r + m > 2147483647) { u = next(31); r = u % bound; }   // in Java: int-Überlauf < 0
+        return r;
+      }
+    };
+  }
+
+  const ARTEN = [['Eiche', 'dunkelgrün'], ['Birke', 'hellgrün'], ['Ahorn', 'rot']];
+  const EINZELN = 7;                                    // so viele Bäume Schritt für Schritt, dann der Rest auf einmal
+  const BAEUME = [], ANZAHL = [0, 0, 0];
+  (function pflanze() {
+    const z = JavaRandom(42);
+    for (let i = 0; i < 100000; i++) {
+      const art = z.nextInt(3), x = z.nextInt(10000), y = z.nextInt(10000);
+      ANZAHL[art]++;
+      if (i < EINZELN) BAEUME.push({ art, x, y });
+    }
+  })();
+
+  const zahl = n => n.toLocaleString('de-DE');
+  const str = t => `"${t}"`;
+  const mb = b => (b / 1048576).toFixed(1).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  const ZEILE_HOLE = 'return cache.computeIfAbsent(name + "|" + farbe, key -> {';
+
+  function lauf(s) {
+    const cacheInhalt = [];                             // Schlüssel in der Reihenfolge des Einfügens
+    const artId = {};
+    let cache = null;
+    const zeigeCache = () => `{${cacheInhalt.map(k => `${k}=→ ${artId[k]}`).join(', ')}}`;
+
+    // Baumarten.hole(name, farbe): beim ersten Mal erzeugen, danach aus dem cache
+    function hole(s, name, farbe, zurueck, setze, ruhig) {
+      const key = `${name}|${farbe}`;
+      if (!cache) {
+        cache = s.neu('ConcurrentHashMap', [['Einträge', '{}']], 'Baumarten.cache');
+        s.ruf('Baumarten.hole(String name, String farbe)', [['name', str(name)], ['farbe', str(farbe)]], ZEILE_HOLE,
+          'Erster Zugriff auf Baumarten: Die Klasse wird geladen, ihr statischer cache entsteht – noch leer. Dann fragt hole() den cache nach dem Schlüssel „' + key + '“.', { cur: [cache], klassen: ['Baumarten'] });
+      } else {
+        s.ruf('Baumarten.hole(String name, String farbe)', [['name', str(name)], ['farbe', str(farbe)]], ZEILE_HOLE,
+          artId[key] ? `„${key}“ steht schon im cache – computeIfAbsent liefert das vorhandene Objekt, es entsteht nichts Neues.` : `„${key}“ fehlt noch im cache.`,
+          { cur: artId[key] ? [cache, artId[key]] : [cache], klassen: ['Baumarten'] });
+      }
+      if (!artId[key]) {
+        s.aus(`  neue Baumart erzeugt: ${name} (${farbe})`);
+        s.ruf('key -> { … }', [['key', str(key)]], 'System.out.println("  neue Baumart erzeugt: "',
+          cacheInhalt.length ? 'Wieder fehlt der Schlüssel, also läuft das Lambda.' : 'computeIfAbsent ruft das Lambda nur auf, wenn der Schlüssel fehlt.', { cur: [cache], klassen: ['Baumarten'] });
+        const id = s.neu('Baumart', [['name', str(name)], ['farbe', str(farbe)], ['textur', 'byte[50000]']], `Baumart ${name}`);
+        artId[key] = id;
+        s.schritt('return new Baumart(name, farbe, new byte[50_000]);', `${id} entsteht – mit 50.000 Byte Textur, dem teuren Teil. Das ist der intrinsische Zustand: für alle ${name}n gleich.`, { klassen: ['Baumarten'] });
+        cacheInhalt.push(key);
+        s.feld(cache, 'Einträge', zeigeCache());
+        s.raus(ZEILE_HOLE, `computeIfAbsent legt ${id} unter „${key}“ im cache ab.`, { cur: [cache, id], klassen: ['Baumarten'] });
+      }
+      s.raus(zurueck, ruhig || `hole() liefert → ${artId[key]}.`, { cur: [artId[key]], setze });
+      return artId[key];
+    }
+
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: Ein Wald mit 100.000 Bäumen soll entstehen.', { klassen: ['main()'] });
+    s.var('arten', '[[Eiche, dunkelgrün], [Birke, hellgrün], [Ahorn, rot]]');
+    s.schritt('String[][] arten = {', 'Drei Baumarten mit Farbe.', { klassen: ['main()'] });
+    s.var('zufall', 'Random(42)');
+    s.schritt('Random zufall = new Random(42);', 'Ein Zufallsgenerator mit festem Startwert 42 – darum pflanzt das Programm bei jedem Lauf genau dieselben Bäume. Die Visualisierung rechnet ihn exakt nach.', { klassen: ['main()'] });
+    const wald = s.neu('ArrayList', [['size', '0']], 'wald');
+    s.var('wald', s.ref(wald));
+    s.schritt('List<Baum> wald = new ArrayList<>();', 'Eine leere Liste für den Wald.', { klassen: ['main()'] });
+    s.aus('Pflanze 100.000 Bäume ...');
+    s.schritt('System.out.println("Pflanze 100.000 Bäume ...");', 'Los geht’s.', { klassen: ['main()'] });
+
+    const baumIds = [];
+    BAEUME.forEach((b, i) => {
+      const [name, farbe] = ARTEN[b.art];
+      s.var('i', String(i));
+      s.var('a', `[${name}, ${farbe}]`);
+      s.schritt('String[] a = arten[zufall.nextInt(arten.length)];', i === 0
+        ? `Durchlauf 0: zufall.nextInt(3) liefert ${b.art} → ${name}. Dann zieht new Baum(...) zwei weitere Zufallszahlen für die Position: (${b.x}, ${b.y}).`
+        : `Durchlauf ${i}: ${name}, Position (${b.x}, ${b.y}).`, { klassen: ['main()'] });
+      const art = hole(s, name, farbe, 'Baumarten.hole(a[0], a[1])));');
+      const id = s.neu('Baum', [['x', String(b.x)], ['y', String(b.y)], ['art', s.ref(art)]]);
+      baumIds.push(id);
+      s.feld(wald, 'size', String(i + 1));
+      s.schritt('wald.add(new Baum(zufall.nextInt(10_000), zufall.nextInt(10_000),', i === 0
+        ? `${id}: nur Position und ein Verweis auf ${art} – ein paar Bytes statt 50.000. Das ist der extrinsische Zustand.`
+        : `${id} bei (${b.x}, ${b.y}) zeigt auf ${art}.`, { cur: [id, art] });
+    });
+
+    // der Rest der Schleife in einem Schritt
+    const rest = 100000 - EINZELN;
+    const restId = s.neu('Baum', [['Anzahl', zahl(rest)], ['art', 'je → eine der drei Baumarten']], `${zahl(rest)} weitere Bäume`);
+    s.feld(wald, 'size', '100000');
+    s.var('i', '–'); s.var('a', '–');
+    s.schritt('for (int i = 0; i < 100_000; i++) {', `Die übrigen ${zahl(rest)} Durchläufe in einem Schritt: Jedes hole() findet seine Art schon im cache, es entsteht keine weitere Baumart. Am Ende teilen sich ${zahl(ANZAHL[0])} Eichen, ${zahl(ANZAHL[1])} Birken und ${zahl(ANZAHL[2])} Ahorne drei Objekte. (i und a gelten nur in der Schleife.)`, { cur: [restId, ...Object.values(artId)] });
+
+    // zeichnen: die Position kommt als Parameter dazu
+    const b0 = BAEUME[0], erste = baumIds[0], ersteArt = artId[ARTEN[b0.art].join('|')];
+    s.schritt('wald.forEach(Baum::zeichne);', 'Jetzt wird jeder Baum gezeichnet. Einmal im Detail:', { cur: [wald] });
+    s.ruf('Baum.zeichne()', [['this', s.ref(erste)]], 'void zeichne() { art.zeichne(x, y); }', `${erste}.zeichne() gibt seine Position an seine Art weiter.`, { cur: [erste] });
+    s.ruf('Baumart.zeichne(int x, int y)', [['this', s.ref(ersteArt)], ['x', String(b0.x)], ['y', String(b0.y)]], 'void zeichne(int x, int y) {',
+      `${ersteArt} zeichnet sich an (${b0.x}, ${b0.y}). Die Position steckt nicht in der Baumart, sie kommt als Parameter – so kann ein Objekt für alle ${ARTEN[b0.art][0]}e dienen. (Im Beispiel bleibt der Methodenrumpf leer.)`, { cur: [ersteArt] });
+    s.raus('void zeichne() { art.zeichne(x, y); }', 'Fertig.', { cur: [erste] });
+    s.raus('wald.forEach(Baum::zeichne);', 'Und so für alle 100.000 Bäume.', { cur: [wald] });
+
+    const mit = 3 * 50000, ohne = 100000 * 50000;
+    s.var('mitFlyweight', String(mit));
+    s.schritt('long mitFlyweight  = (long) Baumarten.anzahl() * 50_000;', `3 Baumarten × 50.000 Byte = ${zahl(mit)} Byte.`, { klassen: ['main()'] });
+    s.var('ohneFlyweight', String(ohne));
+    s.schritt('long ohneFlyweight = (long) wald.size() * 50_000;', `Hätte jeder Baum seine eigene Textur: 100.000 × 50.000 = ${zahl(ohne)} Byte. (Das cast auf long ist nötig – das Ergebnis passt nicht in einen int.)`, { klassen: ['main()'] });
+    s.aus('');
+    s.schritt('System.out.println();', 'Eine Leerzeile.', { klassen: ['main()'] });
+    s.aus('Bäume:                   100.000');
+    s.schritt('System.out.printf(Locale.GERMANY, "Bäume:', '%,d setzt die Tausenderpunkte.', { klassen: ['main()'] });
+    s.aus('Baumart-Objekte:         3');
+    s.schritt('System.out.printf(Locale.GERMANY, "Baumart-Objekte:', 'Drei – so viele, wie es Arten gibt, egal wie viele Bäume.', { klassen: ['main()'] });
+    s.aus(`Texturen mit Flyweight:  ${mb(mit)} MB`);
+    s.schritt('System.out.printf(Locale.GERMANY, "Texturen mit Flyweight:', `${zahl(mit)} Byte sind ${mb(mit)} MB.`, { klassen: ['main()'] });
+    s.aus(`Texturen ohne Flyweight: ${mb(ohne)} MB`);
+    s.schritt('System.out.printf(Locale.GERMANY, "Texturen ohne Flyweight:', `Ohne Teilen wären es ${mb(ohne)} MB – rund 4,7 GB nur für Texturen.`, { klassen: ['main()'] });
+
+    const eiche = 'Eiche|dunkelgrün';
+    hole(s, 'Eiche', 'dunkelgrün', 'Baumart e1 = Baumarten.hole("Eiche", "dunkelgrün");', [['e1', s.ref(artId[eiche])]], `e1 = → ${artId[eiche]}.`);
+    hole(s, 'Eiche', 'dunkelgrün', 'Baumart e2 = Baumarten.hole("Eiche", "dunkelgrün");', [['e2', s.ref(artId[eiche])]], `e2 = → ${artId[eiche]} – dieselbe Referenz wie e1.`);
+    s.aus('\nDieselbe Eiche-Instanz: true');
+    s.schritt('Dieselbe Eiche-Instanz: "', 'e1 == e2 vergleicht Referenzen: true, beide zeigen auf dasselbe Objekt.', { cur: [artId[eiche]], klassen: ['main()'] });
+
+    const i100 = s.neu('Integer', [['value', '100']], 'Integer 100 (IntegerCache)');
+    s.aus('Integer.valueOf(100) == Integer.valueOf(100): true');
+    s.schritt('+ (Integer.valueOf(100) ==', 'Ein Flyweight im JDK: Integer.valueOf() hält die Werte −128 bis 127 in einem Cache bereit. Beide Aufrufe liefern dasselbe Objekt → true.', { cur: [i100] });
+    const a1 = s.neu('Integer', [['value', '1000']], 'Integer 1000 #1');
+    const a2 = s.neu('Integer', [['value', '1000']], 'Integer 1000 #2');
+    s.aus('Integer.valueOf(1000) == Integer.valueOf(1000): false');
+    s.schritt('+ (Integer.valueOf(1000) ==', '1000 liegt außerhalb des Caches: Jeder Aufruf erzeugt ein neues Integer-Objekt, == vergleicht zwei verschiedene → false. (Darum Zahlen-Objekte immer mit equals vergleichen.)', { cur: [a1, a2] });
+    s.weg(wald, cache, ...Object.values(artId), ...baumIds, restId, a1, a2);
+    s.raus(['+ (Integer.valueOf(1000) ==', 1], 'main ist zu Ende. 100.000 Bäume, aber nur drei Texturen im Speicher.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'FlyweightFactory', 'Flyweight'],
+    diagramm: {
+      breite: 170, abstandX: 40, abstandY: 50,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1, y: 0 },
+        { name: 'Baumarten', art: 'final class', rolle: 'FlyweightFactory', x: 0, y: 1 },
+        { name: 'Baum', art: 'record', rolle: 'Client', x: 2, y: 1 },
+        { name: 'Baumart', art: 'record', rolle: 'Flyweight', x: 1, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Baumarten', art: 'nutzt', text: 'hole()' },
+        { von: 'main()', zu: 'Baum', art: 'erzeugt', text: 'new' },
+        { von: 'Baumarten', zu: 'Baumart', art: 'erzeugt', text: 'einmal je Art' },
+        { von: 'Baum', zu: 'Baumart', art: 'nutzt', text: 'art' }
+      ]
+    },
+    szenarien: [
+      { name: 'java Flyweight.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+  window.__flyweight = { baeume: BAEUME, anzahl: ANZAHL };
+})();
+</script>
+</body>
+</html>

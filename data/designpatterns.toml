@@ -100,6 +100,7 @@ gruppe = "struktur"
 schluessel = "flyweight"
 name = "Flyweight"
 text = "viele feingranulare Objekte effizient teilen (intrinsischer vs. extrinsischer Zustand)"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Die ersten sieben Bäume entstehen einzeln, und zwar genau die, die Java mit new Random(42) pflanzt (der Zufallsgenerator ist nachgerechnet). Bei jeder neuen Art legt die Fabrik ein Baumart-Objekt mit Textur an, bei jeder bekannten liefert sie das vorhandene aus dem cache. Die übrigen 99.993 Bäume folgen in einem Schritt. Im Speicher bleibt es bei drei Baumarten, egal wie groß der Wald wird."
 
 [[muster]]
 nummer = 12
