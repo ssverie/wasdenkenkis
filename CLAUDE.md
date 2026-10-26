@@ -145,7 +145,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- IT-Übungen: Kategorien 9–11 mit Blättern „API-Testen“, „Performance & Last“, „Testmanagement & ISTQB-Begriffe“ (`data/uebungen/{api,performance,testmanagement}.json`, `content/it-konzepte/uebungen/{api,performance,testmanagement}.md`, `_index.md`), Herkunft wie bisher (Sven: „9, 10, 11“)
+- (leer – zuletzt freigegeben und gepusht am 2026-10-26: IT-Übungen Kategorien 9–11, 11 Blätter)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
