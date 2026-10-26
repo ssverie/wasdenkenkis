@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bridge – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Bridge (GoF-Strukturmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (bridge-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="bridge-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  const EMPF = 'Sven', EREIGNIS = 'Festplatte zu 95 Prozent belegt auf Server web-01';
+  const ABSENDER = 'server@firma.de';
+  const M = {};                                         // Modell nebenher: Klasse, Kanal, Wiederholungen
+  let erklaertSms = false, erklaertMelde = { Info: false, Alarm: false };
+
+  // Kanal.sende(empfaenger, text) – E-Mail oder SMS
+  function sende(s, kanal, text, zurueck, seite) {
+    const beide = [seite];                              // die Abstraktion, die gerade sendet, leuchtet im Diagramm mit
+    if (M[kanal].typ === 'EmailKanal') {
+      s.ruf('EmailKanal.sende(String empfaenger, String text)', [['this', s.ref(kanal)], ['empfaenger', `"${EMPF}"`], ['text', `"${text}"`]],
+        'System.out.println("  E-Mail von "', 'EmailKanal.sende läuft – das „Wie“ steckt nur hier.', { cur: [kanal], klassen: beide });
+      s.aus(`  E-Mail von ${ABSENDER} an ${EMPF}: ${text}`);
+      s.schritt('System.out.println("  E-Mail von "', 'Die E-Mail nimmt den Text vollständig.', { cur: [kanal], klassen: beide });
+    } else {
+      s.ruf('SmsKanal.sende(String empfaenger, String text)', [['this', s.ref(kanal)], ['empfaenger', `"${EMPF}"`], ['text', `"${text}"`]],
+        'String kurz = text.length() > 40', 'SmsKanal.sende läuft – ein anderes „Wie“ für denselben Aufruf.', { cur: [kanal], klassen: beide });
+      const kurz = text.length > 40 ? text.substring(0, 37) + '...' : text;
+      s.var('kurz', `"${kurz}"`);
+      s.schritt('String kurz = text.length() > 40', erklaertSms
+        ? `Wieder zu lang (${text.length} Zeichen) – gekürzt.`
+        : `Der Text hat ${text.length} Zeichen, mehr als 40. Die SMS kürzt auf 37 Zeichen und hängt „...“ an – das weiß nur der SmsKanal, die Benachrichtigung merkt davon nichts.`, { cur: [kanal], klassen: beide });
+      erklaertSms = true;
+      s.aus(`  SMS an ${EMPF}: ${kurz}`);
+      s.schritt('System.out.println("  SMS an "', 'Die SMS ist verschickt.', { cur: [kanal], klassen: beide });
+    }
+    s.raus(zurueck, 'sende() ist fertig, zurück in der Benachrichtigung.');
+  }
+
+  function lauf(s) {
+    erklaertSms = false; erklaertMelde = { Info: false, Alarm: false };
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: Zwei Kanäle, zwei Arten von Benachrichtigung – und alle vier Kombinationen.');
+    const email = s.neu('EmailKanal', [['absender', `"${ABSENDER}"`]]); M[email] = { typ: 'EmailKanal' };
+    s.var('email', s.ref(email));
+    s.schritt('Kanal email = new EmailKanal("server@firma.de");', `${email}: ein Kanal, der per E-Mail verschickt. Die Variable hat nur den Typ Kanal.`);
+    const sms = s.neu('SmsKanal', []); M[sms] = { typ: 'SmsKanal' };
+    s.var('sms', s.ref(sms));
+    s.schritt('Kanal sms = new SmsKanal();', `${sms}: ein zweiter Kanal.`);
+
+    // die vier Kombinationen
+    const plan = [['Info', email, null, 'new Info(email),'], ['Info', sms, null, 'new Info(sms),'], ['Alarm', email, 1, 'new Alarm(email, 1),'], ['Alarm', sms, 2, 'new Alarm(sms, 2));']];
+    const alle = [];
+    let ersteInfo = true, ersterAlarm = true;
+    for (const [typ, kanal, w, zeile] of plan) {
+      if (typ === 'Info' && ersteInfo) {
+        s.ruf('Info(Kanal kanal)', [['kanal', s.ref(kanal)]], 'Info(Kanal kanal) { super(kanal); }', 'Der Konstruktor von Info reicht den Kanal an die Oberklasse weiter.', { klassen: ['Info'] });
+        const b = s.neu('Info', [['kanal', s.ref(kanal)]]); M[b] = { typ, kanal };
+        s.schritt('protected Benachrichtigung(Kanal kanal) { this.kanal = kanal; }', `Benachrichtigung speichert ihn im Feld kanal – das ist die Brücke. ${b} zeigt jetzt auf ${kanal}.`, { klassen: ['Benachrichtigung', 'Kanal'] });
+        s.raus(zeile, `${b} ist fertig.`, { cur: [b] });
+        alle.push(b); ersteInfo = false; continue;
+      }
+      if (typ === 'Alarm' && ersterAlarm) {
+        s.ruf('Alarm(Kanal kanal, int wiederholungen)', [['kanal', s.ref(kanal)], ['wiederholungen', String(w)]], 'Alarm(Kanal kanal, int wiederholungen) {', 'Alarm hat zusätzlich eine Zahl von Wiederholungen.', { klassen: ['Alarm'] });
+        const b = s.neu('Alarm', [['kanal', s.ref(kanal)], ['wiederholungen', String(w)]]); M[b] = { typ, kanal, w };
+        s.schritt('this.wiederholungen = wiederholungen;', `super(kanal) setzt die Brücke, dann merkt sich ${b} seine Wiederholungen: ${w}. Diese Logik gehört zur Abstraktion, nicht zum Kanal.`, { klassen: ['Alarm'] });
+        s.raus(zeile, `${b} ist fertig.`, { cur: [b] });
+        alle.push(b); ersterAlarm = false; continue;
+      }
+      const b = s.neu(typ, typ === 'Alarm' ? [['kanal', s.ref(kanal)], ['wiederholungen', String(w)]] : [['kanal', s.ref(kanal)]]); M[b] = { typ, kanal, w };
+      s.schritt(zeile, `${b} mit ${kanal}${w ? `, ${w} Wiederholungen` : ''}.`);
+      alle.push(b);
+    }
+    s.var('alle', `[${alle.map(s.ref).join(', ')}]`);
+    s.schritt('List<Benachrichtigung> alle = List.of(', 'Vier Kombinationen aus nur vier Klassen. Ohne Brücke bräuchte jede Kombination eine eigene Klasse – und jeder neue Kanal zwei weitere.', { klassen: ['Benachrichtigung'] });
+
+    // Schleife
+    for (const b of alle) {
+      const { typ, kanal, w } = M[b], kanalTyp = M[kanal].typ;
+      s.var('b', s.ref(b));
+      s.schritt('for (Benachrichtigung b : alle) {', `b zeigt auf ${b}.`, { cur: [b] });
+      s.aus(`${typ} über ${kanalTyp}:`);
+      s.schritt('System.out.println(b.getClass().getSimpleName() + " über "', `b.kanal ist das Brückenfeld – es zeigt auf ${kanal}. Die Kopfzeile nennt beide Seiten.`, { cur: [b, kanal] });
+      s.schritt('b.melde("Sven"', 'b.melde(...): main kennt nur die Abstraktion.', { cur: [b] });
+      if (typ === 'Info') {
+        s.ruf('Info.melde(String empfaenger, String ereignis)', [['this', s.ref(b)], ['empfaenger', `"${EMPF}"`], ['ereignis', `"${EREIGNIS}"`]],
+          'kanal.sende(empfaenger, "Info: " + ereignis);', erklaertMelde.Info ? 'Info.melde läuft wieder.' : 'Info.melde bestimmt das „Was“: Es setzt „Info: “ vor das Ereignis – und reicht den Text über die Brücke an den Kanal.', { cur: [b] });
+        erklaertMelde.Info = true;
+        sende(s, kanal, `Info: ${EREIGNIS}`, 'kanal.sende(empfaenger, "Info: " + ereignis);', 'Info');
+      } else {
+        s.ruf('Alarm.melde(String empfaenger, String ereignis)', [['this', s.ref(b)], ['empfaenger', `"${EMPF}"`], ['ereignis', `"${EREIGNIS}"`]],
+          'for (int i = 1; i <= wiederholungen; i++) {', erklaertMelde.Alarm ? `Alarm.melde läuft, diesmal mit ${w} Wiederholungen.` : 'Alarm.melde hat eigene Logik: Es wiederholt die Meldung und schreibt sie in Großbuchstaben.', { cur: [b] });
+        erklaertMelde.Alarm = true;
+        for (let i = 1; i <= w; i++) {
+          s.var('i', String(i));
+          s.schritt('for (int i = 1; i <= wiederholungen; i++) {', `Durchlauf ${i} von ${w}.`, { cur: [b] });
+          sende(s, kanal, `ALARM (${i}/${w}): ${EREIGNIS.toUpperCase()}`, 'kanal.sende(empfaenger, "ALARM ("', 'Alarm');
+        }
+      }
+      s.raus('b.melde("Sven"', `${b} ist fertig. Abstraktion und Kanal haben zusammengearbeitet, ohne einander zu kennen – nur über die Schnittstelle Kanal.`);
+    }
+    s.schritt('for (Benachrichtigung b : alle) {', 'Alle vier Kombinationen sind durch.');
+    s.weg(...alle, email, sms);
+    s.raus(['b.melde("Sven"', 2], 'main ist zu Ende. Ein dritter Kanal (etwa Push) bräuchte nur eine neue Klasse – Info und Alarm könnten ihn sofort benutzen.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Abstraction', 'RefinedAbstraction', 'Implementor', 'ConcreteImplementor'],
+    diagramm: {
+      breite: 170, abstandX: 40, abstandY: 50,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 0.5, y: 0 },
+        { name: 'Benachrichtigung', art: 'abstract class', rolle: 'Abstraction', x: 0.5, y: 1 },
+        { name: 'Kanal', art: 'interface', rolle: 'Implementor', x: 2.5, y: 1 },
+        { name: 'Info', art: 'class', rolle: 'RefinedAbstraction', x: 0, y: 2 },
+        { name: 'Alarm', art: 'class', rolle: 'RefinedAbstraction', x: 1, y: 2 },
+        { name: 'EmailKanal', art: 'record', rolle: 'ConcreteImplementor', x: 2, y: 2 },
+        { name: 'SmsKanal', art: 'record', rolle: 'ConcreteImplementor', x: 3, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Benachrichtigung', art: 'nutzt', text: 'nutzt', dx: 22 },
+        { von: 'Benachrichtigung', zu: 'Kanal', art: 'nutzt', text: 'kanal – die Brücke' },
+        { von: 'Info', zu: 'Benachrichtigung', art: 'erbt' }, { von: 'Alarm', zu: 'Benachrichtigung', art: 'erbt' },
+        { von: 'EmailKanal', zu: 'Kanal', art: 'impl' }, { von: 'SmsKanal', zu: 'Kanal', art: 'impl' }
+      ]
+    },
+    szenarien: [
+      { name: 'java Bridge.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

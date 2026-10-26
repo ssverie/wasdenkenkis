@@ -68,6 +68,7 @@ gruppe = "struktur"
 schluessel = "bridge"
 name = "Bridge"
 text = "Abstraktion und Implementierung entkoppeln, beide unabhängig variierbar"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Im Klassendiagramm liegt die Brücke waagerecht: links das „Was“ (Info, Alarm), rechts das „Wie“ (E-Mail, SMS), dazwischen das Feld kanal. Im Aufrufstapel sieht man bei jeder Meldung beide Seiten übereinander: oben läuft der Kanal, darunter die Benachrichtigung, die ihn benutzt. Alarm wiederholt die Meldung, die SMS kürzt sie, und jede Seite weiß nur von ihrem eigenen Teil."
 
 [[muster]]
 nummer = 8
