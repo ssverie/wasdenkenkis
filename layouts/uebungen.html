@@ -1,0 +1,28 @@
+{{- /* IT-Übungen (/it-konzepte/uebungen/): die Kategorien aus dem Front-Matter (kategorien = [...], Svens Plan),
+       je Kategorie ihre Übungsblätter (Seiten mit kategorie = "<Name>") mit Anzahl der Aufgaben; ohne Blatt „folgt“. */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  {{- with .Params.oben }}{{ with site.GetPage . }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+<ol class="uebung-kategorien">
+  {{- range .Params.kategorien }}
+  {{- $name := . }}
+  {{- $blaetter := where $.RegularPages "Params.kategorie" $name }}
+  <li>
+    <strong>{{ $name }}</strong>
+    {{- with $blaetter }}
+    <ul>
+      {{- range . }}
+      {{- $anzahl := len (index hugo.Data.uebungen .Params.uebungen).tasks }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a> <span class="meta">({{ $anzahl }} Aufgaben)</span></li>
+      {{- end }}
+    </ul>
+    {{- else }}
+    <span class="meta">(folgt)</span>
+    {{- end }}
+  </li>
+  {{- end }}
+</ol>
+{{ end }}

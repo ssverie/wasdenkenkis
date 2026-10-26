@@ -37,6 +37,11 @@
     li.classList.toggle('beantwortet', beantwortet);
     li.classList.toggle('getroffen', beantwortet && gewaehlt === richtigIndex(li));
     li.querySelector('.loesung').open = beantwortet;
+    // „Fehler finden“: erst nach der Antwort die fehlerhaften Zeilen im Code markieren (vorher würde es die Lösung verraten)
+    if (li.dataset.fehlerzeilen) {
+      const zeilen = li.dataset.fehlerzeilen.split(',').map(Number);
+      li.querySelectorAll('.highlight')[0].querySelectorAll('.line').forEach((z, i) => z.classList.toggle('fehlerzeile', beantwortet && zeilen.includes(i + 1)));
+    }
     li.querySelector('.aufgabe-aktionen').hidden = !beantwortet;
     li.querySelector('.geloest-marke').hidden = !stand.geloest.includes(id);
   }

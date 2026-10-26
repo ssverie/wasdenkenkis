@@ -49,7 +49,9 @@
   </div>
   <ol class="aufgaben">
     {{- range $aufgaben }}
-    <li class="aufgabe" id="{{ .id }}" data-id="{{ .id }}" data-stufe="{{ .difficulty }}" data-themen="{{ delimit .topics "|" }}" data-richtig="{{ .correctIndex }}">
+    {{- /* Format „Fehler finden“: spec, bugLines, fixedCode, demo – Antworten sind Sätze, nicht Ausgaben */}}
+    {{- $fehler := isset . "fixedCode" }}
+    <li class="aufgabe{{ if $fehler }} fehler-finden{{ end }}" id="{{ .id }}" data-id="{{ .id }}" data-stufe="{{ .difficulty }}" data-themen="{{ delimit .topics "|" }}" data-richtig="{{ .correctIndex }}"{{ with .bugLines }} data-fehlerzeilen="{{ delimit . "," }}"{{ end }}>
       <div class="aufgabe-kopf">
         <strong>{{ .title }}</strong>
         <span class="stufe" title="Schwierigkeit {{ .difficulty }} von 3" aria-label="Schwierigkeit {{ .difficulty }} von 3">{{ strings.Repeat (int .difficulty) "★" }}{{ strings.Repeat (sub 3 (int .difficulty)) "☆" }}</span>
@@ -57,17 +59,33 @@
         <span class="geloest-marke" hidden>✓ gelöst</span>
       </div>
       <p class="frage">{{ .question }}</p>
+      {{- with .spec }}
+      <p class="spec"><strong>Spezifikation:</strong> {{ . }}</p>
+      {{- end }}
       {{ transform.Highlight .code $sprache (dict "noClasses" false) }}
-      <div class="optionen">
+      <div class="optionen{{ if $fehler }} saetze{{ end }}">
         {{- range $i, $o := .options }}
-        <button type="button" class="option" data-i="{{ $i }}" disabled><pre>{{ $o }}</pre></button>
+        <button type="button" class="option" data-i="{{ $i }}" disabled>{{ if $fehler }}<span>{{ $o }}</span>{{ else }}<pre>{{ $o }}</pre>{{ end }}</button>
         {{- end }}
       </div>
       <details class="loesung">
         <summary>Lösung anzeigen</summary>
+        {{- with .answer }}
         <p><strong>Ausgabe:</strong></p>
-        <pre>{{ .answer }}</pre>
+        <pre>{{ . }}</pre>
+        {{- end }}
+        {{- if $fehler }}
+        <p><strong>Richtig:</strong> {{ index .options (int .correctIndex) }}</p>
+        {{- end }}
         <p>{{ .explanation }}</p>
+        {{- with .fixedCode }}
+        <p><strong>Korrigiert:</strong></p>
+        {{ transform.Highlight . $sprache (dict "noClasses" false) }}
+        {{- end }}
+        {{- with .demo }}
+        <p class="probe"><strong>Probe:</strong> <code>{{ .call }}</code><br>
+          fehlerhaft: <code>{{ .buggyResult }}</code> · korrigiert: <code>{{ .fixedResult }}</code></p>
+        {{- end }}
       </details>
       <div class="aufgabe-aktionen" hidden>
         <button type="button" class="nochmal">↻ Nochmal versuchen</button>

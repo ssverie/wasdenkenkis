@@ -4,6 +4,7 @@ description = "Jede Lösung wurde mit OpenJDK 21 ausgeführt und geprüft."
 date = 2026-10-26T15:36:00+01:00
 layout = "uebung"
 uebungen = "java-code-lesen"
+kategorie = "Code lesen & vorhersagen"
 sprache_code = "java"
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"

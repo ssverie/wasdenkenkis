@@ -1,0 +1,610 @@
+{
+  "version": 1,
+  "category": "java-fehler-finden",
+  "language": "de",
+  "description": "Java: Fehler finden. Jeder Fehler wurde mit OpenJDK 21 nachgewiesen (fehlerhafte und korrigierte Version ausgeführt).",
+  "tasks": [
+    {
+      "id": "bug-001",
+      "category": "java-fehler-finden",
+      "title": "Summe eines Arrays",
+      "difficulty": 1,
+      "topics": [
+        "Schleifen",
+        "Off-by-one"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert die Summe aller Werte im Array.",
+      "code": "static int sum(int[] values) {\n    int total = 0;\n    for (int i = 0; i <= values.length; i++) {\n        total += values[i];\n    }\n    return total;\n}",
+      "options": [
+        "+= überschreibt total statt zu addieren",
+        "total müsste mit 1 statt 0 beginnen",
+        "Die Schleife läuft mit <= einen Index zu weit",
+        "Der Startwert i = 0 lässt das erste Element aus"
+      ],
+      "correctIndex": 2,
+      "bugLines": [
+        3
+      ],
+      "fixedCode": "static int sum(int[] values) {\n    int total = 0;\n    for (int i = 0; i < values.length; i++) {\n        total += values[i];\n    }\n    return total;\n}",
+      "demo": {
+        "call": "sum(new int[]{1, 2, 3})",
+        "buggyResult": "ArrayIndexOutOfBoundsException",
+        "fixedResult": "6"
+      },
+      "explanation": "Gültige Indizes gehen von 0 bis length - 1. Mit <= wird zuletzt values[length] gelesen, das wirft eine ArrayIndexOutOfBoundsException. Klassischer Off-by-one-Fehler, den ein Test mit beliebigem nicht-leerem Array sofort findet."
+    },
+    {
+      "id": "bug-002",
+      "category": "java-fehler-finden",
+      "title": "Rolle prüfen",
+      "difficulty": 1,
+      "topics": [
+        "Strings",
+        "Gleichheit"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert true, wenn die Rolle \"admin\" ist.",
+      "code": "static boolean isAdmin(String role) {\n    return role == \"admin\";\n}",
+      "options": [
+        "Groß-/Kleinschreibung wird nicht beachtet",
+        "Der Rückgabetyp müsste Boolean sein",
+        "\"admin\" müsste als Konstante definiert sein",
+        "== vergleicht Referenzen statt Inhalt"
+      ],
+      "correctIndex": 3,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static boolean isAdmin(String role) {\n    return \"admin\".equals(role);\n}",
+      "demo": {
+        "call": "isAdmin(new String(\"admin\"))",
+        "buggyResult": "false",
+        "fixedResult": "true"
+      },
+      "explanation": "Mit Literalen im Test funktioniert == zufällig (String-Pool). Kommt der Wert aber aus einer Eingabe, Datenbank oder substring, ist es ein anderes Objekt. Die Form \"admin\".equals(role) ist zusätzlich null-sicher. Tipp für Tests: Eingaben mit new String(...) erzeugen, dann fällt der Fehler auf."
+    },
+    {
+      "id": "bug-003",
+      "category": "java-fehler-finden",
+      "title": "Durchschnitt",
+      "difficulty": 1,
+      "topics": [
+        "Arithmetik",
+        "Datentypen"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert den Durchschnitt der Werte, mit Nachkommastellen.",
+      "code": "static double average(List<Integer> values) {\n    int sum = 0;\n    for (int v : values) sum += v;\n    return sum / values.size();\n}",
+      "options": [
+        "Die for-each-Schleife überspringt das letzte Element",
+        "int / int rechnet ganzzahlig, die Nachkommastellen gehen verloren",
+        "values.size() zählt ab 0",
+        "sum müsste long sein, sonst läuft es über"
+      ],
+      "correctIndex": 1,
+      "bugLines": [
+        4
+      ],
+      "fixedCode": "static double average(List<Integer> values) {\n    int sum = 0;\n    for (int v : values) sum += v;\n    return (double) sum / values.size();\n}",
+      "demo": {
+        "call": "average(List.of(1, 2))",
+        "buggyResult": "1.0",
+        "fixedResult": "1.5"
+      },
+      "explanation": "sum / values.size() ist eine Ganzzahldivision; erst das Ergebnis wird zu double. Aus 3 / 2 wird 1, dann 1.0. Mindestens ein Operand muss vor der Division double sein. Gute Testdaten: Werte mit ungeradem Durchschnitt."
+    },
+    {
+      "id": "bug-004",
+      "category": "java-fehler-finden",
+      "title": "Negative Werte entfernen",
+      "difficulty": 2,
+      "topics": [
+        "Collections",
+        "Iteration"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Entfernt alle negativen Zahlen aus der Liste.",
+      "code": "static void removeNegatives(List<Integer> values) {\n    for (Integer v : values) {\n        if (v < 0) values.remove(v);\n    }\n}",
+      "options": [
+        "Integer kann nicht mit < verglichen werden",
+        "v < 0 müsste v <= 0 sein",
+        "Die Liste wird während der for-each-Iteration verändert",
+        "remove(v) entfernt den Index statt den Wert"
+      ],
+      "correctIndex": 2,
+      "bugLines": [
+        2,
+        3,
+        4
+      ],
+      "fixedCode": "static void removeNegatives(List<Integer> values) {\n    values.removeIf(v -> v < 0);\n}",
+      "demo": {
+        "call": "removeNegatives(new ArrayList<>(List.of(1, -2, 3, -4, 5)))",
+        "buggyResult": "ConcurrentModificationException",
+        "fixedResult": "[1, 3, 5]"
+      },
+      "explanation": "Eine for-each-Schleife nutzt intern einen Iterator. Wird die Liste nebenher verändert, wirft der Iterator beim nächsten Schritt eine ConcurrentModificationException. Tückisch: Steht der negative Wert an vorletzter Stelle, tritt der Fehler nicht auf, er bleibt dann einfach in der Liste. Lösung: removeIf oder explizit Iterator.remove()."
+    },
+    {
+      "id": "bug-005",
+      "category": "java-fehler-finden",
+      "title": "Begrüßung",
+      "difficulty": 1,
+      "topics": [
+        "null",
+        "Validierung"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert \"Hallo <Name>\" oder \"Hallo Gast\", wenn kein Name vorhanden ist (null oder leer).",
+      "code": "static String greet(String name) {\n    if (name.isEmpty()) return \"Hallo Gast\";\n    return \"Hallo \" + name;\n}",
+      "options": [
+        "Die Verkettung mit + funktioniert nicht mit null",
+        "null wird nicht abgefangen, isEmpty() wirft eine NullPointerException",
+        "Leerzeichen-Namen wie \"  \" sollten auch als Gast gelten",
+        "Die Methode müsste Optional<String> liefern"
+      ],
+      "correctIndex": 1,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static String greet(String name) {\n    if (name == null || name.isEmpty()) return \"Hallo Gast\";\n    return \"Hallo \" + name;\n}",
+      "demo": {
+        "call": "greet(null)",
+        "buggyResult": "NullPointerException",
+        "fixedResult": "Hallo Gast"
+      },
+      "explanation": "Die Spezifikation nennt null ausdrücklich, der Code behandelt nur den leeren String. Typischer Fall, den man im Test mit Äquivalenzklassen findet: gültiger Name, leerer String, null. (Der Hinweis auf \"  \" ist berechtigt, aber nicht spezifiziert.)"
+    },
+    {
+      "id": "bug-006",
+      "category": "java-fehler-finden",
+      "title": "Volljährigkeit",
+      "difficulty": 1,
+      "topics": [
+        "Grenzwerte"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert true, wenn eine Person volljährig ist (ab 18 Jahren).",
+      "code": "static boolean isAdult(int age) {\n    return age > 18;\n}",
+      "options": [
+        "int ist für ein Alter zu groß",
+        "Der Vergleich müsste mit equals erfolgen",
+        "Die Grenze ist falsch: 18-Jährige gelten nicht als volljährig",
+        "Negative Alter werden nicht abgelehnt"
+      ],
+      "correctIndex": 2,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static boolean isAdult(int age) {\n    return age >= 18;\n}",
+      "demo": {
+        "call": "isAdult(18)",
+        "buggyResult": "false",
+        "fixedResult": "true"
+      },
+      "explanation": "\"Ab 18\" schließt 18 ein, also >=. Genau dafür gibt es die Grenzwertanalyse: 17, 18 und 19 testen. Ein Test mit 30 oder 10 hätte den Fehler nie gefunden. (Negative Werte zu prüfen wäre sinnvoll, ist aber nicht gefordert.)"
+    },
+    {
+      "id": "bug-007",
+      "category": "java-fehler-finden",
+      "title": "Letztes Zeichen",
+      "difficulty": 2,
+      "topics": [
+        "Strings",
+        "Off-by-one"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert das letzte Zeichen als String.",
+      "code": "static String lastChar(String s) {\n    return s.substring(s.length() - 1, s.length() - 1);\n}",
+      "options": [
+        "s.length() - 1 ist bei Strings immer außerhalb des Bereichs",
+        "Bei Unicode liefert length() die Bytes statt Zeichen",
+        "substring verändert den Original-String",
+        "Der End-Index von substring ist exklusiv, so entsteht ein leerer String"
+      ],
+      "correctIndex": 3,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static String lastChar(String s) {\n    return s.substring(s.length() - 1);\n}",
+      "demo": {
+        "call": "\"[\" + lastChar(\"Java\") + \"]\"",
+        "buggyResult": "[]",
+        "fixedResult": "[a]"
+      },
+      "explanation": "substring(start, end) liefert die Zeichen von start bis end - 1. Sind start und end gleich, ist das Ergebnis leer, ohne jede Exception. Stille Fehler wie dieser fallen nur auf, wenn der Test das Ergebnis wirklich prüft und nicht nur \"kein Absturz\"."
+    },
+    {
+      "id": "bug-008",
+      "category": "java-fehler-finden",
+      "title": "Mitte berechnen (Binärsuche)",
+      "difficulty": 3,
+      "topics": [
+        "Arithmetik",
+        "Überlauf"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert den Index in der Mitte zwischen low und high (beide nicht negativ).",
+      "code": "static int middle(int low, int high) {\n    return (low + high) / 2;\n}",
+      "options": [
+        "low und high sind vertauscht",
+        "low + high kann über Integer.MAX_VALUE laufen",
+        "Die Division müsste >> 1 sein, / 2 ist ungenau",
+        "Bei ungerader Summe wird falsch gerundet"
+      ],
+      "correctIndex": 1,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static int middle(int low, int high) {\n    return low + (high - low) / 2;\n}",
+      "demo": {
+        "call": "middle(2_000_000_000, 2_100_000_000)",
+        "buggyResult": "-97483648",
+        "fixedResult": "2050000000"
+      },
+      "explanation": "Bei großen Werten läuft die Summe über und wird negativ. Genau dieser Fehler steckte jahrelang in Arrays.binarySearch des JDK (2006 entdeckt). Mit low + (high - low) / 2 kann nichts überlaufen. Ein Test mit Werten nahe MAX_VALUE deckt es auf."
+    },
+    {
+      "id": "bug-009",
+      "category": "java-fehler-finden",
+      "title": "Standardrollen",
+      "difficulty": 2,
+      "topics": [
+        "Collections",
+        "Unveränderlichkeit"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert eine Liste mit den Rollen \"user\" und \"guest\".",
+      "code": "static List<String> defaultRoles() {\n    List<String> roles = List.of(\"user\");\n    roles.add(\"guest\");\n    return roles;\n}",
+      "options": [
+        "add fügt am Anfang statt am Ende ein",
+        "Generische Listen brauchen einen expliziten Typ bei List.of",
+        "List.of liefert eine unveränderliche Liste, add wirft eine Exception",
+        "Die Liste müsste als Set deklariert sein"
+      ],
+      "correctIndex": 2,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static List<String> defaultRoles() {\n    List<String> roles = new ArrayList<>(List.of(\"user\"));\n    roles.add(\"guest\");\n    return roles;\n}",
+      "demo": {
+        "call": "defaultRoles()",
+        "buggyResult": "UnsupportedOperationException",
+        "fixedResult": "[user, guest]"
+      },
+      "explanation": "List.of (wie auch Arrays.asList beim Hinzufügen) erzeugt eine Liste fester Größe. add wirft eine UnsupportedOperationException, aber erst zur Laufzeit, der Compiler merkt nichts."
+    },
+    {
+      "id": "bug-010",
+      "category": "java-fehler-finden",
+      "title": "Eingabe normalisieren",
+      "difficulty": 1,
+      "topics": [
+        "Strings",
+        "Unveränderlichkeit"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Entfernt Leerzeichen am Rand und wandelt in Kleinbuchstaben um.",
+      "code": "static String normalize(String input) {\n    input.trim();\n    return input.toLowerCase();\n}",
+      "options": [
+        "toLowerCase() hängt von der Ländereinstellung ab",
+        "Die Reihenfolge müsste umgekehrt sein",
+        "trim() entfernt nur Leerzeichen am Anfang",
+        "Das Ergebnis von trim() wird verworfen"
+      ],
+      "correctIndex": 3,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static String normalize(String input) {\n    input = input.trim();\n    return input.toLowerCase();\n}",
+      "demo": {
+        "call": "\"[\" + normalize(\"  Hallo \") + \"]\"",
+        "buggyResult": "[  hallo ]",
+        "fixedResult": "[hallo]"
+      },
+      "explanation": "Strings sind unveränderlich. trim() verändert input nicht, sondern liefert einen neuen String, der hier ignoriert wird. Viele IDEs warnen davor. (Der Locale-Hinweis ist ein echtes Thema, z. B. beim türkischen I, aber nicht der Fehler hier.)"
+    },
+    {
+      "id": "bug-011",
+      "category": "java-fehler-finden",
+      "title": "Preise vergleichen",
+      "difficulty": 3,
+      "topics": [
+        "BigDecimal",
+        "Gleichheit"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert true, wenn zwei Preise denselben Betrag haben.",
+      "code": "static boolean samePrice(BigDecimal a, BigDecimal b) {\n    return a.equals(b);\n}",
+      "options": [
+        "equals ist bei BigDecimal nicht überschrieben",
+        "BigDecimal.equals vergleicht auch die Anzahl der Nachkommastellen",
+        "BigDecimal muss mit == verglichen werden",
+        "Preise dürfen nicht als BigDecimal gespeichert werden"
+      ],
+      "correctIndex": 1,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static boolean samePrice(BigDecimal a, BigDecimal b) {\n    return a.compareTo(b) == 0;\n}",
+      "demo": {
+        "call": "samePrice(new BigDecimal(\"2.0\"), new BigDecimal(\"2.00\"))",
+        "buggyResult": "false",
+        "fixedResult": "true"
+      },
+      "explanation": "2.0 und 2.00 haben einen unterschiedlichen scale, equals liefert deshalb false. Für den reinen Zahlenwert gilt compareTo(...) == 0. Das betrifft auch HashSet und HashMap mit BigDecimal-Schlüsseln."
+    },
+    {
+      "id": "bug-012",
+      "category": "java-fehler-finden",
+      "title": "Datum formatieren",
+      "difficulty": 3,
+      "topics": [
+        "Datum",
+        "Formatierung"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Formatiert ein Datum als TT.MM.JJJJ.",
+      "code": "static String formatDate(LocalDate date) {\n    DateTimeFormatter f = DateTimeFormatter.ofPattern(\"dd.MM.YYYY\", Locale.GERMANY);\n    return f.format(date);\n}",
+      "options": [
+        "Locale.GERMANY erzwingt das Format JJJJ-MM-TT",
+        "MM steht für Minuten statt Monat",
+        "dd liefert den Tag im Jahr statt im Monat",
+        "YYYY ist das Jahr der Kalenderwoche, nicht das Kalenderjahr"
+      ],
+      "correctIndex": 3,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static String formatDate(LocalDate date) {\n    DateTimeFormatter f = DateTimeFormatter.ofPattern(\"dd.MM.yyyy\", Locale.GERMANY);\n    return f.format(date);\n}",
+      "demo": {
+        "call": "formatDate(LocalDate.of(2024, 12, 30))",
+        "buggyResult": "30.12.2025",
+        "fixedResult": "30.12.2024"
+      },
+      "explanation": "YYYY ist das wochenbasierte Jahr. Der 30.12.2024 liegt in Kalenderwoche 1 von 2025 und wird als 30.12.2025 ausgegeben. Der Fehler tritt nur an wenigen Tagen rund um den Jahreswechsel auf, fällt also monatelang nicht auf. Testdaten deshalb immer auch um Silvester legen."
+    },
+    {
+      "id": "bug-013",
+      "category": "java-fehler-finden",
+      "title": "Quersumme",
+      "difficulty": 2,
+      "topics": [
+        "Datentypen",
+        "char"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert die Quersumme einer Ziffernfolge, z. B. \"123\" → 6.",
+      "code": "static int digitSum(String number) {\n    int sum = 0;\n    for (char c : number.toCharArray()) {\n        sum += c;\n    }\n    return sum;\n}",
+      "options": [
+        "Die erste Ziffer wird übersprungen",
+        "sum += c kompiliert nicht, char und int sind unverträglich",
+        "Es wird der Zeichencode addiert, nicht der Ziffernwert",
+        "toCharArray() liefert die Zeichen in umgekehrter Reihenfolge"
+      ],
+      "correctIndex": 2,
+      "bugLines": [
+        4
+      ],
+      "fixedCode": "static int digitSum(String number) {\n    int sum = 0;\n    for (char c : number.toCharArray()) {\n        sum += c - '0';\n    }\n    return sum;\n}",
+      "demo": {
+        "call": "digitSum(\"123\")",
+        "buggyResult": "150",
+        "fixedResult": "6"
+      },
+      "explanation": "'1' hat den Code 49, '2' den Code 50 usw. Addiert wird also 49 + 50 + 51 = 150. Mit c - '0' (oder Character.getNumericValue) erhält man den Ziffernwert."
+    },
+    {
+      "id": "bug-014",
+      "category": "java-fehler-finden",
+      "title": "Liste hat Einträge",
+      "difficulty": 2,
+      "topics": [
+        "Operatoren",
+        "null"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert true, wenn die Liste existiert und nicht leer ist, sonst false.",
+      "code": "static boolean hasItems(List<String> list) {\n    return list != null & !list.isEmpty();\n}",
+      "options": [
+        "Die Negation ! müsste vor der ganzen Bedingung stehen",
+        "list != null ist bei Collections überflüssig",
+        "& wertet auch die rechte Seite aus, bei null gibt es eine NullPointerException",
+        "isEmpty() liefert bei leerer Liste false"
+      ],
+      "correctIndex": 2,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static boolean hasItems(List<String> list) {\n    return list != null && !list.isEmpty();\n}",
+      "demo": {
+        "call": "hasItems(null)",
+        "buggyResult": "NullPointerException",
+        "fixedResult": "false"
+      },
+      "explanation": "Nur && bricht ab, wenn links false steht. Das einfache & wertet beide Seiten aus, und list.isEmpty() auf null knallt. Ein Zeichen zu wenig, der Code sieht fast richtig aus."
+    },
+    {
+      "id": "bug-015",
+      "category": "java-fehler-finden",
+      "title": "Ticketnummern",
+      "difficulty": 2,
+      "topics": [
+        "static",
+        "Objekte"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Jedes neue Ticket erhält eine eigene, fortlaufende Nummer (1, 2, 3 …).",
+      "code": "static class Ticket {\n    private static int nextNumber = 1;\n    private static int number;\n\n    Ticket() {\n        number = nextNumber++;\n    }\n\n    int getNumber() { return number; }\n}",
+      "options": [
+        "nextNumber++ müsste ++nextNumber sein",
+        "Der Konstruktor müsste public sein",
+        "nextNumber dürfte nicht static sein",
+        "number ist static und wird von allen Tickets geteilt"
+      ],
+      "correctIndex": 3,
+      "bugLines": [
+        3
+      ],
+      "fixedCode": "static class Ticket {\n    private static int nextNumber = 1;\n    private int number;\n\n    Ticket() {\n        number = nextNumber++;\n    }\n\n    int getNumber() { return number; }\n}",
+      "demo": {
+        "call": "Arrays.stream(new Ticket[]{new Ticket(), new Ticket()}).map(Ticket::getNumber).toList()",
+        "buggyResult": "[2, 2]",
+        "fixedResult": "[1, 2]"
+      },
+      "explanation": "nextNumber gehört richtigerweise der Klasse. number muss aber pro Objekt existieren. Weil es static ist, überschreibt jedes neue Ticket die Nummer aller anderen. Ein Test mit nur einem Ticket findet das nicht, man braucht mindestens zwei."
+    },
+    {
+      "id": "bug-016",
+      "category": "java-fehler-finden",
+      "title": "Kunden-IDs vergleichen",
+      "difficulty": 3,
+      "topics": [
+        "Autoboxing",
+        "Gleichheit"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert true, wenn beide IDs gleich sind.",
+      "code": "static boolean sameCustomer(Long idA, Long idB) {\n    return idA == idB;\n}",
+      "options": [
+        "== vergleicht bei Long die Objekt-Referenzen",
+        "1000L ist für Long zu groß",
+        "Long kann grundsätzlich nicht verglichen werden",
+        "Die Parameter müssten final sein"
+      ],
+      "correctIndex": 0,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static boolean sameCustomer(Long idA, Long idB) {\n    return idA.equals(idB);\n}",
+      "demo": {
+        "call": "sameCustomer(1000L, 1000L)",
+        "buggyResult": "false",
+        "fixedResult": "true"
+      },
+      "explanation": "Long cached nur Werte von -128 bis 127. In Tests mit IDs wie 1, 2, 3 läuft alles grün, in Produktion mit echten IDs nicht mehr. Ein Paradebeispiel dafür, warum Testdaten realistisch groß sein sollten. (Objects.equals wäre zusätzlich null-sicher.)"
+    },
+    {
+      "id": "bug-017",
+      "category": "java-fehler-finden",
+      "title": "Gerade Zahlen entfernen",
+      "difficulty": 3,
+      "topics": [
+        "Collections",
+        "Schleifen"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Entfernt alle geraden Zahlen aus der Liste.",
+      "code": "static void removeEven(List<Integer> values) {\n    for (int i = 0; i < values.size(); i++) {\n        if (values.get(i) % 2 == 0) {\n            values.remove(i);\n        }\n    }\n}",
+      "options": [
+        "Nach dem Entfernen rücken die Elemente nach, das nächste wird übersprungen",
+        "remove(i) entfernt den Wert i statt den Index",
+        "Es wird eine ConcurrentModificationException geworfen",
+        "% 2 == 0 erkennt negative gerade Zahlen nicht"
+      ],
+      "correctIndex": 0,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static void removeEven(List<Integer> values) {\n    for (int i = values.size() - 1; i >= 0; i--) {\n        if (values.get(i) % 2 == 0) {\n            values.remove(i);\n        }\n    }\n}",
+      "demo": {
+        "call": "removeEven(new ArrayList<>(List.of(2, 4, 6, 7)))",
+        "buggyResult": "[4, 7]",
+        "fixedResult": "[7]"
+      },
+      "explanation": "Wird bei Index 0 die 2 entfernt, rutscht die 4 auf Index 0, die Schleife geht aber zu Index 1 weiter. So bleibt bei zwei aufeinanderfolgenden geraden Zahlen jede zweite stehen. Rückwärts laufen oder removeIf behebt es. Testdaten: mehrere passende Werte direkt hintereinander."
+    },
+    {
+      "id": "bug-018",
+      "category": "java-fehler-finden",
+      "title": "Dateiendung",
+      "difficulty": 2,
+      "topics": [
+        "Strings",
+        "Regex"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert die Dateiendung, z. B. \"bericht.pdf\" → \"pdf\".",
+      "code": "static String fileExtension(String fileName) {\n    String[] parts = fileName.split(\".\");\n    return parts[parts.length - 1];\n}",
+      "options": [
+        "Bei Dateinamen ohne Punkt gibt es null",
+        "split erwartet einen regulären Ausdruck, \".\" passt auf jedes Zeichen",
+        "parts.length - 1 ist das vorletzte Element",
+        "split entfernt den Punkt nicht"
+      ],
+      "correctIndex": 1,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static String fileExtension(String fileName) {\n    String[] parts = fileName.split(\"\\\\.\");\n    return parts[parts.length - 1];\n}",
+      "demo": {
+        "call": "fileExtension(\"bericht.pdf\")",
+        "buggyResult": "ArrayIndexOutOfBoundsException",
+        "fixedResult": "pdf"
+      },
+      "explanation": "Der Punkt steht im Regex für \"beliebiges Zeichen\". Jedes Zeichen ist ein Trenner, übrig bleiben nur leere Teile, und die entfernt split am Ende. Das Array ist leer, parts[-1] wirft eine ArrayIndexOutOfBoundsException. Richtig: \"\\\\.\" oder Pattern.quote(\".\")."
+    },
+    {
+      "id": "bug-019",
+      "category": "java-fehler-finden",
+      "title": "Index suchen",
+      "difficulty": 1,
+      "topics": [
+        "Kontrollfluss",
+        "Schleifen"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Liefert die Position von target im Array oder -1, wenn es nicht vorkommt.",
+      "code": "static int indexOf(int[] values, int target) {\n    for (int i = 0; i < values.length; i++) {\n        if (values[i] == target) {\n            return i;\n        } else {\n            return -1;\n        }\n    }\n    return -1;\n}",
+      "options": [
+        "== funktioniert bei int-Arrays nicht",
+        "Der else-Zweig beendet die Suche schon nach dem ersten Element",
+        "Das letzte return -1 ist unerreichbar",
+        "Die Schleife müsste bei 1 beginnen"
+      ],
+      "correctIndex": 1,
+      "bugLines": [
+        5,
+        6
+      ],
+      "fixedCode": "static int indexOf(int[] values, int target) {\n    for (int i = 0; i < values.length; i++) {\n        if (values[i] == target) {\n            return i;\n        }\n    }\n    return -1;\n}",
+      "demo": {
+        "call": "indexOf(new int[]{5, 7, 9}, 9)",
+        "buggyResult": "-1",
+        "fixedResult": "2"
+      },
+      "explanation": "Passt das erste Element nicht, kommt sofort -1 zurück. Die Methode prüft also nur values[0]. Ein Test, der das gesuchte Element an Position 0 legt, ist grün. Erst ein Treffer weiter hinten zeigt den Fehler."
+    },
+    {
+      "id": "bug-020",
+      "category": "java-fehler-finden",
+      "title": "Aufsteigend sortieren",
+      "difficulty": 3,
+      "topics": [
+        "Comparator",
+        "Überlauf"
+      ],
+      "question": "Die Methode erfüllt ihre Spezifikation nicht. Wo liegt der Fehler?",
+      "spec": "Sortiert die Liste aufsteigend.",
+      "code": "static void sortAscending(List<Integer> values) {\n    values.sort((a, b) -> a - b);\n}",
+      "options": [
+        "sort verändert die Liste nicht, sondern liefert eine neue",
+        "Lambdas können nicht als Comparator verwendet werden",
+        "a - b sortiert absteigend",
+        "a - b kann überlaufen und liefert dann das falsche Vorzeichen"
+      ],
+      "correctIndex": 3,
+      "bugLines": [
+        2
+      ],
+      "fixedCode": "static void sortAscending(List<Integer> values) {\n    values.sort(Integer::compare);\n}",
+      "demo": {
+        "call": "sortAscending(new ArrayList<>(List.of(1, Integer.MIN_VALUE, 0)))",
+        "buggyResult": "[0, 1, -2147483648]",
+        "fixedResult": "[-2147483648, 0, 1]"
+      },
+      "explanation": "Bei normalen Zahlen funktioniert der Subtraktions-Trick. Aber 1 - Integer.MIN_VALUE läuft über und wird negativ, also gilt MIN_VALUE plötzlich als größte Zahl und landet am Ende. Integer.compare vergleicht ohne zu rechnen. Ein schönes Beispiel für Extremwerte in Testdaten."
+    }
+  ]
+}

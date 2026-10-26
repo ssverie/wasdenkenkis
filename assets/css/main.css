@@ -65,6 +65,9 @@ h1 { font-size: clamp(1.75rem, 5vw, 2.4rem); margin: 0 0 0.5rem; }
 h2 { font-size: 1.35rem; margin: 2.5rem 0 0.75rem; }
 h3 { font-size: 1.1rem; margin: 1.75rem 0 0.5rem; }
 
+/* Ligaturen aus: sonst zeigt z. B. Cascadia Code „<=“ als „≤“ und „++“ als Sonderzeichen – im Code muss stehen,
+   was man tippt (gefunden 2026-10-26 bei „Fehler finden“, wo eine Antwort von „<=“ spricht) */
+code, pre, kbd, samp { font-variant-ligatures: none; font-feature-settings: "liga" 0, "calt" 0; }
 code {
   font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
   font-size: 0.9em;
@@ -601,3 +604,16 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .uebung-fertig { margin: 1.2rem 0; padding: .8rem 1rem; border-radius: var(--radius); background: var(--akzent-leise); font-size: 1.05rem; }
 .uebung-fertig[hidden] { display: none; }
 @media (max-width: 520px) { .aufgabe { padding: .85rem; font-size: 1rem; scroll-margin-top: 1rem; } .uebung-neu { margin-left: 0; } .uebung-leiste { position: static; } .option pre { font-size: .95rem; } .aufgabe pre, .loesung pre { font-size: .9rem; } }
+/* IT-Übungen, Format „Fehler finden“: Antworten als Sätze, Fehlerzeilen nach der Antwort rot hinterlegt */
+.aufgabe .spec { margin: .4rem 0; padding: .5rem .8rem; border-left: 3px solid var(--akzent); background: var(--akzent-leise); border-radius: 0 6px 6px 0; }
+.optionen.saetze { grid-template-columns: 1fr; }
+.option span { display: block; padding: .5rem .7rem; line-height: 1.45; }
+.option.richtig span::after { content: "  ✓"; color: #15803d; font-weight: 700; }
+.option.falsch span::after { content: "  ✗"; color: #b91c1c; font-weight: 700; }
+@media (prefers-color-scheme: dark) { .option.richtig span::after { color: #5fd08a; } .option.falsch span::after { color: #f87171; } }
+.aufgabe .highlight pre code { display: inline-block; min-width: 100%; }   /* Zeilen so breit wie die längste, auch beim seitlichen Wischen */
+.aufgabe .line.fehlerzeile { display: block; background: color-mix(in srgb, #b91c1c 18%, transparent); box-shadow: inset 3px 0 0 #b91c1c; }
+.loesung .probe { line-height: 1.7; }
+.uebung-kategorien { padding-left: 1.6rem; line-height: 1.6; }
+.uebung-kategorien > li { margin: .5rem 0; }
+.uebung-kategorien ul { margin: .2rem 0 0; padding-left: 1.2rem; }
