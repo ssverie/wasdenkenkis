@@ -16,6 +16,10 @@
   {{- if and (in (slice "erklaert" "philosophie" "it-konzepte") .Section) (or .Params.stile .Params.skripte) }}{{ with resources.Get "css/erklaert.css" | minify | fingerprint }}
   <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
   {{- end }}{{ end }}
+  {{- /* Enterprise Integration Patterns: Stile der Lieferung (eip.css, vom Einlese-Skript) und die Angleichungen an die Seite */}}
+  {{- if hasPrefix .RelPermalink "/it-konzepte/integration-patterns/" }}{{ with slice (resources.Get "css/eip.css") (resources.Get "css/eip-seite.css") | resources.Concat "css/eip-alle.css" | minify | fingerprint }}
+  <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">
+  {{- end }}{{ end }}
   {{- /* Seiteneigene Stile aus dem Page-Bundle (z. B. interaktive Erklärseiten): stile = ["stil.css"] */}}
   {{- range .Params.stile }}{{ with $.Resources.Get . }}{{ with . | minify | fingerprint }}
   <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}">

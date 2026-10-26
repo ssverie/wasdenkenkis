@@ -1,0 +1,92 @@
+<article class="eip-index">
+<p>Die 65 Muster aus dem Buch <em>Enterprise Integration Patterns</em> von Gregor Hohpe und Bobby Woolf (2003), auf Deutsch erklärt und illustriert. Jedes Kapitel ist eine eigene Seite mit Diagrammen, Beispielen aus dem Alltag eines Online-Händlers und Hinweisen auf heutige Werkzeuge wie Kafka, RabbitMQ, Apache Camel und Spring Integration.</p>
+<h2><a href="/it-konzepte/integration-patterns/integrationsstile/">1. Integrationsstile</a></h2>
+<table>
+<tr><td class="n">1</td><td><a href="/it-konzepte/integration-patterns/integrationsstile/#file-transfer">File Transfer</a></td><td>Systeme tauschen Daten über Dateien aus</td></tr>
+<tr><td class="n">2</td><td><a href="/it-konzepte/integration-patterns/integrationsstile/#shared-database">Shared Database</a></td><td>alle Systeme arbeiten auf derselben Datenbank</td></tr>
+<tr><td class="n">3</td><td><a href="/it-konzepte/integration-patterns/integrationsstile/#remote-procedure-invocation">Remote Procedure Invocation</a></td><td>ein System ruft Funktionen eines anderen direkt auf</td></tr>
+<tr><td class="n">4</td><td><a href="/it-konzepte/integration-patterns/integrationsstile/#messaging">Messaging</a></td><td>Systeme kommunizieren asynchron über Nachrichten</td></tr>
+</table>
+<h2><a href="/it-konzepte/integration-patterns/messaging-grundlagen/">2. Messaging-Grundlagen</a></h2>
+<table>
+<tr><td class="n">5</td><td><a href="/it-konzepte/integration-patterns/messaging-grundlagen/#message-channel">Message Channel</a></td><td>benannter Kanal, über den Nachrichten fließen</td></tr>
+<tr><td class="n">6</td><td><a href="/it-konzepte/integration-patterns/messaging-grundlagen/#message">Message</a></td><td>Datenpaket aus Header und Body</td></tr>
+<tr><td class="n">7</td><td><a href="/it-konzepte/integration-patterns/messaging-grundlagen/#pipes-and-filters">Pipes and Filters</a></td><td>Verarbeitung als Kette unabhängiger Schritte</td></tr>
+<tr><td class="n">8</td><td><a href="/it-konzepte/integration-patterns/messaging-grundlagen/#message-router">Message Router</a></td><td>leitet Nachrichten je nach Bedingung weiter</td></tr>
+<tr><td class="n">9</td><td><a href="/it-konzepte/integration-patterns/messaging-grundlagen/#message-translator">Message Translator</a></td><td>übersetzt zwischen Nachrichtenformaten</td></tr>
+<tr><td class="n">10</td><td><a href="/it-konzepte/integration-patterns/messaging-grundlagen/#message-endpoint">Message Endpoint</a></td><td>Verbindungsstelle zwischen Anwendung und Messaging</td></tr>
+</table>
+<h2><a href="/it-konzepte/integration-patterns/kanaele/">3. Kanäle</a></h2>
+<table>
+<tr><td class="n">11</td><td><a href="/it-konzepte/integration-patterns/kanaele/#point-to-point-channel">Point-to-Point Channel</a></td><td>genau ein Empfänger pro Nachricht</td></tr>
+<tr><td class="n">12</td><td><a href="/it-konzepte/integration-patterns/kanaele/#publish-subscribe-channel">Publish-Subscribe Channel</a></td><td>jeder Abonnent erhält eine Kopie</td></tr>
+<tr><td class="n">13</td><td><a href="/it-konzepte/integration-patterns/kanaele/#datatype-channel">Datatype Channel</a></td><td>ein Kanal pro Nachrichtentyp</td></tr>
+<tr><td class="n">14</td><td><a href="/it-konzepte/integration-patterns/kanaele/#invalid-message-channel">Invalid Message Channel</a></td><td>Ablage für unverarbeitbare Nachrichten</td></tr>
+<tr><td class="n">15</td><td><a href="/it-konzepte/integration-patterns/kanaele/#dead-letter-channel">Dead Letter Channel</a></td><td>Ablage für unzustellbare Nachrichten</td></tr>
+<tr><td class="n">16</td><td><a href="/it-konzepte/integration-patterns/kanaele/#guaranteed-delivery">Guaranteed Delivery</a></td><td>Nachrichten überleben Ausfälle</td></tr>
+<tr><td class="n">17</td><td><a href="/it-konzepte/integration-patterns/kanaele/#channel-adapter">Channel Adapter</a></td><td>bindet Anwendungen ohne Messaging an</td></tr>
+<tr><td class="n">18</td><td><a href="/it-konzepte/integration-patterns/kanaele/#messaging-bridge">Messaging Bridge</a></td><td>verbindet zwei Messaging-Systeme</td></tr>
+<tr><td class="n">19</td><td><a href="/it-konzepte/integration-patterns/kanaele/#message-bus">Message Bus</a></td><td>gemeinsame Plattform für alle Anwendungen</td></tr>
+</table>
+<h2><a href="/it-konzepte/integration-patterns/nachrichtenaufbau/">4. Nachrichtenaufbau</a></h2>
+<table>
+<tr><td class="n">20</td><td><a href="/it-konzepte/integration-patterns/nachrichtenaufbau/#command-message">Command Message</a></td><td>Nachricht, die eine Aktion auslöst</td></tr>
+<tr><td class="n">21</td><td><a href="/it-konzepte/integration-patterns/nachrichtenaufbau/#document-message">Document Message</a></td><td>Nachricht, die Daten überträgt</td></tr>
+<tr><td class="n">22</td><td><a href="/it-konzepte/integration-patterns/nachrichtenaufbau/#event-message">Event Message</a></td><td>Nachricht, die ein Ereignis meldet</td></tr>
+<tr><td class="n">23</td><td><a href="/it-konzepte/integration-patterns/nachrichtenaufbau/#request-reply">Request-Reply</a></td><td>Anfrage und Antwort über zwei Kanäle</td></tr>
+<tr><td class="n">24</td><td><a href="/it-konzepte/integration-patterns/nachrichtenaufbau/#return-address">Return Address</a></td><td>die Anfrage nennt den Kanal für die Antwort</td></tr>
+<tr><td class="n">25</td><td><a href="/it-konzepte/integration-patterns/nachrichtenaufbau/#correlation-identifier">Correlation Identifier</a></td><td>ID ordnet Antwort und Anfrage zu</td></tr>
+<tr><td class="n">26</td><td><a href="/it-konzepte/integration-patterns/nachrichtenaufbau/#message-sequence">Message Sequence</a></td><td>große Daten auf mehrere Nachrichten verteilt</td></tr>
+<tr><td class="n">27</td><td><a href="/it-konzepte/integration-patterns/nachrichtenaufbau/#message-expiration">Message Expiration</a></td><td>Ablaufzeit für Nachrichten</td></tr>
+<tr><td class="n">28</td><td><a href="/it-konzepte/integration-patterns/nachrichtenaufbau/#format-indicator">Format Indicator</a></td><td>Kennzeichen für Format und Version</td></tr>
+</table>
+<h2><a href="/it-konzepte/integration-patterns/routing/">5. Routing</a></h2>
+<table>
+<tr><td class="n">29</td><td><a href="/it-konzepte/integration-patterns/routing/#content-based-router">Content-Based Router</a></td><td>Weiterleitung nach Inhalt</td></tr>
+<tr><td class="n">30</td><td><a href="/it-konzepte/integration-patterns/routing/#message-filter">Message Filter</a></td><td>unerwünschte Nachrichten verwerfen</td></tr>
+<tr><td class="n">31</td><td><a href="/it-konzepte/integration-patterns/routing/#dynamic-router">Dynamic Router</a></td><td>Routing-Regeln zur Laufzeit</td></tr>
+<tr><td class="n">32</td><td><a href="/it-konzepte/integration-patterns/routing/#recipient-list">Recipient List</a></td><td>an eine berechnete Empfängerliste senden</td></tr>
+<tr><td class="n">33</td><td><a href="/it-konzepte/integration-patterns/routing/#splitter">Splitter</a></td><td>eine Nachricht in Teile zerlegen</td></tr>
+<tr><td class="n">34</td><td><a href="/it-konzepte/integration-patterns/routing/#aggregator">Aggregator</a></td><td>Teile zu einer Nachricht zusammenführen</td></tr>
+<tr><td class="n">35</td><td><a href="/it-konzepte/integration-patterns/routing/#resequencer">Resequencer</a></td><td>Reihenfolge wiederherstellen</td></tr>
+<tr><td class="n">36</td><td><a href="/it-konzepte/integration-patterns/routing/#composed-message-processor">Composed Message Processor</a></td><td>zerlegen, einzeln verarbeiten, zusammenführen</td></tr>
+<tr><td class="n">37</td><td><a href="/it-konzepte/integration-patterns/routing/#scatter-gather">Scatter-Gather</a></td><td>an viele senden, Antworten einsammeln</td></tr>
+<tr><td class="n">38</td><td><a href="/it-konzepte/integration-patterns/routing/#routing-slip">Routing Slip</a></td><td>die Nachricht trägt ihre Route mit</td></tr>
+<tr><td class="n">39</td><td><a href="/it-konzepte/integration-patterns/routing/#process-manager">Process Manager</a></td><td>zentrale Steuerung eines Ablaufs</td></tr>
+<tr><td class="n">40</td><td><a href="/it-konzepte/integration-patterns/routing/#message-broker">Message Broker</a></td><td>zentraler Vermittler für alle Systeme</td></tr>
+</table>
+<h2><a href="/it-konzepte/integration-patterns/transformation/">6. Transformation</a></h2>
+<table>
+<tr><td class="n">41</td><td><a href="/it-konzepte/integration-patterns/transformation/#envelope-wrapper">Envelope Wrapper</a></td><td>Nachricht in einen Transportumschlag packen</td></tr>
+<tr><td class="n">42</td><td><a href="/it-konzepte/integration-patterns/transformation/#content-enricher">Content Enricher</a></td><td>fehlende Daten ergänzen</td></tr>
+<tr><td class="n">43</td><td><a href="/it-konzepte/integration-patterns/transformation/#content-filter">Content Filter</a></td><td>überflüssige Daten entfernen</td></tr>
+<tr><td class="n">44</td><td><a href="/it-konzepte/integration-patterns/transformation/#claim-check">Claim Check</a></td><td>große Daten ablegen, Beleg verschicken</td></tr>
+<tr><td class="n">45</td><td><a href="/it-konzepte/integration-patterns/transformation/#normalizer">Normalizer</a></td><td>viele Formate in eines bringen</td></tr>
+<tr><td class="n">46</td><td><a href="/it-konzepte/integration-patterns/transformation/#canonical-data-model">Canonical Data Model</a></td><td>gemeinsames Datenmodell für alle</td></tr>
+</table>
+<h2><a href="/it-konzepte/integration-patterns/endpunkte/">7. Endpunkte</a></h2>
+<table>
+<tr><td class="n">47</td><td><a href="/it-konzepte/integration-patterns/endpunkte/#messaging-gateway">Messaging Gateway</a></td><td>Messaging hinter einer normalen Schnittstelle</td></tr>
+<tr><td class="n">48</td><td><a href="/it-konzepte/integration-patterns/endpunkte/#messaging-mapper">Messaging Mapper</a></td><td>Objekte in Nachrichten übersetzen</td></tr>
+<tr><td class="n">49</td><td><a href="/it-konzepte/integration-patterns/endpunkte/#transactional-client">Transactional Client</a></td><td>Senden und Empfangen in einer Transaktion</td></tr>
+<tr><td class="n">50</td><td><a href="/it-konzepte/integration-patterns/endpunkte/#polling-consumer">Polling Consumer</a></td><td>Empfänger fragt aktiv nach</td></tr>
+<tr><td class="n">51</td><td><a href="/it-konzepte/integration-patterns/endpunkte/#event-driven-consumer">Event-Driven Consumer</a></td><td>Empfänger wird automatisch aufgerufen</td></tr>
+<tr><td class="n">52</td><td><a href="/it-konzepte/integration-patterns/endpunkte/#competing-consumers">Competing Consumers</a></td><td>mehrere Empfänger teilen sich die Last</td></tr>
+<tr><td class="n">53</td><td><a href="/it-konzepte/integration-patterns/endpunkte/#message-dispatcher">Message Dispatcher</a></td><td>ein Empfänger verteilt intern</td></tr>
+<tr><td class="n">54</td><td><a href="/it-konzepte/integration-patterns/endpunkte/#selective-consumer">Selective Consumer</a></td><td>Empfänger wählt per Selektor aus</td></tr>
+<tr><td class="n">55</td><td><a href="/it-konzepte/integration-patterns/endpunkte/#durable-subscriber">Durable Subscriber</a></td><td>Abonnent verpasst nichts, wenn er offline ist</td></tr>
+<tr><td class="n">56</td><td><a href="/it-konzepte/integration-patterns/endpunkte/#idempotent-receiver">Idempotent Receiver</a></td><td>Duplikate richten keinen Schaden an</td></tr>
+<tr><td class="n">57</td><td><a href="/it-konzepte/integration-patterns/endpunkte/#service-activator">Service Activator</a></td><td>Nachricht ruft einen normalen Dienst auf</td></tr>
+</table>
+<h2><a href="/it-konzepte/integration-patterns/systemverwaltung/">8. Systemverwaltung</a></h2>
+<table>
+<tr><td class="n">58</td><td><a href="/it-konzepte/integration-patterns/systemverwaltung/#control-bus">Control Bus</a></td><td>eigener Kanal für Steuerung und Überwachung</td></tr>
+<tr><td class="n">59</td><td><a href="/it-konzepte/integration-patterns/systemverwaltung/#detour">Detour</a></td><td>zuschaltbarer Umweg über Zusatzschritte</td></tr>
+<tr><td class="n">60</td><td><a href="/it-konzepte/integration-patterns/systemverwaltung/#wire-tap">Wire Tap</a></td><td>Kopie jeder Nachricht abzweigen</td></tr>
+<tr><td class="n">61</td><td><a href="/it-konzepte/integration-patterns/systemverwaltung/#message-history">Message History</a></td><td>die Nachricht protokolliert ihren Weg</td></tr>
+<tr><td class="n">62</td><td><a href="/it-konzepte/integration-patterns/systemverwaltung/#message-store">Message Store</a></td><td>Nachrichten zentral speichern</td></tr>
+<tr><td class="n">63</td><td><a href="/it-konzepte/integration-patterns/systemverwaltung/#smart-proxy">Smart Proxy</a></td><td>Request-Reply abfangen und überwachen</td></tr>
+<tr><td class="n">64</td><td><a href="/it-konzepte/integration-patterns/systemverwaltung/#test-message">Test Message</a></td><td>Testnachrichten im laufenden Betrieb</td></tr>
+<tr><td class="n">65</td><td><a href="/it-konzepte/integration-patterns/systemverwaltung/#channel-purger">Channel Purger</a></td><td>Kanäle leeren</td></tr>
+</table>
+</article>

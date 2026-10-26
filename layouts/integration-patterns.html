@@ -1,0 +1,17 @@
+{{- /* Enterprise Integration Patterns (/it-konzepte/integration-patterns/): die Übersicht der Instanz (65 Muster in acht Kapiteln),
+       eingebettet aus inhalt-html.txt – ohne die automatische Seitenliste, die Kapitel stehen in der Übersicht selbst. */ -}}
+{{ define "main" }}
+<article class="beitrag">
+  <header class="seitenkopf">
+    {{- with .Params.oben }}{{ with site.GetPage . }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}
+    <h1>{{ .Title }}</h1>
+    {{- with .Description }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+  </header>
+  {{ partial "herkunft.html" . }}
+  <div class="inhalt">
+    {{ .Content }}
+  </div>
+</article>
+{{ end }}
