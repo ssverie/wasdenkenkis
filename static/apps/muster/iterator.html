@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Iterator – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Iterator (GoF-Verhaltensmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (iterator-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="iterator-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  function Z(text, nr) {                                // mehrfach vorkommende Zeilen: genauer Inhalt + Nummer des Vorkommens
+    const t = window.MUSTER_CODE.map((l, i) => l.trim() === text ? i : -1).filter(i => i >= 0);
+    if (t.length <= (nr || 0)) throw new Error(`Zeile „${text}“ (${nr || 0}) nicht gefunden`);
+    return t[nr || 0];
+  }
+  const SONGS = [['Morgenrot', 214, true], ['Stadtlichter', 187, false], ['Nordwind', 251, true], ['Kaffeepause', 163, false]];
+  const dauer = sek => `${Math.floor(sek / 60)}:${String(sek % 60).padStart(2, '0')}`;
+  const str = t => `"${t}"`;
+  const MAIN = { klassen: ['main()'] };
+  const VOR = 'vorwärts (anonym)', RUECK = 'rückwärts (anonym)', FILTER = 'gefiltert (anonym)', COUNT = 'Countdown-Iterator';
+
+  function lauf(s) {
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: eine Playlist und mehrere Arten, sie zu durchlaufen.', MAIN);
+    const liste = s.neu('Playlist', [['songs', 'Song[2] [null, null]'], ['anzahl', '0']]);
+    s.var('liste', s.ref(liste));
+    s.schritt('Playlist liste = new Playlist();', `${liste} speichert intern ein Array mit Platz für 2 Songs. Von außen sieht das niemand – genau darum geht es.`, { cur: [liste] });
+
+    let platz = 2;
+    const inhalt = n => `Song[${platz}] [${Array.from({ length: platz }, (_, i) => i < n ? SONGS[i][0] : 'null').join(', ')}]`;
+    const songIds = [];
+    SONGS.forEach(([t, sek, fav], i) => {
+      const id = s.neu('Song', [['titel', str(t)], ['sekunden', String(sek)], ['favorit', String(fav)]], `Song ${t}`);
+      songIds.push(id);
+      const zeile = `liste.hinzufuegen(new Song("${t}", ${sek}, ${fav}));`;
+      s.ruf('Playlist.hinzufuegen(Song s)', [['this', s.ref(liste)], ['s', s.ref(id)]], 'if (anzahl == songs.length) songs = Arrays.copyOf(songs, anzahl * 2);',
+        i === 0 ? `${id} kommt dazu. Ist das Array voll? ${i} von ${platz} belegt – nein.` : i === 2 ? `${id}: Jetzt ist das Array voll (2 von 2) – Arrays.copyOf verdoppelt es auf 4 Plätze.` : `${id} kommt dazu.`, { cur: [liste, id] });
+      if (i === 2) { platz = 4; s.feld(liste, 'songs', inhalt(i)); s.schritt('if (anzahl == songs.length) songs = Arrays.copyOf(songs, anzahl * 2);', 'Neues, doppelt so großes Array – die alten Einträge sind umkopiert.', { cur: [liste] }); }
+      s.feld(liste, 'songs', inhalt(i + 1)); s.feld(liste, 'anzahl', String(i + 1));
+      s.schritt('songs[anzahl++] = s;', `Eingetragen an Platz ${i}, anzahl = ${i + 1}.`, { cur: [liste] });
+      s.raus(zeile, 'Zurück in main.', MAIN);
+    });
+
+    // ---------- vorwärts mit for-each ----------
+    s.aus('Vorwärts (for-each):');
+    s.schritt('System.out.println("Vorwärts (for-each):");', 'Erste Art: for-each.', MAIN);
+    const FOR1 = 'for (Song s : liste) System.out.println';
+    s.ruf('Playlist.iterator()', [['this', s.ref(liste)]], Z('return new java.util.Iterator<>() {', 0), 'for (Song s : liste) ist Kurzschrift: Java ruft liste.iterator() auf und danach hasNext()/next(). Das geht, weil Playlist Iterable<Song> ist.', { cur: [liste] });
+    const it1 = s.neu(VOR, [['index', '0']], 'Iterator #1');
+    s.raus(FOR1, `iterator() liefert ein neues Objekt einer anonymen Klasse: ${it1}, mit eigenem index = 0. Es greift auf das Array der Playlist zu – der Client sieht das Array nie.`, { cur: [it1] });
+    SONGS.forEach(([t, sek], i) => {
+      if (i === 0) {
+        s.ruf('hasNext()', [['this', s.ref(it1)]], Z('public boolean hasNext() { return index < anzahl; }', 0), `hasNext(): index ${i} < anzahl 4 → true.`, { cur: [it1] });
+        s.raus(FOR1, 'Es gibt noch einen Song.', { cur: [it1] });
+        s.ruf('next()', [['this', s.ref(it1)]], 'return songs[index++];', `next() gibt songs[0] zurück und zählt index auf 1 hoch.`, { cur: [it1, songIds[0]] });
+        s.feld(it1, 'index', '1');
+        s.raus(FOR1, `s = → ${songIds[0]}.`, { setze: [['s', s.ref(songIds[0])]], cur: [songIds[0]] });
+      } else {
+        s.feld(it1, 'index', String(i + 1));
+        s.var('s', s.ref(songIds[i]));
+      }
+      s.aus(`  ${t} ${dauer(sek)}`);
+      s.schritt(FOR1, i === 0 ? `Ausgabe: ${t} ${dauer(sek)} (dauer() rechnet ${sek} Sekunden in Minuten um).` : `hasNext() → true, next() → ${t}, index = ${i + 1}. Ausgabe.`, { cur: [it1, songIds[i]], klassen: ['main()'] });
+    });
+    s.var('s', '–');
+    s.weg(it1);
+    s.schritt(FOR1, 'hasNext(): index 4 < anzahl 4 → false. Die Schleife endet, der Iterator wird nicht mehr gebraucht. (s gilt nur in der Schleife.)', { cur: [liste], klassen: ['main()'] });
+
+    // ---------- rückwärts ----------
+    s.aus('Rückwärts:');
+    s.schritt('System.out.println("Rückwärts:");', 'Zweite Art: eine andere Reihenfolge über dieselben Daten.', MAIN);
+    const FOR2 = 'for (Song s : liste.rueckwaerts())';
+    const iter2 = s.neu('Iterable', [['iterator()', 'Lambda'], ['liste', s.ref(liste)]], 'Iterable rückwärts (Lambda)');
+    s.schritt(FOR2, 'rueckwaerts() liefert ein Iterable als Lambda: () -> new Iterator. Erst die for-Schleife ruft es auf.', { cur: [iter2] });
+    const it2 = s.neu(RUECK, [['index', '3']], 'Iterator #2');
+    s.schritt('private int index = anzahl - 1;', `Ein neuer Iterator ${it2} beginnt am Ende: index = anzahl - 1 = 3.`, { cur: [it2] });
+    SONGS.slice().reverse().forEach(([t], i) => {
+      s.feld(it2, 'index', String(2 - i));
+      s.var('s', s.ref(`Song ${t}`));
+      s.aus(`  ${t}`);
+      s.schritt('return songs[index--];', i === 0 ? `next() gibt songs[3] zurück und zählt index herunter. Ausgabe: ${t}.` : `songs[${3 - i}] → ${t}.`, { cur: [it2, `Song ${t}`] });
+    });
+    s.var('s', '–');
+    s.weg(it2, iter2);
+    s.schritt('public boolean hasNext() { return index >= 0; }', 'index = -1 → hasNext() ist false. Fertig.', { cur: [liste] });
+
+    // ---------- gefiltert ----------
+    s.aus('Nur Favoriten:');
+    s.schritt('System.out.println("Nur Favoriten:");', 'Dritte Art: ein Iterator, der Elemente überspringt.', MAIN);
+    const FOR3 = 'for (Song s : liste.gefiltert(Song::favorit))';
+    const iter3 = s.neu('Iterable', [['iterator()', 'Lambda'], ['bedingung', 'Song::favorit']], 'Iterable gefiltert (Lambda)');
+    s.schritt(FOR3, 'gefiltert(Song::favorit): wieder ein Iterable als Lambda, diesmal mit einer Bedingung.', { cur: [iter3] });
+    const it3 = s.neu(FILTER, [['index', '0']], 'Iterator #3');
+    s.schritt('private int index = sucheAb(0);', `${it3}: sucheAb(0) prüft songs[0] – Morgenrot ist Favorit, also index = 0.`, { cur: [it3, songIds[0]] });
+    s.var('s', s.ref(songIds[0]));
+    s.schritt('Song s = songs[index];', 'next() merkt sich songs[0] = Morgenrot …', { cur: [it3, songIds[0]] });
+    s.feld(it3, 'index', '2');
+    s.schritt('while (i < anzahl && !bedingung.test(songs[i])) i++;', '… und sucht schon den nächsten Treffer: sucheAb(1) – Stadtlichter ist kein Favorit, weiter; Nordwind ist einer → index = 2.', { cur: [it3, songIds[1], songIds[2]] });
+    s.aus('  Morgenrot');
+    s.schritt(FOR3, 'Ausgabe: Morgenrot.', { cur: [songIds[0]], klassen: ['main()'] });
+    s.var('s', s.ref(songIds[2]));
+    s.feld(it3, 'index', '4');
+    s.schritt('index = sucheAb(index + 1);', 'next() liefert Nordwind und sucht ab 3: Kaffeepause ist kein Favorit → index = 4 = anzahl.', { cur: [it3, songIds[2], songIds[3]] });
+    s.aus('  Nordwind');
+    s.schritt(FOR3, 'Ausgabe: Nordwind.', { cur: [songIds[2]], klassen: ['main()'] });
+    s.var('s', '–');
+    s.weg(it3, iter3);
+    s.schritt(Z('public boolean hasNext() { return index < anzahl; }', 1), 'hasNext(): 4 < 4 → false. Zwei von vier Songs – der Client hat nichts gefiltert, das hat der Iterator getan.', { cur: [liste] });
+
+    // ---------- zwei parallel ----------
+    s.aus('Zwei Iteratoren parallel:');
+    s.schritt('System.out.println("Zwei Iteratoren parallel:");', 'Vierte Beobachtung: Jeder Iterator hat seinen eigenen Zustand.', MAIN);
+    const ia = s.neu(VOR, [['index', '0']], 'Iterator a');
+    s.var('a', s.ref(ia));
+    s.schritt('var a = liste.iterator();', `${ia} mit index 0.`, { cur: [ia] });
+    const ib = s.neu(VOR, [['index', '0']], 'Iterator b');
+    s.var('b', s.ref(ib));
+    s.schritt('var b = liste.iterator();', `${ib} – ein zweites, unabhängiges Objekt, ebenfalls index 0.`, { cur: [ib] });
+    s.feld(ia, 'index', '2');
+    s.schritt('a.next(); a.next();', 'a läuft zweimal weiter (Morgenrot, Stadtlichter): a.index = 2. b bleibt bei 0.', { cur: [ia, ib] });
+    s.feld(ia, 'index', '3'); s.feld(ib, 'index', '1');
+    s.aus('  a steht bei: Nordwind, b steht bei: Morgenrot');
+    s.schritt('System.out.println("  a steht bei: "', 'a.next() → Nordwind, b.next() → Morgenrot. Zwei Iteratoren über dieselbe Liste, jeder mit eigenem index.', { cur: [ia, ib, songIds[2], songIds[0]] });
+
+    // ---------- Stream ----------
+    const gesamt = SONGS.reduce((a, x) => a + x[1], 0);
+    s.var('gesamt', String(gesamt));
+    s.schritt('int gesamt = liste.stream().mapToInt(Song::sekunden).sum();', `Interne Iteration: Hier steuert der Stream die Schleife, nicht main. stream() baut auf spliterator() auf, das bei einem Iterable wieder iterator() benutzt. ${SONGS.map(x => x[1]).join(' + ')} = ${gesamt} Sekunden.`, { cur: [liste] });
+    s.aus(`Gesamtdauer per Stream: ${dauer(gesamt)}`);
+    s.schritt('System.out.println("Gesamtdauer per Stream: "', `${gesamt} Sekunden = ${dauer(gesamt)}.`, MAIN);
+
+    // ---------- Countdown ----------
+    s.schritt('System.out.print("Countdown: ");', 'print schreibt ohne Zeilenumbruch. Die ganze Zeile erscheint hier in der Konsole, sobald println() sie abschließt.', MAIN);
+    const cd = s.neu('Countdown', [['start', '5']]);
+    const itc = s.neu(COUNT, [['aktuell', '5']], 'Iterator #4');
+    s.schritt('private int aktuell = start;', `Ein Iterator ohne Sammlung: ${cd} speichert nur die 5, ${itc} beginnt bei aktuell = 5. Die Zahlen gibt es nirgends als Liste.`, { cur: [cd, itc] });
+    s.var('i', '5'); s.feld(itc, 'aktuell', '4');
+    s.schritt('return aktuell--;', 'next() liefert 5 und zählt herunter – der Wert wird erst in diesem Moment berechnet.', { cur: [itc] });
+    s.var('i', '0'); s.feld(itc, 'aktuell', '-1');
+    s.schritt('return aktuell--;', 'So weiter: 4, 3, 2, 1, 0 (hier in einem Schritt). Jedes print hängt die Zahl und ein Leerzeichen an.', { cur: [itc] });
+    s.var('i', '–');
+    s.weg(cd, itc);
+    s.schritt('public boolean hasNext() { return aktuell >= 0; }', 'aktuell = -1 → hasNext() ist false.', { cur: [] });
+    s.aus('Countdown: 5 4 3 2 1 0 ');
+    s.schritt('System.out.println();', 'println() schließt die Zeile ab: „Countdown: 5 4 3 2 1 0 “ – mit Leerzeichen am Ende, wie Java es schreibt.', MAIN);
+
+    s.weg(liste, ...songIds, ia, ib);
+    s.raus(['System.out.println();', 1], 'main ist zu Ende. Mehrere Iteratoren über dieselbe Playlist, jeder mit eigenem Zustand – und main hat das Array nie gesehen.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Aggregate', 'ConcreteAggregate', 'Iterator', 'ConcreteIterator'],
+    diagramm: {
+      breite: 150, abstandX: 24, abstandY: 50,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 2, y: 0 },
+        { name: 'Iterable', art: 'interface', rolle: 'Aggregate', x: 0.5, y: 1 },
+        { name: 'Iterator', art: 'interface', rolle: 'Iterator', x: 3, y: 1 },
+        { name: 'Playlist', art: 'final class', rolle: 'ConcreteAggregate', x: 0, y: 2 },
+        { name: 'Countdown', art: 'record', rolle: 'ConcreteAggregate', x: 1, y: 2 },
+        { name: VOR, art: 'Klasse', rolle: 'ConcreteIterator', x: 2, y: 2 },
+        { name: RUECK, art: 'Klasse', rolle: 'ConcreteIterator', x: 3, y: 2 },
+        { name: FILTER, art: 'Klasse', rolle: 'ConcreteIterator', x: 4, y: 2 },
+        { name: COUNT, art: 'Klasse', rolle: 'ConcreteIterator', x: 5, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Iterable', art: 'nutzt', text: 'for-each' },
+        { von: 'Iterable', zu: 'Iterator', art: 'erzeugt', text: 'iterator()' },
+        { von: 'Playlist', zu: 'Iterable', art: 'impl' }, { von: 'Countdown', zu: 'Iterable', art: 'impl' },
+        { von: VOR, zu: 'Iterator', art: 'impl' }, { von: RUECK, zu: 'Iterator', art: 'impl' },
+        { von: FILTER, zu: 'Iterator', art: 'impl' }, { von: COUNT, zu: 'Iterator', art: 'impl' }
+      ]
+    },
+    szenarien: [
+      { name: 'java Iterator.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

@@ -140,6 +140,7 @@ gruppe = "verhalten"
 schluessel = "iterator"
 name = "Iterator"
 text = "sequenzieller Zugriff auf Elemente ohne Offenlegung der Struktur"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Im Speicher sieht man das Array der Playlist wachsen (von 2 auf 4 Plätze). Jede Schleife holt sich einen eigenen Iterator mit eigenem index: vorwärts, rückwärts und gefiltert, der Nicht-Favoriten überspringt. Zwei Iteratoren können gleichzeitig an verschiedenen Stellen stehen. Der Countdown hat gar keine Sammlung, seine Zahlen entstehen erst, wenn next() sie liefert."
 
 [[muster]]
 nummer = 17
