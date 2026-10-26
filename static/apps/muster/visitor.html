@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visitor – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Visitor (GoF-Verhaltensmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (visitor-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="visitor-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  function Z(text, nr) {                                // mehrfach vorkommende Zeilen: genauer Inhalt + Nummer des Vorkommens
+    const t = window.MUSTER_CODE.map((l, i) => l.trim() === text ? i : -1).filter(i => i >= 0);
+    if (t.length <= (nr || 0)) throw new Error(`Zeile „${text}“ (${nr || 0}) nicht gefunden`);
+    return t[nr || 0];
+  }
+  const MAIN = { klassen: ['main()'] };
+  const ANNEHMEN = 'public <R> R annehmen(PostenVisitor<R> v) { return v.besuche(this); }';
+  const NR = { Buch: 0, Lebensmittel: 1, Elektronik: 2 };
+  const euro = c => (c / 100).toFixed(2).replace('.', ',').padStart(7) + ' €';
+  const POSTEN = [
+    { typ: 'Buch', name: 'Entwurfsmuster', preis: 4999 },
+    { typ: 'Lebensmittel', name: 'Kaffeebohnen', preis: 1290, gekuehlt: false },
+    { typ: 'Lebensmittel', name: 'Käse', preis: 690, gekuehlt: true },
+    { typ: 'Elektronik', name: 'Kopfhörer', preis: 12900, garantie: 24 },
+    { typ: 'Elektronik', name: 'Laptop', preis: 89900, garantie: 36 }
+  ];
+  const PARAM = { Buch: 'Buch b', Lebensmittel: 'Lebensmittel l', Elektronik: 'Elektronik e' };
+  const satz = p => p.typ === 'Elektronik' ? 19 : 7;
+  const mwst = p => Math.round(p.preis * satz(p) / (100 + satz(p)));
+  const versandText = p => p.typ === 'Buch' ? 'Büchersendung' : p.typ === 'Lebensmittel' ? (p.gekuehlt ? 'Kühlbox erforderlich' : 'Standardpaket') : `Versichert, ${p.garantie} Monate Garantie beilegen`;
+  const kategorie = p => p.typ === 'Buch' ? ['Medien', '-> "Medien";', 'case Buch b → „Medien“.']
+    : p.typ === 'Lebensmittel' ? (p.gekuehlt ? ['Frische', '-> "Frische";', 'case Lebensmittel l when l.gekuehlt() – ein Pattern mit Bedingung → „Frische“.'] : ['Vorrat', '-> "Vorrat";', 'gekühlt? Nein, also der nächste Fall: case Lebensmittel l → „Vorrat“.'])
+    : (p.preis > 50000 ? ['Technik (hochwertig)', '-> "Technik (hochwertig)";', 'Record Pattern mit Bedingung: case Elektronik(var n, var preis, var g) when preis > 50_000 – 89.900 > 50.000 → „Technik (hochwertig)“.'] : ['Technik', '-> "Technik";', 'preis 12.900 ist nicht > 50.000 → case Elektronik e → „Technik“.']);
+
+  function lauf(s) {
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: ein Warenkorb mit drei Arten von Posten und zwei Besuchern, die etwas mit ihnen tun.', MAIN);
+    POSTEN.forEach(p => {
+      const felder = [[p.typ === 'Buch' ? 'titel' : 'name', `"${p.name}"`], ['preisCent', String(p.preis)]];
+      if (p.typ === 'Lebensmittel') felder.push(['gekuehlt', String(p.gekuehlt)]);
+      if (p.typ === 'Elektronik') felder.push(['garantieMonate', String(p.garantie)]);
+      p.id = s.neu(p.typ, felder, `${p.typ} ${p.name}`);
+    });
+    const korb = s.neu('List', [['Inhalt', `[${POSTEN.map(p => '→ ' + p.id).join(', ')}]`]], 'warenkorb');
+    s.var('warenkorb', s.ref(korb));
+    s.schritt('List<Posten> warenkorb = List.of(', 'Fünf Posten – reine Daten-records. Sie wissen nichts von Steuer oder Versand, sie können nur annehmen().', { cur: POSTEN.map(p => p.id) });
+    const st = s.neu('Mehrwertsteuer', []);
+    s.var('steuer', s.ref(st));
+    s.schritt('var steuer = new Mehrwertsteuer();', `${st}: ein Besucher, der für jeden Posten-Typ eine eigene besuche()-Methode hat und Integer liefert.`, { cur: [st] });
+    const vs = s.neu('Versandhinweis', []);
+    s.var('versand', s.ref(vs));
+    s.schritt('var versand = new Versandhinweis();', `${vs}: ein zweiter Besucher – dieselben Posten, eine ganz andere Operation, ohne die records anzufassen.`, { cur: [vs] });
+    s.aus(`${'Posten'.padEnd(15)} ${'Preis'.padStart(9)} ${'MwSt'.padStart(9)}   ${'Kategorie'.padEnd(21)} Versand`);
+    s.schritt('System.out.printf("%-15s %9s %9s', 'Die Kopfzeile der Tabelle.', MAIN);
+    s.var('summeSteuer', '0');
+    s.schritt('int summeSteuer = 0;', 'Summe der Steuer.', MAIN);
+
+    let summe = 0;
+    // Double Dispatch ausführlich: annehmen() des echten Typs, dann besuche() passend zum Typ
+    function besuchen(p, v, zurueck, rueckMsg, setze) {
+      const istSteuer = v === st, ergebnis = istSteuer ? mwst(p) : versandText(p);
+      s.ruf(`${p.typ}.annehmen(PostenVisitor v)`, [['this', s.ref(p.id)], ['v', s.ref(v)]], Z(ANNEHMEN, NR[p.typ]),
+        `Erster Dispatch: p ist für den Compiler nur ein Posten – zur Laufzeit läuft annehmen() von ${p.typ}. Darin ist this vom Typ ${p.typ}, also ruft v.besuche(this) die Überladung besuche(${p.typ}).`, { cur: [p.id, v] });
+      const zeile = `public ${istSteuer ? 'Integer' : 'String'} besuche(${PARAM[p.typ]})`;
+      s.ruf(`${istSteuer ? 'Mehrwertsteuer' : 'Versandhinweis'}.besuche(${PARAM[p.typ]})`, [['this', s.ref(v)], [PARAM[p.typ].split(' ')[1], s.ref(p.id)]], zeile, istSteuer
+        ? `Zweiter Dispatch: Mehrwertsteuer.besuche(${p.typ}) – ${satz(p)} %: ${p.preis} × ${satz(p)} / ${100 + satz(p)} = ${(p.preis * satz(p) / (100 + satz(p))).toFixed(2).replace('.', ',')} → gerundet ${ergebnis} Cent.`
+        : `Zweiter Dispatch: Versandhinweis.besuche(${p.typ}) → „${ergebnis}“.`, { cur: [v, p.id], klassen: [p.typ] });
+      s.raus(Z(ANNEHMEN, NR[p.typ]), `besuche() liefert ${istSteuer ? ergebnis + ' Cent' : '„' + ergebnis + '“'} zurück an annehmen() …`, { cur: [p.id], klassen: [istSteuer ? 'Mehrwertsteuer' : 'Versandhinweis'] });
+      s.raus(zurueck, rueckMsg, { setze, klassen: ['main()'] });
+      return ergebnis;
+    }
+
+    POSTEN.forEach((p, i) => {
+      const voll = i === 0 || i === 3;                  // Buch und Kopfhörer ausführlich, die anderen in je einem Schritt
+      s.var('p', s.ref(p.id));
+      s.schritt('for (Posten p : warenkorb) {', i === 0 ? `Erster Posten: ${p.id}.` : `${p.id}.`, { cur: [p.id], klassen: ['main()'] });
+      const m = mwst(p);
+      if (voll) {
+        besuchen(p, st, 'int mwst = p.annehmen(steuer);', `… und annehmen() gibt es an main zurück: mwst = ${m}.`, [['mwst', String(m)]]);
+      } else {
+        s.var('mwst', String(m));
+        s.schritt('int mwst = p.annehmen(steuer);', `p.annehmen(steuer) → ${p.typ}.annehmen → Mehrwertsteuer.besuche(${p.typ}): ${satz(p)} % → ${m} Cent (in einem Schritt).`, { cur: [p.id, st] });
+      }
+      summe += m; s.var('summeSteuer', String(summe));
+      s.schritt('summeSteuer += mwst;', `summeSteuer = ${summe}.`, MAIN);
+      const [kat, katZeile, katMsg] = kategorie(p);
+      if (voll || p.typ !== 'Buch') s.schritt(katZeile, `kategorie(p) braucht keinen Besucher: switch mit Pattern Matching. ${katMsg}`, { cur: [p.id], klassen: ['main()'] });
+      const vtext = versandText(p);
+      if (voll) besuchen(p, vs, 'System.out.printf("%-15s %s %s   %-21s %s%n",', '… dann an main.', []);
+      s.aus(`${p.name.padEnd(15)} ${euro(p.preis)} ${euro(m)}   ${kat.padEnd(21)} ${vtext}`);
+      s.schritt('System.out.printf("%-15s %s %s   %-21s %s%n",', voll
+        ? `Die Zeile: Name, Preis, Steuer, Kategorie und der Versandhinweis vom zweiten Besucher.`
+        : `p.annehmen(versand) → Versandhinweis.besuche(${p.typ}): „${vtext}“. Zeile ausgegeben.`, { cur: [p.id, vs], klassen: ['main()'] });
+    });
+    s.var('p', '–'); s.var('mwst', '–');
+
+    s.aus(`Enthaltene MwSt gesamt: ${euro(summe).trim()}`);
+    s.schritt('System.out.println("Enthaltene MwSt gesamt: "', `${POSTEN.map(mwst).join(' + ')} = ${summe} Cent. (p und mwst galten nur in der Schleife.)`, MAIN);
+
+    s.weg(...POSTEN.map(p => p.id), korb, st, vs);
+    s.raus(['System.out.println("Enthaltene MwSt gesamt: "', 1], 'main ist zu Ende. Zwei neue Operationen, und keiner der drei records musste dafür geändert werden – das ist der Zweck des Visitors.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Element', 'ConcreteElement', 'Visitor', 'ConcreteVisitor'],
+    diagramm: {
+      breite: 160, abstandX: 36, abstandY: 50,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 2, y: 0 },
+        { name: 'Posten', art: 'sealed interface', rolle: 'Element', x: 1, y: 1 },
+        { name: 'PostenVisitor', art: 'interface', rolle: 'Visitor', x: 3.5, y: 1 },
+        { name: 'Buch', art: 'record', rolle: 'ConcreteElement', x: 0, y: 2 },
+        { name: 'Lebensmittel', art: 'record', rolle: 'ConcreteElement', x: 1, y: 2 },
+        { name: 'Elektronik', art: 'record', rolle: 'ConcreteElement', x: 2, y: 2 },
+        { name: 'Mehrwertsteuer', art: 'final class', rolle: 'ConcreteVisitor', x: 3, y: 2 },
+        { name: 'Versandhinweis', art: 'final class', rolle: 'ConcreteVisitor', x: 4, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Posten', art: 'nutzt', text: 'annehmen(v)' },
+        { von: 'Posten', zu: 'PostenVisitor', art: 'nutzt', text: 'v.besuche(this)' },
+        { von: 'Buch', zu: 'Posten', art: 'impl' }, { von: 'Lebensmittel', zu: 'Posten', art: 'impl' }, { von: 'Elektronik', zu: 'Posten', art: 'impl' },
+        { von: 'Mehrwertsteuer', zu: 'PostenVisitor', art: 'impl' }, { von: 'Versandhinweis', zu: 'PostenVisitor', art: 'impl' }
+      ]
+    },
+    szenarien: [
+      { name: 'java Visitor.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

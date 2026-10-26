@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategy – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Strategy (GoF-Verhaltensmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (strategy-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="strategy-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  const MAIN = { klassen: ['main()'] };
+  const euro = c => (c / 100).toFixed(2).replace('.', ',').padStart(6) + ' €';
+  const zahl = n => n.toLocaleString('de-DE');
+  const EXPRESS = 'EXPRESS (Lambda)', ABHOLUNG = 'ABHOLUNG (Lambda)';
+  const ARTIKEL = [['Buch', 2490, 600], ['Lampe', 3990, 1800]];
+  const SUMME = ARTIKEL.reduce((a, x) => a + x[1], 0), GEWICHT = ARTIKEL.reduce((a, x) => a + x[2], 0);
+  const Z_SUMME = 'return artikel.stream().mapToInt(Artikel::preisCent).sum() + versand.kostenCent(artikel);';
+  const Z_VERSAND = 'int versandCent() { return versand.kostenCent(artikel); }';
+
+  function lauf(s) {
+    // statische Felder: entstehen beim Laden der Klasse, vor main()
+    const ex = s.neu('Lambda', [['rechnet', '990 + 150 × Anzahl']], EXPRESS);
+    const ab = s.neu('Lambda', [['rechnet', '0']], ABHOLUNG);
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: Die beiden statischen Lambdas EXPRESS und ABHOLUNG gibt es schon – static final Felder entstehen beim Laden der Klasse.', MAIN);
+
+    const std1 = s.neu('Standardversand', []);
+    const korb = s.neu('Warenkorb', [['artikel', '[]'], ['versand', s.ref(std1)]], 'korb');
+    s.var('korb', s.ref(korb));
+    s.schritt('Warenkorb korb = new Warenkorb();', `Der Warenkorb ist der Context. Sein Feld versand zeigt zunächst auf ${std1} – eine austauschbare Strategie.`, { cur: [korb, std1] });
+    const aIds = [];
+    ARTIKEL.forEach(([n, p, g], i) => {
+      aIds.push(s.neu('Artikel', [['name', `"${n}"`], ['preisCent', String(p)], ['gewichtGramm', String(g)]], `Artikel ${n}`));
+      s.feld(korb, 'artikel', `[${aIds.map(x => '→ ' + x).join(', ')}]`);
+      s.schritt(`korb.legeHinein(new Artikel("${n}"`, `${n}: ${euro(p).trim()}, ${zahl(g)} g.`, { cur: [korb, aIds[i]] });
+    });
+
+    // die fünf Optionen
+    const std2 = s.neu('Standardversand', []);
+    const opt = s.neu('LinkedHashMap', [['Inhalt', `{Standard=→ ${std2}}`]], 'optionen');
+    s.var('optionen', s.ref(opt));
+    s.schritt('optionen.put("Standard", new Standardversand());', `Eine Map der Optionen, in Einfügereihenfolge (LinkedHashMap). Zuerst ${std2} – eine Strategie als Klasse.`, { cur: [opt, std2] });
+    const eintraege = [['Standard', std2]];
+    const fuege = (name, id, zeile, msg) => { eintraege.push([name, id]); s.feld(opt, 'Inhalt', `{${eintraege.map(([n, i]) => `${n}=→ ${i}`).join(', ')}}`); s.schritt(zeile, msg, { cur: [opt, id] }); };
+    fuege('Express', ex, 'optionen.put("Express", EXPRESS);', `${EXPRESS}: eine Strategie als Lambda – möglich, weil Versandart ein funktionales Interface ist.`);
+    fuege('Abholung', ab, 'optionen.put("Abholung", ABHOLUNG);', `${ABHOLUNG}: kostet nichts.`);
+    const std3 = s.neu('Standardversand', []);
+    const g1 = s.neu('GratisAb', [['schwelleCent', '5000'], ['sonst', s.ref(std3)]]);
+    fuege('Gratis ab 50 €', g1, 'optionen.put("Gratis ab 50 €"', `${g1}: eine Strategie mit Parametern (record). Unter 50 € fragt sie eine andere Strategie – ${std3}.`);
+    const g2 = s.neu('GratisAb', [['schwelleCent', '10000'], ['sonst', s.ref(ex)]]);
+    fuege('Gratis ab 100 €', g2, 'optionen.put("Gratis ab 100 €"', `${g2}: ab 100 € gratis, sonst Express. Strategien lassen sich so zusammenstecken.`);
+
+    s.aus('Warenkorb: Buch, Lampe');
+    s.schritt('System.out.println("Warenkorb: Buch, Lampe");', `Im Korb: ${zahl(SUMME)} Cent Ware, ${zahl(GEWICHT)} g.`, MAIN);
+
+    // Strategie berechnen (mit Frames)
+    function kosten(id, zurueck, voll, warte) {
+      warte = warte || [];                              // Strategien, die auf die Antwort warten, leuchten mit
+      if (id === std1 || id === std2 || id === std3) {
+        s.ruf('Standardversand.kostenCent(List artikel)', [['this', s.ref(id)]], 'int gewicht = artikel.stream().mapToInt(Artikel::gewichtGramm).sum();', voll ? `Standardversand rechnet nach Gewicht: ${zahl(GEWICHT)} g.` : `Standardversand: ${zahl(GEWICHT)} g.`, { cur: [id], klassen: warte });
+        s.var('gewicht', String(GEWICHT));
+        if (voll) s.schritt('return gewicht <= 2_000 ? 490 : 690;', `Mehr als 2.000 g → 690 Cent.`, { cur: [id] });
+        s.raus(zurueck, '690 Cent zurück.', { cur: [korb] });
+        return 690;
+      }
+      if (id === ex) {
+        s.ruf(`${EXPRESS}.kostenCent(artikel)`, [['artikel', '[Buch, Lampe]']], 'static final Versandart EXPRESS = artikel -> 990 + 150 * artikel.size();', `Express: 990 + 150 × 2 = 1290 Cent.`, { cur: [ex], klassen: warte });
+        s.raus(zurueck, '1290 Cent zurück.', {});
+        return 1290;
+      }
+      if (id === ab) {
+        s.ruf(`${ABHOLUNG}.kostenCent(artikel)`, [['artikel', '[Buch, Lampe]']], 'static final Versandart ABHOLUNG = artikel -> 0;', 'Abholung: 0.', { cur: [ab] });
+        s.raus(zurueck, '0 Cent zurück.', {});
+        return 0;
+      }
+      const schwelle = id === g1 ? 5000 : 10000, sonst = id === g1 ? std3 : ex;
+      s.ruf('GratisAb.kostenCent(List artikel)', [['this', s.ref(id)]], 'int summe = artikel.stream().mapToInt(Artikel::preisCent).sum();', `${id} rechnet die Warensumme: ${zahl(SUMME)} Cent.`, { cur: [id] });
+      s.var('summe', String(SUMME));
+      if (SUMME >= schwelle) {
+        s.schritt('return summe >= schwelleCent ? 0 : sonst.kostenCent(artikel);', `${zahl(SUMME)} ≥ ${zahl(schwelle)} → gratis.`, { cur: [id] });
+        s.raus(zurueck, '0 Cent zurück.', {});
+        return 0;
+      }
+      s.schritt('return summe >= schwelleCent ? 0 : sonst.kostenCent(artikel);', `${zahl(SUMME)} < ${zahl(schwelle)} → nicht gratis. ${id} gibt die Frage an seine zweite Strategie weiter: ${sonst}.`, { cur: [id, sonst] });
+      const k = kosten(sonst, 'return summe >= schwelleCent ? 0 : sonst.kostenCent(artikel);', false, ['GratisAb']);
+      s.raus(zurueck, `${k} Cent zurück.`, {});
+      return k;
+    }
+
+    eintraege.forEach(([name, id], i) => {
+      const voll = i === 0;
+      s.ruf('Lambda (name, art)', [['name', `"${name}"`], ['art', s.ref(id)]], 'korb.setVersand(art);', voll
+        ? `optionen.forEach ruft für jeden Eintrag das Lambda auf. Zuerst „${name}“: setVersand tauscht die Strategie im Korb aus.`
+        : `„${name}“: setVersand(${id}).`, { cur: [korb, id] });
+      s.feld(korb, 'versand', s.ref(id));
+      if (voll) s.schritt('korb.setVersand(art);', `korb.versand = → ${id}. Der Warenkorb selbst bleibt, wie er ist.`, { cur: [korb, id] });
+      s.ruf('Warenkorb.versandCent()', [['this', s.ref(korb)]], Z_VERSAND, voll ? 'versandCent() fragt einfach versand.kostenCent(artikel) – welche Strategie dahintersteht, weiß der Korb nicht.' : 'versandCent().', { cur: [korb] });
+      const k = kosten(id, Z_VERSAND, voll);
+      s.raus('System.out.printf("  %-16s Versand %s   Gesamt %s%n"', `Versand: ${euro(k).trim()}.`, { cur: [korb] });
+      s.aus(`  ${name.padEnd(16)} Versand ${euro(k)}   Gesamt ${euro(SUMME + k)}`);
+      s.schritt('System.out.printf("  %-16s Versand %s   Gesamt %s%n"', voll
+        ? `summeCent() rechnet Ware + versand.kostenCent(artikel) = ${zahl(SUMME)} + ${k} = ${zahl(SUMME + k)} Cent. Dabei wird die Strategie ein zweites Mal gefragt (hier in einem Schritt).`
+        : `Gesamt ${zahl(SUMME)} + ${k} = ${zahl(SUMME + k)} Cent (summeCent() fragt die Strategie noch einmal).`, { cur: [korb, id] });
+      s.raus('optionen.forEach((name, art) -> {', 'Nächster Eintrag.', MAIN);
+    });
+
+    // ---------- Comparator ----------
+    const liste = [['Lampe', 3990, 1800], ['Buch', 2490, 600], ['Tasse', 890, 350]];
+    const lIds = liste.map(([n, p, g]) => s.neu('Artikel', [['name', `"${n}"`], ['preisCent', String(p)], ['gewichtGramm', String(g)]], n === 'Tasse' ? 'Artikel Tasse' : `Artikel ${n} #2`));
+    const lst = s.neu('ArrayList', [['Inhalt', `[${lIds.map(x => '→ ' + x).join(', ')}]`]], 'liste');
+    s.var('liste', s.ref(lst));
+    s.schritt('List<Artikel> liste = new ArrayList<>(List.of(', 'Teil 2: Strategy im JDK. Drei neue Artikel-Objekte in einer Liste.', { cur: [lst] });
+
+    const sortiere = (key, cmpIds, zeileAus, zeileCode, msg) => {
+      const sortiert = liste.slice().sort(key).map(x => x[0]);
+      s.ruf('namen(List liste, Comparator strategie)', [['liste', s.ref(lst)], ['strategie', s.ref(cmpIds[cmpIds.length - 1])]], 'return liste.stream().sorted(strategie).map(Artikel::name).toList();', msg, { cur: cmpIds, klassen: ['Comparator'] });
+      s.aus(`${zeileAus}${'['}${sortiert.join(', ')}]`);
+      s.raus(zeileCode, `→ [${sortiert.join(', ')}]. sorted() weiß, wie man sortiert – die Strategie sagt, wonach.`, MAIN);
+      s.weg(...cmpIds);
+    };
+    const c1 = s.neu('Comparator', [['vergleicht', 'name']], 'Comparator nach Name');
+    sortiere((a, b) => a[0].localeCompare(b[0]), [c1], '\nSortiert nach Name:    ', 'Sortiert nach Name:    " + namen', 'Comparator.comparing(Artikel::name) baut eine Vergleichs-Strategie nach dem Namen. namen() sortiert damit.');
+    const c2 = s.neu('Comparator', [['vergleicht', 'preisCent']], 'Comparator nach Preis');
+    sortiere((a, b) => a[1] - b[1], [c2], 'Sortiert nach Preis:   ', 'System.out.println("Sortiert nach Preis:', 'Dieselbe Methode, eine andere Strategie: nach Preis.');
+    const c3 = s.neu('Comparator', [['vergleicht', 'gewichtGramm']], 'Comparator nach Gewicht');
+    const c4 = s.neu('Comparator', [['umgekehrt', s.ref(c3)]], 'Comparator umgekehrt');
+    sortiere((a, b) => b[2] - a[2], [c3, c4], 'Schwerste zuerst:      ', 'Comparator.comparingInt(Artikel::gewichtGramm).reversed()));', 'comparingInt(...) baut eine Strategie nach Gewicht, reversed() eine neue, die sie umdreht – eine Strategie aus einer Strategie.');
+
+    s.weg(korb, std1, std2, std3, g1, g2, opt, lst, ...aIds, ...lIds);
+    s.raus(['Comparator.comparingInt(Artikel::gewichtGramm).reversed()));', 1], 'main ist zu Ende. Fünf Versandarten, drei Sortierungen – und weder Warenkorb noch sorted() mussten dafür geändert werden.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Context', 'Strategy', 'ConcreteStrategy'],
+    diagramm: {
+      breite: 160, abstandX: 40, abstandY: 50,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1.5, y: 0 },
+        { name: 'Warenkorb', art: 'final class', rolle: 'Context', x: 0, y: 1 },
+        { name: 'Versandart', art: 'functional interface', rolle: 'Strategy', x: 2, y: 1 },
+        { name: 'Comparator', art: 'interface (JDK)', rolle: 'Strategy', x: 4, y: 1 },
+        { name: 'Standardversand', art: 'final class', rolle: 'ConcreteStrategy', x: 0, y: 2 },
+        { name: 'GratisAb', art: 'record', rolle: 'ConcreteStrategy', x: 1, y: 2 },
+        { name: 'Lambda', art: 'EXPRESS, ABHOLUNG', rolle: 'ConcreteStrategy', x: 3, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Warenkorb', art: 'nutzt', text: 'setVersand()' },
+        { von: 'main()', zu: 'Comparator', art: 'nutzt', text: 'sorted(…)' },
+        { von: 'Warenkorb', zu: 'Versandart', art: 'nutzt', text: 'versand' },
+        { von: 'Standardversand', zu: 'Versandart', art: 'impl' }, { von: 'GratisAb', zu: 'Versandart', art: 'impl' }, { von: 'Lambda', zu: 'Versandart', art: 'impl' },
+        { von: 'GratisAb', zu: 'Versandart', art: 'nutzt', bogen: -40, text: 'sonst', dx: -6 }
+      ]
+    },
+    szenarien: [
+      { name: 'java Strategy.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

@@ -180,6 +180,7 @@ gruppe = "verhalten"
 schluessel = "strategy"
 name = "Strategy"
 text = "austauschbare Algorithmen hinter gemeinsamer Schnittstelle"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Derselbe Warenkorb bekommt nacheinander fünf Versandarten: eine Klasse, zwei Lambdas und zwei records mit Parametern. Im Speicher sieht man, wie das Feld versand jedes Mal auf ein anderes Objekt zeigt. Im Aufrufstapel sieht man, dass der Warenkorb nur kostenCent() fragt. „Gratis ab 100 €“ reicht die Frage an Express weiter. Zum Schluss sortiert sorted() dieselbe Liste mit drei Comparator-Strategien."
 
 [[muster]]
 nummer = 22
@@ -187,6 +188,7 @@ gruppe = "verhalten"
 schluessel = "template-method"
 name = "Template Method"
 text = "Algorithmusgerüst in der Oberklasse, Schritte in Unterklassen"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Beide Importe laufen durch dieselbe final-Methode importiere() der Oberklasse. Im Aufrufstapel sieht man, wie sie für zerlege() und wandle() die Unterklasse aufruft, für pruefe() aber ihren eigenen, für alle gleichen Schritt. Der Hook protokollieren() liefert bei CSV die Zusammenfassung, beim Schlüssel-Wert-Format ist er überschrieben. Kunden, die die Prüfung nicht bestehen, werden verworfen."
 
 [[muster]]
 nummer = 23
@@ -194,3 +196,4 @@ gruppe = "verhalten"
 schluessel = "visitor"
 name = "Visitor"
 text = "neue Operationen auf einer Objektstruktur definieren, ohne deren Klassen zu ändern"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Beim Buch und bei den Kopfhörern sieht man den Double Dispatch im Aufrufstapel: Zuerst wählt Java annehmen() nach dem echten Typ des Postens, darin wählt v.besuche(this) die passende Überladung des Besuchers. Die übrigen Posten laufen in je einem Schritt. Die Kategorie kommt ohne Besucher aus: Sie entsteht per Pattern Matching im switch, teils mit Bedingungen (when)."

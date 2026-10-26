@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Template Method – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Template Method (GoF-Verhaltensmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (template-method-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="template-method-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  const MAIN = { klassen: ['main()'] };
+  const str = t => `"${t}"`;
+  const kundeText = k => `Kunde[name=${k.name}, ort=${k.ort}, alter=${k.alter}]`;
+  // Die Datensätze, wie zerlege() und wandle() sie liefern
+  const CSV = { typ: 'CsvImport', zeileMain: 'List<Kunde> ausCsv = new CsvImport().importiere(csv);', ausgabe: 'ausCsv.forEach(', var: 'ausCsv', rohVar: 'csv',
+    saetze: ['Anna Berg;Hamburg;34', 'Ben Krause;Köln;17', 'Cem Yilmaz;Leipzig;52'],
+    kunden: [{ name: 'Anna Berg', ort: 'Hamburg', alter: 34 }, { name: 'Ben Krause', ort: 'Köln', alter: 17 }, { name: 'Cem Yilmaz', ort: 'Leipzig', alter: 52 }],
+    zerlege: 'return rohdaten.lines().skip(1).toList();', wandle: 'String[] f = satz.split(";");', wandleEnde: 'return new Kunde(f[0].strip()', protokoll: true };
+  const KV = { typ: 'KeyValueImport', zeileMain: 'List<Kunde> ausKv = new KeyValueImport().importiere(keyValue);', ausgabe: 'ausKv.forEach(', var: 'ausKv', rohVar: 'keyValue',
+    saetze: ['name = Dora Lenz / ort = München / alter = 41', 'name = / ort = Bremen / alter = 29', 'name = Emil Roth / alter = 65'],
+    kunden: [{ name: 'Dora Lenz', ort: 'München', alter: 41 }, { name: '', ort: 'Bremen', alter: 29 }, { name: 'Emil Roth', ort: '', alter: 65 }],
+    zerlege: 'return List.of(rohdaten.split(', wandle: 'for (String zeile : block.lines().toList()) {', wandleEnde: 'return new Kunde(name, ort, alter);', protokoll: false };
+  const pruefe = k => k.name.trim() !== '' && k.alter >= 18;
+
+  function lauf(s) {
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: zwei Importe für zwei Formate – mit demselben Ablauf.', MAIN);
+    s.var('csv', '"name;ort;alter\\nAnna Berg;…"');
+    s.schritt('String csv = """', 'Die CSV-Daten als Text Block: Kopfzeile und drei Kunden.', MAIN);
+    s.var('keyValue', '"name = Dora Lenz\\n…"');
+    s.schritt('String keyValue = """', 'Dieselben Angaben in einem zweiten Format: Schlüssel = Wert, Blöcke durch --- getrennt.', MAIN);
+
+    function importiere(F, voll) {
+      const imp = s.neu(F.typ, [], `${F.typ} #1`);
+      s.aus(`== ${F.typ} ==`);
+      s.ruf('KundenImport.importiere(String rohdaten)', [['this', s.ref(imp)], ['rohdaten', F.rohVar]], 'System.out.println("== " + getClass().getSimpleName() + " ==");', voll
+        ? `new ${F.typ}().importiere(csv): Die Methode steht in der Oberklasse KundenImport und ist final – die Template Method. Sie legt den Ablauf fest, für alle Unterklassen gleich.`
+        : `${imp}.importiere(keyValue): dieselbe Template Method, ein anderes Objekt.`, { cur: [imp], klassen: ['KundenImport'] });
+      // zerlege
+      s.ruf(`${F.typ}.zerlege(String rohdaten)`, [['this', s.ref(imp)]], F.zerlege, voll
+        ? `Schritt 1, zerlege(): In der Oberklasse nur abstrakt deklariert. Die Oberklasse ruft die Unterklasse auf, nicht umgekehrt – das Hollywood-Prinzip. ${F.typ} lässt die Kopfzeile weg.`
+        : `zerlege() von ${F.typ}: trennt die Blöcke an „---“.`, { cur: [imp], klassen: ['KundenImport'] });
+      s.raus('List<String> datensaetze = zerlege(rohdaten);', `${F.saetze.length} Datensätze.`, { setze: [['datensaetze', `[${F.saetze.length} Einträge]`]], cur: [imp], klassen: ['KundenImport'] });
+      s.var('kunden', '[]');
+      s.schritt('List<Kunde> kunden = new ArrayList<>();', 'Eine leere Ergebnisliste.', { cur: [imp], klassen: ['KundenImport'] });
+
+      const behalten = [];
+      F.saetze.forEach((satz, i) => {
+        const k = F.kunden[i], ausf = voll && i === 0;
+        s.var('satz', str(satz));
+        s.ruf(`${F.typ}.wandle(String ${F.typ === 'CsvImport' ? 'satz' : 'block'})`, [['this', s.ref(imp)]], F.wandle, ausf
+          ? `Schritt 2, wandle(): wieder abstrakt in der Oberklasse. CsvImport teilt die Zeile am Semikolon.`
+          : `wandle(): ${F.typ === 'KeyValueImport' && i === 0 ? 'Jede Zeile wird an „=“ geteilt, ein switch ordnet den Wert zu.' : `„${satz}“.`}`, { cur: [imp], klassen: ['KundenImport'] });
+        const id = s.neu('Kunde', [['name', str(k.name)], ['ort', str(k.ort)], ['alter', String(k.alter)]], `Kunde ${k.name || '(ohne Name)'}`);
+        if (ausf) s.schritt(F.wandleEnde, `Ein Kunde-record entsteht: ${kundeText(k)}.`, { cur: [id] });
+        s.raus('Kunde k = wandle(satz);', `k = → ${id}.`, { setze: [['k', s.ref(id)]], cur: [id], klassen: ['KundenImport'] });
+        const ok = pruefe(k);
+        if (ausf) {
+          s.ruf('KundenImport.pruefe(Kunde k)', [['this', s.ref(imp)], ['k', s.ref(id)]], 'return !k.name().isBlank() && k.alter() >= 18;', 'Schritt 3, pruefe(): Dieser Schritt ist privat in der Oberklasse – für alle Formate gleich, keine Unterklasse kann ihn ändern.', { cur: [id], klassen: ['KundenImport'] });
+          s.raus('if (pruefe(k)) {', `Name vorhanden, Alter ${k.alter} ≥ 18 → ${ok}.`, { cur: [imp], klassen: ['KundenImport'] });
+        } else {
+          s.schritt('if (pruefe(k)) {', `pruefe(): ${k.name.trim() ? 'Name vorhanden' : 'kein Name'}, Alter ${k.alter}${k.alter >= 18 ? ' ≥ 18' : ' < 18'} → ${ok}.`, { cur: [id], klassen: ['KundenImport'] });
+        }
+        if (ok) {
+          behalten.push(id);
+          s.var('kunden', `[${behalten.map(x => '→ ' + x).join(', ')}]`);
+          s.schritt('kunden.add(k);', `${id} kommt in die Liste.`, { cur: [id], klassen: ['KundenImport'] });
+        } else {
+          s.aus(`  verworfen: ${kundeText(k)}`);
+          s.schritt('System.out.println("  verworfen: " + k);', `Verworfen – die Prüfung gilt für jedes Format.`, { cur: [id], klassen: ['KundenImport'] });
+          s.weg(id);
+        }
+      });
+      s.var('satz', '–'); s.var('k', '–');
+
+      // Hook
+      const hookZeile = F.protokoll ? 'protected boolean protokollieren() { return true; }' : 'protected boolean protokollieren() { return false; }';
+      s.ruf(`${F.protokoll ? 'KundenImport' : 'KeyValueImport'}.protokollieren()`, [['this', s.ref(imp)]], hookZeile, F.protokoll
+        ? 'Schritt 4, protokollieren(): ein Hook. Die Oberklasse liefert ein Standardverhalten (true), Unterklassen dürfen es überschreiben – CsvImport tut das nicht.'
+        : 'KeyValueImport hat den Hook überschrieben: false – keine Zusammenfassung.', { cur: [imp], klassen: [F.protokoll ? 'KundenImport' : 'KeyValueImport'] });
+      s.raus('if (protokollieren()) {', F.protokoll ? 'true.' : 'false – die Zeile entfällt.', { cur: [imp], klassen: ['KundenImport'] });
+      if (F.protokoll) {
+        s.aus(`  ${behalten.length} von ${F.saetze.length} importiert`);
+        s.schritt('System.out.println("  " + kunden.size()', `${behalten.length} von ${F.saetze.length} importiert.`, { cur: [imp], klassen: ['KundenImport'] });
+      }
+      s.weg(imp);
+      s.raus(F.zeileMain, `importiere() gibt die Liste zurück. Das Import-Objekt ${imp} hatte nur diese eine Aufgabe und ist jetzt nicht mehr erreichbar.`, { setze: [[F.var, `[${behalten.map(x => '→ ' + x).join(', ')}]`]], klassen: ['main()'] });
+      s.aus(behalten.map(id => '  ' + kundeText(F.kunden[F.kunden.findIndex(k => `Kunde ${k.name || '(ohne Name)'}` === id)])).join('\n'));
+      s.schritt(F.ausgabe, 'Die übernommenen Kunden – toString() der records.', { cur: behalten, klassen: ['main()'] });
+      return behalten;
+    }
+
+    const a = importiere(CSV, true);
+    const b = importiere(KV, false);
+    s.weg(...a, ...b);
+    s.raus(['ausKv.forEach(k -> System.out.println("  " + k));', 1], 'main ist zu Ende. Zwei Formate, ein Ablauf: Nur zerlege(), wandle() und der Hook unterscheiden sich.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'AbstractClass', 'ConcreteClass'],
+    diagramm: {
+      breite: 170, abstandX: 50, abstandY: 50,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1, y: 0 },
+        { name: 'KundenImport', art: 'abstract class', rolle: 'AbstractClass', x: 1, y: 1 },
+        { name: 'Kunde', art: 'record', rolle: 'Daten', x: 2.5, y: 1 },
+        { name: 'CsvImport', art: 'final class', rolle: 'ConcreteClass', x: 0, y: 2 },
+        { name: 'KeyValueImport', art: 'final class', rolle: 'ConcreteClass', x: 2, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'KundenImport', art: 'nutzt', text: 'importiere()' },
+        { von: 'CsvImport', zu: 'KundenImport', art: 'erbt' }, { von: 'KeyValueImport', zu: 'KundenImport', art: 'erbt' },
+        { von: 'KundenImport', zu: 'Kunde', art: 'nutzt', text: 'List<Kunde>' }
+      ]
+    },
+    szenarien: [
+      { name: 'java TemplateMethod.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>
