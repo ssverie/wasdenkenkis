@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>State – Ablauf</title>
+<!-- Ablauf-Visualisierung zu State (GoF-Verhaltensmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (state-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="state-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  function Z(text, nr) {                                // mehrfach vorkommende Zeilen: genauer Inhalt + Nummer des Vorkommens
+    const t = window.MUSTER_CODE.map((l, i) => l.trim() === text ? i : -1).filter(i => i >= 0);
+    if (t.length <= (nr || 0)) throw new Error(`Zeile „${text}“ (${nr || 0}) nicht gefunden`);
+    return t[nr || 0];
+  }
+  const MAIN = { klassen: ['main()'] };
+  // erlaubte Übergänge: Zustand → Aktion → [neuer Zustand, Einstiegszeile, Rückgabezeile, Ausgabe]
+  const UEBERGANG = {
+    Neu: { bezahlen: ['Bezahlt', 'System.out.println("    Zahlung über "', 'return new Bezahlt();', b => `    Zahlung über ${b.betrag} € verbucht`],
+           stornieren: ['Storniert', 'keine Erstattung nötig', () => Z('return new Storniert();', 0), () => '    Bestellung storniert, keine Erstattung nötig'] },
+    Bezahlt: { versenden: ['Versendet', 'String nr = "PK-" + (4711 + b.nummer);', 'return new Versendet(nr);', b => `    Paket übergeben, Sendung PK-${4711 + b.nummer}`],
+               stornieren: ['Storniert', '€ werden erstattet', () => Z('return new Storniert();', 1), b => `    Bestellung storniert, ${b.betrag} € werden erstattet`] },
+    Versendet: { zustellen: ['Zugestellt', '" zugestellt");', 'return new Zugestellt();', (b, z) => `    Sendung ${z.nr} zugestellt`] }
+  };
+  const KUNDE = { Neu: () => 'Wartet auf Zahlung', Bezahlt: () => 'Wird verpackt', Versendet: z => `Unterwegs, Sendung ${z.nr}`, Zugestellt: () => 'Zugestellt', Storniert: () => 'Storniert' };
+  const FALL = { Neu: 'case Neu n', Bezahlt: 'case Bezahlt b', Versendet: 'case Versendet(String nr)', Zugestellt: 'case Zugestellt z', Storniert: 'case Storniert s' };
+
+  function lauf(s) {
+    const erklaert = {};
+
+    function aktion(b, was, zeileMain, voll) {
+      const z = b.zustand, ueb = (UEBERGANG[z.typ] || {})[was];
+      s.ruf(`Bestellung.${was}()`, [['this', s.ref(b.id)]], `status = status.${was}(this);`, voll
+        ? `${b.id}.${was}(): Die Bestellung entscheidet nichts selbst – sie gibt die Aktion an ihren aktuellen Zustand ${z.id} weiter und übernimmt, was zurückkommt.`
+        : `${b.id}.${was}() → weiter an ${z.id}.`, { cur: [b.id, z.id] });
+      if (ueb) {
+        const [neuTyp, einstieg, rueck, text] = ueb;
+        s.aus(text(b, z));
+        s.ruf(`${z.typ}.${was}(Bestellung b)`, [['this', s.ref(z.id)], ['b', s.ref(b.id)]], einstieg, erklaert[z.typ + was]
+          ? `${z.typ}.${was}(): erlaubt.`
+          : `${z.typ} erlaubt ${was}(): Es erledigt seinen Teil${neuTyp === 'Versendet' ? ` – die Sendungsnummer PK-${4711 + b.nummer} ergibt sich aus der Bestellnummer` : ''} …`, { cur: [z.id] });
+        erklaert[z.typ + was] = true;
+        const neu = { typ: neuTyp, nr: neuTyp === 'Versendet' ? `PK-${4711 + b.nummer}` : null };
+        neu.id = s.neu(neuTyp, neu.nr ? [['sendungsnummer', `"${neu.nr}"`]] : []);
+        s.schritt(typeof rueck === 'function' ? rueck() : rueck, `… und liefert den nächsten Zustand zurück: ${neu.id}. Den Übergang bestimmt der Zustand selbst.`, { cur: [neu.id], klassen: [z.typ] });
+        b.zustand = neu;
+        s.feld(b.id, 'status', s.ref(neu.id));
+        s.raus(`status = status.${was}(this);`, `status = → ${neu.id}. ${z.id} wird nicht mehr gebraucht.`, { cur: [b.id, neu.id] });
+        s.weg(z.id);
+      } else {
+        const dflt = `default Status ${was}(Bestellung b)`;
+        s.ruf(`Status.${was}(Bestellung b)`, [['this', s.ref(z.id)], ['b', s.ref(b.id)]], dflt, erklaert.dflt
+          ? `${z.typ} kennt ${was}() nicht – die default-Methode greift.`
+          : `${z.typ} überschreibt ${was}() nicht. Also greift die default-Methode im Interface Status – und die sagt: nicht möglich.`, { cur: [z.id], klassen: ['Status'] });
+        erklaert.dflt = true;
+        s.aus(`    nicht möglich: ${was} im Status ${z.typ}`);
+        s.ruf('Status.verboten(String aktion)', [['this', s.ref(z.id)], ['aktion', `"${was}"`]], 'System.out.println("    nicht möglich: "', `verboten() meldet es und gibt this zurück – der Zustand bleibt ${z.id}.`, { cur: [z.id], klassen: ['Status'] });
+        s.raus(dflt, 'verboten() gibt this zurück.', { cur: [z.id], klassen: ['Status'] });
+        s.raus(`status = status.${was}(this);`, `status bleibt → ${z.id}.`, { cur: [b.id, z.id] });
+      }
+      // zeige() mit fuerKunden()
+      const zz = b.zustand, zeile = `  -> ${zz.typ}: ${KUNDE[zz.typ](zz)}`;
+      s.aus(zeile);
+      if (voll || !erklaert['fall' + zz.typ]) {
+        s.ruf('Bestellung.zeige()', [['this', s.ref(b.id)]], FALL[zz.typ], zz.typ === 'Versendet'
+          ? `zeige() ruft fuerKunden(): switch mit Record Pattern – case Versendet(String nr) holt die Sendungsnummer gleich heraus.`
+          : `zeige() ruft fuerKunden(): Der switch über den sealed-Typ Status landet bei ${FALL[zz.typ]} → „${KUNDE[zz.typ](zz)}“.`, { cur: [b.id, zz.id] });
+        s.raus(`status = status.${was}(this);`, 'Ausgegeben.', { cur: [b.id] });
+      } else {
+        s.schritt(`status = status.${was}(this);`, `zeige(): „${zeile.trim()}“.`, { cur: [b.id, zz.id] });
+      }
+      erklaert['fall' + zz.typ] = true;
+      s.raus(zeileMain, 'Zurück in main.', MAIN);
+    }
+
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: zwei Bestellungen durchlaufen ihre Zustände.', MAIN);
+    s.aus('Bestellung 1: normaler Ablauf');
+    s.schritt('System.out.println("Bestellung 1: normaler Ablauf");', 'Bestellung 1.', MAIN);
+    const n1 = s.neu('Neu', []);
+    const b1 = { id: s.neu('Bestellung', [['nummer', '1'], ['betrag', '59'], ['status', s.ref(n1)]], 'b1'), nummer: 1, betrag: 59, zustand: { typ: 'Neu', id: n1 } };
+    s.var('b1', s.ref(b1.id));
+    s.schritt('Bestellung b1 = new Bestellung(1, 59);', `${b1.id} ist der Context. Ihr Feld status zeigt auf ein Zustandsobjekt: ${n1}.`, { cur: [b1.id, n1] });
+
+    aktion(b1, 'versenden', 'noch nicht bezahlt', true);
+    aktion(b1, 'bezahlen', 'b1.bezahlen();', true);
+    aktion(b1, 'versenden', Z('b1.versenden();', 0), false);
+    aktion(b1, 'stornieren', 'schon unterwegs', false);
+    aktion(b1, 'zustellen', 'b1.zustellen();', false);
+
+    s.aus('\nBestellung 2: Storno nach Zahlung');
+    s.schritt('Storno nach Zahlung");', 'Bestellung 2: ein anderer Weg durch dieselben Zustände.', MAIN);
+    const n2 = s.neu('Neu', []);
+    const b2 = { id: s.neu('Bestellung', [['nummer', '2'], ['betrag', '120'], ['status', s.ref(n2)]], 'b2'), nummer: 2, betrag: 120, zustand: { typ: 'Neu', id: n2 } };
+    s.var('b2', s.ref(b2.id));
+    s.schritt('Bestellung b2 = new Bestellung(2, 120);', `${b2.id} mit eigenem Zustand ${n2}.`, { cur: [b2.id, n2] });
+    aktion(b2, 'bezahlen', 'b2.bezahlen();', false);
+    aktion(b2, 'stornieren', 'b2.stornieren();', false);
+    aktion(b2, 'versenden', 'storniert, geht nicht mehr', false);
+
+    s.weg(b1.id, b1.zustand.id, b2.id, b2.zustand.id);
+    s.raus(['storniert, geht nicht mehr', 1], 'main ist zu Ende. Keine einzige if-Abfrage nach dem Status in der Bestellung – jeder Zustand kennt nur seine eigenen Übergänge.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Context', 'State', 'ConcreteState'],
+    diagramm: {
+      breite: 150, abstandX: 30, abstandY: 50, untenPlatz: 96,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1, y: 0 },
+        { name: 'Bestellung', art: 'final class', rolle: 'Context', x: 0, y: 1 },
+        { name: 'Status', art: 'sealed interface', rolle: 'State', x: 2, y: 1 },
+        { name: 'Neu', art: 'record', rolle: 'ConcreteState', x: 0, y: 2 },
+        { name: 'Bezahlt', art: 'record', rolle: 'ConcreteState', x: 1, y: 2 },
+        { name: 'Versendet', art: 'record', rolle: 'ConcreteState', x: 2, y: 2 },
+        { name: 'Zugestellt', art: 'record', rolle: 'ConcreteState', x: 3, y: 2 },
+        { name: 'Storniert', art: 'record', rolle: 'ConcreteState', x: 4, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Bestellung', art: 'nutzt', text: 'b1, b2' },
+        { von: 'Bestellung', zu: 'Status', art: 'nutzt', text: 'status' },
+        { von: 'Neu', zu: 'Status', art: 'impl' }, { von: 'Bezahlt', zu: 'Status', art: 'impl' }, { von: 'Versendet', zu: 'Status', art: 'impl' },
+        { von: 'Zugestellt', zu: 'Status', art: 'impl' }, { von: 'Storniert', zu: 'Status', art: 'impl' },
+        { von: 'Neu', zu: 'Bezahlt', art: 'erzeugt', unten: 24, text: 'bezahlen' },
+        { von: 'Bezahlt', zu: 'Versendet', art: 'erzeugt', unten: 24, text: 'versenden' },
+        { von: 'Versendet', zu: 'Zugestellt', art: 'erzeugt', unten: 24, text: 'zustellen' },
+        { von: 'Bezahlt', zu: 'Storniert', art: 'erzeugt', unten: 62, text: 'stornieren' },
+        { von: 'Neu', zu: 'Storniert', art: 'erzeugt', unten: 96, text: 'stornieren' }
+      ]
+    },
+    szenarien: [
+      { name: 'java State.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

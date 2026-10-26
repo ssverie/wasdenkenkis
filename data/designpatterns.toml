@@ -172,6 +172,7 @@ gruppe = "verhalten"
 schluessel = "state"
 name = "State"
 text = "Verhalten ändert sich mit dem internen Zustand (Zustand als Objekt)"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Unten im Diagramm stehen die erlaubten Übergänge als Pfeile zwischen den Zuständen. Die Bestellung gibt jede Aktion an ihr aktuelles Zustandsobjekt weiter. Ist die Aktion erlaubt, liefert der Zustand den nächsten zurück, und das alte Objekt wird nicht mehr gebraucht. Ist sie nicht erlaubt, greift die default-Methode im Interface und der Zustand bleibt. Bestellung 2 nimmt einen anderen Weg durch dieselben Zustände."
 
 [[muster]]
 nummer = 21
