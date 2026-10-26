@@ -8,5 +8,7 @@
 {{- $seiten := where .RegularPages "Params.archiv" "!=" true }}
 {{- /* Kolumnen sind eine nummerierte Reihe: neueste Ausgabe oben, unabhängig von der Dateizeit (Gemini 1–4 kamen am selben Abend in anderer Reihenfolge) */}}
 {{- if eq .Section "kolumnen" }}{{ $seiten = sort $seiten "Params.ausgabe" "desc" }}{{ end }}
+{{- /* Rubriken mit eigener Reihenfolge: sortieren_nach = "<Feld>" im _index.md, absteigend (Algorithmen: Buchreihenfolge, Sven 2026-10-26) */}}
+{{- with .Params.sortieren_nach }}{{ $seiten = sort $seiten (printf "Params.%s" .) "desc" }}{{ end }}
 {{ partial "liste.html" $seiten }}
 {{ end }}

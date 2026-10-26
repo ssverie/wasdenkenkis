@@ -2,6 +2,7 @@
 title = "Insertionsort (Algorithmus 2.2)"
 description = "Sortieren durch Einfügen aus Sedgewick/Wayne, Algorithmus 2.2 (Listing 2.5) – Schritt für Schritt, mit Java-Code, Ablaufprotokoll und Inversionen."
 date = 2026-10-24T17:30:00+02:00
+reihenfolge = 220
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"

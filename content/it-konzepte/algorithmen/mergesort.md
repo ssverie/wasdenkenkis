@@ -2,6 +2,7 @@
 title = "Top-Down-Mergesort (Algorithmus 2.4)"
 description = "Sortieren durch Mischen aus Sedgewick/Wayne, Algorithmus 2.4 (Listing 2.10) – Schritt für Schritt durch Rekursion und merge, mit Java-Code, Hilfsarray und Ablaufprotokoll."
 date = 2026-10-25T14:28:00+01:00
+reihenfolge = 240
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"

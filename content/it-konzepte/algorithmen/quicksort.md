@@ -2,6 +2,7 @@
 title = "Quicksort (Algorithmus 2.5)"
 description = "Sortieren durch Zerlegen aus Sedgewick/Wayne, Algorithmus 2.5 (Listing 2.12) – Schritt für Schritt durch partition und Rekursion, mit Java-Code, Rekursionsbaum und Ablaufprotokoll."
 date = 2026-10-25T14:38:00+01:00
+reihenfolge = 250
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"

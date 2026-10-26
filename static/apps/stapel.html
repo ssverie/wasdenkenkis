@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIFO-Stapel mit Arrays variabler Größe</title>
+<!-- Visualisierung des LIFO-Stapels mit Arrays variabler Größe (nach Sedgewick/Wayne, Algorithmen, Algorithmus 1.1, Listing 1.37)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code (umziehen statt resize, eigener Iterator).
+     Grundstile aus sortieren/rahmen.css; Bedienung eigen wie beim Heap, weil hier gestapelt und nicht sortiert wird. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  .eingabe input[type=text] { width: 6.5em; font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 12px 0 4px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .feld { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 4px; max-width: 640px; }
+  .feld div { border-radius: 6px; background: var(--bar); text-align: center; padding: 3px 2px 5px; min-width: 0; }
+  .feld div small { display: block; font-size: 10px; color: var(--muted); line-height: 1.3; }
+  .feld div span { display: block; font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .feld div.null { background: transparent; border: 1px dashed var(--line); }
+  .feld div.null span { color: var(--muted); font-weight: 400; font-size: 11px; }
+  .feld div.oben { box-shadow: inset 0 -3px 0 var(--cur); }
+  .feld div.neu { background: var(--neu); }
+  .feld div.cur { background: var(--cur); }
+  .feld div.swap { background: var(--swap); }
+  .feld div.neu span, .feld div.cur span, .feld div.swap span, .feld div.neu small, .feld div.cur small, .feld div.swap small { color: #fff; }
+  .feld div.raus { background: var(--rest); }
+  .feld div.raus span { color: var(--grau); font-weight: 400; font-size: 11px; }
+  @media (prefers-color-scheme: dark) {
+    .feld div.neu span, .feld div.cur span, .feld div.swap span, .feld div.neu small, .feld div.cur small, .feld div.swap small { color: #0d1530; }
+  }
+  @media (max-width: 480px) {   /* Handy: sechs Buchstaben müssen in eine von acht Spalten passen */
+    .feld { gap: 3px; }
+    .feld div { padding: 2px 1px 4px; }
+    .feld div span { font-size: 10px; letter-spacing: -.2px; }
+  }
+  .alt { opacity: .55; }
+  .fuell { height: 8px; border-radius: 4px; background: var(--rest); margin-top: 8px; max-width: 640px; overflow: hidden; }
+  .fuell i { display: block; height: 100%; background: var(--sortiert, var(--cur)); }
+  .ausgabe { margin-top: 10px; font-size: 14px; }
+  .ausgabe b { font-variant-numeric: tabular-nums; }
+  .proto td.op { text-align: left; font-weight: 600; white-space: nowrap; }
+  .proto td.inhalt { text-align: left; font-family: ui-monospace, Consolas, monospace; font-size: 12px; }
+  .proto td.inhalt i { color: var(--muted); font-style: normal; }
+  .proto tr.zuletzt td { color: var(--neu); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <label>Wort <input type="text" id="wort" maxlength="6" value="Java" autocomplete="off"></label>
+    <button id="push">push</button>
+    <button id="zufall">Zufallswort</button>
+    <button id="pop">pop()</button>
+    <button id="iter">for (x : stapel)</button>
+    <button id="buch">Buchbeispiel</button>
+    <button id="leeren">Leeren</button>
+  </div>
+  <div class="box">
+    <div class="reihe-titel" id="titelA"></div>
+    <div class="feld" id="feldA"></div>
+    <div class="fuell" id="fuell"><i></i></div>
+    <div id="neuBox" hidden>
+      <div class="reihe-titel" id="titelNeu"></div>
+      <div class="feld" id="feldNeu"></div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>Element, um das es geht</span>
+      <span><i style="background:var(--cur)"></i>wird gelesen / oben</span>
+      <span><i style="background:var(--swap)"></i>umkopiert</span>
+      <span><i style="background:var(--rest)"></i>auf null gesetzt</span>
+    </div>
+    <div class="ausgabe" id="ausgabe"></div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 1.1, Listing 1.37)</div><pre id="code"></pre></div>
+    <div class="box"><div class="h">Protokoll (je Operation)</div><div class="proto" id="proto"></div></div>
+  </div>
+</div>
+<script>
+(function () {
+  const KAP = 16;              // höchstens 16 Elemente, das Array wächst bis 16 Plätze
+  const CODE = [
+    'import java.util.Iterator;',
+    '',
+    'public class ResizingArrayStack<Item> implements Iterable<Item>',
+    '{',
+    '   private Item[] a = (Item[]) new Object[1];   // die Elemente',
+    '   private int n = 0;                           // belegte Plätze',
+    '',
+    '   public boolean isEmpty()  {  return n == 0;  }',
+    '   public int size()         {  return n;  }',
+    '',
+    '   private void umziehen(int kapazitaet)',
+    '   {  // alle n Elemente in ein neues Array kopieren',
+    '      Item[] neu = (Item[]) new Object[kapazitaet];',
+    '      for (int i = 0; i < n; i++)',
+    '         neu[i] = a[i];',
+    '      a = neu;',
+    '   }',
+    '',
+    '   public void push(Item item)',
+    '   {',
+    '      if (n == a.length) umziehen(2 * a.length);   // voll: verdoppeln',
+    '      a[n++] = item;                               // oben drauflegen',
+    '   }',
+    '',
+    '   public Item pop()',
+    '   {',
+    '      Item item = a[--n];                          // oberstes Element',
+    '      a[n] = null;                                 // kein Loitering',
+    '      if (n > 0 && n == a.length / 4)              // nur noch ein Viertel:',
+    '         umziehen(a.length / 2);                   // halbieren',
+    '      return item;',
+    '   }',
+    '',
+    '   public Iterator<Item> iterator()',
+    '   {  return new VonObenNachUnten();  }',
+    '',
+    '   private class VonObenNachUnten implements Iterator<Item>',
+    '   {  // läuft von oben (a[n-1]) nach unten (a[0])',
+    '      private int i = n;',
+    '      public boolean hasNext()  {  return i > 0;  }',
+    '      public Item next()        {  return a[--i];  }',
+    '      public void remove()      {  }',
+    '   }',
+    '}'
+  ];
+  const zeile = s => CODE.findIndex(l => l.includes(s));
+  const L = { start: zeile('private Item[] a ='), neu: zeile('Item[] neu ='), kopie: zeile('neu[i] = a[i]'), umgezogen: zeile('a = neu;'),
+              voll: zeile('if (n == a.length)'), drauf: zeile('a[n++] = item'), oberstes: zeile('Item item = a[--n]'),
+              nullen: zeile('a[n] = null'), viertel: zeile('if (n > 0 && n == a.length / 4)'), rueckgabe: zeile('return item;'),
+              iterStart: zeile('private int i = n;'), hasNext: zeile('return i > 0'), next: zeile('return a[--i]') };
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const q = w => `„${w}“`;
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // Zustand am Ende aller bisherigen Schritte
+  let a = [null], n = 0, neu = null, ops = [], ausgabe = [], kopien = 0, anzahlOps = 0;
+  let steps = [], pos = 0, timer = null;
+
+  function snap(line, msg, hl, hlNeu, o) {
+    steps.push(Object.assign({ line, msg, hl: hl || {}, hlNeu: hlNeu || {}, a: a.slice(), n, neu: neu ? neu.slice() : null,
+      ops: ops.slice(), ausgabe: ausgabe.slice(), kopien, anzahlOps }, o));
+  }
+  const inhalt = () => a.map(x => x === null ? null : x);
+  function zeileProto(text, aus) { ops.push({ text, aus, n, len: a.length, inhalt: inhalt() }); }
+
+  function umziehen(kap, grund) {
+    neu = new Array(kap).fill(null);
+    snap(L.neu, `${grund} umziehen(${kap}): Ein neues, leeres Array mit ${kap} ${kap === 1 ? 'Platz' : 'Plätzen'} entsteht.`, {}, {});
+    for (let i = 0; i < n; i++) {
+      neu[i] = a[i]; kopien++;
+      snap(L.kopie, `Kopie ${i + 1} von ${n}: a[${i}] = ${q(a[i])} → neu[${i}].`, { [i]: 'cur' }, { [i]: 'swap' });
+    }
+    const alt = a.length;
+    a = neu; neu = null;
+    snap(L.umgezogen, `a zeigt jetzt auf das neue Array (${alt} → ${kap} Plätze). ${n} ${n === 1 ? 'Element' : 'Elemente'} umkopiert; das alte Array räumt der Garbage Collector ab.`, {}, {});
+  }
+
+  function push(item) {
+    anzahlOps++;
+    if (n === a.length) {
+      snap(L.voll, `push(${q(item)}): n = ${n} = a.length → das Array ist voll.`, { [n - 1]: 'oben' });
+      umziehen(2 * a.length, 'Verdoppeln:');
+    } else {
+      snap(L.voll, `push(${q(item)}): n = ${n}, a.length = ${a.length} → es ist noch Platz.`, n ? { [n - 1]: 'oben' } : {});
+    }
+    a[n++] = item;
+    zeileProto(`push(${q(item)})`, '');
+    snap(L.drauf, `a[${n - 1}] = ${q(item)}, dann n++ → n = ${n}. ${q(item)} liegt jetzt oben.`, { [n - 1]: 'neu' }, {}, { opEnde: true, cls: 'swap' });
+  }
+
+  function pop() {
+    anzahlOps++;
+    const item = a[--n];
+    snap(L.oberstes, `pop(): n-- → n = ${n}, das oberste Element ist a[${n}] = ${q(item)}.`, { [n]: 'neu' });
+    a[n] = null;
+    snap(L.nullen, `a[${n}] = null: Der Platz wird geleert, damit keine alte Referenz hängen bleibt (Loitering).`, { [n]: 'raus' });
+    const viertel = Math.floor(a.length / 4);
+    if (n > 0 && n === viertel) {
+      snap(L.viertel, `n = ${n} = a.length / 4 = ${a.length} / 4 → nur noch ein Viertel belegt, also halbieren.`, {});
+      umziehen(a.length / 2, 'Halbieren:');
+    } else {
+      snap(L.viertel, n === 0
+        ? `n = 0: Der Stapel ist leer, das Array bleibt ${a.length === 1 ? 'bei einem Platz' : 'wie es ist'}.`
+        : `n = ${n}, a.length / 4 = ${viertel} → mehr als ein Viertel belegt, das Array bleibt.`, n ? { [n - 1]: 'oben' } : {});
+    }
+    ausgabe.push(item);
+    zeileProto('pop()', item);
+    snap(L.rueckgabe, `pop() liefert ${q(item)}.`, n ? { [n - 1]: 'oben' } : {}, {}, { opEnde: true, cls: 'swap' });
+    return item;
+  }
+
+  function iterieren() {
+    let i = n; const reihe = [];
+    snap(L.iterStart, `for (String x : stapel): Der Iterator beginnt oben, mit i = n = ${n}.`, {});
+    while (i > 0) {
+      i--;
+      reihe.push(a[i]);
+      snap(L.next, `hasNext(): i > 0 → next(): --i = ${i}, liefert a[${i}] = ${q(a[i])}.`, { [i]: 'cur' });
+    }
+    zeileProto('Iteration', reihe.join(' '));
+    snap(L.hasNext, n
+      ? `hasNext(): i = 0 → fertig. Reihenfolge von oben nach unten: ${reihe.map(q).join(' ')}.`
+      : 'hasNext(): i = 0 → der Stapel ist leer, die Schleife läuft kein einziges Mal.', {}, {}, { opEnde: true, cls: 'swap' });
+  }
+
+  // ---------- Anzeige ----------
+  function feld(arr, hl, alt) {
+    return arr.map((x, i) => {
+      const c = hl[i] === 'oben' ? 'oben' : hl[i] || '';
+      if (x === null && c !== 'raus') return `<div class="null ${c}"><small>${i}</small><span>null</span></div>`;
+      return `<div class="${c}"><small>${i}</small><span>${x === null ? 'null' : esc(x)}</span></div>`;
+    }).join('');
+  }
+  function render() {
+    const s = steps[pos];
+    $('titelA').innerHTML = `Array <b>a</b> · a.length = <b>${s.a.length}</b> · n = <b>${s.n}</b>${s.n ? ` · oben: a[${s.n - 1}]` : ''}`;
+    $('feldA').innerHTML = feld(s.a, s.hl);
+    $('feldA').classList.toggle('alt', !!s.neu);
+    $('fuell').firstElementChild.style.width = (100 * s.n / s.a.length) + '%';
+    $('fuell').title = `Füllgrad ${Math.round(100 * s.n / s.a.length)} %`;
+    $('neuBox').hidden = !s.neu;
+    if (s.neu) {
+      $('titelNeu').innerHTML = `neues Array <b>neu</b> · Länge <b>${s.neu.length}</b>`;
+      $('feldNeu').innerHTML = feld(s.neu, s.hlNeu);
+    }
+    $('ausgabe').innerHTML = s.ausgabe.length ? `pop() lieferte (in dieser Reihenfolge): <b>${s.ausgabe.map(x => esc(x)).join(' · ')}</b>` : 'pop() lieferte: noch nichts';
+
+    const msg = $('msg');
+    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
+    const schnitt = s.anzahlOps ? (s.kopien / s.anzahlOps).toFixed(2).replace('.', ',') : '0';
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length} · Füllgrad <b>${Math.round(100 * s.n / s.a.length)} %</b> · umkopiert insgesamt: <b>${s.kopien}</b> bei ${s.anzahlOps} push/pop → im Schnitt <b>${schnitt}</b> Kopien pro Operation`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
+    $('proto').innerHTML = s.ops.length
+      ? `<table><tr><th style="text-align:left">Operation</th><th>liefert</th><th>n</th><th>a.length</th><th style="text-align:left">a[0] … a[a.length−1]</th></tr>${s.ops.map((o, i) =>
+        `<tr${i === s.ops.length - 1 && s.opEnde ? ' class="zuletzt"' : ''}><td class="op">${esc(o.text)}</td><td>${esc(o.aus)}</td><td>${o.n}</td><td>${o.len}</td><td class="inhalt">${o.inhalt.map(x => x === null ? '<i>null</i>' : esc(x)).join(' ')}</td></tr>`).join('')}</table>`
+      : '<p class="count">Noch keine Operation. Oben ein Wort mit push drauflegen oder das Buchbeispiel abspielen.</p>';
+
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0;
+    $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    $('push').disabled = $('zufall').disabled = n >= KAP;
+    $('pop').disabled = n === 0;
+    if (amEnde) stop();
+  }
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) return;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+  }
+  // neue Operation: hinten anhängen und beim ersten neuen Schritt anfangen
+  function operation(f) {
+    stop();
+    const vorher = steps.length;
+    f();
+    pos = Math.min(vorher, steps.length - 1);
+    render();
+  }
+  function leeren(text) {
+    stop();
+    a = [null]; n = 0; neu = null; ops = []; ausgabe = []; kopien = 0; anzahlOps = 0; steps = [];
+    snap(L.start, text || 'Leerer Stapel: Das Array hat einen Platz, n = 0. Oben ein Wort mit push drauflegen.', {}, {}, { opEnde: true });
+    pos = 0; render();
+  }
+  const BUCH = 'to be or not to - be - - that - - - is'.split(' ');
+  function buchbeispiel() {
+    leeren('Buchbeispiel: to be or not to - be - - that - - - is. Jedes Wort ist ein push, jeder Strich ein pop(). Mit „Abspielen“ oder „Schritt“ geht es los.');
+    BUCH.forEach(w => w === '-' ? pop() : push(w));
+    pos = 0; render();
+  }
+  const WOERTER = ['Haus', 'Baum', 'Hund', 'Katze', 'Java', 'Code', 'Bit', 'Byte', 'rot', 'blau', 'eins', 'zwei', 'drei', 'Stapel', 'oben', 'unten'];
+
+  $('push').addEventListener('click', () => {
+    const w = $('wort').value.trim();
+    if (!w) { $('wort').focus(); return; }
+    if (n < KAP) operation(() => push(w));
+  });
+  $('wort').addEventListener('keydown', e => { if (e.key === 'Enter') $('push').click(); });
+  $('zufall').addEventListener('click', () => { if (n < KAP) operation(() => push(WOERTER[Math.floor(Math.random() * WOERTER.length)])); });
+  $('pop').addEventListener('click', () => { if (n > 0) operation(pop); });
+  $('iter').addEventListener('click', () => operation(iterieren));
+  $('buch').addEventListener('click', buchbeispiel);
+  $('leeren').addEventListener('click', () => leeren());
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests
+  window.__stapel = { push: w => operation(() => push(w)), pop: () => { let x; operation(() => { x = pop(); }); return x; },
+    iterieren: () => operation(iterieren), leeren: () => leeren(), buchbeispiel,
+    get a() { return a.slice(); }, get n() { return n; }, get steps() { return steps; }, get ops() { return ops; },
+    get kopien() { return kopien; }, get anzahlOps() { return anzahlOps; }, KAP };
+
+  buchbeispiel();
+})();
+</script>
+</body>
+</html>

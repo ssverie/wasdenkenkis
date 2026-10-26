@@ -2,6 +2,7 @@
 title = "Heap-Vorrangwarteschlange (Algorithmus 2.6)"
 description = "Die Max-Vorrangwarteschlange als Heap aus Sedgewick/Wayne, Algorithmus 2.6 (Listing 2.19) – selbst einfügen und entnehmen, swim und sink Schritt für Schritt im Baum und im Array."
 date = 2026-10-25T14:45:00+01:00
+reihenfolge = 260
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"

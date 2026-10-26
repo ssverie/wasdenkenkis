@@ -2,6 +2,7 @@
 title = "Binäre Suche"
 description = "Die rekursive binäre Suche aus Sedgewick/Wayne, Listing 1.1 – zum Zuschauen, mit Aufrufstapel und Java-Code."
 date = 2026-10-22T17:40:00+02:00
+reihenfolge = 100
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 herkunft = "eingebracht"

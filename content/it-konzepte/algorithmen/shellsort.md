@@ -2,6 +2,7 @@
 title = "Shellsort (Algorithmus 2.3)"
 description = "Insertionsort mit Sprüngen aus Sedgewick/Wayne, Algorithmus 2.3 (Listing 2.8) – Schritt für Schritt durch die Abstände 13, 4 und 1, mit Java-Code und Ablaufprotokoll."
 date = 2026-10-24T17:40:00+02:00
+reihenfolge = 230
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"

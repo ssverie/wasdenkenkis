@@ -2,6 +2,7 @@
 title = "Selectionsort (Algorithmus 2.1)"
 description = "Sortieren durch Auswählen aus Sedgewick/Wayne, Algorithmus 2.1 (Listing 2.4) – Schritt für Schritt, mit Java-Code und Ablaufprotokoll."
 date = 2026-10-24T17:20:00+02:00
+reihenfolge = 210
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"
