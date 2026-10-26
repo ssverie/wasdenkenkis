@@ -70,6 +70,7 @@
         <button id="play" class="primary">▶ Abspielen</button>
         <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
         <button id="bis" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen: neuer Heap mit 10 Zahlen">↺ Neu starten</button>
       </div>
       <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
     </div>
@@ -276,14 +277,19 @@
     $('next').disabled = amEnde; $('bis').disabled = amEnde;
     $('ein').disabled = $('zufall').disabled = n >= KAP;
     $('del').disabled = $('alle').disabled = n === 0;
+    stabil($('msg'));
     if (amEnde) stop();
   }
+  // die Meldung wird nie wieder niedriger, sonst springen die Knöpfe darunter auf und ab (Sven, 2026-10-26)
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  window.addEventListener('resize', () => { $('msg')._hoch = 0; $('msg').style.minHeight = ''; });
 
   function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
   function play() {
-    if (pos === steps.length - 1) return;
+    if (pos === steps.length - 1) pos = 0;        // am Ende: von vorn abspielen
     $('play').textContent = '❚❚ Pause';
     timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
   }
   // neue Operation: hinten anhängen und beim ersten neuen Schritt anfangen
   function operation(f) {
@@ -318,6 +324,7 @@
   $('alle').addEventListener('click', () => { if (n > 0) operation(() => { while (n > 0) delMax(); }); });
   $('fuellen').addEventListener('click', () => fuellen(10));
   $('leeren').addEventListener('click', () => fuellen(0));
+  $('neu').addEventListener('click', () => fuellen(10));   // Neustart = Zustand beim ersten Öffnen
   $('play').addEventListener('click', () => timer ? stop() : play());
   $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
   $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
