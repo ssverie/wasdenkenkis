@@ -145,9 +145,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- Design Patterns 21 Strategy mit Ablauf (`content/it-konzepte/design-patterns/strategy.md`, `static/apps/muster/strategy.html`, `strategy-code.js`, `sogehts` in `data/designpatterns.toml`)
-- Design Patterns 22 Template Method mit Ablauf (`content/it-konzepte/design-patterns/template-method.md`, `static/apps/muster/template-method.html`, `template-method-code.js`, `sogehts` in `data/designpatterns.toml`)
-- Design Patterns 23 Visitor mit Ablauf (`content/it-konzepte/design-patterns/visitor.md`, `static/apps/muster/visitor.html`, `visitor-code.js`, `sogehts` in `data/designpatterns.toml`) – damit alle 23 Muster
+- (leer – zuletzt freigegeben und gepusht am 2026-10-26: Design Patterns 21 Strategy, 22 Template Method, 23 Visitor mit Ablauf – alle 23 Muster fertig)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
