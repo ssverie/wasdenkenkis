@@ -1,0 +1,427 @@
+{
+  "version": 1,
+  "category": "debugging",
+  "language": "de",
+  "description": "Debugging-Denken: Fehlerszenarien, Logs, Stacktraces, Flaky Tests, Nebenläufigkeit.",
+  "tasks": [
+    {
+      "id": "dbg-001",
+      "category": "debugging",
+      "title": "Nur montags rot",
+      "difficulty": 2,
+      "topics": [
+        "Flaky Tests",
+        "Datum"
+      ],
+      "scenario": "Ein Test läuft lokal immer grün. Im nächtlichen CI-Lauf schlägt er nur in der Nacht auf Montag fehl, an allen anderen Tagen ist er grün.",
+      "question": "Was ist die wahrscheinlichste Ursache?",
+      "options": [
+        "Der Test ist zu lang und sollte aufgeteilt werden",
+        "Die Java-Version im CI ist veraltet",
+        "Der CI-Server ist am Wochenende überlastet",
+        "Datums- oder Wochentagslogik im Code oder in den Testdaten"
+      ],
+      "correctIndex": 3,
+      "answer": "Datums- oder Wochentagslogik im Code oder in den Testdaten",
+      "explanation": "Ein Muster, das an einen Wochentag gebunden ist, deutet fast immer auf Datumslogik hin: „gestern“ ist montags ein Sonntag, „letzter Werktag“ liegt drei Tage zurück, Wochenwechsel. Abhilfe: im Test eine feste Uhr verwenden (java.time.Clock) statt der echten Systemzeit."
+    },
+    {
+      "id": "dbg-002",
+      "category": "debugging",
+      "title": "Einzeln grün, in der Suite rot",
+      "difficulty": 2,
+      "topics": [
+        "Flaky Tests",
+        "Testisolation"
+      ],
+      "scenario": "Ein Test schlägt fehl, wenn die ganze Testsuite läuft. Startet man ihn einzeln, ist er grün.",
+      "question": "Was ist die wahrscheinlichste Ursache?",
+      "options": [
+        "Der Test ist fehlerhaft und sollte gelöscht werden",
+        "Die Suite läuft zu schnell",
+        "Ein anderer Test hinterlässt Zustand, z. B. Daten in der Datenbank oder eine statische Variable",
+        "Der Rechner hat zu wenig Arbeitsspeicher"
+      ],
+      "correctIndex": 2,
+      "answer": "Ein anderer Test hinterlässt Zustand, z. B. Daten in der Datenbank oder eine statische Variable",
+      "explanation": "Tests müssen unabhängig voneinander sein. Wenn die Reihenfolge eine Rolle spielt, verändert ein vorheriger Test etwas Gemeinsames: Datenbankeinträge, Caches, statische Felder, Systemeigenschaften. Eingrenzen: Tests in anderer Reihenfolge laufen lassen und schrittweise halbieren, bis der störende Test gefunden ist."
+    },
+    {
+      "id": "dbg-003",
+      "category": "debugging",
+      "title": "Thread.sleep im Test",
+      "difficulty": 2,
+      "topics": [
+        "Flaky Tests",
+        "Asynchronität"
+      ],
+      "scenario": "Testcode:\nservice.starteImport();\nThread.sleep(500);\nassertEquals(100, repository.anzahl());\n\nMeist grün, gelegentlich rot mit „expected 100 but was 73“.",
+      "question": "Wie behebt man das am besten?",
+      "options": [
+        "Die Assertion entfernen, der Import funktioniert ja meistens",
+        "Den Test bei Fehlschlag automatisch wiederholen",
+        "Statt fester Wartezeit auf die Bedingung warten, mit Zeitlimit (z. B. Awaitility)",
+        "Die Wartezeit auf 5000 ms erhöhen"
+      ],
+      "correctIndex": 2,
+      "answer": "Statt fester Wartezeit auf die Bedingung warten, mit Zeitlimit (z. B. Awaitility)",
+      "explanation": "Eine feste Wartezeit ist entweder zu kurz (flaky) oder zu lang (langsam), auf belasteten CI-Servern oft beides. Besser ist, regelmäßig zu prüfen, ob die Bedingung erfüllt ist, und nach einem großzügigen Zeitlimit aufzugeben. Automatische Wiederholungen verstecken das Problem nur."
+    },
+    {
+      "id": "dbg-004",
+      "category": "debugging",
+      "title": "Kaputte Umlaute",
+      "difficulty": 2,
+      "topics": [
+        "Zeichensätze",
+        "Encoding"
+      ],
+      "scenario": "In der Kundenliste steht „MÃ¼ller“ statt „Müller“.",
+      "question": "Was ist passiert?",
+      "options": [
+        "Die Schriftart im Browser kennt keine Umlaute",
+        "Die Datenbank hat den Namen verschlüsselt",
+        "UTF-8-Text wurde als ISO-8859-1 (Latin-1) gelesen",
+        "Latin-1-Text wurde als UTF-8 gelesen"
+      ],
+      "correctIndex": 2,
+      "answer": "UTF-8-Text wurde als ISO-8859-1 (Latin-1) gelesen",
+      "explanation": "In UTF-8 wird „ü“ mit zwei Bytes gespeichert (C3 BC). Liest man sie als Latin-1, wird jedes Byte zu einem eigenen Zeichen: „Ã“ und „¼“. Das typische Muster „Ã“ plus ein weiteres Zeichen verrät diesen Fall sofort. Der umgekehrte Fall erzeugt meist das Ersatzzeichen „�“. Lösung: Zeichensatz überall ausdrücklich auf UTF-8 setzen."
+    },
+    {
+      "id": "dbg-005",
+      "category": "debugging",
+      "title": "Stacktrace lesen",
+      "difficulty": 2,
+      "topics": [
+        "Stacktraces",
+        "Exceptions"
+      ],
+      "scenario": "Exception in thread \"main\" java.lang.RuntimeException: Bestellung fehlgeschlagen\n    at de.shop.BestellService.abschliessen(BestellService.java:88)\n    at de.shop.Main.main(Main.java:12)\nCaused by: java.lang.NullPointerException: Cannot invoke \"String.length()\" because \"plz\" is null\n    at de.shop.AdressValidator.pruefe(AdressValidator.java:41)\n    at de.shop.BestellService.abschliessen(BestellService.java:80)\n    ... 1 more",
+      "question": "Wo sollte man zuerst nachsehen?",
+      "options": [
+        "BestellService.java:88, dort wurde die Exception geworfen",
+        "Main.java:12, dort hat alles angefangen",
+        "BestellService.java:80, dort steht der Aufruf",
+        "AdressValidator.java:41, dort ist plz null"
+      ],
+      "correctIndex": 3,
+      "answer": "AdressValidator.java:41, dort ist plz null",
+      "explanation": "Die eigentliche Ursache steht im letzten „Caused by“, und dort in der obersten Zeile. Die RuntimeException darüber ist nur eine Hülle. Die Meldung nennt sogar die Variable: plz ist null. Danach fragt man, warum plz null ist, also wo die Adresse herkommt."
+    },
+    {
+      "id": "dbg-006",
+      "category": "debugging",
+      "title": "git bisect",
+      "difficulty": 2,
+      "topics": [
+        "Versionskontrolle",
+        "Binärsuche"
+      ],
+      "scenario": "Zwischen der letzten fehlerfreien Version und der aktuellen liegen 1000 Commits. Mit git bisect testet man jeweils den Commit in der Mitte und halbiert so den Suchbereich.",
+      "question": "Wie viele Tests braucht man höchstens, um den fehlerhaften Commit zu finden?",
+      "options": [
+        "10",
+        "500",
+        "100",
+        "32"
+      ],
+      "correctIndex": 0,
+      "answer": "10",
+      "explanation": "Jeder Test halbiert den Bereich: 1000, 500, 250 … nach 10 Schritten bleibt ein Commit (2¹⁰ = 1024). Lässt sich der Test automatisieren, erledigt „git bisect run“ das sogar ohne Zutun."
+    },
+    {
+      "id": "dbg-007",
+      "category": "debugging",
+      "title": "Langsamen Schritt finden",
+      "difficulty": 1,
+      "topics": [
+        "Logs",
+        "Performance"
+      ],
+      "scenario": "Log einer Bestellung, die 3,9 Sekunden dauert:\n10:15:02.120 Anfrage empfangen: POST /bestellung\n10:15:02.135 Benutzer geladen\n10:15:02.180 Warenkorb geladen\n10:15:05.940 Lagerbestand geprüft\n10:15:06.010 Zahlung autorisiert\n10:15:06.020 Antwort gesendet",
+      "question": "Welcher Schritt verursacht die Verzögerung?",
+      "options": [
+        "Das Senden der Antwort",
+        "Die Lagerbestandsprüfung (3,76 s)",
+        "Die Zahlungsautorisierung",
+        "Das Laden des Warenkorbs"
+      ],
+      "correctIndex": 1,
+      "answer": "Die Lagerbestandsprüfung (3,76 s)",
+      "explanation": "Jede Logzeile markiert das Ende eines Schritts. Entscheidend ist die Differenz zur vorherigen Zeile: Zwischen „Warenkorb geladen“ und „Lagerbestand geprüft“ liegen 3,76 Sekunden, alle anderen Schritte dauern Millisekunden. Ein typischer Kandidat wäre hier ein langsamer externer Dienst."
+    },
+    {
+      "id": "dbg-008",
+      "category": "debugging",
+      "title": "Zahlenformat auf dem Server",
+      "difficulty": 3,
+      "topics": [
+        "Locale",
+        "Internationalisierung"
+      ],
+      "scenario": "Ein Preis von „1.234,56“ wird korrekt verarbeitet, solange die Anwendung auf deutschen Servern läuft. Nach dem Umzug in ein US-Rechenzentrum wird daraus 1,23456.",
+      "question": "Was ist die wahrscheinlichste Ursache?",
+      "options": [
+        "Die Datenbank hat den Preis durch 1000 geteilt",
+        "Der Server rechnet mit weniger Nachkommastellen",
+        "Die Währungsumrechnung in Dollar ist fehlerhaft",
+        "Das Zahlenformat hängt von der Standard-Ländereinstellung (Locale) des Servers ab"
+      ],
+      "correctIndex": 3,
+      "answer": "Das Zahlenformat hängt von der Standard-Ländereinstellung (Locale) des Servers ab",
+      "explanation": "In den USA ist der Punkt das Dezimaltrennzeichen und das Komma das Tausendertrennzeichen, genau umgekehrt zu Deutschland. Ohne ausdrücklich gesetztes Locale (z. B. NumberFormat.getInstance(Locale.GERMANY)) nimmt Java das des Servers. Testidee: Testsysteme bewusst mit fremdem Locale betreiben."
+    },
+    {
+      "id": "dbg-009",
+      "category": "debugging",
+      "title": "Strg + F5 hilft",
+      "difficulty": 1,
+      "topics": [
+        "Caching",
+        "Web"
+      ],
+      "scenario": "Nach einem Deployment melden einige Nutzer, dass ein neuer Button fehlt und die Seite Fehler anzeigt. Wer Strg + F5 drückt, sieht alles korrekt.",
+      "question": "Was ist die Ursache?",
+      "options": [
+        "Das Deployment ist nur auf einem Teil der Server gelaufen",
+        "Die Datenbank wurde nicht migriert",
+        "Der Browser verwendet noch alte, zwischengespeicherte JavaScript- oder CSS-Dateien",
+        "Die betroffenen Nutzer haben veraltete Browser"
+      ],
+      "correctIndex": 2,
+      "answer": "Der Browser verwendet noch alte, zwischengespeicherte JavaScript- oder CSS-Dateien",
+      "explanation": "Strg + F5 lädt alles neu am Cache vorbei. Wenn das hilft, war der Cache das Problem. Die übliche Lösung ist, Dateinamen beim Build mit einem Versions- oder Hash-Anteil zu versehen (app.3f9a2c.js), sodass der Browser neue Dateien zwingend neu lädt."
+    },
+    {
+      "id": "dbg-010",
+      "category": "debugging",
+      "title": "Speicher wächst stetig",
+      "difficulty": 3,
+      "topics": [
+        "Speicher",
+        "Performance"
+      ],
+      "scenario": "Der Speicherverbrauch eines Dienstes steigt nach jedem Neustart gleichmäßig an. Nach etwa drei Tagen stürzt er mit OutOfMemoryError ab. Die Last ist über die Tage gleich.",
+      "question": "Was ist die wahrscheinlichste Ursache?",
+      "options": [
+        "Ein Speicherleck, z. B. ein Cache oder eine statische Map, die nie geleert wird",
+        "Zu viele gleichzeitige Nutzer",
+        "Der Server hat grundsätzlich zu wenig Speicher",
+        "Der Garbage Collector ist abgeschaltet"
+      ],
+      "correctIndex": 0,
+      "answer": "Ein Speicherleck, z. B. ein Cache oder eine statische Map, die nie geleert wird",
+      "explanation": "Gleichmäßiges Wachstum bei gleicher Last heißt: Etwas wird festgehalten, das nie mehr freigegeben wird. Mehr Speicher verschiebt den Absturz nur. Ein Heap-Dump (z. B. mit Eclipse MAT ausgewertet) zeigt, welche Objekte sich ansammeln."
+    },
+    {
+      "id": "dbg-011",
+      "category": "debugging",
+      "title": "Doppelt gebucht",
+      "difficulty": 3,
+      "topics": [
+        "Nebenläufigkeit",
+        "Race Condition"
+      ],
+      "scenario": "Code einer Buchung:\nif (platz.istFrei()) {\n    platz.reservieren(kunde);\n}\n\nZwei Kunden klicken im selben Moment auf den letzten freien Platz. Beide erhalten eine Bestätigung.",
+      "question": "Was ist die Ursache?",
+      "options": [
+        "Der Platz wurde zweimal angelegt",
+        "Die Datenbank ist zu langsam",
+        "Eine Race Condition: Beide prüfen „frei“, bevor einer von beiden reserviert",
+        "Ein Fehler in der Bestätigungs-E-Mail"
+      ],
+      "correctIndex": 2,
+      "answer": "Eine Race Condition: Beide prüfen „frei“, bevor einer von beiden reserviert",
+      "explanation": "Prüfen und Reservieren sind zwei getrennte Schritte. Dazwischen kann ein anderer Thread dieselbe Prüfung machen. Lösung: beides atomar machen, z. B. per Datenbanksperre, eindeutiger Einschränkung (unique constraint) oder bedingtem Update („UPDATE … WHERE frei = true“ und betroffene Zeilen zählen). Testen lässt sich das nur mit echten parallelen Anfragen."
+    },
+    {
+      "id": "dbg-012",
+      "category": "debugging",
+      "title": "Eine Stunde daneben",
+      "difficulty": 2,
+      "topics": [
+        "Datum",
+        "Zeitzonen"
+      ],
+      "scenario": "Seit dem letzten Sonntag im Oktober zeigen gespeicherte Termine eine Stunde zu früh an. Vorher war alles korrekt.",
+      "question": "Was ist die wahrscheinlichste Ursache?",
+      "options": [
+        "Die Serveruhr geht eine Stunde nach",
+        "Die Umstellung von Sommer- auf Winterzeit wird nicht berücksichtigt",
+        "Die Datenbank wurde in der Nacht neu gestartet",
+        "Die Nutzer haben ihre Zeitzone geändert"
+      ],
+      "correctIndex": 1,
+      "answer": "Die Umstellung von Sommer- auf Winterzeit wird nicht berücksichtigt",
+      "explanation": "Ein Fehler, der genau an einem Umstellungstag beginnt, verrät die Ursache. Typisch: Zeiten werden mit festem Versatz (+01:00 oder +02:00) statt mit Zeitzone (Europe/Berlin) gespeichert. Mit ZonedDateTime und einer echten Zeitzone rechnet Java die Umstellung automatisch richtig."
+    },
+    {
+      "id": "dbg-013",
+      "category": "debugging",
+      "title": "Frau Null",
+      "difficulty": 3,
+      "topics": [
+        "null",
+        "Datenqualität"
+      ],
+      "scenario": "Eine Kundin mit dem Nachnamen „Null“ kann sich nicht registrieren. Alle anderen Namen funktionieren.",
+      "question": "Was ist die wahrscheinlichste Ursache?",
+      "options": [
+        "Das Feld erlaubt keine Großbuchstaben",
+        "Der Name ist zu kurz",
+        "Der Name steht auf einer Sperrliste",
+        "Irgendwo wird der Text \"null\" als fehlender Wert interpretiert"
+      ],
+      "correctIndex": 3,
+      "answer": "Irgendwo wird der Text \"null\" als fehlender Wert interpretiert",
+      "explanation": "Das passiert wirklich, z. B. wenn Werte als Text übertragen und mit String.valueOf(null) erzeugt oder mit \"null\".equals(...) geprüft werden. Ähnliche Fälle: Nachnamen wie „True“ oder Orte wie „NaN“. Für Testdaten lohnt eine Liste solcher Problemwerte (Big List of Naughty Strings)."
+    },
+    {
+      "id": "dbg-014",
+      "category": "debugging",
+      "title": "Der erste Schritt",
+      "difficulty": 1,
+      "topics": [
+        "Methodik"
+      ],
+      "scenario": "Ein Kunde meldet: „Manchmal wird mein Rabatt falsch berechnet.“ Mehr ist nicht bekannt.",
+      "question": "Was ist der sinnvollste erste Schritt?",
+      "options": [
+        "Den Kunden bitten, den Rabatt nicht mehr zu nutzen",
+        "Mehr Logging überall einbauen und abwarten",
+        "Den Fehler zuverlässig reproduzieren und die genauen Bedingungen ermitteln",
+        "Sofort den Rabattcode umschreiben"
+      ],
+      "correctIndex": 2,
+      "answer": "Den Fehler zuverlässig reproduzieren und die genauen Bedingungen ermitteln",
+      "explanation": "Ohne Reproduktion weiß man weder, wo man suchen muss, noch, ob ein Fix wirkt. Also: Welche Bestellung, welcher Rabatt, welche Artikel? Ziel ist ein möglichst kleines Beispiel, das den Fehler sicher zeigt. Daraus wird später gleich ein Regressionstest."
+    },
+    {
+      "id": "dbg-015",
+      "category": "debugging",
+      "title": "Der Fehler verschwindet im Debugger",
+      "difficulty": 3,
+      "topics": [
+        "Nebenläufigkeit",
+        "Heisenbug"
+      ],
+      "scenario": "Ein Fehler tritt im normalen Betrieb regelmäßig auf. Sobald man einen Breakpoint setzt und Schritt für Schritt durchgeht, läuft alles korrekt.",
+      "question": "Worauf deutet das hin?",
+      "options": [
+        "Der Debugger ist fehlerhaft installiert",
+        "Der Fehler liegt in der Benutzeroberfläche",
+        "Ein Timing-Problem, z. B. Nebenläufigkeit oder ein Wettlauf zwischen Threads",
+        "Der Code wurde nicht neu kompiliert"
+      ],
+      "correctIndex": 2,
+      "answer": "Ein Timing-Problem, z. B. Nebenläufigkeit oder ein Wettlauf zwischen Threads",
+      "explanation": "Ein Breakpoint verändert das Timing: Andere Threads bekommen plötzlich genug Zeit. Solche Fehler heißen nach der Unschärferelation „Heisenbugs“. Besser beobachtet man hier mit Logging (mit Thread-Namen und genauen Zeitstempeln) statt mit Anhalten."
+    },
+    {
+      "id": "dbg-016",
+      "category": "debugging",
+      "title": "Logs: die Grundursache",
+      "difficulty": 2,
+      "topics": [
+        "Logs",
+        "Ursachenanalyse"
+      ],
+      "scenario": "08:00:01 INFO  Anwendung gestartet\n08:12:44 WARN  Datenbank-Verbindungspool zu 90 % ausgelastet\n08:13:02 ERROR Keine freie Datenbankverbindung (Pool erschöpft)\n08:13:05 ERROR Timeout bei GET /api/kunden\n08:13:05 ERROR Timeout bei GET /api/bestellungen\n08:13:07 ERROR Timeout bei GET /api/kunden",
+      "question": "Was ist die wahrscheinlichste Grundursache?",
+      "options": [
+        "Der Endpunkt /api/kunden ist fehlerhaft programmiert",
+        "Der Datenbank-Verbindungspool ist erschöpft, z. B. weil Verbindungen nicht freigegeben werden",
+        "Das Netzwerk ist ausgefallen",
+        "Die Anwendung wurde falsch gestartet"
+      ],
+      "correctIndex": 1,
+      "answer": "Der Datenbank-Verbindungspool ist erschöpft, z. B. weil Verbindungen nicht freigegeben werden",
+      "explanation": "Die vielen Timeouts sind Folgefehler. Entscheidend ist die erste Auffälligkeit: Warnung zum Pool, dann der erste ERROR. Faustregel: In einer Fehlerlawine von oben nach unten lesen und beim ersten Fehler anfangen, nicht beim häufigsten."
+    },
+    {
+      "id": "dbg-017",
+      "category": "debugging",
+      "title": "Assertion mit Kommazahl",
+      "difficulty": 1,
+      "topics": [
+        "Testen",
+        "Gleitkomma"
+      ],
+      "scenario": "assertEquals(0.3, rechner.summe(0.1, 0.2));\n\nFehlermeldung: expected <0.3> but was <0.30000000000000004>",
+      "question": "Wie korrigiert man den Test?",
+      "options": [
+        "Mit Toleranz vergleichen: assertEquals(0.3, ergebnis, 0.0001)",
+        "Das Ergebnis in einen String umwandeln und vergleichen",
+        "Den Rechner so ändern, dass er immer 0.3 liefert",
+        "Den erwarteten Wert auf 0.30000000000000004 setzen"
+      ],
+      "correctIndex": 0,
+      "answer": "Mit Toleranz vergleichen: assertEquals(0.3, ergebnis, 0.0001)",
+      "explanation": "Gleitkommazahlen sind nicht exakt. JUnit bietet dafür eine Variante mit erlaubter Abweichung (delta). Den krummen Wert einzutragen macht den Test vom Rechenweg abhängig. Geht es um Geld, ist BigDecimal ohnehin die bessere Wahl."
+    },
+    {
+      "id": "dbg-018",
+      "category": "debugging",
+      "title": "Langsam nur in Produktion",
+      "difficulty": 3,
+      "topics": [
+        "Performance",
+        "Datenbank"
+      ],
+      "scenario": "Eine Kundenübersicht lädt im Testsystem in 0,2 Sekunden, in Produktion in 30 Sekunden. Das SQL-Log zeigt pro Seitenaufruf über 5000 Abfragen der Form:\nSELECT * FROM adresse WHERE kunde_id = ?",
+      "question": "Was ist die Ursache?",
+      "options": [
+        "Die Tabelle adresse hat zu viele Spalten",
+        "Das N+1-Problem: Für jeden Kunden wird die Adresse einzeln nachgeladen",
+        "Das Netzwerk zur Datenbank ist überlastet",
+        "Der Produktionsserver ist zu langsam"
+      ],
+      "correctIndex": 1,
+      "answer": "Das N+1-Problem: Für jeden Kunden wird die Adresse einzeln nachgeladen",
+      "explanation": "Eine Abfrage für die Liste, dann eine pro Kunde: bei 20 Testkunden unauffällig, bei 5000 echten Kunden fatal. Lösung: Adressen in einer Abfrage mitladen (JOIN oder JOIN FETCH). Lehre für das Testen: Performance immer auch mit realistischer Datenmenge prüfen."
+    },
+    {
+      "id": "dbg-019",
+      "category": "debugging",
+      "title": "401 oder 403",
+      "difficulty": 1,
+      "topics": [
+        "HTTP",
+        "Sicherheit"
+      ],
+      "scenario": "Eine angemeldete Nutzerin ruft eine Verwaltungsseite auf und erhält den HTTP-Status 403.",
+      "question": "Was bedeutet das?",
+      "options": [
+        "Die Seite existiert nicht",
+        "Sie ist nicht angemeldet",
+        "Sie ist angemeldet, hat aber keine Berechtigung für diese Seite",
+        "Der Server ist überlastet"
+      ],
+      "correctIndex": 2,
+      "answer": "Sie ist angemeldet, hat aber keine Berechtigung für diese Seite",
+      "explanation": "401 (Unauthorized) heißt trotz des Namens: nicht angemeldet bzw. Anmeldung ungültig. 403 (Forbidden): bekannt, aber nicht berechtigt. 404: nicht gefunden, 503: Dienst nicht verfügbar. Für Tests ist der Unterschied wichtig, weil beide Fälle unterschiedlich behandelt werden müssen."
+    },
+    {
+      "id": "dbg-020",
+      "category": "debugging",
+      "title": "Seit gestern kaputt",
+      "difficulty": 2,
+      "topics": [
+        "Methodik",
+        "Änderungsmanagement"
+      ],
+      "scenario": "Eine Funktion, die seit Monaten stabil läuft, funktioniert seit gestern nicht mehr. Am Code der Funktion hat niemand etwas geändert.",
+      "question": "Wo sucht man am sinnvollsten zuerst?",
+      "options": [
+        "Bei allem, was sich seit gestern geändert hat: Deployments, Konfiguration, Bibliotheken, Daten, externe Dienste, Zertifikate",
+        "In der Benutzerdokumentation",
+        "Im Code der Funktion, Zeile für Zeile",
+        "In den Unit-Tests der Funktion"
+      ],
+      "correctIndex": 0,
+      "answer": "Bei allem, was sich seit gestern geändert hat: Deployments, Konfiguration, Bibliotheken, Daten, externe Dienste, Zertifikate",
+      "explanation": "Wenn etwas plötzlich nicht mehr geht, hat sich etwas geändert, nur eben nicht unbedingt der Code. Häufige Kandidaten: abgelaufene Zertifikate oder Passwörter, eine geänderte Schnittstelle eines Partners, neue Daten mit ungewöhnlichen Werten, ein automatisches Bibliotheks-Update."
+    }
+  ]
+}

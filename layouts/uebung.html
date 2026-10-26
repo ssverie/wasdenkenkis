@@ -67,8 +67,9 @@
         {{- if gt (len $teile) 1 }}
         <p>{{ index $teile 0 }}Code:</p>
         {{ transform.Highlight (delimit (after 1 $teile) "Code:\n") $sprache (dict "noClasses" false) }}
-        {{- else if strings.Contains . " | " }}
-        {{- /* Tabellen (z. B. SQL) sind mit Leerzeichen ausgerichtet – nur in gleich breiter Schrift mit allen Leerzeichen lesbar */}}
+        {{- else if or (strings.Contains . " | ") (findRE `(?m)^[ \t]+\S|;[ \t]*$|^\d\d:\d\d` . 1) }}
+        {{- /* Technischer Text: Tabellen (z. B. SQL) mit Leerzeichen ausgerichtet, eingerückte Zeilen (Stacktrace, Code),
+               Zeilen mit „;“ am Ende, Logzeilen mit Uhrzeit – nur in gleich breiter Schrift mit allen Leerzeichen lesbar */}}
         <pre class="szenario-tabelle">{{ . }}</pre>
         {{- else }}
         <p>{{ . }}</p>
