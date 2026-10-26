@@ -92,6 +92,7 @@ gruppe = "struktur"
 schluessel = "facade"
 name = "Facade"
 text = "vereinfachte Schnittstelle zu einem Subsystem"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. main ruft pro Bestellung genau eine Methode auf: shop.bestelle(). Was dahinter geschieht, zeigt der Aufrufstapel: Die Fassade fragt Lager, Preise, Zahlung, Versand und Mail in der richtigen Reihenfolge, im Diagramm leuchten dabei Shop und das gerade gefragte Subsystem. Beim Monitor bricht die Fassade nach der ersten Frage ab und schickt eine Absage. Zurück kommt jedes Mal nur ein Ergebnis, das main mit einem switch auswertet."
 
 [[muster]]
 nummer = 11

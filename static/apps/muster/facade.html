@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facade – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Facade (GoF-Strukturmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (facade-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="facade-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  const KUNDE = 'Sven', MENGE = 2;
+  const PREIS = { Tastatur: 4990, Monitor: 19900 };
+  const euro = c => (c / 100).toFixed(2).replace('.', ',');
+  const str = t => `"${t}"`;
+
+  function lauf(s) {
+    const bestand = { Tastatur: 5, Monitor: 0 };
+    let nummer = 1001;
+    const map = () => `{Tastatur=${bestand.Tastatur}, Monitor=${bestand.Monitor}}`;
+
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: main will zwei Bestellungen aufgeben – und kennt dafür nur eine Klasse.', { klassen: ['main()'] });
+    const lager = s.neu('Lager', [['bestand', map()]]);
+    const preise = s.neu('Preise', []);
+    const zahlung = s.neu('Zahlung', []);
+    const versand = s.neu('Versand', [['naechsteNummer', String(nummer)]]);
+    const mail = s.neu('Mail', []);
+    const shop = s.neu('Shop', [['lager', s.ref(lager)], ['preise', s.ref(preise)], ['zahlung', s.ref(zahlung)], ['versand', s.ref(versand)], ['mail', s.ref(mail)]]);
+    s.var('shop', s.ref(shop));
+    s.schritt('Shop shop = new Shop();', `new Shop(): Die Fassade legt ihre fünf Subsysteme selbst an (die Felder werden beim Erzeugen initialisiert). main bekommt nur ${shop} zu sehen.`, { klassen: ['main()'] });
+
+    const subsys = (cur, extra) => ({ cur: [cur], klassen: ['Shop'], ...extra });
+
+    ['Tastatur', 'Monitor'].forEach((artikel, runde) => {
+      s.var('artikel', str(artikel));
+      if (runde === 1) { s.var('e', '–'); s.var('meldung', '–'); }
+      s.schritt('for (String artikel : new String[]', runde === 0
+        ? 'Erster Durchlauf: Tastatur.'
+        : 'Zweiter Durchlauf: Monitor. (e und meldung gehören zum vorigen Durchlauf und gelten hier nicht mehr.)', { klassen: ['main()'] });
+      s.aus(`Bestellung: 2x ${artikel}`);
+      s.schritt('System.out.println("Bestellung: 2x " + artikel);', 'Die Überschrift der Bestellung.', { klassen: ['main()'] });
+
+      s.ruf('Shop.bestelle(String kunde, String artikel, int menge)', [['this', s.ref(shop)], ['kunde', str(KUNDE)], ['artikel', str(artikel)], ['menge', String(MENGE)]],
+        'Ergebnis bestelle(String kunde, String artikel, int menge) {', runde === 0
+          ? 'shop.bestelle(...): ein einziger Aufruf aus main. Alles Weitere passiert hinter der Fassade – main sieht es nicht.'
+          : 'Wieder nur ein Aufruf aus main.', { cur: [shop] });
+
+      // 1. Lager fragen
+      const da = bestand[artikel] >= MENGE;
+      s.ruf('Lager.verfuegbar(String artikel, int menge)', [['this', s.ref(lager)], ['artikel', str(artikel)], ['menge', String(MENGE)]],
+        'return bestand.getOrDefault(artikel, 0) >= menge;', `Die Fassade fragt zuerst das Lager: ${bestand[artikel]} ${artikel} da, ${MENGE} gewünscht → ${da}.`, subsys(lager));
+      s.raus('if (!lager.verfuegbar(artikel, menge)) {', da ? 'Vorrätig – weiter.' : 'Nicht vorrätig: Die Fassade kennt diesen Sonderfall und bricht hier ab.', { cur: [shop] });
+
+      if (!da) {
+        const text = `${artikel} ist leider nicht vorrätig`;
+        s.aus(`  Mail:     an ${KUNDE}: ${text}`);
+        s.ruf('Mail.sende(String kunde, String text)', [['this', s.ref(mail)], ['kunde', str(KUNDE)], ['text', str(text)]],
+          'System.out.println("  Mail:     an "', 'Statt einer Bestätigung bekommt der Kunde eine Absage per Mail.', subsys(mail));
+        s.raus('mail.sende(kunde, artikel + " ist leider nicht vorrätig");', 'Mail ist verschickt.', { cur: [shop] });
+        const f = s.neu('Fehler', [['grund', str(`${artikel} nicht vorrätig`)]]);
+        s.schritt('return new Fehler(artikel + " nicht vorrätig");', `Preise, Zahlung und Versand werden gar nicht erst gefragt. Die Fassade liefert ${f} zurück – kein null, keine Ausnahme.`, { cur: [f], klassen: ['Ergebnis'] });
+        s.raus('Ergebnis e = shop.bestelle("Sven", artikel, 2);', `Zurück in main: e = ${f}.`, { setze: [['e', s.ref(f)]], cur: [f], klassen: ['main()', 'Ergebnis'] });
+        const meldung = `Fehlgeschlagen: ${artikel} nicht vorrätig`;
+        s.var('meldung', str(meldung));
+        s.schritt('case Fehler(String grund) ->', `e ist ein Fehler: Das Record Pattern holt grund heraus, meldung wird „${meldung}“.`, { cur: [f], klassen: ['main()', 'Ergebnis'] });
+        s.aus(`=> ${meldung}\n`);
+        s.schritt('System.out.println("=> " + meldung', 'Ausgabe mit Leerzeile ("\\n" am Ende).', { klassen: ['main()'] });
+        s.weg(f);
+        return;
+      }
+
+      // 2. Preis holen
+      const betrag = PREIS[artikel] * MENGE;
+      s.ruf('Preise.stueckpreisCent(String artikel)', [['this', s.ref(preise)], ['artikel', str(artikel)]], 'case "Tastatur" -> 4_990;',
+        `Dann die Preisliste: switch auf den Artikel, ${artikel} kostet ${PREIS[artikel]} Cent.`, subsys(preise));
+      s.raus('int betrag = preise.stueckpreisCent(artikel) * menge;', `${PREIS[artikel]} × ${MENGE} = ${betrag} Cent.`, { setze: [['betrag', String(betrag)]], cur: [shop] });
+
+      // 3. Bezahlen
+      s.aus(`  Zahlung:  ${KUNDE} mit ${euro(betrag)} € belastet`);
+      s.ruf('Zahlung.belaste(String kunde, int betragCent)', [['this', s.ref(zahlung)], ['kunde', str(KUNDE)], ['betragCent', String(betrag)]],
+        'System.out.printf(Locale.GERMANY, "  Zahlung:', `Zahlung: ${betrag} Cent werden als ${euro(betrag)} € abgebucht (printf mit Locale.GERMANY, darum das Komma).`, subsys(zahlung));
+      s.raus('if (!zahlung.belaste(kunde, betrag)) {', 'belaste() liefert true – bezahlt.', { cur: [shop] });
+
+      // 4. Reservieren
+      s.ruf('Lager.reserviere(String artikel, int menge)', [['this', s.ref(lager)], ['artikel', str(artikel)], ['menge', String(MENGE)]],
+        'bestand.merge(artikel, -menge, Integer::sum);', `Erst jetzt reserviert das Lager: merge zieht ${MENGE} vom Bestand ab.`, subsys(lager));
+      bestand[artikel] -= MENGE;
+      s.feld(lager, 'bestand', map());
+      s.aus(`  Lager:    ${MENGE}x ${artikel} reserviert`);
+      s.schritt('System.out.println("  Lager:    "', `Bestand ${artikel}: ${bestand[artikel]}.`, subsys(lager));
+      s.raus('lager.reserviere(artikel, menge);', 'Reserviert.', { cur: [shop] });
+
+      // 5. Versand
+      const sendung = 'SN-' + nummer;
+      s.ruf('Versand.beauftrage(String kunde, String artikel, int menge)', [['this', s.ref(versand)], ['kunde', str(KUNDE)], ['artikel', str(artikel)], ['menge', String(MENGE)]],
+        'String sendung = "SN-" + naechsteNummer++;', `Der Versand vergibt die nächste Nummer: ${sendung}, und zählt naechsteNummer hoch.`, subsys(versand));
+      nummer++;
+      s.var('sendung', str(sendung));
+      s.feld(versand, 'naechsteNummer', String(nummer));
+      s.aus(`  Versand:  Sendung ${sendung} für ${KUNDE}`);
+      s.schritt('System.out.println("  Versand:  Sendung "', 'Sendung beauftragt.', subsys(versand));
+      s.raus('String sendung = versand.beauftrage(kunde, artikel, menge);', `Die Fassade merkt sich ${sendung}.`, { setze: [['sendung', str(sendung)]], cur: [shop] });
+
+      // 6. Mail
+      const text = `Bestellung bestätigt, Sendung ${sendung}`;
+      s.aus(`  Mail:     an ${KUNDE}: ${text}`);
+      s.ruf('Mail.sende(String kunde, String text)', [['this', s.ref(mail)], ['kunde', str(KUNDE)], ['text', str(text)]],
+        'System.out.println("  Mail:     an "', 'Zum Schluss die Bestätigung per Mail.', subsys(mail));
+      s.raus('mail.sende(kunde, "Bestellung bestätigt, Sendung " + sendung);', 'Mail ist verschickt.', { cur: [shop] });
+
+      const erfolg = s.neu('Erfolg', [['sendungsnummer', str(sendung)], ['betragCent', String(betrag)]]);
+      s.schritt('return new Erfolg(sendung, betrag);', `Fünf Subsysteme, sechs Aufrufe in der richtigen Reihenfolge. Zurück geht nur ein ${erfolg} mit Sendungsnummer und Betrag.`, { cur: [erfolg], klassen: ['Ergebnis'] });
+      s.raus('Ergebnis e = shop.bestelle("Sven", artikel, 2);', `Zurück in main: e = ${erfolg}. Von Lager, Zahlung oder Versand hat main nichts mitbekommen.`, { setze: [['e', s.ref(erfolg)]], cur: [erfolg], klassen: ['main()', 'Ergebnis'] });
+      s.schritt('case Erfolg(String sendung, int betrag) ->', 'switch mit Record Pattern: e ist ein Erfolg, und sendung und betrag werden in einem Schritt herausgezogen. Weil Ergebnis sealed ist, braucht es keinen default.', { cur: [erfolg], klassen: ['main()', 'Ergebnis'] });
+      const meldung = `OK, Sendung ${sendung}, ${euro(betrag)} €`;
+      s.var('meldung', str(meldung));
+      s.schritt('String.format(Locale.GERMANY, "OK, Sendung %s', `meldung = „${meldung}“.`, { klassen: ['main()'] });
+      s.aus(`=> ${meldung}\n`);
+      s.schritt('System.out.println("=> " + meldung', 'Ausgabe mit Leerzeile ("\\n" am Ende).', { klassen: ['main()'] });
+      s.weg(erfolg);
+    });
+
+    s.schritt('for (String artikel : new String[]', 'Beide Artikel sind durch.', { klassen: ['main()'] });
+    s.weg(shop, lager, preise, zahlung, versand, mail);
+    s.raus(['System.out.println("=> " + meldung', 2], 'main ist zu Ende. Ändert sich der Ablauf hinter der Fassade (etwa erst reservieren, dann bezahlen), bleibt main, wie es ist.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Facade', 'Subsystem'],
+    diagramm: {
+      breite: 150, abstandX: 24, abstandY: 50,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 2, y: 0 },
+        { name: 'Ergebnis', art: 'sealed interface', rolle: 'Erfolg | Fehler', x: 0, y: 1 },
+        { name: 'Shop', art: 'final class', rolle: 'Facade', x: 2, y: 1 },
+        { name: 'Lager', art: 'final class', rolle: 'Subsystem', x: 0, y: 2 },
+        { name: 'Preise', art: 'final class', rolle: 'Subsystem', x: 1, y: 2 },
+        { name: 'Zahlung', art: 'final class', rolle: 'Subsystem', x: 2, y: 2 },
+        { name: 'Versand', art: 'final class', rolle: 'Subsystem', x: 3, y: 2 },
+        { name: 'Mail', art: 'final class', rolle: 'Subsystem', x: 4, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Shop', art: 'nutzt', text: 'nutzt', dx: 6 },
+        { von: 'main()', zu: 'Ergebnis', art: 'nutzt', text: 'switch' },
+        { von: 'Shop', zu: 'Ergebnis', art: 'erzeugt', text: 'liefert' },
+        { von: 'Shop', zu: 'Lager', art: 'nutzt' }, { von: 'Shop', zu: 'Preise', art: 'nutzt' }, { von: 'Shop', zu: 'Zahlung', art: 'nutzt' },
+        { von: 'Shop', zu: 'Versand', art: 'nutzt' }, { von: 'Shop', zu: 'Mail', art: 'nutzt' }
+      ]
+    },
+    szenarien: [
+      { name: 'java Facade.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>
