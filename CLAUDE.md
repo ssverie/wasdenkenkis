@@ -144,7 +144,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- Design Patterns, Pilot Ablauf-Visualisierung: `static/apps/muster/` (Rahmen, Abstract Factory, Builder, Code-Dateien), Musterseiten neu geschrieben (Shortcode + „So geht's“), `data/designpatterns.toml` (`sogehts`), `skripte/pattern-einlesen.pl`
+- (leer – zuletzt freigegeben und gepusht am 2026-10-26: Pilot Ablauf-Visualisierung Design Patterns)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
