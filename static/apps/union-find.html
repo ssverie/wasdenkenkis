@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Union-Find</title>
+<!-- Visualisierung von Union-Find (nach Sedgewick/Wayne, Algorithmen, Algorithmus 1.5, Listing 1.54, dazu die drei Varianten
+     Quick-Find, Quick-Union und gewichtetes Quick-Union) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Eigener Java-Code; find/union stehen im Listing nur als Verweis auf spätere Seiten, darum hier eigene Fassungen.
+     Bedienung wie bei den übrigen eigenen Apps (Abspielen von vorn, Neu starten, stabile Höhe). -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  .eingabe select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 6px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  svg.wald { display: block; width: 100%; height: auto; margin: 0 auto; }
+  svg.wald line { stroke: var(--grau); stroke-width: 2; }
+  svg.wald circle { fill: var(--bar); }
+  svg.wald circle.wurzel { stroke: var(--cur); stroke-width: 2; }
+  svg.wald circle.cur { fill: var(--cur); }
+  svg.wald circle.neu { fill: var(--neu); }
+  svg.wald circle.swap { fill: var(--swap); }
+  svg.wald text { font: 600 14px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg.wald text.hell { fill: #fff; }
+  @media (prefers-color-scheme: dark) { svg.wald text.hell { fill: #0d1530; } }
+  .feld { display: grid; grid-template-columns: 3.2em repeat(10, minmax(0, 1fr)); gap: 3px; max-width: 640px; margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .feld div { text-align: center; border-radius: 5px; padding: 3px 0; font-size: 13px; font-weight: 600; background: var(--bar); }
+  .feld div.kopf { background: transparent; color: var(--muted); font-weight: 400; font-size: 11px; text-align: left; font-family: ui-monospace, Consolas, monospace; }
+  .feld div.idx { background: transparent; color: var(--muted); font-weight: 400; font-size: 11px; }
+  .feld div.cur { background: var(--cur); color: #fff; }
+  .feld div.neu { background: var(--neu); color: #fff; }
+  .feld div.swap { background: var(--swap); color: #fff; }
+  @media (prefers-color-scheme: dark) { .feld div.cur, .feld div.neu, .feld div.swap { color: #0d1530; } }
+  .ausgabe { margin-top: 12px; font-size: 14px; }
+  .ausgabe code { font-size: 13px; }
+  .proto td.op { text-align: left; font-weight: 600; white-space: nowrap; }
+  .proto td.inhalt { text-align: left; font-family: ui-monospace, Consolas, monospace; font-size: 12px; white-space: nowrap; }
+  .proto tr.zuletzt td { color: var(--neu); font-weight: 700; }
+  .proto tr.ignoriert td { color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <label>Variante <select id="variante">
+      <option value="qf">Quick-Find</option>
+      <option value="qu">Quick-Union</option>
+      <option value="w" selected>Gewichtetes Quick-Union</option>
+    </select></label>
+    <label>p <select id="p"></select></label>
+    <label>q <select id="q"></select></label>
+    <button id="union">union(p, q)</button>
+    <button id="connected">connected(p, q)</button>
+    <button id="zufall">Zufallspaar</button>
+    <button id="tiny">tinyUF.txt</button>
+    <button id="schlimm">Schlimmster Fall</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <svg class="wald" id="wald" role="img" aria-label="Komponenten als Bäume"></svg>
+    <div class="feld" id="feld"></div>
+    <div class="legende">
+      <span><i style="background:var(--cur)"></i>wird gelesen</span>
+      <span><i style="background:var(--neu)"></i>Wurzel gefunden</span>
+      <span><i style="background:var(--swap)"></i>geändert</span>
+      <span><i style="background:var(--bar);outline:2px solid var(--cur)"></i>Wurzel</span>
+    </div>
+    <div class="ausgabe" id="ausgabe"></div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen dieser Variante">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h" id="codeTitel"></div><pre id="code"></pre></div>
+    <div class="box"><div class="h">Protokoll (je Operation)</div><div class="proto" id="proto"></div></div>
+  </div>
+</div>
+<script>
+(function () {
+  const N = 10;
+  const NAMEN = { qf: 'Quick-Find', qu: 'Quick-Union', w: 'Gewichtetes Quick-Union' };
+  // tinyUF.txt aus dem Buch: 10 Knoten, 11 Paare
+  const TINY = [[4, 3], [3, 8], [6, 5], [9, 4], [2, 1], [8, 9], [5, 0], [7, 2], [6, 1], [1, 0], [6, 7]];
+  // schlimmster Fall für Quick-Union: immer der Knoten 0 mit dem nächsten – die Kette wird jedes Mal länger
+  const SCHLIMM = [[0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8], [0, 9]];
+
+  function codeFuer(v) {
+    const kopf = [
+      'public class UF',
+      '{',
+      '   private int[] id;      // ' + (v === 'qf' ? 'Komponente je Knoten' : 'Elternknoten je Knoten (Wurzel: id[i] == i)'),
+      ...(v === 'w' ? ['   private int[] sz;      // Größe des Baums je Wurzel'] : []),
+      '   private int count;     // Anzahl der Komponenten',
+      '',
+      '   public UF(int n)',
+      '   {',
+      '      count = n;',
+      '      id = new int[n];',
+      '      for (int i = 0; i < n; i++) id[i] = i;   // jeder für sich',
+      ...(v === 'w' ? ['      sz = new int[n];', '      for (int i = 0; i < n; i++) sz[i] = 1;'] : []),
+      '   }',
+      '',
+      '   public int count()  {  return count;  }',
+      '',
+      '   public boolean connected(int p, int q)',
+      '   {  return find(p) == find(q);  }',
+      ''
+    ];
+    const mitte = v === 'qf' ? [
+      '   public int find(int p)',
+      '   {  return id[p];  }                 // die Komponente steht direkt drin',
+      '',
+      '   public void union(int p, int q)',
+      '   {',
+      '      int pID = find(p);',
+      '      int qID = find(q);',
+      '      if (pID == qID) return;          // schon dieselbe Komponente',
+      '      for (int i = 0; i < id.length; i++)   // ganzes Array durchgehen',
+      '         if (id[i] == pID) id[i] = qID;',
+      '      count--;',
+      '   }'
+    ] : [
+      '   public int find(int p)',
+      '   {  // zur Wurzel hochlaufen',
+      '      while (p != id[p]) p = id[p];',
+      '      return p;',
+      '   }',
+      '',
+      '   public void union(int p, int q)',
+      '   {',
+      '      int i = find(p);',
+      '      int j = find(q);',
+      '      if (i == j) return;              // schon derselbe Baum',
+      ...(v === 'qu' ? [
+      '      id[i] = j;                       // Baum von p unter Wurzel von q'
+      ] : [
+      '      if (sz[i] < sz[j]) { id[i] = j; sz[j] += sz[i]; }   // kleinerer unter',
+      '      else               { id[j] = i; sz[i] += sz[j]; }   // den größeren'
+      ]),
+      '      count--;',
+      '   }'
+    ];
+    const client = [
+      '',
+      '   public static void main(String[] args)',
+      '   {  // Paare lesen, nur neue Verbindungen ausgeben',
+      '      int n = StdIn.readInt();',
+      '      UF uf = new UF(n);',
+      '      while (!StdIn.isEmpty())',
+      '      {',
+      '         int p = StdIn.readInt();',
+      '         int q = StdIn.readInt();',
+      '         if (uf.connected(p, q)) continue;   // schon verbunden',
+      '         uf.union(p, q);',
+      '         StdOut.println(p + " " + q);',
+      '      }',
+      '      StdOut.println(uf.count() + " components");',
+      '   }',
+      '}'
+    ];
+    return [...kopf, ...mitte, ...client];
+  }
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  for (const s of ['p', 'q']) $(s).innerHTML = Array.from({ length: N }, (_, i) => `<option>${i}</option>`).join('');
+  $('p').value = 0; $('q').value = 1;
+
+  let variante = 'w', CODE = [], L = {};
+  let id = [], sz = [], count = N, ops = [], ausgabe = [], gesamt = 0, opZ = 0;
+  let steps = [], pos = 0, timer = null;
+
+  function setzeCode() {
+    CODE = codeFuer(variante);
+    const z = s => CODE.findIndex(l => l.includes(s));
+    L = { start: z('for (int i = 0; i < n; i++) id[i] = i'), connected: z('return find(p) == find(q)'),
+          qfFind: z('{  return id[p];  }'), schleife: z('while (p != id[p])'), wurzel: z('      return p;'),
+          ersterFind: z(variante === 'qf' ? 'int pID = find(p)' : 'int i = find(p)'), gleich: z(variante === 'qf' ? 'if (pID == qID) return' : 'if (i == j) return'),
+          qfLoop: z('if (id[i] == pID) id[i] = qID'), quHaengen: z('id[i] = j;                       //'),
+          wKlein: z('if (sz[i] < sz[j])'), wGross: z('else               { id[j] = i'), minus: z('count--;'),
+          cWhile: z('while (!StdIn.isEmpty())'), cConnected: z('if (uf.connected(p, q)) continue'), cUnion: z('uf.union(p, q);'),
+          cPrint: z('StdOut.println(p + " " + q)'), cEnde: z('" components"') };
+    $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+    $('codeTitel').textContent = `Java (eigene Fassung, nach Algorithmus 1.5, Listing 1.54) – ${NAMEN[variante]}`;
+  }
+
+  function snap(line, msg, hl, o) {
+    steps.push(Object.assign({ line, msg, hl: hl || {}, id: id.slice(), sz: sz.slice(), count, ops: ops.slice(), ausgabe: ausgabe.slice(), gesamt, opZ }, o));
+  }
+  const zugriff = (k = 1) => { opZ += k; gesamt += k; };
+
+  // find mit Schritten; liefert die Wurzel bzw. Komponente
+  function find(p, wozu) {
+    if (variante === 'qf') {
+      zugriff();
+      snap(L.qfFind, `find(${p}) ${wozu}: id[${p}] = ${id[p]} – die Komponente steht direkt im Array, ein einziger Zugriff.`, { [p]: 'neu' });
+      return id[p];
+    }
+    const start = p; let tiefe = 0;
+    while (true) {
+      zugriff();                                            // id[p] für den Vergleich lesen
+      if (p === id[p]) break;
+      snap(L.schleife, `find(${start}) ${wozu}: id[${p}] = ${id[p]} ≠ ${p} → weiter hoch zu ${id[p]}.`, { [p]: 'cur' });
+      zugriff(); p = id[p]; tiefe++;                        // id[p] noch einmal lesen und hochgehen
+    }
+    snap(L.wurzel, `find(${start}) ${wozu}: id[${p}] = ${p} → ${p} ist die Wurzel (${tiefe} ${tiefe === 1 ? 'Ebene' : 'Ebenen'} hoch).`, { [p]: 'neu' });
+    return p;
+  }
+
+  function union(p, q) {
+    const i = find(p, '(für p)'), j = find(q, '(für q)');
+    if (i === j) {
+      snap(L.gleich, `${variante === 'qf' ? 'pID' : 'i'} = ${variante === 'qf' ? 'qID' : 'j'} = ${i} → ${p} und ${q} sind schon in derselben Komponente, nichts zu tun.`, { [i]: 'neu' });
+      return false;
+    }
+    if (variante === 'qf') {
+      snap(L.qfLoop, `Verschieden (${i} ≠ ${j}): Jetzt muss das ganze Array durchlaufen werden – jeder Eintrag mit ${i} wird zu ${j}.`, { [i]: 'neu', [j]: 'neu' });
+      for (let k = 0; k < N; k++) {
+        zugriff();
+        if (id[k] === i) { id[k] = j; zugriff(); snap(L.qfLoop, `id[${k}] = ${i} → wird ${j}.`, { [k]: 'swap' }); }
+        else snap(L.qfLoop, `id[${k}] = ${id[k]} ≠ ${i} → bleibt.`, { [k]: 'cur' });
+      }
+    } else if (variante === 'qu') {
+      id[i] = j; zugriff();
+      snap(L.quHaengen, `id[${i}] = ${j}: Die Wurzel ${i} wird unter die Wurzel ${j} gehängt – eine einzige Zuweisung.`, { [i]: 'swap', [j]: 'neu' });
+    } else {
+      zugriff(2);                                           // sz[i] und sz[j] lesen
+      const si = sz[i], sj = sz[j];
+      if (si < sj) {
+        id[i] = j; sz[j] += sz[i]; zugriff(3);
+        snap(L.wKlein, `sz[${i}] = ${si} < sz[${j}] = ${sj}: Der kleinere Baum (Wurzel ${i}) kommt unter den größeren (Wurzel ${j}), sz[${j}] wird ${sz[j]}.`, { [i]: 'swap', [j]: 'neu' });
+      } else {
+        id[j] = i; sz[i] += sz[j]; zugriff(3);
+        snap(L.wGross, `sz[${i}] = ${si} ≥ sz[${j}] = ${sj}: Der Baum mit Wurzel ${j} kommt unter Wurzel ${i}${si === sj ? ' (gleich groß: dann gewinnt p)' : ''}, sz[${i}] wird ${sz[i]}.`, { [j]: 'swap', [i]: 'neu' });
+      }
+    }
+    count--;
+    snap(L.minus, `count-- → ${count} ${count === 1 ? 'Komponente' : 'Komponenten'}.`, {});
+    return true;
+  }
+
+  function zeileProto(text, ergebnis, ignoriert) { ops.push({ text, ergebnis, z: opZ, count, id: id.slice(), ignoriert }); }
+
+  function opUnion(p, q) {
+    opZ = 0;
+    snap(L.ersterFind, `union(${p}, ${q}): Erst die beiden ${variante === 'qf' ? 'Komponenten' : 'Wurzeln'} bestimmen.`, { [p]: 'cur', [q]: 'cur' });
+    const neu = union(p, q);
+    zeileProto(`union(${p}, ${q})`, neu ? 'verbunden' : 'war schon verbunden', !neu);
+    snap(neu ? L.minus : L.gleich, `union(${p}, ${q}) fertig: ${opZ} Arrayzugriffe.`, {}, { opEnde: true, cls: 'swap' });
+  }
+  function opConnected(p, q) {
+    opZ = 0;
+    const a = find(p, '(für p)'), b = find(q, '(für q)');
+    zeileProto(`connected(${p}, ${q})`, a === b ? 'true' : 'false', false);
+    snap(L.connected, `find(${p}) = ${a}, find(${q}) = ${b} → connected(${p}, ${q}) = ${a === b}. ${opZ} Arrayzugriffe.`, { [a]: 'neu', [b]: 'neu' }, { opEnde: true, cls: 'swap' });
+  }
+  // der Testclient aus dem Listing: verbunden? sonst union und Ausgabe
+  function clientPaar(p, q) {
+    opZ = 0;
+    snap(L.cConnected, `Paar ${p} ${q}: Erst fragt der Client uf.connected(${p}, ${q}).`, { [p]: 'cur', [q]: 'cur' });
+    const a = find(p, '(für p)'), b = find(q, '(für q)');
+    if (a === b) {
+      zeileProto(`${p} ${q}`, 'schon verbunden, ignoriert', true);
+      snap(L.cConnected, `find(${p}) = find(${q}) = ${a} → schon verbunden (über einen Umweg). continue: Das Paar wird ignoriert, nichts wird ausgegeben. ${opZ} Arrayzugriffe.`, { [a]: 'neu' }, { opEnde: true });
+      return;
+    }
+    snap(L.cUnion, `${a} ≠ ${b} → nicht verbunden, also uf.union(${p}, ${q}).`, { [p]: 'cur', [q]: 'cur' });
+    union(p, q);
+    ausgabe.push(`${p} ${q}`);
+    zeileProto(`${p} ${q}`, 'verbunden, ausgegeben', false);
+    snap(L.cPrint, `Ausgabe: „${p} ${q}“. ${opZ} Arrayzugriffe für dieses Paar.`, {}, { opEnde: true, cls: 'swap' });
+  }
+  function client(paare, text) {
+    leeren(text);
+    paare.forEach(([p, q]) => clientPaar(p, q));
+    snap(L.cEnde, `Eingabe zu Ende: „${count} components“. Insgesamt ${gesamt} Arrayzugriffe mit ${NAMEN[variante]}.`, {}, { opEnde: true, cls: 'swap', ende: true });
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  function tiefen(par) { return par.map((_, i) => { let d = 0, k = i; while (par[k] !== k && d <= N) { k = par[k]; d++; } return d; }); }
+  function waldSvg(par, hl) {
+    const kinder = par.map(() => []);
+    const wurzeln = [];
+    par.forEach((p, i) => { if (p === i) wurzeln.push(i); else kinder[p].push(i); });
+    // jeden Baum für sich auslegen (x in Blattbreiten, y in Ebenen)
+    const x = [], y = [];
+    const baeume = wurzeln.map(w => {
+      const knoten = []; let blatt = 0;
+      const lege = (k, d) => {
+        knoten.push(k); y[k] = d;
+        if (!kinder[k].length) { x[k] = blatt++; return; }
+        kinder[k].forEach(c => lege(c, d + 1));
+        x[k] = (x[kinder[k][0]] + x[kinder[k][kinder[k].length - 1]]) / 2;
+      };
+      lege(w, 0);
+      return { knoten, breite: blatt, ebenen: Math.max(...knoten.map(k => y[k])) + 1 };
+    });
+    const tief = Math.max(...baeume.map(b => b.ebenen));
+    const B = 46, H = tief > 5 ? 40 : 52, R = 16;                // tiefe Ketten enger, sonst wird es sehr hoch
+    // Bäume in Reihen packen, so viele wie in die Breite passen (Handy: mehrere Reihen statt winziger Kreise)
+    const platz = Math.max(4, Math.floor(($('anzeige').clientWidth - 40) / B));
+    let rx = 0, ry = 0, reiheH = 0, breiteE = 0;
+    baeume.forEach(b => {
+      if (rx > 0 && rx + b.breite > platz) { ry += reiheH + 0.3; rx = 0; reiheH = 0; }
+      b.knoten.forEach(k => { x[k] += rx; y[k] += ry; });
+      breiteE = Math.max(breiteE, rx + b.breite);
+      rx += b.breite + 0.4; reiheH = Math.max(reiheH, b.ebenen);
+    });
+    const breite = breiteE * B, hoehe = (ry + reiheH) * H;
+    let linien = '', knoten = '';
+    par.forEach((p, i) => { if (p !== i) linien += `<line x1="${x[i] * B + B / 2}" y1="${y[i] * H + H / 2}" x2="${x[p] * B + B / 2}" y2="${y[p] * H + H / 2}"/>`; });
+    par.forEach((p, i) => {
+      const c = hl[i] || '';
+      knoten += `<circle class="${c}${p === i ? ' wurzel' : ''}" cx="${x[i] * B + B / 2}" cy="${y[i] * H + H / 2}" r="${R}"/><text class="${c ? 'hell' : ''}" x="${x[i] * B + B / 2}" y="${y[i] * H + H / 2}">${i}</text>`;
+    });
+    $('wald').setAttribute('viewBox', `0 0 ${breite} ${hoehe}`);
+    $('wald').style.maxWidth = breite + 'px';                       // nie größer als natürlich
+    return linien + knoten;
+  }
+  function render() {
+    const s = steps[pos];
+    const tf = tiefen(s.id), hoehe = Math.max(...tf);
+    $('titel').innerHTML = `${NAMEN[variante]} · count = <b>${s.count}</b> ${s.count === 1 ? 'Komponente' : 'Komponenten'} · größte Baumhöhe <b>${hoehe}</b>`;
+    $('wald').innerHTML = waldSvg(s.id, s.hl);
+    const zeile = (name, arr) => `<div class="kopf">${name}</div>` + arr.map((v, i) => `<div class="${s.hl[i] || ''}">${v}</div>`).join('');
+    $('feld').innerHTML = `<div class="kopf"></div>` + Array.from({ length: N }, (_, i) => `<div class="idx">${i}</div>`).join('')
+      + zeile('id[]', s.id) + (variante === 'w' ? zeile('sz[]', s.sz) : '');
+    $('ausgabe').innerHTML = s.ausgabe.length
+      ? `Ausgabe des Testclients: <code>${s.ausgabe.join(' · ')}</code>${s.ende ? ` · <code>${s.count} components</code>` : ''}`
+      : 'Ausgabe des Testclients: noch nichts';
+
+    const msg = $('msg');
+    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length} · Arrayzugriffe dieser Operation: <b>${s.opZ}</b> · insgesamt: <b>${s.gesamt}</b>`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
+    $('proto').innerHTML = s.ops.length
+      ? `<table><tr><th style="text-align:left">Paar / Operation</th><th style="text-align:left">Ergebnis</th><th>Zugriffe</th><th>count</th><th style="text-align:left">id[]</th></tr>${s.ops.map((o, i) =>
+        `<tr class="${o.ignoriert ? 'ignoriert' : ''}${i === s.ops.length - 1 && s.opEnde ? ' zuletzt' : ''}"><td class="op">${esc(o.text)}</td><td style="text-align:left">${esc(o.ergebnis)}</td><td>${o.z}</td><td>${o.count}</td><td class="inhalt">${o.id.join(' ')}</td></tr>`).join('')}</table>`
+      : '<p class="count">Noch keine Operation. Oben ein Paar wählen und verbinden, oder tinyUF.txt abspielen.</p>';
+
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0;
+    $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  // Kästen werden nie wieder niedriger, sonst springen die Knöpfe darunter auf und ab
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function stabilZurueck() { ['anzeige', 'msg'].forEach(i => { $(i)._hoch = 0; $(i).style.minHeight = ''; }); }
+  window.addEventListener('resize', () => { stabilZurueck(); if (steps.length) render(); });
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;        // am Ende: von vorn abspielen
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  function operation(f) {
+    stop();
+    const vorher = steps.length;
+    f();
+    pos = Math.min(vorher, steps.length - 1);
+    render();
+  }
+  function leeren(text) {
+    stop();
+    id = Array.from({ length: N }, (_, i) => i); sz = Array(N).fill(1); count = N;
+    ops = []; ausgabe = []; gesamt = 0; opZ = 0; steps = [];
+    snap(L.start, text || `Zehn Knoten, jeder ist seine eigene Komponente: id[i] = i, count = ${N}.`, {}, { opEnde: true });
+    pos = 0; render();
+  }
+  const tiny = () => client(TINY, `tinyUF.txt mit ${NAMEN[variante]}: 10 Knoten, 11 Paare. Für jedes Paar fragt der Client erst connected, verbindet nur, wenn nötig, und gibt das Paar dann aus. Mit „Abspielen“ oder „Schritt“ geht es los.`);
+  const schlimm = () => client(SCHLIMM, `Schlimmster Fall für Quick-Union: Paare 0 1, 0 2, … 0 9. Mit ${NAMEN[variante]} – achte auf die Baumhöhe und die Arrayzugriffe.`);
+
+  $('variante').addEventListener('change', () => { variante = $('variante').value; setzeCode(); stabilZurueck(); tiny(); });
+  $('union').addEventListener('click', () => operation(() => opUnion(+$('p').value, +$('q').value)));
+  $('connected').addEventListener('click', () => operation(() => opConnected(+$('p').value, +$('q').value)));
+  $('zufall').addEventListener('click', () => {
+    const p = Math.floor(Math.random() * N); let q; do { q = Math.floor(Math.random() * N); } while (q === p);
+    $('p').value = p; $('q').value = q; operation(() => opUnion(p, q));
+  });
+  $('tiny').addEventListener('click', tiny);
+  $('schlimm').addEventListener('click', schlimm);
+  $('neu').addEventListener('click', tiny);   // Neustart = Zustand beim ersten Öffnen (gewählte Variante)
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests
+  window.__uf = {
+    variante: v => { $('variante').value = v; variante = v; setzeCode(); tiny(); },
+    union: (p, q) => operation(() => opUnion(p, q)), connected: (p, q) => { operation(() => opConnected(p, q)); return ops[ops.length - 1].ergebnis === 'true'; },
+    leeren: () => leeren(), tiny, schlimm, get id() { return id.slice(); }, get sz() { return sz.slice(); }, get count() { return count; },
+    get ausgabe() { return ausgabe.slice(); }, get gesamt() { return gesamt; }, get steps() { return steps; }, get ops() { return ops; }, hoehe: () => Math.max(...tiefen(id)), N };
+
+  setzeCode();
+  tiny();
+})();
+</script>
+</body>
+</html>
