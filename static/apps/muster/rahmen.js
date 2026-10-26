@@ -60,8 +60,8 @@ window.MusterRahmen = (function () {
       const s = {
         // Methode betreten: Rahmen auf den Stapel
         ruf(sig, vars, z, msg, o) { st.stapel.push({ sig, vars: (vars || []).map(v => v.slice()) }); s.schritt(z, msg, o); },
-        // Methode verlassen: Rahmen vom Stapel
-        raus(z, msg, o) { st.stapel.pop(); s.schritt(z, msg, o); },
+        // Methode verlassen: Rahmen vom Stapel; o.setze = [[name, wert]] weist den Rückgabewert im Aufrufer zu
+        raus(z, msg, o) { st.stapel.pop(); ((o && o.setze) || []).forEach(([n, w]) => s.var(n, w)); s.schritt(z, msg, o); },
         var(name, wert) { const f = st.stapel[st.stapel.length - 1]; const v = f.vars.find(v => v[0] === name); if (v) v[1] = wert; else f.vars.push([name, wert]); },
         neu(klasse, felder) {
           st.zaehler[klasse] = (st.zaehler[klasse] || 0) + 1;
@@ -154,7 +154,7 @@ window.MusterRahmen = (function () {
     const RY = 14;                                   // Rand oben/unten; R (seitlich) ist breiter, wenn Bögen außen herumlaufen
     const pos = {}; d.klassen.forEach(k => { pos[k.name] = { x: R + k.x * SX, y: RY + k.y * SY }; });
     const spalten = Math.max(...d.klassen.map(k => k.x)) + 1, zeilen = Math.max(...d.klassen.map(k => k.y)) + 1;
-    const W = 2 * R + spalten * SX - (SX - B), Hg = 2 * RY + zeilen * SY - (SY - H);
+    const W = 2 * R + spalten * SX - (SX - B), Hg = 2 * RY + zeilen * SY - (SY - H) + (d.untenPlatz || 0);   // untenPlatz: für Bögen unter der letzten Zeile
     // Anschlusspunkt am Kastenrand in Richtung des anderen Kastens
     const rand = (a, b) => {
       const ax = a.x + B / 2, ay = a.y + H / 2, bx = b.x + B / 2, by = b.y + H / 2, dx = bx - ax, dy = by - ay;
@@ -167,9 +167,15 @@ window.MusterRahmen = (function () {
     </defs>`;
     let kanten = '';
     (d.kanten || []).forEach(k => {
-      const art = { impl: 'gestrichelt" marker-end="url(#dreieck)', nutzt: '" marker-end="url(#pfeil)', erzeugt: 'gestrichelt" marker-end="url(#pfeil)' }[k.art];
+      const art = { impl: 'gestrichelt" marker-end="url(#dreieck)', erbt: '" marker-end="url(#dreieck)', nutzt: '" marker-end="url(#pfeil)', erzeugt: 'gestrichelt" marker-end="url(#pfeil)' }[k.art];
       let tx, ty;
-      if (k.bogen) {
+      if (k.unten) {
+        // Bogen unten herum, von Kastenunterkante zu Kastenunterkante – für Kästen in derselben Zeile mit etwas dazwischen
+        const a = pos[k.von], b = pos[k.zu];
+        const x1 = a.x + B / 2, x2 = b.x + B / 2, y = a.y + H, cy = y + k.unten;
+        kanten += `<path d="M${x1},${y} C${x1},${cy} ${x2},${cy} ${x2},${y}" class="${art}"/>`;
+        tx = (x1 + x2) / 2; ty = y + 0.75 * k.unten + 14;
+      } else if (k.bogen) {
         // Bogen außen herum (bogen < 0: links bzw. oben), von Kastenseite zu Kastenseite – z. B. Fabrik → zweites Produkt darunter
         const a = pos[k.von], b = pos[k.zu], links = k.bogen < 0;
         const x1 = links ? a.x : a.x + B, y1 = a.y + H / 2, x2 = links ? b.x : b.x + B, y2 = b.y + H / 2, cx = x1 + k.bogen;

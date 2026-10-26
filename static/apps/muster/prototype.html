@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prototype – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Prototype (GoF-Erzeugungsmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (prototype-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="prototype-code.js?v=1"></script>
+<script src="rahmen.js?v=3"></script>
+<script>
+(function () {
+  const KOPIE = { Kreis: 'public Kreis kopie() { return new Kreis(this); }', Rechteck: 'public Rechteck kopie() { return new Rechteck(this); }' };
+  const KCTOR = { Kreis: 'this(vorlage.x, vorlage.y, vorlage.radius, vorlage.farbe);', Rechteck: 'this(vorlage.x, vorlage.y, vorlage.breite, vorlage.hoehe);' };
+  const VERSCHIEBE = { Kreis: [KOPIE.Kreis, 1], Rechteck: [KOPIE.Rechteck, 1] };   // die Zeile direkt unter kopie()
+
+  // Modell der Objekte nebenher, damit Felder und toString() mit echten Werten rechnen
+  let M = {}, reg = null, registry = {};
+  const felder = m => m.typ === 'Kreis' ? [['x', String(m.x)], ['y', String(m.y)], ['radius', String(m.r)], ['farbe', `"${m.farbe}"`]]
+    : m.typ === 'Rechteck' ? [['x', String(m.x)], ['y', String(m.y)], ['breite', String(m.b)], ['hoehe', String(m.h)]]
+    : [['name', `"${m.name}"`], ['teile', `[${m.teile.map(t => '→ ' + t).join(', ')}]`]];
+  const text = id => { const m = M[id];
+    return m.typ === 'Kreis' ? `Kreis(${m.x},${m.y} r=${m.r} ${m.farbe})` : m.typ === 'Rechteck' ? `Rechteck(${m.x},${m.y} ${m.b}x${m.h})` : `${m.name}[${m.teile.map(text).join(', ')}]`; };
+  function neu(s, m) { const id = s.neu(m.typ, felder(m)); M[id] = m; return id; }
+  function auffrischen(s, id) { felder(M[id]).forEach(([k, v]) => s.feld(id, k, v)); }
+  const mapText = () => `{${Object.entries(registry).map(([k, v]) => `${k} → ${v}`).join(', ')}}`;
+
+  // Kreis.kopie() bzw. Rechteck.kopie(): Kopierkonstruktor mit this als Vorlage
+  function kopieEinfach(s, id, aufruf, ausfuehrlich) {
+    const m = M[id];
+    s.ruf(`${m.typ}.kopie()`, [['this', s.ref(id)]], KOPIE[m.typ],
+      ausfuehrlich ? `${m.typ}.kopie() ruft den privaten Kopierkonstruktor auf, mit sich selbst als Vorlage: new ${m.typ}(this).` : `${id}.kopie()`, { cur: [id] });
+    const k = neu(s, { ...m });
+    s.schritt(KCTOR[m.typ], ausfuehrlich
+      ? `Der Kopierkonstruktor übernimmt alle Werte der Vorlage. ${k} ist ein eigenes Objekt – gleiche Werte, eigener Speicherplatz.`
+      : `Kopierkonstruktor: ${k} entsteht mit den Werten von ${id}.`, { cur: [id] });
+    s.raus(aufruf, `kopie() liefert ${k}.`, { cur: [k] });
+    return k;
+  }
+
+  // Gruppe.kopie(): tiefe Kopie – jedes Teil wird selbst kopiert
+  function kopieGruppe(s, gid, aufruf) {
+    const m = M[gid];
+    s.ruf('Gruppe.kopie()', [['this', s.ref(gid)]], 'public Gruppe kopie() {', 'Gruppe.kopie() hat mehr zu tun als ein Kreis: Die Gruppe besteht aus Teilen.', { cur: [gid] });
+    const g = neu(s, { typ: 'Gruppe', name: m.name, teile: [] });
+    s.var('g', s.ref(g));
+    s.schritt('Gruppe g = new Gruppe(name);', `new Gruppe(name): ${g} entsteht, mit demselben Namen und noch leerer Teile-Liste.`);
+    let erstes = true;
+    for (const t of m.teile) {
+      s.var('f', s.ref(t));
+      s.schritt('for (Form f : teile) {', `f zeigt auf ${t} – ein Teil der Vorlage.`, { cur: [t] });
+      s.schritt('g.teile.add(f.kopie());', erstes
+        ? 'f.kopie(): Das Teil wird selbst kopiert. Eine flache Kopie würde hier nur die Referenz übernehmen – dann teilten sich Vorlage und Kopie dasselbe Teil.'
+        : 'Auch dieses Teil wird kopiert.', { cur: [t] });
+      const k = kopieEinfach(s, t, 'g.teile.add(f.kopie());', false);
+      M[g].teile.push(k); auffrischen(s, g);
+      s.schritt('g.teile.add(f.kopie());', `${k} kommt in die Liste von ${g}.`, { cur: [g, k] });
+      erstes = false;
+    }
+    s.schritt('return g;', `Fertig: ${g} hat eigene Teile (${M[g].teile.join(', ')}), die Vorlage behält ihre (${m.teile.join(', ')}). Das ist die tiefe Kopie.`, { cur: [g, gid] });
+    s.raus(aufruf, `Gruppe.kopie() liefert ${g}.`, { cur: [g] });
+    return g;
+  }
+
+  // vorlagen.erzeuge(name): Vorlage holen und sich selbst kopieren lassen
+  function erzeuge(s, name, aufruf, variable, ausfuehrlich) {
+    s.ruf('Vorlagen.erzeuge(String name)', [['this', s.ref(reg)], ['name', `"${name}"`]], 'Form erzeuge(String name) {',
+      ausfuehrlich ? `erzeuge("${name}"): Der Client fragt die Registry nach einer neuen Form.` : `erzeuge("${name}")`, { cur: [reg] });
+    const v = registry[name];
+    s.var('vorlage', s.ref(v));
+    s.schritt('Form vorlage = vorlagen.get(name);', `get("${name}") liefert ${v} – die Vorlage selbst, noch keine Kopie.`, { cur: [v] });
+    if (ausfuehrlich) s.schritt('if (vorlage == null) {', 'Die Vorlage gibt es, also keine Ausnahme.');
+    s.schritt('return vorlage.kopie();', 'vorlage.kopie(): Die Vorlage kopiert sich selbst. Nur sie weiß, wie das richtig geht.', { cur: [v] });
+    const k = M[v].typ === 'Gruppe' ? kopieGruppe(s, v, 'return vorlage.kopie();') : kopieEinfach(s, v, 'return vorlage.kopie();', ausfuehrlich);
+    s.raus(aufruf, `${variable} zeigt auf ${k}, eine Kopie von ${v}. Die Vorlage selbst bleibt in der Registry.`, { cur: [k], setze: [[variable, s.ref(k)]] });
+    return k;
+  }
+
+  function verschiebe(s, id, dx, dy, aufruf) {
+    const m = M[id];
+    if (m.typ === 'Gruppe') {
+      s.ruf('Gruppe.verschiebe(int dx, int dy)', [['this', s.ref(id)], ['dx', String(dx)], ['dy', String(dy)]], 'teile.forEach(f -> f.verschiebe(dx, dy));',
+        'Die Gruppe verschiebt sich, indem sie jedes ihrer Teile verschiebt.', { cur: [id] });
+      for (const t of m.teile) verschiebe(s, t, dx, dy, 'teile.forEach(f -> f.verschiebe(dx, dy));');
+      s.raus(aufruf, `Verschoben sind nur die Teile der Kopie – die Teile der Vorlage stehen unverändert bei ihren alten Werten.`, { cur: [id] });
+      return;
+    }
+    s.ruf(`${m.typ}.verschiebe(int dx, int dy)`, [['this', s.ref(id)], ['dx', String(dx)], ['dy', String(dy)]], VERSCHIEBE[m.typ], `${id}.verschiebe(${dx}, ${dy})`, { cur: [id] });
+    m.x += dx; m.y += dy; auffrischen(s, id);
+    s.schritt(VERSCHIEBE[m.typ], `x += ${dx}; y += ${dy} – ${id} steht jetzt bei ${m.x},${m.y}.`, { cur: [id] });
+    s.raus(aufruf, `${id} ist verschoben.`, { cur: [id] });
+  }
+
+  function lauf(s) {
+    M = {}; registry = {};
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args)', 'Start: main legt zwei Vorlagen an und erzeugt daraus neue Formen.');
+    reg = s.neu('Vorlagen', [['vorlagen', '{}']]);
+    s.var('vorlagen', s.ref(reg));
+    s.schritt('Vorlagen vorlagen = new Vorlagen();', 'Die Registry entsteht – eine Map von Namen auf Vorlagen, noch leer.');
+
+    // Vorlage 1: roter Kreis
+    const k1 = neu(s, { typ: 'Kreis', x: 0, y: 0, r: 10, farbe: 'rot' });
+    s.schritt('vorlagen.registriere("ampel-rot", new Kreis(0, 0, 10, "rot"));', `new Kreis(0, 0, 10, "rot"): ${k1} ist die fertig eingestellte Vorlage.`);
+    registry['ampel-rot'] = k1; s.feld(reg, 'vorlagen', mapText());
+    s.ruf('Vorlagen.registriere(String name, Form vorlage)', [['this', s.ref(reg)], ['name', '"ampel-rot"'], ['vorlage', s.ref(k1)]],
+      'void registriere(String name, Form vorlage) { vorlagen.put(name, vorlage); }', `registriere legt ${k1} unter „ampel-rot“ in der Map ab.`, { cur: [reg] });
+    s.raus('vorlagen.registriere("ampel-rot", new Kreis(0, 0, 10, "rot"));', 'Zurück in main.');
+
+    // Vorlage 2: Schild aus Rechteck und Kreis
+    s.schritt('vorlagen.registriere("schild", new Gruppe("Schild",', 'Die zweite Vorlage ist zusammengesetzt: eine Gruppe „Schild“ aus zwei Teilen. Java wertet zuerst die Argumente aus.');
+    const r1 = neu(s, { typ: 'Rechteck', x: 0, y: 0, b: 40, h: 20 });
+    const k2 = neu(s, { typ: 'Kreis', x: 20, y: 10, r: 5, farbe: 'weiß' });
+    s.schritt('new Rechteck(0, 0, 40, 20), new Kreis(20, 10, 5, "weiß")));', `Die beiden Teile entstehen: ${r1} und ${k2}.`);
+    s.ruf('Gruppe(String name, Form... teile)', [['name', '"Schild"'], ['teile', `[${s.ref(r1)}, ${s.ref(k2)}]`]], 'Gruppe(String name, Form... teile) {', 'Der Konstruktor der Gruppe läuft.');
+    const g1 = neu(s, { typ: 'Gruppe', name: 'Schild', teile: [] });
+    s.schritt('this.name = name;', `${g1} entsteht, Name „Schild“.`);
+    M[g1].teile.push(r1, k2); auffrischen(s, g1);
+    s.schritt('this.teile.addAll(List.of(teile));', `Die Teile kommen in die Liste: ${g1} hält jetzt Referenzen auf ${r1} und ${k2}.`, { cur: [g1] });
+    s.raus('vorlagen.registriere("schild", new Gruppe("Schild",', 'Der Konstruktor ist fertig.', { cur: [g1] });
+    registry.schild = g1; s.feld(reg, 'vorlagen', mapText());
+    s.ruf('Vorlagen.registriere(String name, Form vorlage)', [['this', s.ref(reg)], ['name', '"schild"'], ['vorlage', s.ref(g1)]],
+      'void registriere(String name, Form vorlage) { vorlagen.put(name, vorlage); }', `registriere legt ${g1} unter „schild“ ab. Die Registry hat jetzt zwei Vorlagen.`, { cur: [reg] });
+    s.raus('vorlagen.registriere("schild", new Gruppe("Schild",', 'Zurück in main. Ab hier entstehen neue Formen nur noch durch Kopieren.');
+
+    // a und b aus derselben Vorlage
+    const a = erzeuge(s, 'ampel-rot', 'Form a = vorlagen.erzeuge("ampel-rot");', 'a', true);
+    const b = erzeuge(s, 'ampel-rot', 'Form b = vorlagen.erzeuge("ampel-rot");', 'b', false);
+    s.schritt('b.verschiebe(50, 0);', `a und b sind zwei verschiedene Objekte mit denselben Werten. Jetzt wird nur b verschoben.`, { cur: [b] });
+    verschiebe(s, b, 50, 0, 'b.verschiebe(50, 0);');
+    s.aus(`a = ${text(a)}`);
+    s.schritt('System.out.println("a = " + a);', `a steht noch bei 0,0 – die Kopien sind unabhängig voneinander.`, { cur: [a] });
+    s.aus(`b = ${text(b)}`);
+    s.schritt('System.out.println("b = " + b);', 'b steht bei 50,0. Auch die Vorlage ist unberührt.', { cur: [b] });
+
+    // tiefe Kopie
+    const schild = erzeuge(s, 'schild', 'Form schild = vorlagen.erzeuge("schild");', 'schild', false);
+    s.schritt('schild.verschiebe(100, 100);', 'Jetzt wird die Kopie des Schilds verschoben – der Prüfstein für die tiefe Kopie.', { cur: [schild] });
+    verschiebe(s, schild, 100, 100, 'schild.verschiebe(100, 100);');
+    s.aus(`Kopie:   ${text(schild)}`);
+    s.schritt('System.out.println("Kopie:   " + schild);', 'Die Kopie steht bei 100,100 bzw. 120,110.', { cur: [schild] });
+
+    // „Vorlage:“ – auch hier entsteht eine frische Kopie
+    const g3 = neu(s, { typ: 'Gruppe', name: 'Schild', teile: [] });
+    const t3 = M[g1].teile.map(t => neu(s, { ...M[t] }));
+    M[g3].teile.push(...t3); auffrischen(s, g3);
+    s.schritt('System.out.println("Vorlage: " + vorlagen.erzeuge("schild"));',
+      `Genau hingesehen: Auch hier ruft main erzeuge("schild") auf und bekommt eine frische tiefe Kopie (${g3} mit ${t3.join(' und ')}) – wie eben, darum in einem Schritt. Gedruckt wird diese Kopie, nicht die Vorlage selbst.`, { cur: [g1] });
+    s.aus(`Vorlage: ${text(g3)}`);
+    s.schritt('System.out.println("Vorlage: " + vorlagen.erzeuge("schild"));', `Sie steht bei 0,0 und 20,10. Weil sie frisch von ${g1} kopiert ist, beweist das: Das Verschieben von schild hat die Vorlage nicht verändert.`, { cur: [g3] });
+    s.weg(g3, ...t3);
+    s.raus(['System.out.println("Vorlage: " + vorlagen.erzeuge("schild"));', 1], 'main ist zu Ende. Die frische Kopie für die letzte Zeile war nur für die Ausgabe da und ist nicht mehr erreichbar.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Prototype Registry', 'Prototype', 'ConcretePrototype'],
+    diagramm: {
+      breite: 160, rand: 84, abstandX: 34,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1, y: 0 },
+        { name: 'Vorlagen', art: 'class', rolle: 'Prototype Registry', x: 0, y: 1 },
+        { name: 'Form', art: 'interface', rolle: 'Prototype', x: 2, y: 1 },
+        { name: 'Kreis', art: 'class', rolle: 'ConcretePrototype', x: 1, y: 2 },
+        { name: 'Rechteck', art: 'class', rolle: 'ConcretePrototype', x: 2, y: 2 },
+        { name: 'Gruppe', art: 'class', rolle: 'ConcretePrototype', x: 3, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Vorlagen', art: 'nutzt', text: 'erzeuge(name)', dx: -40 },
+        { von: 'main()', zu: 'Form', art: 'nutzt' },
+        { von: 'Vorlagen', zu: 'Form', art: 'nutzt', text: 'Map<String, Form>' },
+        { von: 'Kreis', zu: 'Form', art: 'impl' }, { von: 'Rechteck', zu: 'Form', art: 'impl' }, { von: 'Gruppe', zu: 'Form', art: 'impl' },
+        { von: 'Gruppe', zu: 'Form', art: 'nutzt', bogen: 50, text: 'teile', dx: 16 }
+      ]
+    },
+    szenarien: [
+      { name: 'java Prototype.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

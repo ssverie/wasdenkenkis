@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Factory Method – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Factory Method (GoF-Erzeugungsmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (factory-method-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="factory-method-code.js?v=1"></script>
+<script src="rahmen.js?v=3"></script>
+<script>
+(function () {
+  const WARE = '20 Paletten Kaffee';
+  // je konkreter Creator: Produktklasse, Feld, Wert, Codezeile der Fabrikmethode, Zeile von liefere(), Text von liefere()
+  const CREATOR = {
+    StrassenLogistik: { produkt: 'Lkw', feld: 'kennzeichen', wert: 'HH-AB 123', fabrik: 'return new Lkw("HH-AB 123");', liefere: 'per Lkw', text: w => `${w} per Lkw HH-AB 123 über die Straße` },
+    SeeLogistik: { produkt: 'Schiff', feld: 'name', wert: 'Hanseatic', fabrik: 'return new Schiff("Hanseatic");', liefere: 'per Schiff', text: w => `${w} per Schiff "Hanseatic" über das Meer` }
+  };
+
+  function lauf(s) {
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args)', 'Start: main plant zwei Lieferungen mit zwei verschiedenen Logistikern.');
+    const ids = ['StrassenLogistik', 'SeeLogistik'].map(k => s.neu(k));
+    s.var('logistiker', `[${ids.map(s.ref).join(', ')}]`);
+    s.schritt('Logistik[] logistiker = { new StrassenLogistik(), new SeeLogistik() };',
+      'Zwei konkrete Creator entstehen. Das Array hat aber den Typ Logistik[] – ab hier spricht main nur noch mit der Oberklasse.', { klassen: ['Logistik'] });
+
+    let erstes = true;
+    for (const l of ids) {
+      const klasse = l.split(' ')[0], c = CREATOR[klasse];
+      s.var('l', s.ref(l));
+      s.schritt('for (Logistik l : logistiker) {', erstes ? `Erster Durchlauf: l zeigt auf ${l}.` : `Zweiter Durchlauf: l zeigt jetzt auf ${l}.`, { cur: [l] });
+      s.schritt('l.planeLieferung("20 Paletten Kaffee");', `l.planeLieferung(...): Der Aufruf ist für beide Logistiker derselbe.`, { cur: [l] });
+      s.ruf(`Logistik.planeLieferung(String ware)`, [['this', s.ref(l)], ['ware', `"${WARE}"`]], 'public final void planeLieferung(String ware) {',
+        erstes ? `planeLieferung ist in der Oberklasse Logistik geschrieben und final – ${klasse} erbt den Ablauf unverändert.` : `Wieder läuft der Ablauf der Oberklasse, diesmal für ${l}.`, { cur: [l], klassen: ['Logistik'] });
+      s.schritt('Transport t = erzeugeTransport();', erstes
+        ? 'Die Oberklasse ruft ihre eigene abstrakte Methode erzeugeTransport() auf. Welche Fassung läuft, entscheidet das Objekt: dynamische Bindung.'
+        : 'Derselbe Aufruf erzeugeTransport() – aber this ist jetzt ein anderes Objekt.', { cur: [l], klassen: ['Logistik'] });
+      s.ruf(`${klasse}.erzeugeTransport()`, [['this', s.ref(l)]], c.fabrik, `${klasse} hat die Fabrikmethode überschrieben – diese Fassung läuft.`, { cur: [l] });
+      const p = s.neu(c.produkt, [[c.feld, `"${c.wert}"`]]);
+      s.schritt(c.fabrik, `new ${c.produkt}("${c.wert}") – nur hier, in der Unterklasse, steht die konkrete Produktklasse.`);
+      s.raus('Transport t = erzeugeTransport();', `Zurück in der Oberklasse: t hat den Typ Transport. Dass dahinter ein ${c.produkt} steckt, weiß planeLieferung nicht.`, { cur: [p], klassen: ['Transport'], setze: [['t', s.ref(p)]] });
+      s.schritt('System.out.println(getClass().getSimpleName()', `getClass().getSimpleName() liefert den Namen der tatsächlichen Klasse: ${klasse}. Dann wird t.liefere(ware) aufgerufen.`, { cur: [l] });
+      s.ruf(`${c.produkt}.liefere(String ware)`, [['this', s.ref(p)], ['ware', `"${WARE}"`]], c.liefere, `${c.produkt}.liefere läuft und baut den Text zusammen.`, { cur: [p] });
+      s.raus('System.out.println(getClass().getSimpleName()', `liefere gibt zurück: „${c.text(WARE)}“.`, { cur: [p] });
+      s.aus(`${klasse}: ${c.text(WARE)}`);
+      s.schritt('System.out.println(getClass().getSimpleName()', 'println gibt die Zeile aus.', { cur: [l] });
+      s.weg(p);
+      s.raus('l.planeLieferung("20 Paletten Kaffee");', `planeLieferung ist fertig. t war eine lokale Variable – ${p} ist nicht mehr erreichbar.`);
+      erstes = false;
+    }
+    s.schritt('for (Logistik l : logistiker) {', 'Keine weiteren Logistiker im Array – die Schleife endet.');
+    s.raus(['l.planeLieferung("20 Paletten Kaffee");', 2], 'main ist zu Ende. Eine dritte Transportart bräuchte nur eine neue Unterklasse – planeLieferung bliebe, wie es ist.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Creator', 'ConcreteCreator', 'Product', 'ConcreteProduct'],
+    diagramm: {
+      breite: 160, abstandX: 60, untenPlatz: 70,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 0.5, y: 0 },
+        { name: 'Logistik', art: 'abstract class', rolle: 'Creator', x: 0.5, y: 1 },
+        { name: 'Transport', art: 'interface', rolle: 'Product', x: 2.5, y: 1 },
+        { name: 'SeeLogistik', art: 'class', rolle: 'ConcreteCreator', x: 0, y: 2 },
+        { name: 'StrassenLogistik', art: 'class', rolle: 'ConcreteCreator', x: 1, y: 2 },
+        { name: 'Lkw', art: 'record', rolle: 'ConcreteProduct', x: 2, y: 2 },
+        { name: 'Schiff', art: 'record', rolle: 'ConcreteProduct', x: 3, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Logistik', art: 'nutzt', text: 'nutzt', dx: 22 },
+        { von: 'Logistik', zu: 'Transport', art: 'nutzt', text: 'kennt nur das Interface' },
+        { von: 'SeeLogistik', zu: 'Logistik', art: 'erbt' }, { von: 'StrassenLogistik', zu: 'Logistik', art: 'erbt' },
+        { von: 'Lkw', zu: 'Transport', art: 'impl' }, { von: 'Schiff', zu: 'Transport', art: 'impl' },
+        { von: 'StrassenLogistik', zu: 'Lkw', art: 'erzeugt', text: 'erzeugt', dy: -8 },
+        { von: 'SeeLogistik', zu: 'Schiff', art: 'erzeugt', unten: 60, text: 'erzeugt' }
+      ]
+    },
+    szenarien: [
+      { name: 'java FactoryMethod.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

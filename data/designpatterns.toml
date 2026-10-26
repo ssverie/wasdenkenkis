@@ -36,6 +36,7 @@ gruppe = "erzeugung"
 schluessel = "factory-method"
 name = "Factory Method"
 text = "Unterklassen entscheiden, welche Klasse instanziiert wird"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Achte auf den Aufrufstapel: planeLieferung() läuft in der Oberklasse Logistik, ruft aber erzeugeTransport() auf, und diese Methode kommt aus der Unterklasse. Im Klassendiagramm leuchten dabei beide Klassen auf. Das Produkt entsteht nur in der Unterklasse, die Oberklasse sieht es bloß als Transport."
 
 [[muster]]
 nummer = 4
@@ -43,6 +44,7 @@ gruppe = "erzeugung"
 schluessel = "prototype"
 name = "Prototype"
 text = "neue Objekte durch Klonen eines Prototyps"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Unter „Objekte im Speicher“ sieht man jede Kopie als eigenes Objekt mit eigener Nummer. Bei der Gruppe „Schild“ entstehen auch neue Teile, das ist die tiefe Kopie. Beim Verschieben ändern sich deshalb nur die Werte der Kopie, die Teile der Vorlage bleiben, wie sie sind. Die letzte Zeile hat eine Überraschung: Gedruckt wird dort nicht die Vorlage selbst, sondern eine frische Kopie von ihr."
 
 [[muster]]
 nummer = 5
