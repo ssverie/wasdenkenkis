@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Observer – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Observer (GoF-Verhaltensmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (observer-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="observer-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  const MAIN = { klassen: ['main()'] };
+  const de = (x, n) => x.toFixed(n).replace('.', ',');
+  const zahl = x => Number.isInteger(x) ? x.toFixed(1) : String(x);      // double wie in Java: 100.0, 101.5
+  const ANZ = 'Lambda Anzeige';
+
+  function lauf(s) {
+    let kurs = 100.0;
+    const liste = [];                                    // angemeldete Beobachter (ids)
+    const stat = { min: Infinity, max: -Infinity, meldungen: 0 };
+    const javaD = x => x === Infinity ? 'Infinity' : x === -Infinity ? '-Infinity' : zahl(x);
+
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: eine Aktie und drei Beobachter, die auf Kursänderungen reagieren.', MAIN);
+    const aktie = s.neu('Aktie', [['symbol', '"ACME"'], ['kurs', '100.0'], ['beobachter', '[]']], 'aktie');
+    s.var('aktie', s.ref(aktie));
+    s.schritt('Aktie aktie = new Aktie("ACME", 100.00);', 'Die Aktie ist das Subject: Sie hat einen Kurs und eine – noch leere – Liste von Beobachtern.', { cur: [aktie] });
+    const syncListe = () => s.feld(aktie, 'beobachter', `[${liste.map(x => '→ ' + x).join(', ')}]`);
+
+    // Anzeige als Lambda, mit Abmelde-Runnable
+    const anz = s.neu(ANZ, [['gibt aus', '"  Anzeige: …"']], ANZ);
+    s.ruf('Aktie.anmelden(KursBeobachter b)', [['this', s.ref(aktie)], ['b', s.ref(anz)]], 'beobachter.add(b);', 'Der erste Beobachter ist ein Lambda – das geht, weil KursBeobachter ein funktionales Interface mit genau einer Methode ist.', { cur: [aktie, anz] });
+    liste.push(anz); syncListe();
+    const ab = s.neu('Runnable', [['entfernt', s.ref(anz)]], 'Abmelde-Lambda');
+    s.schritt('return () -> beobachter.remove(b);', 'anmelden() gibt gleich ein Runnable zurück, das den Beobachter wieder abmeldet – praktisch, weil man sich das Lambda sonst nirgends gemerkt hätte.', { cur: [ab] });
+    s.raus('Runnable anzeigeAbmelden = aktie.anmelden(e -> System.out.printf(Locale.GERMANY,', `anzeigeAbmelden = → ${ab}.`, { setze: [['anzeigeAbmelden', s.ref(ab)]], cur: [ab], klassen: ['main()'] });
+
+    const st = s.neu('Statistik', [['min', 'Infinity'], ['max', '-Infinity'], ['meldungen', '0']], 'statistik');
+    s.var('statistik', s.ref(st));
+    s.schritt('Statistik statistik = new Statistik();', 'Der zweite Beobachter ist eine Klasse mit eigenem Zustand: Minimum, Maximum, Anzahl der Meldungen.', { cur: [st] });
+    liste.push(st); syncListe();
+    s.schritt('aktie.anmelden(statistik);', 'Angemeldet. (Das zurückgegebene Abmelde-Runnable wird hier nicht gebraucht.)', { cur: [aktie, st] });
+    const al = s.neu('Alarm', [['schwelleProzent', '5.0']], 'Alarm 5 %');
+    liste.push(al); syncListe();
+    s.schritt('aktie.anmelden(new Alarm(5.0));', 'Der dritte Beobachter ist ein record: Er meldet sich nur bei Sprüngen ab 5 Prozent.', { cur: [aktie, al] });
+
+    // ein Beobachter reagiert
+    function melde(id, e, ausfuehrlich) {
+      const p = (e.neu - e.alt) / e.alt * 100;
+      if (id === anz) {
+        s.aus(`  Anzeige: ACME ${de(e.alt, 2)} -> ${de(e.neu, 2)}`);
+        s.ruf(`${ANZ}.kursGeaendert(e)`, [['e', s.ref(e.id)]], '"  Anzeige: %s %.2f -> %.2f%n"', ausfuehrlich ? 'Die Anzeige bekommt das Ereignis und gibt alten und neuen Kurs aus – das Push-Modell: Alles Nötige steckt im Ereignis.' : 'Anzeige.', { cur: [anz, e.id], klassen: ['Aktie'] });
+      } else if (id === st) {
+        stat.min = Math.min(stat.min, e.neu); stat.max = Math.max(stat.max, e.neu); stat.meldungen++;
+        s.feld(st, 'min', javaD(stat.min)); s.feld(st, 'max', javaD(stat.max)); s.feld(st, 'meldungen', String(stat.meldungen));
+        s.ruf('Statistik.kursGeaendert(KursAenderung e)', [['this', s.ref(st)], ['e', s.ref(e.id)]], 'min = Math.min(min, e.neu());', ausfuehrlich ? `Die Statistik aktualisiert still ihren Zustand: Min ${zahl(stat.min)}, Max ${zahl(stat.max)}, ${stat.meldungen} Meldung.` : `Statistik: Min ${zahl(stat.min)}, Max ${zahl(stat.max)}, ${stat.meldungen} Meldungen.`, { cur: [st, e.id], klassen: ['Aktie'] });
+      } else {
+        s.ruf('Alarm.kursGeaendert(KursAenderung e)', [['this', s.ref(al)], ['e', s.ref(e.id)]], 'if (Math.abs(e.prozent()) >= schwelleProzent) {', `Alarm prüft: ${p >= 0 ? '+' : ''}${de(p, 2)} % – ${Math.abs(p) >= 5 ? 'mindestens 5, also Alarm.' : 'unter 5, kein Alarm.'}`, { cur: [al, e.id], klassen: ['Aktie'] });
+        if (Math.abs(p) >= 5) {
+          s.aus(`    ALARM: ACME bewegt sich um ${p >= 0 ? '+' : ''}${de(p, 1)} %`);
+          s.schritt('System.out.printf(Locale.GERMANY, "    ALARM:', `%+.1f schreibt das Vorzeichen immer mit: ${p >= 0 ? '+' : ''}${de(p, 1)} %.`, { cur: [al], klassen: ['Aktie'] });
+        }
+      }
+      s.raus('beobachter.forEach(b -> b.kursGeaendert(ereignis));', 'Zurück in setKurs() – der nächste Beobachter.', { cur: [aktie] });
+    }
+
+    // setKurs(neu)
+    let erstes = true;
+    function setKurs(neu, zeileMain) {
+      if (neu === kurs) {
+        s.ruf('Aktie.setKurs(double neu)', [['this', s.ref(aktie)], ['neu', zahl(neu)]], 'if (neu == kurs) return;', `${zahl(neu)} ist derselbe Kurs wie vorher – keine Änderung, also keine Meldung an die Beobachter.`, { cur: [aktie] });
+        s.raus(zeileMain, 'Zurück in main.', MAIN);
+        return;
+      }
+      const e = { alt: kurs, neu };
+      e.id = s.neu('KursAenderung', [['symbol', '"ACME"'], ['alt', zahl(kurs)], ['neu', zahl(neu)]]);
+      if (erstes) {
+        s.ruf('Aktie.setKurs(double neu)', [['this', s.ref(aktie)], ['neu', zahl(neu)]], 'if (neu == kurs) return;', `setKurs(${zahl(neu)}): Der Kurs ändert sich wirklich.`, { cur: [aktie] });
+        s.var('ereignis', s.ref(e.id));
+        s.schritt('var ereignis = new KursAenderung(symbol, kurs, neu);', `${e.id} hält fest, was passiert ist: alter und neuer Kurs.`, { cur: [e.id] });
+        kurs = neu; s.feld(aktie, 'kurs', zahl(kurs));
+        s.schritt('kurs = neu;', 'Erst jetzt wird der Kurs gesetzt …', { cur: [aktie] });
+        s.schritt('beobachter.forEach(b -> b.kursGeaendert(ereignis));', `… und dann jeder Beobachter der Reihe nach benachrichtigt: ${liste.join(', ')}. Die Aktie weiß nicht, was die Beobachter damit tun.`, { cur: [aktie, ...liste] });
+      } else {
+        kurs = neu; s.feld(aktie, 'kurs', zahl(kurs));
+        s.ruf('Aktie.setKurs(double neu)', [['this', s.ref(aktie), ], ['neu', zahl(neu)]], 'beobachter.forEach(b -> b.kursGeaendert(ereignis));', `setKurs(${zahl(neu)}): ${e.id} entsteht, der Kurs wird gesetzt, und ${liste.length} Beobachter werden benachrichtigt.`, { cur: [aktie, e.id] });
+        s.var('ereignis', s.ref(e.id));
+      }
+      liste.slice().forEach(id => melde(id, e, erstes));
+      erstes = false;
+      s.weg(e.id);
+      s.raus(zeileMain, `Alle benachrichtigt. ${e.id} wird nicht mehr gebraucht.`, MAIN);
+    }
+
+    [101.5, 99.8, 106.2, 106.2, 98.4].forEach((k, i) => {
+      s.var('kurs', zahl(k));
+      s.schritt('for (double kurs : new double[]', i === 0 ? 'Fünf neue Kurse nacheinander.' : `Nächster Kurs: ${zahl(k)}.`, MAIN);
+      setKurs(k, 'aktie.setKurs(kurs);');
+    });
+    s.var('kurs', '–');
+
+    s.aus('\nAnzeige wird abgemeldet.');
+    s.schritt('Anzeige wird abgemeldet.");', 'Die Anzeige soll keine Meldungen mehr bekommen. (kurs galt nur in der Schleife.)', MAIN);
+    s.ruf('Abmelde-Lambda.run()', [['this', s.ref(ab)]], 'return () -> beobachter.remove(b);', `anzeigeAbmelden.run() führt beobachter.remove(b) aus – das Lambda hat sich b von der Anmeldung gemerkt.`, { cur: [ab, aktie] });
+    liste.splice(liste.indexOf(anz), 1); syncListe();
+    s.raus('anzeigeAbmelden.run();', `${anz} steht nicht mehr in der Liste. Die Aktie hat nichts davon „gemerkt“ – sie benachrichtigt einfach, wer drin steht.`, { cur: [aktie], klassen: ['main()'] });
+    setKurs(97.0, 'aktie.setKurs(97.00);');
+    setKurs(91.0, 'aktie.setKurs(91.00);');
+
+    s.aus(`\nStatistik: ${stat.meldungen} Meldungen, Min ${de(stat.min, 2)}, Max ${de(stat.max, 2)}`);
+    s.schritt('Statistik: " + statistik);', `Die Statistik hat ${stat.meldungen} Meldungen gezählt – auch die beiden nach dem Abmelden der Anzeige. Der doppelte Kurs 106,20 kam nie an.`, { cur: [st], klassen: ['main()'] });
+
+    s.weg(aktie, anz, ab, st, al);
+    s.raus(['Statistik: " + statistik);', 1], 'main ist zu Ende. Drei sehr verschiedene Beobachter – und die Aktie kennt von allen nur die Methode kursGeaendert().');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Subject', 'Observer', 'ConcreteObserver'],
+    diagramm: {
+      breite: 170, abstandX: 40, abstandY: 50,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1, y: 0 },
+        { name: 'Aktie', art: 'final class', rolle: 'Subject', x: 0, y: 1 },
+        { name: 'KursBeobachter', art: 'functional interface', rolle: 'Observer', x: 2, y: 1 },
+        { name: 'KursAenderung', art: 'record', rolle: 'Ereignis', x: 0, y: 2 },
+        { name: ANZ, art: 'Lambda', rolle: 'ConcreteObserver', x: 1, y: 2 },
+        { name: 'Statistik', art: 'final class', rolle: 'ConcreteObserver', x: 2, y: 2 },
+        { name: 'Alarm', art: 'record', rolle: 'ConcreteObserver', x: 3, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Aktie', art: 'nutzt', text: 'setKurs()' },
+        { von: 'Aktie', zu: 'KursBeobachter', art: 'nutzt', text: 'beobachter' },
+        { von: 'Aktie', zu: 'KursAenderung', art: 'erzeugt', text: 'new' },
+        { von: ANZ, zu: 'KursBeobachter', art: 'impl' }, { von: 'Statistik', zu: 'KursBeobachter', art: 'impl' }, { von: 'Alarm', zu: 'KursBeobachter', art: 'impl' }
+      ]
+    },
+    szenarien: [
+      { name: 'java Observer.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>

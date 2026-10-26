@@ -156,6 +156,7 @@ gruppe = "verhalten"
 schluessel = "memento"
 name = "Memento"
 text = "Zustand externalisieren und wiederherstellen, ohne Kapselung zu brechen"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Im Speicher sieht man die Spielfigur und jeden Spielstand als eigenes Objekt. Ein Stand behält seine Kopie des Inventars, auch wenn die Figur später Neues findet. Die Speicherverwaltung legt die Stände nur ab und gibt sie zurück, hineinschauen kann sie nicht. Beim Laden zerlegt erst die Spielfigur den Stand mit einem Record Pattern und übernimmt die Werte."
 
 [[muster]]
 nummer = 19
@@ -163,6 +164,7 @@ gruppe = "verhalten"
 schluessel = "observer"
 name = "Observer"
 text = "Abhängige werden bei Zustandsänderung automatisch benachrichtigt"
+sogehts = "Der Ablauf oben spielt main() aus dem Quellcode Schritt für Schritt nach. Drei Beobachter melden sich bei der Aktie an: ein Lambda, eine Klasse und ein record. Bei jeder Kursänderung entsteht ein Ereignis-Objekt, und die Aktie ruft der Reihe nach jeden Beobachter auf, ohne zu wissen, was er damit tut. Der doppelte Kurs 106,20 löst keine Meldung aus. Nach dem Abmelden der Anzeige bekommen nur noch Statistik und Alarm die Meldungen."
 
 [[muster]]
 nummer = 20

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Memento – Ablauf</title>
+<!-- Ablauf-Visualisierung zu Memento (GoF-Verhaltensmuster) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     Der Java-Code ist der der Instanz „26.10.2026 - 13:39 - GoF-Designmuster in Java“ (memento-code.js, vom Einlese-Skript).
+     Hier steht nur, was beim Ausführen von main() passiert – nachgespielt Schritt für Schritt. -->
+<link rel="stylesheet" href="../sortieren/rahmen.css?v=3">
+<link rel="stylesheet" href="rahmen.css?v=4">
+</head>
+<body>
+<script src="memento-code.js?v=1"></script>
+<script src="rahmen.js?v=4"></script>
+<script>
+(function () {
+  const str = t => `"${t}"`;
+  const MAIN = { klassen: ['main()'] };
+
+  function lauf(s) {
+    const F = { leben: 100, level: 1, ort: 'Dorf', inventar: ['Holzschwert'] };   // Zustand der Spielfigur
+    const liste = a => `[${a.join(', ')}]`;
+    const zeig = z => `Level ${z.level}, ${String(z.leben).padStart(3)} Leben, ${z.ort.padEnd(13)} ${liste(z.inventar)}`;
+    const ST = {};                                       // Stand-id → Kopie des Zustands
+    const slots = {}, checkpoints = [];
+
+    s.ruf('main(String[] args)', [['args', '[]']], 'public static void main(String[] args) {', 'Start: eine Spielfigur, eine Speicherverwaltung und Spielstände dazwischen.', MAIN);
+    const held = s.neu('Spielfigur', [['leben', '100'], ['level', '1'], ['ort', '"Dorf"'], ['inventar', liste(F.inventar)]], 'held');
+    s.var('held', s.ref(held));
+    s.schritt('Spielfigur held = new Spielfigur();', `Die Spielfigur ist der Originator: Sie besitzt ihren Zustand – Leben, Level, Ort, Inventar.`, { cur: [held] });
+    const sp = s.neu('Speicherverwaltung', [['slots', '{}'], ['checkpoints', '[]']], 'speicher');
+    s.var('speicher', s.ref(sp));
+    s.schritt('Speicherverwaltung speicher = new Speicherverwaltung();', 'Die Speicherverwaltung ist der Caretaker: Sie verwahrt Spielstände, ohne hineinzuschauen.', { cur: [sp] });
+    const sync = () => { s.feld(held, 'leben', String(F.leben)); s.feld(held, 'level', String(F.level)); s.feld(held, 'ort', str(F.ort)); s.feld(held, 'inventar', liste(F.inventar)); };
+    const syncSp = () => { s.feld(sp, 'slots', `{${Object.entries(slots).map(([k, v]) => `${k}=→ ${v}`).join(', ')}}`); s.feld(sp, 'checkpoints', `[${checkpoints.map(c => '→ ' + c).join(', ')}]`); };
+
+    s.aus('Start:            ' + zeig(F));
+    s.schritt('System.out.println("Start:', 'Der Anfangszustand.', { cur: [held], klassen: ['main()'] });
+
+    // speichern(): ein Memento entsteht
+    function speichern(ausfuehrlich, zeileMain) {
+      const kopie = { ...F, inventar: F.inventar.slice() };
+      const id = s.neu('Stand', [['leben', String(kopie.leben)], ['level', String(kopie.level)], ['ort', str(kopie.ort)], ['inventar', liste(kopie.inventar) + ' (Kopie)']]);
+      ST[id] = kopie;
+      if (ausfuehrlich) {
+        s.ruf('Spielfigur.speichern()', [['this', s.ref(held)]], 'return new Stand(leben, level, ort, inventar);', 'speichern(): Die Spielfigur packt ihren Zustand in einen Stand – einen privaten record, den nur sie kennt.', { cur: [held] });
+        s.schritt('inventar = List.copyOf(inventar);', `Im kompakten Konstruktor macht List.copyOf eine eigene, unveränderliche Kopie des Inventars. Ändert sich das Inventar der Figur später, bleibt ${id} davon unberührt.`, { cur: [id] });
+        s.raus(zeileMain, `Zurück kommt ${id} – nach außen nur vom Typ Spielstand, einem leeren Interface. Wer ihn hält, sieht keine Felder.`, { cur: [id], klassen: ['main()', 'Spielstand'] });
+      } else {
+        s.schritt(zeileMain, `held.speichern() wie oben: ${id} mit einer Kopie des aktuellen Zustands (Level ${kopie.level}, ${kopie.ort}, ${liste(kopie.inventar)}).`, { cur: [held, id] });
+      }
+      return id;
+    }
+
+    const st1 = speichern(true, 'speicher.sichere("Slot 1", held.speichern());');
+    s.ruf('Speicherverwaltung.sichere(String slot, Spielstand s)', [['this', s.ref(sp)], ['slot', '"Slot 1"'], ['s', s.ref(st1)]], 'void sichere(String slot', `sichere(): Der Caretaker legt ${st1} unter „Slot 1“ ab. Mehr kann er damit nicht tun.`, { cur: [sp, st1] });
+    slots['Slot 1'] = st1; syncSp();
+    s.raus('speicher.sichere("Slot 1", held.speichern());', 'Slot 1 ist belegt.', { cur: [sp] });
+
+    // Aktionen
+    const aktion = (zeile, f, msg) => { f(); sync(); s.schritt(zeile, msg, { cur: [held], klassen: ['main()'] }); };
+    aktion('held.reise("Wald");', () => { F.ort = 'Wald'; }, 'reise("Wald"): ort = "Wald".');
+    aktion('held.finde("Heiltrank");', () => { F.inventar.push('Heiltrank'); }, 'finde("Heiltrank"): Das Inventar wächst.');
+    aktion('held.steigeAuf();', () => { F.level++; F.leben = 100; }, 'steigeAuf(): Level 2, Leben wieder 100.');
+
+    const st2 = speichern(false, 'speicher.checkpoint(held.speichern());');
+    checkpoints.unshift(st2); syncSp();
+    s.schritt('void checkpoint(Spielfigur.Spielstand s) { checkpoints.push(s); }', `checkpoint(): ${st2} kommt oben auf den Stapel der Checkpoints.`, { cur: [sp, st2] });
+    s.aus('Checkpoint Wald:  ' + zeig(F));
+    s.schritt('System.out.println("Checkpoint Wald:', 'Der Stand im Wald.', { cur: [held], klassen: ['main()'] });
+
+    aktion('held.reise("Drachenhöhle");', () => { F.ort = 'Drachenhöhle'; }, 'Weiter in die Drachenhöhle.');
+    aktion('held.finde("Goldschlüssel");', () => { F.inventar.push('Goldschlüssel'); }, `finde("Goldschlüssel"): Das Inventar der Figur hat jetzt drei Teile – ${st2} hat weiter nur ${liste(ST[st2].inventar)}. Das ist die Kopie aus dem Konstruktor.`);
+    aktion('held.kaempfe(85);', () => { F.leben -= 85; }, 'kaempfe(85): Leben 100 − 85 = 15. Höchste Zeit für den Checkpoint.');
+    s.aus('Nach dem Kampf:   ' + zeig(F));
+    s.schritt('System.out.println("Nach dem Kampf:', 'Fast tot.', { cur: [held], klassen: ['main()'] });
+
+    // laden
+    function laden(id, zeileMain, ausfuehrlich) {
+      const z = ST[id];
+      if (ausfuehrlich) {
+        s.ruf('Spielfigur.laden(Spielstand s)', [['this', s.ref(held)], ['s', s.ref(id)]], 'if (!(s instanceof Stand(', `laden(): Nur die Spielfigur darf in den Spielstand hineinschauen. Das Record Pattern prüft, ob es wirklich ein Stand ist, und zerlegt ihn in einem Schritt in l, lv, o und inv.`, { cur: [held, id], klassen: ['Stand'] });
+        s.var('l', String(z.leben)); s.var('lv', String(z.level)); s.var('o', str(z.ort)); s.var('inv', liste(z.inventar));
+        F.leben = z.leben; F.level = z.level; F.ort = z.ort; sync();
+        s.schritt('leben = l;', `Leben ${z.leben}, Level ${z.level}, Ort ${z.ort} – zurückgesetzt.`, { cur: [held] });
+        F.inventar = z.inventar.slice(); sync();
+        s.schritt('inventar.addAll(inv);', `Das Inventar wird geleert und aus der Kopie neu gefüllt: ${liste(F.inventar)}. Der Goldschlüssel ist weg.`, { cur: [held] });
+      } else {
+        F.leben = z.leben; F.level = z.level; F.ort = z.ort; F.inventar = z.inventar.slice(); sync();
+        s.ruf('Spielfigur.laden(Spielstand s)', [['this', s.ref(held)], ['s', s.ref(id)]], 'inventar.addAll(inv);', `laden() wie eben (in einem Schritt): Der Zustand aus ${id} ersetzt den aktuellen – Level ${z.level}, ${z.leben} Leben, ${z.ort}, ${liste(z.inventar)}.`, { cur: [held, id], klassen: ['Stand'] });
+      }
+      s.raus(zeileMain, 'Geladen.', { cur: [held], klassen: ['main()'] });
+    }
+
+    s.ruf('Speicherverwaltung.letzterCheckpoint()', [['this', s.ref(sp)]], 'Spielfigur.Spielstand letzterCheckpoint() { return checkpoints.pop(); }', `letzterCheckpoint(): pop() holt ${st2} vom Stapel.`, { cur: [sp, st2] });
+    checkpoints.shift(); syncSp();
+    s.raus('held.laden(speicher.letzterCheckpoint());', `${st2} geht an held.laden(...).`, { cur: [st2], klassen: ['main()'] });
+    laden(st2, 'held.laden(speicher.letzterCheckpoint());', true);
+    s.weg(st2);
+    s.aus('Checkpoint laden: ' + zeig(F));
+    s.schritt('System.out.println("Checkpoint laden:', `Zurück im Wald, wieder 100 Leben. ${st2} ist jetzt nicht mehr erreichbar – er war nur noch auf dem Stapel, und der ist leer.`, { cur: [held], klassen: ['main()'] });
+
+    s.ruf('Speicherverwaltung.hole(String slot)', [['this', s.ref(sp)], ['slot', '"Slot 1"']], 'Spielfigur.Spielstand hole(String slot)', `hole("Slot 1"): ${st1} – er bleibt im Slot, man kann ihn beliebig oft laden.`, { cur: [sp, st1] });
+    s.raus('held.laden(speicher.hole("Slot 1"));', `${st1} geht an held.laden(...).`, { cur: [st1], klassen: ['main()'] });
+    laden(st1, 'held.laden(speicher.hole("Slot 1"));', false);
+    s.aus('Slot 1 laden:     ' + zeig(F));
+    s.schritt('System.out.println("Slot 1 laden:', 'Ganz von vorn: Level 1 im Dorf.', { cur: [held], klassen: ['main()'] });
+
+    s.var('s', s.ref(st1));
+    s.schritt('Spielfigur.Spielstand s = speicher.hole("Slot 1");', `s = → ${st1}. main hält jetzt selbst einen Spielstand in der Hand – aber nur als Spielstand.`, { cur: [st1], klassen: ['main()', 'Spielstand'] });
+    s.aus('\nCaretaker sieht nur: Stand (Felder von außerhalb nicht zugreifbar)');
+    s.schritt('Caretaker sieht nur: "', 'getClass().getSimpleName() verrät den Klassennamen „Stand“. An die Felder kommt man von außen nicht: Stand ist ein privater record der Spielfigur. Das ist die Kapselung, die das Muster schützt.', { cur: [st1], klassen: ['main()'] });
+
+    s.weg(held, sp, st1);
+    s.raus(['+ " (Felder von außerhalb nicht zugreifbar)");', 1], 'main ist zu Ende. Gespeichert, gekämpft, zweimal zurückgesetzt – und niemand außer der Spielfigur hat je in einen Spielstand geschaut.');
+  }
+
+  MusterRahmen.starte({
+    rollen: ['Client', 'Originator', 'Memento', 'Caretaker'],
+    diagramm: {
+      breite: 180, abstandX: 50, abstandY: 50,
+      klassen: [
+        { name: 'main()', art: 'Methode', rolle: 'Client', x: 1, y: 0 },
+        { name: 'Spielfigur', art: 'final class', rolle: 'Originator', x: 0, y: 1 },
+        { name: 'Speicherverwaltung', art: 'final class', rolle: 'Caretaker', x: 2, y: 1 },
+        { name: 'Stand', art: 'private record', rolle: 'Memento', x: 0, y: 2 },
+        { name: 'Spielstand', art: 'interface (leer)', rolle: 'Memento', x: 2, y: 2 }
+      ],
+      kanten: [
+        { von: 'main()', zu: 'Spielfigur', art: 'nutzt', text: 'held' },
+        { von: 'main()', zu: 'Speicherverwaltung', art: 'nutzt', text: 'speicher' },
+        { von: 'Spielfigur', zu: 'Stand', art: 'erzeugt', text: 'speichern / laden' },
+        { von: 'Stand', zu: 'Spielstand', art: 'impl' },
+        { von: 'Speicherverwaltung', zu: 'Spielstand', art: 'nutzt', text: 'verwahrt' }
+      ]
+    },
+    szenarien: [
+      { name: 'java Memento.java', titel: 'main() wie auf der Seite', laufe: lauf }
+    ]
+  });
+})();
+</script>
+</body>
+</html>
