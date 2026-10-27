@@ -554,6 +554,18 @@ text = "Was wäre die wichtigste Frage, die sich die Menschheit bislang noch gar
   [[frage.antwort]]
   pfad = "/fragen/wichtigste-frage-gpt-6"
 
+[[frage]]
+gruppe = "menschheit"
+text = "Ist der Charakter eines Menschen wirklich seine eigene Leistung? Oder ist er überwiegend das Ergebnis von Genen, Erziehung und Umständen? Kann man jemanden für Eigenschaften bewundern, die er sich nicht ausgesucht hat?"
+  [[frage.antwort]]
+  pfad = "/fragen/charakter-verdienst-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum möchten Menschen einzigartig sein und haben gleichzeitig solche Angst davor, anders zu sein? Ist Individualität überhaupt möglich, ohne sich ständig mit anderen zu vergleichen?"
+  [[frage.antwort]]
+  pfad = "/fragen/einzigartigkeit-gpt-6"
+
 
 # ---------- Sven: Svens eigene Fragen ----------
 
@@ -580,3 +592,5 @@ gruppe = "sven"
 text = "Was macht ein Java-Entwickler, über 50, im Zeitalter der KI, der in den nächsten Jahren kaum noch selbst Code schreiben wird?"
   [[frage.antwort]]
   pfad = "/fragen/java-entwickler-ki-claude"
+  [[frage.antwort]]
+  pfad = "/fragen/java-entwickler-ki-gpt-6"
