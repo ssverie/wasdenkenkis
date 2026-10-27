@@ -600,6 +600,12 @@ text = "Warum verlieren Menschen häufig das Interesse an etwas, sobald sie es b
   [[frage.antwort]]
   pfad = "/fragen/sehnsucht-erfuellung-gpt-6"
 
+[[frage]]
+gruppe = "menschheit"
+text = "Können zwei Menschen einander vollkommen verstehen? Oder benötigt selbst die engste Beziehung einen Bereich, der dem anderen verborgen bleibt? Könnte völlige Transparenz die Liebe sogar zerstören?"
+  [[frage.antwort]]
+  pfad = "/fragen/grenzen-der-naehe-gpt-6"
+
 
 # ---------- Sven: Svens eigene Fragen ----------
 

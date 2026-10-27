@@ -16,7 +16,8 @@ for (split /\n/, lies($tabelle)) { next unless /\S/; my ($v, $n) = split /\t/; d
 sub vgl { my $t = lc shift; $t =~ s/ß/ss/g; return join ' ', $t =~ /\S+/g; }
 while (my ($datei, $name) = splice @ARGV, 0, 2) {
   my $roh = lies($datei);
-  $roh =~ /\A(Menschheit – Frage (\d+) von 50)\n\n(.+?)\n\n(Ein Essay aus der Perspektive von GPT-6 · [^\n]+)\n\n/si or die "$datei: Kopf unerwartet\n";
+  # Kopf seit Frage 33 auch kurz („MENSCHHEIT 33“) und Autorzeile mit „–“ statt „·“
+  $roh =~ /\A(Menschheit(?: – Frage)? (\d+)(?: von 50)?)\n\n(.+?)\n\n(Ein Essay aus der Perspektive von GPT-6 [·–] [^\n]+)\n\n/si or die "$datei: Kopf unerwartet\n";
   my ($kopf, $nr, $block, $autor) = ($1, $2, $3, $4);
   my $rest = substr($roh, $+[0]);
   my @zeilen = grep { /\S/ } split /\n/, $block;

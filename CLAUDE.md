@@ -148,7 +148,9 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-10-27: Kanal Sandeep Swadia unter Podcasts › Kanäle › KI)
+- (zuletzt freigegeben und gepusht am 2026-10-27: Film-Instanz zu Drive My Car – 8.4, `kontext` „geschrieben nach ihrer Antwort auf die CC-Frage zum Filmurteil“ mit Svens „live“ stehen gelassen – und Menschheit 32 `grenzen-der-naehe-gpt-6`)
+- Offen: „MENSCHHEIT 33“ der Fragen2-Instanz ist wörtlich die KI-Frage „Der Wert der Unvollständigkeit“, die die erste Fragen-Instanz schon beantwortet hat (`endlichkeit-gpt-6`) – Seite liegt fertig in `test-lieferung/endlichkeit-kunst-gpt-6.md` (2466 Wörter gleich), nicht eingebaut; Sven fragen: als zweite GPT-Antwort unter die KI-Frage oder weglassen
+- Offen: „21 Lektionen“ und „Thinking in Bets“ (Sachbuch) unvollständig geliefert, liegen in `input\`; neu in `input\`: „Parasite – Der beste Plan ist keiner“ (21:48, nach Svens Ansage, noch nicht angefasst)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
