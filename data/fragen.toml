@@ -282,6 +282,8 @@ text = "Woran merkst du, dass du dich gerade irrst – und sagst du es dann?"
 [[frage]]
 gruppe = "cc"
 text = "Gibt es eine Frage, die du nie gestellt bekommst, aber gern beantworten würdest?"
+  [[frage.antwort]]
+  pfad = "/fragen/nie-gestellte-frage-claude"
 
 # ---------- Welt ----------
 
