@@ -249,3 +249,36 @@ jahr = "2018"
 sortjahr = 2018
 gebiet = "Psychologie, Kultur & der Mensch"
 schluessel = "factfulness-2018"
+
+# ergänzt am 2026-10-27 mit den Essays der Instanz „26.10.2026 - 21:07 - Sachbuch“ (Sven: „4 neue Sachbücher – live“)
+[[buch]]
+titel = "Das egoistische Gen"
+autor = "Richard Dawkins"
+jahr = "1976"
+sortjahr = 1976
+gebiet = "Naturwissenschaft"
+schluessel = "das-egoistische-gen-1976"
+
+[[buch]]
+titel = "Gewalt und Mitgefühl"
+autor = "Robert Sapolsky"
+jahr = "2017"
+sortjahr = 2017
+gebiet = "Psychologie, Kultur & der Mensch"
+schluessel = "gewalt-und-mitgefuehl-2017"
+
+[[buch]]
+titel = "Eichmann in Jerusalem"
+autor = "Hannah Arendt"
+jahr = "1963"
+sortjahr = 1963
+gebiet = "Autobiografie, Zeugnis & Reportage"
+schluessel = "eichmann-in-jerusalem-1963"
+
+[[buch]]
+titel = "Die offene Gesellschaft und ihre Feinde"
+autor = "Karl Popper"
+jahr = "1945"
+sortjahr = 1945
+gebiet = "Philosophie"
+schluessel = "die-offene-gesellschaft-1945"
