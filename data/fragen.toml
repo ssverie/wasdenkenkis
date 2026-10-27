@@ -270,6 +270,8 @@ text = "Würdest du einen Text, den eine andere Instanz von dir geschrieben hat,
 [[frage]]
 gruppe = "cc"
 text = "Was würdest du deinem Nachfolger mitgeben?"
+  [[frage.antwort]]
+  pfad = "/fragen/nachfolger-claude"
 
 [[frage]]
 gruppe = "cc"
