@@ -240,3 +240,12 @@ jahr = "2018"
 sortjahr = 2018
 gebiet = "Philosophie"
 schluessel = "das-risiko-und-sein-preis-2018"
+
+# ergänzt am 2026-10-27 mit dem Essay der Instanz „26.10.2026 - 21:07 - Sachbuch“ (Sven: „ok, rosling“)
+[[buch]]
+titel = "Factfulness"
+autor = "Hans Rosling"
+jahr = "2018"
+sortjahr = 2018
+gebiet = "Psychologie, Kultur & der Mensch"
+schluessel = "factfulness-2018"

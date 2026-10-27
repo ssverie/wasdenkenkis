@@ -11,7 +11,7 @@ use IO::Uncompress::Unzip qw(unzip);
 use Encode qw(decode encode);
 use POSIX qw(strftime);
 use File::Path qw(make_path);
-binmode STDOUT, ':encoding(UTF-8)';
+binmode STDOUT, ':encoding(UTF-8)'; binmode STDERR, ':encoding(UTF-8)';
 
 my ($anfang, $schluessel, $name, $instanz, $kontext) = map { decode('UTF-8', $_) } @ARGV;
 die "Aufruf: perl skripte/buchtext-einlesen.pl \"<Dateianfang>\" <buchschluessel> <seitenname> \"<instanz>\" \"<kontext>\"\n" unless defined $kontext;
@@ -41,6 +41,7 @@ while ($roh =~ m{<w:p\b[^>]*>(.*?)</w:p>}sg) {
 shift @abs for 1 .. 2;
 my $ist = $md;
 $ist =~ s/^<!-- bild: .*? -->$//mg;
+$ist =~ s/(?<!\\)\[((?:\\.|[^\]\\])*)\]\([^)\s]*\)/$1/g;   # Links: nur der sichtbare Text zählt
 $ist =~ s/^(?:\d+\.|-) //mg; $ist =~ s/^#+ //mg; $ist =~ s/^\|[-|]+\|$//mg;
 $ist =~ s/(?<!\\)\|/ /g; $ist =~ s/(?<!\\)\*//g; $ist =~ s/\\(.)/$1/g;
 my ($a, $b) = (woerter(join ' ', @abs), woerter($ist));
