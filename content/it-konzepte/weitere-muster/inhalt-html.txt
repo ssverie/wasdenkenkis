@@ -1,0 +1,77 @@
+<article class="muster-index">
+<p>53 weitere Entwurfs- und Architekturmuster, die nicht im GoF-Buch stehen, aber in der Praxis genauso verbreitet sind: von Dependency Injection über Domain-Driven Design und Nebenläufigkeit bis zu Microservices. Jedes Muster mit Diagramm und Erklärung, die meisten mit einem lauffähigen Beispiel in Java 21 (Spalte „Java“). Die Beispiele lassen sich ohne Build-Tool starten, etwa mit <code>java CircuitBreaker.java</code>.</p>
+<h2><a href="/it-konzepte/weitere-muster/erzeugung/">Erzeugung und Objektverwaltung</a></h2>
+<table>
+<tr><td class="n">1</td><td><a href="/it-konzepte/weitere-muster/erzeugung/#dependency-injection">Dependency Injection</a></td><td>Abhängigkeiten übergeben</td><td class="j">Java</td></tr>
+<tr><td class="n">2</td><td><a href="/it-konzepte/weitere-muster/erzeugung/#service-locator">Service Locator</a></td><td>Dienstverzeichnis</td><td class="j">Java</td></tr>
+<tr><td class="n">3</td><td><a href="/it-konzepte/weitere-muster/erzeugung/#object-pool">Object Pool</a></td><td>Objektpool</td><td class="j">Java</td></tr>
+<tr><td class="n">4</td><td><a href="/it-konzepte/weitere-muster/erzeugung/#lazy-initialization">Lazy Initialization</a></td><td>Verzögerte Erzeugung</td><td class="j">Java</td></tr>
+<tr><td class="n">5</td><td><a href="/it-konzepte/weitere-muster/erzeugung/#multiton">Multiton</a></td><td>Eine Instanz pro Schlüssel</td><td class="j">Java</td></tr>
+<tr><td class="n">6</td><td><a href="/it-konzepte/weitere-muster/erzeugung/#static-factory-method">Static Factory Method</a></td><td>Statische Fabrikmethode</td><td class="j">Java</td></tr>
+</table>
+<h2><a href="/it-konzepte/weitere-muster/struktur-verhalten/">Struktur und Verhalten im Kleinen</a></h2>
+<table>
+<tr><td class="n">7</td><td><a href="/it-konzepte/weitere-muster/struktur-verhalten/#null-object">Null Object</a></td><td>Nullobjekt</td><td class="j">Java</td></tr>
+<tr><td class="n">8</td><td><a href="/it-konzepte/weitere-muster/struktur-verhalten/#value-object">Value Object</a></td><td>Wertobjekt</td><td class="j">Java</td></tr>
+<tr><td class="n">9</td><td><a href="/it-konzepte/weitere-muster/struktur-verhalten/#fluent-interface">Fluent Interface</a></td><td>Flüssige Schnittstelle</td><td class="j">Java</td></tr>
+<tr><td class="n">10</td><td><a href="/it-konzepte/weitere-muster/struktur-verhalten/#specification">Specification</a></td><td>Spezifikation</td><td class="j">Java</td></tr>
+<tr><td class="n">11</td><td><a href="/it-konzepte/weitere-muster/struktur-verhalten/#type-object">Type Object</a></td><td>Typobjekt</td><td class="j">Java</td></tr>
+<tr><td class="n">12</td><td><a href="/it-konzepte/weitere-muster/struktur-verhalten/#extension-object">Extension Object</a></td><td>Erweiterungsobjekt</td><td class="j">Java</td></tr>
+<tr><td class="n">13</td><td><a href="/it-konzepte/weitere-muster/struktur-verhalten/#mixin">Mixin / Trait</a></td><td>Beimischung</td><td class="j">Java</td></tr>
+</table>
+<h2><a href="/it-konzepte/weitere-muster/datenzugriff/">Datenzugriff</a></h2>
+<table>
+<tr><td class="n">14</td><td><a href="/it-konzepte/weitere-muster/datenzugriff/#repository">Repository</a></td><td>Ablage</td><td class="j">Java</td></tr>
+<tr><td class="n">15</td><td><a href="/it-konzepte/weitere-muster/datenzugriff/#dao">Data Access Object (DAO)</a></td><td>Datenzugriffsobjekt</td><td class="j">Java</td></tr>
+<tr><td class="n">16</td><td><a href="/it-konzepte/weitere-muster/datenzugriff/#active-record">Active Record</a></td><td>Aktiver Datensatz</td><td class="j">Java</td></tr>
+<tr><td class="n">17</td><td><a href="/it-konzepte/weitere-muster/datenzugriff/#data-mapper">Data Mapper</a></td><td>Datenabbilder</td><td class="j">Java</td></tr>
+<tr><td class="n">18</td><td><a href="/it-konzepte/weitere-muster/datenzugriff/#unit-of-work">Unit of Work</a></td><td>Arbeitseinheit</td><td class="j">Java</td></tr>
+<tr><td class="n">19</td><td><a href="/it-konzepte/weitere-muster/datenzugriff/#identity-map">Identity Map</a></td><td>Identitätstabelle</td><td class="j">Java</td></tr>
+<tr><td class="n">20</td><td><a href="/it-konzepte/weitere-muster/datenzugriff/#lazy-load">Lazy Load</a></td><td>Nachladen bei Bedarf</td><td class="j">Java</td></tr>
+<tr><td class="n">21</td><td><a href="/it-konzepte/weitere-muster/datenzugriff/#dto">Data Transfer Object (DTO)</a></td><td>Transferobjekt</td><td class="j">Java</td></tr>
+</table>
+<h2><a href="/it-konzepte/weitere-muster/domain-driven-design/">Domain-Driven Design</a></h2>
+<table>
+<tr><td class="n">22</td><td><a href="/it-konzepte/weitere-muster/domain-driven-design/#entity">Entity</a></td><td>Entität</td><td class="j">Java</td></tr>
+<tr><td class="n">23</td><td><a href="/it-konzepte/weitere-muster/domain-driven-design/#aggregate">Aggregate</a></td><td>Aggregat</td><td class="j">Java</td></tr>
+<tr><td class="n">24</td><td><a href="/it-konzepte/weitere-muster/domain-driven-design/#domain-event">Domain Event</a></td><td>Fachereignis</td><td class="j">Java</td></tr>
+<tr><td class="n">25</td><td><a href="/it-konzepte/weitere-muster/domain-driven-design/#domain-service">Domain Service</a></td><td>Fachdienst</td><td class="j">Java</td></tr>
+<tr><td class="n">26</td><td><a href="/it-konzepte/weitere-muster/domain-driven-design/#anti-corruption-layer">Anti-Corruption Layer</a></td><td>Schutzschicht</td><td class="j">Java</td></tr>
+</table>
+<h2><a href="/it-konzepte/weitere-muster/architektur/">Architektur</a></h2>
+<table>
+<tr><td class="n">27</td><td><a href="/it-konzepte/weitere-muster/architektur/#layers">Layers</a></td><td>Schichtenarchitektur</td><td class="j"></td></tr>
+<tr><td class="n">28</td><td><a href="/it-konzepte/weitere-muster/architektur/#mvc">Model-View-Controller</a></td><td>MVC, MVP und MVVM</td><td class="j">Java</td></tr>
+<tr><td class="n">29</td><td><a href="/it-konzepte/weitere-muster/architektur/#hexagonal-architecture">Hexagonal Architecture</a></td><td>Ports und Adapter</td><td class="j">Java</td></tr>
+<tr><td class="n">30</td><td><a href="/it-konzepte/weitere-muster/architektur/#pipes-and-filters">Pipes and Filters</a></td><td>Röhren und Filter</td><td class="j"></td></tr>
+<tr><td class="n">31</td><td><a href="/it-konzepte/weitere-muster/architektur/#broker">Broker</a></td><td>Vermittler</td><td class="j"></td></tr>
+<tr><td class="n">32</td><td><a href="/it-konzepte/weitere-muster/architektur/#microkernel">Microkernel / Plugin</a></td><td>Mikrokern</td><td class="j">Java</td></tr>
+<tr><td class="n">33</td><td><a href="/it-konzepte/weitere-muster/architektur/#blackboard">Blackboard</a></td><td>Wandtafel</td><td class="j">Java</td></tr>
+<tr><td class="n">34</td><td><a href="/it-konzepte/weitere-muster/architektur/#event-sourcing">Event Sourcing</a></td><td>Ereignisspeicherung</td><td class="j">Java</td></tr>
+<tr><td class="n">35</td><td><a href="/it-konzepte/weitere-muster/architektur/#cqrs">CQRS</a></td><td>Trennung von Befehl und Abfrage</td><td class="j">Java</td></tr>
+</table>
+<h2><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/">Nebenläufigkeit</a></h2>
+<table>
+<tr><td class="n">36</td><td><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/#producer-consumer">Producer-Consumer</a></td><td>Erzeuger und Verbraucher</td><td class="j">Java</td></tr>
+<tr><td class="n">37</td><td><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/#thread-pool">Thread Pool</a></td><td>Thread-Pool</td><td class="j">Java</td></tr>
+<tr><td class="n">38</td><td><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/#future-promise">Future / Promise</a></td><td>Zukünftiges Ergebnis</td><td class="j">Java</td></tr>
+<tr><td class="n">39</td><td><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/#active-object">Active Object</a></td><td>Aktives Objekt</td><td class="j">Java</td></tr>
+<tr><td class="n">40</td><td><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/#monitor-object">Monitor Object</a></td><td>Monitorobjekt</td><td class="j">Java</td></tr>
+<tr><td class="n">41</td><td><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/#read-write-lock">Read-Write Lock</a></td><td>Lese-Schreib-Sperre</td><td class="j">Java</td></tr>
+<tr><td class="n">42</td><td><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/#reactor">Reactor</a></td><td>Ereignisverteiler</td><td class="j">Java</td></tr>
+<tr><td class="n">43</td><td><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/#balking-guarded-suspension">Balking / Guarded Suspension</a></td><td>Abbrechen oder Warten</td><td class="j">Java</td></tr>
+<tr><td class="n">44</td><td><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/#immutable-object">Immutable Object</a></td><td>Unveränderliches Objekt</td><td class="j">Java</td></tr>
+</table>
+<h2><a href="/it-konzepte/weitere-muster/verteilte-systeme/">Verteilte Systeme</a></h2>
+<table>
+<tr><td class="n">45</td><td><a href="/it-konzepte/weitere-muster/verteilte-systeme/#circuit-breaker">Circuit Breaker</a></td><td>Sicherung</td><td class="j">Java</td></tr>
+<tr><td class="n">46</td><td><a href="/it-konzepte/weitere-muster/verteilte-systeme/#retry-backoff">Retry mit Backoff</a></td><td>Wiederholung mit Wartezeit</td><td class="j">Java</td></tr>
+<tr><td class="n">47</td><td><a href="/it-konzepte/weitere-muster/verteilte-systeme/#bulkhead">Bulkhead</a></td><td>Schott</td><td class="j">Java</td></tr>
+<tr><td class="n">48</td><td><a href="/it-konzepte/weitere-muster/verteilte-systeme/#saga">Saga</a></td><td>Folge lokaler Transaktionen</td><td class="j">Java</td></tr>
+<tr><td class="n">49</td><td><a href="/it-konzepte/weitere-muster/verteilte-systeme/#api-gateway">API Gateway</a></td><td>Zugangstor</td><td class="j">Java</td></tr>
+<tr><td class="n">50</td><td><a href="/it-konzepte/weitere-muster/verteilte-systeme/#outbox">Transactional Outbox</a></td><td>Ausgangskorb</td><td class="j">Java</td></tr>
+<tr><td class="n">51</td><td><a href="/it-konzepte/weitere-muster/verteilte-systeme/#strangler-fig">Strangler Fig</a></td><td>Würgefeige</td><td class="j">Java</td></tr>
+<tr><td class="n">52</td><td><a href="/it-konzepte/weitere-muster/verteilte-systeme/#sidecar">Sidecar</a></td><td>Beiwagen</td><td class="j"></td></tr>
+<tr><td class="n">53</td><td><a href="/it-konzepte/weitere-muster/verteilte-systeme/#publish-subscribe">Publish-Subscribe / Message Bus</a></td><td>Veröffentlichen und Abonnieren</td><td class="j"></td></tr>
+</table>
+</article>

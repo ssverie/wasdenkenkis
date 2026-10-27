@@ -5,7 +5,7 @@
   {{- $aktiv := or ($seite.IsMenuCurrent "main" $e) ($seite.HasMenuCurrent "main" $e) }}
   {{- /* Unterbereiche mit eigenem Menüpunkt neben ihrem Elternbereich (IT-Konzepte › Algorithmen und › Design Patterns liegen
          unter /it-konzepte/ = Grundlagen): dort ist nur der eigene Punkt aktiv, nicht die Grundlagen */}}
-  {{- $eigene := dict "/it-konzepte" (slice "/it-konzepte/algorithmen/" "/it-konzepte/design-patterns/" "/it-konzepte/integration-patterns/" "/it-konzepte/uebungen/") }}
+  {{- $eigene := dict "/it-konzepte" (slice "/it-konzepte/algorithmen/" "/it-konzepte/design-patterns/" "/it-konzepte/weitere-muster/" "/it-konzepte/integration-patterns/" "/it-konzepte/uebungen/") }}
   {{- range index $eigene $e.PageRef }}{{ if hasPrefix $seite.RelPermalink . }}{{ $aktiv = false }}{{ end }}{{ end }}
   {{- if and (eq $seite.Kind "term") (eq $e.PageRef (printf "/%s" $seite.Data.Plural)) }}{{ $aktiv = true }}{{ end }}
   {{- /* Menüpunkt zeigt direkt auf diese Seite (z. B. Modelle › GPT = Steckbrief-Seite) */}}

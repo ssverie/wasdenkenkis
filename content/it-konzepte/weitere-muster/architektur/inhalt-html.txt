@@ -1,0 +1,685 @@
+<article class="muster">
+<nav class="nav"><a href="/it-konzepte/weitere-muster/domain-driven-design/">← Domain-Driven Design</a><a href="/it-konzepte/weitere-muster/">Übersicht</a><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/">Nebenläufigkeit →</a></nav>
+<p>Architekturmuster beschreiben die <strong>Grobstruktur</strong> einer ganzen Anwendung: wie sie in Teile gegliedert ist und wie diese Teile zusammenarbeiten. Viele davon stammen aus dem Buch <em>Pattern-Oriented Software Architecture</em> (POSA, 1996), andere sind später entstanden. Sie lassen sich nur eingeschränkt in einer einzelnen Datei zeigen. Wo ein kleines Codebeispiel die Idee trotzdem verständlich macht, ist eines dabei. Bei <em>Layers</em>, <em>Pipes and Filters</em> und <em>Broker</em> sind Diagramm und Text aussagekräftiger.</p>
+<ul class="legende"><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="8" class="app"/><text x="17.0" y="16.0" class="lbl" text-anchor="middle"></text></svg>Anwendung / Objekt</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="6" class="comp"/><text x="17.0" y="16.0" class="lbl-c" text-anchor="middle"></text></svg>Muster-Baustein</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><path d="M6,11 v0 a11.0,10 0 0 0 22,0 v0" class="store"/><ellipse cx="17.0" cy="11" rx="11.0" ry="10" class="store"/><text x="17.0" y="22.0" class="lbl" text-anchor="middle"></text></svg>Speicher / Ressource</li></ul>
+<ul class="inhalt">
+  <li><a href="#layers">27. Layers</a></li>
+  <li><a href="#mvc">28. Model-View-Controller</a></li>
+  <li><a href="#hexagonal-architecture">29. Hexagonal Architecture</a></li>
+  <li><a href="#pipes-and-filters">30. Pipes and Filters</a></li>
+  <li><a href="#broker">31. Broker</a></li>
+  <li><a href="#microkernel">32. Microkernel / Plugin</a></li>
+  <li><a href="#blackboard">33. Blackboard</a></li>
+  <li><a href="#event-sourcing">34. Event Sourcing</a></li>
+  <li><a href="#cqrs">35. CQRS</a></li>
+</ul>
+<h2 id="layers"><span class="nr">27.</span> Layers <span class="de">· Schichtenarchitektur</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 260" role="img" aria-label="Schichtenarchitektur: jede Schicht nutzt nur die darunterliegende" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="120" y="16" width="420" height="46" rx="6" class="comp"/><text x="220" y="44" class="lbl" text-anchor="middle">Präsentation</text><text x="410" y="44" class="tiny" text-anchor="middle">Weboberfläche, REST-Controller</text><line x1="330" y1="62" x2="330" y2="74" class="arr" marker-end="url(#pfeil)"/><rect x="120" y="74" width="420" height="46" rx="6" class="comp"/><text x="220" y="102" class="lbl" text-anchor="middle">Anwendung</text><text x="410" y="102" class="tiny" text-anchor="middle">Anwendungsfälle, Transaktionen</text><line x1="330" y1="120" x2="330" y2="132" class="arr" marker-end="url(#pfeil)"/><rect x="120" y="132" width="420" height="46" rx="6" class="store"/><text x="220" y="160" class="lbl" text-anchor="middle">Domäne</text><text x="410" y="160" class="tiny" text-anchor="middle">Fachlogik, Entities, Regeln</text><line x1="330" y1="178" x2="330" y2="190" class="arr" marker-end="url(#pfeil)"/><rect x="120" y="190" width="420" height="46" rx="6" class="app"/><text x="220" y="218" class="lbl" text-anchor="middle">Infrastruktur</text><text x="410" y="218" class="tiny" text-anchor="middle">Datenbank, Mail, externe Dienste</text><path d="M560,200 C620,180 620,60 560,40" class="arr-leise" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><path d="M607,112 L623,128 M623,112 L607,128" class="cross"/><text x="640" y="124" class="tiny" text-anchor="start">nie nach oben</text><text x="60" y="130" class="note" text-anchor="middle">Abhängigkeit</text><text x="60" y="146" class="note" text-anchor="middle">nur nach unten</text></svg><figcaption>Vier klassische Schichten. Jede darf nur die darunterliegende verwenden, nie eine darüberliegende.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Die Anwendung wird in <strong>übereinanderliegende Schichten</strong> gegliedert, jede mit einer klaren Aufgabe. Eine Schicht darf nur die Dienste der Schicht <strong>unter ihr</strong> nutzen, nie die einer höheren. So bleibt jede Schicht austauschbar und verständlich, ohne dass man das ganze System kennen muss. Das Muster ist eines der ältesten der Softwarearchitektur und steht auch im POSA-Buch.</p>
+<h3>Beispiel</h3>
+<p>Ein Online-Shop hat vier Schichten: Die <strong>Präsentation</strong> nimmt Anfragen aus dem Browser entgegen. Die <strong>Anwendungsschicht</strong> setzt Anwendungsfälle wie „Bestellung aufgeben“ um und steuert Transaktionen. Die <strong>Domäne</strong> enthält die Fachlogik, etwa Preis- und Rabattregeln. Die <strong>Infrastruktur</strong> spricht mit Datenbank, Mailserver und externen Diensten. Wird die Weboberfläche durch eine App ersetzt, betrifft das nur die oberste Schicht.</p>
+<h3>Worauf achten</h3>
+<p>In der <strong>strikten</strong> Variante darf jede Schicht nur die direkt darunterliegende nutzen, in der <strong>gelockerten</strong> alle tieferen. Ein bekanntes Problem: In der klassischen Anordnung hängt die Domäne von der Infrastruktur ab, die Fachlogik also von der Datenbanktechnik. Genau das kehren die <em>Hexagonal Architecture</em> (Muster 29) und verwandte Ansätze wie Clean Architecture um. Zu viele Schichten erzeugen außerdem reine Durchreichcode, bei dem jede Schicht nur die nächste aufruft, ohne selbst etwas zu tun.</p>
+<h3>In der Praxis</h3>
+<p>Die typische Spring-Anwendung mit <code>@Controller</code>, <code>@Service</code> und <code>@Repository</code>, das OSI-Modell und TCP/IP in Netzwerken, die Schichtung eines Betriebssystems von der Hardware bis zur Anwendung. Werkzeuge wie ArchUnit prüfen in Tests, dass keine verbotenen Abhängigkeiten zwischen Schichten entstehen.</p>
+
+<h2 id="mvc"><span class="nr">28.</span> Model-View-Controller <span class="de">· MVC, MVP und MVVM</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 260" role="img" aria-label="Model-View-Controller: Daten, Darstellung und Eingabe getrennt" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="290" y="20" width="140" height="56" rx="6" class="comp"/><text x="360.0" y="53.0" class="lbl-c" text-anchor="middle">Model</text><text x="360" y="94" class="tiny" text-anchor="middle">Daten und Regeln</text><rect x="110" y="170" width="140" height="56" rx="8" class="app"/><text x="180.0" y="203.0" class="lbl" text-anchor="middle">View</text><rect x="470" y="170" width="140" height="56" rx="8" class="app"/><text x="540.0" y="203.0" class="lbl" text-anchor="middle">Controller</text><path d="M290,60 C220,70 190,110 182,166" class="arr" fill="none" marker-end="url(#pfeil)"/><text x="170" y="106" class="tiny" text-anchor="end">benachrichtigt</text><path d="M538,168 C530,110 500,70 432,60" class="arr" fill="none" marker-end="url(#pfeil)"/><text x="560" y="106" class="tiny" text-anchor="start">ändert</text><circle cx="360" cy="236" r="16" class="app"/><text x="360" y="241" class="lbl" text-anchor="middle">☺</text><path d="M250,212 C290,236 310,240 340,238" class="arr" fill="none" marker-end="url(#pfeil)"/><text x="296" y="252" class="tiny" text-anchor="middle">sieht</text><path d="M378,238 C410,240 430,236 468,212" class="arr" fill="none" marker-end="url(#pfeil)"/><text x="430" y="252" class="tiny" text-anchor="middle">klickt, tippt</text><text x="610" y="40" class="note" text-anchor="middle">zwei Views auf</text><text x="610" y="56" class="note" text-anchor="middle">dasselbe Model möglich</text></svg><figcaption>Der Benutzer bedient den Controller, der das Model ändert. Das Model benachrichtigt die View, die der Benutzer sieht.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>MVC trennt eine Anwendung mit Benutzeroberfläche in drei Teile: Das <strong>Model</strong> enthält die Daten und Regeln und weiß nichts von ihrer Darstellung. Die <strong>View</strong> stellt das Model dar. Der <strong>Controller</strong> nimmt Eingaben des Benutzers entgegen und übersetzt sie in Änderungen am Model. Ändert sich das Model, werden die Views benachrichtigt, meist über das <em>Observer</em>-Muster. Erfunden wurde MVC 1979 von Trygve Reenskaug für Smalltalk.</p>
+<h3>Im Code</h3>
+<p>Der <code>Warenkorb</code> ist das Model mit Preisregeln und einer Liste von Beobachtern. Die <code>KopfzeilenView</code> zeigt bei jeder Änderung Anzahl und Summe, die <code>DetailView</code> listet die Positionen auf, beide über dasselbe Model. Der <code>WarenkorbController</code> wandelt Eingaben wie „+ Buch“ in Aufrufe am Model um und fängt Fehler ab.</p>
+<details class="code"><summary>Java-21-Code: ModelViewController.java</summary><p>Direkt ausführbar mit <code>java ModelViewController.java</code></p><pre><code class="language-java">// Model-View-Controller (MVC)
+// Trennt Daten und Logik (Model), Darstellung (View) und Eingabeverarbeitung (Controller).
+// Start: java ModelViewController.java
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Consumer;
+
+public class ModelViewController {
+
+    // ================= Model: Daten und Regeln, kennt keine Darstellung =================
+    static final class Warenkorb {
+        private final Map&lt;String, Integer&gt; positionen = new LinkedHashMap&lt;&gt;();
+        private final Map&lt;String, Long&gt; preise = Map.of(&quot;Buch&quot;, 1_990L, &quot;Lampe&quot;, 3_990L, &quot;Tasse&quot;, 890L);
+        private final List&lt;Consumer&lt;Warenkorb&gt;&gt; beobachter = new ArrayList&lt;&gt;();
+
+        void beobachte(Consumer&lt;Warenkorb&gt; b) { beobachter.add(b); }
+
+        void lege(String artikel, int menge) {
+            if (!preise.containsKey(artikel)) throw new IllegalArgumentException(&quot;unbekannter Artikel: &quot; + artikel);
+            positionen.merge(artikel, menge, Integer::sum);
+            if (positionen.get(artikel) &lt;= 0) positionen.remove(artikel);
+            beobachter.forEach(b -&gt; b.accept(this));              // Views benachrichtigen (Observer)
+        }
+        Map&lt;String, Integer&gt; positionen() { return java.util.Collections.unmodifiableMap(positionen); }
+        long summe() { return positionen.entrySet().stream().mapToLong(e -&gt; preise.get(e.getKey()) * e.getValue()).sum(); }
+        int anzahl() { return positionen.values().stream().mapToInt(Integer::intValue).sum(); }
+    }
+
+    // ================= Views: zwei verschiedene Darstellungen desselben Models =================
+    static final class KopfzeilenView {
+        void zeige(Warenkorb w) {
+            System.out.printf(Locale.GERMANY, &quot;  [Kopfzeile] Warenkorb (%d) %.2f €%n&quot;, w.anzahl(), w.summe() / 100.0);
+        }
+    }
+    static final class DetailView {
+        void zeige(Warenkorb w) {
+            w.positionen().forEach((a, m) -&gt; System.out.println(&quot;  [Details]   &quot; + m + &quot; × &quot; + a));
+        }
+    }
+
+    // ================= Controller: nimmt Eingaben entgegen und ändert das Model =================
+    static final class WarenkorbController {
+        private final Warenkorb model;
+        WarenkorbController(Warenkorb model) { this.model = model; }
+
+        void eingabe(String befehl) {                              // z. B. aus einem Klick oder einer Anfrage
+            System.out.println(&quot;Eingabe: &quot; + befehl);
+            String[] t = befehl.split(&quot; &quot;);
+            try {
+                switch (t[0]) {
+                    case &quot;+&quot; -&gt; model.lege(t[1], 1);
+                    case &quot;-&quot; -&gt; model.lege(t[1], -1);
+                    default -&gt; System.out.println(&quot;  unbekannter Befehl&quot;);
+                }
+            } catch (IllegalArgumentException e) {
+                System.out.println(&quot;  Fehler: &quot; + e.getMessage());
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Warenkorb model = new Warenkorb();
+        KopfzeilenView kopf = new KopfzeilenView();
+        model.beobachte(kopf::zeige);                              // die Kopfzeile zeigt jede Änderung
+        WarenkorbController controller = new WarenkorbController(model);
+
+        controller.eingabe(&quot;+ Buch&quot;);
+        controller.eingabe(&quot;+ Buch&quot;);
+        controller.eingabe(&quot;+ Lampe&quot;);
+        controller.eingabe(&quot;+ Fahrrad&quot;);
+        controller.eingabe(&quot;- Buch&quot;);
+
+        System.out.println(&quot;Warenkorb-Seite öffnen:&quot;);
+        new DetailView().zeige(model);                             // zweite View auf dasselbe Model
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Eingabe: + Buch
+  [Kopfzeile] Warenkorb (1) 19,90 €
+Eingabe: + Buch
+  [Kopfzeile] Warenkorb (2) 39,80 €
+Eingabe: + Lampe
+  [Kopfzeile] Warenkorb (3) 79,70 €
+Eingabe: + Fahrrad
+  Fehler: unbekannter Artikel: Fahrrad
+Eingabe: - Buch
+  [Kopfzeile] Warenkorb (2) 59,80 €
+Warenkorb-Seite öffnen:
+  [Details]   1 × Buch
+  [Details]   1 × Lampe</code></pre></details>
+<h3>Die Varianten</h3>
+<table>
+<tr><th></th><th>MVC</th><th>MVP</th><th>MVVM</th></tr>
+<tr><th>Vermittler</th><td>Controller</td><td>Presenter</td><td>ViewModel</td></tr>
+<tr><th>View kennt das Model?</th><td>ja, liest direkt</td><td>nein</td><td>nein</td></tr>
+<tr><th>Aktualisierung der View</th><td>Model benachrichtigt die View</td><td>Presenter setzt Werte in der View</td><td>automatisch per Datenbindung</td></tr>
+<tr><th>Typisch für</th><td>Web-Frameworks</td><td>Android (früher), Desktop</td><td>JavaFX, Angular, WPF, Vue</td></tr>
+</table>
+<h3>Worauf achten</h3>
+<p>„MVC“ bezeichnet heute viele leicht unterschiedliche Dinge. In Web-Frameworks wie Spring MVC verarbeitet der Controller eine HTTP-Anfrage, lädt Daten und gibt sie an ein Template weiter. Die Benachrichtigung des Models an die View fällt dort weg. Der häufigste Fehler ist der „fette Controller“, in den die Geschäftslogik wandert. Sie gehört ins Model bzw. in die darunterliegenden Schichten.</p>
+<h3>In der Praxis</h3>
+<p>Spring MVC und Jakarta MVC, Ruby on Rails, ASP.NET MVC, JavaFX mit Properties und Bindings (MVVM), Angular und Vue (MVVM-artig), Swing mit getrennten Models wie <code>TableModel</code>.</p>
+
+<h2 id="hexagonal-architecture"><span class="nr">29.</span> Hexagonal Architecture <span class="de">· Ports und Adapter</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 280" role="img" aria-label="Hexagonal Architecture: Kern mit Ports, Technik in austauschbaren Adaptern" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><polygon points="470,140 415,235 305,235 250,140 305,45 415,45" class="store"/><text x="360" y="130" class="lbl" text-anchor="middle">Fachkern</text><text x="360" y="150" class="tiny" text-anchor="middle">BestellService</text><text x="360" y="168" class="tiny" text-anchor="middle">kennt keine Technik</text><circle cx="268" cy="104" r="7" class="comp"/><circle cx="452" cy="104" r="7" class="comp"/><circle cx="452" cy="180" r="7" class="comp"/><text x="250" y="66" class="tiny" text-anchor="end">eingehender Port</text><text x="470" y="66" class="tiny" text-anchor="start">ausgehende Ports</text><rect x="16" y="50" width="130" height="40" rx="8" class="app"/><text x="81.0" y="75.0" class="lbl" text-anchor="middle">REST-Adapter</text><line x1="146" y1="70" x2="260" y2="104" class="arr" marker-end="url(#pfeil)"/><rect x="16" y="120" width="130" height="40" rx="8" class="app"/><text x="81.0" y="145.0" class="lbl" text-anchor="middle">CLI-Adapter</text><line x1="146" y1="140" x2="260" y2="104" class="arr" marker-end="url(#pfeil)"/><rect x="16" y="190" width="130" height="40" rx="8" class="app"/><text x="81.0" y="215.0" class="lbl" text-anchor="middle">Test</text><line x1="146" y1="210" x2="260" y2="104" class="arr" marker-end="url(#pfeil)"/><rect x="574" y="30" width="130" height="40" rx="8" class="app"/><text x="639.0" y="55.0" class="lbl" text-anchor="middle">SQL-Adapter</text><path d="M572,50 L460,104" class="arr" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><rect x="574" y="88" width="130" height="40" rx="8" class="app"/><text x="639.0" y="113.0" class="lbl" text-anchor="middle">InMemory (Test)</text><path d="M572,108 L460,104" class="arr" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><rect x="574" y="146" width="130" height="40" rx="8" class="app"/><text x="639.0" y="171.0" class="lbl" text-anchor="middle">E-Mail-Adapter</text><path d="M572,166 L460,180" class="arr" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><rect x="574" y="204" width="130" height="40" rx="8" class="app"/><text x="639.0" y="229.0" class="lbl" text-anchor="middle">Postfach (Test)</text><path d="M572,224 L460,180" class="arr" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><text x="360" y="272" class="note" text-anchor="middle">Abhängigkeiten zeigen immer zum Kern</text></svg><figcaption>Der Fachkern definiert Ports. REST, Kommandozeile, Datenbank und Mail sind austauschbare Adapter außen herum.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Die Hexagonal Architecture von Alistair Cockburn (2005), auch <em>Ports and Adapters</em> genannt, stellt die <strong>Fachlogik in die Mitte</strong>. Der Kern definiert <strong>Ports</strong>, also Schnittstellen in seiner eigenen Sprache: eingehende für das, was er anbietet, und ausgehende für das, was er von außen braucht. Alle Technik, Web, Datenbank, Mail, Messaging, wird über <strong>Adapter</strong> angeschlossen, die diese Ports bedienen oder implementieren. Die Abhängigkeiten zeigen immer von außen nach innen, nie umgekehrt. Das Sechseck hat keine besondere Bedeutung, es soll nur zeigen, dass es viele gleichberechtigte Seiten gibt, nicht „oben“ und „unten“ wie bei Schichten.</p>
+<h3>Im Code</h3>
+<p>Der <code>BestellService</code> implementiert den eingehenden Port <code>BestellenUseCase</code> und nutzt die ausgehenden Ports <code>BestellungenSpeichern</code> und <code>KundeBenachrichtigen</code>. Derselbe Kern wird über einen REST-Adapter und einen Kommandozeilen-Adapter angesprochen und läuft einmal mit SQL und E-Mail, einmal mit Test-Adaptern ganz ohne Infrastruktur.</p>
+<details class="code"><summary>Java-21-Code: HexagonalArchitecture.java</summary><p>Direkt ausführbar mit <code>java HexagonalArchitecture.java</code></p><pre><code class="language-java">// Hexagonal Architecture (Ports &amp; Adapters)
+// Der fachliche Kern definiert Ports (Schnittstellen). Technik wird über austauschbare Adapter angeschlossen.
+// Start: java HexagonalArchitecture.java
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+public class HexagonalArchitecture {
+
+    // ======================= KERN: kennt keine Technik =======================
+    record Bestellung(long nr, String kunde, long cent) {}
+
+    // Eingehender Port: was die Anwendung anbietet
+    interface BestellenUseCase {
+        long bestelle(String kunde, long cent);
+    }
+
+    // Ausgehende Ports: was die Anwendung von außen braucht
+    interface BestellungenSpeichern { void speichere(Bestellung b); Optional&lt;Bestellung&gt; lade(long nr); }
+    interface KundeBenachrichtigen  { void bestaetige(Bestellung b); }
+
+    // Die Fachlogik: implementiert den eingehenden Port, nutzt die ausgehenden
+    static final class BestellService implements BestellenUseCase {
+        private final BestellungenSpeichern speicher;
+        private final KundeBenachrichtigen benachrichtigung;
+        private long naechsteNr = 1000;
+
+        BestellService(BestellungenSpeichern s, KundeBenachrichtigen b) { this.speicher = s; this.benachrichtigung = b; }
+
+        public long bestelle(String kunde, long cent) {
+            if (cent &lt;= 0) throw new IllegalArgumentException(&quot;Betrag muss positiv sein&quot;);
+            Bestellung b = new Bestellung(++naechsteNr, kunde, cent);
+            speicher.speichere(b);
+            benachrichtigung.bestaetige(b);
+            return b.nr();
+        }
+    }
+
+    // ======================= ADAPTER: Technik außen herum =======================
+    // Treibender Adapter (links): z. B. REST, hier als einfache &quot;Anfrage&quot;
+    static final class RestAdapter {
+        private final BestellenUseCase useCase;
+        RestAdapter(BestellenUseCase u) { this.useCase = u; }
+        String post(String json) {                                  // {&quot;kunde&quot;:&quot;Sven&quot;,&quot;cent&quot;:4990}
+            String kunde = json.replaceAll(&quot;.*\&quot;kunde\&quot;:\&quot;([^\&quot;]+)\&quot;.*&quot;, &quot;$1&quot;);
+            long cent = Long.parseLong(json.replaceAll(&quot;.*\&quot;cent\&quot;:(\\d+).*&quot;, &quot;$1&quot;));
+            return &quot;201 Created, Bestellung &quot; + useCase.bestelle(kunde, cent);
+        }
+    }
+    // Treibender Adapter: Kommandozeile
+    static final class CliAdapter {
+        private final BestellenUseCase useCase;
+        CliAdapter(BestellenUseCase u) { this.useCase = u; }
+        void befehl(String zeile) {
+            String[] t = zeile.split(&quot; &quot;);
+            System.out.println(&quot;  CLI: Bestellung &quot; + useCase.bestelle(t[1], Long.parseLong(t[2])) + &quot; angelegt&quot;);
+        }
+    }
+
+    // Getriebene Adapter (rechts)
+    static final class InMemorySpeicher implements BestellungenSpeichern {
+        final Map&lt;Long, Bestellung&gt; daten = new HashMap&lt;&gt;();
+        public void speichere(Bestellung b) { daten.put(b.nr(), b); }
+        public Optional&lt;Bestellung&gt; lade(long nr) { return Optional.ofNullable(daten.get(nr)); }
+    }
+    static final class SqlSpeicher implements BestellungenSpeichern {
+        private final InMemorySpeicher intern = new InMemorySpeicher();
+        public void speichere(Bestellung b) { System.out.println(&quot;  SQL: INSERT INTO bestellung VALUES (&quot; + b.nr() + &quot;, ...)&quot;); intern.speichere(b); }
+        public Optional&lt;Bestellung&gt; lade(long nr) { return intern.lade(nr); }
+    }
+    static final class EmailAdapter implements KundeBenachrichtigen {
+        public void bestaetige(Bestellung b) { System.out.println(&quot;  E-Mail an &quot; + b.kunde() + &quot;: Bestellung &quot; + b.nr() + &quot; eingegangen&quot;); }
+    }
+    static final class TestPostfach implements KundeBenachrichtigen {
+        final List&lt;String&gt; gesendet = new ArrayList&lt;&gt;();
+        public void bestaetige(Bestellung b) { gesendet.add(b.kunde() + &quot;#&quot; + b.nr()); }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(&quot;Betrieb: REST + SQL + E-Mail&quot;);
+        BestellenUseCase betrieb = new BestellService(new SqlSpeicher(), new EmailAdapter());
+        System.out.println(&quot;  Antwort: &quot; + new RestAdapter(betrieb).post(&quot;{\&quot;kunde\&quot;:\&quot;Sven\&quot;,\&quot;cent\&quot;:4990}&quot;));
+
+        System.out.println(&quot;\nAdministration: Kommandozeile, derselbe Kern&quot;);
+        new CliAdapter(betrieb).befehl(&quot;bestelle Anna 1290&quot;);
+
+        System.out.println(&quot;\nTest: ohne Datenbank, ohne Mailserver&quot;);
+        InMemorySpeicher speicher = new InMemorySpeicher();
+        TestPostfach postfach = new TestPostfach();
+        long nr = new BestellService(speicher, postfach).bestelle(&quot;Testkunde&quot;, 100);
+        System.out.println(&quot;  gespeichert: &quot; + speicher.lade(nr).isPresent() + &quot;, benachrichtigt: &quot; + postfach.gesendet);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Betrieb: REST + SQL + E-Mail
+  SQL: INSERT INTO bestellung VALUES (1001, ...)
+  E-Mail an Sven: Bestellung 1001 eingegangen
+  Antwort: 201 Created, Bestellung 1001
+
+Administration: Kommandozeile, derselbe Kern
+  SQL: INSERT INTO bestellung VALUES (1002, ...)
+  E-Mail an Anna: Bestellung 1002 eingegangen
+  CLI: Bestellung 1002 angelegt
+
+Test: ohne Datenbank, ohne Mailserver
+  gespeichert: true, benachrichtigt: [Testkunde#1001]</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Der Kern darf <strong>keine Abhängigkeit</strong> zu Frameworks, Datenbanken oder Web-Bibliotheken haben, auch keine Annotationen wie <code>@Entity</code>. Das macht ihn ohne Infrastruktur testbar und überlebt jeden Technologiewechsel. Der Preis sind zusätzliche Schnittstellen und Abbildungen zwischen Kernobjekten und Technikobjekten. Für einfache CRUD-Anwendungen ist das zu viel. Eng verwandt sind die <em>Onion Architecture</em> (Jeffrey Palermo) und die <em>Clean Architecture</em> (Robert C. Martin), die dasselbe Prinzip mit konzentrischen Ringen darstellen.</p>
+<h3>In der Praxis</h3>
+<p>Häufig in Microservices nach Domain-Driven Design. Java-Projekte gliedern sich dann oft in Pakete wie <code>domain</code>, <code>application.port.in</code>, <code>application.port.out</code> und <code>adapter.in.web</code>, <code>adapter.out.persistence</code>. Bibliotheken wie jMolecules und ArchUnit helfen, die Regeln einzuhalten.</p>
+
+<h2 id="pipes-and-filters"><span class="nr">30.</span> Pipes and Filters <span class="de">· Röhren und Filter</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 150" role="img" aria-label="Pipes and Filters: Verarbeitung als Kette unabhängiger Schritte" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="10" y="50" width="92" height="50" rx="8" class="app"/><text x="56.0" y="80.0" class="lbl" text-anchor="middle">Quelle</text><line x1="102" y1="75" x2="138" y2="75" class="arr" marker-end="url(#pfeil)"/><rect x="140" y="50" width="120" height="50" rx="6" class="comp"/><text x="200.0" y="80.0" class="lbl-c" text-anchor="middle">Filter 1</text><line x1="260" y1="75" x2="298" y2="75" class="arr" marker-end="url(#pfeil)"/><text x="279.0" y="66" class="tiny" text-anchor="middle">Pipe</text><rect x="300" y="50" width="120" height="50" rx="6" class="comp"/><text x="360.0" y="80.0" class="lbl-c" text-anchor="middle">Filter 2</text><line x1="420" y1="75" x2="458" y2="75" class="arr" marker-end="url(#pfeil)"/><rect x="460" y="50" width="120" height="50" rx="6" class="comp"/><text x="520.0" y="80.0" class="lbl-c" text-anchor="middle">Filter 3</text><line x1="580" y1="75" x2="618" y2="75" class="arr" marker-end="url(#pfeil)"/><rect x="620" y="50" width="92" height="50" rx="8" class="app"/><text x="666.0" y="80.0" class="lbl" text-anchor="middle">Ziel</text><text x="360" y="130" class="note" text-anchor="middle">cat log | grep FEHLER | sort | uniq</text></svg><figcaption>Jeder Filter erledigt einen Schritt. Pipes verbinden sie, ohne dass ein Filter seine Nachbarn kennt.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Eine Verarbeitung wird in eine <strong>Kette unabhängiger Schritte</strong> zerlegt. Jeder Schritt (Filter) hat einen Eingang und einen Ausgang. Verbunden werden sie durch Pipes, die Daten weiterreichen. Kein Filter kennt seine Nachbarn, deshalb lassen sich Filter austauschen, umsortieren und wiederverwenden. Das Muster steht im POSA-Buch als Architekturmuster und bei den Enterprise Integration Patterns als Grundbaustein des Messaging.</p>
+<h3>In Java</h3>
+<p>Im Kleinen sind Java Streams ein Pipes-and-Filters-System: <code>liste.stream().filter(...).map(...).distinct().sorted()</code>. Jede Methode ist ein Filter, der Stream die Pipe. Im Großen verbinden Frameworks wie Apache Camel oder Spring Integration Filter über Nachrichtenkanäle.</p>
+<p>Eine ausführliche Beschreibung mit Diagramm steht bei den <a href="/it-konzepte/integration-patterns/messaging-grundlagen/#pipes-and-filters">Enterprise Integration Patterns, Muster 7</a>.</p>
+
+<h2 id="broker"><span class="nr">31.</span> Broker <span class="de">· Vermittler</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 230" role="img" aria-label="Broker: ein Vermittler zwischen verteilten Komponenten" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><line x1="360" y1="25" x2="360" y2="115" class="arr"/><line x1="485" y1="70" x2="360" y2="115" class="arr"/><line x1="485" y1="160" x2="360" y2="115" class="arr"/><line x1="360" y1="205" x2="360" y2="115" class="arr"/><line x1="235" y1="160" x2="360" y2="115" class="arr"/><line x1="235" y1="70" x2="360" y2="115" class="arr"/><rect x="305.0" y="8.0" width="110" height="34" rx="8" class="app"/><text x="360.0" y="30.0" class="lbl" text-anchor="middle">Shop</text><rect x="429.70765814495917" y="53.0" width="110" height="34" rx="8" class="app"/><text x="484.70765814495917" y="75.0" class="lbl" text-anchor="middle">Lager</text><rect x="429.70765814495917" y="143.0" width="110" height="34" rx="8" class="app"/><text x="484.70765814495917" y="165.0" class="lbl" text-anchor="middle">Buchhaltung</text><rect x="305.0" y="188.0" width="110" height="34" rx="8" class="app"/><text x="360.0" y="210.0" class="lbl" text-anchor="middle">CRM</text><rect x="180.29234185504086" y="143.00000000000003" width="110" height="34" rx="8" class="app"/><text x="235.29234185504086" y="165.00000000000003" class="lbl" text-anchor="middle">Versand</text><rect x="180.29234185504083" y="53.0" width="110" height="34" rx="8" class="app"/><text x="235.29234185504083" y="75.0" class="lbl" text-anchor="middle">App</text><rect x="305" y="91" width="110" height="48" rx="6" class="comp"/><text x="360.0" y="120.0" class="lbl-c" text-anchor="middle">Broker</text></svg><figcaption>Alle Komponenten sprechen nur mit dem Broker. Er vermittelt Anfragen und Nachrichten an die richtige Stelle.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Broker ist ein <strong>Vermittler</strong> zwischen verteilten Komponenten. Statt einander direkt zu kennen, schicken die Komponenten ihre Anfragen oder Nachrichten an den Broker, der sie an den passenden Empfänger weiterleitet und Antworten zurückbringt. Das entkoppelt die Komponenten: Wo ein Dienst läuft, in welcher Sprache er geschrieben ist und wie viele Instanzen es gibt, ist für den Aufrufer unsichtbar.</p>
+<h3>Varianten</h3>
+<p>Das POSA-Buch beschreibt vor allem den Broker für <strong>entfernte Aufrufe</strong>, wie ihn CORBA mit dem Object Request Broker umsetzt. Heute ist der Begriff vor allem für <strong>Message Broker</strong> gebräuchlich: RabbitMQ, ActiveMQ, Kafka. Auch ein API-Gateway oder ein Service Mesh übernimmt Teile der Broker-Rolle.</p>
+<p>Eine ausführliche Beschreibung mit Vergleich zur direkten Verbindung aller Systeme steht bei den <a href="/it-konzepte/integration-patterns/routing/#message-broker">Enterprise Integration Patterns, Muster 40</a>.</p>
+
+<h2 id="microkernel"><span class="nr">32.</span> Microkernel / Plugin <span class="de">· Mikrokern</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Microkernel: ein minimaler Kern, alles Weitere als Plugin" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><circle cx="360" cy="125" r="62" class="comp"/><text x="360" y="120" class="lbl-c" text-anchor="middle">Kern</text><text x="360" y="140" class="tiny" text-anchor="middle">Bestellablauf</text><rect x="40" y="20" width="160" height="40" rx="8" class="app"/><text x="120.0" y="45.0" class="lbl" text-anchor="middle">Versand DACH</text><path d="M200,40 L310,95" class="arr" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><rect x="520" y="20" width="160" height="40" rx="8" class="app"/><text x="600.0" y="45.0" class="lbl" text-anchor="middle">Express</text><path d="M520,40 L410,95" class="arr" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><rect x="40" y="180" width="160" height="40" rx="8" class="app"/><text x="120.0" y="205.0" class="lbl" text-anchor="middle">Betrugsprüfung</text><path d="M200,200 L310,155" class="arr" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><rect x="520" y="180" width="160" height="40" rx="8" class="app" stroke-dasharray="5 4"/><text x="600" y="205" class="lbl" text-anchor="middle">Bonuspunkte (neu)</text><path d="M520,200 L410,155" class="arr-leise" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><text x="360" y="236" class="note" text-anchor="middle">Plugins einstecken, ohne den Kern zu ändern</text></svg><figcaption>Der Kern kennt nur den Grundablauf. Versand, Express, Betrugsprüfung und künftige Funktionen kommen als Plugins hinzu.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Beim Microkernel-Muster enthält der <strong>Kern nur das Nötigste</strong>: den Grundablauf und eine klar definierte Schnittstelle für Erweiterungen. Alle weiteren Funktionen werden als <strong>Plugins</strong> angeschlossen, die unabhängig entwickelt, ausgeliefert und aktiviert werden können. Der Name stammt von Betriebssystemen, deren Kern nur Prozesse und Speicher verwaltet, während Treiber und Dateisysteme außerhalb laufen.</p>
+<h3>Im Code</h3>
+<p>Der <code>Kern</code> verarbeitet Bestellungen, kennt aber weder Versandkosten noch Sonderregeln. Ohne Plugins ist jede Bestellung „nicht lieferbar“. Drei Plugins registrieren beim Start Versandkosten und reagieren auf jede Bestellung mit eigenen Notizen. Kein Plugin kennt ein anderes.</p>
+<details class="code"><summary>Java-21-Code: Microkernel.java</summary><p>Direkt ausführbar mit <code>java Microkernel.java</code></p><pre><code class="language-java">// Microkernel / Plugin
+// Ein minimaler Kern stellt die Grundfunktionen bereit. Alles Weitere kommt über Plugins hinzu.
+// Start: java Microkernel.java
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
+
+public class Microkernel {
+
+    record Bestellung(String nr, String land, long cent, boolean express) {}
+
+    // --- Kontrakt zwischen Kern und Plugins ---
+    interface Plugin {
+        String name();
+        default void beimStart(Kern kern) {}
+        default void beiBestellung(Bestellung b, Map&lt;String, String&gt; notizen) {}
+    }
+
+    // --- Der Kern: nur das Nötigste ---
+    static final class Kern {
+        private final List&lt;Plugin&gt; plugins = new ArrayList&lt;&gt;();
+        private final Map&lt;String, Long&gt; versandkosten = new TreeMap&lt;&gt;();
+
+        void installiere(Plugin p) {
+            plugins.add(p);
+            p.beimStart(this);
+            System.out.println(&quot;  Plugin geladen: &quot; + p.name());
+        }
+        void registriereVersand(String land, long cent) { versandkosten.put(land, cent); }   // Erweiterungspunkt
+
+        void verarbeite(Bestellung b) {
+            Map&lt;String, String&gt; notizen = new TreeMap&lt;&gt;();
+            Long versand = versandkosten.get(b.land());
+            notizen.put(&quot;versand&quot;, versand == null ? &quot;nicht lieferbar&quot; : String.format(Locale.GERMANY, &quot;%.2f €&quot;, versand / 100.0));
+            plugins.forEach(p -&gt; p.beiBestellung(b, notizen));
+            System.out.println(&quot;  &quot; + b.nr() + &quot; &quot; + notizen);
+        }
+    }
+
+    // --- Plugins: unabhängig entwickelt, einzeln aktivierbar ---
+    static final class VersandDACH implements Plugin {
+        public String name() { return &quot;Versand DACH&quot;; }
+        public void beimStart(Kern k) { k.registriereVersand(&quot;DE&quot;, 490); k.registriereVersand(&quot;AT&quot;, 790); k.registriereVersand(&quot;CH&quot;, 1490); }
+    }
+    static final class Expresszuschlag implements Plugin {
+        public String name() { return &quot;Express&quot;; }
+        public void beiBestellung(Bestellung b, Map&lt;String, String&gt; n) { if (b.express()) n.put(&quot;express&quot;, &quot;+9,90 €&quot;); }
+    }
+    static final class Betrugspruefung implements Plugin {
+        public String name() { return &quot;Betrugsprüfung&quot;; }
+        public void beiBestellung(Bestellung b, Map&lt;String, String&gt; n) { if (b.cent() &gt; 200_000) n.put(&quot;prüfung&quot;, &quot;manuell freigeben&quot;); }
+    }
+
+    public static void main(String[] args) {
+        List&lt;Bestellung&gt; bestellungen = List.of(
+                new Bestellung(&quot;B-1&quot;, &quot;DE&quot;, 4_990, false),
+                new Bestellung(&quot;B-2&quot;, &quot;CH&quot;, 250_000, true));
+
+        System.out.println(&quot;Nur der Kern:&quot;);
+        Kern nackt = new Kern();
+        bestellungen.forEach(nackt::verarbeite);
+
+        System.out.println(&quot;\nKern mit drei Plugins:&quot;);
+        Kern kern = new Kern();
+        // In echten Systemen findet der Kern seine Plugins selbst, z. B. per java.util.ServiceLoader
+        for (Plugin p : List.of(new VersandDACH(), new Expresszuschlag(), new Betrugspruefung())) kern.installiere(p);
+        bestellungen.forEach(kern::verarbeite);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Nur der Kern:
+  B-1 {versand=nicht lieferbar}
+  B-2 {versand=nicht lieferbar}
+
+Kern mit drei Plugins:
+  Plugin geladen: Versand DACH
+  Plugin geladen: Express
+  Plugin geladen: Betrugsprüfung
+  B-1 {versand=4,90 €}
+  B-2 {express=+9,90 €, prüfung=manuell freigeben, versand=14,90 €}</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Das Herzstück ist der <strong>Plugin-Vertrag</strong>: Er muss stabil bleiben, denn jede Änderung betrifft alle Plugins. Man braucht Regeln für Reihenfolge, Abhängigkeiten zwischen Plugins und Fehler: Darf ein abstürzendes Plugin den ganzen Kern mitreißen? Microkernel lohnt sich für Produkte, die bei verschiedenen Kunden unterschiedlich erweitert werden, weniger für eine einzelne, interne Anwendung.</p>
+<h3>In der Praxis</h3>
+<p>Die Eclipse-IDE und IntelliJ IDEA, deren gesamte Funktionalität aus Plugins besteht, Browser mit Erweiterungen, Jenkins, Maven und Gradle mit ihren Plugins, OSGi als Plugin-Plattform für Java. Plugins werden in Java oft über <code>java.util.ServiceLoader</code> oder das Modulsystem gefunden.</p>
+
+<h2 id="blackboard"><span class="nr">33.</span> Blackboard <span class="de">· Wandtafel</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 272" role="img" aria-label="Blackboard: Spezialisten arbeiten auf einer gemeinsamen Tafel" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="250" y="70" width="220" height="120" rx="8" class="store"/><text x="360" y="92" class="lbl" text-anchor="middle">Tafel</text><text x="360" y="114" class="tagt" text-anchor="middle">betrag_risiko = 30</text><text x="360" y="132" class="tagt" text-anchor="middle">historie_risiko = 25</text><text x="360" y="150" class="tagt" text-anchor="middle">adresse_risiko = 30</text><text x="360" y="168" class="tagt" text-anchor="middle">entscheidung = ?</text><rect x="20" y="40" width="140" height="44" rx="6" class="comp"/><text x="90.0" y="67.0" class="lbl-c" text-anchor="middle">Betragsprüfung</text><path d="M160,62 L248,130" class="arr-leise" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><rect x="20" y="160" width="140" height="44" rx="6" class="comp"/><text x="90.0" y="187.0" class="lbl-c" text-anchor="middle">Kundenhistorie</text><path d="M160,182 L248,130" class="arr-leise" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><rect x="560" y="40" width="140" height="44" rx="6" class="comp"/><text x="630.0" y="67.0" class="lbl-c" text-anchor="middle">Adressprüfung</text><path d="M560,62 L472,130" class="arr-leise" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><rect x="560" y="160" width="140" height="44" rx="6" class="comp"/><text x="630.0" y="187.0" class="lbl-c" text-anchor="middle">Entscheider</text><path d="M560,182 L472,130" class="arr-leise" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><rect x="285" y="210" width="150" height="36" rx="8" class="app"/><text x="360.0" y="233.0" class="lbl" text-anchor="middle">Steuerung</text><text x="360" y="256" class="tiny" text-anchor="middle">fragt: wer kann beitragen?</text><text x="360" y="40" class="note" text-anchor="middle">jeder liest, was da ist, und ergänzt, was er kann</text></svg><figcaption>Vier Spezialisten tragen nacheinander zur Risikobewertung einer Bestellung bei. Erst wenn alle Teile da sind, kann der Entscheider urteilen.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Beim Blackboard-Muster arbeiten mehrere <strong>unabhängige Spezialisten</strong> (Wissensquellen) an einem gemeinsamen Datenbestand, der <strong>Tafel</strong>. Jeder schaut, ob er mit dem, was dort steht, etwas beitragen kann, und schreibt sein Ergebnis dazu. Eine Steuerung entscheidet, wer als Nächstes an der Reihe ist. Wie Experten vor einer Wandtafel, die gemeinsam ein Problem lösen, ohne dass einer allein den ganzen Lösungsweg kennt.</p>
+<h3>Im Code</h3>
+<p>Bei jeder Bestellung prüfen drei Spezialisten Betrag, Kundenhistorie und Lieferadresse und schreiben ein Teilrisiko auf die Tafel. Der Entscheider wird erst aktiv, wenn alle drei Teilergebnisse vorliegen. Die Steuerung fragt reihum, wer beitragen kann, bis eine Entscheidung steht. Die Reihenfolge der Spezialisten in der Liste spielt keine Rolle.</p>
+<details class="code"><summary>Java-21-Code: Blackboard.java</summary><p>Direkt ausführbar mit <code>java Blackboard.java</code></p><pre><code class="language-java">// Blackboard
+// Mehrere unabhängige Spezialisten arbeiten an einem gemeinsamen Datenbestand, bis eine Lösung entsteht.
+// Start: java Blackboard.java
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+public class Blackboard {
+
+    // --- Die Tafel: gemeinsamer Datenbestand, auf den alle schauen ---
+    static final class Tafel {
+        final Map&lt;String, Object&gt; eintraege = new TreeMap&lt;&gt;();
+        boolean hat(String k) { return eintraege.containsKey(k); }
+        int zahl(String k)    { return (int) eintraege.getOrDefault(k, 0); }
+        void schreibe(String quelle, String k, Object v) {
+            eintraege.put(k, v);
+            System.out.println(&quot;  &quot; + quelle + &quot;: &quot; + k + &quot; = &quot; + v);
+        }
+    }
+
+    // --- Wissensquellen: jede kann nur einen Teil, und meldet sich, wenn sie etwas beitragen kann ---
+    interface Wissensquelle {
+        String name();
+        boolean kannBeitragen(Tafel t);
+        void trageBei(Tafel t);
+    }
+
+    record AdressPruefung() implements Wissensquelle {
+        public String name() { return &quot;Adressprüfung&quot;; }
+        public boolean kannBeitragen(Tafel t) { return t.hat(&quot;lieferadresse&quot;) &amp;&amp; !t.hat(&quot;adresse_risiko&quot;); }
+        public void trageBei(Tafel t) {
+            boolean packstation = t.eintraege.get(&quot;lieferadresse&quot;).toString().contains(&quot;Packstation&quot;);
+            t.schreibe(name(), &quot;adresse_risiko&quot;, packstation ? 30 : 0);
+        }
+    }
+    record KundenHistorie() implements Wissensquelle {
+        public String name() { return &quot;Kundenhistorie&quot;; }
+        public boolean kannBeitragen(Tafel t) { return t.hat(&quot;kunde&quot;) &amp;&amp; !t.hat(&quot;historie_risiko&quot;); }
+        public void trageBei(Tafel t) { t.schreibe(name(), &quot;historie_risiko&quot;, t.eintraege.get(&quot;kunde&quot;).equals(&quot;neu&quot;) ? 25 : 0); }
+    }
+    record BetragsPruefung() implements Wissensquelle {
+        public String name() { return &quot;Betragsprüfung&quot;; }
+        public boolean kannBeitragen(Tafel t) { return t.hat(&quot;betrag&quot;) &amp;&amp; !t.hat(&quot;betrag_risiko&quot;); }
+        public void trageBei(Tafel t) { t.schreibe(name(), &quot;betrag_risiko&quot;, t.zahl(&quot;betrag&quot;) &gt; 1_000 ? 30 : 5); }
+    }
+    record Entscheider() implements Wissensquelle {   // wird erst aktiv, wenn alle anderen fertig sind
+        public String name() { return &quot;Entscheider&quot;; }
+        public boolean kannBeitragen(Tafel t) {
+            return t.hat(&quot;adresse_risiko&quot;) &amp;&amp; t.hat(&quot;historie_risiko&quot;) &amp;&amp; t.hat(&quot;betrag_risiko&quot;) &amp;&amp; !t.hat(&quot;entscheidung&quot;);
+        }
+        public void trageBei(Tafel t) {
+            int summe = t.zahl(&quot;adresse_risiko&quot;) + t.zahl(&quot;historie_risiko&quot;) + t.zahl(&quot;betrag_risiko&quot;);
+            t.schreibe(name(), &quot;risiko_gesamt&quot;, summe);
+            t.schreibe(name(), &quot;entscheidung&quot;, summe &gt;= 60 ? &quot;manuell prüfen&quot; : &quot;freigeben&quot;);
+        }
+    }
+
+    // --- Steuerung: fragt reihum, wer beitragen kann, bis nichts mehr passiert ---
+    static void loese(Tafel t, List&lt;Wissensquelle&gt; quellen) {
+        boolean fortschritt = true;
+        while (fortschritt &amp;&amp; !t.hat(&quot;entscheidung&quot;)) {
+            fortschritt = false;
+            for (Wissensquelle q : quellen) {
+                if (q.kannBeitragen(t)) { q.trageBei(t); fortschritt = true; }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        List&lt;Wissensquelle&gt; quellen = new ArrayList&lt;&gt;(List.of(new Entscheider(), new BetragsPruefung(), new KundenHistorie(), new AdressPruefung()));
+
+        for (Map&lt;String, Object&gt; bestellung : List.of(
+                Map.&lt;String, Object&gt;of(&quot;kunde&quot;, &quot;stamm&quot;, &quot;betrag&quot;, 80, &quot;lieferadresse&quot;, &quot;Hafenstraße 7, Hamburg&quot;),
+                Map.&lt;String, Object&gt;of(&quot;kunde&quot;, &quot;neu&quot;, &quot;betrag&quot;, 2_400, &quot;lieferadresse&quot;, &quot;Packstation 112, Berlin&quot;))) {
+            System.out.println(&quot;Bestellung: &quot; + new TreeMap&lt;&gt;(bestellung));
+            Tafel t = new Tafel();
+            t.eintraege.putAll(bestellung);
+            loese(t, quellen);
+            System.out.println();
+        }
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Bestellung: {betrag=80, kunde=stamm, lieferadresse=Hafenstraße 7, Hamburg}
+  Betragsprüfung: betrag_risiko = 5
+  Kundenhistorie: historie_risiko = 0
+  Adressprüfung: adresse_risiko = 0
+  Entscheider: risiko_gesamt = 5
+  Entscheider: entscheidung = freigeben
+
+Bestellung: {betrag=2400, kunde=neu, lieferadresse=Packstation 112, Berlin}
+  Betragsprüfung: betrag_risiko = 30
+  Kundenhistorie: historie_risiko = 25
+  Adressprüfung: adresse_risiko = 30
+  Entscheider: risiko_gesamt = 85
+  Entscheider: entscheidung = manuell prüfen</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Blackboard eignet sich für Probleme <strong>ohne festen Lösungsweg</strong>, bei denen verschiedene Teilergebnisse in unvorhersehbarer Reihenfolge zusammenkommen. Für Abläufe mit fester Reihenfolge ist es zu aufwendig: Dann ist eine Kette (Pipes and Filters) einfacher. Die Steuerung ist der schwierige Teil, besonders wenn mehrere Spezialisten gleichzeitig beitragen können oder sich widersprechen. Und weil alle auf denselben Daten arbeiten, muss der Zugriff bei paralleler Ausführung abgesichert werden.</p>
+<h3>In der Praxis</h3>
+<p>Spracherkennung (das ursprüngliche Hearsay-II-System aus den 1970ern), Betrugserkennung und Risikobewertung, Bildanalyse, Expertensysteme, Planungs- und Optimierungsprobleme. Moderne Varianten sind Systeme mit mehreren KI-Agenten, die über einen gemeinsamen Speicher zusammenarbeiten.</p>
+
+<h2 id="event-sourcing"><span class="nr">34.</span> Event Sourcing <span class="de">· Ereignisspeicherung</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 260" role="img" aria-label="Event Sourcing: Ereignisse speichern, Zustand daraus berechnen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="30" width="300" height="200" rx="8" class="store"/><text x="166" y="52" class="lbl" text-anchor="middle">Event Store (nur anhängen)</text><rect x="89.0" y="68" width="154" height="20" rx="10" class="tag"/><text x="166" y="82" class="tagt" text-anchor="middle">02.01. KontoEröffnet</text><rect x="71.5" y="98" width="189" height="20" rx="10" class="tag"/><text x="166" y="112" class="tagt" text-anchor="middle">15.01. Eingezahlt 1.000 €</text><rect x="82.0" y="128" width="168" height="20" rx="10" class="tag"/><text x="166" y="142" class="tagt" text-anchor="middle">01.03. Abgehoben 300 €</text><rect x="78.5" y="158" width="175" height="20" rx="10" class="tag"/><text x="166" y="172" class="tagt" text-anchor="middle">30.06. Eingezahlt 500 €</text><rect x="82.0" y="188" width="168" height="20" rx="10" class="tag"/><text x="166" y="202" class="tagt" text-anchor="middle">01.10. Abgehoben 200 €</text><line x1="316" y1="90" x2="420" y2="70" class="arr" marker-end="url(#pfeil)"/><text x="370" y="60" class="tiny" text-anchor="middle">alle abspielen</text><rect x="422" y="46" width="270" height="50" rx="8" class="app"/><text x="557" y="76" class="lbl" text-anchor="middle">heute: 1.000,00 €</text><line x1="316" y1="150" x2="420" y2="180" class="arr" marker-end="url(#pfeil)"/><text x="370" y="190" class="tiny" text-anchor="middle">bis 31.03.</text><rect x="422" y="156" width="270" height="50" rx="8" class="app"/><text x="557" y="186" class="lbl" text-anchor="middle">am 31.03.: 700,00 €</text><text x="557" y="130" class="note" text-anchor="middle">Zustand ist nur ein Ergebnis</text><text x="166" y="252" class="note" text-anchor="middle">nichts wird überschrieben oder gelöscht</text></svg><figcaption>Gespeichert werden nur die Buchungen. Der Kontostand wird daraus berechnet, für heute oder für jeden beliebigen Tag in der Vergangenheit.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Üblicherweise speichert eine Anwendung den <strong>aktuellen Zustand</strong>: Der Kontostand ist 1.000 €. Bei Event Sourcing speichert sie stattdessen die <strong>Folge aller Ereignisse</strong>, die zu diesem Zustand geführt haben: eröffnet, 1.000 € eingezahlt, 300 € abgehoben und so weiter. Der Zustand wird bei Bedarf berechnet, indem man die Ereignisse der Reihe nach „abspielt“. Ereignisse werden nur angehängt, nie geändert oder gelöscht. So arbeitet jede Buchhaltung seit Jahrhunderten: Man radiert keine Buchung aus, man bucht eine Korrektur.</p>
+<h3>Im Code</h3>
+<p>Die Ereignisse sind Records hinter einem <code>sealed</code> Interface. Der <code>EventStore</code> hängt nur an. Der Kontostand entsteht durch <code>Konto.aus(ereignisse)</code>, das jedes Ereignis per Pattern Matching anwendet. Befehle wie <code>hebeAb</code> prüfen gegen den berechneten Zustand und erzeugen nur dann ein neues Ereignis. Zum Schluss zwei Dinge, die mit einem normalen Zustandsspeicher unmöglich wären: der Kontostand an einem beliebigen Tag der Vergangenheit und eine neue Auswertung über alle bisherigen Einzahlungen.</p>
+<details class="code"><summary>Java-21-Code: EventSourcing.java</summary><p>Direkt ausführbar mit <code>java EventSourcing.java</code></p><pre><code class="language-java">// Event Sourcing
+// Gespeichert wird nicht der aktuelle Zustand, sondern die Folge aller Ereignisse. Der Zustand wird daraus berechnet.
+// Start: java EventSourcing.java
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+public class EventSourcing {
+
+    // --- Ereignisse: unveränderlich, in der Vergangenheit benannt ---
+    sealed interface Ereignis permits KontoEroeffnet, Eingezahlt, Abgehoben { LocalDate datum(); }
+    record KontoEroeffnet(String inhaber, LocalDate datum) implements Ereignis {}
+    record Eingezahlt(long cent, LocalDate datum) implements Ereignis {}
+    record Abgehoben(long cent, LocalDate datum) implements Ereignis {}
+
+    // --- Event Store: hängt nur an, ändert und löscht nie ---
+    static final class EventStore {
+        private final List&lt;Ereignis&gt; log = new ArrayList&lt;&gt;();
+        void anhaengen(Ereignis e) { log.add(e); }
+        List&lt;Ereignis&gt; alle() { return List.copyOf(log); }
+    }
+
+    // --- Zustand: wird aus den Ereignissen berechnet ---
+    record Konto(String inhaber, long saldoCent, int buchungen) {
+        static final Konto LEER = new Konto(&quot;&quot;, 0, 0);
+
+        Konto anwenden(Ereignis e) {
+            return switch (e) {
+                case KontoEroeffnet(String name, LocalDate d) -&gt; new Konto(name, 0, 0);
+                case Eingezahlt(long c, LocalDate d)          -&gt; new Konto(inhaber, saldoCent + c, buchungen + 1);
+                case Abgehoben(long c, LocalDate d)           -&gt; new Konto(inhaber, saldoCent - c, buchungen + 1);
+            };
+        }
+        static Konto aus(List&lt;Ereignis&gt; ereignisse) {
+            Konto k = LEER;
+            for (Ereignis e : ereignisse) k = k.anwenden(e);
+            return k;
+        }
+        public String toString() { return String.format(Locale.GERMANY, &quot;%s: %,.2f € nach %d Buchungen&quot;, inhaber, saldoCent / 100.0, buchungen); }
+    }
+
+    // --- Befehl: prüft gegen den aktuellen Zustand und erzeugt ein Ereignis ---
+    static void hebeAb(EventStore store, long cent, LocalDate datum) {
+        Konto aktuell = Konto.aus(store.alle());
+        if (aktuell.saldoCent() &lt; cent) {
+            System.out.println(&quot;  abgelehnt: Abhebung &quot; + cent / 100 + &quot; € am &quot; + datum + &quot;, Saldo zu niedrig&quot;);
+            return;
+        }
+        store.anhaengen(new Abgehoben(cent, datum));
+    }
+
+    public static void main(String[] args) {
+        EventStore store = new EventStore();
+        store.anhaengen(new KontoEroeffnet(&quot;Sven&quot;, LocalDate.of(2026, 1, 2)));
+        store.anhaengen(new Eingezahlt(100_000, LocalDate.of(2026, 1, 15)));
+        store.anhaengen(new Abgehoben(30_000, LocalDate.of(2026, 3, 1)));
+        store.anhaengen(new Eingezahlt(50_000, LocalDate.of(2026, 6, 30)));
+        hebeAb(store, 200_000, LocalDate.of(2026, 9, 1));
+        hebeAb(store, 20_000, LocalDate.of(2026, 10, 1));
+
+        System.out.println(&quot;Gespeicherte Ereignisse:&quot;);
+        store.alle().forEach(e -&gt; System.out.println(&quot;  &quot; + e));
+
+        System.out.println(&quot;\nAktueller Zustand, berechnet aus allen Ereignissen:&quot;);
+        System.out.println(&quot;  &quot; + Konto.aus(store.alle()));
+
+        System.out.println(&quot;\nZeitreise: Wie stand das Konto am 31.03.2026?&quot;);
+        List&lt;Ereignis&gt; bisMaerz = store.alle().stream().filter(e -&gt; !e.datum().isAfter(LocalDate.of(2026, 3, 31))).toList();
+        System.out.println(&quot;  &quot; + Konto.aus(bisMaerz));
+
+        System.out.println(&quot;\nNeue Auswertung aus alten Daten: Summe aller Einzahlungen&quot;);
+        long einzahlungen = store.alle().stream().filter(e -&gt; e instanceof Eingezahlt).mapToLong(e -&gt; ((Eingezahlt) e).cent()).sum();
+        System.out.printf(Locale.GERMANY, &quot;  %,.2f €%n&quot;, einzahlungen / 100.0);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>  abgelehnt: Abhebung 2000 € am 2026-09-01, Saldo zu niedrig
+Gespeicherte Ereignisse:
+  KontoEroeffnet[inhaber=Sven, datum=2026-01-02]
+  Eingezahlt[cent=100000, datum=2026-01-15]
+  Abgehoben[cent=30000, datum=2026-03-01]
+  Eingezahlt[cent=50000, datum=2026-06-30]
+  Abgehoben[cent=20000, datum=2026-10-01]
+
+Aktueller Zustand, berechnet aus allen Ereignissen:
+  Sven: 1.000,00 € nach 4 Buchungen
+
+Zeitreise: Wie stand das Konto am 31.03.2026?
+  Sven: 700,00 € nach 2 Buchungen
+
+Neue Auswertung aus alten Daten: Summe aller Einzahlungen
+  1.500,00 €</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Die Vorteile sind eine lückenlose <strong>Historie</strong> (wichtig für Prüfungen und Fehlersuche), <strong>Zeitreisen</strong> und die Möglichkeit, aus alten Ereignissen jederzeit neue Auswertungen zu berechnen. Die Nachteile sind ebenso deutlich: Der Zustand muss berechnet werden, was bei vielen Ereignissen <em>Snapshots</em> erfordert. Ereignisformate lassen sich kaum noch ändern, weil alte Ereignisse für immer bleiben. Und Abfragen über viele Objekte („alle Konten im Minus“) sind ohne zusätzliche Lesemodelle kaum möglich. Deshalb wird Event Sourcing fast immer mit <em>CQRS</em> (Muster 35) kombiniert. Für die meisten Anwendungen ist es zu aufwendig. Es lohnt sich dort, wo die Historie selbst fachlich wichtig ist.</p>
+<h3>In der Praxis</h3>
+<p>Axon Framework und EventStoreDB, Kafka als Ereignisprotokoll, Buchhaltungs- und Bankensysteme. Auch Git ist im Grunde Event Sourcing: Gespeichert werden die Änderungen, der aktuelle Stand der Dateien wird daraus hergestellt.</p>
+
+<h2 id="cqrs"><span class="nr">35.</span> CQRS <span class="de">· Trennung von Befehl und Abfrage</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 260" role="img" aria-label="CQRS: getrennte Modelle für Schreiben und Lesen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="40" width="120" height="44" rx="8" class="app"/><text x="76.0" y="67.0" class="lbl" text-anchor="middle">Befehle</text><text x="76" y="100" class="tagt" text-anchor="middle">GibBestellungAuf</text><rect x="190" y="30" width="170" height="64" rx="6" class="comp"/><text x="275.0" y="67.0" class="lbl-c" text-anchor="middle">Schreibmodell</text><text x="275" y="112" class="tiny" text-anchor="middle">prüft Regeln, Lager</text><line x1="136" y1="62" x2="188" y2="62" class="arr" marker-end="url(#pfeil)"/><line x1="360" y1="62" x2="430" y2="62" class="arr" marker-end="url(#pfeil)"/><text x="395.0" y="52" class="tiny" text-anchor="middle">Ereignisse</text><rect x="385.0" y="75.5" width="20" height="13" rx="2" class="msg-b"/><path d="M385.0,75.5 L395,84 L405.0,75.5" class="msg-b-flap"/><rect x="432" y="30" width="160" height="56" rx="8" class="store"/><text x="512" y="62" class="lbl" text-anchor="middle">Umsatz pro Kunde</text><rect x="432" y="130" width="160" height="56" rx="8" class="store"/><text x="512" y="162" class="lbl" text-anchor="middle">Bestseller-Liste</text><path d="M430,62 C420,100 420,150 430,158" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="620" y="80" width="90" height="44" rx="8" class="app"/><text x="665.0" y="107.0" class="lbl" text-anchor="middle">Abfragen</text><path d="M618,96 C600,80 600,60 594,58" class="arr" fill="none" marker-end="url(#pfeil)"/><path d="M618,108 C600,130 600,150 594,158" class="arr" fill="none" marker-end="url(#pfeil)"/><text x="275" y="160" class="note" text-anchor="middle">Schreiben: normalisiert,</text><text x="275" y="176" class="note" text-anchor="middle">konsistent, mit Regeln</text><text x="512" y="214" class="note" text-anchor="middle">Lesen: vorberechnet, schnell,</text><text x="512" y="230" class="note" text-anchor="middle">eines pro Bildschirm</text></svg><figcaption>Befehle gehen an das Schreibmodell. Dessen Ereignisse halten mehrere Lesemodelle aktuell, aus denen Abfragen ohne Berechnung bedient werden.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>CQRS, <em>Command Query Responsibility Segregation</em>, trennt eine Anwendung in zwei Seiten: Die <strong>Schreibseite</strong> nimmt Befehle entgegen, prüft Geschäftsregeln und ändert Daten. Die <strong>Leseseite</strong> beantwortet Abfragen aus eigenen, für genau diesen Zweck aufbereiteten <strong>Lesemodellen</strong>. Verbunden sind die beiden meist über Ereignisse: Jede Änderung auf der Schreibseite wird an die Lesemodelle weitergereicht, die sich selbst aktualisieren. Der Begriff stammt von Greg Young und baut auf dem älteren Prinzip <em>Command-Query Separation</em> von Bertrand Meyer auf.</p>
+<h3>Im Code</h3>
+<p>Befehle wie <code>GibBestellungAuf</code> gehen an die <code>BestellungsBefehle</code>, die den Lagerbestand prüfen und bei Erfolg ein Ereignis veröffentlichen. Zwei Lesemodelle, Umsatz pro Kunde und Bestseller, aktualisieren sich bei jedem Ereignis. Die Abfragen am Ende lesen nur fertige Werte, ohne etwas zu berechnen. Die abgelehnte Bestellung taucht in keinem Lesemodell auf.</p>
+<details class="code"><summary>Java-21-Code: CQRS.java</summary><p>Direkt ausführbar mit <code>java CQRS.java</code></p><pre><code class="language-java">// CQRS (Command Query Responsibility Segregation)
+// Schreiben und Lesen bekommen getrennte Modelle: eines für Befehle, eines (oder mehrere) für Abfragen.
+// Start: java CQRS.java
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.Consumer;
+
+public class CQRS {
+
+    // ===================== Gemeinsam: Ereignisse als Brücke =====================
+    record BestellungAufgegeben(long nr, String kunde, String artikel, int menge, long cent) {}
+
+    // ===================== Schreibseite (Command) =====================
+    record GibBestellungAuf(String kunde, String artikel, int menge, long einzelpreisCent) {}   // ein Befehl
+
+    static final class BestellungsBefehle {
+        private final Map&lt;String, Integer&gt; lager = new HashMap&lt;&gt;(Map.of(&quot;Buch&quot;, 10, &quot;Lampe&quot;, 2));
+        private final List&lt;Consumer&lt;BestellungAufgegeben&gt;&gt; abonnenten = new ArrayList&lt;&gt;();
+        private long naechsteNr = 1;
+
+        void abonniere(Consumer&lt;BestellungAufgegeben&gt; a) { abonnenten.add(a); }
+
+        // Befehle prüfen Regeln, ändern Zustand und liefern nichts außer Erfolg/Fehler
+        void ausfuehren(GibBestellungAuf b) {
+            int bestand = lager.getOrDefault(b.artikel(), 0);
+            if (b.menge() &gt; bestand) throw new IllegalStateException(b.artikel() + &quot;: nur noch &quot; + bestand + &quot; auf Lager&quot;);
+            lager.put(b.artikel(), bestand - b.menge());
+            var e = new BestellungAufgegeben(naechsteNr++, b.kunde(), b.artikel(), b.menge(), b.menge() * b.einzelpreisCent());
+            abonnenten.forEach(a -&gt; a.accept(e));
+        }
+    }
+
+    // ===================== Leseseite (Query): je ein Modell pro Bildschirm =====================
+    // Lesemodell 1: Umsatz pro Kunde, fertig berechnet
+    static final class KundenUmsatz {
+        final Map&lt;String, Long&gt; umsatz = new TreeMap&lt;&gt;();
+        void aktualisiere(BestellungAufgegeben e) { umsatz.merge(e.kunde(), e.cent(), Long::sum); }
+    }
+    // Lesemodell 2: Bestseller-Liste
+    static final class Bestseller {
+        final Map&lt;String, Integer&gt; verkauft = new TreeMap&lt;&gt;();
+        void aktualisiere(BestellungAufgegeben e) { verkauft.merge(e.artikel(), e.menge(), Integer::sum); }
+        List&lt;String&gt; top() {
+            return verkauft.entrySet().stream().sorted(Map.Entry.&lt;String, Integer&gt;comparingByValue().reversed())
+                    .map(x -&gt; x.getKey() + &quot; (&quot; + x.getValue() + &quot;)&quot;).toList();
+        }
+    }
+
+    public static void main(String[] args) {
+        BestellungsBefehle befehle = new BestellungsBefehle();
+        KundenUmsatz umsatz = new KundenUmsatz();
+        Bestseller bestseller = new Bestseller();
+        befehle.abonniere(umsatz::aktualisiere);               // Lesemodelle werden bei jedem Ereignis nachgeführt
+        befehle.abonniere(bestseller::aktualisiere);
+
+        List&lt;GibBestellungAuf&gt; eingang = List.of(
+                new GibBestellungAuf(&quot;Sven&quot;, &quot;Buch&quot;, 2, 1_990),
+                new GibBestellungAuf(&quot;Anna&quot;, &quot;Lampe&quot;, 1, 3_990),
+                new GibBestellungAuf(&quot;Sven&quot;, &quot;Buch&quot;, 3, 1_990),
+                new GibBestellungAuf(&quot;Ben&quot;, &quot;Lampe&quot;, 5, 3_990));
+
+        System.out.println(&quot;Befehle (Schreibseite):&quot;);
+        for (var b : eingang) {
+            try { befehle.ausfuehren(b); System.out.println(&quot;  ok:        &quot; + b); }
+            catch (IllegalStateException e) { System.out.println(&quot;  abgelehnt: &quot; + b + &quot; -&gt; &quot; + e.getMessage()); }
+        }
+
+        System.out.println(&quot;\nAbfragen (Leseseite), ohne jede Berechnung beim Lesen:&quot;);
+        umsatz.umsatz.forEach((k, c) -&gt; System.out.printf(Locale.GERMANY, &quot;  Umsatz %-5s %7.2f €%n&quot;, k, c / 100.0));
+        System.out.println(&quot;  Bestseller: &quot; + bestseller.top());
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Befehle (Schreibseite):
+  ok:        GibBestellungAuf[kunde=Sven, artikel=Buch, menge=2, einzelpreisCent=1990]
+  ok:        GibBestellungAuf[kunde=Anna, artikel=Lampe, menge=1, einzelpreisCent=3990]
+  ok:        GibBestellungAuf[kunde=Sven, artikel=Buch, menge=3, einzelpreisCent=1990]
+  abgelehnt: GibBestellungAuf[kunde=Ben, artikel=Lampe, menge=5, einzelpreisCent=3990] -&gt; Lampe: nur noch 1 auf Lager
+
+Abfragen (Leseseite), ohne jede Berechnung beim Lesen:
+  Umsatz Anna    39,90 €
+  Umsatz Sven    99,50 €
+  Bestseller: [Buch (5), Lampe (1)]</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Schreib- und Lesemodell haben oft völlig unterschiedliche Anforderungen. Geschrieben wird selten und mit vielen Regeln, gelesen sehr oft und in vielen verschiedenen Darstellungen. Getrennt lässt sich beides unabhängig optimieren und skalieren. Der Preis ist <strong>Komplexität</strong> und meist <strong>letztendliche Konsistenz</strong>: Laufen die Lesemodelle asynchron nach, sieht ein Benutzer seine eigene Änderung womöglich erst eine Sekunde später. Für einfache CRUD-Anwendungen ist CQRS fast immer übertrieben. Greg Young selbst betont, dass es nur für Teile eines Systems gedacht ist, nicht für das ganze.</p>
+<h3>In der Praxis</h3>
+<p>Axon Framework, das CQRS und Event Sourcing kombiniert, Lesemodelle in Elasticsearch neben einer relationalen Schreibdatenbank, materialisierte Sichten in Datenbanken, Projektionen in Kafka Streams. Eine einfache Form ist schon die Trennung von Methoden, die etwas ändern, und solchen, die nur lesen.</p>
+<h2 id="vergleich">Im Überblick</h2>
+<table>
+<tr><th>Muster</th><th>Strukturiert nach</th><th>Typischer Einsatz</th></tr>
+<tr><td>Layers</td><td>technischen Ebenen, oben nach unten</td><td>klassische Geschäftsanwendungen</td></tr>
+<tr><td>MVC / MVP / MVVM</td><td>Daten, Darstellung, Eingabe</td><td>Benutzeroberflächen</td></tr>
+<tr><td>Hexagonal</td><td>Fachkern innen, Technik außen</td><td>langlebige Fachanwendungen, Microservices</td></tr>
+<tr><td>Pipes and Filters</td><td>Verarbeitungsschritten in Reihe</td><td>Datenverarbeitung, Compiler, Integration</td></tr>
+<tr><td>Broker</td><td>Vermittler zwischen verteilten Teilen</td><td>verteilte Systeme, Messaging</td></tr>
+<tr><td>Microkernel</td><td>minimalem Kern und Erweiterungen</td><td>erweiterbare Produkte, IDEs</td></tr>
+<tr><td>Blackboard</td><td>gemeinsamem Datenbestand</td><td>Probleme ohne festen Lösungsweg</td></tr>
+<tr><td>Event Sourcing</td><td>Ereignissen statt Zuständen</td><td>Buchhaltung, Prüfpflichten, Historie</td></tr>
+<tr><td>CQRS</td><td>Schreiben und Lesen getrennt</td><td>viele Leser, komplexe Abfragen</td></tr>
+</table>
+<p>Die Links zu den Enterprise Integration Patterns funktionieren, wenn die Ordner <code>eip</code> und <code>muster</code> auf der Webseite nebeneinander liegen.</p>
+<nav class="nav"><a href="/it-konzepte/weitere-muster/domain-driven-design/">← Domain-Driven Design</a><a href="/it-konzepte/weitere-muster/">Übersicht</a><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/">Nebenläufigkeit →</a></nav>
+</article>

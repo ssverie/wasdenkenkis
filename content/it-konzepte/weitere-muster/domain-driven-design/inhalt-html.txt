@@ -1,0 +1,477 @@
+<article class="muster">
+<nav class="nav"><a href="/it-konzepte/weitere-muster/datenzugriff/">← Datenzugriff</a><a href="/it-konzepte/weitere-muster/">Übersicht</a><a href="/it-konzepte/weitere-muster/architektur/">Architektur →</a></nav>
+<p>Eric Evans hat 2003 mit <em>Domain-Driven Design</em> beschrieben, wie man Software um das <strong>Fachgebiet</strong> herum baut statt um die Technik. Ein Kernpunkt ist eine gemeinsame Sprache von Fachleuten und Entwicklern, die sich direkt im Code wiederfindet. Dazu hat Evans eine Reihe taktischer Bausteine beschrieben. Das <em>Value Object</em> und die <em>Specification</em> stehen bereits in Gruppe 2, das <em>Repository</em> in Gruppe 3. Diese Gruppe ergänzt die übrigen fünf.</p>
+<p>Die Codebeispiele bauen aufeinander auf und verwenden durchgehend den Online-Händler mit Kunden, Bestellungen und Konten.</p>
+<ul class="legende"><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="8" class="app"/><text x="17.0" y="16.0" class="lbl" text-anchor="middle"></text></svg>Anwendung / Objekt</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="6" class="comp"/><text x="17.0" y="16.0" class="lbl-c" text-anchor="middle"></text></svg>Muster-Baustein</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><path d="M6,11 v0 a11.0,10 0 0 0 22,0 v0" class="store"/><ellipse cx="17.0" cy="11" rx="11.0" ry="10" class="store"/><text x="17.0" y="22.0" class="lbl" text-anchor="middle"></text></svg>Speicher / Ressource</li></ul>
+<ul class="inhalt">
+  <li><a href="#entity">22. Entity</a></li>
+  <li><a href="#aggregate">23. Aggregate</a></li>
+  <li><a href="#domain-event">24. Domain Event</a></li>
+  <li><a href="#domain-service">25. Domain Service</a></li>
+  <li><a href="#anti-corruption-layer">26. Anti-Corruption Layer</a></li>
+</ul>
+<h2 id="entity"><span class="nr">22.</span> Entity <span class="de">· Entität</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Entity: ein Objekt mit dauerhafter Identität" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="20" y="30" width="200" height="70" rx="8" class="app"/><rect x="74.5" y="20" width="91" height="20" rx="10" class="tag"/><text x="120" y="34" class="tagt" text-anchor="middle">id 7e2cb236</text><text x="120" y="64" class="lbl" text-anchor="middle">Anna Lenz</text><text x="120" y="86" class="sub" text-anchor="middle">Köln</text><rect x="260" y="30" width="200" height="70" rx="8" class="app"/><rect x="314.5" y="20" width="91" height="20" rx="10" class="tag"/><text x="360" y="34" class="tagt" text-anchor="middle">id 7e2cb236</text><text x="360" y="64" class="lbl" text-anchor="middle">Anna Berg</text><text x="360" y="86" class="sub" text-anchor="middle">Köln</text><rect x="500" y="30" width="200" height="70" rx="8" class="app"/><rect x="554.5" y="20" width="91" height="20" rx="10" class="tag"/><text x="600" y="34" class="tagt" text-anchor="middle">id 7e2cb236</text><text x="600" y="64" class="lbl" text-anchor="middle">Anna Berg</text><text x="600" y="86" class="sub" text-anchor="middle">Hamburg</text><line x1="220" y1="65" x2="258" y2="65" class="arr" marker-end="url(#pfeil)"/><line x1="460" y1="65" x2="498" y2="65" class="arr" marker-end="url(#pfeil)"/><text x="239" y="120" class="tiny" text-anchor="middle">heiratet</text><text x="479" y="120" class="tiny" text-anchor="middle">zieht um</text><text x="360" y="140" class="note" text-anchor="middle">Daten ändern sich, die Identität bleibt: immer dieselbe Kundin</text><rect x="140" y="170" width="200" height="50" rx="8" class="app"/><rect x="194.5" y="160" width="91" height="20" rx="10" class="tag"/><text x="240" y="174" class="tagt" text-anchor="middle">id 7e2cb236</text><text x="240" y="202" class="lbl" text-anchor="middle">Anna Berg, Hamburg</text><rect x="380" y="170" width="200" height="50" rx="8" class="app"/><rect x="434.5" y="160" width="91" height="20" rx="10" class="tag"/><text x="480" y="174" class="tagt" text-anchor="middle">id 5b5e5b8a</text><text x="480" y="202" class="lbl" text-anchor="middle">Anna Berg, Hamburg</text><text x="360" y="202" class="lbl" text-anchor="middle">≠</text><text x="660" y="202" class="tiny" text-anchor="middle">gleiche Daten,</text><text x="660" y="216" class="tiny" text-anchor="middle">andere Person</text></svg><figcaption>Anna heiratet und zieht um, bleibt aber dieselbe Kundin. Eine andere Kundin mit gleichem Namen und Wohnort ist trotzdem eine andere.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Eine Entity ist ein Objekt, das sich über eine <strong>eigene, dauerhafte Identität</strong> definiert, nicht über seine Eigenschaften. Ein Kunde kann heiraten, umziehen und eine neue Telefonnummer bekommen und bleibt doch derselbe Kunde. Zwei Kunden mit identischem Namen und Wohnort sind dagegen zwei verschiedene Menschen. Das ist der Gegenpol zum <em>Value Object</em> (Gruppe 2), das allein über seine Werte definiert ist.</p>
+<h3>Das Problem</h3>
+<p>Vergleicht man Kunden über ihre Daten, gilt eine Kundin nach dem Umzug als „neuer“ Kunde, ihre Bestellhistorie scheint verloren. Und zwei Namensvettern würden zu einer Person verschmolzen. Wird Gleichheit gar nicht definiert, gelten zwei aus der Datenbank geladene Exemplare derselben Kundin als verschieden.</p>
+<h3>Im Code</h3>
+<p>Die Klasse <code>Kunde</code> hat eine unveränderliche <code>KundenId</code>, selbst ein Value Object, und veränderliche Eigenschaften. <code>equals</code> und <code>hashCode</code> vergleichen nur die Id. Ein alter und ein neuer Stand derselben Kundin sind gleich, zwei Kundinnen mit gleichen Daten aber verschiedenen Ids sind es nicht. Im Set landen deshalb zwei Einträge, nicht drei.</p>
+<details class="code"><summary>Java-21-Code: Entity.java</summary><p>Direkt ausführbar mit <code>java Entity.java</code></p><pre><code class="language-java">// Entity
+// Ein Objekt mit eigener, dauerhafter Identität. Seine Eigenschaften können sich ändern, es bleibt dasselbe.
+// Start: java Entity.java
+
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+
+public class Entity {
+
+    // --- Value Objects (vgl. Gruppe 2): gleich, wenn die Werte gleich sind ---
+    record KundenId(UUID wert) {
+        static KundenId neu(String schluessel) { return new KundenId(UUID.nameUUIDFromBytes(schluessel.getBytes())); }   // im echten System: UUID.randomUUID()
+        public String toString() { return wert.toString().substring(0, 8); }
+    }
+    record Adresse(String strasse, String ort) {}
+
+    // --- Entity: gleich, wenn die Identität gleich ist ---
+    static final class Kunde {
+        private final KundenId id;                    // ändert sich nie
+        private String name;                          // darf sich ändern
+        private Adresse adresse;                      // darf sich ändern
+
+        Kunde(KundenId id, String name, Adresse adresse) {
+            this.id = Objects.requireNonNull(id);
+            this.name = name;
+            this.adresse = adresse;
+        }
+
+        KundenId id() { return id; }
+        void ziehtUm(Adresse neu)      { this.adresse = neu; }
+        void heiratet(String neuerName) { this.name = neuerName; }
+
+        @Override public boolean equals(Object o) { return o instanceof Kunde k &amp;&amp; k.id.equals(id); }
+        @Override public int hashCode()            { return id.hashCode(); }
+        @Override public String toString()         { return &quot;Kunde &quot; + id + &quot;: &quot; + name + &quot;, &quot; + adresse.ort(); }
+    }
+
+    public static void main(String[] args) {
+        KundenId id = KundenId.neu(&quot;anna-1&quot;);
+        Kunde anna = new Kunde(id, &quot;Anna Lenz&quot;, new Adresse(&quot;Domweg 3&quot;, &quot;Köln&quot;));
+        System.out.println(&quot;Vorher:  &quot; + anna);
+
+        anna.heiratet(&quot;Anna Berg&quot;);
+        anna.ziehtUm(new Adresse(&quot;Hafenstraße 7&quot;, &quot;Hamburg&quot;));
+        System.out.println(&quot;Nachher: &quot; + anna);
+
+        // Gleiche Identität = gleiche Entity, auch wenn die Daten verschieden sind (z. B. alter Stand aus der DB)
+        Kunde alterStand = new Kunde(id, &quot;Anna Lenz&quot;, new Adresse(&quot;Domweg 3&quot;, &quot;Köln&quot;));
+        System.out.println(&quot;\nalter Stand equals aktueller Stand: &quot; + alterStand.equals(anna));
+
+        // Gleiche Daten, andere Identität = verschiedene Entities (zwei Kundinnen gleichen Namens)
+        Kunde namensvetterin = new Kunde(KundenId.neu(&quot;anna-2&quot;), &quot;Anna Berg&quot;, new Adresse(&quot;Hafenstraße 7&quot;, &quot;Hamburg&quot;));
+        System.out.println(&quot;gleiche Daten, andere Id, equals:   &quot; + namensvetterin.equals(anna));
+
+        Set&lt;Kunde&gt; kunden = new HashSet&lt;&gt;(Set.of(anna, namensvetterin));
+        kunden.add(alterStand);
+        System.out.println(&quot;Kunden im Set: &quot; + kunden.size());
+
+        // Zum Vergleich: Value Objects vergleichen über Werte
+        System.out.println(&quot;\nAdresse equals gleiche Adresse: &quot; +
+                new Adresse(&quot;Domweg 3&quot;, &quot;Köln&quot;).equals(new Adresse(&quot;Domweg 3&quot;, &quot;Köln&quot;)));
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Vorher:  Kunde 7e2cb236: Anna Lenz, Köln
+Nachher: Kunde 7e2cb236: Anna Berg, Hamburg
+
+alter Stand equals aktueller Stand: true
+gleiche Daten, andere Id, equals:   false
+Kunden im Set: 2
+
+Adresse equals gleiche Adresse: true</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Die wichtigste Entscheidung ist die <strong>Identität</strong>: Woher kommt sie, und ist sie wirklich dauerhaft? E-Mail-Adresse oder Name sind schlechte Kandidaten, weil sie sich ändern. Bewährt sind künstliche Schlüssel wie UUIDs oder fortlaufende Nummern. Entities sollten nicht als Records modelliert werden, weil Records über alle Felder vergleichen. Und nicht alles ist eine Entity: Viele Dinge, die man spontan als Entity anlegt, sind eigentlich Value Objects. Die Frage lautet immer: Interessiert uns, <em>welches</em> Exemplar das ist, oder nur, <em>was</em> es enthält?</p>
+<h3>In der Praxis</h3>
+<p>JPA-Klassen mit <code>@Entity</code> und <code>@Id</code>. Die JPA-Entity ist allerdings ein technischer Begriff für „hat eine Tabelle“ und nicht dasselbe wie die DDD-Entity. Auch Adressen werden in JPA oft als <code>@Entity</code> angelegt, obwohl sie fachlich Value Objects sind. Dafür gibt es <code>@Embeddable</code>.</p>
+
+<h2 id="aggregate"><span class="nr">23.</span> Aggregate <span class="de">· Aggregat</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 260" role="img" aria-label="Aggregate: eine Gruppe von Objekten mit einer Wurzel als einzigem Zugang" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="200" y="20" width="330" height="220" rx="12" class="zone"/><text x="212" y="38" class="zlbl" text-anchor="start">Aggregat Bestellung</text><rect x="280" y="50" width="180" height="50" rx="6" class="comp"/><text x="370.0" y="80.0" class="lbl-c" text-anchor="middle">Bestellung (Wurzel)</text><rect x="220" y="160" width="92" height="40" rx="8" class="app"/><text x="266.0" y="185.0" class="lbl" text-anchor="middle">Position 1</text><path d="M370,100 L266,158" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="322" y="160" width="92" height="40" rx="8" class="app"/><text x="368.0" y="185.0" class="lbl" text-anchor="middle">Position 2</text><path d="M370,100 L368,158" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="424" y="160" width="92" height="40" rx="8" class="app"/><text x="470.0" y="185.0" class="lbl" text-anchor="middle">Position 3</text><path d="M370,100 L470,158" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="16" y="52" width="140" height="46" rx="8" class="app"/><text x="86.0" y="80.0" class="lbl" text-anchor="middle">Shop</text><line x1="156" y1="75" x2="278" y2="75" class="arr" marker-end="url(#pfeil)"/><text x="217.0" y="66" class="tiny" text-anchor="middle">fuegeHinzu()</text><rect x="16" y="160" width="140" height="46" rx="8" class="app"/><text x="86.0" y="188.0" class="lbl" text-anchor="middle">anderer Code</text><line x1="156" y1="183" x2="218" y2="183" class="arr" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><path d="M182,175 L198,191 M198,175 L182,191" class="cross"/><text x="86" y="226" class="tiny" text-anchor="middle">kein direkter Zugriff</text><rect x="580" y="52" width="120" height="46" rx="8" class="app"/><text x="640.0" y="80.0" class="lbl" text-anchor="middle">Kunde 815</text><text x="640" y="116" class="tiny" text-anchor="middle">eigenes Aggregat</text><path d="M460,75 L578,75" class="arr" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><text x="520" y="66" class="tiny" text-anchor="middle">nur die Id</text><text x="640" y="170" class="note" text-anchor="middle">Wurzel prüft</text><text x="640" y="186" class="note" text-anchor="middle">alle Regeln:</text><text x="640" y="202" class="note" text-anchor="middle">max. 5 Positionen,</text><text x="640" y="218" class="note" text-anchor="middle">max. 5.000 €</text></svg><figcaption>Positionen werden nur über die Bestellung geändert, die dabei alle Regeln prüft. Auf den Kunden verweist sie nur über seine Id.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Aggregat ist eine <strong>Gruppe zusammengehöriger Objekte</strong>, die als Einheit behandelt wird, etwa eine Bestellung mit ihren Positionen. Eines der Objekte ist die <strong>Wurzel</strong> (Aggregate Root). Nur über sie darf von außen auf die Gruppe zugegriffen werden. Die Wurzel stellt sicher, dass die Regeln der Gruppe, die <em>Invarianten</em>, jederzeit eingehalten sind. Gespeichert und geladen wird immer das ganze Aggregat.</p>
+<h3>Das Problem</h3>
+<p>Darf jeder Programmteil Bestellpositionen direkt anlegen und ändern, kann niemand garantieren, dass eine Bestellung höchstens fünf Positionen und höchstens 5.000 € hat oder dass nach dem Bezahlen nichts mehr hinzukommt. Die Prüfungen müssten an jeder Stelle wiederholt werden, und eine vergessene Prüfung reicht für inkonsistente Daten.</p>
+<h3>Im Code</h3>
+<p>Die <code>Bestellung</code> ist die Wurzel. Positionen kommen nur über <code>fuegeHinzu()</code> hinein, das alle Regeln prüft. Nach außen gibt es die Positionen nur als unveränderliche Liste. Der Versuch, dort etwas einzuschleusen, scheitert. Auf den Kunden, ein eigenes Aggregat, verweist die Bestellung nur über dessen <code>KundenId</code>, nicht über das Objekt.</p>
+<details class="code"><summary>Java-21-Code: Aggregate.java</summary><p>Direkt ausführbar mit <code>java Aggregate.java</code></p><pre><code class="language-java">// Aggregate
+// Eine Gruppe zusammengehöriger Objekte mit einer Wurzel, die alle Regeln der Gruppe sicherstellt.
+// Start: java Aggregate.java
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Aggregate {
+
+    record KundenId(long wert) {}                       // Verweis auf ein ANDERES Aggregat: nur die Id
+    record ArtikelNr(String wert) {}
+
+    // --- Teil des Aggregats: von außen nicht direkt änderbar ---
+    record Position(ArtikelNr artikel, int menge, long einzelpreisCent) {
+        long summe() { return menge * einzelpreisCent; }
+    }
+
+    enum Status { OFFEN, BEZAHLT, VERSANDT }
+
+    // --- Aggregatwurzel: einziger Zugang, schützt die Regeln (Invarianten) ---
+    static final class Bestellung {
+        static final int MAX_POSITIONEN = 5;
+        static final long MAX_SUMME_CENT = 500_000;
+
+        private final long id;
+        private final KundenId kunde;
+        private final List&lt;Position&gt; positionen = new ArrayList&lt;&gt;();
+        private Status status = Status.OFFEN;
+
+        Bestellung(long id, KundenId kunde) { this.id = id; this.kunde = kunde; }
+
+        void fuegeHinzu(ArtikelNr artikel, int menge, long einzelpreisCent) {
+            pruefe(status == Status.OFFEN, &quot;Bestellung ist nicht mehr offen&quot;);
+            pruefe(menge &gt; 0, &quot;Menge muss positiv sein&quot;);
+            pruefe(positionen.size() &lt; MAX_POSITIONEN, &quot;höchstens &quot; + MAX_POSITIONEN + &quot; Positionen&quot;);
+            Position neu = new Position(artikel, menge, einzelpreisCent);
+            pruefe(summe() + neu.summe() &lt;= MAX_SUMME_CENT, &quot;Bestellwert über 5.000 €&quot;);
+            positionen.add(neu);
+        }
+
+        void bezahle()  { pruefe(status == Status.OFFEN &amp;&amp; !positionen.isEmpty(), &quot;nichts zu bezahlen&quot;); status = Status.BEZAHLT; }
+        void versende() { pruefe(status == Status.BEZAHLT, &quot;erst bezahlen, dann versenden&quot;); status = Status.VERSANDT; }
+
+        long summe()                 { return positionen.stream().mapToLong(Position::summe).sum(); }
+        List&lt;Position&gt; positionen()  { return Collections.unmodifiableList(positionen); }   // nur lesend nach außen
+        Status status()              { return status; }
+
+        private static void pruefe(boolean ok, String regel) {
+            if (!ok) throw new IllegalStateException(regel);
+        }
+        public String toString() {
+            return &quot;Bestellung &quot; + id + &quot; (Kunde &quot; + kunde.wert() + &quot;): &quot; + positionen.size() + &quot; Pos., &quot;
+                    + summe() / 100 + &quot; €, &quot; + status;
+        }
+    }
+
+    static void versuche(String was, Runnable r) {
+        try { r.run(); System.out.println(&quot;  ok:        &quot; + was); }
+        catch (RuntimeException e) {
+            System.out.println(&quot;  abgelehnt: &quot; + was + &quot; -&gt; &quot; + (e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName()));
+        }
+    }
+
+    public static void main(String[] args) {
+        Bestellung b = new Bestellung(4711, new KundenId(815));
+
+        versuche(&quot;Buch hinzufügen&quot;, () -&gt; b.fuegeHinzu(new ArtikelNr(&quot;B-1&quot;), 2, 1_990));
+        versuche(&quot;Laptop hinzufügen&quot;, () -&gt; b.fuegeHinzu(new ArtikelNr(&quot;L-9&quot;), 1, 89_900));
+        versuche(&quot;5 Fernseher hinzufügen&quot;, () -&gt; b.fuegeHinzu(new ArtikelNr(&quot;TV-3&quot;), 5, 99_900));
+        versuche(&quot;Menge 0&quot;, () -&gt; b.fuegeHinzu(new ArtikelNr(&quot;B-2&quot;), 0, 990));
+        versuche(&quot;Position von außen einschleusen&quot;, () -&gt; b.positionen().add(new Position(new ArtikelNr(&quot;X&quot;), 1, 1)));
+        versuche(&quot;versenden vor dem Bezahlen&quot;, b::versende);
+        versuche(&quot;bezahlen&quot;, b::bezahle);
+        versuche(&quot;noch etwas hinzufügen&quot;, () -&gt; b.fuegeHinzu(new ArtikelNr(&quot;B-3&quot;), 1, 990));
+        versuche(&quot;versenden&quot;, b::versende);
+
+        System.out.println(&quot;\n&quot; + b);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>  ok:        Buch hinzufügen
+  ok:        Laptop hinzufügen
+  abgelehnt: 5 Fernseher hinzufügen -&gt; Bestellwert über 5.000 €
+  abgelehnt: Menge 0 -&gt; Menge muss positiv sein
+  abgelehnt: Position von außen einschleusen -&gt; UnsupportedOperationException
+  abgelehnt: versenden vor dem Bezahlen -&gt; erst bezahlen, dann versenden
+  ok:        bezahlen
+  abgelehnt: noch etwas hinzufügen -&gt; Bestellung ist nicht mehr offen
+  ok:        versenden
+
+Bestellung 4711 (Kunde 815): 2 Pos., 938 €, VERSANDT</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Vaughn Vernon hat für Aggregate vier Faustregeln formuliert: <strong>Klein halten</strong>, also nur zusammenfassen, was wirklich gemeinsam konsistent sein muss. <strong>Andere Aggregate nur per Id referenzieren</strong>, nicht per Objektverweis. <strong>Pro Transaktion nur ein Aggregat ändern</strong>. Und <strong>zwischen Aggregaten nur letztendlich konsistent</strong> sein, etwa über Domain Events. Ein häufiger Fehler sind riesige Aggregate, bei denen ein Kunde alle seine Bestellungen enthält. Dann sperrt jede neue Bestellung den ganzen Kunden.</p>
+<h3>In der Praxis</h3>
+<p>Pro Aggregat gibt es genau ein <em>Repository</em> (Gruppe 3). In JPA wird die Wurzel zur Entity mit Kaskadierung auf die Teile (<code>cascade = ALL, orphanRemoval = true</code>). Frameworks wie Axon oder jMolecules unterstützen das Konzept direkt.</p>
+
+<h2 id="domain-event"><span class="nr">24.</span> Domain Event <span class="de">· Fachereignis</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Domain Event: fachliche Ereignisse festhalten und verteilen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="60" width="200" height="130" rx="10" class="app"/><text x="116" y="84" class="lbl" text-anchor="middle">Bestellung</text><text x="116" y="104" class="tagt" text-anchor="middle">aufgeben()</text><rect x="36" y="118" width="160" height="56" rx="6" class="store"/><text x="116" y="138" class="tiny" text-anchor="middle">neue Ereignisse:</text><text x="116" y="158" class="tagt" text-anchor="middle">BestellungAufgegeben</text><line x1="216" y1="125" x2="288" y2="125" class="arr" marker-end="url(#pfeil)"/><text x="252" y="148" class="tiny" text-anchor="middle">nach dem</text><text x="252" y="162" class="tiny" text-anchor="middle">Speichern</text><rect x="290" y="100" width="120" height="50" rx="6" class="comp"/><text x="350.0" y="130.0" class="lbl-c" text-anchor="middle">Ereignisbus</text><path d="M410,125 C450,125 450,50 480,50" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="487.0" y="41.0" width="26" height="18" rx="2" class="msg-b"/><path d="M487.0,41.0 L500,52 L513.0,41.0" class="msg-b-flap"/><line x1="518" y1="50" x2="556" y2="50" class="arr" marker-end="url(#pfeil)"/><rect x="558" y="28" width="140" height="44" rx="8" class="app"/><text x="628.0" y="55.0" class="lbl" text-anchor="middle">Lager</text><path d="M410,125 C450,125 450,125 480,125" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="487.0" y="116.0" width="26" height="18" rx="2" class="msg-b"/><path d="M487.0,116.0 L500,127 L513.0,116.0" class="msg-b-flap"/><line x1="518" y1="125" x2="556" y2="125" class="arr" marker-end="url(#pfeil)"/><rect x="558" y="103" width="140" height="44" rx="8" class="app"/><text x="628.0" y="130.0" class="lbl" text-anchor="middle">E-Mail</text><path d="M410,125 C450,125 450,200 480,200" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="487.0" y="191.0" width="26" height="18" rx="2" class="msg-b"/><path d="M487.0,191.0 L500,202 L513.0,191.0" class="msg-b-flap"/><line x1="518" y1="200" x2="556" y2="200" class="arr" marker-end="url(#pfeil)"/><rect x="558" y="178" width="140" height="44" rx="8" class="app"/><text x="628.0" y="205.0" class="lbl" text-anchor="middle">Protokoll</text><text x="350" y="230" class="note" text-anchor="middle">die Bestellung kennt ihre Empfänger nicht</text></svg><figcaption>Die Bestellung zeichnet auf, dass sie aufgegeben wurde. Nach dem Speichern wird das Ereignis an Lager, E-Mail und Protokoll verteilt.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Domain Event hält fest, dass <strong>fachlich etwas Bedeutsames passiert ist</strong>: eine Bestellung wurde aufgegeben, eine Zahlung ist eingegangen, ein Kunde ist umgezogen. Das Ereignis ist ein unveränderliches Objekt, benannt in der Vergangenheit, mit allen wichtigen Angaben. Andere Teile des Systems reagieren darauf, ohne dass das auslösende Objekt sie kennt.</p>
+<h3>Das Problem</h3>
+<p>Würde die Bestellung beim Aufgeben selbst das Lager, den Mailversand und das Protokoll aufrufen, wäre sie mit all diesen Bereichen verdrahtet. Jede neue Reaktion, etwa ein Bonusprogramm, erforderte eine Änderung an der Bestellung. Und nach der Aggregat-Regel „nur ein Aggregat pro Transaktion“ darf sie andere Aggregate gar nicht direkt ändern.</p>
+<h3>Im Code</h3>
+<p>Die Ereignisse sind Records hinter einem <code>sealed</code> Interface. Die Bestellung sammelt sie in einer Liste. Erst nach dem (hier gedachten) Speichern werden sie entnommen und über einen einfachen Bus an die Abonnenten verteilt. Ein Abonnent wertet sie per Pattern Matching im <code>switch</code> aus, ein anderer mit einem Record Pattern in <code>instanceof</code>.</p>
+<details class="code"><summary>Java-21-Code: DomainEvent.java</summary><p>Direkt ausführbar mit <code>java DomainEvent.java</code></p><pre><code class="language-java">// Domain Event
+// Ein fachlich bedeutsames Ereignis wird als Objekt festgehalten und an Interessierte verteilt.
+// Start: java DomainEvent.java
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+public class DomainEvent {
+
+    // --- Die Ereignisse: unveränderlich, in der Vergangenheit benannt ---
+    sealed interface Ereignis permits BestellungAufgegeben, BestellungStorniert {
+        long bestellung();
+        Instant zeitpunkt();
+    }
+    record BestellungAufgegeben(long bestellung, String kunde, long summeCent, Instant zeitpunkt) implements Ereignis {}
+    record BestellungStorniert(long bestellung, String grund, Instant zeitpunkt) implements Ereignis {}
+
+    // --- Aggregat: zeichnet Ereignisse auf, statt andere direkt aufzurufen ---
+    static final class Bestellung {
+        final long id;
+        final String kunde;
+        long summeCent;
+        boolean aufgegeben, storniert;
+        private final List&lt;Ereignis&gt; neueEreignisse = new ArrayList&lt;&gt;();
+
+        Bestellung(long id, String kunde, long summeCent) { this.id = id; this.kunde = kunde; this.summeCent = summeCent; }
+
+        void aufgeben() {
+            aufgegeben = true;
+            neueEreignisse.add(new BestellungAufgegeben(id, kunde, summeCent, Instant.parse(&quot;2026-10-27T10:15:00Z&quot;)));
+        }
+        void stornieren(String grund) {
+            storniert = true;
+            neueEreignisse.add(new BestellungStorniert(id, grund, Instant.parse(&quot;2026-10-27T10:40:00Z&quot;)));
+        }
+        List&lt;Ereignis&gt; entnehmeEreignisse() {
+            List&lt;Ereignis&gt; e = List.copyOf(neueEreignisse);
+            neueEreignisse.clear();
+            return e;
+        }
+    }
+
+    // --- Einfacher Verteiler für Ereignisse ---
+    static final class Ereignisbus {
+        private final List&lt;Consumer&lt;Ereignis&gt;&gt; abonnenten = new ArrayList&lt;&gt;();
+        void abonniere(Consumer&lt;Ereignis&gt; a) { abonnenten.add(a); }
+        void veroeffentliche(List&lt;Ereignis&gt; ereignisse) { ereignisse.forEach(e -&gt; abonnenten.forEach(a -&gt; a.accept(e))); }
+    }
+
+    public static void main(String[] args) {
+        Ereignisbus bus = new Ereignisbus();
+
+        // Andere Teile des Systems reagieren, ohne dass die Bestellung sie kennt
+        bus.abonniere(e -&gt; {
+            switch (e) {
+                case BestellungAufgegeben a -&gt; System.out.println(&quot;  Lager:       reserviere Ware für Bestellung &quot; + a.bestellung());
+                case BestellungStorniert s  -&gt; System.out.println(&quot;  Lager:       gib Ware für Bestellung &quot; + s.bestellung() + &quot; frei&quot;);
+            }
+        });
+        bus.abonniere(e -&gt; {
+            if (e instanceof BestellungAufgegeben(long nr, String kunde, long summe, Instant zeit))
+                System.out.printf(&quot;  E-Mail:      Danke %s, Bestellung %d über %d,%02d €%n&quot;, kunde, nr, summe / 100, summe % 100);
+        });
+        bus.abonniere(e -&gt; System.out.println(&quot;  Protokoll:   &quot; + e.zeitpunkt() + &quot; &quot; + e.getClass().getSimpleName()));
+
+        Bestellung b = new Bestellung(4711, &quot;Sven&quot;, 12_990);
+
+        System.out.println(&quot;Bestellung aufgeben:&quot;);
+        b.aufgeben();
+        // erst NACH erfolgreichem Speichern veröffentlichen
+        bus.veroeffentliche(b.entnehmeEreignisse());
+
+        System.out.println(&quot;\nBestellung stornieren:&quot;);
+        b.stornieren(&quot;Kunde hat es sich anders überlegt&quot;);
+        bus.veroeffentliche(b.entnehmeEreignisse());
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Bestellung aufgeben:
+  Lager:       reserviere Ware für Bestellung 4711
+  E-Mail:      Danke Sven, Bestellung 4711 über 129,90 €
+  Protokoll:   2026-10-27T10:15:00Z BestellungAufgegeben
+
+Bestellung stornieren:
+  Lager:       gib Ware für Bestellung 4711 frei
+  Protokoll:   2026-10-27T10:40:00Z BestellungStorniert</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Ereignisse sollten erst <strong>nach erfolgreichem Speichern</strong> verteilt werden, sonst reagiert das Lager auf eine Bestellung, deren Speicherung danach fehlschlägt. Sollen Ereignisse andere Dienste über Messaging erreichen, hilft das <em>Outbox-Muster</em> (Gruppe 7). Ein Domain Event beschreibt Fachliches: „BestellungAufgegeben“, nicht „DatensatzGeändert“. Es ist die fachliche Seite dessen, was in den Enterprise Integration Patterns als <em>Event Message</em> verschickt wird.</p>
+<h3>In der Praxis</h3>
+<p><code>@DomainEvents</code> und <code>AbstractAggregateRoot</code> in Spring Data, die Ereignisse beim Speichern automatisch veröffentlichen, <code>ApplicationEventPublisher</code> in Spring, Axon Framework. Event Sourcing (Gruppe 5) speichert sogar ausschließlich Domain Events.</p>
+
+<h2 id="domain-service"><span class="nr">25.</span> Domain Service <span class="de">· Fachdienst</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 230" role="img" aria-label="Domain Service: Fachlogik, die zu keiner einzelnen Entity gehört" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="20" y="70" width="170" height="70" rx="8" class="app"/><text x="105.0" y="110.0" class="lbl" text-anchor="middle">Konto Sven</text><text x="105" y="160" class="tiny" text-anchor="middle">Saldo, Dispo</text><rect x="530" y="70" width="170" height="70" rx="8" class="app"/><text x="615.0" y="110.0" class="lbl" text-anchor="middle">Konto Marco</text><text x="615" y="160" class="tiny" text-anchor="middle">Saldo</text><rect x="250" y="70" width="220" height="70" rx="6" class="comp"/><text x="360.0" y="110.0" class="lbl-c" text-anchor="middle">Überweisungsdienst</text><line x1="250" y1="92" x2="192" y2="92" class="arr" marker-end="url(#pfeil)"/><text x="220" y="60" class="tiny" text-anchor="middle">belaste(100 € + Gebühr)</text><line x1="470" y1="92" x2="528" y2="92" class="arr" marker-end="url(#pfeil)"/><text x="500" y="60" class="tiny" text-anchor="middle">schreibeGut(100 €)</text><text x="360" y="162" class="tiny" text-anchor="middle">kennt Regeln: Gebühr ins Ausland,</text><text x="360" y="178" class="tiny" text-anchor="middle">kein gleiches Konto, Betrag positiv</text><text x="360" y="212" class="note" text-anchor="middle">gehört weder Sven noch Marco, hat keinen eigenen Zustand</text></svg><figcaption>Eine Überweisung betrifft zwei Konten gleichermaßen. Die Logik dafür steckt in einem eigenen Dienst.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Manche Fachlogik passt in <strong>keine einzelne Entity</strong>, weil sie mehrere gleichrangig betrifft oder weil sie in der Fachsprache als eigener Vorgang gilt. Für sie gibt es einen Domain Service: eine <strong>zustandslose</strong> Klasse, deren Name ein fachlicher Begriff ist und deren Methoden fachliche Vorgänge ausführen.</p>
+<h3>Das Problem</h3>
+<p>Eine Überweisung betrifft zwei Konten. Gehört <code>ueberweise()</code> in das sendende Konto? Dann muss das Konto das empfangende Konto kennen und verändern, was die Aggregat-Regeln verletzt. In das empfangende? Ebenso schlecht. Steckt man die Logik dagegen in irgendeine Hilfsklasse außerhalb der Domäne, geht Fachwissen verloren.</p>
+<h3>Im Code</h3>
+<p>Die Konten bleiben für ihre eigenen Regeln zuständig: Ob abgebucht werden darf, entscheidet das Konto selbst anhand von Saldo und Dispo. Der <code>Ueberweisungsdienst</code> kennt die Regeln, die beide betreffen: kein gleiches Konto, positiver Betrag, Gebühr bei Auslandsüberweisungen. Er hat keinen eigenen Zustand, nur eine Konfiguration.</p>
+<details class="code"><summary>Java-21-Code: DomainService.java</summary><p>Direkt ausführbar mit <code>java DomainService.java</code></p><pre><code class="language-java">// Domain Service
+// Fachlogik, die zu keiner einzelnen Entity gehört, bekommt einen eigenen, zustandslosen Dienst.
+// Start: java DomainService.java
+
+import java.util.Locale;
+
+public class DomainService {
+
+    // --- Entities mit eigener Logik ---
+    static final class Konto {
+        final String iban;
+        final String inhaber;
+        private long saldoCent;
+        private final long dispoCent;
+
+        Konto(String iban, String inhaber, long saldoCent, long dispoCent) {
+            this.iban = iban; this.inhaber = inhaber; this.saldoCent = saldoCent; this.dispoCent = dispoCent;
+        }
+        boolean kannAbbuchen(long cent) { return saldoCent - cent &gt;= -dispoCent; }
+        void belaste(long cent) {
+            if (!kannAbbuchen(cent)) throw new IllegalStateException(&quot;Deckung nicht ausreichend&quot;);
+            saldoCent -= cent;
+        }
+        void schreibeGut(long cent) { saldoCent += cent; }
+        public String toString() { return String.format(Locale.GERMANY, &quot;%-6s %9.2f €&quot;, inhaber, saldoCent / 100.0); }
+    }
+
+    // --- Domain Service: Logik, die zwei Konten betrifft, gehört keinem von beiden ---
+    static final class Ueberweisungsdienst {
+        private final long gebuehrCent;
+        Ueberweisungsdienst(long gebuehrCent) { this.gebuehrCent = gebuehrCent; }
+
+        void ueberweise(Konto von, Konto an, long cent) {
+            if (von == an) throw new IllegalArgumentException(&quot;gleiches Konto&quot;);
+            if (cent &lt;= 0) throw new IllegalArgumentException(&quot;Betrag muss positiv sein&quot;);
+            long gebuehr = von.iban.substring(0, 2).equals(an.iban.substring(0, 2)) ? 0 : gebuehrCent;   // Ausland kostet
+            von.belaste(cent + gebuehr);
+            an.schreibeGut(cent);
+        }
+    }
+
+    public static void main(String[] args) {
+        Konto sven = new Konto(&quot;DE89 3704&quot;, &quot;Sven&quot;, 50_000, 20_000);
+        Konto anna = new Konto(&quot;DE12 5001&quot;, &quot;Anna&quot;, 10_000, 0);
+        Konto marco = new Konto(&quot;AT61 1904&quot;, &quot;Marco&quot;, 0, 0);
+        var dienst = new Ueberweisungsdienst(150);
+
+        System.out.println(&quot;Start:   &quot; + sven + &quot; | &quot; + anna + &quot; | &quot; + marco);
+        dienst.ueberweise(sven, anna, 30_000);
+        System.out.println(&quot;Inland:  &quot; + sven + &quot; | &quot; + anna + &quot; | &quot; + marco);
+        dienst.ueberweise(sven, marco, 10_000);
+        System.out.println(&quot;Ausland: &quot; + sven + &quot; | &quot; + anna + &quot; | &quot; + marco + &quot;   (1,50 € Gebühr)&quot;);
+        try {
+            dienst.ueberweise(anna, marco, 50_000);
+        } catch (IllegalStateException e) {
+            System.out.println(&quot;Abgelehnt: Anna -&gt; Marco 500 €: &quot; + e.getMessage());
+        }
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Start:   Sven      500,00 € | Anna      100,00 € | Marco       0,00 €
+Inland:  Sven      200,00 € | Anna      400,00 € | Marco       0,00 €
+Ausland: Sven       98,50 € | Anna      400,00 € | Marco     100,00 €   (1,50 € Gebühr)
+Abgelehnt: Anna -&gt; Marco 500 €: Deckung nicht ausreichend</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Domain Services sind die Ausnahme, nicht die Regel. Die größte Gefahr ist das „blutleere Modell“ (<em>Anemic Domain Model</em>): Alle Logik wandert in Services, und die Entities bleiben reine Datenbehälter mit Gettern und Settern. Dann ist von objektorientiertem Design nichts mehr übrig. Ein Domain Service ist auch zu unterscheiden vom <em>Application Service</em>, der einen Anwendungsfall koordiniert (laden, Fachlogik aufrufen, speichern, Transaktion) und selbst keine Fachlogik enthält.</p>
+<h3>In der Praxis</h3>
+<p>Typische Kandidaten sind Überweisungen, Preis- und Steuerberechnungen über mehrere Objekte, Prüfungen auf Doppelbuchungen, Wechselkursumrechnungen. In Spring sind solche Klassen oft mit <code>@Service</code> markiert, wobei diese Annotation fachlich keinen Unterschied zwischen Domain und Application Service macht.</p>
+
+<h2 id="anti-corruption-layer"><span class="nr">26.</span> Anti-Corruption Layer <span class="de">· Schutzschicht</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Anti-Corruption Layer: Übersetzungsschicht zu einem fremden System" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="10" y="20" width="220" height="210" rx="12" class="zone"/><text x="22" y="38" class="zlbl" text-anchor="start">Fremdsystem: altes ERP</text><rect x="71.0" y="52" width="98" height="20" rx="10" class="tag"/><text x="120" y="66" class="tagt" text-anchor="middle">KDNR=0000815</text><rect x="81.5" y="79" width="77" height="20" rx="10" class="tag"/><text x="120" y="93" class="tagt" text-anchor="middle">NAM1=BERG</text><rect x="92.0" y="106" width="56" height="20" rx="10" class="tag"/><text x="120" y="120" class="tagt" text-anchor="middle">STAT=A</text><rect x="67.5" y="133" width="105" height="20" rx="10" class="tag"/><text x="120" y="147" class="tagt" text-anchor="middle">KRLIM=5000,00</text><rect x="92.0" y="160" width="56" height="20" rx="10" class="tag"/><text x="120" y="174" class="tagt" text-anchor="middle">LAND=D</text><rect x="88.5" y="187" width="63" height="20" rx="10" class="tag"/><text x="120" y="201" class="tagt" text-anchor="middle">RC=4711</text><rect x="270" y="80" width="170" height="90" rx="6" class="comp"/><text x="355.0" y="130.0" class="lbl-c" text-anchor="middle"></text><text x="355" y="112" class="lbl-c" text-anchor="middle">Anti-Corruption</text><text x="355" y="130" class="lbl-c" text-anchor="middle">Layer</text><text x="355" y="152" class="tiny" text-anchor="middle">übersetzt</text><path d="M230,125 L268,125" class="arr" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><path d="M440,125 L478,125" class="arr" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><rect x="480" y="20" width="230" height="210" rx="12" class="zone"/><text x="492" y="38" class="zlbl" text-anchor="start">eigenes Modell</text><rect x="542.5" y="52" width="105" height="20" rx="10" class="tag"/><text x="595" y="66" class="tagt" text-anchor="middle">KundenNr(815)</text><rect x="549.5" y="79" width="91" height="20" rx="10" class="tag"/><text x="595" y="93" class="tagt" text-anchor="middle">&quot;Sven Berg&quot;</text><rect x="570.5" y="106" width="49" height="20" rx="10" class="tag"/><text x="595" y="120" class="tagt" text-anchor="middle">AKTIV</text><rect x="553.0" y="133" width="84" height="20" rx="10" class="tag"/><text x="595" y="147" class="tagt" text-anchor="middle">5.000,00 €</text><rect x="563.5" y="160" width="63" height="20" rx="10" class="tag"/><text x="595" y="174" class="tagt" text-anchor="middle">Land.DE</text><rect x="532.0" y="187" width="126" height="20" rx="10" class="tag"/><text x="595" y="201" class="tagt" text-anchor="middle">Optional.empty()</text><text x="355" y="220" class="note" text-anchor="middle">Fremdbegriffe bleiben draußen</text></svg><figcaption>Kryptische Feldnamen, Statuscodes und Zahlen als Text aus dem ERP werden an einer einzigen Stelle in das eigene Modell übersetzt.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Muss das eigene System mit einem fremden zusammenarbeiten, etwa einem Altsystem, einer eingekauften Software oder dem System eines Partners, setzt man eine <strong>Übersetzungsschicht</strong> dazwischen. Sie spricht nach innen die Sprache des eigenen Modells und nach außen die des Fremdsystems. So <strong>„verseuchen“</strong> dessen Begriffe, Codes und Eigenheiten nicht das eigene Modell.</p>
+<h3>Das Problem</h3>
+<p>Das alte ERP liefert Kunden als Maps mit Schlüsseln wie <code>KDNR</code> und <code>NAM1</code>, Statuscodes wie <code>"A"</code> und <code>"G"</code>, Beträge als Text mit Komma und Fehler als „Rückgabecode“. Übernimmt der eigene Code diese Begriffe, breiten sie sich überall aus: Plötzlich prüft der Shop auf <code>STAT == "A"</code>, und ein späterer Wechsel des ERP betrifft das ganze System.</p>
+<h3>Im Code</h3>
+<p>Die Schnittstelle <code>KundenQuelle</code> ist in der eigenen Sprache formuliert. Der <code>ErpKundenAdapter</code> ist die einzige Klasse, die das ERP kennt. Er übersetzt Kundennummern, Namen, Statuscodes, Beträge und Länder in saubere Typen und den Rückgabecode in ein leeres <code>Optional</code>. Unbekannte Codes führen zu einem klaren Fehler, statt still falsche Daten zu liefern. Die Methode <code>darfAufRechnungKaufen()</code> arbeitet nur mit dem eigenen Modell.</p>
+<details class="code"><summary>Java-21-Code: AntiCorruptionLayer.java</summary><p>Direkt ausführbar mit <code>java AntiCorruptionLayer.java</code></p><pre><code class="language-java">// Anti-Corruption Layer
+// Eine Übersetzungsschicht schützt das eigene Modell vor den Begriffen und Eigenheiten eines fremden Systems.
+// Start: java AntiCorruptionLayer.java
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+public class AntiCorruptionLayer {
+
+    // ============ Fremdsystem: altes ERP, nicht änderbar ============
+    static final class AltesErp {
+        // liefert Datensätze als Map mit kryptischen Schlüsseln, Codes und Zahlen als Text
+        Map&lt;String, String&gt; KDSATZ_LESEN(String kdnr) {
+            return switch (kdnr) {
+                case &quot;0000815&quot; -&gt; Map.of(&quot;KDNR&quot;, &quot;0000815&quot;, &quot;NAM1&quot;, &quot;BERG&quot;, &quot;NAM2&quot;, &quot;SVEN&quot;, &quot;STAT&quot;, &quot;A&quot;, &quot;KRLIM&quot;, &quot;5000,00&quot;, &quot;LAND&quot;, &quot;D&quot;);
+                case &quot;0000816&quot; -&gt; Map.of(&quot;KDNR&quot;, &quot;0000816&quot;, &quot;NAM1&quot;, &quot;LENZ&quot;, &quot;NAM2&quot;, &quot;ANNA&quot;, &quot;STAT&quot;, &quot;G&quot;, &quot;KRLIM&quot;, &quot;0,00&quot;, &quot;LAND&quot;, &quot;A&quot;);
+                default -&gt; Map.of(&quot;RC&quot;, &quot;4711&quot;);                                     // &quot;Rückgabecode&quot; statt Fehler
+            };
+        }
+    }
+
+    // ============ Eigenes, sauberes Domänenmodell ============
+    record KundenNr(int wert) {}
+    enum Kundenstatus { AKTIV, GESPERRT }
+    enum Land { DE, AT, CH }
+    record Kunde(KundenNr nr, String name, Kundenstatus status, BigDecimal kreditlimit, Land land) {
+        boolean darfAufRechnungKaufen() { return status == Kundenstatus.AKTIV &amp;&amp; kreditlimit.signum() &gt; 0; }
+    }
+    interface KundenQuelle { Optional&lt;Kunde&gt; kunde(KundenNr nr); }       // Schnittstelle in UNSERER Sprache
+
+    // ============ Anti-Corruption Layer: einzige Stelle, die das ERP kennt ============
+    static final class ErpKundenAdapter implements KundenQuelle {
+        private final AltesErp erp;
+        ErpKundenAdapter(AltesErp erp) { this.erp = erp; }
+
+        public Optional&lt;Kunde&gt; kunde(KundenNr nr) {
+            Map&lt;String, String&gt; satz = erp.KDSATZ_LESEN(&quot;%07d&quot;.formatted(nr.wert()));
+            if (satz.containsKey(&quot;RC&quot;)) return Optional.empty();
+            return Optional.of(new Kunde(
+                    new KundenNr(Integer.parseInt(satz.get(&quot;KDNR&quot;))),
+                    schoen(satz.get(&quot;NAM2&quot;)) + &quot; &quot; + schoen(satz.get(&quot;NAM1&quot;)),
+                    switch (satz.get(&quot;STAT&quot;)) {
+                        case &quot;A&quot; -&gt; Kundenstatus.AKTIV;
+                        case &quot;G&quot; -&gt; Kundenstatus.GESPERRT;
+                        default -&gt; throw new IllegalStateException(&quot;unbekannter ERP-Status &quot; + satz.get(&quot;STAT&quot;));
+                    },
+                    new BigDecimal(satz.get(&quot;KRLIM&quot;).replace(&quot;,&quot;, &quot;.&quot;)),
+                    switch (satz.get(&quot;LAND&quot;)) {
+                        case &quot;D&quot; -&gt; Land.DE;
+                        case &quot;A&quot; -&gt; Land.AT;
+                        case &quot;CH&quot; -&gt; Land.CH;
+                        default -&gt; throw new IllegalStateException(&quot;unbekanntes ERP-Land &quot; + satz.get(&quot;LAND&quot;));
+                    }));
+        }
+        private static String schoen(String s) { return s.charAt(0) + s.substring(1).toLowerCase(); }
+    }
+
+    public static void main(String[] args) {
+        KundenQuelle quelle = new ErpKundenAdapter(new AltesErp());
+
+        // Der eigene Code arbeitet nur mit dem eigenen Modell
+        for (int nr : List.of(815, 816, 999)) {
+            quelle.kunde(new KundenNr(nr)).ifPresentOrElse(
+                    k -&gt; System.out.printf(java.util.Locale.GERMANY, &quot;%-10s %-9s %-3s Limit %,9.2f €  Rechnungskauf: %s%n&quot;,
+                            k.name(), k.status(), k.land(), k.kreditlimit(), k.darfAufRechnungKaufen() ? &quot;ja&quot; : &quot;nein&quot;),
+                    () -&gt; System.out.println(&quot;Kunde &quot; + nr + &quot; nicht gefunden&quot;));
+        }
+        System.out.println(&quot;\nRohdaten aus dem ERP zum Vergleich: &quot; + new java.util.TreeMap&lt;&gt;(new AltesErp().KDSATZ_LESEN(&quot;0000815&quot;)));
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Sven Berg  AKTIV     DE  Limit  5.000,00 €  Rechnungskauf: ja
+Anna Lenz  GESPERRT  AT  Limit      0,00 €  Rechnungskauf: nein
+Kunde 999 nicht gefunden
+
+Rohdaten aus dem ERP zum Vergleich: {KDNR=0000815, KRLIM=5000,00, LAND=D, NAM1=BERG, NAM2=SVEN, STAT=A}</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Ein Anti-Corruption Layer besteht meist aus mehreren GoF-Mustern: einer <em>Facade</em>, die die komplizierte Fremdschnittstelle vereinfacht, <em>Adaptern</em>, die sie an die eigenen Schnittstellen anpassen, und <em>Translatoren</em> für die Daten. Er kostet Aufwand und lohnt sich, wenn das Fremdsystem ein schlechtes oder ganz anderes Modell hat oder später ausgetauscht werden soll. Ist das fremde Modell gut und stabil, kann man es auch bewusst übernehmen. Das DDD nennt das <em>Conformist</em>.</p>
+<h3>In der Praxis</h3>
+<p>Anbindung von SAP und anderen ERP-Systemen, Integration externer Zahlungs- und Versanddienstleister, schrittweise Ablösung von Altsystemen zusammen mit dem <em>Strangler Fig</em>-Muster (Gruppe 7). Auf Nachrichtenebene leisten <em>Message Translator</em> und <em>Normalizer</em> aus den Enterprise Integration Patterns dasselbe.</p>
+<h2 id="vergleich">Die DDD-Bausteine im Zusammenhang</h2>
+<table>
+<tr><th>Baustein</th><th>Kurz gesagt</th><th>Beispiel</th><th>Seite</th></tr>
+<tr><td>Value Object</td><td>definiert durch Werte, unveränderlich</td><td>Geld, Adresse</td><td>Gruppe 2</td></tr>
+<tr><td>Entity</td><td>definiert durch Identität</td><td>Kunde, Konto</td><td>diese Seite</td></tr>
+<tr><td>Aggregate</td><td>Gruppe mit Wurzel und Regeln</td><td>Bestellung mit Positionen</td><td>diese Seite</td></tr>
+<tr><td>Repository</td><td>speichert und lädt ganze Aggregate</td><td>BestellRepository</td><td>Gruppe 3</td></tr>
+<tr><td>Domain Event</td><td>„Das ist fachlich passiert“</td><td>BestellungAufgegeben</td><td>diese Seite</td></tr>
+<tr><td>Domain Service</td><td>Fachlogik ohne eigene Entity</td><td>Überweisung</td><td>diese Seite</td></tr>
+<tr><td>Specification</td><td>kombinierbare Geschäftsregel</td><td>Premiumkunde</td><td>Gruppe 2</td></tr>
+<tr><td>Anti-Corruption Layer</td><td>Schutz vor fremden Modellen</td><td>ERP-Adapter</td><td>diese Seite</td></tr>
+</table>
+<p>Neben diesen taktischen Bausteinen beschreibt DDD auch strategische Konzepte wie <em>Bounded Context</em> (abgegrenzte Bereiche mit eigenem Modell) und <em>Context Map</em> (wie diese Bereiche zusammenhängen). Der Anti-Corruption Layer gehört eigentlich schon dazu: Er schützt die Grenze eines Bounded Context.</p>
+<nav class="nav"><a href="/it-konzepte/weitere-muster/datenzugriff/">← Datenzugriff</a><a href="/it-konzepte/weitere-muster/">Übersicht</a><a href="/it-konzepte/weitere-muster/architektur/">Architektur →</a></nav>
+</article>

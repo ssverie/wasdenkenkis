@@ -1,0 +1,782 @@
+<article class="muster">
+<nav class="nav"><a href="/it-konzepte/weitere-muster/struktur-verhalten/">← Struktur und Verhalten im Kleinen</a><a href="/it-konzepte/weitere-muster/">Übersicht</a><a href="/it-konzepte/weitere-muster/domain-driven-design/">Domain-Driven Design →</a></nav>
+<p>Fast jede Anwendung muss Daten dauerhaft speichern, und fast immer in einer relationalen Datenbank, deren Tabellen nicht zu den Objekten im Programm passen. Martin Fowler hat 2002 in <em>Patterns of Enterprise Application Architecture</em> (PoEAA) beschrieben, wie man diese Lücke überbrückt. Die Muster dieser Gruppe stecken heute in jedem ORM-Framework wie JPA und Hibernate. Wer sie kennt, versteht, was diese Frameworks im Hintergrund tun und wo ihre Fallen liegen.</p>
+<p>Die Codebeispiele verwenden keine echte Datenbank, sondern Listen und Maps im Speicher. Die ausgegebenen SQL-Befehle zeigen, was eine echte Implementierung an die Datenbank schicken würde.</p>
+<ul class="legende"><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="8" class="app"/><text x="17.0" y="16.0" class="lbl" text-anchor="middle"></text></svg>Anwendung / Objekt</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="6" class="comp"/><text x="17.0" y="16.0" class="lbl-c" text-anchor="middle"></text></svg>Muster-Baustein</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><path d="M6,11 v0 a11.0,10 0 0 0 22,0 v0" class="store"/><ellipse cx="17.0" cy="11" rx="11.0" ry="10" class="store"/><text x="17.0" y="22.0" class="lbl" text-anchor="middle"></text></svg>Speicher / Ressource</li></ul>
+<ul class="inhalt">
+  <li><a href="#repository">14. Repository</a></li>
+  <li><a href="#dao">15. Data Access Object (DAO)</a></li>
+  <li><a href="#active-record">16. Active Record</a></li>
+  <li><a href="#data-mapper">17. Data Mapper</a></li>
+  <li><a href="#unit-of-work">18. Unit of Work</a></li>
+  <li><a href="#identity-map">19. Identity Map</a></li>
+  <li><a href="#lazy-load">20. Lazy Load</a></li>
+  <li><a href="#dto">21. Data Transfer Object (DTO)</a></li>
+</ul>
+<h2 id="repository"><span class="nr">14.</span> Repository <span class="de">· Ablage</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Repository: sammlungsartige Schnittstelle zu Domänenobjekten" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="90" width="150" height="60" rx="8" class="app"/><text x="91.0" y="125.0" class="lbl" text-anchor="middle">Geschäftslogik</text><rect x="230" y="60" width="210" height="120" rx="8" class="comp"/><text x="335" y="84" class="lbl-c" text-anchor="middle">BestellRepository</text><text x="335" y="108" class="tagt" text-anchor="middle">speichere(b)</text><text x="335" y="126" class="tagt" text-anchor="middle">mitId(4711)</text><text x="335" y="144" class="tagt" text-anchor="middle">offeneVon(&quot;Sven&quot;)</text><text x="335" y="162" class="tagt" text-anchor="middle">summeOffen()</text><line x1="166" y1="120" x2="228" y2="120" class="arr" marker-end="url(#pfeil)"/><rect x="510" y="40" width="190" height="60" rx="8" class="app"/><text x="605" y="66" class="lbl" text-anchor="middle">InMemory</text><text x="605" y="86" class="tiny" text-anchor="middle">für Tests</text><rect x="510" y="140" width="190" height="60" rx="8" class="app"/><text x="605" y="166" class="lbl" text-anchor="middle">SQL / JPA</text><text x="605" y="186" class="tiny" text-anchor="middle">für den Betrieb</text><path d="M440,110 C475,110 475,70 508,70" class="arr" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><path d="M440,130 C475,130 475,170 508,170" class="arr" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><text x="335" y="220" class="note" text-anchor="middle">fachliche Fragen statt SQL</text><text x="90" y="40" class="note" text-anchor="middle">„Gib mir alle offenen</text><text x="90" y="56" class="note" text-anchor="middle">Bestellungen von Sven.“</text></svg><figcaption>Die Geschäftslogik stellt fachliche Fragen an das Repository. Ob dahinter eine Liste im Speicher oder eine Datenbank steckt, weiß sie nicht.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Repository verhält sich nach außen wie eine <strong>Sammlung von Domänenobjekten</strong> im Speicher: Man legt Objekte hinein, holt sie heraus und sucht nach fachlichen Kriterien. Wie und wo die Objekte tatsächlich gespeichert werden, in einer Datenbank, einer Datei oder einem fremden Dienst, verbirgt es vollständig. Die Methoden sprechen die Sprache der Fachabteilung: <code>offeneVon(kunde)</code> statt <code>SELECT ... WHERE</code>.</p>
+<h3>Das Problem</h3>
+<p>Streuen sich SQL-Abfragen über die ganze Geschäftslogik, ist diese untrennbar mit der Datenbank verbunden. Tests brauchen eine echte Datenbank, und jede Änderung am Tabellenschema zieht sich durch den ganzen Code. Gleiche Abfragen werden an mehreren Stellen leicht unterschiedlich geschrieben.</p>
+<h3>Im Code</h3>
+<p>Das Interface <code>BestellRepository</code> hat zwei Implementierungen: eine im Speicher und eine, die SQL erzeugt (hier nur simuliert und protokolliert). Dieselbe Methode <code>geschaeftsablauf</code> läuft mit beiden und liefert dasselbe Ergebnis.</p>
+<details class="code"><summary>Java-21-Code: Repository.java</summary><p>Direkt ausführbar mit <code>java Repository.java</code></p><pre><code class="language-java">// Repository
+// Eine sammlungsartige Schnittstelle zu Domänenobjekten, die verbirgt, wo und wie sie gespeichert sind.
+// Start: java Repository.java
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
+
+public class Repository {
+
+    enum Status { OFFEN, VERSANDT }
+    record Bestellung(Long id, String kunde, long cent, Status status) {
+        Bestellung mitId(long neueId) { return new Bestellung(neueId, kunde, cent, status); }
+    }
+
+    // --- Das Repository: spricht die Sprache der Domäne, nicht die der Datenbank ---
+    interface BestellRepository {
+        Bestellung speichere(Bestellung b);
+        Optional&lt;Bestellung&gt; mitId(long id);
+        List&lt;Bestellung&gt; offeneVon(String kunde);
+        long summeOffen();
+    }
+
+    // --- Implementierung 1: im Speicher, z. B. für Tests ---
+    static final class InMemoryBestellungen implements BestellRepository {
+        private final Map&lt;Long, Bestellung&gt; daten = new ConcurrentHashMap&lt;&gt;();
+        private final AtomicLong naechsteId = new AtomicLong(1);
+
+        public Bestellung speichere(Bestellung b) {
+            Bestellung mitId = b.id() == null ? b.mitId(naechsteId.getAndIncrement()) : b;
+            daten.put(mitId.id(), mitId);
+            return mitId;
+        }
+        public Optional&lt;Bestellung&gt; mitId(long id) { return Optional.ofNullable(daten.get(id)); }
+        public List&lt;Bestellung&gt; offeneVon(String kunde) {
+            return daten.values().stream().filter(b -&gt; b.kunde().equals(kunde) &amp;&amp; b.status() == Status.OFFEN).toList();
+        }
+        public long summeOffen() {
+            return daten.values().stream().filter(b -&gt; b.status() == Status.OFFEN).mapToLong(Bestellung::cent).sum();
+        }
+    }
+
+    // --- Implementierung 2: &quot;Datenbank&quot;, hier nur simuliert, zeigt die erzeugten SQL-Befehle ---
+    static final class SqlBestellungen implements BestellRepository {
+        private final InMemoryBestellungen tabelle = new InMemoryBestellungen();
+        final List&lt;String&gt; log = new ArrayList&lt;&gt;();
+
+        public Bestellung speichere(Bestellung b) {
+            log.add(b.id() == null ? &quot;INSERT INTO bestellung ...&quot; : &quot;UPDATE bestellung ... WHERE id = &quot; + b.id());
+            return tabelle.speichere(b);
+        }
+        public Optional&lt;Bestellung&gt; mitId(long id) {
+            log.add(&quot;SELECT * FROM bestellung WHERE id = &quot; + id);
+            return tabelle.mitId(id);
+        }
+        public List&lt;Bestellung&gt; offeneVon(String kunde) {
+            log.add(&quot;SELECT * FROM bestellung WHERE kunde = &#x27;&quot; + kunde + &quot;&#x27; AND status = &#x27;OFFEN&#x27;&quot;);
+            return tabelle.offeneVon(kunde);
+        }
+        public long summeOffen() {
+            log.add(&quot;SELECT SUM(cent) FROM bestellung WHERE status = &#x27;OFFEN&#x27;&quot;);
+            return tabelle.summeOffen();
+        }
+    }
+
+    // --- Geschäftslogik: kennt nur die Schnittstelle ---
+    static void geschaeftsablauf(BestellRepository repo) {
+        Bestellung a = repo.speichere(new Bestellung(null, &quot;Sven&quot;, 4_990, Status.OFFEN));
+        repo.speichere(new Bestellung(null, &quot;Sven&quot;, 1_200, Status.OFFEN));
+        repo.speichere(new Bestellung(null, &quot;Anna&quot;, 8_000, Status.OFFEN));
+        repo.speichere(new Bestellung(a.id(), a.kunde(), a.cent(), Status.VERSANDT));
+
+        System.out.println(&quot;  offen für Sven: &quot; + repo.offeneVon(&quot;Sven&quot;));
+        System.out.println(&quot;  Bestellung 1:   &quot; + repo.mitId(1).map(Bestellung::status).orElseThrow());
+        System.out.printf(java.util.Locale.GERMANY, &quot;  Summe offen:    %.2f €%n&quot;, repo.summeOffen() / 100.0);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(&quot;Mit In-Memory-Repository:&quot;);
+        geschaeftsablauf(new InMemoryBestellungen());
+
+        System.out.println(&quot;\nMit SQL-Repository (simuliert):&quot;);
+        SqlBestellungen sql = new SqlBestellungen();
+        geschaeftsablauf(sql);
+        System.out.println(&quot;  erzeugte Befehle:&quot;);
+        sql.log.forEach(s -&gt; System.out.println(&quot;    &quot; + s));
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Mit In-Memory-Repository:
+  offen für Sven: [Bestellung[id=2, kunde=Sven, cent=1200, status=OFFEN]]
+  Bestellung 1:   VERSANDT
+  Summe offen:    92,00 €
+
+Mit SQL-Repository (simuliert):
+  offen für Sven: [Bestellung[id=2, kunde=Sven, cent=1200, status=OFFEN]]
+  Bestellung 1:   VERSANDT
+  Summe offen:    92,00 €
+  erzeugte Befehle:
+    INSERT INTO bestellung ...
+    INSERT INTO bestellung ...
+    INSERT INTO bestellung ...
+    UPDATE bestellung ... WHERE id = 1
+    SELECT * FROM bestellung WHERE kunde = &#x27;Sven&#x27; AND status = &#x27;OFFEN&#x27;
+    SELECT * FROM bestellung WHERE id = 1
+    SELECT SUM(cent) FROM bestellung WHERE status = &#x27;OFFEN&#x27;</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Ein Repository gibt es typischerweise <strong>pro Aggregat</strong> (siehe Gruppe 4), nicht pro Tabelle. Für eine Bestellung mit Positionen gibt es ein <code>BestellRepository</code>, aber kein eigenes für Positionen. Die Abgrenzung zum DAO ist in der Praxis fließend. Als Faustregel gilt: Das Repository denkt in Domänenobjekten und fachlichen Fragen, das DAO in Tabellen und Datenbankoperationen. Ein häufiger Fehler sind „generische“ Repositories mit Hunderten Abfragemethoden. Dann hilft die <em>Specification</em> aus Gruppe 2.</p>
+<h3>In der Praxis</h3>
+<p>Spring Data mit Interfaces wie <code>JpaRepository</code>, aus deren Methodennamen (<code>findByKundeAndStatus</code>) die Abfrage automatisch erzeugt wird, Jakarta Data, Repositories in Micronaut Data. Das Muster stammt aus Fowlers PoEAA und wurde durch Eric Evans' Domain-Driven Design bekannt.</p>
+
+<h2 id="dao"><span class="nr">15.</span> Data Access Object (DAO) <span class="de">· Datenzugriffsobjekt</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 230" role="img" aria-label="Data Access Object: CRUD-Operationen auf einer Tabelle" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="80" width="140" height="60" rx="8" class="app"/><text x="86.0" y="115.0" class="lbl" text-anchor="middle">Anwendung</text><rect x="220" y="40" width="190" height="140" rx="8" class="comp"/><text x="315" y="64" class="lbl-c" text-anchor="middle">KundenDao</text><text x="315" y="88" class="tagt" text-anchor="middle">einfuegen(...)</text><text x="315" y="106" class="tagt" text-anchor="middle">lese(id)</text><text x="315" y="124" class="tagt" text-anchor="middle">aendere(...)</text><text x="315" y="142" class="tagt" text-anchor="middle">loesche(id)</text><text x="315" y="160" class="tagt" text-anchor="middle">alle()</text><line x1="156" y1="110" x2="218" y2="110" class="arr" marker-end="url(#pfeil)"/><rect x="470" y="40" width="230" height="108" rx="4" class="store"/><text x="585.0" y="55" class="tagt" text-anchor="middle">Tabelle kunde</text><text x="508.3333333333333" y="76" class="tagt" text-anchor="middle">id</text><text x="585.0" y="76" class="tagt" text-anchor="middle">name</text><text x="661.6666666666667" y="76" class="tagt" text-anchor="middle">ort</text><line x1="470" y1="82" x2="700" y2="82" class="arr-leise"/><text x="508.3333333333333" y="98" class="tiny" text-anchor="middle">1</text><text x="585.0" y="98" class="tiny" text-anchor="middle">Sven Berg</text><text x="661.6666666666667" y="98" class="tiny" text-anchor="middle">Bremen</text><text x="508.3333333333333" y="120" class="tiny" text-anchor="middle">2</text><text x="585.0" y="120" class="tiny" text-anchor="middle">Anna Lenz</text><text x="661.6666666666667" y="120" class="tiny" text-anchor="middle">Köln</text><text x="508.3333333333333" y="142" class="tiny" text-anchor="middle">…</text><text x="585.0" y="142" class="tiny" text-anchor="middle">…</text><text x="661.6666666666667" y="142" class="tiny" text-anchor="middle">…</text><line x1="410" y1="110" x2="468" y2="110" class="arr" marker-end="url(#pfeil)"/><text x="439.0" y="100" class="tiny" text-anchor="middle">SQL</text><text x="315" y="212" class="note" text-anchor="middle">eine Methode pro Datenbankoperation</text></svg><figcaption>Das DAO bietet für die Tabelle kunde je eine Methode zum Anlegen, Lesen, Ändern und Löschen.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Data Access Object <strong>kapselt den Zugriff auf eine Datenquelle</strong>, meist eine Tabelle, hinter einer Schnittstelle mit den Grundoperationen Anlegen, Lesen, Ändern und Löschen, kurz CRUD. Die Anwendung ruft Methoden auf, das DAO kümmert sich um Verbindungen, SQL und die Umwandlung der Ergebnisse.</p>
+<h3>Das Problem</h3>
+<p>Ohne DAO steht JDBC-Code mit Verbindungen, <code>PreparedStatement</code>, <code>ResultSet</code> und Fehlerbehandlung mitten in der Anwendung. Er wird kopiert, Fehler schleichen sich ein, und ein Wechsel der Datenbank oder der Zugriffstechnik betrifft den ganzen Code.</p>
+<h3>Im Code</h3>
+<p>Das Interface <code>KundenDao</code> definiert die fünf Operationen, <code>JdbcKundenDao</code> setzt sie um (die Datenbank ist hier eine <code>TreeMap</code>, die ausgegebenen SQL-Befehle zeigen, was eine echte Implementierung schicken würde). Die Zeilen werden als Record <code>KundeZeile</code> transportiert.</p>
+<details class="code"><summary>Java-21-Code: DataAccessObject.java</summary><p>Direkt ausführbar mit <code>java DataAccessObject.java</code></p><pre><code class="language-java">// Data Access Object (DAO)
+// Kapselt den Zugriff auf eine Datenquelle hinter einer Schnittstelle mit Lese- und Schreiboperationen.
+// Start: java DataAccessObject.java
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+
+public class DataAccessObject {
+
+    // --- Transportobjekt für genau eine Tabellenzeile ---
+    record KundeZeile(long id, String name, String ort) {}
+
+    // --- Das DAO: Operationen auf einer Tabelle (CRUD) ---
+    interface KundenDao {
+        void einfuegen(KundeZeile k);
+        Optional&lt;KundeZeile&gt; lese(long id);
+        List&lt;KundeZeile&gt; alle();
+        void aendere(KundeZeile k);
+        void loesche(long id);
+    }
+
+    // --- Implementierung für eine (hier simulierte) relationale Datenbank ---
+    static final class JdbcKundenDao implements KundenDao {
+        private final Map&lt;Long, KundeZeile&gt; tabelle = new TreeMap&lt;&gt;();       // steht für die echte Tabelle
+
+        private void sql(String s) { System.out.println(&quot;    SQL: &quot; + s); }
+
+        public void einfuegen(KundeZeile k) {
+            sql(&quot;INSERT INTO kunde (id, name, ort) VALUES (&quot; + k.id() + &quot;, &#x27;&quot; + k.name() + &quot;&#x27;, &#x27;&quot; + k.ort() + &quot;&#x27;)&quot;);
+            tabelle.put(k.id(), k);
+        }
+        public Optional&lt;KundeZeile&gt; lese(long id) {
+            sql(&quot;SELECT id, name, ort FROM kunde WHERE id = &quot; + id);
+            return Optional.ofNullable(tabelle.get(id));
+        }
+        public List&lt;KundeZeile&gt; alle() {
+            sql(&quot;SELECT id, name, ort FROM kunde ORDER BY id&quot;);
+            return new ArrayList&lt;&gt;(tabelle.values());
+        }
+        public void aendere(KundeZeile k) {
+            sql(&quot;UPDATE kunde SET name = &#x27;&quot; + k.name() + &quot;&#x27;, ort = &#x27;&quot; + k.ort() + &quot;&#x27; WHERE id = &quot; + k.id());
+            tabelle.put(k.id(), k);
+        }
+        public void loesche(long id) {
+            sql(&quot;DELETE FROM kunde WHERE id = &quot; + id);
+            tabelle.remove(id);
+        }
+    }
+
+    public static void main(String[] args) {
+        KundenDao dao = new JdbcKundenDao();
+
+        System.out.println(&quot;Anlegen:&quot;);
+        dao.einfuegen(new KundeZeile(1, &quot;Sven Berg&quot;, &quot;Hamburg&quot;));
+        dao.einfuegen(new KundeZeile(2, &quot;Anna Lenz&quot;, &quot;Köln&quot;));
+
+        System.out.println(&quot;Umzug von Kunde 1:&quot;);
+        dao.lese(1).ifPresent(k -&gt; dao.aendere(new KundeZeile(k.id(), k.name(), &quot;Bremen&quot;)));
+
+        System.out.println(&quot;Löschen von Kunde 2:&quot;);
+        dao.loesche(2);
+
+        System.out.println(&quot;Alle Kunden:&quot;);
+        dao.alle().forEach(k -&gt; System.out.println(&quot;    &quot; + k));
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Anlegen:
+    SQL: INSERT INTO kunde (id, name, ort) VALUES (1, &#x27;Sven Berg&#x27;, &#x27;Hamburg&#x27;)
+    SQL: INSERT INTO kunde (id, name, ort) VALUES (2, &#x27;Anna Lenz&#x27;, &#x27;Köln&#x27;)
+Umzug von Kunde 1:
+    SQL: SELECT id, name, ort FROM kunde WHERE id = 1
+    SQL: UPDATE kunde SET name = &#x27;Sven Berg&#x27;, ort = &#x27;Bremen&#x27; WHERE id = 1
+Löschen von Kunde 2:
+    SQL: DELETE FROM kunde WHERE id = 2
+Alle Kunden:
+    SQL: SELECT id, name, ort FROM kunde ORDER BY id
+    KundeZeile[id=1, name=Sven Berg, ort=Bremen]</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Das DAO ist das ältere und technischere Muster: Es stammt aus den Core J2EE Patterns von Sun (2001) und denkt in Tabellen. Das Repository (Muster 14) denkt in Domänenobjekten. In kleineren Anwendungen ohne ausgeprägtes Domänenmodell ist ein DAO völlig ausreichend. In größeren steht das DAO oft <em>unter</em> dem Repository: Das Repository nutzt DAOs, um ein Aggregat aus mehreren Tabellen zusammenzusetzen. Wichtig: SQL immer mit Platzhaltern (<code>PreparedStatement</code>) erzeugen, nie per String-Verkettung wie in dieser vereinfachten Ausgabe, sonst droht SQL-Injection.</p>
+<h3>In der Praxis</h3>
+<p>Klassische JDBC-DAOs, <code>JdbcTemplate</code> in Spring, MyBatis-Mapper, die DAO-Schnittstellen von JDBI. In vielen Codebasen heißen Klassen auch dann „DAO“, wenn sie eigentlich Repositories sind, und umgekehrt.</p>
+
+<h2 id="active-record"><span class="nr">16.</span> Active Record <span class="de">· Aktiver Datensatz</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 230" role="img" aria-label="Active Record: ein Objekt ist eine Tabellenzeile und speichert sich selbst" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="30" y="30" width="300" height="170" rx="10" class="app"/><text x="180" y="54" class="lbl" text-anchor="middle">Kunde</text><rect x="46" y="66" width="268" height="36" rx="4" class="store"/><text x="180" y="89" class="tagt" text-anchor="middle">id · name · ort · umsatz</text><rect x="46" y="110" width="268" height="36" rx="4" class="comp"/><text x="180" y="133" class="tagt" text-anchor="middle">bucheUmsatz() · istPremium()</text><rect x="46" y="154" width="268" height="36" rx="4" class="msg"/><text x="180" y="177" class="tagt" text-anchor="middle">speichere() · loesche() · finde()</text><text x="345" y="89" class="tiny" text-anchor="start">Daten</text><text x="345" y="133" class="tiny" text-anchor="start">Fachlogik</text><text x="345" y="177" class="tiny" text-anchor="start">Datenbank</text><rect x="470" y="50" width="230" height="86" rx="4" class="store"/><text x="585.0" y="65" class="tagt" text-anchor="middle">Tabelle kunde</text><text x="498.75" y="86" class="tagt" text-anchor="middle">id</text><text x="556.25" y="86" class="tagt" text-anchor="middle">name</text><text x="613.75" y="86" class="tagt" text-anchor="middle">ort</text><text x="671.25" y="86" class="tagt" text-anchor="middle">umsatz</text><line x1="470" y1="92" x2="700" y2="92" class="arr-leise"/><text x="498.75" y="108" class="tiny" text-anchor="middle">1</text><text x="556.25" y="108" class="tiny" text-anchor="middle">Sven</text><text x="613.75" y="108" class="tiny" text-anchor="middle">Hamburg</text><text x="671.25" y="108" class="tiny" text-anchor="middle">1200</text><text x="498.75" y="130" class="tiny" text-anchor="middle">2</text><text x="556.25" y="130" class="tiny" text-anchor="middle">Anna</text><text x="613.75" y="130" class="tiny" text-anchor="middle">Köln</text><text x="671.25" y="130" class="tiny" text-anchor="middle">0</text><path d="M314,172 C400,172 420,120 468,120" class="arr" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><text x="585" y="200" class="note" text-anchor="middle">ein Objekt = eine Zeile</text></svg><figcaption>Die Klasse Kunde vereint Daten, Fachlogik und Datenbankzugriff. Jedes Objekt entspricht einer Zeile der Tabelle.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Beim Active Record entspricht ein Objekt <strong>genau einer Zeile</strong> einer Tabelle, und es weiß selbst, wie es sich lädt, speichert und löscht. Daten, Fachlogik und Datenbankzugriff stecken in derselben Klasse: <code>kunde.speichere()</code>, <code>Kunde.finde(1)</code>, <code>kunde.loesche()</code>.</p>
+<h3>Das Problem, das es löst</h3>
+<p>Für einfache Anwendungen, in denen die Klassen weitgehend den Tabellen entsprechen, sind getrennte Schichten aus Repository, Mapper und Domänenobjekt viel Aufwand für wenig Nutzen. Active Record ist der direkteste Weg: kein zusätzlicher Code, keine Übersetzung, sofort verständlich.</p>
+<h3>Im Code</h3>
+<p>Die Klasse <code>Kunde</code> hat Felder für jede Spalte, Methoden für die Fachlogik (<code>bucheUmsatz</code>, <code>istPremium</code>) und für die Datenbank (<code>speichere</code>, <code>loesche</code> sowie die statischen <code>finde</code> und <code>alle</code>). Beim ersten <code>speichere()</code> wird eingefügt, danach aktualisiert.</p>
+<details class="code"><summary>Java-21-Code: ActiveRecord.java</summary><p>Direkt ausführbar mit <code>java ActiveRecord.java</code></p><pre><code class="language-java">// Active Record
+// Ein Objekt entspricht einer Tabellenzeile und weiß selbst, wie es sich lädt, speichert und löscht.
+// Start: java ActiveRecord.java
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+
+public class ActiveRecord {
+
+    // Simulierte Tabelle &quot;kunde&quot;
+    static final Map&lt;Long, Object[]&gt; TABELLE = new TreeMap&lt;&gt;();
+    static long naechsteId = 1;
+    static void sql(String s) { System.out.println(&quot;    SQL: &quot; + s); }
+
+    // --- Der Active Record: Daten + Geschäftslogik + Datenbankzugriff in einer Klasse ---
+    static final class Kunde {
+        Long id;
+        String name;
+        String ort;
+        long umsatzCent;
+
+        Kunde(String name, String ort) { this.name = name; this.ort = ort; }
+
+        // Datenbankzugriff, direkt am Objekt
+        void speichere() {
+            if (id == null) {
+                id = naechsteId++;
+                sql(&quot;INSERT INTO kunde VALUES (&quot; + id + &quot;, &#x27;&quot; + name + &quot;&#x27;, &#x27;&quot; + ort + &quot;&#x27;, &quot; + umsatzCent + &quot;)&quot;);
+            } else {
+                sql(&quot;UPDATE kunde SET name=&#x27;&quot; + name + &quot;&#x27;, ort=&#x27;&quot; + ort + &quot;&#x27;, umsatz=&quot; + umsatzCent + &quot; WHERE id=&quot; + id);
+            }
+            TABELLE.put(id, new Object[] { name, ort, umsatzCent });
+        }
+
+        void loesche() {
+            sql(&quot;DELETE FROM kunde WHERE id = &quot; + id);
+            TABELLE.remove(id);
+        }
+
+        static Optional&lt;Kunde&gt; finde(long id) {
+            sql(&quot;SELECT * FROM kunde WHERE id = &quot; + id);
+            Object[] z = TABELLE.get(id);
+            if (z == null) return Optional.empty();
+            Kunde k = new Kunde((String) z[0], (String) z[1]);
+            k.id = id;
+            k.umsatzCent = (long) z[2];
+            return Optional.of(k);
+        }
+
+        static List&lt;Kunde&gt; alle() {
+            sql(&quot;SELECT * FROM kunde&quot;);
+            List&lt;Kunde&gt; l = new ArrayList&lt;&gt;();
+            for (long id : TABELLE.keySet()) {
+                Object[] z = TABELLE.get(id);
+                Kunde k = new Kunde((String) z[0], (String) z[1]);
+                k.id = id;
+                k.umsatzCent = (long) z[2];
+                l.add(k);
+            }
+            return l;
+        }
+
+        // Geschäftslogik, ebenfalls am Objekt
+        void bucheUmsatz(long cent) { umsatzCent += cent; }
+        boolean istPremium()        { return umsatzCent &gt;= 100_000; }
+
+        public String toString() { return &quot;Kunde#&quot; + id + &quot; &quot; + name + &quot;, &quot; + ort + &quot;, &quot; + umsatzCent / 100 + &quot; €&quot;; }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(&quot;Neue Kunden speichern:&quot;);
+        Kunde sven = new Kunde(&quot;Sven Berg&quot;, &quot;Hamburg&quot;);
+        sven.speichere();
+        new Kunde(&quot;Anna Lenz&quot;, &quot;Köln&quot;).speichere();
+
+        System.out.println(&quot;Laden, ändern, speichern:&quot;);
+        Kunde k = Kunde.finde(1).orElseThrow();
+        k.bucheUmsatz(120_000);
+        k.speichere();
+        System.out.println(&quot;    Premium? &quot; + k.istPremium());
+
+        System.out.println(&quot;Alle Kunden:&quot;);
+        Kunde.alle().forEach(x -&gt; System.out.println(&quot;    &quot; + x));
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Neue Kunden speichern:
+    SQL: INSERT INTO kunde VALUES (1, &#x27;Sven Berg&#x27;, &#x27;Hamburg&#x27;, 0)
+    SQL: INSERT INTO kunde VALUES (2, &#x27;Anna Lenz&#x27;, &#x27;Köln&#x27;, 0)
+Laden, ändern, speichern:
+    SQL: SELECT * FROM kunde WHERE id = 1
+    SQL: UPDATE kunde SET name=&#x27;Sven Berg&#x27;, ort=&#x27;Hamburg&#x27;, umsatz=120000 WHERE id=1
+    Premium? true
+Alle Kunden:
+    SQL: SELECT * FROM kunde
+    Kunde#1 Sven Berg, Hamburg, 1200 €
+    Kunde#2 Anna Lenz, Köln, 0 €</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Active Record ist schnell und bequem, solange <strong>Klassen und Tabellen sich decken</strong>. Weichen sie voneinander ab, etwa weil ein Kunde aus drei Tabellen zusammengesetzt wird oder die Fachlogik komplex wird, stößt das Muster an Grenzen. Da Fachlogik und Datenbank untrennbar verbunden sind, lässt sich die Logik kaum ohne Datenbank testen. Dann ist der <em>Data Mapper</em> (Muster 17) die bessere Wahl.</p>
+<h3>In der Praxis</h3>
+<p>Ruby on Rails hat Active Record berühmt gemacht. In der Java-Welt gibt es es in Panache für Quarkus (<code>PanacheEntity</code> mit <code>persist()</code> und <code>findById()</code>), in ActiveJDBC und in Grails/GORM. Laravel (PHP) und Django (Python) folgen ebenfalls diesem Muster.</p>
+
+<h2 id="data-mapper"><span class="nr">17.</span> Data Mapper <span class="de">· Datenabbilder</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Data Mapper: eine eigene Schicht übersetzt zwischen Objekten und Tabellen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="40" width="200" height="150" rx="10" class="app"/><text x="116" y="62" class="lbl" text-anchor="middle">Domäne</text><rect x="36" y="76" width="160" height="40" rx="6" class="comp"/><text x="116.0" y="101.0" class="lbl-c" text-anchor="middle">Kunde</text><text x="116" y="132" class="tiny" text-anchor="middle">vorname, nachname</text><rect x="56" y="144" width="120" height="34" rx="6" class="comp"/><text x="116.0" y="166.0" class="lbl-c" text-anchor="middle">Adresse</text><rect x="270" y="90" width="150" height="60" rx="6" class="comp"/><text x="345.0" y="125.0" class="lbl-c" text-anchor="middle">KundenMapper</text><path d="M216,120 L268,120" class="arr" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><path d="M420,120 L472,120" class="arr" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><rect x="474" y="46" width="234" height="64" rx="4" class="store"/><text x="591.0" y="61" class="tagt" text-anchor="middle">KD_STAMM</text><text x="513.0" y="82" class="tagt" text-anchor="middle">KD_NR</text><text x="591.0" y="82" class="tagt" text-anchor="middle">KD_NAME</text><text x="669.0" y="82" class="tagt" text-anchor="middle">KD_ORT</text><line x1="474" y1="88" x2="708" y2="88" class="arr-leise"/><text x="513.0" y="104" class="tiny" text-anchor="middle">815</text><text x="591.0" y="104" class="tiny" text-anchor="middle">Berg, Sven</text><text x="669.0" y="104" class="tiny" text-anchor="middle">Hamburg</text><text x="116" y="222" class="note" text-anchor="middle">kennt keine Datenbank</text><text x="345" y="180" class="note" text-anchor="middle">kennt beide Seiten</text><text x="590" y="160" class="note" text-anchor="middle">kennt keine Objekte</text></svg><figcaption>Der Kunde weiß nichts von der Tabelle KD_STAMM. Der Mapper übersetzt Vor- und Nachname in die Spalte KD_NAME und zurück.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Data Mapper ist eine <strong>eigene Schicht</strong> zwischen Domänenobjekten und Datenbank. Er überträgt Daten in beide Richtungen und hält beide Seiten <strong>vollständig unabhängig</strong> voneinander. Die Domänenobjekte enthalten kein SQL und keine Spaltennamen, die Datenbank weiß nichts von Objekten.</p>
+<h3>Das Problem</h3>
+<p>Oft passen Objektmodell und Tabellenstruktur nicht zusammen: Eine Altdatenbank speichert den Namen als „Nachname, Vorname“ in einer Spalte mit kryptischem Namen, die Adresse ist ein eigenes Objekt im Modell, aber Spalten in derselben Tabelle. Mit Active Record müsste das Domänenobjekt diese Eigenheiten übernehmen.</p>
+<h3>Im Code</h3>
+<p>Die Records <code>Kunde</code> und <code>Adresse</code> sind reine Fachobjekte. Die simulierte Tabelle <code>KD_STAMM</code> hat eine ganz andere Struktur. Nur der <code>KundenMapper</code> kennt beide und übersetzt, inklusive Zerlegung des Namens. Nach Speichern und Laden ist das Objekt gleich dem Original.</p>
+<details class="code"><summary>Java-21-Code: DataMapper.java</summary><p>Direkt ausführbar mit <code>java DataMapper.java</code></p><pre><code class="language-java">// Data Mapper
+// Eine eigene Schicht übersetzt zwischen Domänenobjekten und Datenbank. Beide kennen einander nicht.
+// Start: java DataMapper.java
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
+
+public class DataMapper {
+
+    // --- Domänenmodell: reine Fachlogik, kein SQL, keine Spaltennamen ---
+    record Adresse(String strasse, String ort) {}
+    record Kunde(long id, String vorname, String nachname, Adresse adresse) {
+        String anzeigename() { return vorname + &quot; &quot; + nachname; }
+    }
+
+    // --- Datenbank (simuliert): andere Struktur als das Domänenmodell ---
+    //     Tabelle KD_STAMM mit Spalten KD_NR, KD_NAME (&quot;Nachname, Vorname&quot;), KD_STR, KD_ORT
+    static final Map&lt;Long, Map&lt;String, Object&gt;&gt; KD_STAMM = new HashMap&lt;&gt;();
+
+    // --- Der Data Mapper: der einzige Ort, der beide Welten kennt ---
+    static final class KundenMapper {
+        void speichere(Kunde k) {
+            Map&lt;String, Object&gt; zeile = new LinkedHashMap&lt;&gt;();
+            zeile.put(&quot;KD_NR&quot;, k.id());
+            zeile.put(&quot;KD_NAME&quot;, k.nachname() + &quot;, &quot; + k.vorname());
+            zeile.put(&quot;KD_STR&quot;, k.adresse().strasse());
+            zeile.put(&quot;KD_ORT&quot;, k.adresse().ort());
+            System.out.println(&quot;    SQL: INSERT INTO KD_STAMM &quot; + zeile);
+            KD_STAMM.put(k.id(), zeile);
+        }
+
+        Optional&lt;Kunde&gt; lade(long id) {
+            System.out.println(&quot;    SQL: SELECT * FROM KD_STAMM WHERE KD_NR = &quot; + id);
+            Map&lt;String, Object&gt; z = KD_STAMM.get(id);
+            if (z == null) return Optional.empty();
+            String[] name = ((String) z.get(&quot;KD_NAME&quot;)).split(&quot;, &quot;);
+            return Optional.of(new Kunde((long) z.get(&quot;KD_NR&quot;), name[1], name[0],
+                    new Adresse((String) z.get(&quot;KD_STR&quot;), (String) z.get(&quot;KD_ORT&quot;))));
+        }
+    }
+
+    public static void main(String[] args) {
+        KundenMapper mapper = new KundenMapper();
+
+        Kunde sven = new Kunde(815, &quot;Sven&quot;, &quot;Berg&quot;, new Adresse(&quot;Hafenstraße 7&quot;, &quot;Hamburg&quot;));
+        System.out.println(&quot;Speichern:&quot;);
+        mapper.speichere(sven);
+
+        System.out.println(&quot;Laden:&quot;);
+        Kunde geladen = mapper.lade(815).orElseThrow();
+        System.out.println(&quot;    &quot; + geladen);
+        System.out.println(&quot;    Anzeigename: &quot; + geladen.anzeigename());
+        System.out.println(&quot;    gleich dem Original: &quot; + geladen.equals(sven));
+
+        System.out.println(&quot;\nDas Domänenobjekt weiß nichts von KD_STAMM oder KD_NAME.&quot;);
+        System.out.println(&quot;Ändert sich die Tabelle, ändert sich nur der Mapper. Dasselbe gilt umgekehrt.&quot;);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Speichern:
+    SQL: INSERT INTO KD_STAMM {KD_NR=815, KD_NAME=Berg, Sven, KD_STR=Hafenstraße 7, KD_ORT=Hamburg}
+Laden:
+    SQL: SELECT * FROM KD_STAMM WHERE KD_NR = 815
+    Kunde[id=815, vorname=Sven, nachname=Berg, adresse=Adresse[strasse=Hafenstraße 7, ort=Hamburg]]
+    Anzeigename: Sven Berg
+    gleich dem Original: true
+
+Das Domänenobjekt weiß nichts von KD_STAMM oder KD_NAME.
+Ändert sich die Tabelle, ändert sich nur der Mapper. Dasselbe gilt umgekehrt.</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Der Data Mapper ist mehr Aufwand als Active Record, lohnt sich aber, sobald die Fachlogik komplex wird oder Modell und Datenbank voneinander abweichen. Von Hand geschrieben wird er schnell umfangreich. Deshalb übernehmen das meist ORM-Frameworks. Selbst geschriebene Mapper sind sinnvoll, wenn man volle Kontrolle über das SQL braucht.</p>
+<h3>In der Praxis</h3>
+<p>JPA mit Hibernate oder EclipseLink ist ein Data Mapper: Die Abbildung steht in Annotationen oder XML, die Entity selbst hat keine Speicher-Methoden. Ebenso MyBatis, Spring Data JDBC und jOOQ mit eigenen Mappern. Zusammen mit <em>Unit of Work</em>, <em>Identity Map</em> und <em>Lazy Load</em> (Muster 18 bis 20) bildet er den Kern jedes ORM.</p>
+
+<h2 id="unit-of-work"><span class="nr">18.</span> Unit of Work <span class="de">· Arbeitseinheit</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Unit of Work: Änderungen sammeln und gemeinsam schreiben" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="30" width="150" height="34" rx="8" class="app"/><text x="91.0" y="52.0" class="lbl" text-anchor="middle">Position 1 neu</text><rect x="16" y="74" width="150" height="34" rx="8" class="app"/><text x="91.0" y="96.0" class="lbl" text-anchor="middle">Position 2 neu</text><rect x="16" y="118" width="150" height="34" rx="8" class="app"/><text x="91.0" y="140.0" class="lbl" text-anchor="middle">Artikel 1 geändert</text><rect x="16" y="162" width="150" height="34" rx="8" class="app"/><text x="91.0" y="184.0" class="lbl" text-anchor="middle">Artikel 2 geändert</text><line x1="166" y1="47" x2="228" y2="70" class="arr" marker-end="url(#pfeil)"/><line x1="166" y1="91" x2="228" y2="91" class="arr" marker-end="url(#pfeil)"/><line x1="166" y1="135" x2="228" y2="135" class="arr" marker-end="url(#pfeil)"/><line x1="166" y1="179" x2="228" y2="160" class="arr" marker-end="url(#pfeil)"/><rect x="230" y="40" width="200" height="150" rx="8" class="comp"/><text x="330" y="62" class="lbl-c" text-anchor="middle">Unit of Work</text><text x="246" y="92" class="tiny" text-anchor="start">neu:</text><text x="316" y="92" class="tiny" text-anchor="start">Pos. 1, Pos. 2</text><text x="246" y="118" class="tiny" text-anchor="start">geändert:</text><text x="316" y="118" class="tiny" text-anchor="start">Artikel 1, Artikel 2</text><text x="246" y="144" class="tiny" text-anchor="start">gelöscht:</text><text x="316" y="144" class="tiny" text-anchor="start">–</text><line x1="430" y1="115" x2="520" y2="115" class="arr" marker-end="url(#pfeil)"/><text x="475.0" y="105" class="tiny" text-anchor="middle">commit()</text><path d="M530,80 v70 a60.0,10 0 0 0 120,0 v-70" class="store"/><ellipse cx="590.0" cy="80" rx="60.0" ry="10" class="store"/><text x="590.0" y="118.0" class="lbl" text-anchor="middle">eine</text><text x="590.0" y="134.0" class="lbl" text-anchor="middle">Transaktion</text><text x="330" y="222" class="note" text-anchor="middle">bis zum commit: kein Datenbankzugriff</text></svg><figcaption>Alle Änderungen eines Vorgangs werden gesammelt und beim Commit in einer einzigen Transaktion geschrieben.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Eine Unit of Work <strong>merkt sich alle Änderungen</strong> während eines Geschäftsvorgangs: welche Objekte neu sind, welche geändert und welche gelöscht wurden. Erst am Ende schreibt sie alles <strong>gebündelt in einer Transaktion</strong> in die Datenbank. Bricht der Vorgang ab, wird nichts geschrieben.</p>
+<h3>Das Problem</h3>
+<p>Würde jede einzelne Änderung sofort gespeichert, entstünden viele kleine Datenbankzugriffe, und bei einem Abbruch mittendrin bliebe ein halbfertiger Zustand zurück: Bestellpositionen ohne Bestandsbuchung, oder umgekehrt. Wird dasselbe Objekt mehrmals geändert, gäbe es unnötig viele Schreibvorgänge.</p>
+<h3>Im Code</h3>
+<p>Die <code>Arbeitseinheit</code> hält drei Mengen für neue, geänderte und gelöschte Objekte. Wird ein Objekt mehrfach als geändert gemeldet, zählt es nur einmal. <code>commit()</code> gibt alle Befehle in einer Transaktion aus. Im zweiten Vorgang wird abgebrochen, und <code>verwerfen()</code> schreibt nichts.</p>
+<details class="code"><summary>Java-21-Code: UnitOfWork.java</summary><p>Direkt ausführbar mit <code>java UnitOfWork.java</code></p><pre><code class="language-java">// Unit of Work
+// Sammelt alle Änderungen eines Geschäftsvorgangs und schreibt sie am Ende gebündelt in die Datenbank.
+// Start: java UnitOfWork.java
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+public class UnitOfWork {
+
+    static final class Artikel {
+        final long id;
+        int bestand;
+        Artikel(long id, int bestand) { this.id = id; this.bestand = bestand; }
+        public String toString() { return &quot;Artikel#&quot; + id; }
+    }
+    record Bestellposition(long artikelId, int menge) {}
+
+    // --- Unit of Work: merkt sich, was neu, geändert und gelöscht ist ---
+    static final class Arbeitseinheit {
+        private final Set&lt;Object&gt; neu = new LinkedHashSet&lt;&gt;();
+        private final Set&lt;Object&gt; geaendert = new LinkedHashSet&lt;&gt;();
+        private final Set&lt;Object&gt; geloescht = new LinkedHashSet&lt;&gt;();
+
+        void registriereNeu(Object o)       { neu.add(o); }
+        void registriereGeaendert(Object o) { if (!neu.contains(o)) geaendert.add(o); }   // doppelt zählt nur einmal
+        void registriereGeloescht(Object o) { neu.remove(o); geaendert.remove(o); geloescht.add(o); }
+
+        void commit() {
+            List&lt;String&gt; sql = new ArrayList&lt;&gt;();
+            sql.add(&quot;BEGIN&quot;);
+            neu.forEach(o -&gt; sql.add(&quot;INSERT &quot; + o));
+            geaendert.forEach(o -&gt; sql.add(&quot;UPDATE &quot; + o));
+            geloescht.forEach(o -&gt; sql.add(&quot;DELETE &quot; + o));
+            sql.add(&quot;COMMIT&quot;);
+            sql.forEach(s -&gt; System.out.println(&quot;    &quot; + s));
+            neu.clear(); geaendert.clear(); geloescht.clear();
+        }
+
+        void verwerfen() {
+            System.out.println(&quot;    nichts geschrieben, &quot; + (neu.size() + geaendert.size() + geloescht.size()) + &quot; Änderungen verworfen&quot;);
+            neu.clear(); geaendert.clear(); geloescht.clear();
+        }
+    }
+
+    public static void main(String[] args) {
+        Artikel buch = new Artikel(1, 10);
+        Artikel lampe = new Artikel(2, 3);
+
+        System.out.println(&quot;Vorgang 1: Bestellung mit zwei Artikeln&quot;);
+        Arbeitseinheit uow = new Arbeitseinheit();
+        Bestellposition p1 = new Bestellposition(1, 2);
+        Bestellposition p2 = new Bestellposition(2, 1);
+        uow.registriereNeu(p1);
+        uow.registriereNeu(p2);
+        buch.bestand -= 2;  uow.registriereGeaendert(buch);
+        lampe.bestand -= 1; uow.registriereGeaendert(lampe);
+        uow.registriereGeaendert(buch);                            // dasselbe Objekt noch einmal: kein zweites UPDATE
+        System.out.println(&quot;  Bis hierhin: kein einziger Datenbankzugriff&quot;);
+        System.out.println(&quot;  commit():&quot;);
+        uow.commit();
+
+        System.out.println(&quot;\nVorgang 2: bricht mittendrin ab&quot;);
+        uow.registriereNeu(new Bestellposition(2, 5));
+        lampe.bestand -= 5; uow.registriereGeaendert(lampe);
+        if (lampe.bestand &lt; 0) {
+            System.out.println(&quot;  Bestand würde negativ, Vorgang wird abgebrochen:&quot;);
+            lampe.bestand += 5;
+            uow.verwerfen();
+        }
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Vorgang 1: Bestellung mit zwei Artikeln
+  Bis hierhin: kein einziger Datenbankzugriff
+  commit():
+    BEGIN
+    INSERT Bestellposition[artikelId=1, menge=2]
+    INSERT Bestellposition[artikelId=2, menge=1]
+    UPDATE Artikel#1
+    UPDATE Artikel#2
+    COMMIT
+
+Vorgang 2: bricht mittendrin ab
+  Bestand würde negativ, Vorgang wird abgebrochen:
+    nichts geschrieben, 2 Änderungen verworfen</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Die Unit of Work muss wissen, welche Objekte sich geändert haben. Entweder melden sich die Objekte selbst (wie im Beispiel), oder die Unit of Work vergleicht beim Commit jedes geladene Objekt mit einer Kopie seines Ursprungszustands (<em>Dirty Checking</em>). Die Reihenfolge der Befehle ist wichtig: Zuerst müssen Einträge entstehen, auf die andere verweisen. Eine Unit of Work sollte nur so lange leben wie ein Geschäftsvorgang, etwa eine Web-Anfrage.</p>
+<h3>In der Praxis</h3>
+<p>Der <code>EntityManager</code> in JPA bzw. die <code>Session</code> in Hibernate ist eine Unit of Work: Geänderte Entities werden automatisch erkannt und beim <code>flush()</code> oder Commit geschrieben. In .NET erfüllt der <code>DbContext</code> von Entity Framework dieselbe Rolle.</p>
+
+<h2 id="identity-map"><span class="nr">19.</span> Identity Map <span class="de">· Identitätstabelle</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 230" role="img" aria-label="Identity Map: jedes Objekt wird pro Vorgang nur einmal geladen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="34" width="170" height="40" rx="8" class="app"/><text x="101.0" y="59.0" class="lbl" text-anchor="middle">finde(815)</text><rect x="16" y="140" width="170" height="40" rx="8" class="app"/><text x="101.0" y="165.0" class="lbl" text-anchor="middle">finde(815)</text><text x="101" y="98" class="tiny" text-anchor="middle">1. Aufruf</text><text x="101" y="204" class="tiny" text-anchor="middle">2. Aufruf</text><rect x="250" y="40" width="200" height="140" rx="8" class="comp"/><text x="350" y="62" class="lbl-c" text-anchor="middle">Identity Map</text><rect x="266" y="76" width="168" height="34" rx="4" class="app"/><text x="350" y="98" class="tagt" text-anchor="middle">815 → Kunde-Objekt</text><line x1="186" y1="54" x2="248" y2="80" class="arr" marker-end="url(#pfeil)"/><line x1="186" y1="160" x2="248" y2="140" class="arr" marker-end="url(#pfeil)"/><text x="210" y="186" class="tiny" text-anchor="middle">schon geladen</text><line x1="450" y1="90" x2="528" y2="90" class="arr" marker-end="url(#pfeil)"/><text x="490" y="150" class="tiny" text-anchor="middle">nur beim 1. Mal</text><path d="M530,60 v60 a55.0,10 0 0 0 110,0 v-60" class="store"/><ellipse cx="585.0" cy="60" rx="55.0" ry="10" class="store"/><text x="585.0" y="101.0" class="lbl" text-anchor="middle">Datenbank</text><text x="350" y="214" class="note" text-anchor="middle">beide Aufrufe bekommen dasselbe Objekt</text></svg><figcaption>Der erste Aufruf lädt den Kunden aus der Datenbank, der zweite bekommt dasselbe Objekt aus der Identity Map.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Eine Identity Map ist ein Verzeichnis aller Objekte, die in einem Vorgang bereits geladen wurden, nach ihrer ID. Wird ein Objekt erneut angefordert, liefert sie das <strong>vorhandene Objekt</strong>, statt es neu zu laden. So gibt es zu jeder Datenbankzeile <strong>genau ein Objekt</strong> im Speicher.</p>
+<h3>Das Problem</h3>
+<p>Lädt man denselben Kunden zweimal, etwa einmal über die Bestellung und einmal über die Rechnung, entstehen zwei getrennte Objekte. Ändert man den Wohnort im einen, zeigt das andere noch den alten Ort. Beim Speichern überschreibt dann womöglich das eine die Änderung des anderen. Und jede Anfrage kostet eine Datenbankabfrage.</p>
+<h3>Im Code</h3>
+<p>Ohne Identity Map liefern zwei Aufrufe zwei Objekte und zwei Abfragen. Nach dem Umzug in einem Objekt zeigt das andere noch Hamburg. Mit Identity Map, einer <code>HashMap</code> mit <code>computeIfAbsent</code>, gibt es eine Abfrage und ein Objekt, beide Aufrufer sehen Bremen.</p>
+<details class="code"><summary>Java-21-Code: IdentityMap.java</summary><p>Direkt ausführbar mit <code>java IdentityMap.java</code></p><pre><code class="language-java">// Identity Map
+// Jedes Datenbankobjekt wird pro Vorgang nur einmal geladen. Wer es erneut anfordert, bekommt dasselbe Objekt.
+// Start: java IdentityMap.java
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class IdentityMap {
+
+    static final class Kunde {
+        final long id;
+        String ort;
+        Kunde(long id, String ort) { this.id = id; this.ort = ort; }
+    }
+
+    // --- Simulierte Datenbank, zählt die Abfragen ---
+    static final class Datenbank {
+        int abfragen = 0;
+        Kunde lade(long id) {
+            abfragen++;
+            System.out.println(&quot;    SQL: SELECT * FROM kunde WHERE id = &quot; + id);
+            return new Kunde(id, &quot;Hamburg&quot;);
+        }
+    }
+
+    // --- Ohne Identity Map ---
+    static final class EinfacherMapper {
+        final Datenbank db;
+        EinfacherMapper(Datenbank db) { this.db = db; }
+        Kunde finde(long id) { return db.lade(id); }
+    }
+
+    // --- Mit Identity Map: id -&gt; bereits geladenes Objekt ---
+    static final class MapperMitIdentityMap {
+        final Datenbank db;
+        private final Map&lt;Long, Kunde&gt; geladen = new HashMap&lt;&gt;();
+        MapperMitIdentityMap(Datenbank db) { this.db = db; }
+        Kunde finde(long id) { return geladen.computeIfAbsent(id, db::lade); }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(&quot;Ohne Identity Map:&quot;);
+        Datenbank db1 = new Datenbank();
+        EinfacherMapper ohne = new EinfacherMapper(db1);
+        Kunde a = ohne.finde(815);   // z. B. aus der Bestellung
+        Kunde b = ohne.finde(815);   // z. B. aus der Rechnung
+        a.ort = &quot;Bremen&quot;;             // Umzug über Objekt a
+        System.out.println(&quot;  a == b: &quot; + (a == b) + &quot;, Ort laut b: &quot; + b.ort + &quot;  &lt;- widersprüchlich!&quot;);
+        System.out.println(&quot;  Abfragen: &quot; + db1.abfragen);
+
+        System.out.println(&quot;\nMit Identity Map:&quot;);
+        Datenbank db2 = new Datenbank();
+        MapperMitIdentityMap mit = new MapperMitIdentityMap(db2);
+        Kunde c = mit.finde(815);
+        Kunde d = mit.finde(815);
+        c.ort = &quot;Bremen&quot;;
+        System.out.println(&quot;  c == d: &quot; + (c == d) + &quot;, Ort laut d: &quot; + d.ort);
+        System.out.println(&quot;  Abfragen: &quot; + db2.abfragen);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Ohne Identity Map:
+    SQL: SELECT * FROM kunde WHERE id = 815
+    SQL: SELECT * FROM kunde WHERE id = 815
+  a == b: false, Ort laut b: Hamburg  &lt;- widersprüchlich!
+  Abfragen: 2
+
+Mit Identity Map:
+    SQL: SELECT * FROM kunde WHERE id = 815
+  c == d: true, Ort laut d: Bremen
+  Abfragen: 1</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Eine Identity Map gilt für einen <strong>begrenzten Rahmen</strong>, typischerweise einen Vorgang oder eine Transaktion. Eine anwendungsweite Identity Map würde mit der Zeit veraltete Daten ausliefern und unbegrenzt wachsen. Sie ist kein Cache im üblichen Sinn: Ihr Hauptzweck ist die Konsistenz, die gesparten Abfragen sind ein Nebeneffekt. Abfragen, die nicht über die ID laufen, etwa „alle Kunden aus Hamburg“, gehen trotzdem an die Datenbank. Nur die gefundenen Objekte werden dann mit der Map abgeglichen.</p>
+<h3>In der Praxis</h3>
+<p>Der Persistenzkontext in JPA (der „First-Level-Cache“ von Hibernate) ist eine Identity Map: Innerhalb eines <code>EntityManager</code> liefert <code>find(Kunde.class, 815)</code> immer dasselbe Objekt.</p>
+
+<h2 id="lazy-load"><span class="nr">20.</span> Lazy Load <span class="de">· Nachladen bei Bedarf</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Lazy Load: verknüpfte Daten erst beim Zugriff nachladen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="40" width="250" height="140" rx="10" class="app"/><text x="141" y="62" class="lbl" text-anchor="middle">Bestellung 1</text><text x="141" y="86" class="tiny" text-anchor="middle">kunde: Sven</text><rect x="36" y="104" width="210" height="56" rx="6" class="comp" stroke-dasharray="5 4"/><text x="141" y="128" class="tiny" text-anchor="middle">positionen: noch nicht geladen</text><text x="141" y="146" class="tiny" text-anchor="middle">(Platzhalter)</text><line x1="266" y1="132" x2="350" y2="132" class="arr" marker-end="url(#pfeil)"/><text x="308.0" y="122" class="tiny" text-anchor="middle">erster Zugriff</text><path d="M352,102 v60 a55.0,10 0 0 0 110,0 v-60" class="store"/><ellipse cx="407.0" cy="102" rx="55.0" ry="10" class="store"/><text x="407.0" y="143.0" class="lbl" text-anchor="middle">Datenbank</text><line x1="462" y1="132" x2="520" y2="132" class="arr" marker-end="url(#pfeil)"/><rect x="522" y="96" width="180" height="72" rx="6" class="store"/><text x="612" y="120" class="tiny" text-anchor="middle">Buch × 2</text><text x="612" y="140" class="tiny" text-anchor="middle">Lampe × 1</text><text x="612" y="158" class="tiny" text-anchor="middle">jetzt im Speicher</text><text x="141" y="210" class="note" text-anchor="middle">Übersicht: nur Kopfdaten, eine Abfrage</text><text x="520" y="210" class="note" text-anchor="middle">Vorsicht in Schleifen: 1 + N Abfragen</text></svg><figcaption>Die Positionen einer Bestellung werden erst geladen, wenn jemand auf sie zugreift.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Beim Laden eines Objekts werden <strong>verknüpfte Daten zunächst nicht mitgeladen</strong>. An ihrer Stelle steht ein Platzhalter. Erst beim ersten Zugriff holt er die Daten aus der Datenbank. Es ist die <em>Lazy Initialization</em> aus Gruppe 1, angewendet auf Datenbankbeziehungen.</p>
+<h3>Das Problem</h3>
+<p>Ein Kunde hat Bestellungen, die Positionen haben, die auf Artikel verweisen, die Kategorien haben. Würde beim Laden eines Kunden alles Verknüpfte mitgeladen, holte eine einzige Abfrage halbe Datenbank in den Speicher, obwohl die Übersicht nur den Namen anzeigt.</p>
+<h3>Im Code</h3>
+<p>Die Klasse <code>Nachladen&lt;T&gt;</code> ist der Platzhalter, ein <em>Virtual Proxy</em> im Sinne der GoF. Die Übersicht braucht nur eine Abfrage. Der Zugriff auf die Positionen einer Bestellung löst genau eine weitere aus, der zweite Zugriff keine. Der letzte Teil zeigt die Kehrseite, das <strong>N+1-Problem</strong>.</p>
+<details class="code"><summary>Java-21-Code: LazyLoad.java</summary><p>Direkt ausführbar mit <code>java LazyLoad.java</code></p><pre><code class="language-java">// Lazy Load
+// Verknüpfte Daten werden erst aus der Datenbank geladen, wenn tatsächlich auf sie zugegriffen wird.
+// Start: java LazyLoad.java
+
+import java.util.List;
+import java.util.function.Supplier;
+
+public class LazyLoad {
+
+    static int abfragen = 0;
+    static &lt;T&gt; T sql(String s, T ergebnis) { abfragen++; System.out.println(&quot;    SQL: &quot; + s); return ergebnis; }
+
+    record Position(String artikel, int menge) {}
+
+    // --- Ein Platzhalter, der die Daten beim ersten Zugriff lädt (Virtual Proxy) ---
+    static final class Nachladen&lt;T&gt; {
+        private final Supplier&lt;T&gt; lader;
+        private T wert;
+        private boolean geladen;
+        Nachladen(Supplier&lt;T&gt; lader) { this.lader = lader; }
+        T get() {
+            if (!geladen) { wert = lader.get(); geladen = true; }
+            return wert;
+        }
+    }
+
+    // --- Bestellung: Kopfdaten sofort, Positionen erst bei Bedarf ---
+    static final class Bestellung {
+        final long id;
+        final String kunde;
+        private final Nachladen&lt;List&lt;Position&gt;&gt; positionen;
+
+        Bestellung(long id, String kunde) {
+            this.id = id;
+            this.kunde = kunde;
+            this.positionen = new Nachladen&lt;&gt;(() -&gt; sql(&quot;SELECT * FROM position WHERE bestellung = &quot; + id,
+                    List.of(new Position(&quot;Buch&quot;, 2), new Position(&quot;Lampe&quot;, 1))));
+        }
+        List&lt;Position&gt; positionen() { return positionen.get(); }
+    }
+
+    static List&lt;Bestellung&gt; ladeBestellungen() {
+        return sql(&quot;SELECT id, kunde FROM bestellung WHERE kunde = &#x27;Sven&#x27;&quot;,
+                List.of(new Bestellung(1, &quot;Sven&quot;), new Bestellung(2, &quot;Sven&quot;), new Bestellung(3, &quot;Sven&quot;)));
+    }
+
+    public static void main(String[] args) {
+        System.out.println(&quot;Übersicht anzeigen (nur Kopfdaten):&quot;);
+        abfragen = 0;
+        ladeBestellungen().forEach(b -&gt; System.out.println(&quot;    Bestellung &quot; + b.id));
+        System.out.println(&quot;  Abfragen: &quot; + abfragen + &quot;  &lt;- Positionen wurden nicht geladen&quot;);
+
+        System.out.println(&quot;\nDetails einer Bestellung:&quot;);
+        abfragen = 0;
+        Bestellung b = ladeBestellungen().get(0);
+        System.out.println(&quot;    &quot; + b.positionen());
+        System.out.println(&quot;    &quot; + b.positionen() + &quot;  (zweiter Zugriff, aus dem Speicher)&quot;);
+        System.out.println(&quot;  Abfragen: &quot; + abfragen);
+
+        System.out.println(&quot;\nVorsicht, das N+1-Problem: alle Positionen aller Bestellungen&quot;);
+        abfragen = 0;
+        int summe = 0;
+        for (Bestellung x : ladeBestellungen()) {
+            summe += x.positionen().stream().mapToInt(Position::menge).sum();
+        }
+        System.out.println(&quot;  Artikel gesamt: &quot; + summe + &quot;, Abfragen: &quot; + abfragen + &quot;  &lt;- 1 + N, eine pro Bestellung&quot;);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Übersicht anzeigen (nur Kopfdaten):
+    SQL: SELECT id, kunde FROM bestellung WHERE kunde = &#x27;Sven&#x27;
+    Bestellung 1
+    Bestellung 2
+    Bestellung 3
+  Abfragen: 1  &lt;- Positionen wurden nicht geladen
+
+Details einer Bestellung:
+    SQL: SELECT id, kunde FROM bestellung WHERE kunde = &#x27;Sven&#x27;
+    SQL: SELECT * FROM position WHERE bestellung = 1
+    [Position[artikel=Buch, menge=2], Position[artikel=Lampe, menge=1]]
+    [Position[artikel=Buch, menge=2], Position[artikel=Lampe, menge=1]]  (zweiter Zugriff, aus dem Speicher)
+  Abfragen: 2
+
+Vorsicht, das N+1-Problem: alle Positionen aller Bestellungen
+    SQL: SELECT id, kunde FROM bestellung WHERE kunde = &#x27;Sven&#x27;
+    SQL: SELECT * FROM position WHERE bestellung = 1
+    SQL: SELECT * FROM position WHERE bestellung = 2
+    SQL: SELECT * FROM position WHERE bestellung = 3
+  Artikel gesamt: 9, Abfragen: 4  &lt;- 1 + N, eine pro Bestellung</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Das <strong>N+1-Problem</strong> ist die bekannteste Falle in der Datenbankprogrammierung: Werden in einer Schleife über N Objekte jeweils deren verknüpfte Daten angefasst, entstehen 1 + N Abfragen, bei 1.000 Bestellungen also 1.001. Abhilfe schafft, die Daten für diesen Fall gezielt in einer Abfrage mitzuladen (<em>Eager Loading</em> per <code>JOIN FETCH</code> oder Entity Graph). Eine zweite Falle: Wird nach dem Schließen der Datenbanksitzung auf einen Platzhalter zugegriffen, kann er nicht mehr nachladen (in Hibernate die <code>LazyInitializationException</code>).</p>
+<h3>In der Praxis</h3>
+<p><code>FetchType.LAZY</code> in JPA, in Hibernate durch Proxy-Objekte umgesetzt, Standard bei <code>@OneToMany</code>- und <code>@ManyToMany</code>-Beziehungen. Fowler beschreibt vier Varianten: Lazy Initialization, Virtual Proxy, Value Holder und Ghost.</p>
+
+<h2 id="dto"><span class="nr">21.</span> Data Transfer Object (DTO) <span class="de">· Transferobjekt</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Data Transfer Object: nur die Daten, die über eine Grenze sollen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="30" width="210" height="190" rx="10" class="app"/><text x="121" y="52" class="lbl" text-anchor="middle">Kunde (Domäne)</text><text x="121" y="78" class="tiny" text-anchor="middle">id, vorname, nachname</text><text x="121" y="98" class="tiny" text-anchor="middle">email</text><text x="121" y="118" class="tiny" text-anchor="middle">passwortHash</text><text x="121" y="138" class="tiny" text-anchor="middle">iban</text><text x="121" y="158" class="tiny" text-anchor="middle">interneNotiz</text><text x="121" y="178" class="tiny" text-anchor="middle">bestellungen [ ... ]</text><text x="121" y="198" class="tiny" text-anchor="middle">umsatz()</text><line x1="76" y1="114" x2="166" y2="114" class="cross" style="stroke-width:1.4"/><line x1="76" y1="134" x2="166" y2="134" class="cross" style="stroke-width:1.4"/><line x1="76" y1="154" x2="166" y2="154" class="cross" style="stroke-width:1.4"/><rect x="270" y="100" width="110" height="50" rx="6" class="comp"/><text x="325.0" y="130.0" class="lbl-c" text-anchor="middle">alsDto()</text><line x1="226" y1="125" x2="268" y2="125" class="arr" marker-end="url(#pfeil)"/><rect x="420" y="60" width="160" height="130" rx="8" class="store"/><text x="500" y="82" class="lbl" text-anchor="middle">KundenDto</text><text x="500" y="104" class="tiny" text-anchor="middle">id</text><text x="500" y="122" class="tiny" text-anchor="middle">name</text><text x="500" y="140" class="tiny" text-anchor="middle">anzahl</text><text x="500" y="158" class="tiny" text-anchor="middle">offen</text><text x="500" y="176" class="tiny" text-anchor="middle">umsatz (Text)</text><line x1="380" y1="125" x2="418" y2="125" class="arr" marker-end="url(#pfeil)"/><line x1="580" y1="125" x2="620" y2="125" class="arr" marker-end="url(#pfeil)"/><text x="600.0" y="115" class="tiny" text-anchor="middle">JSON</text><rect x="622" y="100" width="92" height="50" rx="8" class="app"/><text x="668.0" y="130.0" class="lbl" text-anchor="middle">Browser</text><text x="121" y="240" class="note" text-anchor="middle">sensible Felder bleiben drinnen</text><text x="500" y="220" class="note" text-anchor="middle">flach, ohne Verhalten, für einen Zweck</text></svg><figcaption>Aus dem vollständigen Kunden wird ein schlankes DTO für die Kundenliste. Passwort, IBAN und Notizen verlassen den Server nicht.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein DTO ist ein <strong>reiner Datencontainer ohne Verhalten</strong>, der genau die Daten bündelt, die über eine Grenze transportiert werden sollen: zwischen Server und Browser, zwischen zwei Diensten oder zwischen Schichten. Ursprünglich ging es Fowler darum, mit einem einzigen Aufruf alle benötigten Daten zu übertragen, statt viele kleine Aufrufe über ein langsames Netz zu machen.</p>
+<h3>Das Problem</h3>
+<p>Gibt eine REST-Schnittstelle direkt die Domänenobjekte als JSON aus, landen <strong>alle Felder</strong> im Browser, auch Passwort-Hashes, Bankdaten und interne Notizen. Jede Änderung an der Domänenklasse ändert ungewollt die öffentliche Schnittstelle. Und Objektgeflechte mit Rückverweisen führen bei der Umwandlung in JSON zu Endlosschleifen.</p>
+<h3>Im Code</h3>
+<p>Der Record <code>KundenUebersichtDto</code> enthält nur, was die Kundenliste braucht, teils schon berechnet: Anzahl der Bestellungen, offene Bestellungen und formatierter Umsatz. <code>alsDto()</code> bildet den Kunden ab. Ein einziger Aufruf liefert die komplette Liste.</p>
+<details class="code"><summary>Java-21-Code: DataTransferObject.java</summary><p>Direkt ausführbar mit <code>java DataTransferObject.java</code></p><pre><code class="language-java">// Data Transfer Object (DTO)
+// Ein reiner Datencontainer, der genau die Daten bündelt, die über eine Grenze transportiert werden sollen.
+// Start: java DataTransferObject.java
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class DataTransferObject {
+
+    // --- Domänenobjekte: viel mehr Daten und Verhalten, als nach außen soll ---
+    record Bestellung(long id, long cent, boolean offen) {}
+    record Kunde(long id, String vorname, String nachname, String email,
+                 String passwortHash, String iban, String interneNotiz, List&lt;Bestellung&gt; bestellungen) {
+        long umsatz() { return bestellungen.stream().mapToLong(Bestellung::cent).sum(); }
+    }
+
+    // --- DTOs: zugeschnitten auf einen bestimmten Zweck, ohne Verhalten ---
+    record KundenUebersichtDto(long id, String name, int anzahlBestellungen, int offeneBestellungen, String umsatz) {}
+    record KundenListeDto(List&lt;KundenUebersichtDto&gt; kunden, int gesamt) {}
+
+    // --- Abbildung Domäne -&gt; DTO an der Grenze, z. B. in der REST-Schicht ---
+    static KundenUebersichtDto alsDto(Kunde k) {
+        return new KundenUebersichtDto(
+                k.id(),
+                k.vorname() + &quot; &quot; + k.nachname(),
+                k.bestellungen().size(),
+                (int) k.bestellungen().stream().filter(Bestellung::offen).count(),
+                &quot;%d,%02d €&quot;.formatted(k.umsatz() / 100, k.umsatz() % 100));
+    }
+
+    // --- Einfache JSON-Ausgabe für die Demonstration ---
+    static String json(KundenUebersichtDto d) {
+        return &quot;{ \&quot;id\&quot;: %d, \&quot;name\&quot;: \&quot;%s\&quot;, \&quot;bestellungen\&quot;: %d, \&quot;offen\&quot;: %d, \&quot;umsatz\&quot;: \&quot;%s\&quot; }&quot;
+                .formatted(d.id(), d.name(), d.anzahlBestellungen(), d.offeneBestellungen(), d.umsatz());
+    }
+
+    public static void main(String[] args) {
+        List&lt;Kunde&gt; kunden = List.of(
+                new Kunde(815, &quot;Sven&quot;, &quot;Berg&quot;, &quot;sven@example.de&quot;, &quot;$2a$10$abc...&quot;, &quot;DE89 3704 ...&quot;, &quot;zahlt pünktlich&quot;,
+                        List.of(new Bestellung(1, 4_990, false), new Bestellung(2, 12_900, true))),
+                new Kunde(816, &quot;Anna&quot;, &quot;Lenz&quot;, &quot;anna@example.de&quot;, &quot;$2a$10$xyz...&quot;, &quot;DE12 5001 ...&quot;, &quot;&quot;,
+                        List.of(new Bestellung(3, 2_500, false))));
+
+        // EIN Aufruf liefert alles, was die Kundenliste im Browser braucht
+        KundenListeDto antwort = new KundenListeDto(kunden.stream().map(DataTransferObject::alsDto).toList(), kunden.size());
+
+        System.out.println(&quot;Antwort der API (&quot; + antwort.gesamt() + &quot; Kunden):&quot;);
+        System.out.println(antwort.kunden().stream().map(d -&gt; &quot;  &quot; + json(d)).collect(Collectors.joining(&quot;,\n&quot;, &quot;[\n&quot;, &quot;\n]&quot;)));
+        System.out.println(&quot;\nNicht enthalten: E-Mail, Passwort-Hash, IBAN, interne Notiz, einzelne Bestellungen.&quot;);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Antwort der API (2 Kunden):
+[
+  { &quot;id&quot;: 815, &quot;name&quot;: &quot;Sven Berg&quot;, &quot;bestellungen&quot;: 2, &quot;offen&quot;: 1, &quot;umsatz&quot;: &quot;178,90 €&quot; },
+  { &quot;id&quot;: 816, &quot;name&quot;: &quot;Anna Lenz&quot;, &quot;bestellungen&quot;: 1, &quot;offen&quot;: 0, &quot;umsatz&quot;: &quot;25,00 €&quot; }
+]
+
+Nicht enthalten: E-Mail, Passwort-Hash, IBAN, interne Notiz, einzelne Bestellungen.</code></pre></details>
+<h3>Worauf achten</h3>
+<p>DTOs bedeuten zusätzliche Klassen und Abbildungscode, ein bewusster Preis für eine stabile, sichere Schnittstelle. Records machen DTOs in Java 21 sehr kurz. Für die Abbildung gibt es Bibliotheken wie MapStruct. Ein DTO pro Anwendungsfall ist oft besser als ein großes DTO für alles. DTOs sind kein Ersatz für Domänenobjekte: Geschäftslogik gehört nicht hinein. Das unterscheidet sie vom <em>Value Object</em>, das durchaus Verhalten hat.</p>
+<h3>In der Praxis</h3>
+<p>Request- und Response-Klassen in REST-Schnittstellen mit Spring oder Jakarta REST, Projektionen in Spring Data, die direkt DTOs statt Entities laden, Protobuf-Nachrichten bei gRPC, GraphQL-Typen. Auch die Nachrichten aus den Enterprise Integration Patterns sind im Kern DTOs.</p>
+<h2 id="vergleich">Wer spricht mit der Datenbank?</h2>
+<p>Die ersten vier Muster beantworten dieselbe Frage auf unterschiedliche Weise:</p>
+<table>
+<tr><th></th><th>Repository</th><th>DAO</th><th>Active Record</th><th>Data Mapper</th></tr>
+<tr><th>denkt in</th><td>Domänenobjekten</td><td>Tabellen</td><td>Zeilen als Objekten</td><td>Abbildung zwischen beidem</td></tr>
+<tr><th>Datenbankcode steckt</th><td>hinter dem Repository</td><td>im DAO</td><td>im Objekt selbst</td><td>im Mapper</td></tr>
+<tr><th>Domänenobjekt kennt DB</th><td>nein</td><td>nein</td><td>ja</td><td>nein</td></tr>
+<tr><th>passt gut, wenn</th><td>komplexe Fachlogik</td><td>einfacher Tabellenzugriff</td><td>Klassen ≈ Tabellen</td><td>Modell ≠ Tabellen</td></tr>
+<tr><th>Beispiel</th><td>Spring Data</td><td>JdbcTemplate</td><td>Panache, Rails</td><td>JPA/Hibernate</td></tr>
+</table>
+<p>Die Muster 18 bis 20 arbeiten im Hintergrund jedes ORM zusammen: Die <strong>Identity Map</strong> sorgt dafür, dass jedes Objekt nur einmal existiert, <strong>Lazy Load</strong> lädt Beziehungen erst bei Bedarf, und die <strong>Unit of Work</strong> schreibt alle Änderungen am Ende gemeinsam. In JPA sind alle drei im <code>EntityManager</code> vereint. Das <strong>DTO</strong> schließlich sorgt dafür, dass von all dem nach außen nur das sichtbar wird, was sichtbar sein soll.</p>
+<nav class="nav"><a href="/it-konzepte/weitere-muster/struktur-verhalten/">← Struktur und Verhalten im Kleinen</a><a href="/it-konzepte/weitere-muster/">Übersicht</a><a href="/it-konzepte/weitere-muster/domain-driven-design/">Domain-Driven Design →</a></nav>
+</article>

@@ -1,0 +1,663 @@
+<article class="muster">
+<nav class="nav"><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/">← Nebenläufigkeit</a><a href="/it-konzepte/weitere-muster/">Übersicht</a><span></span></nav>
+<p>Sobald eine Anwendung aus mehreren Diensten besteht, die über ein Netzwerk kommunizieren, gelten neue Regeln: Das Netz ist unzuverlässig, Dienste fallen aus oder antworten langsam, und es gibt keine gemeinsame Datenbanktransaktion mehr. Die Muster dieser Gruppe stammen vor allem aus der Microservice-Welt, etwa aus Michael Nygards <em>Release It!</em> und Chris Richardsons <em>Microservices Patterns</em>. Sie machen verteilte Systeme <strong>robust gegen Ausfälle</strong>, <strong>konsistent ohne verteilte Transaktionen</strong> und <strong>schrittweise veränderbar</strong>.</p>
+<p>Die Codebeispiele simulieren Dienste, Ausfälle und Zeit im Speicher, damit sie ohne Netzwerk sofort laufen. Beim <em>Sidecar</em> gibt es keinen Code, weil er gerade nicht im Programm, sondern daneben läuft.</p>
+<ul class="legende"><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="8" class="app"/><text x="17.0" y="16.0" class="lbl" text-anchor="middle"></text></svg>Anwendung / Objekt</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="6" class="comp"/><text x="17.0" y="16.0" class="lbl-c" text-anchor="middle"></text></svg>Muster-Baustein</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><path d="M6,11 v0 a11.0,10 0 0 0 22,0 v0" class="store"/><ellipse cx="17.0" cy="11" rx="11.0" ry="10" class="store"/><text x="17.0" y="22.0" class="lbl" text-anchor="middle"></text></svg>Speicher / Ressource</li></ul>
+<ul class="inhalt">
+  <li><a href="#circuit-breaker">45. Circuit Breaker</a></li>
+  <li><a href="#retry-backoff">46. Retry mit Backoff</a></li>
+  <li><a href="#bulkhead">47. Bulkhead</a></li>
+  <li><a href="#saga">48. Saga</a></li>
+  <li><a href="#api-gateway">49. API Gateway</a></li>
+  <li><a href="#outbox">50. Transactional Outbox</a></li>
+  <li><a href="#strangler-fig">51. Strangler Fig</a></li>
+  <li><a href="#sidecar">52. Sidecar</a></li>
+  <li><a href="#publish-subscribe">53. Publish-Subscribe / Message Bus</a></li>
+</ul>
+<h2 id="circuit-breaker"><span class="nr">45.</span> Circuit Breaker <span class="de">· Sicherung</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Circuit Breaker: Zustandsautomat einer Sicherung" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><circle cx="110" cy="110" r="52" class="store"/><text x="110" y="108" class="lbl" text-anchor="middle">Geschlossen</text><text x="110" y="128" class="tiny" text-anchor="middle">ruft Dienst auf</text><circle cx="360" cy="110" r="52" class="msg-a"/><text x="360" y="108" class="lbl" text-anchor="middle">Offen</text><text x="360" y="128" class="tiny" text-anchor="middle">sofort Ersatz</text><circle cx="610" cy="110" r="52" class="msg"/><text x="610" y="108" class="lbl" text-anchor="middle">Halb offen</text><text x="610" y="128" class="tiny" text-anchor="middle">ein Probeaufruf</text><path d="M160,92 C220,60 260,60 310,92" class="arr" fill="none" marker-end="url(#pfeil)"/><text x="235" y="52" class="tiny" text-anchor="middle">3 Fehler in Folge</text><path d="M410,92 C470,60 510,60 560,92" class="arr" fill="none" marker-end="url(#pfeil)"/><text x="485" y="52" class="tiny" text-anchor="middle">nach 10 s Wartezeit</text><path d="M560,130 C500,160 460,160 410,130" class="arr" fill="none" marker-end="url(#pfeil)"/><text x="485" y="178" class="tiny" text-anchor="middle">Probe schlägt fehl</text><path d="M600,162 C560,240 160,240 120,162" class="arr" fill="none" marker-end="url(#pfeil)"/><text x="360" y="236" class="tiny" text-anchor="middle">Probe gelingt</text></svg><figcaption>Nach drei Fehlern springt die Sicherung auf „offen“. Nach einer Wartezeit wird ein Probeaufruf erlaubt, und erst wenn der gelingt, ist sie wieder geschlossen.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Circuit Breaker funktioniert wie eine elektrische Sicherung. Solange ein entfernter Dienst funktioniert, ist er <strong>geschlossen</strong>, und Aufrufe gehen durch. Häufen sich Fehler, springt er auf <strong>offen</strong>: Eine Zeit lang wird der Dienst gar nicht mehr aufgerufen, stattdessen gibt es sofort einen Fehler oder ein Ersatzergebnis. Nach einer Wartezeit wird er <strong>halb offen</strong> und lässt einen Probeaufruf durch. Gelingt der, schließt er sich wieder, sonst bleibt er offen. Bekannt gemacht hat das Muster Michael Nygard in <em>Release It!</em>.</p>
+<h3>Das Problem</h3>
+<p>Antwortet ein Empfehlungsdienst nicht mehr und hängt jeder Aufruf fünf Sekunden bis zum Timeout, warten alle Produktseiten des Shops fünf Sekunden. Threads und Verbindungen stauen sich, und am Ende fällt der Shop aus, weil ein unwichtiger Dienst ausgefallen ist. Außerdem bekommt der kranke Dienst weiter die volle Last ab und kann sich nicht erholen.</p>
+<h3>Im Code</h3>
+<p>Die <code>Sicherung</code> zählt Fehler in Folge und merkt sich, wann sie geöffnet wurde. Die Zeit wird simuliert, damit das Beispiel sofort läuft. Der Dienst fällt bei Sekunde 2 aus und ist ab Sekunde 20 wieder da. Die Tabelle zeigt, wie die Sicherung nach drei Fehlern öffnet, Aufrufe überspringt, bei Sekunde 14 eine erfolglose Probe macht und bei Sekunde 26 mit erfolgreicher Probe wieder schließt. Nur 8 von 12 Aufrufen erreichen den Dienst überhaupt.</p>
+<details class="code"><summary>Java-21-Code: CircuitBreaker.java</summary><p>Direkt ausführbar mit <code>java CircuitBreaker.java</code></p><pre><code class="language-java">// Circuit Breaker
+// Schützt vor wiederholten Aufrufen eines ausgefallenen Dienstes: Nach zu vielen Fehlern wird
+// eine Zeit lang gar nicht mehr aufgerufen, sondern sofort ein Ersatzergebnis geliefert.
+// Start: java CircuitBreaker.java
+
+import java.util.function.Supplier;
+
+public class CircuitBreaker {
+
+    enum Zustand { GESCHLOSSEN, OFFEN, HALB_OFFEN }
+
+    static final class Sicherung {
+        private final int fehlerGrenze;
+        private final long wartezeitMs;
+        private Zustand zustand = Zustand.GESCHLOSSEN;
+        private int fehlerInFolge = 0;
+        private long geoeffnetUm;
+
+        Sicherung(int fehlerGrenze, long wartezeitMs) { this.fehlerGrenze = fehlerGrenze; this.wartezeitMs = wartezeitMs; }
+
+        &lt;T&gt; T rufe(Supplier&lt;T&gt; dienst, Supplier&lt;T&gt; ersatz, long jetztMs) {
+            if (zustand == Zustand.OFFEN) {
+                if (jetztMs - geoeffnetUm &lt; wartezeitMs) return ersatz.get();     // gar nicht erst versuchen
+                zustand = Zustand.HALB_OFFEN;                                     // Probeaufruf erlauben
+            }
+            try {
+                T ergebnis = dienst.get();
+                fehlerInFolge = 0;
+                zustand = Zustand.GESCHLOSSEN;
+                return ergebnis;
+            } catch (RuntimeException e) {
+                fehlerInFolge++;
+                if (zustand == Zustand.HALB_OFFEN || fehlerInFolge &gt;= fehlerGrenze) {
+                    zustand = Zustand.OFFEN;
+                    geoeffnetUm = jetztMs;
+                }
+                return ersatz.get();
+            }
+        }
+        Zustand zustand() { return zustand; }
+    }
+
+    // --- Ein externer Dienst, der zeitweise ausfällt ---
+    static boolean dienstAusgefallen = false;
+    static int echteAufrufe = 0;
+    static String empfehlungen() {
+        echteAufrufe++;
+        if (dienstAusgefallen) throw new IllegalStateException(&quot;Timeout nach 5 s&quot;);
+        return &quot;3 Empfehlungen&quot;;
+    }
+
+    public static void main(String[] args) {
+        Sicherung sicherung = new Sicherung(3, 10_000);           // 3 Fehler -&gt; 10 Sekunden offen
+        long[] zeitpunkte = { 0, 1_000, 2_000, 3_000, 4_000, 5_000, 6_000, 8_000, 14_000, 15_000, 26_000, 27_000 };
+
+        System.out.printf(&quot;%-7s %-12s %-26s %s%n&quot;, &quot;Zeit&quot;, &quot;Dienst&quot;, &quot;Antwort&quot;, &quot;Sicherung danach&quot;);
+        for (long t : zeitpunkte) {
+            if (t == 2_000) dienstAusgefallen = true;             // Dienst fällt aus
+            if (t &gt;= 20_000) dienstAusgefallen = false;               // und ist ab Sekunde 20 wieder da
+            int vorher = echteAufrufe;
+            String antwort = sicherung.rufe(CircuitBreaker::empfehlungen, () -&gt; &quot;Bestseller (Ersatz)&quot;, t);
+            System.out.printf(&quot;%5.0f s  %-12s %-26s %s%n&quot;, t / 1000.0,
+                    echteAufrufe &gt; vorher ? &quot;aufgerufen&quot; : &quot;übersprungen&quot;, antwort, sicherung.zustand());
+        }
+        System.out.println(&quot;\nEchte Aufrufe des Dienstes: &quot; + echteAufrufe + &quot; von &quot; + zeitpunkte.length);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Zeit    Dienst       Antwort                    Sicherung danach
+    0 s  aufgerufen   3 Empfehlungen             GESCHLOSSEN
+    1 s  aufgerufen   3 Empfehlungen             GESCHLOSSEN
+    2 s  aufgerufen   Bestseller (Ersatz)        GESCHLOSSEN
+    3 s  aufgerufen   Bestseller (Ersatz)        GESCHLOSSEN
+    4 s  aufgerufen   Bestseller (Ersatz)        OFFEN
+    5 s  übersprungen Bestseller (Ersatz)        OFFEN
+    6 s  übersprungen Bestseller (Ersatz)        OFFEN
+    8 s  übersprungen Bestseller (Ersatz)        OFFEN
+   14 s  aufgerufen   Bestseller (Ersatz)        OFFEN
+   15 s  übersprungen Bestseller (Ersatz)        OFFEN
+   26 s  aufgerufen   3 Empfehlungen             GESCHLOSSEN
+   27 s  aufgerufen   3 Empfehlungen             GESCHLOSSEN
+
+Echte Aufrufe des Dienstes: 8 von 12</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Das Ersatzergebnis (<em>Fallback</em>) ist eine fachliche Entscheidung: Bestseller statt persönlicher Empfehlungen ist sinnvoll, ein erfundener Kontostand nicht. Schwellwerte und Wartezeiten müssen zum Dienst passen. Moderne Implementierungen arbeiten statt mit Fehlern in Folge mit einer Fehlerquote über ein gleitendes Zeitfenster. Ein Circuit Breaker sollte immer mit sinnvollen Timeouts kombiniert werden und ist das Gegenstück zum Retry: Retry versucht es erneut, der Circuit Breaker hört bewusst damit auf.</p>
+<h3>In der Praxis</h3>
+<p>Resilience4j (der Standard in Java, mit Spring-Boot-Integration), Hystrix von Netflix (nicht mehr weiterentwickelt), Circuit Breaker in Service Meshes wie Istio und in API-Gateways.</p>
+
+<h2 id="retry-backoff"><span class="nr">46.</span> Retry mit Backoff <span class="de">· Wiederholung mit Wartezeit</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 200" role="img" aria-label="Retry mit Backoff: Wiederholungen mit wachsendem Abstand" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><line x1="30" y1="100" x2="690" y2="100" class="arr" marker-end="url(#pfeil)"/><text x="680" y="122" class="tiny" text-anchor="middle">Zeit</text><circle cx="60" cy="100" r="14" class="msg-a"/><text x="60" y="105" class="lbl" text-anchor="middle">✗</text><text x="60" y="140" class="tiny" text-anchor="middle">Versuch 1</text><circle cx="150" cy="100" r="14" class="msg-a"/><text x="150" y="105" class="lbl" text-anchor="middle">✗</text><text x="150" y="140" class="tiny" text-anchor="middle">Versuch 2</text><circle cx="300" cy="100" r="14" class="msg-a"/><text x="300" y="105" class="lbl" text-anchor="middle">✗</text><text x="300" y="140" class="tiny" text-anchor="middle">Versuch 3</text><circle cx="600" cy="100" r="14" class="store"/><text x="600" y="105" class="lbl" text-anchor="middle">✓</text><text x="600" y="140" class="tiny" text-anchor="middle">Versuch 4</text><path d="M74,76 C90,50 120,50 136,76" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><text x="105.0" y="48" class="tiny" text-anchor="middle">0,5 s</text><path d="M164,76 C180,50 270,50 286,76" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><text x="225.0" y="48" class="tiny" text-anchor="middle">1 s</text><path d="M314,76 C330,50 570,50 586,76" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><text x="450.0" y="48" class="tiny" text-anchor="middle">2 s</text><text x="360" y="176" class="note" text-anchor="middle">jedes Mal doppelt so lange warten, plus etwas Zufall (Jitter)</text></svg><figcaption>Drei Versuche scheitern, der vierte gelingt. Zwischen den Versuchen wird immer länger gewartet.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Viele Fehler in verteilten Systemen sind <strong>vorübergehend</strong>: ein kurzer Netzwerkaussetzer, ein überlasteter Dienst, ein Neustart. Ein zweiter Versuch kurze Zeit später gelingt oft. Retry wiederholt fehlgeschlagene Aufrufe, und <strong>Backoff</strong> sorgt dafür, dass die Abstände zwischen den Versuchen wachsen, meist exponentiell: 0,5 s, 1 s, 2 s, 4 s. Ein zufälliger Anteil, der <strong>Jitter</strong>, verhindert, dass viele Aufrufer im Gleichtakt wiederholen.</p>
+<h3>Das Problem</h3>
+<p>Ohne Wiederholung führt jeder kleine Aussetzer zu einer Fehlermeldung beim Kunden. Mit sofortiger, häufiger Wiederholung ohne Pause dagegen bekommt ein ohnehin überlasteter Dienst noch mehr Anfragen und bricht endgültig zusammen. Wiederholen tausend Aufrufer alle exakt nach einer Sekunde, trifft ihn die Welle immer wieder gleichzeitig.</p>
+<h3>Im Code</h3>
+<p><code>mitWiederholung</code> versucht es bis zu fünfmal, verdoppelt die Wartezeit nach jedem Fehlschlag (höchstens 8 s) und addiert bis zu 20 % Zufall. Das eigentliche Warten ist auskommentiert, damit das Beispiel sofort durchläuft. Ein fester Startwert für den Zufall sorgt für immer gleiche Ausgabe. Im ersten Fall gelingt der vierte Versuch, im zweiten wird nach fünf Versuchen aufgegeben.</p>
+<details class="code"><summary>Java-21-Code: RetryBackoff.java</summary><p>Direkt ausführbar mit <code>java RetryBackoff.java</code></p><pre><code class="language-java">// Retry mit Backoff
+// Fehlgeschlagene Aufrufe werden wiederholt, mit wachsendem Abstand zwischen den Versuchen.
+// Start: java RetryBackoff.java
+
+import java.util.Random;
+import java.util.function.Supplier;
+
+public class RetryBackoff {
+
+    // --- Wiederholung mit exponentiellem Backoff und Zufallsanteil (Jitter) ---
+    static &lt;T&gt; T mitWiederholung(Supplier&lt;T&gt; aufruf, int maxVersuche, long startMs, Random zufall) {
+        long warte = startMs;
+        for (int versuch = 1; ; versuch++) {
+            try {
+                T ergebnis = aufruf.get();
+                System.out.println(&quot;  Versuch &quot; + versuch + &quot;: erfolgreich&quot;);
+                return ergebnis;
+            } catch (VoruebergehenderFehler e) {
+                if (versuch == maxVersuche) {
+                    System.out.println(&quot;  Versuch &quot; + versuch + &quot;: &quot; + e.getMessage() + &quot; -&gt; aufgeben&quot;);
+                    throw e;
+                }
+                long jitter = (long) (warte * 0.2 * zufall.nextDouble());        // bis zu 20 % zufällig dazu
+                System.out.printf(&quot;  Versuch %d: %s -&gt; warte %d ms%n&quot;, versuch, e.getMessage(), warte + jitter);
+                // Thread.sleep(warte + jitter);   // im echten Code; hier weggelassen, damit das Beispiel sofort läuft
+                warte = Math.min(warte * 2, 8_000);                               // verdoppeln, aber höchstens 8 s
+            }
+        }
+    }
+
+    static class VoruebergehenderFehler extends RuntimeException {
+        VoruebergehenderFehler(String m) { super(m); }
+    }
+
+    // --- Ein Zahlungsdienst, der die ersten n Aufrufe ablehnt ---
+    static Supplier&lt;String&gt; dienstMitFehlern(int fehlschlaege) {
+        int[] zaehler = { 0 };
+        return () -&gt; {
+            if (++zaehler[0] &lt;= fehlschlaege) throw new VoruebergehenderFehler(&quot;503 Service Unavailable&quot;);
+            return &quot;Zahlung bestätigt&quot;;
+        };
+    }
+
+    public static void main(String[] args) {
+        Random zufall = new Random(42);                                         // fester Startwert: gleiche Ausgabe
+
+        System.out.println(&quot;Dienst ist kurz überlastet (3 Fehlschläge):&quot;);
+        System.out.println(&quot;  Ergebnis: &quot; + mitWiederholung(dienstMitFehlern(3), 5, 500, zufall));
+
+        System.out.println(&quot;\nDienst bleibt ausgefallen (10 Fehlschläge):&quot;);
+        try {
+            mitWiederholung(dienstMitFehlern(10), 5, 500, zufall);
+        } catch (VoruebergehenderFehler e) {
+            System.out.println(&quot;  Ergebnis: Fehler an den Aufrufer weitergeben&quot;);
+        }
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Dienst ist kurz überlastet (3 Fehlschläge):
+  Versuch 1: 503 Service Unavailable -&gt; warte 572 ms
+  Versuch 2: 503 Service Unavailable -&gt; warte 1136 ms
+  Versuch 3: 503 Service Unavailable -&gt; warte 2123 ms
+  Versuch 4: erfolgreich
+  Ergebnis: Zahlung bestätigt
+
+Dienst bleibt ausgefallen (10 Fehlschläge):
+  Versuch 1: 503 Service Unavailable -&gt; warte 527 ms
+  Versuch 2: 503 Service Unavailable -&gt; warte 1133 ms
+  Versuch 3: 503 Service Unavailable -&gt; warte 2361 ms
+  Versuch 4: 503 Service Unavailable -&gt; warte 4295 ms
+  Versuch 5: 503 Service Unavailable -&gt; aufgeben
+  Ergebnis: Fehler an den Aufrufer weitergeben</code></pre></details>
+<h3>Worauf achten</h3>
+<p><strong>Nur wiederholen, was sich lohnt</strong>: Eine Zeitüberschreitung oder „503 Service Unavailable“ ja, „400 Bad Request“ oder „Konto gesperrt“ nein, die Antwort wird beim nächsten Mal dieselbe sein. <strong>Nur wiederholen, was idempotent ist</strong>: Wird eine Zahlung wiederholt, deren erste Ausführung schon geklappt hat und nur die Antwort verloren ging, wird doppelt abgebucht, wenn der Empfänger kein <em>Idempotent Receiver</em> ist. Wiederholungen auf mehreren Ebenen vervielfachen sich: Wiederholen Gateway, Dienst und Datenbanktreiber je dreimal, sind es 27 Versuche. Und ein Retry braucht einen Circuit Breaker als Gegenspieler für lang anhaltende Ausfälle.</p>
+<h3>In der Praxis</h3>
+<p>Resilience4j Retry, Spring Retry (<code>@Retryable</code>), Failsafe, eingebaute Wiederholungen in den AWS- und Azure-SDKs, die Wiederholungslogik von Kafka-Produzenten und Message Brokern.</p>
+
+<h2 id="bulkhead"><span class="nr">47.</span> Bulkhead <span class="de">· Schott</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 225" role="img" aria-label="Bulkhead: getrennte Abteilungen wie im Schiffsrumpf" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><path d="M40,40 H680 L640,184 H80 Z" class="app"/><line x1="300" y1="40" x2="300" y2="184" class="arr" style="stroke-width:4"/><text x="170" y="64" class="lbl" text-anchor="middle">Empfehlungen (3 Plätze)</text><rect x="90" y="84" width="46" height="40" rx="4" class="msg-a"/><rect x="150" y="84" width="46" height="40" rx="4" class="msg-a"/><rect x="210" y="84" width="46" height="40" rx="4" class="msg-a"/><text x="170" y="148" class="tiny" text-anchor="middle">voll: weitere sofort abgewiesen</text><text x="490" y="64" class="lbl" text-anchor="middle">Zahlung (10 Plätze)</text><rect x="330" y="80" width="46" height="30" rx="4" class="store"/><rect x="390" y="80" width="46" height="30" rx="4" class="store"/><rect x="450" y="80" width="46" height="30" rx="4" class="store"/><rect x="510" y="80" width="46" height="30" rx="4" class="store"/><rect x="570" y="80" width="46" height="30" rx="4" class="app"/><rect x="330" y="116" width="46" height="30" rx="4" class="app"/><rect x="390" y="116" width="46" height="30" rx="4" class="app"/><rect x="450" y="116" width="46" height="30" rx="4" class="app"/><rect x="510" y="116" width="46" height="30" rx="4" class="app"/><rect x="570" y="116" width="46" height="30" rx="4" class="app"/><text x="490" y="170" class="tiny" text-anchor="middle">läuft normal weiter</text><text x="360" y="210" class="note" text-anchor="middle">ein hängender Dienst kann nur seine eigene Abteilung füllen</text></svg><figcaption>Der hängende Empfehlungsdienst belegt alle seine drei Plätze. Die Plätze für Zahlungen bleiben davon unberührt.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Schiffsrumpf ist durch <strong>Schotten</strong> in wasserdichte Abteilungen geteilt. Schlägt ein Leck, läuft nur eine Abteilung voll, und das Schiff schwimmt weiter. Das Bulkhead-Muster überträgt das auf Software: Ressourcen wie Threads, Verbindungen oder Speicher werden in <strong>getrennte Kontingente</strong> aufgeteilt, eines pro Dienst oder Aufgabe. Hängt ein Dienst, erschöpft er nur sein eigenes Kontingent.</p>
+<h3>Das Problem</h3>
+<p>Teilen sich alle ausgehenden Aufrufe einen gemeinsamen Pool von 50 Threads, und der Empfehlungsdienst antwortet plötzlich nicht mehr, belegen die Aufrufe an ihn nach kurzer Zeit alle 50 Threads. Dann kann der Shop auch keine Zahlungen mehr abwickeln, obwohl der Zahlungsdienst einwandfrei läuft.</p>
+<h3>Im Code</h3>
+<p>Jedes <code>Schott</code> ist ein <code>Semaphore</code> mit einer festen Zahl von Plätzen. <code>tryAcquire()</code> wartet nicht, sondern weist ab, wenn kein Platz frei ist. Der hängende Empfehlungsdienst bekommt drei Plätze, der Zahlungsdienst zehn. Von 20 Anfragen an den hängenden Dienst werden 17 sofort abgewiesen, alle 10 Zahlungen laufen durch.</p>
+<details class="code"><summary>Java-21-Code: Bulkhead.java</summary><p>Direkt ausführbar mit <code>java Bulkhead.java</code></p><pre><code class="language-java">// Bulkhead (Schott)
+// Ressourcen werden in getrennte Abteilungen aufgeteilt, damit ein überlasteter Teil nicht alles mitreißt.
+// Start: java Bulkhead.java
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class Bulkhead {
+
+    // --- Ein Schott: höchstens n gleichzeitige Aufrufe, der Rest wird sofort abgewiesen ---
+    static final class Schott {
+        final String name;
+        private final Semaphore plaetze;
+        final AtomicInteger angenommen = new AtomicInteger(), abgewiesen = new AtomicInteger();
+
+        Schott(String name, int max) { this.name = name; this.plaetze = new Semaphore(max); }
+
+        void rufe(Runnable aufruf) {
+            if (!plaetze.tryAcquire()) {               // kein Platz frei: nicht warten, sofort ablehnen
+                abgewiesen.incrementAndGet();
+                return;
+            }
+            try {
+                angenommen.incrementAndGet();
+                aufruf.run();
+            } finally {
+                plaetze.release();
+            }
+        }
+        public String toString() { return String.format(&quot;%-14s angenommen %2d, abgewiesen %2d&quot;, name, angenommen.get(), abgewiesen.get()); }
+    }
+
+    static void warte(long ms) { try { Thread.sleep(ms); } catch (InterruptedException e) { Thread.currentThread().interrupt(); } }
+
+    public static void main(String[] args) {
+        Schott empfehlungen = new Schott(&quot;Empfehlungen&quot;, 3);   // langsamer, unwichtiger Dienst: wenige Plätze
+        Schott zahlung = new Schott(&quot;Zahlung&quot;, 10);            // wichtiger Dienst: eigene Plätze
+
+        try (var ex = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i &lt; 20; i++) {
+                ex.submit(() -&gt; empfehlungen.rufe(() -&gt; warte(500)));   // Empfehlungsdienst hängt
+            }
+            warte(50);
+            for (int i = 0; i &lt; 10; i++) {
+                ex.submit(() -&gt; zahlung.rufe(() -&gt; warte(20)));         // Zahlungen laufen normal
+            }
+        }
+        System.out.println(&quot;20 Anfragen an den hängenden Empfehlungsdienst, 10 an den Zahlungsdienst:&quot;);
+        System.out.println(&quot;  &quot; + empfehlungen);
+        System.out.println(&quot;  &quot; + zahlung);
+        System.out.println(&quot;Der hängende Dienst belegt höchstens 3 Plätze. Zahlungen sind nicht betroffen.&quot;);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>20 Anfragen an den hängenden Empfehlungsdienst, 10 an den Zahlungsdienst:
+  Empfehlungen   angenommen  3, abgewiesen 17
+  Zahlung        angenommen 10, abgewiesen  0
+Der hängende Dienst belegt höchstens 3 Plätze. Zahlungen sind nicht betroffen.</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Die Kontingente müssen sinnvoll bemessen sein: Zu klein abgewiesen wird schon bei normaler Last, zu groß schützt nicht. Abgewiesene Aufrufe brauchen eine Antwort, meist ein Fallback wie beim Circuit Breaker, mit dem Bulkhead oft kombiniert wird. Bulkheads gibt es auf allen Ebenen: getrennte Thread-Pools oder Semaphoren im Programm, getrennte Verbindungspools pro Datenbank, getrennte Instanzen oder Cluster für wichtige und unwichtige Kunden.</p>
+<h3>In der Praxis</h3>
+<p>Resilience4j Bulkhead (als Semaphor- oder Thread-Pool-Variante), getrennte <code>ExecutorService</code>-Instanzen pro Abhängigkeit, Ressourcenlimits für Container in Kubernetes, getrennte Verbindungspools in HikariCP.</p>
+
+<h2 id="saga"><span class="nr">48.</span> Saga <span class="de">· Folge lokaler Transaktionen</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 230" role="img" aria-label="Saga: lokale Schritte mit Ausgleichsaktionen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="30" y="40" width="180" height="50" rx="8" class="store"/><text x="120" y="70" class="lbl" text-anchor="middle">Ware reservieren</text><rect x="270" y="40" width="180" height="50" rx="8" class="store"/><text x="360" y="70" class="lbl" text-anchor="middle">Zahlung einziehen</text><rect x="510" y="40" width="180" height="50" rx="8" class="msg-a"/><text x="600" y="70" class="lbl" text-anchor="middle">Versand beauftragen</text><line x1="210" y1="65" x2="268" y2="65" class="arr" marker-end="url(#pfeil)"/><line x1="450" y1="65" x2="508" y2="65" class="arr" marker-end="url(#pfeil)"/><path d="M681,56 L699,74 M699,56 L681,74" class="cross"/><text x="662" y="112" class="tiny" text-anchor="middle">schlägt fehl</text><rect x="30" y="150" width="180" height="44" rx="8" class="app" stroke-dasharray="5 4"/><text x="120" y="177" class="lbl" text-anchor="middle">Reservierung aufheben</text><rect x="270" y="150" width="180" height="44" rx="8" class="app" stroke-dasharray="5 4"/><text x="360" y="177" class="lbl" text-anchor="middle">Betrag erstatten</text><path d="M600,92 C600,170 500,172 452,172" class="arr" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><line x1="270" y1="172" x2="212" y2="172" class="arr" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><text x="360" y="218" class="tiny" text-anchor="middle">Ausgleich in umgekehrter Reihenfolge</text><text x="30" y="22" class="note" text-anchor="start">jeder Schritt: eigene Datenbank, eigene Transaktion</text></svg><figcaption>Der Versand scheitert. Die bereits erledigten Schritte werden durch Ausgleichsaktionen in umgekehrter Reihenfolge rückgängig gemacht.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Wenn ein Geschäftsvorgang mehrere Dienste mit jeweils eigener Datenbank betrifft, gibt es keine gemeinsame Transaktion, die alles oder nichts garantiert. Eine Saga zerlegt den Vorgang in eine <strong>Folge lokaler Transaktionen</strong>, eine pro Dienst. Zu jedem Schritt gehört eine <strong>Ausgleichsaktion</strong>, die ihn fachlich rückgängig macht. Scheitert ein Schritt, werden die bereits erledigten in umgekehrter Reihenfolge ausgeglichen. Das Konzept stammt von Hector Garcia-Molina und Kenneth Salem (1987).</p>
+<h3>Zwei Arten der Steuerung</h3>
+<ul>
+<li><strong>Orchestrierung:</strong> Ein zentraler Koordinator ruft die Schritte nacheinander auf und löst bei Fehlern die Ausgleiche aus. Übersichtlich, aber ein zentraler Baustein. Das entspricht dem <em>Process Manager</em> der EIP.</li>
+<li><strong>Choreografie:</strong> Jeder Dienst reagiert auf Ereignisse des vorherigen und veröffentlicht selbst ein Ereignis. Kein zentraler Koordinator, aber der Gesamtablauf ist nirgends sichtbar.</li>
+</ul>
+<h3>Im Code</h3>
+<p>Eine orchestrierte Saga mit drei Schritten: Ware reservieren, Zahlung einziehen, Versand beauftragen. Jeder <code>Schritt</code> ist ein Record mit Aktion und Ausgleich. Bestellung 1 läuft durch. Bei Bestellung 2 scheitert der Versand, und die Saga erstattet die Zahlung und hebt die Reservierung auf. Am Ende ist nur Bestellung 1 im System.</p>
+<details class="code"><summary>Java-21-Code: Saga.java</summary><p>Direkt ausführbar mit <code>java Saga.java</code></p><pre><code class="language-java">// Saga
+// Eine verteilte Transaktion als Folge lokaler Schritte. Schlägt ein Schritt fehl,
+// werden die bereits erledigten durch Ausgleichsaktionen rückgängig gemacht.
+// Start: java Saga.java
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.List;
+
+public class Saga {
+
+    // --- Ein Schritt: Aktion + Ausgleichsaktion ---
+    record Schritt(String name, Runnable aktion, Runnable ausgleich) {}
+
+    // --- Orchestrierte Saga: führt Schritte aus, gleicht bei Fehler rückwärts aus ---
+    static boolean fuehreAus(String vorgang, List&lt;Schritt&gt; schritte) {
+        System.out.println(vorgang + &quot;:&quot;);
+        Deque&lt;Schritt&gt; erledigt = new ArrayDeque&lt;&gt;();
+        for (Schritt s : schritte) {
+            try {
+                s.aktion().run();
+                erledigt.push(s);
+                System.out.println(&quot;  ✓ &quot; + s.name());
+            } catch (RuntimeException e) {
+                System.out.println(&quot;  ✗ &quot; + s.name() + &quot;: &quot; + e.getMessage());
+                while (!erledigt.isEmpty()) {
+                    Schritt zurueck = erledigt.pop();                 // in umgekehrter Reihenfolge
+                    zurueck.ausgleich().run();
+                    System.out.println(&quot;  ↩ Ausgleich für: &quot; + zurueck.name());
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // --- Drei Dienste mit eigener Datenbank (hier nur Zustandsvariablen) ---
+    static int lagerReserviert = 0;
+    static long kontoBelastet = 0;
+    static int sendungen = 0;
+
+    static List&lt;Schritt&gt; bestellung(int menge, long cent, boolean versandMoeglich) {
+        return List.of(
+                new Schritt(&quot;Ware reservieren (Lagerdienst)&quot;,
+                        () -&gt; lagerReserviert += menge, () -&gt; lagerReserviert -= menge),
+                new Schritt(&quot;Zahlung einziehen (Zahlungsdienst)&quot;,
+                        () -&gt; kontoBelastet += cent, () -&gt; kontoBelastet -= cent),
+                new Schritt(&quot;Versand beauftragen (Versanddienst)&quot;,
+                        () -&gt; { if (!versandMoeglich) throw new IllegalStateException(&quot;Adresse nicht zustellbar&quot;); sendungen++; },
+                        () -&gt; sendungen--));
+    }
+
+    public static void main(String[] args) {
+        boolean ok1 = fuehreAus(&quot;Bestellung 1&quot;, bestellung(2, 5_980, true));
+        System.out.println(&quot;  -&gt; &quot; + (ok1 ? &quot;abgeschlossen&quot; : &quot;zurückgerollt&quot;));
+        System.out.println();
+        boolean ok2 = fuehreAus(&quot;Bestellung 2&quot;, bestellung(1, 3_990, false));
+        System.out.println(&quot;  -&gt; &quot; + (ok2 ? &quot;abgeschlossen&quot; : &quot;zurückgerollt&quot;));
+
+        System.out.printf(java.util.Locale.GERMANY, &quot;%nEndstand: reserviert %d Stück, belastet %.2f €, Sendungen %d  (nur Bestellung 1)%n&quot;,
+                lagerReserviert, kontoBelastet / 100.0, sendungen);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Bestellung 1:
+  ✓ Ware reservieren (Lagerdienst)
+  ✓ Zahlung einziehen (Zahlungsdienst)
+  ✓ Versand beauftragen (Versanddienst)
+  -&gt; abgeschlossen
+
+Bestellung 2:
+  ✓ Ware reservieren (Lagerdienst)
+  ✓ Zahlung einziehen (Zahlungsdienst)
+  ✗ Versand beauftragen (Versanddienst): Adresse nicht zustellbar
+  ↩ Ausgleich für: Zahlung einziehen (Zahlungsdienst)
+  ↩ Ausgleich für: Ware reservieren (Lagerdienst)
+  -&gt; zurückgerollt
+
+Endstand: reserviert 2 Stück, belastet 59,80 €, Sendungen 1  (nur Bestellung 1)</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Ausgleichen ist nicht dasselbe wie Zurückrollen: Zwischen Schritt und Ausgleich waren die Zwischenstände für andere sichtbar. Die Ware war kurz reserviert, das Geld kurz abgebucht. Manche Schritte lassen sich gar nicht ausgleichen, etwa eine verschickte E-Mail. Solche Schritte stellt man ans Ende. Ausgleichsaktionen müssen selbst zuverlässig und wiederholbar sein. Und eine Saga muss ihren Fortschritt dauerhaft speichern, damit sie nach einem Absturz weiß, wo sie stand.</p>
+<h3>In der Praxis</h3>
+<p>Temporal, Camunda und AWS Step Functions für orchestrierte Sagas, Axon Framework, Eventuate Tram. Choreografierte Sagas laufen über Event-Messaging mit Kafka oder RabbitMQ, meist zusammen mit dem Outbox-Muster (Muster 50).</p>
+
+<h2 id="api-gateway"><span class="nr">49.</span> API Gateway <span class="de">· Zugangstor</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="API Gateway: ein Einstiegspunkt vor vielen Diensten" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="40" width="110" height="40" rx="8" class="app"/><text x="71.0" y="65.0" class="lbl" text-anchor="middle">Webshop</text><line x1="126" y1="60" x2="218" y2="124" class="arr" marker-end="url(#pfeil)"/><rect x="16" y="104" width="110" height="40" rx="8" class="app"/><text x="71.0" y="129.0" class="lbl" text-anchor="middle">App</text><line x1="126" y1="124" x2="218" y2="124" class="arr" marker-end="url(#pfeil)"/><rect x="16" y="168" width="110" height="40" rx="8" class="app"/><text x="71.0" y="193.0" class="lbl" text-anchor="middle">Partner</text><line x1="126" y1="188" x2="218" y2="124" class="arr" marker-end="url(#pfeil)"/><rect x="220" y="40" width="200" height="170" rx="10" class="comp"/><text x="320" y="64" class="lbl-c" text-anchor="middle">API Gateway</text><rect x="257.0" y="82" width="126" height="20" rx="10" class="tag"/><text x="320" y="96" class="tagt" text-anchor="middle">Anmeldung prüfen</text><rect x="257.0" y="112" width="126" height="20" rx="10" class="tag"/><text x="320" y="126" class="tagt" text-anchor="middle">Mengen begrenzen</text><rect x="271.0" y="142" width="98" height="20" rx="10" class="tag"/><text x="320" y="156" class="tagt" text-anchor="middle">Weiterleiten</text><rect x="253.5" y="172" width="133" height="20" rx="10" class="tag"/><text x="320" y="186" class="tagt" text-anchor="middle">Antworten bündeln</text><rect x="560" y="26" width="140" height="38" rx="8" class="app"/><text x="630.0" y="50.0" class="lbl" text-anchor="middle">Kundendienst</text><line x1="420" y1="124" x2="558" y2="45" class="arr" marker-end="url(#pfeil)"/><rect x="560" y="76" width="140" height="38" rx="8" class="app"/><text x="630.0" y="100.0" class="lbl" text-anchor="middle">Bestelldienst</text><line x1="420" y1="124" x2="558" y2="95" class="arr" marker-end="url(#pfeil)"/><rect x="560" y="126" width="140" height="38" rx="8" class="app"/><text x="630.0" y="150.0" class="lbl" text-anchor="middle">Empfehlungen</text><line x1="420" y1="124" x2="558" y2="145" class="arr" marker-end="url(#pfeil)"/><rect x="560" y="176" width="140" height="38" rx="8" class="app"/><text x="630.0" y="200.0" class="lbl" text-anchor="middle">Lager</text><line x1="420" y1="124" x2="558" y2="195" class="arr" marker-end="url(#pfeil)"/><text x="490" y="236" class="tiny" text-anchor="middle">interne Dienste</text><text x="70" y="236" class="tiny" text-anchor="middle">von außen</text></svg><figcaption>Alle Anfragen von außen gehen durch das Gateway. Es prüft, begrenzt, leitet weiter und fasst bei Bedarf mehrere Antworten zusammen.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Besteht ein System aus vielen kleinen Diensten, sollen Clients nicht jeden einzeln kennen und ansprechen müssen. Ein API Gateway ist der <strong>einzige Einstiegspunkt</strong> von außen. Es leitet Anfragen an den zuständigen Dienst weiter und übernimmt <strong>Querschnittsaufgaben</strong> an zentraler Stelle: Anmeldung prüfen, Anfragemengen begrenzen, protokollieren. Außerdem kann es die Antworten mehrerer Dienste zu einer zusammenfassen.</p>
+<h3>Das Problem</h3>
+<p>Die App-Startseite zeigt Kundendaten, offene Bestellungen und Empfehlungen aus drei verschiedenen Diensten. Ohne Gateway macht die App drei Anfragen über das langsame Mobilfunknetz, und jeder der drei Dienste muss selbst die Anmeldung prüfen. Ändert sich die Aufteilung der Dienste, muss jede App aktualisiert werden.</p>
+<h3>Im Code</h3>
+<p>Das <code>Gateway</code> prüft den Token, zählt Anfragen pro Token und lehnt ab der vierten mit „429“ ab. Es leitet Pfade an die zuständigen Dienste weiter. Für <code>/api/startseite</code> ruft es drei Dienste parallel auf und liefert eine gemeinsame Antwort.</p>
+<details class="code"><summary>Java-21-Code: ApiGateway.java</summary><p>Direkt ausführbar mit <code>java ApiGateway.java</code></p><pre><code class="language-java">// API Gateway
+// Ein einziger Einstiegspunkt vor vielen Diensten: prüft, leitet weiter und fasst Antworten zusammen.
+// Start: java ApiGateway.java
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Function;
+
+public class ApiGateway {
+
+    // --- Interne Dienste, von außen nicht direkt erreichbar ---
+    static String kundenDienst(String pfad)   { return &quot;{\&quot;kunde\&quot;:815,\&quot;name\&quot;:\&quot;Sven\&quot;}&quot;; }
+    static String bestellDienst(String pfad)  { return &quot;{\&quot;offeneBestellungen\&quot;:2}&quot;; }
+    static String empfehlDienst(String pfad)  { return &quot;[\&quot;Lampe\&quot;,\&quot;Tasse\&quot;]&quot;; }
+
+    static final class Gateway {
+        private final Map&lt;String, Function&lt;String, String&gt;&gt; routen = new LinkedHashMap&lt;&gt;();
+        private final Set&lt;String&gt; gueltigeTokens = Set.of(&quot;token-sven&quot;);
+        private final Map&lt;String, Integer&gt; anfragenProToken = new LinkedHashMap&lt;&gt;();
+        private final int limit = 3;
+        private final ExecutorService ex = Executors.newVirtualThreadPerTaskExecutor();
+
+        Gateway() {
+            routen.put(&quot;/api/kunden&quot;, ApiGateway::kundenDienst);
+            routen.put(&quot;/api/bestellungen&quot;, ApiGateway::bestellDienst);
+            routen.put(&quot;/api/empfehlungen&quot;, ApiGateway::empfehlDienst);
+        }
+
+        String anfrage(String token, String pfad) {
+            // 1. Querschnittsaufgaben an EINER Stelle: Anmeldung, Mengenbegrenzung
+            if (!gueltigeTokens.contains(token)) return &quot;401 Nicht angemeldet&quot;;
+            int n = anfragenProToken.merge(token, 1, Integer::sum);
+            if (n &gt; limit) return &quot;429 Zu viele Anfragen&quot;;
+
+            // 2. Zusammengesetzter Endpunkt für die App-Startseite: drei Dienste parallel, eine Antwort
+            if (pfad.equals(&quot;/api/startseite&quot;)) {
+                var k = CompletableFuture.supplyAsync(() -&gt; kundenDienst(pfad), ex);
+                var b = CompletableFuture.supplyAsync(() -&gt; bestellDienst(pfad), ex);
+                var e = CompletableFuture.supplyAsync(() -&gt; empfehlDienst(pfad), ex);
+                return &quot;200 {\&quot;kunde\&quot;:&quot; + k.join() + &quot;,\&quot;bestellungen\&quot;:&quot; + b.join() + &quot;,\&quot;empfehlungen\&quot;:&quot; + e.join() + &quot;}&quot;;
+            }
+            // 3. Weiterleitung an den zuständigen Dienst
+            return routen.entrySet().stream().filter(r -&gt; pfad.startsWith(r.getKey())).findFirst()
+                    .map(r -&gt; &quot;200 &quot; + r.getValue().apply(pfad))
+                    .orElse(&quot;404 Unbekannter Pfad&quot;);
+        }
+    }
+
+    public static void main(String[] args) {
+        Gateway gw = new Gateway();
+        String[][] anfragen = {
+                { &quot;token-sven&quot;, &quot;/api/kunden/815&quot; },
+                { &quot;token-sven&quot;, &quot;/api/startseite&quot; },
+                { &quot;falsch&quot;, &quot;/api/bestellungen&quot; },
+                { &quot;token-sven&quot;, &quot;/api/lager&quot; },
+                { &quot;token-sven&quot;, &quot;/api/bestellungen&quot; } };
+        for (String[] a : anfragen) {
+            System.out.printf(&quot;%-12s %-20s -&gt; %s%n&quot;, a[0], a[1], gw.anfrage(a[0], a[1]));
+        }
+        gw.ex.shutdown();
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>token-sven   /api/kunden/815      -&gt; 200 {&quot;kunde&quot;:815,&quot;name&quot;:&quot;Sven&quot;}
+token-sven   /api/startseite      -&gt; 200 {&quot;kunde&quot;:{&quot;kunde&quot;:815,&quot;name&quot;:&quot;Sven&quot;},&quot;bestellungen&quot;:{&quot;offeneBestellungen&quot;:2},&quot;empfehlungen&quot;:[&quot;Lampe&quot;,&quot;Tasse&quot;]}
+falsch       /api/bestellungen    -&gt; 401 Nicht angemeldet
+token-sven   /api/lager           -&gt; 404 Unbekannter Pfad
+token-sven   /api/bestellungen    -&gt; 429 Zu viele Anfragen</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Das Gateway ist ein zentraler Engpass und Ausfallpunkt. Es muss hochverfügbar und schnell sein. Geschäftslogik gehört nicht hinein, sonst wird es zum neuen Monolithen. Haben Web, App und Partner sehr unterschiedliche Bedürfnisse, bekommt jede Art von Client ein eigenes Gateway, das Muster <em>Backends for Frontends</em> (BFF). Das Gateway entspricht im Großen der <em>Facade</em> der GoF.</p>
+<h3>In der Praxis</h3>
+<p>Spring Cloud Gateway, Kong, Traefik, NGINX, Amazon API Gateway, Azure API Management, Apigee. Auch GraphQL-Server übernehmen oft die Rolle, Daten aus mehreren Diensten zu einer Antwort zusammenzusetzen.</p>
+
+<h2 id="outbox"><span class="nr">50.</span> Transactional Outbox <span class="de">· Ausgangskorb</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Transactional Outbox: Nachricht in derselben Transaktion speichern" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="20" width="330" height="200" rx="12" class="zone"/><text x="28" y="38" class="zlbl" text-anchor="start">Bestelldienst</text><rect x="36" y="50" width="120" height="40" rx="8" class="app"/><text x="96.0" y="75.0" class="lbl" text-anchor="middle">Logik</text><rect x="176" y="40" width="150" height="160" rx="8" class="store"/><text x="251" y="62" class="lbl" text-anchor="middle">Datenbank</text><rect x="188" y="76" width="126" height="44" rx="4" class="app"/><text x="251" y="103" class="tagt" text-anchor="middle">bestellung</text><rect x="188" y="134" width="126" height="44" rx="4" class="msg"/><text x="251" y="161" class="tagt" text-anchor="middle">outbox</text><line x1="156" y1="70" x2="186" y2="96" class="arr" marker-end="url(#pfeil)"/><line x1="156" y1="76" x2="186" y2="150" class="arr" marker-end="url(#pfeil)"/><text x="96" y="130" class="tiny" text-anchor="middle">eine</text><text x="96" y="146" class="tiny" text-anchor="middle">Transaktion</text><rect x="400" y="130" width="110" height="50" rx="6" class="comp"/><text x="455.0" y="160.0" class="lbl-c" text-anchor="middle">Relay</text><line x1="326" y1="156" x2="398" y2="156" class="arr" marker-end="url(#pfeil)"/><text x="362.0" y="146" class="tiny" text-anchor="middle">liest</text><path d="M522,142.0 H576 a7,13.0 0 0 1 0,26 H522 z" class="pipe"/><ellipse cx="522" cy="155" rx="7" ry="13.0" class="pipe-end"/><rect x="536.0" y="146.0" width="26" height="18" rx="2" class="msg"/><path d="M536.0,146.0 L549.0,157 L562.0,146.0" class="msg-flap"/><line x1="585" y1="155" x2="599" y2="155" class="arr" marker-end="url(#pfeil)"/><rect x="600" y="130" width="110" height="50" rx="8" class="app"/><text x="655.0" y="160.0" class="lbl" text-anchor="middle">Broker</text><text x="455" y="204" class="tiny" text-anchor="middle">löscht erst nach Erfolg</text><text x="530" y="70" class="note" text-anchor="middle">keine Bestellung ohne Nachricht,</text><text x="530" y="86" class="note" text-anchor="middle">keine Nachricht ohne Bestellung</text></svg><figcaption>Bestellung und Nachricht werden in derselben Datenbanktransaktion gespeichert. Ein Relay verschickt die Nachricht später zuverlässig.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Dienst muss oft zweierlei tun: seine Daten speichern <strong>und</strong> eine Nachricht verschicken, etwa „Bestellung aufgegeben“. Datenbank und Message Broker lassen sich aber nicht zuverlässig in einer Transaktion verbinden. Bei der Transactional Outbox schreibt der Dienst die Nachricht deshalb zunächst in eine <strong>eigene Tabelle in seiner Datenbank</strong>, die <em>Outbox</em>, und zwar in <strong>derselben Transaktion</strong> wie die Fachdaten. Ein separater Prozess, das <em>Relay</em>, liest die Outbox, veröffentlicht die Nachrichten und entfernt sie erst danach.</p>
+<h3>Das Problem</h3>
+<p>Speichert der Dienst zuerst die Bestellung und schickt dann die Nachricht, kann er dazwischen abstürzen: Die Bestellung ist da, aber das Lager erfährt nie davon. Schickt er zuerst die Nachricht und speichert dann, kann die Speicherung scheitern: Das Lager verschickt Ware für eine Bestellung, die es nicht gibt. Dieses <em>Dual-Write-Problem</em> tritt selten auf, aber wenn, dann mit teuren Folgen.</p>
+<h3>Im Code</h3>
+<p>Bestellung 4711 wird zusammen mit ihrem Outbox-Eintrag gespeichert. Bei Bestellung 4712 gibt es einen Absturz vor dem Commit, und beides verschwindet. Das Relay findet den Broker zunächst nicht erreichbar und lässt den Eintrag liegen. Beim nächsten Lauf veröffentlicht es ihn und löscht ihn erst dann. Am Ende passen gespeicherte Bestellungen und zugestellte Nachrichten genau zusammen.</p>
+<details class="code"><summary>Java-21-Code: Outbox.java</summary><p>Direkt ausführbar mit <code>java Outbox.java</code></p><pre><code class="language-java">// Transactional Outbox
+// Ausgehende Nachrichten werden in derselben Datenbanktransaktion gespeichert wie die Fachdaten
+// und erst danach von einem eigenen Prozess zuverlässig verschickt.
+// Start: java Outbox.java
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class Outbox {
+
+    record Bestellung(long nr, String kunde) {}
+    record OutboxEintrag(long id, String thema, String inhalt) {}
+
+    // --- Simulierte Datenbank mit Transaktionen ---
+    static final class Datenbank {
+        final List&lt;Bestellung&gt; bestellungen = new ArrayList&lt;&gt;();
+        final List&lt;OutboxEintrag&gt; outbox = new ArrayList&lt;&gt;();
+
+        void inTransaktion(Runnable arbeit, boolean absturzVorCommit) {
+            int b = bestellungen.size(), o = outbox.size();
+            arbeit.run();
+            if (absturzVorCommit) {                                         // Rollback: beides verschwindet
+                bestellungen.subList(b, bestellungen.size()).clear();
+                outbox.subList(o, outbox.size()).clear();
+                System.out.println(&quot;  Absturz vor dem Commit: Bestellung UND Nachricht verworfen&quot;);
+            } else {
+                System.out.println(&quot;  COMMIT: Bestellung und Nachricht gemeinsam gespeichert&quot;);
+            }
+        }
+    }
+
+    // --- Broker, der zeitweise nicht erreichbar ist ---
+    static boolean brokerErreichbar = false;
+    static final List&lt;String&gt; zugestellt = new ArrayList&lt;&gt;();
+
+    // --- Relay: liest die Outbox und veröffentlicht, löscht erst nach Erfolg ---
+    static void relayLauf(Datenbank db) {
+        Iterator&lt;OutboxEintrag&gt; it = db.outbox.iterator();
+        while (it.hasNext()) {
+            OutboxEintrag e = it.next();
+            if (!brokerErreichbar) {
+                System.out.println(&quot;  Relay: Broker nicht erreichbar, Eintrag &quot; + e.id() + &quot; bleibt in der Outbox&quot;);
+                return;
+            }
+            zugestellt.add(e.thema() + &quot;: &quot; + e.inhalt());
+            it.remove();
+            System.out.println(&quot;  Relay: Eintrag &quot; + e.id() + &quot; veröffentlicht und aus der Outbox entfernt&quot;);
+        }
+    }
+
+    public static void main(String[] args) {
+        Datenbank db = new Datenbank();
+        long[] id = { 1 };
+
+        System.out.println(&quot;Bestellung 4711:&quot;);
+        db.inTransaktion(() -&gt; {
+            db.bestellungen.add(new Bestellung(4711, &quot;Sven&quot;));
+            db.outbox.add(new OutboxEintrag(id[0]++, &quot;bestellungen&quot;, &quot;BestellungAufgegeben 4711&quot;));
+        }, false);
+
+        System.out.println(&quot;Bestellung 4712:&quot;);
+        db.inTransaktion(() -&gt; {
+            db.bestellungen.add(new Bestellung(4712, &quot;Anna&quot;));
+            db.outbox.add(new OutboxEintrag(id[0]++, &quot;bestellungen&quot;, &quot;BestellungAufgegeben 4712&quot;));
+        }, true);
+
+        System.out.println(&quot;\nRelay, Broker ausgefallen:&quot;);
+        relayLauf(db);
+        System.out.println(&quot;Relay, Broker wieder da:&quot;);
+        brokerErreichbar = true;
+        relayLauf(db);
+
+        System.out.println(&quot;\nGespeicherte Bestellungen: &quot; + db.bestellungen.stream().map(Bestellung::nr).toList());
+        System.out.println(&quot;Zugestellte Nachrichten:   &quot; + zugestellt);
+        System.out.println(&quot;Beides passt zusammen: keine Bestellung ohne Nachricht, keine Nachricht ohne Bestellung.&quot;);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Bestellung 4711:
+  COMMIT: Bestellung und Nachricht gemeinsam gespeichert
+Bestellung 4712:
+  Absturz vor dem Commit: Bestellung UND Nachricht verworfen
+
+Relay, Broker ausgefallen:
+  Relay: Broker nicht erreichbar, Eintrag 1 bleibt in der Outbox
+Relay, Broker wieder da:
+  Relay: Eintrag 1 veröffentlicht und aus der Outbox entfernt
+
+Gespeicherte Bestellungen: [4711]
+Zugestellte Nachrichten:   [bestellungen: BestellungAufgegeben 4711]
+Beides passt zusammen: keine Bestellung ohne Nachricht, keine Nachricht ohne Bestellung.</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Das Relay garantiert „mindestens einmal“: Stürzt es nach dem Veröffentlichen, aber vor dem Löschen ab, wird die Nachricht ein zweites Mal verschickt. Die Empfänger müssen deshalb <em>Idempotent Receiver</em> sein. Die Reihenfolge der Nachrichten muss erhalten bleiben, wenn sie fachlich wichtig ist. Statt die Outbox regelmäßig abzufragen, kann das Relay auch das Transaktionslog der Datenbank mitlesen (<em>Change Data Capture</em>).</p>
+<h3>In der Praxis</h3>
+<p>Debezium mit dem Outbox Event Router für Kafka, Eventuate Tram, Spring Modulith mit seinem Event Publication Registry, eigene Outbox-Tabellen mit einem geplanten Job als Relay.</p>
+
+<h2 id="strangler-fig"><span class="nr">51.</span> Strangler Fig <span class="de">· Würgefeige</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Strangler Fig: ein Altsystem schrittweise ablösen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="100" width="110" height="48" rx="8" class="app"/><text x="71.0" y="129.0" class="lbl" text-anchor="middle">Anfragen</text><line x1="126" y1="124" x2="176" y2="124" class="arr" marker-end="url(#pfeil)"/><rect x="178" y="98" width="110" height="52" rx="6" class="comp"/><text x="233.0" y="129.0" class="lbl-c" text-anchor="middle">Weiche</text><text x="330" y="50" class="tiny" text-anchor="start">Phase 0</text><rect x="392" y="28" width="66" height="34" rx="4" class="app"/><text x="425" y="50" class="tiny" text-anchor="middle">alt</text><rect x="464" y="28" width="66" height="34" rx="4" class="app"/><text x="497" y="50" class="tiny" text-anchor="middle">alt</text><rect x="536" y="28" width="66" height="34" rx="4" class="app"/><text x="569" y="50" class="tiny" text-anchor="middle">alt</text><rect x="608" y="28" width="66" height="34" rx="4" class="app"/><text x="641" y="50" class="tiny" text-anchor="middle">alt</text><text x="330" y="102" class="tiny" text-anchor="start">Phase 1</text><rect x="392" y="80" width="66" height="34" rx="4" class="app"/><text x="425" y="102" class="tiny" text-anchor="middle">alt</text><rect x="464" y="80" width="66" height="34" rx="4" class="app"/><text x="497" y="102" class="tiny" text-anchor="middle">alt</text><rect x="536" y="80" width="66" height="34" rx="4" class="app"/><text x="569" y="102" class="tiny" text-anchor="middle">alt</text><rect x="608" y="80" width="66" height="34" rx="4" class="store"/><text x="641" y="102" class="tiny" text-anchor="middle">neu</text><text x="330" y="154" class="tiny" text-anchor="start">Phase 2</text><rect x="392" y="132" width="66" height="34" rx="4" class="app"/><text x="425" y="154" class="tiny" text-anchor="middle">alt</text><rect x="464" y="132" width="66" height="34" rx="4" class="app"/><text x="497" y="154" class="tiny" text-anchor="middle">alt</text><rect x="536" y="132" width="66" height="34" rx="4" class="store"/><text x="569" y="154" class="tiny" text-anchor="middle">neu</text><rect x="608" y="132" width="66" height="34" rx="4" class="store"/><text x="641" y="154" class="tiny" text-anchor="middle">neu</text><text x="330" y="206" class="tiny" text-anchor="start">Phase 3</text><rect x="392" y="184" width="66" height="34" rx="4" class="store"/><text x="425" y="206" class="tiny" text-anchor="middle">neu</text><rect x="464" y="184" width="66" height="34" rx="4" class="store"/><text x="497" y="206" class="tiny" text-anchor="middle">neu</text><rect x="536" y="184" width="66" height="34" rx="4" class="store"/><text x="569" y="206" class="tiny" text-anchor="middle">neu</text><rect x="608" y="184" width="66" height="34" rx="4" class="store"/><text x="641" y="206" class="tiny" text-anchor="middle">neu</text><path d="M288,124 L320,124" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><text x="425" y="240" class="tiny" text-anchor="middle">Rechnung</text><text x="497" y="240" class="tiny" text-anchor="middle">Bestellung</text><text x="569" y="240" class="tiny" text-anchor="middle">Warenkorb</text><text x="641" y="240" class="tiny" text-anchor="middle">Katalog</text><text x="130" y="220" class="note" text-anchor="middle">Funktion für Funktion umleiten</text></svg><figcaption>Eine Weiche leitet Bereich für Bereich vom Altsystem auf das neue System um, bis das Altsystem keine Anfragen mehr bekommt.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Benannt nach der Würgefeige, die an einem Baum emporwächst, ihn nach und nach umschließt und am Ende ersetzt. Statt ein Altsystem in einem großen Wurf durch ein neues zu ersetzen, wird eine <strong>Weiche</strong> davorgesetzt, über die alle Anfragen laufen. Dann wird <strong>Funktion für Funktion</strong> im neuen System gebaut und die Weiche entsprechend umgestellt. Irgendwann bekommt das Altsystem keine Anfragen mehr und kann abgeschaltet werden. Martin Fowler hat das Muster 2004 benannt.</p>
+<h3>Das Problem</h3>
+<p>Die Ablösung eines großen Altsystems am Stück, der „Big Bang“, ist eines der riskantesten Vorhaben der Softwareentwicklung: jahrelange Entwicklung ohne Nutzen für die Anwender, ein Stichtag, an dem alles auf einmal funktionieren muss, und keine Möglichkeit, zurückzugehen. Viele solcher Projekte scheitern.</p>
+<h3>Im Code</h3>
+<p>Die <code>Weiche</code> hält eine Menge bereits umgezogener Bereiche und leitet jede Anfrage anhand des ersten Pfadteils ans alte oder neue System. In vier Phasen ziehen Katalog, Warenkorb, Bestellung und Rechnung um. Mit <code>zurueck()</code> lässt sich ein Bereich bei Problemen sofort wieder auf das Altsystem stellen.</p>
+<details class="code"><summary>Java-21-Code: StranglerFig.java</summary><p>Direkt ausführbar mit <code>java StranglerFig.java</code></p><pre><code class="language-java">// Strangler Fig
+// Ein Altsystem wird schrittweise ersetzt: Eine Weiche leitet Funktion für Funktion auf das neue System um.
+// Start: java StranglerFig.java
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+public class StranglerFig {
+
+    interface Anwendung { String bearbeite(String pfad); }
+
+    static final class Altsystem implements Anwendung {
+        public String bearbeite(String pfad) { return &quot;ALT  &quot; + pfad; }
+    }
+    static final class NeuesSystem implements Anwendung {
+        public String bearbeite(String pfad) { return &quot;NEU  &quot; + pfad; }
+    }
+
+    // --- Die Weiche (Fassade): entscheidet pro Funktion, wer zuständig ist ---
+    static final class Weiche {
+        private final Anwendung alt = new Altsystem(), neu = new NeuesSystem();
+        private final Set&lt;String&gt; migriert = new LinkedHashSet&lt;&gt;();
+
+        void migriere(String bereich) { migriert.add(bereich); }
+        void zurueck(String bereich)  { migriert.remove(bereich); }        // falls im neuen System etwas schiefgeht
+
+        String anfrage(String pfad) {
+            String bereich = pfad.split(&quot;/&quot;)[1];
+            return (migriert.contains(bereich) ? neu : alt).bearbeite(pfad);
+        }
+    }
+
+    public static void main(String[] args) {
+        Weiche weiche = new Weiche();
+        List&lt;String&gt; anfragen = List.of(&quot;/katalog/lampe&quot;, &quot;/warenkorb/815&quot;, &quot;/bestellung/4711&quot;, &quot;/rechnung/2026-10&quot;);
+
+        String[][] phasen = {
+                { &quot;Phase 0: alles im Altsystem&quot; },
+                { &quot;Phase 1: Katalog umgezogen&quot;, &quot;katalog&quot; },
+                { &quot;Phase 2: Warenkorb umgezogen&quot;, &quot;warenkorb&quot; },
+                { &quot;Phase 3: Bestellung und Rechnung umgezogen&quot;, &quot;bestellung&quot;, &quot;rechnung&quot; } };
+
+        for (String[] phase : phasen) {
+            for (int i = 1; i &lt; phase.length; i++) weiche.migriere(phase[i]);
+            System.out.println(phase[0]);
+            anfragen.forEach(a -&gt; System.out.println(&quot;  &quot; + weiche.anfrage(a)));
+        }
+        System.out.println(&quot;\nDas Altsystem bekommt keine Anfragen mehr und kann abgeschaltet werden.&quot;);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Phase 0: alles im Altsystem
+  ALT  /katalog/lampe
+  ALT  /warenkorb/815
+  ALT  /bestellung/4711
+  ALT  /rechnung/2026-10
+Phase 1: Katalog umgezogen
+  NEU  /katalog/lampe
+  ALT  /warenkorb/815
+  ALT  /bestellung/4711
+  ALT  /rechnung/2026-10
+Phase 2: Warenkorb umgezogen
+  NEU  /katalog/lampe
+  NEU  /warenkorb/815
+  ALT  /bestellung/4711
+  ALT  /rechnung/2026-10
+Phase 3: Bestellung und Rechnung umgezogen
+  NEU  /katalog/lampe
+  NEU  /warenkorb/815
+  NEU  /bestellung/4711
+  NEU  /rechnung/2026-10
+
+Das Altsystem bekommt keine Anfragen mehr und kann abgeschaltet werden.</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Jeder Schritt ist klein, bringt sofort Nutzen und lässt sich zurücknehmen. Die schwierigste Frage ist meist die <strong>Datenhaltung</strong>: Solange alt und neu parallel laufen, müssen ihre Daten synchron bleiben, etwa über Change Data Capture oder einen <em>Anti-Corruption Layer</em> (Gruppe 4). Man beginnt sinnvollerweise mit Bereichen, die wenig verflochten sind oder bei denen das Altsystem am meisten Probleme macht. Und man muss das Ende wirklich erreichen: Viele Projekte bleiben auf halbem Weg stehen und betreiben dann dauerhaft zwei Systeme.</p>
+<h3>In der Praxis</h3>
+<p>Als Weiche dienen Reverse Proxys und API Gateways (NGINX, Spring Cloud Gateway), Feature Flags im Code oder eine Fassade vor dem Altsystem. Typisch bei der Zerlegung von Monolithen in Microservices und bei der Ablösung von Großrechner-Anwendungen.</p>
+
+<h2 id="sidecar"><span class="nr">52.</span> Sidecar <span class="de">· Beiwagen</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Sidecar: Querschnittsaufgaben in einem Begleitprozess" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="160" y="20" width="400" height="190" rx="12" class="zone"/><text x="172" y="38" class="zlbl" text-anchor="start">Pod / gemeinsamer Host</text><rect x="190" y="70" width="160" height="90" rx="8" class="app"/><text x="270.0" y="112.0" class="lbl" text-anchor="middle">Bestelldienst</text><text x="270.0" y="128.0" class="lbl" text-anchor="middle">(nur Fachlogik)</text><rect x="390" y="60" width="150" height="110" rx="8" class="comp"/><text x="465" y="82" class="lbl-c" text-anchor="middle">Sidecar</text><text x="465" y="104" class="tiny" text-anchor="middle">TLS</text><text x="465" y="120" class="tiny" text-anchor="middle">Metriken</text><text x="465" y="136" class="tiny" text-anchor="middle">Logs</text><text x="465" y="152" class="tiny" text-anchor="middle">Wiederholung</text><path d="M350,115 L388,115" class="arr" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><text x="369" y="100" class="tiny" text-anchor="middle">localhost</text><rect x="16" y="92" width="110" height="46" rx="8" class="app"/><text x="71.0" y="112.0" class="lbl" text-anchor="middle">andere</text><text x="71.0" y="128.0" class="lbl" text-anchor="middle">Dienste</text><path d="M126,115 C250,230 470,230 470,172" class="arr" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><rect x="594" y="92" width="110" height="46" rx="8" class="app"/><text x="649.0" y="120.0" class="lbl" text-anchor="middle">Monitoring</text><line x1="540" y1="115" x2="592" y2="115" class="arr" marker-end="url(#pfeil)"/><text x="360" y="232" class="note" text-anchor="middle">aller Netzverkehr läuft über den Sidecar</text></svg><figcaption>Der Bestelldienst enthält nur Fachlogik. Verschlüsselung, Metriken, Logs und Wiederholungen übernimmt ein Begleitprozess daneben.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Wie ein Beiwagen am Motorrad läuft neben jedem Dienst ein <strong>eigener Begleitprozess</strong>, der Sidecar. Er teilt sich mit dem Dienst den Host bzw. in Kubernetes den Pod und übernimmt technische <strong>Querschnittsaufgaben</strong>: Verschlüsselung der Verbindungen, Wiederholungen und Circuit Breaker, Metriken, Weiterleitung von Logs, Konfiguration. Der Dienst selbst enthält nur noch Fachlogik und spricht über <code>localhost</code> mit seinem Sidecar.</p>
+<h3>Das Problem</h3>
+<p>In einer Landschaft mit Dutzenden Diensten, womöglich in verschiedenen Programmiersprachen, müsste jeder Dienst Verschlüsselung, Wiederholungslogik, Metriken und Tracing selbst einbauen, über eine Bibliothek pro Sprache. Updates dieser Bibliotheken bedeuten, jeden Dienst neu auszuliefern. Und jedes Team setzt es etwas anders um.</p>
+<h3>Warum hier kein Code</h3>
+<p>Der Sidecar ist ein Muster der <strong>Betriebsumgebung</strong>, nicht des Programmcodes: Er ist ein eigener Prozess, meist ein eigener Container, der neben der Anwendung gestartet wird. Im Java-Code des Dienstes ist er gerade nicht zu sehen. Das ist der Sinn der Sache.</p>
+<h3>Worauf achten</h3>
+<p>Jeder Sidecar kostet Speicher, Rechenzeit und eine zusätzliche Station auf jedem Netzwerkweg. Bei Hunderten von Dienstinstanzen summiert sich das. Fehler sind schwerer zu finden, weil ein Teil des Verhaltens nicht mehr im eigenen Code steckt. Neuere Service Meshes bieten deshalb auch Varianten ohne Sidecar an, bei denen ein gemeinsamer Proxy pro Rechner die Aufgabe übernimmt.</p>
+<h3>In der Praxis</h3>
+<p>Envoy als Sidecar in den Service Meshes Istio und Consul Connect, Linkerd, Dapr, Log-Sammler wie Fluent Bit als Sidecar-Container, das Ambassador-Muster als Variante für ausgehende Verbindungen.</p>
+
+<h2 id="publish-subscribe"><span class="nr">53.</span> Publish-Subscribe / Message Bus <span class="de">· Veröffentlichen und Abonnieren</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 225" role="img" aria-label="Publish-Subscribe über Systemgrenzen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="76" width="110" height="46" rx="8" class="app"/><text x="71.0" y="104.0" class="lbl" text-anchor="middle">Bestelldienst</text><path d="M138,86.0 H306 a7,13.0 0 0 1 0,26 H138 z" class="pipe"/><ellipse cx="138" cy="99" rx="7" ry="13.0" class="pipe-end"/><rect x="209.0" y="90.0" width="26" height="18" rx="2" class="msg-b"/><path d="M209.0,90.0 L222.0,101 L235.0,90.0" class="msg-b-flap"/><text x="222.0" y="128.0" class="sub" text-anchor="middle">Topic &quot;bestellungen&quot;</text><line x1="315" y1="99" x2="329" y2="99" class="arr" marker-end="url(#pfeil)"/><path d="M330,99 C370,99 370,50 410,50" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="417.0" y="41.0" width="26" height="18" rx="2" class="msg-b"/><path d="M417.0,41.0 L430,52 L443.0,41.0" class="msg-b-flap"/><line x1="448" y1="50" x2="548" y2="50" class="arr" marker-end="url(#pfeil)"/><rect x="550" y="30" width="150" height="40" rx="8" class="app"/><text x="625.0" y="55.0" class="lbl" text-anchor="middle">Lager</text><path d="M330,99 C370,99 370,120 410,120" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="417.0" y="111.0" width="26" height="18" rx="2" class="msg-b"/><path d="M417.0,111.0 L430,122 L443.0,111.0" class="msg-b-flap"/><line x1="448" y1="120" x2="548" y2="120" class="arr" marker-end="url(#pfeil)"/><rect x="550" y="100" width="150" height="40" rx="8" class="app"/><text x="625.0" y="125.0" class="lbl" text-anchor="middle">Rechnung</text><path d="M330,99 C370,99 370,190 410,190" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="417.0" y="181.0" width="26" height="18" rx="2" class="msg-b"/><path d="M417.0,181.0 L430,192 L443.0,181.0" class="msg-b-flap"/><line x1="448" y1="190" x2="548" y2="190" class="arr" marker-end="url(#pfeil)"/><rect x="550" y="170" width="150" height="40" rx="8" class="app"/><text x="625.0" y="195.0" class="lbl" text-anchor="middle">Analyse</text></svg><figcaption>Der Bestelldienst veröffentlicht Ereignisse. Jeder interessierte Dienst bekommt eine eigene Kopie.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Publish-Subscribe ist das <em>Observer</em>-Muster der GoF über Systemgrenzen hinweg: Ein Dienst <strong>veröffentlicht</strong> Ereignisse in ein Thema (Topic), und beliebig viele andere Dienste <strong>abonnieren</strong> es und erhalten jeweils eine eigene Kopie. Der Veröffentlichende kennt seine Abonnenten nicht. Ein <strong>Message Bus</strong> ist die gemeinsame Infrastruktur, über die alle Dienste einer Organisation auf diese Weise kommunizieren, mit vereinbarten Themen und Formaten.</p>
+<h3>In verteilten Systemen</h3>
+<p>Pub/Sub ist die Grundlage ereignisgetriebener Microservice-Architekturen: Dienste reagieren auf Ereignisse anderer, statt sie direkt aufzurufen. Das entkoppelt sie zeitlich und organisatorisch. Ein neuer Analysedienst kann sich anschließen, ohne dass der Bestelldienst davon erfährt. Zusammen mit <em>Outbox</em>, <em>Idempotent Receiver</em> und <em>Saga</em> entsteht so ein robustes Zusammenspiel ohne verteilte Transaktionen.</p>
+<p>Beide Muster sind bei den Enterprise Integration Patterns ausführlich beschrieben: <a href="/it-konzepte/integration-patterns/kanaele/#publish-subscribe-channel">Publish-Subscribe Channel (Muster 12)</a> und <a href="/it-konzepte/integration-patterns/kanaele/#message-bus">Message Bus (Muster 19)</a>.</p>
+<h2 id="vergleich">Im Überblick</h2>
+<table>
+<tr><th>Ziel</th><th>Muster</th><th>Kurz gesagt</th></tr>
+<tr><td rowspan="3">Robust gegen Ausfälle</td><td>Circuit Breaker</td><td>bei Dauerausfall aufhören zu rufen</td></tr>
+<tr><td>Retry mit Backoff</td><td>bei kurzen Aussetzern wiederholen</td></tr>
+<tr><td>Bulkhead</td><td>Ausfälle auf eine Abteilung begrenzen</td></tr>
+<tr><td rowspan="3">Konsistent ohne verteilte Transaktion</td><td>Saga</td><td>Schritte mit Ausgleichsaktionen</td></tr>
+<tr><td>Transactional Outbox</td><td>Daten und Nachricht gemeinsam speichern</td></tr>
+<tr><td>Publish-Subscribe</td><td>Ereignisse statt direkter Aufrufe</td></tr>
+<tr><td rowspan="2">Zugang und Betrieb</td><td>API Gateway</td><td>ein Einstiegspunkt für alle Clients</td></tr>
+<tr><td>Sidecar</td><td>Technik neben dem Dienst statt darin</td></tr>
+<tr><td>Veränderung</td><td>Strangler Fig</td><td>Altsystem schrittweise ablösen</td></tr>
+</table>
+<p>Die drei Resilienzmuster werden fast immer zusammen eingesetzt, in einer festen Reihenfolge von außen nach innen: Bulkhead begrenzt die gleichzeitigen Aufrufe, der Circuit Breaker entscheidet, ob überhaupt gerufen wird, Retry wiederholt einzelne Fehlschläge, und jeder einzelne Aufruf hat ein Timeout.</p>
+<nav class="nav"><a href="/it-konzepte/weitere-muster/nebenlaeufigkeit/">← Nebenläufigkeit</a><a href="/it-konzepte/weitere-muster/">Übersicht</a><span></span></nav>
+</article>

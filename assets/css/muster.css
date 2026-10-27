@@ -1,0 +1,137 @@
+/* Software-Muster jenseits von GoF – Stile der Lieferung (alle Kapitel gleich), von skripte/reihe-einlesen.pl auf .muster begrenzt.
+   Angleichungen an die Seite stehen in reihe-seite.css, nicht hier (überleben so jede neue Lieferung). */
+
+  .muster {
+    --text: #1f2328; --leise: #59636e; --hg: #ffffff; --flaeche: #f8f9fb; --rand: #d1d9e0;
+    --akzent: #9a4d00; --link: #0969da; --fehler: #cf222e; --code-hg: #f3f4f6;
+    --app: #eef0f3; --app-rand: #8b949e;
+    --comp: #dbe9ff; --comp-rand: #4a7fd4; --comp-text: #1d4f9c;
+    --store: #e8f3ea; --store-rand: #5a9a68;
+    --file: #ffffff;
+    --pipe: #f3efe6; --pipe-end: #e6dfcf; --pipe-rand: #a39370;
+    --msg: #fff4d6; --msg-rand: #c49a2c;
+    --msg-a: #ffe1dc; --msg-a-rand: #d0604d;
+    --msg-b: #dcefff; --msg-b-rand: #3f7fc4;
+    --msg-c: #e2f5df; --msg-c-rand: #4f9a45;
+    --msg-x: #eeeeee; --msg-x-rand: #9a9a9a;
+    --pfeil: #57606a; --zone: rgba(120,130,150,.06); --zone-rand: #9aa4b2;
+  }
+  @media (prefers-color-scheme: dark) {
+    .muster {
+      --text: #e6edf3; --leise: #9da7b3; --hg: #0d1117; --flaeche: #151b23; --rand: #30363d;
+      --akzent: #e3a35b; --link: #58a6ff; --fehler: #ff7b72; --code-hg: #1c232c;
+      --app: #222a33; --app-rand: #6e7681;
+      --comp: #1b2d48; --comp-rand: #4a7fd4; --comp-text: #9cc3ff;
+      --store: #1c2e22; --store-rand: #5a9a68;
+      --file: #1c232c;
+      --pipe: #2a271f; --pipe-end: #3a3528; --pipe-rand: #8f805e;
+      --msg: #463a17; --msg-rand: #d6ab3c;
+      --msg-a: #4a2520; --msg-a-rand: #e07a66;
+      --msg-b: #1c3450; --msg-b-rand: #6aa6e8;
+      --msg-c: #213c22; --msg-c-rand: #74c069;
+      --msg-x: #2e2e2e; --msg-x-rand: #8a8a8a;
+      --pfeil: #9da7b3; --zone: rgba(160,170,190,.06); --zone-rand: #5c6672;
+    }
+  }
+  .muster h1 { margin-bottom: .2rem; }
+  .muster h2 { margin-top: 2.6rem; padding-top: 1rem; border-top: 1px solid var(--rand); }
+  .muster h2 .de { font-weight: 400; color: var(--leise); font-size: .8em; }
+  .muster h3 { font-size: 1rem; margin: 1.1rem 0 .2rem; }
+  .muster .kategorie { color: var(--leise); margin-top: 0; }
+  .muster .nr { color: var(--leise); font-weight: 400; }
+  .muster a { color: var(--link); }
+  .muster code { font-family: ui-monospace, Consolas, monospace; background: var(--code-hg); padding: .1em .3em; border-radius: 4px; font-size: .92em; }
+  .muster pre { background: var(--code-hg); border: 1px solid var(--rand); border-radius: 6px; padding: .9rem 1rem; overflow-x: auto; font-size: .86rem; line-height: 1.45; }
+  .muster pre code { background: none; padding: 0; font-size: inherit; }
+  .muster details.code { margin: 1rem 0; border: 1px solid var(--rand); border-radius: 8px; padding: .4rem .9rem; }
+  .muster details.code summary { cursor: pointer; font-weight: 600; padding: .3rem 0; }
+  .muster details.code p { margin: .4rem 0; }
+  .muster table { border-collapse: collapse; width: 100%; font-size: .92rem; margin: .8rem 0; }
+  .muster th, .muster td { border: 1px solid var(--rand); padding: .4rem .6rem; text-align: left; vertical-align: top; }
+  .muster th { background: var(--flaeche); }
+  .muster .legende { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; font-size: .88rem; color: var(--leise); margin: .6rem 0 0; padding: 0; list-style: none; }
+  .muster .legende svg { width: 34px; height: 22px; vertical-align: middle; margin-right: .3rem; }
+  .muster .inhalt { columns: 2; font-size: .95rem; }
+  .muster .nav { display: flex; justify-content: space-between; gap: 1rem; font-size: .9rem; margin: 1.5rem 0; }
+  @media (max-width: 600px) { .muster .inhalt { columns: 1; } }
+
+  .muster .diagramm { margin: 1rem 0 1.25rem; padding: .75rem; border: 1px solid var(--rand); border-radius: 8px; background: var(--flaeche); }
+  .muster .diagramm svg { width: 100%; height: auto; display: block; }
+  .muster .diagramm figcaption { font-size: .85rem; color: var(--leise); margin-top: .4rem; }
+  .muster svg .app { fill: var(--app); stroke: var(--app-rand); stroke-width: 1.5; }
+  .muster svg .comp { fill: var(--comp); stroke: var(--comp-rand); stroke-width: 1.5; }
+  .muster svg .store { fill: var(--store); stroke: var(--store-rand); stroke-width: 1.5; }
+  .muster svg .file { fill: var(--file); stroke: var(--app-rand); stroke-width: 1.5; }
+  .muster svg .file-fold { fill: none; stroke: var(--app-rand); stroke-width: 1.5; }
+  .muster svg .file-line { stroke: var(--leise); stroke-width: 1.2; }
+  .muster svg .pipe { fill: var(--pipe); stroke: var(--pipe-rand); stroke-width: 1.5; }
+  .muster svg .pipe-end { fill: var(--pipe-end); stroke: var(--pipe-rand); stroke-width: 1.5; }
+  .muster svg .msg, .muster svg .msg-a, .muster svg .msg-b, .muster svg .msg-c, .muster svg .msg-x { stroke-width: 1.3; }
+  .muster svg .msg { fill: var(--msg); stroke: var(--msg-rand); }
+  .muster svg .msg-a { fill: var(--msg-a); stroke: var(--msg-a-rand); }
+  .muster svg .msg-b { fill: var(--msg-b); stroke: var(--msg-b-rand); }
+  .muster svg .msg-c { fill: var(--msg-c); stroke: var(--msg-c-rand); }
+  .muster svg .msg-x { fill: var(--msg-x); stroke: var(--msg-x-rand); }
+  .muster svg [class$="-flap"] { fill: none; stroke-width: 1.1; }
+  .muster svg .msg-flap { stroke: var(--msg-rand); }
+  .muster svg .msg-a-flap { stroke: var(--msg-a-rand); }
+  .muster svg .msg-b-flap { stroke: var(--msg-b-rand); }
+  .muster svg .msg-c-flap { stroke: var(--msg-c-rand); }
+  .muster svg .msg-x-flap { stroke: var(--msg-x-rand); }
+  .muster svg .arr { stroke: var(--pfeil); stroke-width: 1.6; fill: none; }
+  .muster svg .arr-leise { stroke: var(--leise); stroke-width: 1.3; fill: none; }
+  .muster svg .head { fill: var(--pfeil); }
+  .muster svg .zone { fill: var(--zone); stroke: var(--zone-rand); stroke-width: 1.4; stroke-dasharray: 6 5; }
+  .muster svg .zlbl { font-size: 12px; font-weight: 600; fill: var(--leise); }
+  .muster svg .bus { fill: var(--pipe); stroke: var(--pipe-rand); stroke-width: 1.5; }
+  .muster svg .tag { fill: var(--hg); stroke: var(--leise); stroke-width: 1; }
+  .muster svg .tagt { font-size: 11px; font-family: ui-monospace, Consolas, monospace; fill: var(--text); }
+  .muster svg .cross { stroke: var(--fehler); stroke-width: 3; stroke-linecap: round; }
+  .muster svg text { font-family: system-ui, sans-serif; fill: var(--text); }
+  .muster svg .lbl { font-size: 13px; font-weight: 600; }
+  .muster svg .lbl-c { font-size: 13px; font-weight: 600; fill: var(--comp-text); }
+  .muster svg .sub { font-size: 12px; fill: var(--leise); }
+  .muster svg .tiny { font-size: 11.5px; fill: var(--leise); }
+  .muster svg .note { font-size: 12px; font-style: italic; fill: var(--akzent); }
+  .muster svg .ico { fill: none; stroke: var(--comp-text); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .muster svg .ico-f { fill: var(--comp-text); stroke: none; }
+
+
+  .muster-index {
+    --text: #1f2328; --leise: #59636e; --hg: #ffffff; --flaeche: #f8f9fb; --rand: #d1d9e0;
+    --akzent: #9a4d00; --link: #0969da; --fehler: #cf222e; --code-hg: #f3f4f6;
+    --app: #eef0f3; --app-rand: #8b949e;
+    --comp: #dbe9ff; --comp-rand: #4a7fd4; --comp-text: #1d4f9c;
+    --store: #e8f3ea; --store-rand: #5a9a68;
+    --file: #ffffff;
+    --pipe: #f3efe6; --pipe-end: #e6dfcf; --pipe-rand: #a39370;
+    --msg: #fff4d6; --msg-rand: #c49a2c;
+    --msg-a: #ffe1dc; --msg-a-rand: #d0604d;
+    --msg-b: #dcefff; --msg-b-rand: #3f7fc4;
+    --msg-c: #e2f5df; --msg-c-rand: #4f9a45;
+    --msg-x: #eeeeee; --msg-x-rand: #9a9a9a;
+    --pfeil: #57606a; --zone: rgba(120,130,150,.06); --zone-rand: #9aa4b2;
+  }
+  @media (prefers-color-scheme: dark) {
+    .muster-index {
+      --text: #e6edf3; --leise: #9da7b3; --hg: #0d1117; --flaeche: #151b23; --rand: #30363d;
+      --akzent: #e3a35b; --link: #58a6ff; --fehler: #ff7b72; --code-hg: #1c232c;
+      --app: #222a33; --app-rand: #6e7681;
+      --comp: #1b2d48; --comp-rand: #4a7fd4; --comp-text: #9cc3ff;
+      --store: #1c2e22; --store-rand: #5a9a68;
+      --file: #1c232c;
+      --pipe: #2a271f; --pipe-end: #3a3528; --pipe-rand: #8f805e;
+      --msg: #463a17; --msg-rand: #d6ab3c;
+      --msg-a: #4a2520; --msg-a-rand: #e07a66;
+      --msg-b: #1c3450; --msg-b-rand: #6aa6e8;
+      --msg-c: #213c22; --msg-c-rand: #74c069;
+      --msg-x: #2e2e2e; --msg-x-rand: #8a8a8a;
+      --pfeil: #9da7b3; --zone: rgba(160,170,190,.06); --zone-rand: #5c6672;
+    }
+  }
+  .muster-index a { color: var(--link); }
+  .muster-index h2 { margin-top: 2rem; font-size: 1.2rem; }
+  .muster-index table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+  .muster-index td { border-bottom: 1px solid var(--rand); padding: .35rem .5rem; vertical-align: top; }
+  .muster-index td.n { color: var(--leise); width: 2.5rem; text-align: right; }
+  .muster-index td.j { color: var(--leise); font-size: .85rem; width: 3rem; }

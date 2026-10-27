@@ -1,0 +1,24 @@
+/* Muster-Reihen der GoF-Instanz (Enterprise Integration Patterns = .eip, Software-Muster jenseits von GoF = .muster) –
+   Angleichungen an die Seite, nach eip.css bzw. muster.css geladen (die schreibt skripte/reihe-einlesen.pl neu). */
+
+/* Die Lieferung setzt eigene Variablen (u. a. --akzent, --rand) auf die Wrapper-Klasse; die Linkfarbe der Seite wird vorher abgegriffen */
+.inhalt { --seiten-akzent: var(--akzent); }
+.eip a, .eip-index a, .muster a, .muster-index a { color: var(--seiten-akzent); }
+
+/* Das Inhaltsverzeichnis der Kapitel ist eine Liste mit Spalten – ohne Einrückung der Seite */
+.eip ul.inhalt, .muster ul.inhalt { padding-left: 1.2rem; }
+
+/* Die Seite hat keine Höchstbreite (Svens Wahl); die Diagramme (640 px breit gezeichnet) würden auf breiten Schirmen riesig –
+   darum höchstens so groß wie bei der Instanz (Spalte 860 px) */
+.eip .diagramm svg, .muster .diagramm svg { max-width: 860px; margin: 0 auto; }
+
+/* Lange Code-Wörter im Fließtext (z. B. Camel-Route bei Routing) dürfen umbrechen, sonst wird die Seite auf dem Handy zu breit;
+   Codeblöcke (pre) wischen dagegen waagerecht */
+.eip :not(pre) > code, .muster :not(pre) > code { overflow-wrap: anywhere; }
+
+/* Handy: Diagramme nicht unter Lesbarkeit verkleinern, sondern seitlich wischen (wie bei den Design Patterns) */
+@media (max-width: 600px) {
+  .eip .diagramm, .muster .diagramm { overflow-x: auto; }
+  .eip .diagramm svg, .muster .diagramm svg { min-width: 520px; }
+  .muster pre { font-size: .78rem; }
+}

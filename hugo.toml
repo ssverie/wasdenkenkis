@@ -312,19 +312,26 @@ enableRobotsTXT = true
     parent = "it-konzepte"
     weight = 3
   [[menus.main]]
+    # Software-Muster jenseits von GoF seit 2026-10-27 (Sven: eigene Kachel direkt nach Design Patterns)
+    name = "Weitere Muster"
+    identifier = "it-weitere-muster"
+    pageRef = "/it-konzepte/weitere-muster"
+    parent = "it-konzepte"
+    weight = 4
+  [[menus.main]]
     # Enterprise Integration Patterns seit 2026-10-27 (Sven: „neue Kachel für diese patterns“), nach Design Patterns
     name = "Integration Patterns"
     identifier = "it-integration-patterns"
     pageRef = "/it-konzepte/integration-patterns"
     parent = "it-konzepte"
-    weight = 4
+    weight = 5
   [[menus.main]]
     # IT-Übungen seit 2026-10-26 (Sven: „neue Kachel unter IT-Konzepte – da sollen IT-Übungen rein“)
     name = "IT-Übungen"
     identifier = "it-uebungen"
     pageRef = "/it-konzepte/uebungen"
     parent = "it-konzepte"
-    weight = 5
+    weight = 6
   [[menus.main]]
     name = "Sprachen"
     pageRef = "/sprachen"

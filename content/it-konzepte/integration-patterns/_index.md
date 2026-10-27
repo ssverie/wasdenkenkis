@@ -2,7 +2,7 @@
 title = "Enterprise Integration Patterns"
 description = "Die 65 Muster von Hohpe und Woolf, wie Systeme über Nachrichten zusammenarbeiten – in acht Kapiteln mit Diagrammen."
 date = 2026-10-27T00:40:00+01:00
-layout = "integration-patterns"
+layout = "reihe-uebersicht"
 oben = "/wissen/it"
 einheit = ["Kapitel", "Kapitel"]
 modelle = ["Claude"]

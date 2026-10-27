@@ -1,0 +1,748 @@
+<article class="muster">
+<nav class="nav"><a href="/it-konzepte/weitere-muster/architektur/">← Architektur</a><a href="/it-konzepte/weitere-muster/">Übersicht</a><a href="/it-konzepte/weitere-muster/verteilte-systeme/">Verteilte Systeme →</a></nav>
+<p>Sobald mehrere Threads gleichzeitig arbeiten, entstehen neue Arten von Fehlern: verlorene Änderungen, Deadlocks, Threads, die ewig warten. Sie treten nur manchmal auf und sind schwer zu finden. Die Muster dieser Gruppe sind bewährte Wege, Nebenläufigkeit beherrschbar zu machen. Sie stammen großteils aus <em>Pattern-Oriented Software Architecture, Band 2</em> (2000) und aus Doug Leas <em>Concurrent Programming in Java</em>.</p>
+<p>Alle Beispiele nutzen Java 21, wo es passt mit <strong>virtuellen Threads</strong>. Weil nebenläufige Programme bei jedem Lauf etwas anders ablaufen, geben die Beispiele vor allem Ergebnisse und Zählerstände aus, die immer gleich sind, keine Zwischenstände. Gemessene Zeiten sind gerundet.</p>
+<ul class="legende"><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="8" class="app"/><text x="17.0" y="16.0" class="lbl" text-anchor="middle"></text></svg>Anwendung / Objekt</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="6" class="comp"/><text x="17.0" y="16.0" class="lbl-c" text-anchor="middle"></text></svg>Muster-Baustein</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><path d="M6,11 v0 a11.0,10 0 0 0 22,0 v0" class="store"/><ellipse cx="17.0" cy="11" rx="11.0" ry="10" class="store"/><text x="17.0" y="22.0" class="lbl" text-anchor="middle"></text></svg>Speicher / Ressource</li></ul>
+<ul class="inhalt">
+  <li><a href="#producer-consumer">36. Producer-Consumer</a></li>
+  <li><a href="#thread-pool">37. Thread Pool</a></li>
+  <li><a href="#future-promise">38. Future / Promise</a></li>
+  <li><a href="#active-object">39. Active Object</a></li>
+  <li><a href="#monitor-object">40. Monitor Object</a></li>
+  <li><a href="#read-write-lock">41. Read-Write Lock</a></li>
+  <li><a href="#reactor">42. Reactor</a></li>
+  <li><a href="#balking-guarded-suspension">43. Balking / Guarded Suspension</a></li>
+  <li><a href="#immutable-object">44. Immutable Object</a></li>
+</ul>
+<h2 id="producer-consumer"><span class="nr">36.</span> Producer-Consumer <span class="de">· Erzeuger und Verbraucher</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Producer-Consumer: Erzeuger und Verbraucher über eine begrenzte Warteschlange entkoppelt" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="50" width="110" height="44" rx="8" class="app"/><text x="71.0" y="77.0" class="lbl" text-anchor="middle">Shop</text><rect x="16" y="130" width="110" height="44" rx="8" class="app"/><text x="71.0" y="157.0" class="lbl" text-anchor="middle">App</text><path d="M126,72 C170,72 170,112 200,112" class="arr" fill="none" marker-end="url(#pfeil)"/><path d="M126,152 C170,152 170,112 200,112" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="210" y="86" width="250" height="52" rx="6" class="pipe"/><line x1="260" y1="86" x2="260" y2="138" class="arr-leise"/><rect x="222.0" y="103.0" width="26" height="18" rx="2" class="msg"/><path d="M222.0,103.0 L235,114 L248.0,103.0" class="msg-flap"/><line x1="310" y1="86" x2="310" y2="138" class="arr-leise"/><rect x="272.0" y="103.0" width="26" height="18" rx="2" class="msg"/><path d="M272.0,103.0 L285,114 L298.0,103.0" class="msg-flap"/><line x1="360" y1="86" x2="360" y2="138" class="arr-leise"/><rect x="322.0" y="103.0" width="26" height="18" rx="2" class="msg"/><path d="M322.0,103.0 L335,114 L348.0,103.0" class="msg-flap"/><line x1="410" y1="86" x2="410" y2="138" class="arr-leise"/><rect x="372.0" y="103.0" width="26" height="18" rx="2" class="msg"/><path d="M372.0,103.0 L385,114 L398.0,103.0" class="msg-flap"/><line x1="460" y1="86" x2="460" y2="138" class="arr-leise"/><text x="335" y="160" class="sub" text-anchor="middle">Warteschlange, Kapazität 5</text><path d="M460,112 C500,112 500,40 540,40" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="542" y="20" width="160" height="40" rx="8" class="app"/><text x="622.0" y="45.0" class="lbl" text-anchor="middle">Lager-Worker 1</text><path d="M460,112 C500,112 500,112 540,112" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="542" y="92" width="160" height="40" rx="8" class="app"/><text x="622.0" y="117.0" class="lbl" text-anchor="middle">Lager-Worker 2</text><path d="M460,112 C500,112 500,184 540,184" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="542" y="164" width="160" height="40" rx="8" class="app"/><text x="622.0" y="189.0" class="lbl" text-anchor="middle">Lager-Worker 3</text><text x="335" y="40" class="note" text-anchor="middle">voll: Erzeuger wartet</text><text x="335" y="200" class="note" text-anchor="middle">leer: Verbraucher wartet</text><text x="90" y="220" class="note" text-anchor="middle">schnell</text><text x="622" y="236" class="note" text-anchor="middle">langsamer</text></svg><figcaption>Shop und App legen Bestellungen in eine Warteschlange mit fünf Plätzen. Drei Worker nehmen sie heraus, jeder in seinem Tempo.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Wer Arbeit <strong>erzeugt</strong> und wer sie <strong>erledigt</strong>, wird durch eine Warteschlange getrennt. Erzeuger legen Aufgaben hinein, Verbraucher nehmen sie heraus. Ist die Schlange <strong>voll</strong>, warten die Erzeuger. Ist sie <strong>leer</strong>, warten die Verbraucher. So passen sich beide Seiten automatisch aneinander an, ohne voneinander zu wissen. Es ist das Messaging-Prinzip der Enterprise Integration Patterns, nur innerhalb eines Programms.</p>
+<h3>Im Code</h3>
+<p>Eine <code>ArrayBlockingQueue</code> mit fünf Plätzen verbindet zwei schnelle Erzeuger mit drei langsameren Verbrauchern, alle als virtuelle Threads. <code>put()</code> blockiert bei voller, <code>take()</code> bei leerer Schlange. Am Ende bekommt jeder Verbraucher eine „Giftpille“, ein besonderes Objekt, das ihm sagt, dass keine Arbeit mehr kommt.</p>
+<details class="code"><summary>Java-21-Code: ProducerConsumer.java</summary><p>Direkt ausführbar mit <code>java ProducerConsumer.java</code></p><pre><code class="language-java">// Producer-Consumer
+// Erzeuger und Verbraucher sind über eine Warteschlange entkoppelt und arbeiten in ihrem eigenen Tempo.
+// Start: java ProducerConsumer.java
+
+import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class ProducerConsumer {
+
+    record Bestellung(String quelle, int nr) {}
+    static final Bestellung ENDE = new Bestellung(&quot;ENDE&quot;, -1);         // &quot;Giftpille&quot;: signalisiert das Ende
+
+    public static void main(String[] args) throws Exception {
+        BlockingQueue&lt;Bestellung&gt; warteschlange = new ArrayBlockingQueue&lt;&gt;(5);   // begrenzt: höchstens 5
+        AtomicInteger maxFuellstand = new AtomicInteger();
+        Map&lt;String, Integer&gt; verarbeitet = new ConcurrentHashMap&lt;&gt;();
+        int verbraucher = 3;
+
+        try (var ex = Executors.newVirtualThreadPerTaskExecutor()) {
+            // --- Erzeuger: Shop und App liefern je 10 Bestellungen, schnell ---
+            for (String quelle : new String[] { &quot;Shop&quot;, &quot;App&quot; }) {
+                ex.submit(() -&gt; {
+                    for (int i = 1; i &lt;= 10; i++) {
+                        warteschlange.put(new Bestellung(quelle, i));      // blockiert, wenn die Schlange voll ist
+                        maxFuellstand.accumulateAndGet(warteschlange.size(), Math::max);
+                        Thread.sleep(5);
+                    }
+                    return null;
+                });
+            }
+            // --- Verbraucher: drei Lager-Worker, langsamer ---
+            for (int w = 1; w &lt;= verbraucher; w++) {
+                String name = &quot;Worker &quot; + w;
+                ex.submit(() -&gt; {
+                    while (true) {
+                        Bestellung b = warteschlange.take();             // blockiert, wenn die Schlange leer ist
+                        if (b == ENDE) return null;
+                        Thread.sleep(30);                                // Verarbeitung dauert
+                        verarbeitet.merge(b.quelle(), 1, Integer::sum);
+                    }
+                });
+            }
+            // --- Ende signalisieren, sobald alle Erzeuger fertig sind ---
+            ex.submit(() -&gt; {
+                while (verarbeitet.values().stream().mapToInt(Integer::intValue).sum() + warteschlange.size() &lt; 20) Thread.sleep(10);
+                for (int i = 0; i &lt; verbraucher; i++) warteschlange.put(ENDE);
+                return null;
+            });
+        }
+
+        System.out.println(&quot;Verarbeitet:          &quot; + new java.util.TreeMap&lt;&gt;(verarbeitet));
+        System.out.println(&quot;Größter Füllstand:    &quot; + Math.min(maxFuellstand.get(), 5) + &quot; (Kapazität 5)&quot;);
+        System.out.println(&quot;Erzeuger haben gewartet, wenn die Schlange voll war, statt den Speicher zu fluten.&quot;);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Verarbeitet:          {App=10, Shop=10}
+Größter Füllstand:    5 (Kapazität 5)
+Erzeuger haben gewartet, wenn die Schlange voll war, statt den Speicher zu fluten.</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Die Warteschlange sollte <strong>begrenzt</strong> sein. Eine unbegrenzte Schlange nimmt alles an, bis der Speicher voll ist, wenn die Verbraucher dauerhaft langsamer sind. Die Begrenzung bremst die Erzeuger aus, man spricht von <em>Backpressure</em>. Für das saubere Beenden gibt es zwei übliche Wege: eine Giftpille pro Verbraucher wie im Beispiel oder das Unterbrechen der Verbraucher-Threads. Und wie bei Competing Consumers gilt: Mit mehreren Verbrauchern ist die Reihenfolge der Verarbeitung nicht garantiert.</p>
+<h3>In der Praxis</h3>
+<p><code>BlockingQueue</code> mit ihren Implementierungen <code>ArrayBlockingQueue</code>, <code>LinkedBlockingQueue</code> und <code>SynchronousQueue</code>. Jeder <code>ExecutorService</code> hat intern eine Warteschlange. Die LMAX Disruptor-Bibliothek ist eine extrem schnelle Variante. Über Prozessgrenzen hinweg übernehmen Message Broker diese Rolle.</p>
+
+<h2 id="thread-pool"><span class="nr">37.</span> Thread Pool <span class="de">· Thread-Pool</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Thread Pool: eine feste Zahl von Threads arbeitet eine Aufgabenwarteschlange ab" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><text x="130" y="26" class="lbl" text-anchor="middle">Aufgaben</text><rect x="30" y="44" width="40" height="32" rx="4" class="msg"/><text x="50" y="65" class="tiny" text-anchor="middle">5</text><rect x="80" y="44" width="40" height="32" rx="4" class="msg"/><text x="100" y="65" class="tiny" text-anchor="middle">6</text><rect x="130" y="44" width="40" height="32" rx="4" class="msg"/><text x="150" y="65" class="tiny" text-anchor="middle">7</text><rect x="180" y="44" width="40" height="32" rx="4" class="msg"/><text x="200" y="65" class="tiny" text-anchor="middle">8</text><rect x="30" y="88" width="40" height="32" rx="4" class="msg"/><text x="50" y="109" class="tiny" text-anchor="middle">9</text><rect x="80" y="88" width="40" height="32" rx="4" class="msg"/><text x="100" y="109" class="tiny" text-anchor="middle">10</text><rect x="130" y="88" width="40" height="32" rx="4" class="msg"/><text x="150" y="109" class="tiny" text-anchor="middle">11</text><rect x="180" y="88" width="40" height="32" rx="4" class="msg"/><text x="200" y="109" class="tiny" text-anchor="middle">12</text><line x1="240" y1="82" x2="300" y2="82" class="arr" marker-end="url(#pfeil)"/><rect x="302" y="14" width="260" height="168" rx="12" class="zone"/><text x="314" y="32" class="zlbl" text-anchor="start">Pool: 4 Threads</text><rect x="322" y="40" width="220" height="30" rx="15" class="comp"/><text x="432.0" y="60" class="tiny" text-anchor="middle">Thread 1: Aufgabe 1</text><rect x="322" y="74" width="220" height="30" rx="15" class="comp"/><text x="432.0" y="94" class="tiny" text-anchor="middle">Thread 2: Aufgabe 2</text><rect x="322" y="108" width="220" height="30" rx="15" class="comp"/><text x="432.0" y="128" class="tiny" text-anchor="middle">Thread 3: Aufgabe 3</text><rect x="322" y="142" width="220" height="30" rx="15" class="comp"/><text x="432.0" y="162" class="tiny" text-anchor="middle">Thread 4: Aufgabe 4</text><line x1="562" y1="82" x2="620" y2="82" class="arr" marker-end="url(#pfeil)"/><rect x="622" y="62" width="90" height="40" rx="8" class="app"/><text x="667.0" y="87.0" class="lbl" text-anchor="middle">fertig</text><text x="130" y="150" class="note" text-anchor="middle">warten auf einen</text><text x="130" y="166" class="note" text-anchor="middle">freien Thread</text><text x="432" y="196" class="note" text-anchor="middle">Threads werden wiederverwendet, nicht neu erzeugt</text><text x="432" y="222" class="note" text-anchor="middle">Java 21: für wartende Aufgaben lieber ein virtueller Thread pro Aufgabe</text></svg><figcaption>Vier Threads arbeiten die Aufgaben nacheinander ab. Die übrigen warten in der Schlange, bis ein Thread frei wird.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Statt für jede Aufgabe einen neuen Thread zu starten, gibt es eine <strong>feste Zahl von Threads</strong>, die eine Warteschlange von Aufgaben abarbeiten. Ist ein Thread fertig, nimmt er sich die nächste Aufgabe. Threads werden so wiederverwendet, und ihre Zahl ist nach oben begrenzt. Der Thread Pool ist eine Kombination aus <em>Object Pool</em> (Gruppe 1) und <em>Producer-Consumer</em> (Muster 36).</p>
+<h3>Im Code</h3>
+<p>Ein <code>Executors.newFixedThreadPool(4)</code> erledigt zwölf Aufgaben à 100 ms. Es werden genau vier Threads benutzt, und es dauert drei Runden, also etwa 300 ms. Im zweiten Teil laufen 10.000 wartende Aufgaben mit virtuellen Threads, je einem pro Aufgabe, in deutlich unter einer Sekunde.</p>
+<details class="code"><summary>Java-21-Code: ThreadPool.java</summary><p>Direkt ausführbar mit <code>java ThreadPool.java</code></p><pre><code class="language-java">// Thread Pool
+// Eine feste Anzahl von Threads arbeitet eine Warteschlange von Aufgaben ab.
+// Start: java ThreadPool.java
+
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+public class ThreadPool {
+
+    static long ms(long start) { return Math.round((System.nanoTime() - start) / 1e8) * 100; }
+
+    public static void main(String[] args) throws Exception {
+        // --- 1. Klassischer Thread Pool: 4 Plattform-Threads für 12 Aufgaben ---
+        Set&lt;String&gt; benutzteThreads = ConcurrentHashMap.newKeySet();
+        long start = System.nanoTime();
+        ExecutorService pool = Executors.newFixedThreadPool(4);
+        for (int i = 1; i &lt;= 12; i++) {
+            pool.submit(() -&gt; {
+                benutzteThreads.add(Thread.currentThread().getName());
+                Thread.sleep(100);                                   // z. B. Rechnung als PDF erzeugen
+                return null;
+            });
+        }
+        pool.shutdown();                                             // keine neuen Aufgaben mehr annehmen
+        pool.awaitTermination(10, TimeUnit.SECONDS);                 // auf die laufenden warten
+        System.out.println(&quot;Fester Pool: 12 Aufgaben à 100 ms mit 4 Threads&quot;);
+        System.out.println(&quot;  verschiedene Threads benutzt: &quot; + benutzteThreads.size());
+        System.out.println(&quot;  Dauer ca. &quot; + ms(start) + &quot; ms  (3 Runden à 4 Aufgaben)&quot;);
+
+        // --- 2. Java 21: virtuelle Threads, ein Thread pro Aufgabe, kein Pool nötig ---
+        start = System.nanoTime();
+        try (var ex = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i &lt; 10_000; i++) {
+                ex.submit(() -&gt; { Thread.sleep(100); return null; }); // wartende Aufgaben, z. B. auf eine Antwort
+            }
+        }
+        System.out.println(&quot;\nVirtuelle Threads: 10.000 wartende Aufgaben à 100 ms&quot;);
+        System.out.println(&quot;  Dauer deutlich unter 1 Sekunde: &quot; + (ms(start) &lt; 1_000));
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Fester Pool: 12 Aufgaben à 100 ms mit 4 Threads
+  verschiedene Threads benutzt: 4
+  Dauer ca. 300 ms  (3 Runden à 4 Aufgaben)
+
+Virtuelle Threads: 10.000 wartende Aufgaben à 100 ms
+  Dauer deutlich unter 1 Sekunde: true</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Die richtige <strong>Poolgröße</strong> hängt von der Art der Arbeit ab: Für rechenintensive Aufgaben etwa so viele Threads wie Prozessorkerne, mehr bringen nichts. Für Aufgaben, die überwiegend <strong>warten</strong> (Datenbank, Netzwerk, Dateien), waren früher große Pools nötig. Seit <strong>Java 21</strong> sind dafür virtuelle Threads die bessere Wahl: Sie sind so billig, dass man sie nicht mehr poolen muss, Millionen gleichzeitig sind möglich. Plattform-Thread-Pools bleiben sinnvoll für rechenintensive Arbeit und um die Last auf eine Ressource bewusst zu begrenzen. Pools müssen immer mit <code>shutdown()</code> beendet werden, sonst läuft das Programm nicht zu Ende. Die try-with-resources-Form von <code>ExecutorService</code> nimmt einem das seit Java 19 ab.</p>
+<h3>In der Praxis</h3>
+<p><code>ExecutorService</code> mit <code>newFixedThreadPool</code>, <code>newCachedThreadPool</code>, <code>ForkJoinPool</code> (für Streams mit <code>parallel()</code>), Thread-Pools in Webservern wie Tomcat, die seit Spring Boot 3.2 per Einstellung durch virtuelle Threads ersetzt werden können.</p>
+
+<h2 id="future-promise"><span class="nr">38.</span> Future / Promise <span class="de">· Zukünftiges Ergebnis</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Future / Promise: Platzhalter für ein späteres Ergebnis" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><text x="16" y="30" class="lbl" text-anchor="start">nacheinander</text><rect x="130" y="16" width="150" height="26" rx="4" class="msg"/><text x="205" y="34" class="tiny" text-anchor="middle">Preis</text><rect x="280" y="16" width="150" height="26" rx="4" class="msg-b"/><text x="355" y="34" class="tiny" text-anchor="middle">Bestand</text><rect x="430" y="16" width="150" height="26" rx="4" class="msg-c"/><text x="505" y="34" class="tiny" text-anchor="middle">Versand</text><text x="600" y="34" class="lbl" text-anchor="start">≈ 900 ms</text><text x="16" y="96" class="lbl" text-anchor="start">parallel</text><rect x="130" y="70" width="150" height="26" rx="4" class="msg"/><text x="205" y="88" class="tiny" text-anchor="middle">Preis</text><rect x="130" y="100" width="150" height="26" rx="4" class="msg-b"/><text x="205" y="118" class="tiny" text-anchor="middle">Bestand</text><rect x="130" y="130" width="150" height="26" rx="4" class="msg-c"/><text x="205" y="148" class="tiny" text-anchor="middle">Versand</text><path d="M280,83 C300,83 300,113 318,113" class="arr" fill="none" marker-end="url(#pfeil)"/><path d="M280,143 C300,143 300,113 318,113" class="arr" fill="none" marker-end="url(#pfeil)"/><path d="M280,113 L318,113" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="320" y="96" width="130" height="34" rx="6" class="comp"/><text x="385.0" y="118.0" class="lbl-c" text-anchor="middle">thenCombine</text><text x="600" y="118" class="lbl" text-anchor="start">≈ 300 ms</text><line x1="130" y1="190" x2="580" y2="190" class="arr" marker-end="url(#pfeil)"/><line x1="130" y1="186" x2="130" y2="194" class="arr"/><text x="130" y="210" class="tiny" text-anchor="middle">0</text><line x1="280" y1="186" x2="280" y2="194" class="arr"/><text x="280" y="210" class="tiny" text-anchor="middle">300</text><line x1="430" y1="186" x2="430" y2="194" class="arr"/><text x="430" y="210" class="tiny" text-anchor="middle">600</text><line x1="580" y1="186" x2="580" y2="194" class="arr"/><text x="580" y="210" class="tiny" text-anchor="middle">900 ms</text><text x="360" y="238" class="note" text-anchor="middle">Das Programm kann weiterarbeiten, während die Ergebnisse unterwegs sind</text></svg><figcaption>Drei langsame Abfragen nacheinander dauern so lange wie alle zusammen. Als Futures parallel gestartet, so lange wie die längste.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Future ist ein <strong>Platzhalter für ein Ergebnis, das es noch nicht gibt</strong>. Wer eine langwierige Aufgabe startet, bekommt sofort ein Future zurück und kann weiterarbeiten. Später kann er auf das Ergebnis warten, oder er hängt gleich <strong>Folgeschritte</strong> an, die automatisch laufen, sobald das Ergebnis da ist. „Promise“ bezeichnet die Seite, die das Ergebnis später einlöst. In Java vereint <code>CompletableFuture</code> beides.</p>
+<h3>Im Code</h3>
+<p>Eine Produktseite braucht Preis, Bestand und Versandkosten von drei langsamen Diensten. Nacheinander abgefragt dauert das etwa 900 ms, als drei Futures parallel etwa 300 ms. <code>thenCombine</code> setzt die Ergebnisse zusammen, <code>thenApply</code> verarbeitet weiter, <code>exceptionally</code> liefert bei einem Fehler einen Ersatzwert, und <code>completeOnTimeout</code> begrenzt die Wartezeit.</p>
+<details class="code"><summary>Java-21-Code: FuturePromise.java</summary><p>Direkt ausführbar mit <code>java FuturePromise.java</code></p><pre><code class="language-java">// Future / Promise
+// Ein Platzhalter für ein Ergebnis, das erst später vorliegt. Man kann darauf warten oder Folgeschritte anhängen.
+// Start: java FuturePromise.java
+
+import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+public class FuturePromise {
+
+    static void warte(long ms) { try { Thread.sleep(ms); } catch (InterruptedException e) { throw new RuntimeException(e); } }
+    static long ms(long start) { return Math.round((System.nanoTime() - start) / 1e8) * 100; }
+
+    // Drei langsame Dienste, z. B. entfernte Aufrufe
+    static long preisCent(String artikel) { warte(300); return 3_990; }
+    static int bestand(String artikel)    { warte(300); return 7; }
+    static long versandCent(String plz)   { warte(300); return 490; }
+    static long empfehlungen()            { warte(200); throw new IllegalStateException(&quot;Empfehlungsdienst nicht erreichbar&quot;); }
+
+    record Produktseite(long preis, int bestand, long versand) {}
+
+    public static void main(String[] args) {
+        var ex = Executors.newVirtualThreadPerTaskExecutor();
+
+        // --- Nacheinander: die Zeiten addieren sich ---
+        long start = System.nanoTime();
+        var seq = new Produktseite(preisCent(&quot;Lampe&quot;), bestand(&quot;Lampe&quot;), versandCent(&quot;20457&quot;));
+        System.out.println(&quot;Nacheinander: &quot; + seq + &quot;, Dauer ca. &quot; + ms(start) + &quot; ms&quot;);
+
+        // --- Parallel mit Futures: die Zeiten überlappen sich ---
+        start = System.nanoTime();
+        CompletableFuture&lt;Long&gt; preis = CompletableFuture.supplyAsync(() -&gt; preisCent(&quot;Lampe&quot;), ex);
+        CompletableFuture&lt;Integer&gt; lager = CompletableFuture.supplyAsync(() -&gt; bestand(&quot;Lampe&quot;), ex);
+        CompletableFuture&lt;Long&gt; versand = CompletableFuture.supplyAsync(() -&gt; versandCent(&quot;20457&quot;), ex);
+        // Hier könnte das Programm etwas anderes tun, während die drei Ergebnisse unterwegs sind
+
+        // Folgeschritt, der erst läuft, wenn alle drei fertig sind
+        CompletableFuture&lt;Produktseite&gt; seite = preis.thenCombine(lager, (p, b) -&gt; new long[] { p, b })
+                .thenCombine(versand, (pb, v) -&gt; new Produktseite(pb[0], (int) pb[1], v));
+        System.out.println(&quot;Parallel:     &quot; + seite.join() + &quot;, Dauer ca. &quot; + ms(start) + &quot; ms&quot;);
+
+        // --- Folgeschritte anhängen und Fehler abfangen ---
+        String text = seite.thenApply(s -&gt; String.format(Locale.GERMANY, &quot;%.2f € + %.2f € Versand&quot;, s.preis() / 100.0, s.versand() / 100.0)).join();
+        System.out.println(&quot;Weiterverarbeitet: &quot; + text);
+
+        String empf = CompletableFuture.supplyAsync(FuturePromise::empfehlungen, ex)
+                .thenApply(n -&gt; n + &quot; Empfehlungen&quot;)
+                .exceptionally(fehler -&gt; &quot;keine Empfehlungen (&quot; + fehler.getCause().getMessage() + &quot;)&quot;)
+                .join();
+        System.out.println(&quot;Mit Fehler:   &quot; + empf);
+
+        // --- Zeitlimit ---
+        String mitLimit = CompletableFuture.supplyAsync(() -&gt; { warte(2_000); return &quot;zu spät&quot;; }, ex)
+                .completeOnTimeout(&quot;Standardwert nach 500 ms&quot;, 500, TimeUnit.MILLISECONDS)
+                .join();
+        System.out.println(&quot;Mit Zeitlimit: &quot; + mitLimit);
+        ex.shutdownNow();
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Nacheinander: Produktseite[preis=3990, bestand=7, versand=490], Dauer ca. 900 ms
+Parallel:     Produktseite[preis=3990, bestand=7, versand=490], Dauer ca. 300 ms
+Weiterverarbeitet: 39,90 € + 4,90 € Versand
+Mit Fehler:   keine Empfehlungen (Empfehlungsdienst nicht erreichbar)
+Mit Zeitlimit: Standardwert nach 500 ms</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Ein blockierendes <code>get()</code> oder <code>join()</code> zu früh im Code macht den Vorteil zunichte. Fehler in Futures werden leicht übersehen, weil sie erst beim Abholen des Ergebnisses auftauchen. Jede Kette braucht deshalb eine Fehlerbehandlung. Mit virtuellen Threads in Java 21 wird blockierender Code wieder billig, und viele asynchrone Ketten lassen sich durch einfachen, linearen Code ersetzen. Für strukturierte Parallelität gibt es <em>Structured Concurrency</em>, seit Java 21 als Preview-Funktion.</p>
+<h3>In der Praxis</h3>
+<p><code>java.util.concurrent.Future</code> und <code>CompletableFuture</code>, Promises in JavaScript mit <code>async</code>/<code>await</code>, <code>Mono</code> in Project Reactor, <code>Task</code> in C#. Spring liefert aus <code>@Async</code>-Methoden <code>CompletableFuture</code> zurück.</p>
+
+<h2 id="active-object"><span class="nr">39.</span> Active Object <span class="de">· Aktives Objekt</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Active Object: Aufrufe werden in eine Warteschlange gestellt und vom eigenen Thread des Objekts abgearbeitet" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="30" width="110" height="40" rx="8" class="app"/><text x="71.0" y="55.0" class="lbl" text-anchor="middle">Aufrufer 1</text><path d="M126,50 C150,50 150,110 176,110" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="16" y="90" width="110" height="40" rx="8" class="app"/><text x="71.0" y="115.0" class="lbl" text-anchor="middle">Aufrufer 2</text><path d="M126,110 C150,110 150,110 176,110" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="16" y="150" width="110" height="40" rx="8" class="app"/><text x="71.0" y="175.0" class="lbl" text-anchor="middle">Aufrufer 3</text><path d="M126,170 C150,170 150,110 176,110" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="180" y="16" width="520" height="200" rx="12" class="zone"/><text x="192" y="34" class="zlbl" text-anchor="start">Active Object: Lager</text><rect x="196" y="86" width="100" height="48" rx="6" class="comp"/><text x="246.0" y="115.0" class="lbl-c" text-anchor="middle">Proxy</text><text x="246" y="152" class="tiny" text-anchor="middle">liefert Future</text><line x1="296" y1="110" x2="326" y2="110" class="arr" marker-end="url(#pfeil)"/><rect x="328" y="88" width="170" height="44" rx="6" class="pipe"/><rect x="341.0" y="102.5" width="22" height="15" rx="2" class="msg"/><path d="M341.0,102.5 L352,112 L363.0,102.5" class="msg-flap"/><rect x="381.0" y="102.5" width="22" height="15" rx="2" class="msg"/><path d="M381.0,102.5 L392,112 L403.0,102.5" class="msg-flap"/><rect x="421.0" y="102.5" width="22" height="15" rx="2" class="msg"/><path d="M421.0,102.5 L432,112 L443.0,102.5" class="msg-flap"/><rect x="461.0" y="102.5" width="22" height="15" rx="2" class="msg"/><path d="M461.0,102.5 L472,112 L483.0,102.5" class="msg-flap"/><text x="413" y="152" class="tiny" text-anchor="middle">Auftragswarteschlange</text><line x1="498" y1="110" x2="528" y2="110" class="arr" marker-end="url(#pfeil)"/><rect x="530" y="76" width="150" height="68" rx="6" class="comp"/><text x="605.0" y="115.0" class="lbl-c" text-anchor="middle"></text><text x="605" y="100" class="lbl-c" text-anchor="middle">eigener Thread</text><text x="605" y="120" class="tiny" text-anchor="middle">Bestand</text><text x="605" y="134" class="tiny" text-anchor="middle">(nur er greift zu)</text><text x="440" y="196" class="note" text-anchor="middle">Aufrufe kehren sofort zurück, ausgeführt wird nacheinander</text><text x="360" y="238" class="note" text-anchor="middle">keine Sperren nötig: der Zustand gehört genau einem Thread</text></svg><figcaption>Viele Aufrufer greifen gleichzeitig auf das Lager zu. Ihre Aufträge werden eingereiht und vom einzigen Thread des Lagers nacheinander ausgeführt.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Active Object hat einen <strong>eigenen Thread</strong>. Ruft jemand eine seiner Methoden auf, wird die Arbeit nicht sofort im Thread des Aufrufers erledigt, sondern als Auftrag in eine <strong>Warteschlange</strong> gestellt. Der Aufrufer bekommt sofort ein Future zurück. Der Thread des Objekts arbeitet die Aufträge nacheinander ab. Weil nur dieser eine Thread den Zustand des Objekts berührt, sind <strong>keine Sperren</strong> nötig.</p>
+<h3>Im Code</h3>
+<p>Das <code>Lager</code> hat einen <code>SingleThreadExecutor</code> als eigenen Thread und Warteschlange. Seine öffentlichen Methoden verpacken den Auftrag und reihen ihn ein. 1.000 virtuelle Threads entnehmen gleichzeitig Bücher und liefern Tassen. Am Ende stimmt der Bestand exakt, obwohl die interne <code>HashMap</code> nicht threadsicher ist und kein einziges <code>synchronized</code> im Code steht.</p>
+<details class="code"><summary>Java-21-Code: ActiveObject.java</summary><p>Direkt ausführbar mit <code>java ActiveObject.java</code></p><pre><code class="language-java">// Active Object
+// Methodenaufrufe werden nicht sofort ausgeführt, sondern in eine Warteschlange gestellt
+// und von einem eigenen Thread des Objekts nacheinander abgearbeitet.
+// Start: java ActiveObject.java
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Supplier;
+
+public class ActiveObject {
+
+    // --- Das Active Object: eigener Thread, eigener Zustand, keine Sperren nötig ---
+    static final class Lager implements AutoCloseable {
+        private final ExecutorService eigenerThread = Executors.newSingleThreadExecutor();   // Scheduler + Queue
+        private final Map&lt;String, Integer&gt; bestand = new HashMap&lt;&gt;();                       // nur dieser Thread greift zu
+        private int auftraege = 0;
+
+        // Öffentliche Methoden: nehmen den Auftrag an und kehren sofort zurück (Proxy)
+        CompletableFuture&lt;Void&gt; liefere(String artikel, int menge) {
+            return einreihen(() -&gt; { bestand.merge(artikel, menge, Integer::sum); auftraege++; return null; });
+        }
+        CompletableFuture&lt;Boolean&gt; entnehme(String artikel, int menge) {
+            return einreihen(() -&gt; {
+                auftraege++;
+                int da = bestand.getOrDefault(artikel, 0);
+                if (da &lt; menge) return false;
+                bestand.put(artikel, da - menge);
+                return true;
+            });
+        }
+        CompletableFuture&lt;String&gt; bericht() {
+            return einreihen(() -&gt; &quot;Bestand &quot; + new java.util.TreeMap&lt;&gt;(bestand) + &quot; nach &quot; + auftraege + &quot; Aufträgen&quot;);
+        }
+
+        private &lt;T&gt; CompletableFuture&lt;T&gt; einreihen(Supplier&lt;T&gt; auftrag) {
+            return CompletableFuture.supplyAsync(auftrag, eigenerThread);   // Method Request in die Warteschlange
+        }
+        public void close() { eigenerThread.shutdown(); }
+    }
+
+    public static void main(String[] args) {
+        try (Lager lager = new Lager();
+             var aufrufer = Executors.newVirtualThreadPerTaskExecutor()) {
+
+            lager.liefere(&quot;Buch&quot;, 1_000).join();
+
+            // 1.000 Aufrufer gleichzeitig, jeder entnimmt 1 Buch und liefert 1 Tasse
+            var erfolge = new java.util.concurrent.atomic.AtomicInteger();
+            var futures = new java.util.ArrayList&lt;CompletableFuture&lt;?&gt;&gt;();
+            for (int i = 0; i &lt; 1_000; i++) {
+                futures.add(CompletableFuture.runAsync(() -&gt; {
+                    if (lager.entnehme(&quot;Buch&quot;, 1).join()) erfolge.incrementAndGet();
+                    lager.liefere(&quot;Tasse&quot;, 1).join();
+                }, aufrufer));
+            }
+            futures.forEach(CompletableFuture::join);
+
+            System.out.println(&quot;Erfolgreiche Entnahmen: &quot; + erfolge.get());
+            System.out.println(lager.bericht().join());
+            System.out.println(&quot;Keine einzige Sperre im Code: der Zustand gehört genau einem Thread.&quot;);
+        }
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Erfolgreiche Entnahmen: 1000
+Bestand {Buch=0, Tasse=1000} nach 2001 Aufträgen
+Keine einzige Sperre im Code: der Zustand gehört genau einem Thread.</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Das Muster tauscht Sperren gegen <strong>Serialisierung</strong>: Alle Aufträge laufen nacheinander. Bei sehr vielen Aufrufen wird der eine Thread zum Engpass. Dauert ein Auftrag lange, warten alle anderen. Und ruft das Active Object aus einem Auftrag heraus blockierend sich selbst auf, wartet es auf sich selbst, ein Deadlock. Das GoF-nahe Original von Douglas Schmidt (POSA 2) unterscheidet die Rollen Proxy, Method Request, Activation List, Scheduler, Servant und Future. Im Beispiel übernimmt der <code>ExecutorService</code> mehrere davon.</p>
+<h3>In der Praxis</h3>
+<p>Der Event-Dispatch-Thread in Swing und der Application Thread in JavaFX (Änderungen an der Oberfläche nur über <code>invokeLater</code> bzw. <code>Platform.runLater</code>), Aktoren in Akka bzw. Pekko, Erlang-Prozesse und die Verticles in Vert.x arbeiten alle nach diesem Prinzip.</p>
+
+<h2 id="monitor-object"><span class="nr">40.</span> Monitor Object <span class="de">· Monitorobjekt</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 230" role="img" aria-label="Monitor Object: immer nur ein Thread gleichzeitig im Objekt" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="40" width="140" height="30" rx="15" class="app"/><text x="86.0" y="60" class="tiny" text-anchor="middle">Thread 2: wartet</text><line x1="156" y1="55" x2="236" y2="110" class="arr-leise" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><rect x="16" y="80" width="140" height="30" rx="15" class="app"/><text x="86.0" y="100" class="tiny" text-anchor="middle">Thread 3: wartet</text><line x1="156" y1="95" x2="236" y2="110" class="arr-leise" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><rect x="16" y="120" width="140" height="30" rx="15" class="app"/><text x="86.0" y="140" class="tiny" text-anchor="middle">Thread 4: wartet</text><line x1="156" y1="135" x2="236" y2="110" class="arr-leise" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><rect x="16" y="160" width="140" height="30" rx="15" class="app"/><text x="86.0" y="180" class="tiny" text-anchor="middle">Thread 5: wartet</text><line x1="156" y1="175" x2="236" y2="110" class="arr-leise" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><rect x="240" y="40" width="260" height="150" rx="10" class="app"/><text x="370" y="64" class="lbl" text-anchor="middle">Konto (Monitor)</text><rect x="252" y="76" width="236" height="38" rx="4" class="comp"/><text x="370" y="100" class="tagt" text-anchor="middle">synchronized abbuchen()</text><rect x="300" y="130" width="140" height="30" rx="15" class="store"/><text x="370.0" y="150" class="tiny" text-anchor="middle">Thread 1: drinnen</text><text x="370" y="180" class="tiny" text-anchor="middle">saldo</text><rect x="232" y="94" width="14" height="18" rx="2" class="comp"/><text x="610" y="90" class="note" text-anchor="middle">prüfen und ändern</text><text x="610" y="106" class="note" text-anchor="middle">als eine Einheit</text><text x="610" y="140" class="note" text-anchor="middle">Saldo nie negativ</text></svg><figcaption>Das Konto lässt immer nur einen Thread in seine Methoden. Die anderen warten vor der Tür.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Monitor Object <strong>schützt seinen Zustand selbst</strong>: Alle seine Methoden sind so gesichert, dass immer nur ein Thread gleichzeitig darin arbeiten kann. Andere Threads warten, bis er fertig ist. Der Aufrufer muss sich um nichts kümmern. Zusätzlich kann ein Monitor <em>Bedingungen</em> bieten, auf die Threads warten können, siehe Guarded Suspension (Muster 43). Das Konzept stammt von Tony Hoare und Per Brinch Hansen aus den 1970ern.</p>
+<h3>Im Code</h3>
+<p>Ein ungeschützter Zähler, von acht Threads je 200.000-mal erhöht, verliert Änderungen, weil <code>wert++</code> aus drei Schritten besteht: lesen, erhöhen, schreiben. Mit <code>synchronized</code> stimmt das Ergebnis. Das <code>Konto</code> nutzt eine <code>ReentrantLock</code> und prüft und ändert den Saldo als eine geschützte Einheit. 5.000 gleichzeitige Abbuchungen von 1 € auf ein Konto mit 1.000 € ergeben genau 1.000 erfolgreiche, und der Saldo wird nie negativ.</p>
+<details class="code"><summary>Java-21-Code: MonitorObject.java</summary><p>Direkt ausführbar mit <code>java MonitorObject.java</code></p><pre><code class="language-java">// Monitor Object
+// Ein Objekt schützt seinen Zustand selbst: Es lässt immer nur einen Thread gleichzeitig in seine Methoden.
+// Start: java MonitorObject.java
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class MonitorObject {
+
+    // --- Ungeschützt: mehrere Threads können sich gegenseitig Änderungen überschreiben ---
+    static final class Zaehler {
+        private long wert;
+        void erhoehe() { wert++; }                       // lesen, +1, schreiben: drei Schritte, nicht atomar
+        long wert()    { return wert; }
+    }
+
+    // --- Monitor mit synchronized: Java-Objekte haben einen eingebauten Monitor ---
+    static final class SicherZaehler {
+        private long wert;
+        synchronized void erhoehe() { wert++; }
+        synchronized long wert()    { return wert; }
+    }
+
+    // --- Monitor mit ReentrantLock: mehr Kontrolle, gut für virtuelle Threads ---
+    static final class Konto {
+        private final ReentrantLock sperre = new ReentrantLock();
+        private long saldoCent;
+
+        boolean abbuchen(long cent) {
+            sperre.lock();
+            try {
+                if (saldoCent &lt; cent) return false;      // Prüfen und Ändern als EINE geschützte Einheit
+                saldoCent -= cent;
+                return true;
+            } finally {
+                sperre.unlock();
+            }
+        }
+        void einzahlen(long cent) { sperre.lock(); try { saldoCent += cent; } finally { sperre.unlock(); } }
+        long saldo()              { sperre.lock(); try { return saldoCent; } finally { sperre.unlock(); } }
+    }
+
+    static void parallel(int threads, int jeThread, Runnable r) throws InterruptedException {
+        ExecutorService ex = Executors.newFixedThreadPool(threads);
+        for (int t = 0; t &lt; threads; t++) ex.submit(() -&gt; { for (int i = 0; i &lt; jeThread; i++) r.run(); });
+        ex.shutdown();
+        ex.awaitTermination(30, TimeUnit.SECONDS);
+    }
+
+    public static void main(String[] args) throws Exception {
+        Zaehler unsicher = new Zaehler();
+        SicherZaehler sicher = new SicherZaehler();
+        parallel(8, 200_000, unsicher::erhoehe);
+        parallel(8, 200_000, sicher::erhoehe);
+        System.out.println(&quot;8 Threads erhöhen je 200.000-mal, erwartet 1.600.000:&quot;);
+        System.out.println(&quot;  ohne Schutz:        &quot; + (unsicher.wert() == 1_600_000 ? &quot;zufällig korrekt&quot; : &quot;Änderungen verloren gegangen&quot;));
+        System.out.println(&quot;  mit synchronized:   &quot; + sicher.wert());
+
+        Konto konto = new Konto();
+        konto.einzahlen(100_000);                        // 1.000 €
+        var erfolge = new java.util.concurrent.atomic.AtomicInteger();
+        try (var ex = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i &lt; 5_000; i++) ex.submit(() -&gt; { if (konto.abbuchen(100)) erfolge.incrementAndGet(); });
+        }
+        System.out.println(&quot;\n5.000 gleichzeitige Abbuchungen à 1 € von 1.000 €:&quot;);
+        System.out.println(&quot;  erfolgreich: &quot; + erfolge.get() + &quot;, Saldo: &quot; + konto.saldo() + &quot; Cent (nie negativ)&quot;);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>8 Threads erhöhen je 200.000-mal, erwartet 1.600.000:
+  ohne Schutz:        Änderungen verloren gegangen
+  mit synchronized:   1600000
+
+5.000 gleichzeitige Abbuchungen à 1 € von 1.000 €:
+  erfolgreich: 1000, Saldo: 0 Cent (nie negativ)</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Jedes Java-Objekt hat einen eingebauten Monitor, den <code>synchronized</code> verwendet. Wichtig ist, <strong>zusammengehörige Schritte gemeinsam</strong> zu schützen: Getrennte, je für sich synchronisierte Methoden <code>pruefe()</code> und <code>buche()</code> helfen nicht, wenn zwischen den Aufrufen ein anderer Thread dazwischenkommt. Halten Threads mehrere Monitore und warten aufeinander, entstehen Deadlocks. Bei virtuellen Threads in Java 21 ist <code>ReentrantLock</code> oft die bessere Wahl, weil ein virtueller Thread in einem <code>synchronized</code>-Block seinen Träger-Thread blockiert. Seit Java 24 ist dieses Problem behoben.</p>
+<h3>In der Praxis</h3>
+<p><code>synchronized</code>-Methoden und -Blöcke, <code>ReentrantLock</code>, <code>Collections.synchronizedList()</code>, ältere Klassen wie <code>Vector</code> und <code>Hashtable</code>. Für einfache Zähler sind <code>AtomicLong</code> und <code>LongAdder</code> schneller als ein Monitor.</p>
+
+<h2 id="read-write-lock"><span class="nr">41.</span> Read-Write Lock <span class="de">· Lese-Schreib-Sperre</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Read-Write Lock: viele Leser gleichzeitig, Schreiber exklusiv" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="20" y="30" width="320" height="170" rx="10" class="app"/><text x="180" y="52" class="lbl" text-anchor="middle">Lesen</text><rect x="40" y="66" width="280" height="80" rx="6" class="store"/><rect x="52" y="74" width="120" height="30" rx="15" class="comp"/><text x="112.0" y="94" class="tiny" text-anchor="middle">Leser 1</text><rect x="188" y="74" width="120" height="30" rx="15" class="comp"/><text x="248.0" y="94" class="tiny" text-anchor="middle">Leser 2</text><rect x="52" y="110" width="120" height="30" rx="15" class="comp"/><text x="112.0" y="130" class="tiny" text-anchor="middle">Leser 3</text><rect x="188" y="110" width="120" height="30" rx="15" class="comp"/><text x="248.0" y="130" class="tiny" text-anchor="middle">Leser 4</text><text x="180" y="170" class="tiny" text-anchor="middle">alle gleichzeitig: ok</text><rect x="380" y="30" width="320" height="170" rx="10" class="app"/><text x="540" y="52" class="lbl" text-anchor="middle">Schreiben</text><rect x="400" y="66" width="280" height="80" rx="6" class="store"/><rect x="480" y="90" width="120" height="30" rx="15" class="msg-a"/><text x="540.0" y="110" class="tiny" text-anchor="middle">Schreiber</text><rect x="400" y="156" width="90" height="30" rx="15" class="app"/><text x="445.0" y="176" class="tiny" text-anchor="middle">Leser 5: wartet</text><rect x="496" y="156" width="90" height="30" rx="15" class="app"/><text x="541.0" y="176" class="tiny" text-anchor="middle">Leser 6: wartet</text><rect x="592" y="156" width="90" height="30" rx="15" class="app"/><text x="637.0" y="176" class="tiny" text-anchor="middle">Leser 7: wartet</text><text x="360" y="228" class="note" text-anchor="middle">Daten ändern sich selten, werden aber oft gelesen</text></svg><figcaption>Links lesen vier Threads gleichzeitig. Rechts schreibt einer, und alle Leser warten, bis er fertig ist.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Lesen verändert nichts, deshalb dürfen <strong>beliebig viele Leser gleichzeitig</strong> zugreifen. Nur wer <strong>schreibt</strong>, braucht exklusiven Zugriff: Während eines Schreibvorgangs darf weder ein anderer Schreiber noch ein Leser zugreifen. Eine Read-Write Lock verwaltet zwei zusammengehörige Sperren, eine geteilte zum Lesen und eine exklusive zum Schreiben.</p>
+<h3>Im Code</h3>
+<p>Eine Preisliste wird 200-mal gelesen und viermal geändert. Die Messung zeigt: Mehrere Leser waren gleichzeitig aktiv, aber während eines Schreibvorgangs las kein einziger. Mit einer normalen Sperre hätten alle 200 Leser nacheinander warten müssen.</p>
+<details class="code"><summary>Java-21-Code: ReadWriteLock.java</summary><p>Direkt ausführbar mit <code>java ReadWriteLock.java</code></p><pre><code class="language-java">// Read-Write Lock
+// Beliebig viele Leser dürfen gleichzeitig lesen. Wer schreibt, bekommt exklusiven Zugriff.
+// Start: java ReadWriteLock.java
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+public class ReadWriteLock {
+
+    static final class Preisliste {
+        private final ReentrantReadWriteLock sperre = new ReentrantReadWriteLock();
+        private final Map&lt;String, Long&gt; preise = new HashMap&lt;&gt;(Map.of(&quot;Buch&quot;, 1_990L, &quot;Lampe&quot;, 3_990L));
+
+        // Messwerte für die Demonstration
+        final AtomicInteger leserJetzt = new AtomicInteger();
+        final AtomicInteger leserMaximal = new AtomicInteger();
+        final AtomicInteger leserWaehrendSchreiben = new AtomicInteger();
+        private volatile boolean schreibtGerade;
+
+        long preis(String artikel) throws InterruptedException {
+            sperre.readLock().lock();                                // viele gleichzeitig erlaubt
+            try {
+                int n = leserJetzt.incrementAndGet();
+                leserMaximal.accumulateAndGet(n, Math::max);
+                if (schreibtGerade) leserWaehrendSchreiben.incrementAndGet();
+                Thread.sleep(20);                                    // Lesen dauert etwas
+                return preise.get(artikel);
+            } finally {
+                leserJetzt.decrementAndGet();
+                sperre.readLock().unlock();
+            }
+        }
+
+        void setzePreis(String artikel, long cent) throws InterruptedException {
+            sperre.writeLock().lock();                               // exklusiv: keine Leser, keine anderen Schreiber
+            try {
+                schreibtGerade = true;
+                Thread.sleep(50);
+                preise.put(artikel, cent);
+            } finally {
+                schreibtGerade = false;
+                sperre.writeLock().unlock();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Preisliste liste = new Preisliste();
+        try (var ex = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i &lt; 200; i++) {
+                ex.submit(() -&gt; liste.preis(&quot;Buch&quot;));                // viele Leser
+                if (i % 50 == 0) ex.submit(() -&gt; { liste.setzePreis(&quot;Buch&quot;, 1_790); return null; });   // wenige Schreiber
+            }
+        }
+        System.out.println(&quot;200 Lesezugriffe, 4 Schreibzugriffe:&quot;);
+        System.out.println(&quot;  mehrere Leser gleichzeitig:    &quot; + (liste.leserMaximal.get() &gt; 1));
+        System.out.println(&quot;  Leser während eines Schreibens: &quot; + liste.leserWaehrendSchreiben.get());
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>200 Lesezugriffe, 4 Schreibzugriffe:
+  mehrere Leser gleichzeitig:    true
+  Leser während eines Schreibens: 0</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Der Gewinn tritt nur ein, wenn deutlich <strong>mehr gelesen als geschrieben</strong> wird und das Lesen eine gewisse Zeit dauert. Bei kurzen Zugriffen ist eine Read-Write Lock wegen ihres Verwaltungsaufwands oft langsamer als eine einfache Sperre. Schreiber können „verhungern“, wenn ständig neue Leser kommen. <code>ReentrantReadWriteLock</code> kann deshalb im fairen Modus betrieben werden. Eine Lesesperre lässt sich nicht in eine Schreibsperre umwandeln, der Versuch führt zum Deadlock. Oft ist ein <em>Immutable Object</em> (Muster 44), das bei Änderungen komplett ausgetauscht wird, die einfachere Lösung.</p>
+<h3>In der Praxis</h3>
+<p><code>ReentrantReadWriteLock</code>, <code>StampedLock</code> mit optimistischem Lesen ohne Sperre, <code>ConcurrentHashMap</code>, die Leser grundsätzlich nicht blockiert, <code>CopyOnWriteArrayList</code> für sehr selten geänderte Listen. In Datenbanken entsprechen geteilte und exklusive Sperren demselben Prinzip.</p>
+
+<h2 id="reactor"><span class="nr">42.</span> Reactor <span class="de">· Ereignisverteiler</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Reactor: ein Thread verteilt Ereignisse vieler Quellen an Handler" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="20" width="120" height="36" rx="8" class="app"/><text x="76.0" y="43.0" class="lbl" text-anchor="middle">Verbindung A</text><path d="M136,38 C170,38 170,113 196,113" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="16" y="70" width="120" height="36" rx="8" class="app"/><text x="76.0" y="93.0" class="lbl" text-anchor="middle">Verbindung B</text><path d="M136,88 C170,88 170,113 196,113" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="16" y="120" width="120" height="36" rx="8" class="app"/><text x="76.0" y="143.0" class="lbl" text-anchor="middle">Verbindung C</text><path d="M136,138 C170,138 170,113 196,113" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="16" y="170" width="120" height="36" rx="8" class="app"/><text x="76.0" y="193.0" class="lbl" text-anchor="middle">Verbindung D</text><path d="M136,188 C170,188 170,113 196,113" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="198" y="80" width="130" height="66" rx="6" class="comp"/><text x="263.0" y="118.0" class="lbl-c" text-anchor="middle"></text><text x="263" y="106" class="lbl-c" text-anchor="middle">Demultiplexer</text><text x="263" y="126" class="tiny" text-anchor="middle">(Selector)</text><line x1="328" y1="113" x2="368" y2="113" class="arr" marker-end="url(#pfeil)"/><circle cx="430" cy="113" r="58" class="store"/><text x="430" y="106" class="lbl" text-anchor="middle">Event-Loop</text><text x="430" y="126" class="tiny" text-anchor="middle">ein Thread</text><path d="M488,113 C520,113 520,61 548,61" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="550" y="43" width="150" height="36" rx="6" class="comp"/><text x="625.0" y="66.0" class="lbl-c" text-anchor="middle">neue Verbindung</text><path d="M488,113 C520,113 520,131 548,131" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="550" y="113" width="150" height="36" rx="6" class="comp"/><text x="625.0" y="136.0" class="lbl-c" text-anchor="middle">Daten lesen</text><path d="M488,113 C520,113 520,201 548,201" class="arr" fill="none" marker-end="url(#pfeil)"/><rect x="550" y="183" width="150" height="36" rx="6" class="comp"/><text x="625.0" y="206.0" class="lbl-c" text-anchor="middle">Verbindung zu</text><text x="263" y="218" class="note" text-anchor="middle">wartet auf alle Quellen zugleich</text><text x="625" y="236" class="note" text-anchor="middle">Handler: kurz, nie blockieren</text></svg><figcaption>Viele Verbindungen, ein einziger Thread: Der Reactor wartet auf Ereignisse aller Quellen und ruft jeweils den passenden Handler auf.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Statt für jede Verbindung einen eigenen Thread zu reservieren, wartet beim Reactor <strong>ein einziger Thread</strong> auf Ereignisse <strong>aller Quellen gleichzeitig</strong>: neue Verbindung, Daten angekommen, Verbindung geschlossen. Sobald etwas passiert, ruft er den dafür registrierten <strong>Handler</strong> auf und wartet dann wieder. Diese Schleife heißt <em>Event-Loop</em>. Das Muster stammt von Douglas Schmidt (POSA 2).</p>
+<h3>Im Code</h3>
+<p>Die Klasse <code>EventLoop</code> nimmt Ereignisse aus einer Warteschlange, die hier für den Selector des Betriebssystems steht, und verteilt sie an die registrierten Handler. Drei Verbindungen schicken zehn Ereignisse verzahnt. Alle werden vom einzigen Thread <code>reactor</code> verarbeitet. Die Sitzungsdaten liegen in einer gewöhnlichen <code>HashMap</code>, ohne Sperren.</p>
+<details class="code"><summary>Java-21-Code: Reactor.java</summary><p>Direkt ausführbar mit <code>java Reactor.java</code></p><pre><code class="language-java">// Reactor
+// Ein einziger Thread wartet auf Ereignisse aus vielen Quellen und verteilt sie an die zuständigen Handler.
+// Start: java Reactor.java
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
+
+public class Reactor {
+
+    enum Art { VERBINDUNG, DATEN, GESCHLOSSEN }
+    record Ereignis(Art art, String quelle, String inhalt) {}
+
+    // --- Der Reactor: Ereignisschleife + Verteilung an registrierte Handler ---
+    static final class EventLoop {
+        private final BlockingQueue&lt;Ereignis&gt; eingang = new LinkedBlockingQueue&lt;&gt;();   // steht für den Selector
+        private final Map&lt;Art, Consumer&lt;Ereignis&gt;&gt; handler = new HashMap&lt;&gt;();
+
+        void registriere(Art art, Consumer&lt;Ereignis&gt; h) { handler.put(art, h); }
+        void melde(Ereignis e) { eingang.add(e); }                     // von außen: &quot;hier ist etwas passiert&quot;
+        void stopp() { eingang.add(new Ereignis(null, &quot;&quot;, &quot;&quot;)); }      // Stopp-Ereignis, nach allen anderen
+
+        void starte() throws InterruptedException {
+            while (true) {
+                Ereignis e = eingang.take();                           // warten, bis etwas passiert (demultiplexen)
+                if (e.art() == null) return;
+                handler.getOrDefault(e.art(), x -&gt; {}).accept(e);      // an den Handler verteilen (dispatch)
+            }
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        EventLoop reactor = new EventLoop();
+        Map&lt;String, List&lt;String&gt;&gt; sitzungen = new HashMap&lt;&gt;();         // kein Locking nötig: nur EIN Thread
+
+        reactor.registriere(Art.VERBINDUNG, e -&gt; {
+            sitzungen.put(e.quelle(), new ArrayList&lt;&gt;());
+            System.out.println(&quot;  [&quot; + Thread.currentThread().getName() + &quot;] neu:     &quot; + e.quelle());
+        });
+        reactor.registriere(Art.DATEN, e -&gt; {
+            sitzungen.get(e.quelle()).add(e.inhalt());
+            System.out.println(&quot;  [&quot; + Thread.currentThread().getName() + &quot;] Daten:   &quot; + e.quelle() + &quot; -&gt; &quot; + e.inhalt());
+        });
+        reactor.registriere(Art.GESCHLOSSEN, e -&gt; {
+            System.out.println(&quot;  [&quot; + Thread.currentThread().getName() + &quot;] Ende:    &quot; + e.quelle() + &quot;, empfangen: &quot; + sitzungen.remove(e.quelle()));
+        });
+
+        Thread schleife = Thread.ofPlatform().name(&quot;reactor&quot;).start(() -&gt; {
+            try { reactor.starte(); } catch (InterruptedException ignored) { }
+        });
+
+        // Viele &quot;Verbindungen&quot; melden Ereignisse, verzahnt
+        String[][] ablauf = {
+                { &quot;VERBINDUNG&quot;, &quot;Kunde-A&quot;, &quot;&quot; }, { &quot;VERBINDUNG&quot;, &quot;Kunde-B&quot;, &quot;&quot; },
+                { &quot;DATEN&quot;, &quot;Kunde-A&quot;, &quot;GET /warenkorb&quot; }, { &quot;DATEN&quot;, &quot;Kunde-B&quot;, &quot;GET /suche?q=lampe&quot; },
+                { &quot;VERBINDUNG&quot;, &quot;Kunde-C&quot;, &quot;&quot; }, { &quot;DATEN&quot;, &quot;Kunde-A&quot;, &quot;POST /bestellung&quot; },
+                { &quot;GESCHLOSSEN&quot;, &quot;Kunde-B&quot;, &quot;&quot; }, { &quot;DATEN&quot;, &quot;Kunde-C&quot;, &quot;GET /&quot; },
+                { &quot;GESCHLOSSEN&quot;, &quot;Kunde-A&quot;, &quot;&quot; }, { &quot;GESCHLOSSEN&quot;, &quot;Kunde-C&quot;, &quot;&quot; } };
+        for (String[] z : ablauf) reactor.melde(new Ereignis(Art.valueOf(z[0]), z[1], z[2]));
+
+        reactor.stopp();
+        schleife.join();
+        System.out.println(&quot;\nDrei Verbindungen, zehn Ereignisse, ein einziger Thread.&quot;);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>  [reactor] neu:     Kunde-A
+  [reactor] neu:     Kunde-B
+  [reactor] Daten:   Kunde-A -&gt; GET /warenkorb
+  [reactor] Daten:   Kunde-B -&gt; GET /suche?q=lampe
+  [reactor] neu:     Kunde-C
+  [reactor] Daten:   Kunde-A -&gt; POST /bestellung
+  [reactor] Ende:    Kunde-B, empfangen: [GET /suche?q=lampe]
+  [reactor] Daten:   Kunde-C -&gt; GET /
+  [reactor] Ende:    Kunde-A, empfangen: [GET /warenkorb, POST /bestellung]
+  [reactor] Ende:    Kunde-C, empfangen: [GET /]
+
+Drei Verbindungen, zehn Ereignisse, ein einziger Thread.</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Die goldene Regel: <strong>Ein Handler darf nie blockieren</strong>. Wartet er auf eine Datenbank oder rechnet lange, stehen alle anderen Verbindungen still. Langwierige Arbeit wird deshalb an einen Thread-Pool abgegeben. Code im Reactor-Stil ist schwerer zu lesen als einfacher blockierender Code, weil der Ablauf über viele Rückrufe verteilt ist. Mit virtuellen Threads in Java 21 lässt sich dieselbe Skalierbarkeit in vielen Fällen mit einfachem Code „ein Thread pro Verbindung“ erreichen.</p>
+<h3>In der Praxis</h3>
+<p><code>java.nio.channels.Selector</code> als Demultiplexer, Netty und Vert.x als Reactor-Frameworks, Node.js mit seiner Event-Loop, nginx, Redis, Spring WebFlux über Reactor Netty. Unter Linux liegt meist <code>epoll</code> darunter.</p>
+
+<h2 id="balking-guarded-suspension"><span class="nr">43.</span> Balking / Guarded Suspension <span class="de">· Abbrechen oder Warten</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Balking und Guarded Suspension: abbrechen oder warten" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="20" width="330" height="200" rx="10" class="app"/><text x="181" y="42" class="lbl" text-anchor="middle">Balking</text><rect x="36" y="60" width="120" height="36" rx="8" class="app"/><text x="96.0" y="83.0" class="lbl" text-anchor="middle">speichere()</text><line x1="156" y1="78" x2="196" y2="78" class="arr" marker-end="url(#pfeil)"/><rect x="198" y="58" width="128" height="40" rx="6" class="comp"/><text x="262.0" y="83.0" class="lbl-c" text-anchor="middle">geändert?</text><line x1="262" y1="98" x2="262" y2="138" class="arr" marker-end="url(#pfeil)"/><text x="280" y="122" class="tiny" text-anchor="middle">nein</text><rect x="202" y="140" width="120" height="34" rx="17" class="msg-x"/><text x="262" y="162" class="tiny" text-anchor="middle">sofort zurück</text><text x="96" y="160" class="tiny" text-anchor="middle">z. B. Autosave,</text><text x="96" y="176" class="tiny" text-anchor="middle">Doppelklick</text><rect x="374" y="20" width="330" height="200" rx="10" class="app"/><text x="539" y="42" class="lbl" text-anchor="middle">Guarded Suspension</text><rect x="394" y="60" width="120" height="36" rx="8" class="app"/><text x="454.0" y="83.0" class="lbl" text-anchor="middle">entnehme(3)</text><line x1="514" y1="78" x2="554" y2="78" class="arr" marker-end="url(#pfeil)"/><rect x="556" y="58" width="128" height="40" rx="6" class="comp"/><text x="620.0" y="83.0" class="lbl-c" text-anchor="middle">Bestand ≥ 3?</text><path d="M620,98 C620,150 560,150 560,128 C560,110 590,104 606,100" class="arr" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><text x="640" y="140" class="tiny" text-anchor="start">nein: wait()</text><rect x="395.5" y="190" width="287" height="20" rx="10" class="tag"/><text x="539" y="204" class="tagt" text-anchor="middle">anderer Thread: liefere() → notifyAll()</text><text x="454" y="160" class="tiny" text-anchor="middle">wartet, bis die</text><text x="454" y="176" class="tiny" text-anchor="middle">Bedingung erfüllt ist</text></svg><figcaption>Ist eine Bedingung nicht erfüllt, bricht Balking sofort ab. Guarded Suspension wartet, bis ein anderer Thread die Bedingung herstellt.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Beide Muster beantworten dieselbe Frage: Was tun, wenn ein Aufruf eintrifft, aber der Zustand ihn gerade nicht zulässt?</p>
+<ul>
+<li><strong>Balking</strong> (zögern, sich weigern): Die Methode prüft die Bedingung und <strong>kehrt sofort zurück</strong>, wenn sie nicht erfüllt ist. Typisch, wenn die Aktion dann sinnlos wäre: speichern, obwohl sich nichts geändert hat, oder ein zweiter Speichervorgang, während der erste noch läuft.</li>
+<li><strong>Guarded Suspension</strong> (bewachtes Warten): Die Methode <strong>wartet</strong>, bis die Bedingung erfüllt ist. Ein anderer Thread stellt sie her und weckt die Wartenden. Typisch, wenn die Aktion später gelingen wird: Ware entnehmen, die gerade geliefert wird.</li>
+</ul>
+<h3>Im Code</h3>
+<p>Das <code>Dokument</code> verweigert das Speichern, wenn nichts geändert wurde oder gerade gespeichert wird. Am Ende gibt es genau einen Speichervorgang. Das <code>Lager</code> lässt Kommissionierer mit <code>wait()</code> warten, bis eine Lieferung mit <code>notifyAll()</code> sie weckt. Kommissionierer 1 wartet nach der ersten Lieferung weiter, weil 2 Stück für ihn nicht reichen, und kommt nach der zweiten zum Zug.</p>
+<details class="code"><summary>Java-21-Code: BalkingGuardedSuspension.java</summary><p>Direkt ausführbar mit <code>java BalkingGuardedSuspension.java</code></p><pre><code class="language-java">// Balking und Guarded Suspension
+// Zwei Antworten auf dieselbe Frage: Was tun, wenn eine Aktion gerade nicht möglich ist?
+//   Balking:            sofort aufgeben (&quot;lohnt sich nicht&quot;)
+//   Guarded Suspension: warten, bis es möglich ist
+// Start: java BalkingGuardedSuspension.java
+
+import java.util.concurrent.Executors;
+
+public class BalkingGuardedSuspension {
+
+    // --- Balking: Speichern nur, wenn es etwas zu speichern gibt und nicht schon gespeichert wird ---
+    static final class Dokument {
+        private boolean geaendert;
+        private boolean speichertGerade;
+        private int speichervorgaenge;
+
+        synchronized void bearbeite() { geaendert = true; }
+
+        void speichere(String wer) throws InterruptedException {
+            synchronized (this) {
+                if (!geaendert || speichertGerade) {                      // Bedingung nicht erfüllt -&gt; abbrechen
+                    System.out.println(&quot;  &quot; + wer + &quot;: &quot; + (speichertGerade ? &quot;wird gerade gespeichert&quot; : &quot;nichts geändert&quot;) + &quot;, breche ab&quot;);
+                    return;
+                }
+                speichertGerade = true;
+            }
+            Thread.sleep(50);                                            // langsames Schreiben, ohne Sperre
+            synchronized (this) {
+                geaendert = false;
+                speichertGerade = false;
+                speichervorgaenge++;
+                System.out.println(&quot;  &quot; + wer + &quot;: gespeichert&quot;);
+            }
+        }
+        synchronized int speichervorgaenge() { return speichervorgaenge; }
+    }
+
+    // --- Guarded Suspension: Entnahme wartet, bis genug Bestand da ist ---
+    static final class Lager {
+        private int bestand;
+
+        synchronized void entnehme(int menge, String wer) throws InterruptedException {
+            while (bestand &lt; menge) {                                    // Wächterbedingung, immer in einer Schleife
+                System.out.println(&quot;  &quot; + wer + &quot; wartet auf &quot; + menge + &quot; Stück (Bestand &quot; + bestand + &quot;)&quot;);
+                wait();                                                  // Sperre freigeben und schlafen
+            }
+            bestand -= menge;
+            System.out.println(&quot;  &quot; + wer + &quot; entnimmt &quot; + menge + &quot; Stück (Rest &quot; + bestand + &quot;)&quot;);
+        }
+
+        synchronized void liefere(int menge) {
+            bestand += menge;
+            System.out.println(&quot;  Lieferung: +&quot; + menge + &quot; (Bestand &quot; + bestand + &quot;)&quot;);
+            notifyAll();                                                 // Wartende wecken
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        System.out.println(&quot;Balking: Autosave und Benutzer wollen gleichzeitig speichern&quot;);
+        Dokument doc = new Dokument();
+        doc.speichere(&quot;Autosave (vor jeder Änderung)&quot;);
+        doc.bearbeite();
+        Thread t = Thread.ofVirtual().start(() -&gt; { try { doc.speichere(&quot;Autosave&quot;); } catch (InterruptedException ignored) { } });
+        Thread.sleep(10);
+        doc.speichere(&quot;Benutzer&quot;);                                       // Autosave läuft gerade
+        t.join();
+        System.out.println(&quot;  Speichervorgänge insgesamt: &quot; + doc.speichervorgaenge());
+
+        System.out.println(&quot;\nGuarded Suspension: Kommissionierer warten auf Ware&quot;);
+        Lager lager = new Lager();
+        try (var ex = Executors.newVirtualThreadPerTaskExecutor()) {
+            ex.submit(() -&gt; { lager.entnehme(3, &quot;Kommissionierer 1&quot;); return null; });
+            Thread.sleep(50);
+            ex.submit(() -&gt; { lager.entnehme(2, &quot;Kommissionierer 2&quot;); return null; });
+            Thread.sleep(50);
+            lager.liefere(2);
+            Thread.sleep(50);
+            lager.liefere(5);
+        }
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Balking: Autosave und Benutzer wollen gleichzeitig speichern
+  Autosave (vor jeder Änderung): nichts geändert, breche ab
+  Benutzer: wird gerade gespeichert, breche ab
+  Autosave: gespeichert
+  Speichervorgänge insgesamt: 1
+
+Guarded Suspension: Kommissionierer warten auf Ware
+  Kommissionierer 1 wartet auf 3 Stück (Bestand 0)
+  Kommissionierer 2 wartet auf 2 Stück (Bestand 0)
+  Lieferung: +2 (Bestand 2)
+  Kommissionierer 1 wartet auf 3 Stück (Bestand 2)
+  Kommissionierer 2 entnimmt 2 Stück (Rest 0)
+  Lieferung: +5 (Bestand 5)
+  Kommissionierer 1 entnimmt 3 Stück (Rest 2)</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Die Wächterbedingung muss immer in einer <strong><code>while</code>-Schleife</strong> geprüft werden, nie in einem <code>if</code>. Ein geweckter Thread muss erneut prüfen, weil ein anderer ihm zuvorgekommen sein kann oder er ohne Grund aufwacht (<em>spurious wakeup</em>). <code>notifyAll()</code> ist sicherer als <code>notify()</code>, das nur einen beliebigen Wartenden weckt. Bei Guarded Suspension ist fast immer ein <strong>Zeitlimit</strong> sinnvoll, damit ein Thread nicht ewig wartet. In modernem Java nimmt man statt <code>wait()</code>/<code>notifyAll()</code> meist eine <code>BlockingQueue</code>, eine <code>Condition</code> oder einen <code>Semaphore</code>.</p>
+<h3>In der Praxis</h3>
+<p>Balking: Autosave-Funktionen, das Abfangen von Doppelklicks auf „Bestellen“, Initialisierungen, die nur einmal laufen sollen. Guarded Suspension: <code>BlockingQueue.take()</code>, <code>CountDownLatch.await()</code>, <code>Condition.await()</code> zusammen mit <code>ReentrantLock</code>.</p>
+
+<h2 id="immutable-object"><span class="nr">44.</span> Immutable Object <span class="de">· Unveränderliches Objekt</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Immutable Object: unveränderliche Objekte sind automatisch threadsicher" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="30" y="40" width="170" height="70" rx="8" class="store"/><text x="115" y="66" class="lbl" text-anchor="middle">Preisliste v1</text><text x="115" y="88" class="tiny" text-anchor="middle">Buch 19,90 · Lampe 39,90</text><line x1="200" y1="75" x2="300" y2="75" class="arr" marker-end="url(#pfeil)"/><text x="250.0" y="66" class="tiny" text-anchor="middle">mitPreis(...)</text><rect x="302" y="40" width="170" height="70" rx="8" class="store"/><text x="387" y="66" class="lbl" text-anchor="middle">Preisliste v2</text><text x="387" y="88" class="tiny" text-anchor="middle">Buch 17,90 · Lampe 39,90</text><text x="115" y="132" class="tiny" text-anchor="middle">bleibt unverändert</text><rect x="302" y="150" width="170" height="40" rx="6" class="comp"/><text x="387.0" y="175.0" class="lbl-c" text-anchor="middle">AtomicReference</text><path d="M387,150 L387,112" class="arr" fill="none" marker-end="url(#pfeil)"/><text x="400" y="136" class="tiny" text-anchor="start">zeigt auf</text><rect x="560" y="30" width="130" height="30" rx="15" class="comp"/><text x="625.0" y="50" class="tiny" text-anchor="middle">Leser 1</text><path d="M560,45 C520,45 510,75 474,75" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="560" y="74" width="130" height="30" rx="15" class="comp"/><text x="625.0" y="94" class="tiny" text-anchor="middle">Leser 2</text><path d="M560,89 C520,89 510,75 474,75" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="560" y="118" width="130" height="30" rx="15" class="comp"/><text x="625.0" y="138" class="tiny" text-anchor="middle">Leser 3</text><path d="M560,133 C520,133 510,75 474,75" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="560" y="162" width="130" height="30" rx="15" class="comp"/><text x="625.0" y="182" class="tiny" text-anchor="middle">Leser 4</text><path d="M560,177 C520,177 510,75 474,75" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><text x="625" y="220" class="note" text-anchor="middle">lesen ohne Sperre</text><text x="200" y="220" class="note" text-anchor="middle">ändern = neue Version erzeugen und Zeiger umsetzen</text></svg><figcaption>Eine Preisänderung erzeugt eine neue Version. Leser greifen ohne Sperre auf die aktuelle Version zu, die alte bleibt unberührt.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Objekt, das sich nach seiner Erzeugung <strong>nie mehr verändert</strong>, kann ohne jede Absicherung von beliebig vielen Threads gleichzeitig gelesen werden. Es gibt nichts, was sich zwischen zwei Zugriffen ändern könnte. „Ändern“ heißt dann: eine neue Version erzeugen. Wer die aktuelle Version braucht, holt sie sich über eine einzige, atomar austauschbare Referenz.</p>
+<h3>Im Code</h3>
+<p>Die <code>Preisliste</code> ist ein Record mit defensiven Kopien im Konstruktor. Ändert jemand nachträglich die übergebene Liste, bleibt die Preisliste unberührt, und auch über den Getter lässt sich nichts hinzufügen. <code>mitPreis()</code> liefert eine neue Version. Eine <code>AtomicReference</code> zeigt auf die aktuelle Version. 1.000 Leser greifen ohne Sperre zu, 100 Schreiber setzen per <code>updateAndGet</code> neue Versionen ein, und am Ende stimmen Preis und Versionsnummer exakt.</p>
+<details class="code"><summary>Java-21-Code: ImmutableObject.java</summary><p>Direkt ausführbar mit <code>java ImmutableObject.java</code></p><pre><code class="language-java">// Immutable Object
+// Ein Objekt, das nach seiner Erzeugung nie mehr verändert wird, ist automatisch threadsicher.
+// Start: java ImmutableObject.java
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicReference;
+
+public class ImmutableObject {
+
+    // --- Unveränderlich: final, keine Setter, Kopien von veränderlichen Eingaben ---
+    record Preisliste(int version, Map&lt;String, Long&gt; preise, List&lt;String&gt; aktionen) {
+        Preisliste {
+            preise = Map.copyOf(preise);           // defensive Kopie: spätere Änderungen am Original wirken nicht
+            aktionen = List.copyOf(aktionen);
+        }
+        // &quot;Ändern&quot; heißt: neue Instanz liefern
+        Preisliste mitPreis(String artikel, long cent) {
+            Map&lt;String, Long&gt; neu = new TreeMap&lt;&gt;(preise);
+            neu.put(artikel, cent);
+            return new Preisliste(version + 1, neu, aktionen);
+        }
+        public String toString() { return &quot;v&quot; + version + &quot; &quot; + new TreeMap&lt;&gt;(preise) + &quot; &quot; + aktionen; }
+    }
+
+    public static void main(String[] args) throws Exception {
+        List&lt;String&gt; aktionen = new ArrayList&lt;&gt;(List.of(&quot;Herbstrabatt&quot;));
+        Preisliste v1 = new Preisliste(1, Map.of(&quot;Buch&quot;, 1_990L, &quot;Lampe&quot;, 3_990L), aktionen);
+
+        aktionen.add(&quot;heimlich hinzugefügt&quot;);      // ändert die Preisliste NICHT
+        System.out.println(&quot;v1 nach Änderung der Eingabeliste: &quot; + v1);
+
+        try { v1.aktionen().add(&quot;Hack&quot;); }
+        catch (UnsupportedOperationException e) { System.out.println(&quot;v1.aktionen().add(...) -&gt; abgelehnt&quot;); }
+
+        Preisliste v2 = v1.mitPreis(&quot;Buch&quot;, 1_790);
+        System.out.println(&quot;v1 bleibt: &quot; + v1);
+        System.out.println(&quot;v2 neu:    &quot; + v2);
+
+        // --- Teilen zwischen Threads: lesen ohne Sperren, austauschen per AtomicReference ---
+        AtomicReference&lt;Preisliste&gt; aktuell = new AtomicReference&lt;&gt;(v2);
+        try (var ex = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i &lt; 1_000; i++) ex.submit(() -&gt; aktuell.get().preise().get(&quot;Lampe&quot;));     // 1.000 Leser
+            for (int i = 0; i &lt; 100; i++) ex.submit(() -&gt; aktuell.updateAndGet(p -&gt; p.mitPreis(&quot;Lampe&quot;, p.preise().get(&quot;Lampe&quot;) - 1)));
+        }
+        System.out.println(&quot;\nNach 1.000 Lesern und 100 Preissenkungen um je 1 Cent:&quot;);
+        System.out.println(&quot;  &quot; + aktuell.get());
+        System.out.println(&quot;  Lampe = 3990 - 100 = &quot; + aktuell.get().preise().get(&quot;Lampe&quot;) + &quot;, Version &quot; + aktuell.get().version());
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>v1 nach Änderung der Eingabeliste: v1 {Buch=1990, Lampe=3990} [Herbstrabatt]
+v1.aktionen().add(...) -&gt; abgelehnt
+v1 bleibt: v1 {Buch=1990, Lampe=3990} [Herbstrabatt]
+v2 neu:    v2 {Buch=1790, Lampe=3990} [Herbstrabatt]
+
+Nach 1.000 Lesern und 100 Preissenkungen um je 1 Cent:
+  v102 {Buch=1790, Lampe=3890} [Herbstrabatt]
+  Lampe = 3990 - 100 = 3890, Version 102</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Ein Objekt ist nur dann wirklich unveränderlich, wenn <strong>alle Felder final</strong> sind, <strong>keine Methode etwas ändert</strong> und auch <strong>enthaltene Objekte</strong> unveränderlich sind oder kopiert werden. Ein Record mit einer <code>ArrayList</code> darin ist es nicht. Daher die Kopie mit <code>List.copyOf</code>. Bei großen Objekten, die oft geändert werden, kostet das ständige Kopieren Zeit und Speicher. Dafür gibt es persistente Datenstrukturen, die unveränderte Teile zwischen Versionen teilen. Das Muster vereinfacht nebenläufige Programme so stark, dass Joshua Bloch rät: „Klassen sollten unveränderlich sein, solange es keinen sehr guten Grund dagegen gibt.“</p>
+<h3>In der Praxis</h3>
+<p>Im JDK: <code>String</code>, <code>Integer</code>, <code>LocalDate</code>, <code>BigDecimal</code>, Records, <code>List.of()</code> und <code>Map.of()</code>. Konfigurationen, die zur Laufzeit komplett ausgetauscht werden, Zustände in Redux und in funktionalen Sprachen. Das <em>Value Object</em> aus Gruppe 2 ist fast immer zugleich ein Immutable Object.</p>
+<h2 id="vergleich">Im Überblick</h2>
+<table>
+<tr><th>Problem</th><th>Muster</th><th>Java 21</th></tr>
+<tr><td rowspan="3">Arbeit verteilen</td><td>Producer-Consumer</td><td><code>BlockingQueue</code></td></tr>
+<tr><td>Thread Pool</td><td><code>ExecutorService</code>, virtuelle Threads</td></tr>
+<tr><td>Future / Promise</td><td><code>CompletableFuture</code></td></tr>
+<tr><td rowspan="3">Gemeinsamen Zustand schützen</td><td>Monitor Object</td><td><code>synchronized</code>, <code>ReentrantLock</code></td></tr>
+<tr><td>Read-Write Lock</td><td><code>ReentrantReadWriteLock</code>, <code>StampedLock</code></td></tr>
+<tr><td>Immutable Object</td><td>Records, <code>List.copyOf</code>, <code>AtomicReference</code></td></tr>
+<tr><td rowspan="2">Zustand nur einem Thread geben</td><td>Active Object</td><td><code>newSingleThreadExecutor</code></td></tr>
+<tr><td>Reactor</td><td><code>Selector</code>, Netty</td></tr>
+<tr><td>Auf Bedingungen reagieren</td><td>Balking / Guarded Suspension</td><td><code>wait</code>/<code>notifyAll</code>, <code>Condition</code></td></tr>
+</table>
+<p>Eine Faustregel für den Alltag: Zuerst versuchen, ohne gemeinsamen veränderlichen Zustand auszukommen (Immutable Object, Active Object). Wenn das nicht geht, fertige Bausteine aus <code>java.util.concurrent</code> verwenden. Eigene Sperren mit <code>synchronized</code> und <code>wait</code> sind der letzte Ausweg.</p>
+<nav class="nav"><a href="/it-konzepte/weitere-muster/architektur/">← Architektur</a><a href="/it-konzepte/weitere-muster/">Übersicht</a><a href="/it-konzepte/weitere-muster/verteilte-systeme/">Verteilte Systeme →</a></nav>
+</article>

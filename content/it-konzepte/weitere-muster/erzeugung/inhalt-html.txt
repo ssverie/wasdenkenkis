@@ -1,0 +1,543 @@
+<article class="muster">
+<nav class="nav"><span></span><a href="/it-konzepte/weitere-muster/">Übersicht</a><a href="/it-konzepte/weitere-muster/struktur-verhalten/">Struktur und Verhalten im Kleinen →</a></nav>
+<p>Die fünf Erzeugungsmuster der GoF beantworten die Frage, <em>wie</em> ein Objekt entsteht. Diese Gruppe geht einen Schritt weiter: <strong>Wer</strong> erzeugt die Objekte, <strong>wann</strong> entstehen sie, und <strong>wie viele</strong> gibt es davon? Die beiden ersten Muster regeln, wie eine Klasse an ihre Abhängigkeiten kommt. Die anderen vier steuern, ob Objekte neu entstehen, wiederverwendet oder erst bei Bedarf erzeugt werden.</p>
+<ul class="legende"><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="8" class="app"/><text x="17.0" y="16.0" class="lbl" text-anchor="middle"></text></svg>Anwendung / Objekt</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="6" class="comp"/><text x="17.0" y="16.0" class="lbl-c" text-anchor="middle"></text></svg>Muster-Baustein</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><path d="M6,11 v0 a11.0,10 0 0 0 22,0 v0" class="store"/><ellipse cx="17.0" cy="11" rx="11.0" ry="10" class="store"/><text x="17.0" y="22.0" class="lbl" text-anchor="middle"></text></svg>Speicher / Ressource</li></ul>
+<ul class="inhalt">
+  <li><a href="#dependency-injection">1. Dependency Injection</a></li>
+  <li><a href="#service-locator">2. Service Locator</a></li>
+  <li><a href="#object-pool">3. Object Pool</a></li>
+  <li><a href="#lazy-initialization">4. Lazy Initialization</a></li>
+  <li><a href="#multiton">5. Multiton</a></li>
+  <li><a href="#static-factory-method">6. Static Factory Method</a></li>
+</ul>
+<h2 id="dependency-injection"><span class="nr">1.</span> Dependency Injection <span class="de">· Abhängigkeiten übergeben</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 250" role="img" aria-label="Dependency Injection: Abhängigkeiten werden von außen übergeben" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="250" y="14" width="220" height="40" rx="6" class="comp"/><text x="360.0" y="39.0" class="lbl-c" text-anchor="middle">Composition Root</text><text x="360" y="72" class="tiny" text-anchor="middle">steckt einmal beim Start alles zusammen</text><rect x="240" y="110" width="240" height="70" rx="8" class="app"/><text x="360.0" y="150.0" class="lbl" text-anchor="middle">BestellService</text><text x="360" y="166" class="tiny" text-anchor="middle">(Zahlungsdienst, Benachrichtigung)</text><rect x="20" y="92" width="150" height="42" rx="8" class="app"/><text x="95.0" y="118.0" class="lbl" text-anchor="middle">Kreditkarte</text><rect x="20" y="152" width="150" height="42" rx="8" class="app"/><text x="95.0" y="178.0" class="lbl" text-anchor="middle">E-Mail</text><line x1="170" y1="113" x2="238" y2="133" class="arr" marker-end="url(#pfeil)"/><text x="204.0" y="110" class="tiny" text-anchor="middle">übergeben</text><line x1="170" y1="173" x2="238" y2="160" class="arr" marker-end="url(#pfeil)"/><rect x="550" y="92" width="150" height="42" rx="8" class="app" stroke-dasharray="5 4"/><text x="625" y="118" class="lbl" text-anchor="middle">Attrappe Zahlung</text><rect x="550" y="152" width="150" height="42" rx="8" class="app" stroke-dasharray="5 4"/><text x="625" y="178" class="lbl" text-anchor="middle">Postfach (Test)</text><line x1="550" y1="113" x2="482" y2="133" class="arr" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><line x1="550" y1="173" x2="482" y2="160" class="arr" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><text x="95" y="220" class="sub" text-anchor="middle">im Betrieb</text><text x="625" y="220" class="sub" text-anchor="middle">im Test</text><text x="360" y="222" class="note" text-anchor="middle">dieselbe Klasse, unverändert</text><path d="M360,78 L360,106" class="arr-leise" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/></svg><figcaption>Der BestellService bekommt seine Dienste über den Konstruktor. Im Betrieb sind es die echten, im Test Attrappen.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Eine Klasse <strong>erzeugt ihre Abhängigkeiten nicht selbst</strong>, sondern bekommt sie von außen übergeben, am besten über den Konstruktor. Statt <code>new Kreditkarte()</code> im Inneren steht im Konstruktor nur: „Ich brauche einen Zahlungsdienst.“ Welcher das ist, entscheidet eine einzige Stelle beim Programmstart, die <em>Composition Root</em>.</p>
+<h3>Das Problem</h3>
+<p>Ein <code>BestellService</code>, der seinen Zahlungsdienst mit <code>new</code> selbst anlegt, ist fest an diese eine Implementierung gebunden. Ein Test würde jedes Mal echtes Geld abbuchen und echte E-Mails verschicken. Und ein Wechsel des Zahlungsanbieters bedeutet, in jeder Klasse zu suchen, die ihn erzeugt.</p>
+<h3>Im Code</h3>
+<p>Der <code>BestellService</code> kennt nur die Schnittstellen <code>Zahlungsdienst</code> und <code>Benachrichtigung</code>. In <code>main</code> wird er dreimal verwendet: mit echten Diensten, mit Attrappen für einen Test und mit zwei Lambdas, denn beide Schnittstellen haben nur eine Methode. Am <code>BestellService</code> ändert sich dabei keine Zeile.</p>
+<details class="code"><summary>Java-21-Code: DependencyInjection.java</summary><p>Direkt ausführbar mit <code>java DependencyInjection.java</code></p><pre><code class="language-java">// Dependency Injection
+// Eine Klasse erzeugt ihre Abhängigkeiten nicht selbst, sondern bekommt sie von außen übergeben.
+// Start: java DependencyInjection.java
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class DependencyInjection {
+
+    // --- Abhängigkeiten als Schnittstellen ---
+    interface Zahlungsdienst { boolean belaste(String kunde, int cent); }
+    interface Benachrichtigung { void sende(String an, String text); }
+
+    // --- Die Klasse mit Abhängigkeiten: kein &quot;new&quot; für Dienste, alles kommt über den Konstruktor ---
+    static final class BestellService {
+        private final Zahlungsdienst zahlung;
+        private final Benachrichtigung nachricht;
+
+        BestellService(Zahlungsdienst zahlung, Benachrichtigung nachricht) {   // Constructor Injection
+            this.zahlung = zahlung;
+            this.nachricht = nachricht;
+        }
+
+        boolean bestelle(String kunde, int cent) {
+            if (!zahlung.belaste(kunde, cent)) {
+                nachricht.sende(kunde, &quot;Zahlung abgelehnt&quot;);
+                return false;
+            }
+            nachricht.sende(kunde, &quot;Danke für Ihre Bestellung&quot;);
+            return true;
+        }
+    }
+
+    // --- Echte Implementierungen ---
+    static final class Kreditkarte implements Zahlungsdienst {
+        public boolean belaste(String kunde, int cent) {
+            System.out.printf(&quot;  [Kreditkarte] %s mit %d,%02d € belastet%n&quot;, kunde, cent / 100, cent % 100);
+            return true;
+        }
+    }
+    static final class Email implements Benachrichtigung {
+        public void sende(String an, String text) { System.out.println(&quot;  [E-Mail an &quot; + an + &quot;] &quot; + text); }
+    }
+
+    // --- Attrappen für Tests: ohne Netzwerk, ohne echtes Geld ---
+    record ZahlungLehntAb() implements Zahlungsdienst {
+        public boolean belaste(String kunde, int cent) { return false; }
+    }
+    static final class Postfach implements Benachrichtigung {
+        final List&lt;String&gt; eingang = new ArrayList&lt;&gt;();
+        public void sende(String an, String text) { eingang.add(an + &quot;: &quot; + text); }
+    }
+
+    public static void main(String[] args) {
+        // Composition Root: die EINE Stelle, an der alles zusammengesteckt wird
+        System.out.println(&quot;Produktiv:&quot;);
+        BestellService produktiv = new BestellService(new Kreditkarte(), new Email());
+        produktiv.bestelle(&quot;Sven&quot;, 4_990);
+
+        // Test: dieselbe Klasse, andere Abhängigkeiten, ohne eine Zeile im BestellService zu ändern
+        System.out.println(&quot;\nTest mit Attrappen:&quot;);
+        Postfach postfach = new Postfach();
+        BestellService imTest = new BestellService(new ZahlungLehntAb(), postfach);
+        boolean ergebnis = imTest.bestelle(&quot;Testkunde&quot;, 100);
+        System.out.println(&quot;  Ergebnis: &quot; + ergebnis + &quot;, Postfach: &quot; + postfach.eingang);
+
+        // Abhängigkeiten als Lambda: beide Schnittstellen haben genau eine Methode
+        System.out.println(&quot;\nMit Lambdas:&quot;);
+        new BestellService((k, c) -&gt; c &lt; 10_000, (an, t) -&gt; System.out.println(&quot;  [SMS an &quot; + an + &quot;] &quot; + t))
+                .bestelle(&quot;Anna&quot;, 25_000);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Produktiv:
+  [Kreditkarte] Sven mit 49,90 € belastet
+  [E-Mail an Sven] Danke für Ihre Bestellung
+
+Test mit Attrappen:
+  Ergebnis: false, Postfach: [Testkunde: Zahlung abgelehnt]
+
+Mit Lambdas:
+  [SMS an Anna] Zahlung abgelehnt</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Es gibt drei Formen: <strong>Konstruktor-Injektion</strong> (empfohlen, weil alle Abhängigkeiten sichtbar sind und die Felder <code>final</code> sein können), <strong>Setter-Injektion</strong> für optionale Abhängigkeiten und <strong>Feld-Injektion</strong> per Annotation, die bequem ist, aber Abhängigkeiten versteckt und Tests ohne Framework erschwert. Hat ein Konstruktor sehr viele Parameter, ist das kein Problem der Injektion, sondern ein Hinweis, dass die Klasse zu viel tut. Dependency Injection braucht kein Framework. Das Beispiel kommt ohne aus, Frameworks nehmen einem nur das Zusammenstecken ab.</p>
+<h3>In der Praxis</h3>
+<p>Spring (<code>@Component</code>, <code>@Autowired</code>, Konstruktor-Injektion ist dort Standard), Jakarta CDI (<code>@Inject</code>), Google Guice und Dagger, die Abhängigkeiten zur Compilezeit verdrahten. DI ist die Umsetzung des <em>Dependency Inversion Principle</em>, des „D“ in SOLID: Klassen hängen von Abstraktionen ab, nicht von konkreten Implementierungen.</p>
+
+<h2 id="service-locator"><span class="nr">2.</span> Service Locator <span class="de">· Dienstverzeichnis</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Service Locator: eine zentrale Registry, bei der Klassen ihre Abhängigkeiten selbst abholen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="20" y="80" width="180" height="70" rx="8" class="app"/><text x="110.0" y="120.0" class="lbl" text-anchor="middle">BestellService</text><text x="110" y="166" class="tiny" text-anchor="middle">Konstruktor: ()</text><rect x="290" y="40" width="200" height="150" rx="8" class="comp"/><text x="390" y="62" class="lbl-c" text-anchor="middle">Service Locator</text><rect x="304" y="76" width="172" height="100" rx="4" class="app"/><text x="390" y="100" class="tiny" text-anchor="middle">Zahlungsdienst → Kreditkarte</text><text x="390" y="126" class="tiny" text-anchor="middle">Benachrichtigung → E-Mail</text><text x="390" y="152" class="tiny" text-anchor="middle">Lager → ?</text><line x1="200" y1="104" x2="288" y2="104" class="arr" marker-end="url(#pfeil)"/><text x="244.0" y="96" class="tiny" text-anchor="middle">hole(...)</text><line x1="288" y1="128" x2="202" y2="128" class="arr" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><rect x="560" y="52" width="140" height="42" rx="8" class="app"/><text x="630.0" y="78.0" class="lbl" text-anchor="middle">Kreditkarte</text><rect x="560" y="112" width="140" height="42" rx="8" class="app"/><text x="630.0" y="138.0" class="lbl" text-anchor="middle">E-Mail</text><path d="M476,100 C510,100 520,74 558,74" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><path d="M476,126 C510,126 520,133 558,133" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><text x="20" y="210" class="note" text-anchor="start">Abhängigkeiten von außen nicht sichtbar</text><text x="470" y="226" class="note" text-anchor="middle">fehlt ein Eintrag: Fehler erst zur Laufzeit</text></svg><figcaption>Der BestellService fragt die Registry nach seinen Diensten. Von außen sieht man nicht, was er braucht.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Service Locator ist ein <strong>zentrales Verzeichnis</strong>, in dem beim Start alle Dienste registriert werden. Klassen, die einen Dienst brauchen, fragen dort nach: „Gib mir den Zahlungsdienst.“ Wie bei Dependency Injection kennen die Klassen nur Schnittstellen, aber die Richtung ist umgekehrt. Die Klasse <em>holt</em> sich ihre Abhängigkeiten, statt sie zu <em>bekommen</em>.</p>
+<h3>Das Problem, das er löst</h3>
+<p>Er entkoppelt Klassen von konkreten Implementierungen, ohne dass alle Abhängigkeiten durch Konstruktoren gereicht werden müssen. In älteren Systemen ohne DI-Framework, etwa bei JNDI-Lookups in frühen Java-EE-Anwendungen, war das der übliche Weg.</p>
+<h3>Im Code</h3>
+<p>Die Klasse <code>Dienste</code> ist eine <code>Map</code> von Typ auf Implementierung. Der <code>BestellService</code> hat einen leeren Konstruktor und holt sich seine Dienste im Methodenrumpf. Im zweiten Teil wird die Registry geleert. Der Code kompiliert weiterhin problemlos, scheitert aber zur Laufzeit.</p>
+<details class="code"><summary>Java-21-Code: ServiceLocator.java</summary><p>Direkt ausführbar mit <code>java ServiceLocator.java</code></p><pre><code class="language-java">// Service Locator
+// Eine zentrale Registry, bei der sich Klassen ihre Abhängigkeiten selbst holen.
+// Start: java ServiceLocator.java
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class ServiceLocator {
+
+    interface Zahlungsdienst { boolean belaste(String kunde, int cent); }
+    interface Benachrichtigung { void sende(String an, String text); }
+
+    // --- Der Service Locator: Typ -&gt; Implementierung ---
+    static final class Dienste {
+        private static final Map&lt;Class&lt;?&gt;, Object&gt; registry = new ConcurrentHashMap&lt;&gt;();
+
+        static &lt;T&gt; void registriere(Class&lt;T&gt; typ, T dienst) { registry.put(typ, dienst); }
+
+        static &lt;T&gt; T hole(Class&lt;T&gt; typ) {
+            Object dienst = registry.get(typ);
+            if (dienst == null) throw new IllegalStateException(&quot;Kein Dienst registriert für &quot; + typ.getSimpleName());
+            return typ.cast(dienst);
+        }
+
+        static void leeren() { registry.clear(); }
+    }
+
+    // --- Die Klasse holt sich ihre Abhängigkeiten selbst ---
+    static final class BestellService {
+        boolean bestelle(String kunde, int cent) {
+            // Die Abhängigkeiten stehen NICHT im Konstruktor, sondern versteckt im Methodenrumpf
+            Zahlungsdienst zahlung = Dienste.hole(Zahlungsdienst.class);
+            Benachrichtigung nachricht = Dienste.hole(Benachrichtigung.class);
+            boolean ok = zahlung.belaste(kunde, cent);
+            nachricht.sende(kunde, ok ? &quot;Danke für Ihre Bestellung&quot; : &quot;Zahlung abgelehnt&quot;);
+            return ok;
+        }
+    }
+
+    public static void main(String[] args) {
+        // Beim Start registrieren
+        Dienste.registriere(Zahlungsdienst.class, (k, c) -&gt; {
+            System.out.println(&quot;  [Kreditkarte] &quot; + k + &quot; belastet&quot;);
+            return true;
+        });
+        Dienste.registriere(Benachrichtigung.class, (an, t) -&gt; System.out.println(&quot;  [E-Mail an &quot; + an + &quot;] &quot; + t));
+
+        System.out.println(&quot;Mit Registrierung:&quot;);
+        new BestellService().bestelle(&quot;Sven&quot;, 4_990);
+
+        // Das typische Problem: fehlt eine Registrierung, merkt man es erst zur Laufzeit
+        System.out.println(&quot;\nNach dem Leeren der Registry:&quot;);
+        Dienste.leeren();
+        try {
+            new BestellService().bestelle(&quot;Sven&quot;, 4_990);   // kompiliert problemlos
+        } catch (IllegalStateException e) {
+            System.out.println(&quot;  Laufzeitfehler: &quot; + e.getMessage());
+        }
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Mit Registrierung:
+  [Kreditkarte] Sven belastet
+  [E-Mail an Sven] Danke für Ihre Bestellung
+
+Nach dem Leeren der Registry:
+  Laufzeitfehler: Kein Dienst registriert für Zahlungsdienst</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Der Service Locator gilt heute weithin als <strong>Anti-Pattern</strong>, und das Beispiel zeigt warum. Die Abhängigkeiten einer Klasse sind <em>versteckt</em>: Am Konstruktor sieht man nicht, was sie braucht. Fehlende Registrierungen fallen erst zur Laufzeit auf. Tests müssen die globale Registry vorbereiten und danach aufräumen, und parallele Tests können sich gegenseitig stören. Dependency Injection löst dieselbe Aufgabe ohne diese Nachteile. Sinnvoll bleibt der Locator dort, wo man keinen Einfluss auf die Erzeugung von Objekten hat, etwa in Plugins.</p>
+<h3>In der Praxis</h3>
+<p>JNDI-Lookups in Java EE, <code>java.util.ServiceLoader</code> für Plugins, die über <code>META-INF/services</code> gefunden werden, <code>ApplicationContext.getBean()</code> in Spring, wenn man es direkt aufruft. Martin Fowler hat den Unterschied zwischen Locator und Injection 2004 im Artikel „Inversion of Control Containers and the Dependency Injection pattern“ beschrieben.</p>
+
+<h2 id="object-pool"><span class="nr">3.</span> Object Pool <span class="de">· Objektpool</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 260" role="img" aria-label="Object Pool: teure Objekte werden verliehen und wiederverwendet" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="20" width="120" height="34" rx="8" class="app"/><text x="76.0" y="42.0" class="lbl" text-anchor="middle">Aufgabe 1</text><rect x="16" y="64" width="120" height="34" rx="8" class="app"/><text x="76.0" y="86.0" class="lbl" text-anchor="middle">Aufgabe 2</text><rect x="16" y="108" width="120" height="34" rx="8" class="app"/><text x="76.0" y="130.0" class="lbl" text-anchor="middle">Aufgabe 3</text><rect x="16" y="152" width="120" height="34" rx="8" class="app"/><text x="76.0" y="174.0" class="lbl" text-anchor="middle">Aufgabe 4</text><rect x="16" y="196" width="120" height="34" rx="8" class="app"/><text x="76.0" y="218.0" class="lbl" text-anchor="middle">Aufgabe 5</text><rect x="250" y="20" width="260" height="210" rx="12" class="zone"/><text x="262" y="38" class="zlbl" text-anchor="start">Pool (3 Verbindungen)</text><rect x="270" y="56" width="220" height="38" rx="6" class="store"/><text x="380" y="80" class="tiny" text-anchor="middle">Verbindung 1 · verliehen</text><rect x="270" y="110" width="220" height="38" rx="6" class="store"/><text x="380" y="134" class="tiny" text-anchor="middle">Verbindung 2 · verliehen</text><rect x="270" y="164" width="220" height="38" rx="6" class="store"/><text x="380" y="188" class="tiny" text-anchor="middle">Verbindung 3 · frei</text><path d="M136,37 C200,37 210,75 268,75" class="arr" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><path d="M136,81 C200,81 210,129 268,129" class="arr" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><path d="M136,125 C200,125 210,183 268,183" class="arr" fill="none" marker-end="url(#pfeil)"/><path d="M136,169 C190,169 200,210 240,210" class="arr-leise" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><path d="M136,213 C180,213 200,216 240,216" class="arr-leise" fill="none" stroke-dasharray="5 4" marker-end="url(#pfeil)"/><text x="190" y="248" class="tiny" text-anchor="middle">warten, bis eine frei wird</text><text x="615" y="90" class="note" text-anchor="middle">leihen →</text><text x="615" y="110" class="note" text-anchor="middle">benutzen →</text><text x="615" y="130" class="note" text-anchor="middle">zurückgeben</text><text x="615" y="170" class="note" text-anchor="middle">nichts wird neu erzeugt</text></svg><figcaption>Fünf Aufgaben, drei Verbindungen. Wer keine freie bekommt, wartet, bis eine zurückgegeben wird.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Manche Objekte sind teuer in der Erzeugung: Datenbankverbindungen, Netzwerkverbindungen, große Puffer. Ein Object Pool <strong>erzeugt eine feste Anzahl davon im Voraus</strong> und <strong>verleiht</strong> sie. Wer eines braucht, leiht es aus, benutzt es und gibt es zurück. Danach kann es der Nächste verwenden. Wie Einkaufswagen im Supermarkt.</p>
+<h3>Das Problem</h3>
+<p>Für jede Datenbankabfrage eine neue Verbindung aufzubauen kostet Zeit für Netzwerk, Anmeldung und Verschlüsselung, oft mehr als die Abfrage selbst. Gleichzeitig verträgt die Datenbank nur eine begrenzte Zahl gleichzeitiger Verbindungen. Ein Pool löst beides: Verbindungen werden wiederverwendet, und ihre Zahl ist nach oben begrenzt.</p>
+<h3>Im Code</h3>
+<p>Der Pool ist eine <code>BlockingQueue</code> mit drei Verbindungen. Die Ausleihe ist ein Record, der <code>AutoCloseable</code> implementiert. So gibt try-with-resources die Verbindung automatisch zurück, auch im Fehlerfall. 30 Abfragen laufen in virtuellen Threads, und wer keine Verbindung bekommt, wartet. Am Ende wurden nur drei Verbindungen erzeugt statt 30.</p>
+<details class="code"><summary>Java-21-Code: ObjectPool.java</summary><p>Direkt ausführbar mit <code>java ObjectPool.java</code></p><pre><code class="language-java">// Object Pool
+// Teure Objekte werden einmal erzeugt, verliehen, zurückgegeben und wiederverwendet.
+// Start: java ObjectPool.java
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class ObjectPool {
+
+    // --- Teures Objekt ---
+    static final class Verbindung {
+        private static final AtomicInteger erzeugt = new AtomicInteger();
+        final int nr;
+
+        Verbindung() {
+            nr = erzeugt.incrementAndGet();
+            schlafe(200);                                  // Aufbau dauert (Netzwerk, Anmeldung ...)
+        }
+        String abfrage(String sql) { schlafe(50); return &quot;Ergebnis von &quot; + sql; }
+    }
+
+    // --- Der Pool: feste Anzahl Objekte in einer Warteschlange ---
+    static final class VerbindungsPool {
+        private final BlockingQueue&lt;Verbindung&gt; frei;
+
+        VerbindungsPool(int groesse) {
+            frei = new ArrayBlockingQueue&lt;&gt;(groesse);
+            for (int i = 0; i &lt; groesse; i++) frei.add(new Verbindung());
+        }
+
+        // Ausleihe als AutoCloseable: Rückgabe passiert automatisch am Ende von try-with-resources
+        record Leihe(Verbindung verbindung, VerbindungsPool pool) implements AutoCloseable {
+            public void close() { pool.frei.offer(verbindung); }
+        }
+
+        Leihe leihe() throws InterruptedException {
+            Verbindung v = frei.poll(2, TimeUnit.SECONDS);   // wartet, wenn alle verliehen sind
+            if (v == null) throw new IllegalStateException(&quot;Pool erschöpft&quot;);
+            return new Leihe(v, this);
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        long start = System.nanoTime();
+        VerbindungsPool pool = new VerbindungsPool(3);
+        System.out.printf(&quot;Pool mit 3 Verbindungen aufgebaut in ca. %d ms%n&quot;, rund(start));
+
+        AtomicInteger erledigt = new AtomicInteger();
+        start = System.nanoTime();
+        try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 1; i &lt;= 30; i++) {
+                int nr = i;
+                executor.submit(() -&gt; {
+                    try (var leihe = pool.leihe()) {
+                        leihe.verbindung().abfrage(&quot;SELECT * FROM bestellung WHERE id = &quot; + nr);
+                        erledigt.incrementAndGet();
+                    }
+                    return null;
+                });
+            }
+        }
+        System.out.printf(&quot;30 Abfragen erledigt: %d, Dauer ca. %d ms%n&quot;, erledigt.get(), rund(start));
+        System.out.println(&quot;Insgesamt erzeugte Verbindungen: &quot; + Verbindung.erzeugt.get());
+        System.out.println(&quot;Ohne Pool wären es 30 gewesen, mit je 200 ms Aufbauzeit.&quot;);
+    }
+
+    static long rund(long start) { return Math.round((System.nanoTime() - start) / 1e8) * 100; }
+
+    static void schlafe(long ms) {
+        try { Thread.sleep(ms); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Pool mit 3 Verbindungen aufgebaut in ca. 600 ms
+30 Abfragen erledigt: 30, Dauer ca. 500 ms
+Insgesamt erzeugte Verbindungen: 3
+Ohne Pool wären es 30 gewesen, mit je 200 ms Aufbauzeit.</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Die größte Gefahr ist das <strong>Vergessen der Rückgabe</strong>: Dann leert sich der Pool, bis alle warten. Deshalb die Rückgabe immer über try-with-resources oder <code>finally</code>. Zurückgegebene Objekte müssen in einen sauberen Zustand gebracht werden, etwa offene Transaktionen beendet. Defekte Objekte müssen erkannt und ersetzt werden. Für billige Objekte lohnt sich ein Pool nicht mehr: Moderne JVMs erzeugen kleine Objekte so schnell, dass ein Pool eher schadet. Auch Threads muss man mit virtuellen Threads in Java 21 nicht mehr poolen.</p>
+<h3>In der Praxis</h3>
+<p>Datenbank-Verbindungspools wie HikariCP (Standard in Spring Boot), Thread-Pools in <code>ExecutorService</code>, HTTP-Client-Verbindungspools, Apache Commons Pool als allgemeine Bibliothek.</p>
+
+<h2 id="lazy-initialization"><span class="nr">4.</span> Lazy Initialization <span class="de">· Verzögerte Erzeugung</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 200" role="img" aria-label="Lazy Initialization: ein Wert wird erst beim ersten Zugriff erzeugt" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><line x1="40" y1="110" x2="690" y2="110" class="arr" marker-end="url(#pfeil)"/><text x="680" y="132" class="tiny" text-anchor="middle">Zeit</text><circle cx="110" cy="110" r="7" class="comp"/><text x="110" y="86" class="lbl" text-anchor="middle">Shop erzeugt</text><text x="110" y="140" class="sub" text-anchor="middle">Katalog: noch nicht da</text><circle cx="330" cy="110" r="7" class="comp"/><text x="330" y="86" class="lbl" text-anchor="middle">1. Zugriff</text><text x="330" y="140" class="sub" text-anchor="middle">jetzt laden (teuer)</text><circle cx="550" cy="110" r="7" class="comp"/><text x="550" y="86" class="lbl" text-anchor="middle">2. Zugriff</text><text x="550" y="140" class="sub" text-anchor="middle">aus dem Speicher</text><path d="M296,160 v20 a34.0,10 0 0 0 68,0 v-20" class="store"/><ellipse cx="330.0" cy="160" rx="34.0" ry="10" class="store"/><text x="330.0" y="181.0" class="lbl" text-anchor="middle"></text><text x="220" y="40" class="note" text-anchor="middle">Start ist schnell</text><text x="550" y="40" class="note" text-anchor="middle">jeder weitere Zugriff ist schnell</text></svg><figcaption>Der Katalog wird nicht beim Start, sondern erst beim ersten Zugriff geladen, und danach nie wieder.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Objekt oder Wert wird <strong>erst dann erzeugt, wenn er zum ersten Mal gebraucht wird</strong>, und danach wiederverwendet. Wird er nie gebraucht, entstehen auch keine Kosten.</p>
+<h3>Das Problem</h3>
+<p>Eine Anwendung, die beim Start alles lädt, was sie irgendwann brauchen könnte, startet langsam und belegt Speicher für Dinge, die oft nie verwendet werden. Ein Produktkatalog, der nur in der Suche gebraucht wird, muss nicht geladen werden, wenn ein Kunde nur seine Bestellungen ansieht.</p>
+<h3>Im Code</h3>
+<p>Drei Varianten: ein einfaches Feld, das beim ersten Zugriff gefüllt wird (nur für einen Thread geeignet), eine wiederverwendbare Klasse <code>Lazy&lt;T&gt;</code>, die mit <code>volatile</code> und Double-Checked Locking threadsicher ist und hier von 1.000 virtuellen Threads gleichzeitig aufgerufen wird, und das Holder-Idiom, bei dem die JVM selbst für das verzögerte und threadsichere Laden sorgt. In allen drei Fällen wird der Katalog genau einmal geladen.</p>
+<details class="code"><summary>Java-21-Code: LazyInitialization.java</summary><p>Direkt ausführbar mit <code>java LazyInitialization.java</code></p><pre><code class="language-java">// Lazy Initialization
+// Ein Objekt oder Wert wird erst erzeugt, wenn er zum ersten Mal gebraucht wird.
+// Start: java LazyInitialization.java
+
+import java.util.List;
+import java.util.function.Supplier;
+
+public class LazyInitialization {
+
+    // --- Teure Berechnung ---
+    static List&lt;String&gt; ladeKatalog() {
+        System.out.println(&quot;    (Katalog wird geladen ... teuer!)&quot;);
+        return List.of(&quot;Buch&quot;, &quot;Lampe&quot;, &quot;Tasse&quot;);
+    }
+
+    // --- Variante 1: einfaches Lazy-Feld (nur für einen Thread) ---
+    static final class Shop {
+        private List&lt;String&gt; katalog;                       // noch null
+
+        List&lt;String&gt; katalog() {
+            if (katalog == null) katalog = ladeKatalog();   // erst beim ersten Zugriff
+            return katalog;
+        }
+    }
+
+    // --- Variante 2: wiederverwendbarer, threadsicherer Lazy-Wert ---
+    static final class Lazy&lt;T&gt; implements Supplier&lt;T&gt; {
+        private final Supplier&lt;T&gt; erzeuger;
+        private volatile T wert;
+
+        private Lazy(Supplier&lt;T&gt; erzeuger) { this.erzeuger = erzeuger; }
+        static &lt;T&gt; Lazy&lt;T&gt; von(Supplier&lt;T&gt; erzeuger) { return new Lazy&lt;&gt;(erzeuger); }
+
+        public T get() {
+            T w = wert;
+            if (w == null) {
+                synchronized (this) {
+                    w = wert;
+                    if (w == null) wert = w = erzeuger.get();   // Double-Checked Locking mit volatile
+                }
+            }
+            return w;
+        }
+        boolean geladen() { return wert != null; }
+    }
+
+    public static void main(String[] args) throws Exception {
+        System.out.println(&quot;Variante 1: Lazy-Feld&quot;);
+        Shop shop = new Shop();
+        System.out.println(&quot;  Shop erzeugt, Katalog noch nicht geladen&quot;);
+        System.out.println(&quot;  1. Zugriff: &quot; + shop.katalog());
+        System.out.println(&quot;  2. Zugriff: &quot; + shop.katalog());
+
+        System.out.println(&quot;\nVariante 2: Lazy&lt;T&gt;, von 1.000 virtuellen Threads gleichzeitig abgefragt&quot;);
+        Lazy&lt;List&lt;String&gt;&gt; katalog = Lazy.von(LazyInitialization::ladeKatalog);
+        System.out.println(&quot;  geladen? &quot; + katalog.geladen());
+        try (var ex = java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor()) {
+            for (int i = 0; i &lt; 1_000; i++) ex.submit(katalog::get);
+        }
+        System.out.println(&quot;  geladen? &quot; + katalog.geladen() + &quot; -&gt; &quot; + katalog.get());
+
+        System.out.println(&quot;\nVariante 3: Holder-Idiom (siehe Singleton), die JVM lädt erst bei Bedarf&quot;);
+        System.out.println(&quot;  vor dem Zugriff&quot;);
+        System.out.println(&quot;  &quot; + Holder.KATALOG);
+    }
+
+    static final class Holder {
+        static final List&lt;String&gt; KATALOG = ladeKatalog();
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Variante 1: Lazy-Feld
+  Shop erzeugt, Katalog noch nicht geladen
+    (Katalog wird geladen ... teuer!)
+  1. Zugriff: [Buch, Lampe, Tasse]
+  2. Zugriff: [Buch, Lampe, Tasse]
+
+Variante 2: Lazy&lt;T&gt;, von 1.000 virtuellen Threads gleichzeitig abgefragt
+  geladen? false
+    (Katalog wird geladen ... teuer!)
+  geladen? true -&gt; [Buch, Lampe, Tasse]
+
+Variante 3: Holder-Idiom (siehe Singleton), die JVM lädt erst bei Bedarf
+  vor dem Zugriff
+    (Katalog wird geladen ... teuer!)
+  [Buch, Lampe, Tasse]</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Lazy Initialization verschiebt die Kosten nur: Der erste Zugriff wird langsamer. Bei einem Webdienst trifft das den ersten Kunden nach dem Start, was unerwünscht sein kann. Die einfache Variante ist in nebenläufigen Programmen fehlerhaft, weil zwei Threads gleichzeitig <code>null</code> sehen und doppelt laden können. Fehler beim Laden müssen behandelt werden: Wird die Erzeugung beim nächsten Zugriff erneut versucht oder der Fehler gespeichert? Ab Java 25 gibt es mit <code>StableValue</code> eine eingebaute Lösung, in Java 21 nimmt man das Holder-Idiom oder eine eigene Klasse wie im Beispiel.</p>
+<h3>In der Praxis</h3>
+<p>Lazy Loading von Beziehungen in JPA/Hibernate, <code>@Lazy</code> für Beans in Spring, Lazy-Initialisierung von Singletons, Bilder auf Webseiten, die erst beim Scrollen geladen werden (<code>loading="lazy"</code>).</p>
+
+<h2 id="multiton"><span class="nr">5.</span> Multiton <span class="de">· Eine Instanz pro Schlüssel</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 230" role="img" aria-label="Multiton: genau eine Instanz pro Schlüssel" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="30" width="150" height="40" rx="8" class="app"/><text x="91.0" y="55.0" class="lbl" text-anchor="middle">von(&quot;EUR&quot;)</text><rect x="16" y="90" width="150" height="40" rx="8" class="app"/><text x="91.0" y="115.0" class="lbl" text-anchor="middle">von(&quot;eur&quot;)</text><rect x="16" y="150" width="150" height="40" rx="8" class="app"/><text x="91.0" y="175.0" class="lbl" text-anchor="middle">von(&quot;JPY&quot;)</text><rect x="250" y="20" width="200" height="190" rx="8" class="comp"/><text x="350" y="44" class="lbl-c" text-anchor="middle">Registry (Map)</text><rect x="266" y="60" width="168" height="34" rx="4" class="app"/><text x="350" y="82" class="tagt" text-anchor="middle">EUR</text><rect x="266" y="106" width="168" height="34" rx="4" class="app"/><text x="350" y="128" class="tagt" text-anchor="middle">JPY</text><rect x="266" y="152" width="168" height="34" rx="4" class="app"/><text x="350" y="174" class="tagt" text-anchor="middle">USD</text><path d="M166,50 C210,50 220,77 264,77" class="arr" fill="none" marker-end="url(#pfeil)"/><path d="M166,110 C210,110 220,77 264,77" class="arr" fill="none" marker-end="url(#pfeil)"/><path d="M166,170 C210,170 220,123 264,123" class="arr" fill="none" marker-end="url(#pfeil)"/><line x1="434" y1="77" x2="518" y2="77" class="arr" marker-end="url(#pfeil)"/><rect x="520" y="60" width="180" height="34" rx="6" class="store"/><text x="610" y="82" class="tiny" text-anchor="middle">Euro, 2 Stellen</text><line x1="434" y1="123" x2="518" y2="123" class="arr" marker-end="url(#pfeil)"/><rect x="520" y="106" width="180" height="34" rx="6" class="store"/><text x="610" y="128" class="tiny" text-anchor="middle">Yen, 0 Stellen</text><line x1="434" y1="169" x2="518" y2="169" class="arr" marker-end="url(#pfeil)"/><rect x="520" y="152" width="180" height="34" rx="6" class="store"/><text x="610" y="174" class="tiny" text-anchor="middle">Dollar, 2 Stellen</text><text x="90" y="216" class="note" text-anchor="middle">EUR und eur: dieselbe Instanz</text></svg><figcaption>Für jeden Währungscode gibt es genau ein Objekt. Wer zweimal nach EUR fragt, bekommt zweimal dasselbe.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Das Multiton ist die Verallgemeinerung des Singletons: Statt genau einer Instanz gibt es <strong>genau eine Instanz pro Schlüssel</strong>. Eine zentrale Registry legt die Instanz beim ersten Zugriff an und gibt danach immer dieselbe zurück.</p>
+<h3>Das Problem</h3>
+<p>Für jede Währung, jedes Lager oder jede Datenbankverbindung zu einem bestimmten Mandanten soll es genau ein Objekt geben, damit Einstellungen nicht doppelt geladen werden und Vergleiche mit <code>==</code> zuverlässig funktionieren. Welche Schlüssel es gibt, steht aber nicht immer im Voraus fest.</p>
+<h3>Im Code</h3>
+<p>Zwei Varianten. Ist die Menge der Schlüssel <strong>offen</strong>, etwa Währungscodes, verwaltet eine <code>ConcurrentHashMap</code> die Instanzen. <code>computeIfAbsent</code> erzeugt jede Instanz threadsicher genau einmal. Der Schlüssel wird normalisiert, damit „EUR“ und „eur“ dasselbe Objekt liefern. Ist die Menge <strong>fest</strong> und schon beim Programmieren bekannt, ist ein <code>enum</code> die einfachste und sicherste Form eines Multitons.</p>
+<details class="code"><summary>Java-21-Code: Multiton.java</summary><p>Direkt ausführbar mit <code>java Multiton.java</code></p><pre><code class="language-java">// Multiton
+// Genau eine Instanz pro Schlüssel, zentral verwaltet.
+// Start: java Multiton.java
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+public class Multiton {
+
+    // --- Variante 1: offene Menge von Schlüsseln, Instanzen bei Bedarf ---
+    static final class Waehrung {
+        private static final Map&lt;String, Waehrung&gt; instanzen = new ConcurrentHashMap&lt;&gt;();
+
+        final String code;
+        final int nachkommastellen;
+
+        private Waehrung(String code, int nachkommastellen) {      // privat: kein &quot;new&quot; von außen
+            this.code = code;
+            this.nachkommastellen = nachkommastellen;
+            System.out.println(&quot;    (neue Instanz für &quot; + code + &quot;)&quot;);
+        }
+
+        static Waehrung von(String code) {
+            String key = code.toUpperCase();
+            return instanzen.computeIfAbsent(key, c -&gt; new Waehrung(c, c.equals(&quot;JPY&quot;) ? 0 : 2));
+        }
+
+        static int anzahl() { return instanzen.size(); }
+        public String toString() { return code + &quot;(&quot; + nachkommastellen + &quot; Nachkommastellen)&quot;; }
+    }
+
+    // --- Variante 2: feste Menge von Schlüsseln -&gt; einfach ein enum ---
+    enum Lager {
+        HAMBURG(&quot;Hafenstraße 7&quot;), MUENCHEN(&quot;Isarweg 12&quot;), WIEN(&quot;Donaugasse 3&quot;);
+
+        final String adresse;
+        Lager(String adresse) { this.adresse = adresse; }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(&quot;Variante 1: Map mit computeIfAbsent&quot;);
+        Waehrung a = Waehrung.von(&quot;EUR&quot;);
+        Waehrung b = Waehrung.von(&quot;eur&quot;);
+        Waehrung c = Waehrung.von(&quot;JPY&quot;);
+        System.out.println(&quot;  &quot; + a + &quot;, &quot; + c);
+        System.out.println(&quot;  EUR == eur: &quot; + (a == b));
+        System.out.println(&quot;  Instanzen insgesamt: &quot; + Waehrung.anzahl());
+
+        System.out.println(&quot;\nVariante 2: enum&quot;);
+        Lager l = Lager.valueOf(&quot;HAMBURG&quot;);
+        System.out.println(&quot;  &quot; + l + &quot; -&gt; &quot; + l.adresse + &quot;, gleiche Instanz: &quot; + (l == Lager.HAMBURG));
+        System.out.println(&quot;  alle: &quot; + java.util.Arrays.toString(Lager.values()));
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Variante 1: Map mit computeIfAbsent
+    (neue Instanz für EUR)
+    (neue Instanz für JPY)
+  EUR(2 Nachkommastellen), JPY(0 Nachkommastellen)
+  EUR == eur: true
+  Instanzen insgesamt: 2
+
+Variante 2: enum
+  HAMBURG -&gt; Hafenstraße 7, gleiche Instanz: true
+  alle: [HAMBURG, MUENCHEN, WIEN]</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Das Multiton erbt die Nachteile des Singletons: Es ist globaler Zustand und erschwert Tests. Dazu kommt ein eigenes Problem: Die Registry wächst mit jedem neuen Schlüssel und gibt Instanzen nie wieder frei. Bei vielen oder unkontrollierten Schlüsseln, etwa aus Benutzereingaben, wird daraus ein Speicherleck. Die Instanzen sollten unveränderlich sein, weil sie geteilt werden.</p>
+<h3>In der Praxis</h3>
+<p>Im JDK: <code>java.util.Currency.getInstance("EUR")</code>, <code>Charset.forName("UTF-8")</code> und <code>ZoneId.of("Europe/Berlin")</code> liefern für denselben Schlüssel dieselbe oder eine gleichwertige Instanz. Logger-Frameworks wie SLF4J halten einen Logger pro Name. Das Multiton ist eng verwandt mit dem <em>Flyweight</em> der GoF.</p>
+
+<h2 id="static-factory-method"><span class="nr">6.</span> Static Factory Method <span class="de">· Statische Fabrikmethode</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Static Factory Method: benannte statische Methoden statt öffentlicher Konstruktoren" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="250" y="20" width="220" height="200" rx="8" class="comp"/><text x="360" y="44" class="lbl-c" text-anchor="middle">Geldbetrag</text><rect x="266" y="58" width="188" height="28" rx="4" class="app"/><text x="360" y="77" class="tagt" text-anchor="middle">private Geldbetrag(...)</text><path d="M440,66 L452,78 M452,66 L440,78" class="cross"/><rect x="307.5" y="100" width="105" height="20" rx="10" class="tag"/><text x="360" y="114" class="tagt" text-anchor="middle">ausCent(1299)</text><rect x="314.5" y="130" width="91" height="20" rx="10" class="tag"/><text x="360" y="144" class="tagt" text-anchor="middle">ausEuro(12)</text><rect x="297.0" y="160" width="126" height="20" rx="10" class="tag"/><text x="360" y="174" class="tagt" text-anchor="middle">ausText(&quot;7,5 €&quot;)</text><rect x="325.0" y="190" width="70" height="20" rx="10" class="tag"/><text x="360" y="204" class="tagt" text-anchor="middle">nichts()</text><rect x="20" y="84" width="140" height="34" rx="8" class="app"/><text x="90.0" y="106.0" class="lbl" text-anchor="middle">Aufrufer A</text><line x1="160" y1="101" x2="300" y2="110" class="arr" marker-end="url(#pfeil)"/><rect x="20" y="128" width="140" height="34" rx="8" class="app"/><text x="90.0" y="150.0" class="lbl" text-anchor="middle">Aufrufer B</text><line x1="160" y1="145" x2="300" y2="140" class="arr" marker-end="url(#pfeil)"/><rect x="20" y="172" width="140" height="34" rx="8" class="app"/><text x="90.0" y="194.0" class="lbl" text-anchor="middle">Aufrufer C</text><line x1="160" y1="189" x2="300" y2="170" class="arr" marker-end="url(#pfeil)"/><rect x="540" y="100" width="160" height="34" rx="6" class="store"/><text x="620" y="122" class="tiny" text-anchor="middle">neue Instanz</text><rect x="540" y="170" width="160" height="34" rx="6" class="store"/><text x="620" y="192" class="tiny" text-anchor="middle">geteilte Instanz NULL</text><line x1="420" y1="140" x2="538" y2="117" class="arr" marker-end="url(#pfeil)"/><line x1="398" y1="200" x2="538" y2="187" class="arr" marker-end="url(#pfeil)"/><text x="90" y="60" class="note" text-anchor="middle">&quot;new&quot; ist nicht möglich</text></svg><figcaption>Der Konstruktor ist privat. Erzeugt wird über Methoden, deren Namen sagen, was gemeint ist, und die auch vorhandene Instanzen zurückgeben dürfen.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Statt eines öffentlichen Konstruktors bietet eine Klasse <strong>statische Methoden mit sprechenden Namen</strong> an, die Instanzen liefern: <code>Geldbetrag.ausEuro(12)</code> statt <code>new Geldbetrag(1200)</code>. Joshua Bloch stellt dieses Vorgehen in <em>Effective Java</em> gleich an den Anfang („Item 1“). Wichtig: Es ist <em>nicht</em> das GoF-Muster <em>Factory Method</em>, das auf Vererbung beruht.</p>
+<h3>Was Konstruktoren nicht können</h3>
+<ul>
+<li><strong>Namen tragen:</strong> <code>new Geldbetrag(12)</code> ist mehrdeutig, Cent oder Euro? <code>ausCent(12)</code> und <code>ausEuro(12)</code> sind es nicht.</li>
+<li><strong>Vorhandene Objekte zurückgeben:</strong> <code>ausCent(0)</code> liefert immer dieselbe Instanz <code>NULL</code>, ganz ohne neues Objekt.</li>
+<li><strong>Einen Untertyp zurückgeben:</strong> <code>Rabatt.prozent(10)</code> liefert einen <code>Prozent</code>-Record, <code>Rabatt.prozent(0)</code> die Konstante <code>KEIN</code>. Der Aufrufer kennt nur <code>Rabatt</code>.</li>
+<li><strong>Vorher Arbeit leisten:</strong> <code>ausText("7,5 €")</code> parst und rundet, bevor das Objekt entsteht.</li>
+</ul>
+<h3>Im Code</h3>
+<p>Der Record <code>Geldbetrag</code> zeigt die benannten Methoden und die geteilte Instanz. Das <code>sealed</code> Interface <code>Rabatt</code> zeigt Fabrikmethoden in einem Interface, die je nach Parameter verschiedene Implementierungen liefern.</p>
+<details class="code"><summary>Java-21-Code: StaticFactoryMethod.java</summary><p>Direkt ausführbar mit <code>java StaticFactoryMethod.java</code></p><pre><code class="language-java">// Static Factory Method
+// Benannte statische Methoden statt öffentlicher Konstruktoren.
+// Start: java StaticFactoryMethod.java
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+public class StaticFactoryMethod {
+
+    // --- Geldbetrag: privater Konstruktor, mehrere sprechende Erzeugungsmethoden ---
+    record Geldbetrag(long cent) {
+        static final Geldbetrag NULL = new Geldbetrag(0);                 // vorgefertigte, geteilte Instanz
+
+        Geldbetrag {
+            if (cent &lt; 0) throw new IllegalArgumentException(&quot;negativ: &quot; + cent);
+        }
+
+        // 1. Name erklärt die Bedeutung des Parameters
+        static Geldbetrag ausCent(long cent)  { return cent == 0 ? NULL : new Geldbetrag(cent); }
+        static Geldbetrag ausEuro(long euro)  { return ausCent(euro * 100); }
+
+        // 2. Parsen mit eigener Logik
+        static Geldbetrag ausText(String text) {
+            BigDecimal euro = new BigDecimal(text.replace(&quot;€&quot;, &quot;&quot;).replace(&quot;,&quot;, &quot;.&quot;).strip());
+            return ausCent(euro.setScale(2, RoundingMode.HALF_UP).movePointRight(2).longValueExact());
+        }
+
+        // 3. Ergebnis kann eine geteilte Instanz sein, kein neues Objekt
+        static Geldbetrag nichts() { return NULL; }
+
+        public String toString() { return &quot;%d,%02d €&quot;.formatted(cent / 100, cent % 100); }
+    }
+
+    // --- Rückgabetyp darf ein Untertyp sein, der Aufrufer kennt nur die Schnittstelle ---
+    sealed interface Rabatt permits Prozent, Fest, KeinRabatt {
+        long wende(long cent);
+
+        static Rabatt prozent(int p)   { return p == 0 ? KeinRabatt.KEIN : new Prozent(p); }
+        static Rabatt fest(long cent)  { return cent == 0 ? KeinRabatt.KEIN : new Fest(cent); }
+    }
+    record Prozent(int p) implements Rabatt { public long wende(long c) { return c - c * p / 100; } }
+    record Fest(long abzug) implements Rabatt { public long wende(long c) { return Math.max(0, c - abzug); } }
+    enum KeinRabatt implements Rabatt { KEIN; public long wende(long c) { return c; } }
+
+    public static void main(String[] args) {
+        System.out.println(&quot;ausEuro(12):        &quot; + Geldbetrag.ausEuro(12));
+        System.out.println(&quot;ausCent(1299):      &quot; + Geldbetrag.ausCent(1299));
+        System.out.println(&quot;ausText(\&quot;7,5 €\&quot;):   &quot; + Geldbetrag.ausText(&quot;7,5 €&quot;));
+        System.out.println(&quot;ausCent(0) == NULL: &quot; + (Geldbetrag.ausCent(0) == Geldbetrag.nichts()));
+
+        Geldbetrag preis = Geldbetrag.ausEuro(80);
+        for (Rabatt r : new Rabatt[] { Rabatt.prozent(10), Rabatt.fest(1_500), Rabatt.prozent(0) }) {
+            System.out.printf(&quot;%-26s -&gt; %s%n&quot;, r, Geldbetrag.ausCent(r.wende(preis.cent())));
+        }
+
+        System.out.println(&quot;\nAus dem JDK: List.of(), Optional.empty(), Integer.valueOf(), Path.of(), LocalDate.of()&quot;);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>ausEuro(12):        12,00 €
+ausCent(1299):      12,99 €
+ausText(&quot;7,5 €&quot;):   7,50 €
+ausCent(0) == NULL: true
+Prozent[p=10]              -&gt; 72,00 €
+Fest[abzug=1500]           -&gt; 65,00 €
+KEIN                       -&gt; 80,00 €
+
+Aus dem JDK: List.of(), Optional.empty(), Integer.valueOf(), Path.of(), LocalDate.of()</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Statische Fabrikmethoden sind in der Dokumentation schwerer zu finden als Konstruktoren. Deshalb helfen übliche Namen: <code>of</code>, <code>from</code>, <code>valueOf</code>, <code>getInstance</code>, <code>newInstance</code>, <code>parse</code>. Ist der Konstruktor privat, kann man von der Klasse nicht erben. Das ist bei Records und Werttypen aber meist ohnehin gewollt.</p>
+<h3>In der Praxis</h3>
+<p>Das JDK ist voll davon: <code>List.of()</code>, <code>Optional.empty()</code>, <code>Integer.valueOf()</code>, <code>Path.of()</code>, <code>LocalDate.of()</code>, <code>EnumSet.noneOf()</code>, <code>Duration.ofMinutes()</code>.</p>
+<h2 id="vergleich">Im Überblick</h2>
+<table>
+<tr><th>Muster</th><th>Frage</th><th>Antwort</th><th>Heute</th></tr>
+<tr><td>Dependency Injection</td><td>Wie kommt eine Klasse an ihre Dienste?</td><td>Sie bekommt sie übergeben</td><td>Standard</td></tr>
+<tr><td>Service Locator</td><td>Wie kommt eine Klasse an ihre Dienste?</td><td>Sie holt sie aus einer Registry</td><td>meist Anti-Pattern</td></tr>
+<tr><td>Object Pool</td><td>Wie viele teure Objekte gibt es?</td><td>eine feste Anzahl, wiederverwendet</td><td>für Verbindungen üblich</td></tr>
+<tr><td>Lazy Initialization</td><td>Wann entsteht ein Objekt?</td><td>beim ersten Zugriff</td><td>häufig</td></tr>
+<tr><td>Multiton</td><td>Wie viele Instanzen gibt es?</td><td>genau eine pro Schlüssel</td><td>oft als <code>enum</code></td></tr>
+<tr><td>Static Factory Method</td><td>Wie ruft man die Erzeugung auf?</td><td>über benannte statische Methoden</td><td>Standard bei Werttypen</td></tr>
+</table>
+<p>Zum Vergleich: die GoF-Erzeugungsmuster Singleton, Factory Method, Abstract Factory, Builder und Prototype.</p>
+<nav class="nav"><span></span><a href="/it-konzepte/weitere-muster/">Übersicht</a><a href="/it-konzepte/weitere-muster/struktur-verhalten/">Struktur und Verhalten im Kleinen →</a></nav>
+</article>

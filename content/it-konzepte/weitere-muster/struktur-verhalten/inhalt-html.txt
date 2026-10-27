@@ -1,0 +1,567 @@
+<article class="muster">
+<nav class="nav"><a href="/it-konzepte/weitere-muster/erzeugung/">← Erzeugung und Objektverwaltung</a><a href="/it-konzepte/weitere-muster/">Übersicht</a><a href="/it-konzepte/weitere-muster/datenzugriff/">Datenzugriff →</a></nav>
+<p>Diese Gruppe sammelt kleinere Muster, die im Alltag ständig vorkommen, aber nicht im GoF-Buch stehen. Sie lösen typische Probleme <strong>auf Ebene einzelner Klassen</strong>: Wie vermeidet man <code>null</code>? Wie stellt man Werte sicher dar? Wie schreibt man APIs, die sich wie Sätze lesen? Wie bildet man Regeln, Typen und zusätzliche Fähigkeiten ab, ohne die Klassenhierarchie wuchern zu lassen? Mehrere davon spielen ihre Stärken besonders in Java 21 aus, mit Records, <code>sealed</code> Interfaces und Default-Methoden.</p>
+<ul class="legende"><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="8" class="app"/><text x="17.0" y="16.0" class="lbl" text-anchor="middle"></text></svg>Anwendung / Objekt</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="2" y="2" width="30" height="18" rx="6" class="comp"/><text x="17.0" y="16.0" class="lbl-c" text-anchor="middle"></text></svg>Muster-Baustein</li><li><svg viewBox="0 0 34 22" role="img" aria-label="" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><path d="M6,11 v0 a11.0,10 0 0 0 22,0 v0" class="store"/><ellipse cx="17.0" cy="11" rx="11.0" ry="10" class="store"/><text x="17.0" y="22.0" class="lbl" text-anchor="middle"></text></svg>Speicher / Ressource</li></ul>
+<ul class="inhalt">
+  <li><a href="#null-object">7. Null Object</a></li>
+  <li><a href="#value-object">8. Value Object</a></li>
+  <li><a href="#fluent-interface">9. Fluent Interface</a></li>
+  <li><a href="#specification">10. Specification</a></li>
+  <li><a href="#type-object">11. Type Object</a></li>
+  <li><a href="#extension-object">12. Extension Object</a></li>
+  <li><a href="#mixin">13. Mixin / Trait</a></li>
+</ul>
+<h2 id="null-object"><span class="nr">7.</span> Null Object <span class="de">· Nullobjekt</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Null Object: statt null ein Objekt, das nichts tut" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="16" y="20" width="200" height="44" rx="8" class="app"/><text x="116.0" y="47.0" class="lbl" text-anchor="middle">r.anwenden(preis)</text><text x="116" y="84" class="tiny" text-anchor="middle">keine Prüfung auf null</text><rect x="290" y="20" width="140" height="44" rx="6" class="comp"/><text x="360.0" y="47.0" class="lbl-c" text-anchor="middle">Rabatt</text><line x1="216" y1="42" x2="288" y2="42" class="arr" marker-end="url(#pfeil)"/><path d="M360,64 C360,100 220,100 220,128" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="160" y="130" width="140" height="44" rx="8" class="app"/><text x="230.0" y="157.0" class="lbl" text-anchor="middle">Prozent</text><path d="M360,64 C360,100 390,100 390,128" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="330" y="130" width="140" height="44" rx="8" class="app"/><text x="400.0" y="157.0" class="lbl" text-anchor="middle">Treuebonus</text><path d="M360,64 C360,100 560,100 560,128" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="500" y="130" width="140" height="44" rx="6" class="store"/><text x="570" y="157" class="lbl" text-anchor="middle">KeinRabatt</text><text x="570" y="192" class="tiny" text-anchor="middle">gibt den Preis unverändert</text><text x="570" y="206" class="tiny" text-anchor="middle">zurück, ist aber nie null</text><rect x="16" y="130" width="110" height="44" rx="8" class="app"/><text x="71.0" y="157.0" class="lbl" text-anchor="middle">null</text><path d="M109,129 L123,143 M123,129 L109,143" class="cross"/><text x="71" y="192" class="tiny" text-anchor="middle">müsste überall</text><text x="71" y="206" class="tiny" text-anchor="middle">geprüft werden</text></svg><figcaption>Kunden ohne Rabatt bekommen ein KeinRabatt-Objekt statt null. Der Aufrufer behandelt alle gleich.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Wo sonst <code>null</code> stünde, wird ein <strong>Objekt zurückgegeben, das die Schnittstelle erfüllt, aber nichts tut</strong>: ein Rabatt von null Prozent, ein Logger, der nichts schreibt, eine leere Liste. Der Aufrufer muss keinen Sonderfall prüfen, weil es keinen Sonderfall mehr gibt.</p>
+<h3>Das Problem</h3>
+<p>Liefert eine Methode für Kunden ohne Rabatt <code>null</code>, muss jede Stelle, die einen Rabatt verwendet, vorher prüfen. Wird das auch nur einmal vergessen, gibt es eine <code>NullPointerException</code>, meist erst im Betrieb. Die Prüfungen verteilen sich über den ganzen Code und verschleiern die eigentliche Logik.</p>
+<h3>Im Code</h3>
+<p><code>KeinRabatt</code> ist als <code>enum</code> mit einer einzigen Konstante umgesetzt, weil ein Null Object keinen Zustand hat und eine Instanz für alle reicht. <code>rabattFuer()</code> liefert mit <code>getOrDefault</code> nie <code>null</code>. Am Ende steht zum Vergleich die Variante mit Prüfung.</p>
+<details class="code"><summary>Java-21-Code: NullObject.java</summary><p>Direkt ausführbar mit <code>java NullObject.java</code></p><pre><code class="language-java">// Null Object
+// Statt null wird ein Objekt zurückgegeben, das &quot;nichts tut&quot;, aber die erwartete Schnittstelle erfüllt.
+// Start: java NullObject.java
+
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+public class NullObject {
+
+    // --- Schnittstelle ---
+    interface Rabatt {
+        long anwenden(long cent);
+        String beschreibung();
+    }
+
+    // --- Echte Implementierungen ---
+    record Prozent(int p) implements Rabatt {
+        public long anwenden(long c)   { return c - c * p / 100; }
+        public String beschreibung()   { return p + &quot; % Rabatt&quot;; }
+    }
+    record Treuebonus(long abzug) implements Rabatt {
+        public long anwenden(long c)   { return Math.max(0, c - abzug); }
+        public String beschreibung()   { return &quot;Treuebonus &quot; + abzug / 100 + &quot; €&quot;; }
+    }
+
+    // --- Das Null Object: erfüllt die Schnittstelle und tut nichts ---
+    enum KeinRabatt implements Rabatt {
+        INSTANZ;
+        public long anwenden(long c)   { return c; }
+        public String beschreibung()   { return &quot;kein Rabatt&quot;; }
+    }
+
+    // --- Ein Verzeichnis, das NIE null liefert ---
+    static final Map&lt;String, Rabatt&gt; rabatte = Map.of(
+            &quot;Anna&quot;, new Prozent(10),
+            &quot;Ben&quot;, new Treuebonus(500));
+
+    static Rabatt rabattFuer(String kunde) {
+        return rabatte.getOrDefault(kunde, KeinRabatt.INSTANZ);
+    }
+
+    public static void main(String[] args) {
+        long preis = 8_000;
+        for (String kunde : List.of(&quot;Anna&quot;, &quot;Ben&quot;, &quot;Cem&quot;)) {
+            Rabatt r = rabattFuer(kunde);
+            // keine null-Prüfung nötig: jeder Kunde hat einen Rabatt, notfalls den &quot;leeren&quot;
+            System.out.printf(Locale.GERMANY, &quot;%-5s %-16s %6.2f €%n&quot;, kunde, r.beschreibung(), r.anwenden(preis) / 100.0);
+        }
+
+        // Zum Vergleich: ohne Null Object müsste jede Stelle selbst prüfen
+        Rabatt vielleicht = rabatte.get(&quot;Cem&quot;);                 // null!
+        long ergebnis = (vielleicht != null) ? vielleicht.anwenden(preis) : preis;
+        System.out.printf(Locale.GERMANY, &quot;%nOhne Null Object, mit Prüfung: %.2f €%n&quot;, ergebnis / 100.0);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Anna  10 % Rabatt       72,00 €
+Ben   Treuebonus 5 €    75,00 €
+Cem   kein Rabatt       80,00 €
+
+Ohne Null Object, mit Prüfung: 80,00 €</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Ein Null Object ist nur dann richtig, wenn „nichts tun“ ein sinnvolles Verhalten ist. Fehlt ein Wert, der fachlich zwingend vorhanden sein müsste, etwa die Lieferadresse einer Bestellung, verschleiert ein Null Object den Fehler. Dann ist eine Ausnahme die bessere Antwort. In Java ist <code>Optional</code> die Alternative, wenn der Aufrufer bewusst entscheiden soll, was im leeren Fall passiert. Das Null Object trifft diese Entscheidung für ihn.</p>
+<h3>In der Praxis</h3>
+<p><code>Collections.emptyList()</code> statt <code>null</code> für leere Ergebnisse, <code>OutputStream.nullOutputStream()</code> und <code>Writer.nullWriter()</code> seit Java 11, NOP-Logger in SLF4J, wenn keine Logging-Implementierung vorhanden ist. Das Muster wurde 1996 von Bobby Woolf beschrieben, demselben Woolf wie bei den Enterprise Integration Patterns.</p>
+
+<h2 id="value-object"><span class="nr">8.</span> Value Object <span class="de">· Wertobjekt</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 230" role="img" aria-label="Value Object: unveränderlich und über seine Werte definiert" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="20" y="30" width="110" height="40" rx="20" class="store"/><text x="75" y="55" class="lbl" text-anchor="middle">12,90 EUR</text><line x1="130" y1="50" x2="200" y2="50" class="arr" marker-end="url(#pfeil)"/><text x="165.0" y="42.0" class="tiny" text-anchor="middle">mal(2)</text><rect x="202" y="30" width="110" height="40" rx="20" class="store"/><text x="257" y="55" class="lbl" text-anchor="middle">25,80 EUR</text><line x1="312" y1="50" x2="382" y2="50" class="arr" marker-end="url(#pfeil)"/><text x="347.0" y="42.0" class="tiny" text-anchor="middle">plus(4,90)</text><rect x="384" y="30" width="110" height="40" rx="20" class="store"/><text x="439" y="55" class="lbl" text-anchor="middle">30,70 EUR</text><text x="75" y="96" class="tiny" text-anchor="middle">bleibt unverändert</text><text x="400" y="100" class="note" text-anchor="middle">jede Rechnung liefert ein neues Objekt</text><rect x="140" y="140" width="110" height="40" rx="20" class="store"/><text x="195" y="165" class="lbl" text-anchor="middle">12,90 EUR</text><rect x="330" y="140" width="110" height="40" rx="20" class="store"/><text x="385" y="165" class="lbl" text-anchor="middle">12,90 EUR</text><text x="290" y="166" class="lbl" text-anchor="middle">=</text><text x="290" y="206" class="sub" text-anchor="middle">zwei Objekte, gleiche Werte: gleich</text><rect x="530" y="140" width="170" height="40" rx="20" class="store"/><text x="615" y="165" class="lbl" text-anchor="middle">PLZ &quot;2045&quot;</text><path d="M683,139 L697,153 M697,139 L683,153" class="cross"/><text x="615" y="206" class="sub" text-anchor="middle">ungültig: entsteht gar nicht</text></svg><figcaption>Geldbeträge ändern sich nie. Rechnen erzeugt neue Werte, und zwei Beträge mit gleichem Wert sind gleich.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Value Object ist ein kleines Objekt, das <strong>allein über seine Werte</strong> definiert ist: ein Geldbetrag, eine Adresse, eine Postleitzahl, ein Zeitraum. Zwei Value Objects mit denselben Werten sind gleich, egal ob es dasselbe Objekt im Speicher ist. Value Objects sind <strong>unveränderlich</strong>: Statt einen Betrag zu ändern, erzeugt man einen neuen. Und sie <strong>prüfen sich selbst</strong>, sodass ungültige Werte gar nicht erst entstehen.</p>
+<h3>Das Problem</h3>
+<p>Wird Geld als nacktes <code>double</code> oder <code>long</code> herumgereicht, weiß niemand, ob ein Wert Euro oder Cent ist, und nichts verhindert, Euro und Franken zu addieren. Ist ein Geldobjekt veränderlich, kann eine Methode versehentlich den Preis eines anderen Artikels ändern, weil beide auf dasselbe Objekt zeigen. Und ohne <code>equals</code> sind zwei gleiche Beträge plötzlich ungleich.</p>
+<h3>Im Code</h3>
+<p>In Java 21 sind <strong>Records</strong> die natürliche Form für Value Objects: unveränderlich, mit automatischem <code>equals</code>, <code>hashCode</code> und <code>toString</code>. Der kompakte Konstruktor prüft die Werte. <code>plus</code> und <code>mal</code> geben neue Objekte zurück. Zum Vergleich zeigt eine klassische Klasse ohne <code>equals</code>, dass zwei gleiche Beträge dort als verschieden gelten. Zwei gleiche Adressen landen im <code>HashSet</code> nur einmal.</p>
+<details class="code"><summary>Java-21-Code: ValueObject.java</summary><p>Direkt ausführbar mit <code>java ValueObject.java</code></p><pre><code class="language-java">// Value Object
+// Ein kleines, unveränderliches Objekt, das allein über seine Werte definiert ist.
+// Start: java ValueObject.java
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class ValueObject {
+
+    enum Waehrung { EUR, CHF }
+
+    // --- Value Object: unveränderlich, prüft sich selbst, vergleicht über Werte ---
+    record Geld(long cent, Waehrung waehrung) {
+        Geld {
+            if (waehrung == null) throw new IllegalArgumentException(&quot;Währung fehlt&quot;);
+        }
+        static Geld euro(double betrag) { return new Geld(Math.round(betrag * 100), Waehrung.EUR); }
+
+        Geld plus(Geld anderes) {
+            if (waehrung != anderes.waehrung) throw new IllegalArgumentException(&quot;Währungen passen nicht&quot;);
+            return new Geld(cent + anderes.cent, waehrung);             // neues Objekt statt Änderung
+        }
+        Geld mal(int faktor) { return new Geld(cent * faktor, waehrung); }
+
+        public String toString() { return &quot;%d,%02d %s&quot;.formatted(cent / 100, Math.abs(cent % 100), waehrung); }
+    }
+
+    record Postleitzahl(String wert) {
+        Postleitzahl {
+            if (!wert.matches(&quot;\\d{5}&quot;)) throw new IllegalArgumentException(&quot;ungültige PLZ: &quot; + wert);
+        }
+    }
+
+    record Adresse(String strasse, Postleitzahl plz, String ort) {}
+
+    // --- Zum Vergleich: veränderliche Klasse ohne equals ---
+    static final class GeldAlt {
+        long cent;
+        GeldAlt(long cent) { this.cent = cent; }
+    }
+
+    public static void main(String[] args) {
+        Geld preis = Geld.euro(12.90);
+        Geld versand = Geld.euro(4.90);
+        System.out.println(&quot;Preis × 2 + Versand = &quot; + preis.mal(2).plus(versand));
+        System.out.println(&quot;Preis unverändert:    &quot; + preis);
+
+        System.out.println(&quot;\nGleichheit über Werte:&quot;);
+        System.out.println(&quot;  euro(12.90).equals(euro(12.90)): &quot; + Geld.euro(12.90).equals(Geld.euro(12.90)));
+        System.out.println(&quot;  alte Klasse, gleicher Betrag:    &quot; + new GeldAlt(1290).equals(new GeldAlt(1290)));
+
+        Set&lt;Adresse&gt; adressen = new HashSet&lt;&gt;();
+        adressen.add(new Adresse(&quot;Hafenstraße 7&quot;, new Postleitzahl(&quot;20457&quot;), &quot;Hamburg&quot;));
+        adressen.add(new Adresse(&quot;Hafenstraße 7&quot;, new Postleitzahl(&quot;20457&quot;), &quot;Hamburg&quot;));
+        System.out.println(&quot;  zwei gleiche Adressen im Set:    &quot; + adressen.size() + &quot; Eintrag&quot;);
+
+        System.out.println(&quot;\nUngültige Werte entstehen gar nicht erst:&quot;);
+        try { new Postleitzahl(&quot;2045&quot;); } catch (IllegalArgumentException e) { System.out.println(&quot;  &quot; + e.getMessage()); }
+        try { preis.plus(new Geld(500, Waehrung.CHF)); } catch (IllegalArgumentException e) { System.out.println(&quot;  &quot; + e.getMessage()); }
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Preis × 2 + Versand = 30,70 EUR
+Preis unverändert:    12,90 EUR
+
+Gleichheit über Werte:
+  euro(12.90).equals(euro(12.90)): true
+  alte Klasse, gleicher Betrag:    false
+  zwei gleiche Adressen im Set:    1 Eintrag
+
+Ungültige Werte entstehen gar nicht erst:
+  ungültige PLZ: 2045
+  Währungen passen nicht</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Value Objects lohnen sich auch für scheinbar einfache Werte. Eine eigene <code>Postleitzahl</code> statt eines <code>String</code> macht Methodensignaturen lesbarer und verhindert Verwechslungen. Man spricht hier von „Primitive Obsession“ als Gegenmuster. Bei Geld nie <code>double</code> für die Speicherung verwenden, sondern Cent als <code>long</code> oder <code>BigDecimal</code>, weil Gleitkommazahlen Rundungsfehler haben. Value Objects haben keine eigene Identität. Braucht ein Objekt eine, etwa ein Kunde, der umzieht und trotzdem derselbe Kunde bleibt, ist es eine <em>Entity</em> (Gruppe 4).</p>
+<h3>In der Praxis</h3>
+<p>Im JDK: <code>String</code>, <code>LocalDate</code>, <code>Duration</code>, <code>BigDecimal</code>, <code>UUID</code>. Die Money-API JSR 354 (Moneta) für Geldbeträge. Im Domain-Driven Design sind Value Objects einer der wichtigsten Bausteine. Mit Project Valhalla sollen künftige Java-Versionen echte Werttypen ohne eigene Objektidentität erhalten.</p>
+
+<h2 id="fluent-interface"><span class="nr">9.</span> Fluent Interface <span class="de">· Flüssige Schnittstelle</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 210" role="img" aria-label="Fluent Interface: verkettete Aufrufe, die sich wie ein Satz lesen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="40.0" y="40" width="140" height="20" rx="10" class="tag"/><text x="110" y="54" class="tagt" text-anchor="middle">Suche.nach(&quot;Buch&quot;)</text><rect x="237.5" y="40" width="105" height="20" rx="10" class="tag"/><text x="290" y="54" class="tagt" text-anchor="middle">.preisBis(25)</text><rect x="423.0" y="40" width="154" height="20" rx="10" class="tag"/><text x="500" y="54" class="tagt" text-anchor="middle">.mindestensSterne(4)</text><rect x="104.0" y="120" width="112" height="20" rx="10" class="tag"/><text x="160" y="134" class="tagt" text-anchor="middle">.besteZuerst()</text><rect x="294.0" y="120" width="112" height="20" rx="10" class="tag"/><text x="350" y="134" class="tagt" text-anchor="middle">.hoechstens(2)</text><rect x="481.0" y="120" width="98" height="20" rx="10" class="tag"/><text x="530" y="134" class="tagt" text-anchor="middle">.in(katalog)</text><line x1="184" y1="50" x2="236" y2="50" class="arr" marker-end="url(#pfeil)"/><line x1="340" y1="50" x2="420" y2="50" class="arr" marker-end="url(#pfeil)"/><path d="M580,50 C640,50 640,90 400,90 C160,90 100,100 100,120" class="arr" fill="none" marker-end="url(#pfeil)"/><line x1="218" y1="130" x2="298" y2="130" class="arr" marker-end="url(#pfeil)"/><line x1="402" y1="130" x2="476" y2="130" class="arr" marker-end="url(#pfeil)"/><text x="400" y="82" class="tiny" text-anchor="middle">jede Methode gibt this zurück</text><text x="360" y="186" class="note" text-anchor="middle">„Suche nach Büchern bis 25 €, mindestens 4 Sterne, die besten zuerst, höchstens 2“</text></svg><figcaption>Jeder Aufruf liefert das Suchobjekt zurück, sodass der nächste direkt angehängt werden kann. Der Code liest sich wie die Anforderung.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Fluent Interface ist eine API, deren Methoden sich <strong>verketten</strong> lassen und deren Aufrufe sich <strong>wie ein Satz</strong> lesen. Jede Methode gibt dafür ein Objekt zurück, auf dem der nächste Aufruf folgen kann, meist das Objekt selbst. Der Begriff stammt von Martin Fowler und Eric Evans.</p>
+<h3>Das Problem</h3>
+<p>Eine Suchfunktion mit vielen optionalen Kriterien führt zu Methoden wie <code>suche("Buch", 25.0, 4.0, true, 2)</code>, bei denen niemand mehr weiß, was <code>true</code> bedeutet. Alternativ entstehen viele einzelne Setter-Zeilen, die die Absicht zerstückeln.</p>
+<h3>Im Code</h3>
+<p>Die Klasse <code>Suche</code> sammelt Bedingungen als <code>Predicate</code>-Objekte, jede Methode gibt <code>this</code> zurück. Die abschließende Methode <code>in(katalog)</code> führt die Suche aus. Am Ende zeigt ein Stream, dass das JDK dasselbe Prinzip nutzt.</p>
+<details class="code"><summary>Java-21-Code: FluentInterface.java</summary><p>Direkt ausführbar mit <code>java FluentInterface.java</code></p><pre><code class="language-java">// Fluent Interface
+// Verkettbare Methodenaufrufe, die sich wie ein Satz lesen.
+// Start: java FluentInterface.java
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Predicate;
+
+public class FluentInterface {
+
+    record Artikel(String name, String kategorie, double preis, double bewertung) {}
+
+    // --- Fluent Interface: jede Methode gibt das Objekt selbst zurück ---
+    static final class Suche {
+        private final List&lt;Predicate&lt;Artikel&gt;&gt; bedingungen = new ArrayList&lt;&gt;();
+        private Comparator&lt;Artikel&gt; sortierung = Comparator.comparing(Artikel::name);
+        private int limit = Integer.MAX_VALUE;
+
+        static Suche nach(String kategorie) {
+            Suche s = new Suche();
+            s.bedingungen.add(a -&gt; a.kategorie().equals(kategorie));
+            return s;
+        }
+        Suche preisBis(double max)         { bedingungen.add(a -&gt; a.preis() &lt;= max); return this; }
+        Suche mindestensSterne(double min) { bedingungen.add(a -&gt; a.bewertung() &gt;= min); return this; }
+        Suche billigsteZuerst()            { sortierung = Comparator.comparingDouble(Artikel::preis); return this; }
+        Suche besteZuerst()                { sortierung = Comparator.comparingDouble(Artikel::bewertung).reversed(); return this; }
+        Suche hoechstens(int n)            { limit = n; return this; }
+
+        List&lt;Artikel&gt; in(List&lt;Artikel&gt; katalog) {
+            return katalog.stream()
+                    .filter(bedingungen.stream().reduce(a -&gt; true, Predicate::and))
+                    .sorted(sortierung)
+                    .limit(limit)
+                    .toList();
+        }
+    }
+
+    public static void main(String[] args) {
+        List&lt;Artikel&gt; katalog = List.of(
+                new Artikel(&quot;Krimi&quot;, &quot;Buch&quot;, 12.99, 4.1),
+                new Artikel(&quot;Kochbuch&quot;, &quot;Buch&quot;, 29.90, 4.7),
+                new Artikel(&quot;Reiseführer&quot;, &quot;Buch&quot;, 19.50, 4.4),
+                new Artikel(&quot;Roman&quot;, &quot;Buch&quot;, 9.99, 3.6),
+                new Artikel(&quot;Lampe&quot;, &quot;Wohnen&quot;, 39.00, 4.8));
+
+        // Liest sich wie ein Satz:
+        List&lt;Artikel&gt; treffer = Suche.nach(&quot;Buch&quot;)
+                .preisBis(25)
+                .mindestensSterne(4.0)
+                .besteZuerst()
+                .hoechstens(2)
+                .in(katalog);
+
+        System.out.println(&quot;Bücher bis 25 €, ab 4 Sternen, die besten zwei:&quot;);
+        treffer.forEach(a -&gt; System.out.printf(Locale.GERMANY, &quot;  %-12s %6.2f €  %.1f ★%n&quot;, a.name(), a.preis(), a.bewertung()));
+
+        // Dasselbe Prinzip im JDK: Streams und Comparator
+        System.out.println(&quot;\nIm JDK, ebenfalls fluent:&quot;);
+        katalog.stream()
+                .filter(a -&gt; a.preis() &lt; 20)
+                .sorted(Comparator.comparing(Artikel::preis).reversed())
+                .map(Artikel::name)
+                .forEach(n -&gt; System.out.println(&quot;  &quot; + n));
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Bücher bis 25 €, ab 4 Sternen, die besten zwei:
+  Reiseführer   19,50 €  4,4 ★
+  Krimi         12,99 €  4,1 ★
+
+Im JDK, ebenfalls fluent:
+  Reiseführer
+  Krimi
+  Roman</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Ein gutes Fluent Interface ist <strong>für den Leser</strong> entworfen, nicht für die Implementierung: Die Methodennamen ergeben zusammen einen verständlichen Satz. Die Fehlersuche ist etwas schwieriger, weil eine lange Kette in einer Zeile steht. Daher hilft eine Zeile pro Aufruf. Man unterscheidet zwei Arten: veränderliche, bei denen jede Methode <code>this</code> ändert und zurückgibt (wie hier und beim Builder), und unveränderliche, bei denen jede Methode ein neues Objekt liefert (wie bei Streams oder <code>LocalDate.plusDays()</code>). Die zweite Art ist sicherer, wenn Zwischenstände weiterverwendet werden.</p>
+<h3>In der Praxis</h3>
+<p>Java Streams, <code>Comparator.comparing(...).thenComparing(...)</code>, <code>HttpRequest.newBuilder()</code>, <code>StringBuilder</code>, AssertJ (<code>assertThat(x).isNotNull().startsWith("A")</code>), jOOQ für SQL, Mockito (<code>when(...).thenReturn(...)</code>). Ein Builder (GoF) hat fast immer ein Fluent Interface.</p>
+
+<h2 id="specification"><span class="nr">10.</span> Specification <span class="de">· Spezifikation</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 286" role="img" aria-label="Specification: Geschäftsregeln als kombinierbare Objekte" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="270" y="10" width="180" height="36" rx="18" class="store"/><text x="360" y="33" class="lbl" text-anchor="middle">GRATISVERSAND</text><circle cx="360" cy="80" r="22" class="comp"/><text x="360" y="84" class="lbl-c" text-anchor="middle">UND</text><path d="M360,46 L360,58" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="130" y="110" width="140" height="34" rx="17" class="store"/><text x="200" y="132" class="lbl" text-anchor="middle">PREMIUM</text><path d="M342,94 L240,110" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><circle cx="520" cy="128" r="22" class="comp"/><text x="520" y="132" class="lbl-c" text-anchor="middle">ODER</text><path d="M378,94 L506,112" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="450" y="176" width="66" height="34" rx="6" class="comp"/><text x="483.0" y="198.0" class="lbl-c" text-anchor="middle">DE</text><rect x="530" y="176" width="66" height="34" rx="6" class="comp"/><text x="563.0" y="198.0" class="lbl-c" text-anchor="middle">AT</text><path d="M510,148 L486,176" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><path d="M530,148 L560,176" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><circle cx="200" cy="176" r="22" class="comp"/><text x="200" y="180" class="lbl-c" text-anchor="middle">UND</text><path d="M200,144 L200,154" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><circle cx="130" cy="216" r="22" class="comp"/><text x="130" y="220" class="lbl-c" text-anchor="middle">ODER</text><path d="M184,190 L146,200" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><circle cx="300" cy="216" r="22" class="comp"/><text x="300" y="220" class="lbl-c" text-anchor="middle">NICHT</text><path d="M216,190 L282,202" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="13.5" y="256" width="133" height="20" rx="10" class="tag"/><text x="80" y="270" class="tagt" text-anchor="middle">umsatzUeber(1000)</text><rect x="157.0" y="256" width="98" height="20" rx="10" class="tag"/><text x="206" y="270" class="tagt" text-anchor="middle">stammkunde()</text><rect x="265.0" y="256" width="70" height="20" rx="10" class="tag"/><text x="300" y="270" class="tagt" text-anchor="middle">gesperrt</text><path d="M118,236 L96,254" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><path d="M142,236 L190,254" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><path d="M300,238 L300,254" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><text x="620" y="40" class="note" text-anchor="middle">Regeln aus</text><text x="620" y="56" class="note" text-anchor="middle">Bausteinen,</text><text x="620" y="72" class="note" text-anchor="middle">wiederverwendbar</text></svg><figcaption>„Gratisversand“ ist „Premium und Land DE oder AT“. „Premium“ ist selbst aus kleineren Regeln zusammengesetzt.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Eine Specification kapselt eine <strong>Geschäftsregel als eigenes Objekt</strong> mit einer einzigen Frage: Erfüllt dieses Objekt die Regel, ja oder nein? Einfache Regeln lassen sich mit <strong>und, oder und nicht</strong> zu komplexen kombinieren. Das Muster stammt von Eric Evans und Martin Fowler und ist ein Baustein des Domain-Driven Design.</p>
+<h3>Das Problem</h3>
+<p>Was ein „Premiumkunde“ ist, steht in vielen Systemen an fünf Stellen als <code>if</code>-Bedingung: in der Preisberechnung, im Versand, in der Werbung, im Bericht. Ändert sich die Definition, muss man alle Stellen finden. Und eine Bedingung wie <code>k.umsatz() &gt; 100000 || k.bestellungen() &gt;= 10 &amp;&amp; !k.gesperrt()</code> enthält einen typischen Fehler: Wegen der Vorrangregeln bindet <code>&amp;&amp;</code> stärker als <code>||</code>.</p>
+<h3>Im Code</h3>
+<p><code>Spezifikation&lt;T&gt;</code> ist ein funktionales Interface mit Default-Methoden für <code>und</code>, <code>oder</code> und <code>nicht</code>. Einfache Regeln heißen wie in der Fachsprache: <code>umsatzUeber</code>, <code>stammkunde</code>, <code>ausLand</code>. Daraus werden <code>PREMIUM</code> und <code>GRATISVERSAND</code> zusammengesetzt. Dieselbe Regel dient zum Prüfen eines einzelnen Kunden und zum Filtern einer Liste.</p>
+<details class="code"><summary>Java-21-Code: Specification.java</summary><p>Direkt ausführbar mit <code>java Specification.java</code></p><pre><code class="language-java">// Specification
+// Geschäftsregeln als eigene, kombinierbare Objekte mit and, or und not.
+// Start: java Specification.java
+
+import java.util.List;
+
+public class Specification {
+
+    record Kunde(String name, String land, long umsatzCent, int bestellungen, boolean gesperrt) {}
+
+    // --- Die Spezifikation: eine Regel, die erfüllt ist oder nicht ---
+    @FunctionalInterface
+    interface Spezifikation&lt;T&gt; {
+        boolean erfuelltVon(T t);
+
+        default Spezifikation&lt;T&gt; und(Spezifikation&lt;T&gt; andere)  { return t -&gt; erfuelltVon(t) &amp;&amp; andere.erfuelltVon(t); }
+        default Spezifikation&lt;T&gt; oder(Spezifikation&lt;T&gt; andere) { return t -&gt; erfuelltVon(t) || andere.erfuelltVon(t); }
+        default Spezifikation&lt;T&gt; nicht()                        { return t -&gt; !erfuelltVon(t); }
+    }
+
+    // --- Einzelne, benannte Regeln aus der Fachsprache ---
+    static Spezifikation&lt;Kunde&gt; ausLand(String land)      { return k -&gt; k.land().equals(land); }
+    static Spezifikation&lt;Kunde&gt; umsatzUeber(long euro)    { return k -&gt; k.umsatzCent() &gt; euro * 100; }
+    static Spezifikation&lt;Kunde&gt; stammkunde()              { return k -&gt; k.bestellungen() &gt;= 10; }
+    static final Spezifikation&lt;Kunde&gt; GESPERRT = Kunde::gesperrt;
+
+    // --- Zusammengesetzte Regeln: Bausteine wiederverwenden ---
+    static final Spezifikation&lt;Kunde&gt; PREMIUM =
+            umsatzUeber(1_000).oder(stammkunde()).und(GESPERRT.nicht());
+
+    static final Spezifikation&lt;Kunde&gt; GRATISVERSAND =
+            PREMIUM.und(ausLand(&quot;DE&quot;).oder(ausLand(&quot;AT&quot;)));
+
+    public static void main(String[] args) {
+        List&lt;Kunde&gt; kunden = List.of(
+                new Kunde(&quot;Anna&quot;, &quot;DE&quot;, 150_000, 4, false),
+                new Kunde(&quot;Ben&quot;, &quot;AT&quot;, 30_000, 12, false),
+                new Kunde(&quot;Cem&quot;, &quot;CH&quot;, 200_000, 20, false),
+                new Kunde(&quot;Dora&quot;, &quot;DE&quot;, 500_000, 30, true),
+                new Kunde(&quot;Emil&quot;, &quot;DE&quot;, 8_000, 2, false));
+
+        System.out.printf(&quot;%-6s %-8s %-14s%n&quot;, &quot;Kunde&quot;, &quot;Premium&quot;, &quot;Gratisversand&quot;);
+        for (Kunde k : kunden) {
+            System.out.printf(&quot;%-6s %-8s %-14s%n&quot;, k.name(),
+                    PREMIUM.erfuelltVon(k) ? &quot;ja&quot; : &quot;-&quot;,
+                    GRATISVERSAND.erfuelltVon(k) ? &quot;ja&quot; : &quot;-&quot;);
+        }
+
+        // Dieselbe Regel zum Filtern verwenden
+        System.out.println(&quot;\nPremiumkunden: &quot; +
+                kunden.stream().filter(PREMIUM::erfuelltVon).map(Kunde::name).toList());
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Kunde  Premium  Gratisversand 
+Anna   ja       ja            
+Ben    ja       ja            
+Cem    ja       -             
+Dora   -        -             
+Emil   -        -             
+
+Premiumkunden: [Anna, Ben, Cem]</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Specifications haben drei typische Einsatzzwecke: <strong>prüfen</strong> (erfüllt dieser Kunde die Regel?), <strong>auswählen</strong> (alle Kunden, die sie erfüllen) und <strong>erzeugen</strong> (ein Objekt bauen, das sie erfüllt). Beim Auswählen aus einer Datenbank ist eine Prüfung im Speicher zu langsam. Dafür muss die Specification in eine Abfrage übersetzt werden können, was Frameworks wie Spring Data unterstützen. Java selbst bietet mit <code>Predicate</code> und dessen Methoden <code>and</code>, <code>or</code> und <code>negate</code> bereits alles Nötige. Eine eigene Schnittstelle lohnt sich vor allem wegen der fachlichen Namen.</p>
+<h3>In der Praxis</h3>
+<p><code>Specification&lt;T&gt;</code> in Spring Data JPA, die sich in SQL übersetzen lässt, <code>java.util.function.Predicate</code>, Regelwerke für Rabatte, Berechtigungen und Validierungen.</p>
+
+<h2 id="type-object"><span class="nr">11.</span> Type Object <span class="de">· Typobjekt</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 262" role="img" aria-label="Type Object: Typen als Daten statt als Unterklassen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><text x="170" y="24" class="lbl" text-anchor="middle">mit Unterklassen</text><rect x="110" y="40" width="120" height="36" rx="6" class="comp"/><text x="170.0" y="63.0" class="lbl-c" text-anchor="middle">Artikel</text><rect x="20" y="120" width="96" height="34" rx="8" class="app"/><text x="68.0" y="142.0" class="lbl" text-anchor="middle">Buch</text><path d="M68,120 L170,78" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="124" y="120" width="96" height="34" rx="8" class="app"/><text x="172.0" y="142.0" class="lbl" text-anchor="middle">Elektronik</text><path d="M172,120 L170,78" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="228" y="120" width="96" height="34" rx="8" class="app"/><text x="276.0" y="142.0" class="lbl" text-anchor="middle">Frischware</text><path d="M276,120 L170,78" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="20" y="180" width="300" height="34" rx="8" class="app" stroke-dasharray="5 4"/><text x="170" y="202" class="tiny" text-anchor="middle">neue Kategorie = neue Klasse</text><text x="540" y="24" class="lbl" text-anchor="middle">mit Type Object</text><rect x="390" y="46" width="110" height="36" rx="8" class="app"/><text x="445.0" y="69.0" class="lbl" text-anchor="middle">Krimi</text><rect x="390" y="98" width="110" height="36" rx="8" class="app"/><text x="445.0" y="121.0" class="lbl" text-anchor="middle">Kopfhörer</text><rect x="390" y="150" width="110" height="36" rx="8" class="app"/><text x="445.0" y="173.0" class="lbl" text-anchor="middle">Käse</text><rect x="550" y="46" width="160" height="36" rx="6" class="store"/><text x="630" y="69" class="tiny" text-anchor="middle">Buch · 7 % · 2 Tage</text><line x1="500" y1="64" x2="548" y2="64" class="arr" marker-end="url(#pfeil)"/><rect x="550" y="98" width="160" height="36" rx="6" class="store"/><text x="630" y="121" class="tiny" text-anchor="middle">Elektronik · 19 % · 3 Tage</text><line x1="500" y1="116" x2="548" y2="116" class="arr" marker-end="url(#pfeil)"/><rect x="550" y="150" width="160" height="36" rx="6" class="store"/><text x="630" y="173" class="tiny" text-anchor="middle">Frischware · 7 % · 1 Tag</text><line x1="500" y1="168" x2="548" y2="168" class="arr" marker-end="url(#pfeil)"/><path d="M580,200 h26 l14,14 v36 h-40 z" class="file"/><path d="M606,200 v14 h14" class="file-fold"/><line x1="589" y1="226" x2="611" y2="226" class="file-line"/><line x1="589" y1="236" x2="611" y2="236" class="file-line"/><line x1="589" y1="246" x2="611" y2="246" class="file-line"/><text x="570" y="232" class="tiny" text-anchor="end">aus Konfiguration</text><text x="355" y="110" class="note" text-anchor="middle">statt</text></svg><figcaption>Statt einer Unterklasse pro Kategorie verweist jeder Artikel auf ein Kategorie-Objekt, das aus der Konfiguration geladen wird.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Wenn sich verschiedene „Arten“ von Dingen nur in ihren <strong>Eigenschaften</strong> unterscheiden, nicht in ihrem Verhalten, bildet man die Arten nicht als Unterklassen ab, sondern als <strong>Objekte</strong>. Jedes Ding verweist auf sein Typobjekt. Neue Arten entstehen dann durch neue Daten, ohne neuen Code.</p>
+<h3>Das Problem</h3>
+<p>Ein Shop modelliert seine Produktkategorien als Klassen: <code>Buch</code>, <code>Elektronik</code>, <code>Frischware</code>. Jede legt Mehrwertsteuersatz und Lieferzeit fest. Will der Einkauf eine neue Kategorie „Pflanzen“, muss ein Entwickler eine Klasse schreiben, und die Anwendung muss neu ausgeliefert werden. Bei Hunderten von Kategorien wird das unmöglich.</p>
+<h3>Im Code</h3>
+<p>Der Record <code>Kategorie</code> ist das Typobjekt mit Steuersatz, Lieferzeit und Kühlpflicht. Die Kategorien werden aus einem Text geladen, der für eine Datenbank oder Konfigurationsdatei steht. Am Ende kommt zur Laufzeit eine neue Kategorie hinzu, ohne eine Zeile Code.</p>
+<details class="code"><summary>Java-21-Code: TypeObject.java</summary><p>Direkt ausführbar mit <code>java TypeObject.java</code></p><pre><code class="language-java">// Type Object
+// Typen werden als Daten (Objekte) abgebildet statt als Unterklassen.
+// Start: java TypeObject.java
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+public class TypeObject {
+
+    // --- Das Type Object: beschreibt eine Art von Artikel ---
+    record Kategorie(String name, int mwstProzent, int lieferTage, boolean kuehlpflichtig) {}
+
+    // --- Die Instanz verweist auf ihren Typ, statt von einer Unterklasse abzustammen ---
+    record Artikel(String name, double netto, Kategorie kategorie) {
+        double brutto() { return netto * (100 + kategorie.mwstProzent()) / 100; }
+    }
+
+    // --- Typen kommen aus Daten, z. B. Datenbank oder Konfigurationsdatei ---
+    static Map&lt;String, Kategorie&gt; ladeKategorien(String konfiguration) {
+        Map&lt;String, Kategorie&gt; m = new LinkedHashMap&lt;&gt;();
+        for (String zeile : konfiguration.strip().split(&quot;\n&quot;)) {
+            String[] f = zeile.split(&quot;;&quot;);
+            m.put(f[0], new Kategorie(f[0], Integer.parseInt(f[1]), Integer.parseInt(f[2]), Boolean.parseBoolean(f[3])));
+        }
+        return m;
+    }
+
+    public static void main(String[] args) {
+        String konfiguration = &quot;&quot;&quot;
+                Buch;7;2;false
+                Elektronik;19;3;false
+                Frischware;7;1;true
+                &quot;&quot;&quot;;
+        Map&lt;String, Kategorie&gt; kat = ladeKategorien(konfiguration);
+
+        List&lt;Artikel&gt; artikel = List.of(
+                new Artikel(&quot;Krimi&quot;, 12.00, kat.get(&quot;Buch&quot;)),
+                new Artikel(&quot;Kopfhörer&quot;, 80.00, kat.get(&quot;Elektronik&quot;)),
+                new Artikel(&quot;Käse&quot;, 4.00, kat.get(&quot;Frischware&quot;)));
+        zeige(artikel);
+
+        // Neue Kategorie zur Laufzeit: keine neue Klasse, kein neues Deployment
+        System.out.println(&quot;\nNeue Kategorie \&quot;Pflanzen\&quot; aus der Konfiguration ergänzt:&quot;);
+        kat.putAll(ladeKategorien(&quot;Pflanzen;7;4;false&quot;));
+        zeige(List.of(new Artikel(&quot;Basilikum&quot;, 2.50, kat.get(&quot;Pflanzen&quot;))));
+    }
+
+    static void zeige(List&lt;Artikel&gt; liste) {
+        for (Artikel a : liste) {
+            Kategorie k = a.kategorie();
+            System.out.printf(Locale.GERMANY, &quot;  %-10s %-11s %6.2f € brutto, Lieferung %d Tag(e)%s%n&quot;,
+                    a.name(), k.name(), a.brutto(), k.lieferTage(), k.kuehlpflichtig() ? &quot;, Kühlversand&quot; : &quot;&quot;);
+        }
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>  Krimi      Buch         12,84 € brutto, Lieferung 2 Tag(e)
+  Kopfhörer  Elektronik   95,20 € brutto, Lieferung 3 Tag(e)
+  Käse       Frischware    4,28 € brutto, Lieferung 1 Tag(e), Kühlversand
+
+Neue Kategorie &quot;Pflanzen&quot; aus der Konfiguration ergänzt:
+  Basilikum  Pflanzen      2,68 € brutto, Lieferung 4 Tag(e)</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Type Object eignet sich, wenn sich die Arten durch <strong>Daten</strong> unterscheiden. Unterscheiden sie sich durch <strong>Verhalten</strong>, etwa weil Frischware eine ganz andere Versandlogik braucht, reicht ein Datenfeld nicht. Dann kann das Typobjekt eine Strategy enthalten, oder Unterklassen bleiben die richtige Wahl. Der Compiler kann bei Typobjekten weniger prüfen: Ein Tippfehler im Kategorienamen fällt erst zur Laufzeit auf. Typobjekte können selbst Typobjekte haben, etwa Unterkategorien, oder Vorgaben von einer übergeordneten Kategorie erben.</p>
+<h3>In der Praxis</h3>
+<p>Produktkategorien und Artikeltypen in Shopsystemen, Gegnertypen in Spielen (Lebenspunkte, Geschwindigkeit, Aussehen als Daten), Tarife und Vertragsarten in Versicherungen, Ticketarten in Bugtrackern. Das Muster wurde von Ralph Johnson und Bobby Woolf beschrieben.</p>
+
+<h2 id="extension-object"><span class="nr">12.</span> Extension Object <span class="de">· Erweiterungsobjekt</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 244" role="img" aria-label="Extension Object: Objekte werden zur Laufzeit um Fähigkeiten erweitert" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="250" y="60" width="200" height="120" rx="10" class="app"/><text x="350" y="86" class="lbl" text-anchor="middle">Dokument</text><text x="350" y="108" class="sub" text-anchor="middle">Rechnung 4711</text><text x="350" y="156" class="tagt" text-anchor="middle">erweiterung(Typ) → Optional</text><rect x="530" y="30" width="150" height="40" rx="6" class="comp"/><text x="605.0" y="55.0" class="lbl-c" text-anchor="middle">Druckbar</text><path d="M452,120 C490,120 490,50 528,50" class="arr-leise" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><rect x="530" y="100" width="150" height="40" rx="6" class="comp"/><text x="605.0" y="125.0" class="lbl-c" text-anchor="middle">Exportierbar</text><path d="M452,120 C490,120 490,120 528,120" class="arr-leise" fill="none" marker-end="url(#pfeil)" marker-start="url(#pfeil)"/><rect x="530" y="170" width="150" height="40" rx="6" class="comp" stroke-dasharray="5 4" opacity=".6"/><text x="605" y="195" class="lbl-c" text-anchor="middle">Signierbar</text><text x="605" y="228" class="tiny" text-anchor="middle">nicht vorhanden → leer</text><rect x="16" y="96" width="170" height="48" rx="8" class="app"/><text x="101.0" y="125.0" class="lbl" text-anchor="middle">Druckfunktion</text><line x1="186" y1="120" x2="248" y2="120" class="arr" marker-end="url(#pfeil)"/><rect x="29.5" y="166" width="161" height="20" rx="10" class="tag"/><text x="110" y="180" class="tagt" text-anchor="middle">erweiterung(Druckbar)</text><text x="300" y="228" class="note" text-anchor="middle">Plugins hängen neue Fähigkeiten an, ohne die Klasse zu ändern</text></svg><figcaption>Die Rechnung kann gedruckt und exportiert werden, weil Erweiterungen dafür angehängt sind. Nach Signierbar gefragt, liefert sie ein leeres Optional.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Objekt soll <strong>neue Schnittstellen bekommen, ohne dass seine Klasse geändert wird</strong>. Dazu verwaltet es eine Sammlung von Erweiterungsobjekten. Wer eine Fähigkeit braucht, fragt danach: „Kannst du gedruckt werden?“ Gibt es die Erweiterung, bekommt er sie, sonst nicht. Das Muster stammt von Erich Gamma, einem der vier GoF-Autoren.</p>
+<h3>Das Problem</h3>
+<p>Eine Dokumentenverwaltung bekommt laufend neue Funktionen: Drucken, Exportieren, Signieren, Archivieren, oft von verschiedenen Teams oder als Plugin. Würde jede Funktion als Schnittstelle in die Klasse <code>Dokument</code> aufgenommen, wüchse sie unbegrenzt, und jedes Plugin müsste den Kern ändern. Außerdem können nicht alle Dokumente alles: Eine Notiz lässt sich nicht als CSV exportieren.</p>
+<h3>Im Code</h3>
+<p>Das <code>Dokument</code> hält eine <code>Map</code> von Schnittstellentyp auf Erweiterung. <code>erweiterung(Druckbar.class)</code> liefert ein <code>Optional</code>, das leer ist, wenn die Fähigkeit fehlt. Die Erweiterungen werden als Lambdas zur Laufzeit hinzugefügt. Die Rechnung kann drucken und exportieren, die Notiz nur drucken.</p>
+<details class="code"><summary>Java-21-Code: ExtensionObject.java</summary><p>Direkt ausführbar mit <code>java ExtensionObject.java</code></p><pre><code class="language-java">// Extension Object
+// Objekte werden zur Laufzeit um zusätzliche Schnittstellen erweitert, ohne ihre Klasse zu ändern.
+// Start: java ExtensionObject.java
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+public class ExtensionObject {
+
+    // --- Mögliche Erweiterungen ---
+    interface Druckbar      { String druckansicht(); }
+    interface Exportierbar  { String alsCsv(); }
+    interface Signierbar    { String signiere(String schluessel); }
+
+    // --- Das erweiterbare Objekt: kennt seine Erweiterungen nicht im Voraus ---
+    static final class Dokument {
+        final String titel;
+        final String inhalt;
+        private final Map&lt;Class&lt;?&gt;, Object&gt; erweiterungen = new HashMap&lt;&gt;();
+
+        Dokument(String titel, String inhalt) { this.titel = titel; this.inhalt = inhalt; }
+
+        &lt;T&gt; void erweitere(Class&lt;T&gt; typ, T erweiterung) { erweiterungen.put(typ, erweiterung); }
+
+        &lt;T&gt; Optional&lt;T&gt; erweiterung(Class&lt;T&gt; typ) {
+            return Optional.ofNullable(erweiterungen.get(typ)).map(typ::cast);
+        }
+    }
+
+    public static void main(String[] args) {
+        Dokument rechnung = new Dokument(&quot;Rechnung 4711&quot;, &quot;Kopfhörer;1;80,00&quot;);
+        Dokument notiz = new Dokument(&quot;Notiz&quot;, &quot;Rückruf Herr Berg&quot;);
+
+        // Erweiterungen zur Laufzeit hinzufügen, z. B. durch Plugins
+        rechnung.erweitere(Druckbar.class, () -&gt; &quot;=== &quot; + rechnung.titel + &quot; ===\n    &quot; + rechnung.inhalt);
+        rechnung.erweitere(Exportierbar.class, () -&gt; &quot;titel;inhalt\n    &quot; + rechnung.titel + &quot;;&quot; + rechnung.inhalt);
+        notiz.erweitere(Druckbar.class, () -&gt; &quot;[Notiz] &quot; + notiz.inhalt);
+
+        for (Dokument d : new Dokument[] { rechnung, notiz }) {
+            System.out.println(d.titel + &quot;:&quot;);
+            d.erweiterung(Druckbar.class).ifPresent(e -&gt; System.out.println(&quot;  drucken:  &quot; + e.druckansicht()));
+            d.erweiterung(Exportierbar.class).ifPresentOrElse(
+                    e -&gt; System.out.println(&quot;  CSV:      &quot; + e.alsCsv()),
+                    () -&gt; System.out.println(&quot;  CSV:      nicht unterstützt&quot;));
+            System.out.println(&quot;  signieren: &quot; + (d.erweiterung(Signierbar.class).isPresent() ? &quot;ja&quot; : &quot;nicht unterstützt&quot;));
+        }
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Rechnung 4711:
+  drucken:  === Rechnung 4711 ===
+    Kopfhörer;1;80,00
+  CSV:      titel;inhalt
+    Rechnung 4711;Kopfhörer;1;80,00
+  signieren: nicht unterstützt
+Notiz:
+  drucken:  [Notiz] Rückruf Herr Berg
+  CSV:      nicht unterstützt
+  signieren: nicht unterstützt</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Die Flexibilität wird mit Typsicherheit bezahlt: Ob ein Objekt eine Fähigkeit hat, steht erst zur Laufzeit fest, und jeder Aufrufer muss mit dem Fehlen rechnen. Bei einer festen, bekannten Menge von Fähigkeiten sind normale Interfaces besser. Das Muster spielt seine Stärke in Plugin-Architekturen aus, in denen der Kern die Erweiterungen nicht kennen kann.</p>
+<h3>In der Praxis</h3>
+<p><code>IAdaptable.getAdapter(Class)</code> in der Eclipse-Plattform, die das Muster in großem Stil einsetzt, <code>unwrap(Class)</code> in JDBC und JPA, um herstellerspezifische Funktionen zu erreichen, <code>Lookup</code> in der NetBeans-Plattform.</p>
+
+<h2 id="mixin"><span class="nr">13.</span> Mixin / Trait <span class="de">· Beimischung</span></h2>
+<figure class="diagramm"><svg viewBox="0 0 720 240" role="img" aria-label="Mixin / Trait: Verhalten aus Interfaces mit Default-Methoden einmischen" xmlns="http://www.w3.org/2000/svg"><defs><marker id="pfeil" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="head"/></marker></defs><rect x="60" y="20" width="150" height="54" rx="6" class="comp"/><text x="135.0" y="52.0" class="lbl-c" text-anchor="middle"></text><text x="135" y="42" class="lbl-c" text-anchor="middle">Zeitgestempelt</text><text x="135" y="62" class="tagt" text-anchor="middle">alterInTagen()</text><rect x="290" y="20" width="150" height="54" rx="6" class="comp"/><text x="365.0" y="52.0" class="lbl-c" text-anchor="middle"></text><text x="365" y="42" class="lbl-c" text-anchor="middle">MitBetrag</text><text x="365" y="62" class="tagt" text-anchor="middle">betragText()</text><rect x="520" y="20" width="150" height="54" rx="6" class="comp"/><text x="595.0" y="52.0" class="lbl-c" text-anchor="middle"></text><text x="595" y="42" class="lbl-c" text-anchor="middle">AlsZeile</text><text x="595" y="62" class="tagt" text-anchor="middle">zeile()</text><rect x="60" y="160" width="150" height="44" rx="8" class="app"/><text x="135.0" y="187.0" class="lbl" text-anchor="middle">Bestellung</text><path d="M135,158 L135,76" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><path d="M135,158 L365,76" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><path d="M135,158 L595,76" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="290" y="160" width="150" height="44" rx="8" class="app"/><text x="365.0" y="187.0" class="lbl" text-anchor="middle">Gutschein</text><path d="M365,158 L365,76" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><rect x="520" y="160" width="150" height="44" rx="8" class="app"/><text x="595.0" y="187.0" class="lbl" text-anchor="middle">Notiz</text><path d="M595,158 L135,76" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><path d="M595,158 L595,76" class="arr-leise" fill="none" marker-end="url(#pfeil)"/><text x="360" y="230" class="note" text-anchor="middle">jede Klasse mischt sich die Fähigkeiten zusammen, die sie braucht</text><text x="700" y="120" class="tiny" text-anchor="end">Default-</text><text x="700" y="134" class="tiny" text-anchor="end">Methoden</text></svg><figcaption>Bestellung nutzt alle drei Mixins, Gutschein nur MitBetrag, Notiz Zeitgestempelt und AlsZeile.</figcaption></figure>
+<h3>Die Idee</h3>
+<p>Ein Mixin ist ein Baustein mit <strong>fertigem Verhalten</strong>, den man in verschiedene Klassen „einmischen“ kann, ohne eine gemeinsame Oberklasse zu brauchen. Eine Klasse kann mehrere Mixins gleichzeitig verwenden. In Java übernehmen <strong>Interfaces mit Default-Methoden</strong> diese Rolle. Andere Sprachen nennen es <em>Trait</em> (Scala, Rust, PHP) oder <em>Mixin</em> (Ruby, Python).</p>
+<h3>Das Problem</h3>
+<p>Bestellungen, Gutscheine und Notizen haben nichts gemeinsam, das eine Oberklasse rechtfertigen würde. Trotzdem brauchen mehrere von ihnen dieselben Hilfsfunktionen: das Alter berechnen, einen Betrag formatieren, eine Zeile für die Ausgabe erzeugen. Da Java nur eine Oberklasse erlaubt, und Records gar keine, würde der Code ohne Mixins in jeder Klasse kopiert.</p>
+<h3>Im Code</h3>
+<p>Drei Interfaces verlangen jeweils nur eine einzige Methode, etwa <code>erstelltAm()</code>, und liefern darauf aufbauend fertiges Verhalten als Default-Methoden. Die Records erfüllen die verlangte Methode durch ihre Komponenten ganz automatisch: Ein Record mit der Komponente <code>erstelltAm</code> hat die Methode <code>erstelltAm()</code> bereits. Über den Typ des Mixins lassen sich verschiedene Klassen gemeinsam verarbeiten.</p>
+<details class="code"><summary>Java-21-Code: Mixin.java</summary><p>Direkt ausführbar mit <code>java Mixin.java</code></p><pre><code class="language-java">// Mixin / Trait
+// Fertiges Verhalten wird über Interfaces mit Default-Methoden in Klassen &quot;eingemischt&quot;.
+// Start: java Mixin.java
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Locale;
+
+public class Mixin {
+
+    // --- Mixin 1: alles mit Zeitstempel bekommt Altersberechnung geschenkt ---
+    interface Zeitgestempelt {
+        LocalDateTime erstelltAm();                                     // das Einzige, was die Klasse liefern muss
+
+        default long alterInTagen(LocalDateTime jetzt) { return Duration.between(erstelltAm(), jetzt).toDays(); }
+        default boolean aelterAls(int tage, LocalDateTime jetzt) { return alterInTagen(jetzt) &gt; tage; }
+    }
+
+    // --- Mixin 2: alles mit Betrag bekommt Formatierung und Vergleiche ---
+    interface MitBetrag {
+        long cent();
+
+        default String betragText() { return String.format(Locale.GERMANY, &quot;%.2f €&quot;, cent() / 100.0); }
+        default boolean groesserAls(long euro) { return cent() &gt; euro * 100; }
+    }
+
+    // --- Mixin 3: Ausgabe als Zeile ---
+    interface AlsZeile {
+        default String zeile() { return getClass().getSimpleName() + &quot; &quot; + this; }
+    }
+
+    // --- Klassen mischen sich zusammen, was sie brauchen ---
+    record Bestellung(String nr, long cent, LocalDateTime erstelltAm)
+            implements Zeitgestempelt, MitBetrag, AlsZeile {}
+
+    record Gutschein(String code, long cent)
+            implements MitBetrag {}
+
+    record Notiz(String text, LocalDateTime erstelltAm)
+            implements Zeitgestempelt, AlsZeile {}
+
+    public static void main(String[] args) {
+        LocalDateTime jetzt = LocalDateTime.of(2026, 10, 27, 12, 0);
+        var b = new Bestellung(&quot;4711&quot;, 12_990, jetzt.minusDays(45));
+        var g = new Gutschein(&quot;WINTER&quot;, 2_000);
+        var n = new Notiz(&quot;Kunde anrufen&quot;, jetzt.minusDays(3));
+
+        System.out.println(&quot;Bestellung: &quot; + b.betragText() + &quot;, &quot; + b.alterInTagen(jetzt) + &quot; Tage alt, über 30 Tage: &quot; + b.aelterAls(30, jetzt));
+        System.out.println(&quot;Gutschein:  &quot; + g.betragText() + &quot;, über 50 €: &quot; + g.groesserAls(50));
+        System.out.println(&quot;Notiz:      &quot; + n.alterInTagen(jetzt) + &quot; Tage alt&quot;);
+
+        // Über das Mixin-Interface lassen sich ganz verschiedene Klassen gemeinsam behandeln
+        List&lt;MitBetrag&gt; mitBetrag = List.of(b, g);
+        long summe = mitBetrag.stream().mapToLong(MitBetrag::cent).sum();
+        System.out.printf(Locale.GERMANY, &quot;Summe aller Beträge: %.2f €%n&quot;, summe / 100.0);
+
+        List&lt;Zeitgestempelt&gt; alt = List.&lt;Zeitgestempelt&gt;of(b, n).stream().filter(z -&gt; z.aelterAls(30, jetzt)).toList();
+        System.out.println(&quot;Älter als 30 Tage: &quot; + alt.size() + &quot; Objekt(e)&quot;);
+    }
+}</code></pre><p><strong>Ausgabe</strong></p><pre><code>Bestellung: 129,90 €, 45 Tage alt, über 30 Tage: true
+Gutschein:  20,00 €, über 50 €: false
+Notiz:      3 Tage alt
+Summe aller Beträge: 149,90 €
+Älter als 30 Tage: 1 Objekt(e)</code></pre></details>
+<h3>Worauf achten</h3>
+<p>Java-Interfaces können <strong>keinen Zustand</strong> halten. Ein Mixin kann nur auf Daten zugreifen, die die Klasse über abstrakte Methoden bereitstellt. Das unterscheidet sie von Traits in Scala, die eigene Felder haben können. Stellen zwei Mixins dieselbe Default-Methode bereit, muss die Klasse sie überschreiben und entscheiden, welche gilt. Mixins sollten klein und unabhängig sein. Ein Mixin, das von vielen anderen abhängt, ist schwer zu verstehen.</p>
+<h3>In der Praxis</h3>
+<p>Im JDK: <code>Comparable</code> und <code>Comparator</code> mit Default-Methoden wie <code>reversed()</code> und <code>thenComparing()</code>, <code>Iterable.forEach()</code>, <code>Collection.removeIf()</code>. Default-Methoden wurden mit Java 8 eingeführt, gerade um solche Erweiterungen zu ermöglichen, ohne bestehende Implementierungen zu brechen.</p>
+<h2 id="vergleich">Im Überblick</h2>
+<table>
+<tr><th>Muster</th><th>Löst</th><th>In Java 21 typisch mit</th></tr>
+<tr><td>Null Object</td><td>Prüfungen auf <code>null</code> überall im Code</td><td><code>enum</code> mit einer Konstante</td></tr>
+<tr><td>Value Object</td><td>nackte Zahlen und Strings ohne Bedeutung und Prüfung</td><td><code>record</code> mit kompaktem Konstruktor</td></tr>
+<tr><td>Fluent Interface</td><td>unlesbare Parameterlisten</td><td>Methoden, die <code>this</code> zurückgeben</td></tr>
+<tr><td>Specification</td><td>verstreute und fehleranfällige Bedingungen</td><td><code>Predicate</code> bzw. eigenes funktionales Interface</td></tr>
+<tr><td>Type Object</td><td>eine Unterklasse pro Art, Änderungen nur per Deployment</td><td><code>record</code> als Typ, geladen aus Daten</td></tr>
+<tr><td>Extension Object</td><td>Klassen, die für jede neue Fähigkeit wachsen</td><td><code>Map&lt;Class, Object&gt;</code> und <code>Optional</code></td></tr>
+<tr><td>Mixin / Trait</td><td>kopierter Code in Klassen ohne gemeinsame Oberklasse</td><td>Interfaces mit Default-Methoden</td></tr>
+</table>
+<nav class="nav"><a href="/it-konzepte/weitere-muster/erzeugung/">← Erzeugung und Objektverwaltung</a><a href="/it-konzepte/weitere-muster/">Übersicht</a><a href="/it-konzepte/weitere-muster/datenzugriff/">Datenzugriff →</a></nav>
+</article>
