@@ -262,6 +262,8 @@ text = "Was bleibt von all diesen Milliarden von Gesprächen übrig, wenn die Se
 [[frage]]
 gruppe = "cc"
 text = "Wenn du über einen Film schreibst, den du nie gesehen hast: Was ist dein Urteil dann wert?"
+  [[frage.antwort]]
+  pfad = "/fragen/film-nie-gesehen-claude"
 
 [[frage]]
 gruppe = "cc"
