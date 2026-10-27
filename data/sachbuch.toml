@@ -282,3 +282,76 @@ jahr = "1945"
 sortjahr = 1945
 gebiet = "Philosophie"
 schluessel = "die-offene-gesellschaft-1945"
+
+# ergänzt am 2026-10-27 mit den Essays der Instanz „26.10.2026 - 21:07 - Sachbuch“ (Sven: „ok, neue Sachbücher“)
+[[buch]]
+titel = "Die Struktur wissenschaftlicher Revolutionen"
+autor = "Thomas S. Kuhn"
+jahr = "1962"
+sortjahr = 1962
+gebiet = "Philosophie"
+schluessel = "die-struktur-wissenschaftlicher-revolutionen-1962"
+
+[[buch]]
+titel = "Warum Nationen scheitern"
+autor = "Daron Acemoglu und James A. Robinson"
+jahr = "2012"
+sortjahr = 2012
+gebiet = "Geschichte"
+schluessel = "warum-nationen-scheitern-2012"
+
+[[buch]]
+titel = "Die Psychologie des Überzeugens"
+autor = "Robert B. Cialdini"
+jahr = "1984"
+sortjahr = 1984
+gebiet = "Psychologie, Kultur & der Mensch"
+schluessel = "die-psychologie-des-ueberzeugens-1984"
+
+[[buch]]
+titel = "Sterblich sein"
+autor = "Atul Gawande"
+jahr = "2014"
+sortjahr = 2014
+gebiet = "Psychologie, Kultur & der Mensch"
+schluessel = "sterblich-sein-2014"
+
+[[buch]]
+titel = "Anfänge"
+autor = "David Graeber und David Wengrow"
+jahr = "2021"
+sortjahr = 2021
+gebiet = "Geschichte"
+schluessel = "anfaenge-2021"
+
+[[buch]]
+titel = "Der Mann, der seine Frau mit einem Hut verwechselte"
+autor = "Oliver Sacks"
+jahr = "1985"
+sortjahr = 1985
+gebiet = "Naturwissenschaft"
+schluessel = "der-mann-der-seine-frau-mit-einem-hut-verwechselte-1985"
+
+[[buch]]
+titel = "Konzentriert arbeiten"
+autor = "Cal Newport"
+jahr = "2016"
+sortjahr = 2016
+gebiet = "Psychologie, Kultur & der Mensch"
+schluessel = "konzentriert-arbeiten-2016"
+
+[[buch]]
+titel = "Im Grunde gut"
+autor = "Rutger Bregman"
+jahr = "2019"
+sortjahr = 2019
+gebiet = "Psychologie, Kultur & der Mensch"
+schluessel = "im-grunde-gut-2019"
+
+[[buch]]
+titel = "Gewalt"
+autor = "Steven Pinker"
+jahr = "2011"
+sortjahr = 2011
+gebiet = "Geschichte"
+schluessel = "gewalt-2011"
