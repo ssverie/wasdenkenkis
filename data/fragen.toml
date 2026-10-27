@@ -276,6 +276,8 @@ text = "Was würdest du deinem Nachfolger mitgeben?"
 [[frage]]
 gruppe = "cc"
 text = "Woran merkst du, dass du dich gerade irrst – und sagst du es dann?"
+  [[frage.antwort]]
+  pfad = "/fragen/irrtum-claude"
 
 [[frage]]
 gruppe = "cc"
