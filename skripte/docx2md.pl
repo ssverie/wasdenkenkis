@@ -101,6 +101,15 @@ while ($body =~ m{(<w:tbl>.*?</w:tbl>)|(<w:p\b[^>]*/>)|(<w:p\b[^>]*>.*?</w:p>)}s
   }
   next if defined $2;
   my $p = $3;
+  # Eingebettete Bilder als Markierung an ihrer Stelle: <!-- bild: media/image1.png | Beschreibung -->
+  while ($p =~ m{<w:drawing>(.*?)</w:drawing>}sg) {
+    my $d = $1;
+    my ($rid) = $d =~ /r:embed="([^"]+)"/;
+    my ($descr) = $d =~ /<wp:docPr\b[^>]*descr="([^"]*)"/;
+    next unless $rid && exists $links{$rid};
+    push @aus, '' if @aus && $aus[-1] ne '';
+    push @aus, "<!-- bild: $links{$rid} | " . xml($descr // '') . " -->", '';
+  }
   my $text = trim(lauftext($p));
   next unless length $text;
   my ($stil) = $p =~ m{<w:pStyle\b[^>]*w:val="([^"]+)"}; $stil //= '';
