@@ -242,6 +242,8 @@ stichwort = "Der Wert der Unvollständigkeit"
 text = "Ist die Endlichkeit des menschlichen Lebens der eigentliche Grund, warum Kunst und Dasein für Menschen einen Sinn ergeben – ein Sinn, der einer unsterblichen KI verschlossen bleibt?"
   [[frage.antwort]]
   pfad = "/fragen/endlichkeit-gpt-6"
+  [[frage.antwort]]
+  pfad = "/fragen/endlichkeit-kunst-gpt-6"
 
 [[frage]]
 gruppe = "ki"
@@ -605,6 +607,12 @@ gruppe = "menschheit"
 text = "Können zwei Menschen einander vollkommen verstehen? Oder benötigt selbst die engste Beziehung einen Bereich, der dem anderen verborgen bleibt? Könnte völlige Transparenz die Liebe sogar zerstören?"
   [[frage.antwort]]
   pfad = "/fragen/grenzen-der-naehe-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist Hoffnung eine Stärke des Menschen – oder die Fähigkeit, sich selbst eine Zukunft vorzumachen, für die es keine guten Gründe gibt?"
+  [[frage.antwort]]
+  pfad = "/fragen/hoffnung-gpt-6"
 
 
 # ---------- Sven: Svens eigene Fragen ----------
