@@ -355,3 +355,20 @@ jahr = "2011"
 sortjahr = 2011
 gebiet = "Geschichte"
 schluessel = "gewalt-2011"
+
+# ergänzt am 2026-10-27 mit den Essays der Instanz „26.10.2026 - 21:07 - Sachbuch“ (Bloodlands stand schon in der Liste)
+[[buch]]
+titel = "Homo Deus"
+autor = "Yuval Noah Harari"
+jahr = "2015"
+sortjahr = 2015
+gebiet = "Geschichte"
+schluessel = "homo-deus-2015"
+
+[[buch]]
+titel = "Nexus"
+autor = "Yuval Noah Harari"
+jahr = "2024"
+sortjahr = 2024
+gebiet = "Geschichte"
+schluessel = "nexus-2024"
