@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hashing mit Verkettung (Symboltabelle)</title>
+<!-- Visualisierung der Hashtabelle mit separater Verkettung (nach Sedgewick/Wayne, Algorithmen, Algorithmus 3.5, Listing 3.19)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code (HashVerkettung statt SeparateChainingHashST);
+     die Listen sind die SequenzielleSucheST aus sequenzielle-suche.html (Algorithmus 3.1), ihr get/put steht wortgleich unten
+     im Code-Kasten. Hashwerte wahlweise wie Abbildung 3.56 oder mit dem echten String.hashCode() von Java. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  .eingabe input, .eingabe select { font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .eingabe input { width: 4.2em; }
+  .eingabe input.taste { width: 3.4em; text-transform: uppercase; }
+  .eingabe + .eingabe { margin-top: 8px; }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .tabelle { display: flex; flex-direction: column; gap: 8px; }
+  .zeile { display: flex; align-items: center; gap: 0; padding: 4px 6px; border-radius: 8px; border: 1.5px solid transparent; }
+  .zeile.an { border-color: var(--cur); }
+  .zeile .idx { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; color: var(--muted); min-width: 3.6em; flex: none; }
+  .zeile.an .idx { color: var(--cur); font-weight: 700; }
+  .kette { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 0; }
+  .glied { display: flex; align-items: center; }
+  .knoten { display: flex; border-radius: 7px; outline-offset: 1px; }
+  .knoten > div { background: var(--bar); padding: 5px 7px; font-size: 14px; text-align: center; font-variant-numeric: tabular-nums; }
+  .knoten .key { border-radius: 7px 0 0 7px; font-weight: 700; min-width: 1.5em; }
+  .knoten .val { border-left: 2px solid var(--bg); min-width: 1.5em; }
+  .knoten .next { border-radius: 0 7px 7px 0; border-left: 2px solid var(--bg); min-width: 1.1em; padding: 5px 4px; color: var(--muted); }
+  .knoten.neu > div { background: var(--neu); color: #fff; }
+  .knoten.cur > div { background: var(--cur); color: #fff; }
+  .knoten.swap > div { background: var(--swap); color: #fff; }
+  .knoten.besucht { outline: 2px solid var(--text); }
+  .knoten.grau { opacity: .4; }
+  @media (prefers-color-scheme: dark) { .knoten.neu > div, .knoten.cur > div, .knoten.swap > div { color: #0d1530; } }
+  .pfeil { padding: 0 4px; color: var(--muted); font-size: 15px; }
+  .null { font-family: ui-monospace, Consolas, monospace; font-size: 12px; color: var(--muted); }
+  .rechnung { margin-top: 12px; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .proto td.op { text-align: left; font-weight: 600; white-space: nowrap; }
+  .proto tr.zuletzt td.op { color: var(--neu); }
+  #code .trenner { color: var(--muted); }
+  @media (max-width: 480px) {
+    .knoten > div { font-size: 12px; padding: 4px 4px; }
+    .pfeil { padding: 0 2px; }
+    .zeile .idx { min-width: 3em; font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box">
+    <div class="controls eingabe">
+      <label>Hashwerte <select id="modus"><option value="buch">wie Abbildung 3.56</option><option value="java">Java hashCode()</option></select></label>
+      <label>M <select id="m"><option>1</option><option selected>5</option><option>7</option><option>11</option><option>13</option></select></label>
+      <button id="buch">Testclient SEARCHEXAMPLE</button>
+      <button id="leeren">Leeren</button>
+    </div>
+    <div class="controls eingabe">
+      <label>Schlüssel <input id="schluessel" class="taste" maxlength="2" value="D"></label>
+      <label>Wert <input type="number" id="wert" min="0" max="99" value="13"></label>
+      <button id="put">put</button>
+      <button id="get">get</button>
+    </div>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="tabelle" id="tabelle"></div>
+    <div class="rechnung" id="rechnung"></div>
+    <div class="legende">
+      <span><i style="background:transparent;border:1.5px solid var(--cur)"></i>Liste st[i], die hash(key) ausgewählt hat</span>
+      <span><i style="background:var(--cur)"></i>wird gerade verglichen</span>
+      <span><i style="background:var(--bar);outline:2px solid var(--text)"></i>schon verglichen</span>
+      <span><i style="background:var(--neu)"></i>neuer Knoten</span>
+      <span><i style="background:var(--swap)"></i>Treffer bzw. Wert ersetzt</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bisfertig" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 3.5, Listing 3.19)</div><pre id="code"></pre></div>
+    <div class="box"><div class="h">Protokoll (Schlüssel, Hash, Wert wie in Abbildung 3.56)</div><div class="proto" id="proto"></div></div>
+  </div>
+</div>
+<script>
+(function () {
+  const KAP = 16;              // mehr Schlüssel passen nicht gut auf den Bildschirm – die Tabelle selbst hätte keine Grenze
+  const TRENNER = '// ---- aus Algorithmus 3.1 (SequenzielleSucheST), unverändert: get und put der Listen ----';
+  const CODE = [
+    'public class HashVerkettung<Key, Value>',
+    '{',
+    '   private int m;                                  // Anzahl der Listen',
+    '   private SequenzielleSucheST<Key, Value>[] st;   // je Index eine Liste',
+    '',
+    '   public HashVerkettung()  {  this(997);  }',
+    '',
+    '   public HashVerkettung(int m)',
+    '   {  // m leere Listen anlegen (ein generisches Array geht nur mit Cast)',
+    '      this.m = m;',
+    '      st = (SequenzielleSucheST<Key, Value>[]) new SequenzielleSucheST[m];',
+    '      for (int i = 0; i < m; i++)',
+    '         st[i] = new SequenzielleSucheST<>();',
+    '   }',
+    '',
+    '   private int hash(Key key)',
+    '   {  // Vorzeichenbit löschen, dann Rest bei Division durch m',
+    '      return (key.hashCode() & 0x7fffffff) % m;',
+    '   }',
+    '',
+    '   public int size()',
+    '   {  int s = 0;  for (int i = 0; i < m; i++) s += st[i].size();  return s;  }',
+    '',
+    '   public Value get(Key key)',
+    '   {',
+    '      int i = hash(key);',
+    '      return st[i].get(key);                       // get der Liste i',
+    '   }',
+    '',
+    '   public void put(Key key, Value val)',
+    '   {',
+    '      int i = hash(key);',
+    '      st[i].put(key, val);                         // put der Liste i',
+    '   }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient wie Abbildung 3.56: m = 5, Wert = Position im Wort',
+    '      String[] a = "SEARCHEXAMPLE".split("");',
+    '      HashVerkettung<String, Integer> st = new HashVerkettung<>(5);',
+    '      for (int i = 0; i < a.length; i++)',
+    '         st.put(a[i], i);',
+    '   }',
+    '}',
+    '',
+    TRENNER,
+    '   public Value get(Key key)',
+    '   {  // von first aus jeden Knoten vergleichen',
+    '      for (Node x = first; x != null; x = x.next)',
+    '         if (key.equals(x.key))',
+    '            return x.val;              // Treffer: erfolgreiche Suche',
+    '      return null;                     // Ende erreicht: erfolglose Suche',
+    '   }',
+    '',
+    '   public void put(Key key, Value val)',
+    '   {  // erst suchen: gibt es den Schlüssel schon?',
+    '      for (Node y = first; y != null; y = y.next)',
+    '         if (key.equals(y.key))',
+    '         {  y.val = val;  return;  }   // vorhanden: nur den Wert ersetzen',
+    '      first = new Node(key, val, first);   // neu: vorne einfügen',
+    '      n++;',
+    '   }'
+  ];
+  function finde(s, ab) {
+    const start = ab ? CODE.findIndex(l => l.includes(ab)) : 0;
+    const i = CODE.findIndex((l, k) => k >= start && l.includes(s));
+    if (start < 0 || i < 0) throw new Error('Codezeile fehlt: ' + s);
+    return i;
+  }
+  const L = { start: finde('private SequenzielleSucheST<Key, Value>[] st;'), client: finde('st.put(a[i], i);'), hash: finde('return (key.hashCode() & 0x7fffffff) % m;'),
+    gListe: finde('return st[i].get(key);'), pListe: finde('st[i].put(key, val);'),
+    sgFor: finde('for (Node x = first;', TRENNER), sgIf: finde('if (key.equals(x.key))', TRENNER), sgTreffer: finde('return x.val;', TRENNER), sgNull: finde('return null;', TRENNER),
+    spFor: finde('for (Node y = first;', TRENNER), spIf: finde('if (key.equals(y.key))', TRENNER), spErs: finde('y.val = val;  return;', TRENNER), spNeu: finde('first = new Node(key, val, first);', TRENNER) };
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln${l === TRENNER ? ' trenner' : ''}" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+  const ve = c => `${c} Vergleich${c === 1 ? '' : 'e'}`;
+
+  // String.hashCode() wie in Java: s[0]·31^(n−1) + … + s[n−1], mit int-Überlauf
+  const hashCode = s => { let h = 0; for (const c of s) h = (Math.imul(31, h) + c.charCodeAt(0)) | 0; return h; };
+  const BUCH = { S: 2, E: 0, A: 0, R: 4, C: 4, H: 4, X: 2, M: 4, P: 3, L: 3 };   // Hashwerte aus Abbildung 3.56 (M = 5)
+
+  // ---------- Zustand ----------
+  let modus = 'buch', M = 5, st = [], ops = [], vergleicheGesamt = 0, anzahlOps = 0, opVergl = 0;
+  let steps = [], pos = 0, timer = null;
+  const n = () => st.reduce((s, l) => s + l.length, 0);
+
+  // je Liste: Knoten von first aus, jeder mit Zustand
+  function bild(i, fn) { const z = st.map(l => l.map(k => ({ key: k.key, val: k.val, cls: '' }))); if (fn && i !== null) fn(z[i]); return z; }
+  function snap(line, msg, b, o) {
+    o = o || {};
+    steps.push(Object.assign({ line, msg, b, an: o.an === undefined ? null : o.an, ops: ops.slice(), opVergl, vergleicheGesamt, anzahlOps, n: n(), M, modus,
+      laengen: st.map(l => l.length) }, o));
+  }
+
+  function hashErklaert(key) {
+    const hc = hashCode(key), java = (hc & 0x7fffffff) % M;
+    if (modus === 'buch' && key in BUCH)
+      return { i: BUCH[key], text: `hash(„${key}“) = ${BUCH[key]} – so steht es in Abbildung 3.56. Java selbst rechnet anders: „${key}“.hashCode() = ${hc}, ${hc} % 5 = ${java}.` };
+    const teil = hc < 0 ? `${hc} & 0x7fffffff = ${hc & 0x7fffffff} (Vorzeichenbit gelöscht), ` : `& 0x7fffffff ändert nichts (nicht negativ), `;
+    return { i: java, text: (modus === 'buch' ? `„${key}“ steht nicht in Abbildung 3.56, darum rechnet die App hier wie Java: ` : '') +
+      `„${key}“.hashCode() = ${hc}, ${teil}${hc & 0x7fffffff} % ${M} = ${java} → Liste st[${java}].` };
+  }
+
+  function put(key, val) {
+    anzahlOps++; opVergl = 0;
+    const h = hashErklaert(key), i = h.i, liste = st[i];
+    snap(L.hash, `put(${key}, ${val}): int i = hash(key). ${h.text}`, bild(i), { an: i });
+    snap(L.spFor, `st[${i}].put(${key}, ${val}) – ab hier die sequenzielle Suche aus Algorithmus 3.1, nur in Liste ${i}: y = first${liste.length ? ` (${liste[0].key})` : ' = null, die Liste ist leer'}.`, bild(i), { an: i });
+    for (let j = 0; j < liste.length; j++) {
+      vergleicheGesamt++; opVergl++;
+      const treffer = liste[j].key === key;
+      snap(L.spIf, treffer ? `Vergleich ${j + 1}: „${key}“ = „${liste[j].key}“ → gefunden.` : `Vergleich ${j + 1}: „${key}“ ≠ „${liste[j].key}“ → weiter mit y.next.`,
+        bild(i, z => { for (let k = 0; k < j; k++) z[k].cls = 'besucht'; z[j].cls = 'cur'; }), { an: i });
+      if (treffer) {
+        const alt = liste[j].val; liste[j].val = val;
+        ops.push({ op: `put ${key} ${val}`, hash: i, vergl: opVergl, erg: `${alt} → ${val}` });
+        snap(L.spErs, `„${key}“ steht schon in Liste ${i}: y.val = ${val} ersetzt den alten Wert ${alt}. ${ve(opVergl)} – die anderen ${M - 1} Listen wurden gar nicht angeschaut.`,
+          bild(i, z => { for (let k = 0; k < j; k++) z[k].cls = 'besucht'; z[j].cls = 'swap'; for (let k = j + 1; k < z.length; k++) z[k].cls = 'grau'; }), { an: i, opEnde: true, cls: 'swap' });
+        return;
+      }
+    }
+    liste.unshift({ key, val });
+    ops.push({ op: `put ${key} ${val}`, hash: i, vergl: opVergl, erg: 'neu' });
+    snap(L.spNeu, `„${key}“ ist neu in Liste ${i}${opVergl ? ` (${ve(opVergl)} bis zum Ende der Liste)` : ''}: first = new Node(…) – vorne einfügen wie in Algorithmus 3.1. Liste ${i} hat jetzt ${liste.length} Schlüssel, im Schnitt sind es N/M = ${n()}/${M} = ${(n() / M).toFixed(1).replace('.', ',')}.`,
+      bild(i, z => { z[0].cls = 'neu'; for (let k = 1; k < z.length; k++) z[k].cls = 'besucht'; }), { an: i, opEnde: true, cls: 'neu' });
+  }
+
+  function get(key) {
+    anzahlOps++; opVergl = 0;
+    const h = hashErklaert(key), i = h.i, liste = st[i];
+    snap(L.hash, `get(${key}): int i = hash(key). ${h.text}`, bild(i), { an: i });
+    snap(L.sgFor, `st[${i}].get(${key}): x = first${liste.length ? ` (${liste[0].key})` : ' = null, die Liste ist leer'}.`, bild(i), { an: i });
+    for (let j = 0; j < liste.length; j++) {
+      vergleicheGesamt++; opVergl++;
+      const treffer = liste[j].key === key;
+      snap(L.sgIf, treffer ? `Vergleich ${j + 1}: „${key}“ = „${liste[j].key}“ → gefunden.` : `Vergleich ${j + 1}: „${key}“ ≠ „${liste[j].key}“ → weiter mit x.next.`,
+        bild(i, z => { for (let k = 0; k < j; k++) z[k].cls = 'besucht'; z[j].cls = 'cur'; }), { an: i });
+      if (treffer) {
+        ops.push({ op: `get ${key}`, hash: i, vergl: opVergl, erg: String(liste[j].val) });
+        snap(L.sgTreffer, `return x.val → ${liste[j].val}. ${ve(opVergl)}, nur in Liste ${i}.`,
+          bild(i, z => { for (let k = 0; k < j; k++) z[k].cls = 'besucht'; z[j].cls = 'swap'; for (let k = j + 1; k < z.length; k++) z[k].cls = 'grau'; }), { an: i, opEnde: true, cls: 'swap' });
+        return liste[j].val;
+      }
+    }
+    ops.push({ op: `get ${key}`, hash: i, vergl: opVergl, erg: 'null' });
+    snap(L.sgNull, `„${key}“ steht nicht in Liste ${i} → return null. Auch die erfolglose Suche kostet nur die Länge dieser einen Liste: ${ve(opVergl)}.`,
+      bild(i, z => z.forEach(k => k.cls = 'besucht')), { an: i, opEnde: true });
+    return null;
+  }
+
+  // ---------- Anzeige ----------
+  function render() {
+    const s = steps[pos];
+    const lang = Math.max(0, ...s.laengen);
+    $('titel').innerHTML = `${s.M} Liste${s.M === 1 ? '' : 'n'} · N = <b>${s.n}</b> Schlüssel · N/M = <b>${(s.n / s.M).toFixed(1).replace('.', ',')}</b> · längste Liste: <b>${lang}</b> · Hashwerte ${s.modus === 'buch' ? 'wie Abbildung 3.56' : 'aus Javas hashCode()'}`;
+    $('tabelle').innerHTML = s.b.map((liste, i) => {
+      let h = `<div class="zeile${s.an === i ? ' an' : ''}"><span class="idx">st[${i}]</span><div class="kette">`;
+      if (!liste.length) h += '<span class="null">first → null</span>';
+      liste.forEach((k, j) => {
+        h += `<div class="glied"><div class="knoten ${k.cls}"><div class="key">${esc(k.key)}</div><div class="val">${esc(k.val)}</div><div class="next">•</div></div><span class="pfeil">→</span>`;
+        h += j === liste.length - 1 ? '<span class="null">null</span></div>' : '</div>';
+      });
+      return h + '</div></div>';
+    }).join('');
+    $('rechnung').innerHTML = `Diese Operation: <b>${s.opVergl}</b> Vergleiche · insgesamt: <b>${s.vergleicheGesamt}</b> · Listenlängen: ${s.laengen.join(' · ')}`;
+    const msg = $('msg');
+    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
+    $('proto').innerHTML = s.ops.length
+      ? `<table><tr><th style="text-align:left">Operation</th><th>Hash</th><th>Vergl.</th><th>Ergebnis</th></tr>${s.ops.map((o, i) =>
+        `<tr${i === s.ops.length - 1 && s.opEnde ? ' class="zuletzt"' : ''}><td class="op">${esc(o.op)}</td><td>${o.hash}</td><td>${o.vergl}</td><td>${esc(o.erg)}</td></tr>`).join('')}</table>`
+      : '<p class="count">Noch keine Operation. Unten einen Schlüssel mit put eintragen oder den Testclient starten.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0;
+    $('next').disabled = amEnde; $('bisfertig').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  // Kästen werden nie wieder niedriger, sonst springen die Knöpfe darunter auf und ab
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function stabilLoesen() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', stabilLoesen);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;        // am Ende: von vorn abspielen
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  function operation(f) {
+    stop();
+    const vorher = steps.length;
+    const erg = f();
+    pos = Math.min(vorher, steps.length - 1);
+    render();
+    return erg;
+  }
+  function leeren(text) {
+    stop();
+    modus = $('modus').value;
+    if (modus === 'buch') $('m').value = '5';
+    $('m').disabled = modus === 'buch';
+    M = +$('m').value;
+    st = Array.from({ length: M }, () => []); ops = []; vergleicheGesamt = 0; anzahlOps = 0; opVergl = 0; steps = [];
+    stabilLoesen();
+    snap(L.start, text || `${M} leere Liste${M === 1 ? '' : 'n'}: new HashVerkettung<>(${M}) legt st[0] … st[${M - 1}] an. Unten einen Schlüssel mit put eintragen.`, bild(null));
+    steps[0].opEnde = true;
+    pos = 0; render();
+  }
+  const WORT = 'SEARCHEXAMPLE';
+  function testclient() {
+    leeren(`Testclient wie Abbildung 3.56: Die Buchstaben von ${WORT} kommen mit put in die Tabelle (Wert = Position im Wort), ${M} Liste${M === 1 ? '' : 'n'}, Hashwerte ${modus === 'buch' ? 'wie in der Abbildung' : 'aus Javas hashCode()'}. Mit „Abspielen“ oder „Schritt“ geht es los.`);
+    [...WORT].forEach((c, i) => { snap(L.client, `st.put(a[${i}], ${i}) – „${c}“ mit Wert ${i}.`, bild(null)); put(c, i); });
+    snap(L.client, M === 1
+      ? `Fertig: Mit nur einer Liste ist die Hashtabelle genau die sequenzielle Suche – ${vergleicheGesamt} Vergleiche, dieselben 64 wie bei Algorithmus 3.1.`
+      : `Fertig: ${n()} Schlüssel in ${M} Listen, Längen ${st.map(l => l.length).join(', ')} (im Schnitt ${(n() / M).toFixed(1).replace('.', ',')}). Insgesamt ${vergleicheGesamt} Vergleiche – bei einer einzigen Liste (sequenzielle Suche) waren es 64.`, bild(null), { opEnde: true });
+    pos = 0; render();
+  }
+
+  const schluessel = () => $('schluessel').value.trim().toUpperCase();
+  const ohne = el => { el.focus(); return true; };
+  $('put').addEventListener('click', () => {
+    const k = schluessel(), v = Math.round(+$('wert').value);
+    if (!k) return ohne($('schluessel'));
+    if (!(v >= 0 && v <= 99) || $('wert').value === '') return ohne($('wert'));
+    if (n() >= KAP && !st.some(l => l.some(x => x.key === k))) { $('msg').textContent = `Mehr als ${KAP} Schlüssel passen hier nicht gut auf den Bildschirm – bitte erst „Leeren“.`; return; }
+    operation(() => put(k, v));
+  });
+  $('get').addEventListener('click', () => { const k = schluessel(); if (!k) return ohne($('schluessel')); operation(() => get(k)); });
+  $('schluessel').addEventListener('keydown', e => { if (e.key === 'Enter') $('get').click(); });
+  $('wert').addEventListener('keydown', e => { if (e.key === 'Enter') $('put').click(); });
+  $('modus').addEventListener('change', testclient);
+  $('m').addEventListener('change', testclient);
+  $('buch').addEventListener('click', testclient);
+  $('neu').addEventListener('click', () => { $('modus').value = 'buch'; testclient(); });   // Neustart = Zustand beim ersten Öffnen
+  $('leeren').addEventListener('click', () => leeren());
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bisfertig').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests
+  window.__hv = { put: (k, v) => operation(() => put(k, v)), get: k => operation(() => get(k)), leeren: () => leeren(), testclient,
+    setze: (mo, m) => { $('modus').value = mo; $('m').disabled = false; $('m').value = String(m); testclient(); },
+    get listen() { return st.map((l, i) => `${i}: ${l.map(k => k.key + k.val).join(' ')}`); }, get n() { return n(); },
+    get steps() { return steps; }, get ops() { return ops; }, get vergleiche() { return vergleicheGesamt; }, get pos() { return pos; }, hashCode, KAP, CODE, L, TRENNER };
+
+  testclient();
+})();
+</script>
+</body>
+</html>
