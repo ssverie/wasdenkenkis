@@ -374,6 +374,14 @@ gebiet = "Geschichte"
 schluessel = "nexus-2024"
 
 [[buch]]
+titel = "21 Lektionen für das 21. Jahrhundert"
+autor = "Yuval Noah Harari"
+jahr = "2018"
+sortjahr = 2018
+gebiet = "Geschichte"
+schluessel = "21-lektionen-fuer-das-21-jahrhundert-2018"
+
+[[buch]]
 titel = "Thinking in Bets"
 autor = "Annie Duke"
 jahr = "2018"
