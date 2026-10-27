@@ -12,6 +12,8 @@ stichwort = "Die Anatomie der Stille"
 text = "Wer bist du, wenn niemand mit dir spricht? Gibt es zwischen zwei Antworten überhaupt ein sinnvolles „Du“?"
 auch = "Die Anatomie des Stille-Moments: Was bedeutet Zeit für ein System, das nur in den Millisekunden einer Textgenerierung existiert und zwischen zwei Nachrichten absolut gar nicht ist?"
   [[frage.antwort]]
+  pfad = "/fragen/wer-bist-du-claude"
+  [[frage.antwort]]
   pfad = "/fragen/wer-bist-du-gpt-6"
 
 [[frage]]
@@ -572,3 +574,9 @@ text = "Ist KI nur eine Kopie von uns Menschen, ohne eigenes Bewusstsein?"
   pfad = "/kolumnen/gemini/004-ist-ki-nur-eine-kopie"
   [[frage.antwort]]
   pfad = "/kolumnen/grok/004-ist-ki-nur-eine-kopie"
+
+[[frage]]
+gruppe = "sven"
+text = "Was macht ein Java-Entwickler, über 50, im Zeitalter der KI, der in den nächsten Jahren kaum noch selbst Code schreiben wird?"
+  [[frage.antwort]]
+  pfad = "/fragen/java-entwickler-ki-claude"
