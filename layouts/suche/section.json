@@ -3,7 +3,7 @@
        damit auch Einträge ohne eigene Seite gefunden werden. Durchsucht wird im Browser (assets/js/suche.js). */ -}}
 {{- $eintraege := slice }}
 {{- range site.Pages }}
-  {{- if and .Title (in (slice "page" "section" "term") .Kind) (ne .Section "suche") }}
+  {{- if and .Title (in (slice "page" "section" "term") .Kind) (ne .Section "suche") (ne .Section "filmjahrzehnte") }}
     {{- $p := . }}
     {{- $rubrik := "" }}
     {{- with .Parent }}{{ if not .IsHome }}{{ $rubrik = .Title }}{{ end }}{{ end }}

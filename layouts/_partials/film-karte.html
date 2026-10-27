@@ -1,0 +1,10 @@
+{{- /* Eine Filmkarte (Filmliste nach Jahrzehnt): Titel, Regie, Original-/deutscher Titel, IMDb-Wertung, Zahl der Texte */ -}}
+{{- $film := . }}
+{{- $n := len .Pages }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .Title }}</strong>
+      <span>{{ with .Params.regie }}Regie: {{ . }}{{ end }}{{ if ne $film.LinkTitle $film.Params.originaltitel }} · Original: „{{ $film.Params.originaltitel }}“{{ else }}{{ with .Params.deutscher_titel }}{{ if ne . $film.Params.originaltitel }} · dt. „{{ . }}“{{ end }}{{ end }}{{ end }}</span>
+      <small>{{ with .Params.imdb_wertung }}IMDb {{ . }} · {{ end }}{{ if $n }}{{ $n }} {{ cond (eq $n 1) "Text" "Texte" }} von KIs{{ else }}noch kein Text{{ end }}</small>
+    </a>
+  </li>

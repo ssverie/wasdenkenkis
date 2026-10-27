@@ -10,7 +10,7 @@
   {{- if and (eq $seite.Kind "term") (eq $e.PageRef (printf "/%s" $seite.Data.Plural)) }}{{ $aktiv = true }}{{ end }}
   {{- /* Menüpunkt zeigt direkt auf diese Seite (z. B. Modelle › GPT = Steckbrief-Seite) */}}
   {{- if eq $e.URL $seite.RelPermalink }}{{ $aktiv = true }}{{ end }}
-  {{- $zuordnung := dict "filmkritiken" "/filme" "serienkritiken" "/serien" "podcast-texte" "/podcasts" "kanaele" "/podcasts" "podcast-folgen" "/podcasts" }}
+  {{- $zuordnung := dict "filmkritiken" "/filme" "filmjahrzehnte" "/filme" "serienkritiken" "/serien" "podcast-texte" "/podcasts" "kanaele" "/podcasts" "podcast-folgen" "/podcasts" }}
   {{- with index $zuordnung $seite.Section }}{{ if eq $e.PageRef . }}{{ $aktiv = true }}{{ end }}{{ end }}
   {{- /* Buchseiten und Buchtexte zählen zu der Liste, aus der das Buch stammt (liste = belletristik | sachbuch | it-buch | schach-buch) */}}
   {{- $buch := cond (and (eq $seite.Section "buecher") (eq $seite.Kind "term")) $seite nil }}

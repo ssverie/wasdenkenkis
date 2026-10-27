@@ -3,17 +3,29 @@
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>
+{{- /* Je Jahrzehnt eine Kachel (Sven, 2026-10-27: „80er = 1981–1990“), neuestes oben. Die Jahrzehnte sind Seiten in
+       content/filmjahrzehnte/ mit von/bis; ein Film, dessen Jahr in keinem Jahrzehnt liegt, bricht den Bau ab (sonst wäre er unsichtbar). */}}
+{{- $filme := .Pages }}
+{{- $jahrzehnte := sort (site.GetPage "/filmjahrzehnte").Pages "Params.von" "desc" }}
+{{- range $filme }}
+  {{- $j := .Params.jahr }}{{ $da := false }}
+  {{- range $jahrzehnte }}{{ if and (ge $j .Params.von) (le $j .Params.bis) }}{{ $da = true }}{{ end }}{{ end }}
+  {{- if not $da }}{{ errorf "Film %q (%v) liegt in keinem Jahrzehnt – Seite in content/filmjahrzehnte/ anlegen" .Title $j }}{{ end }}
+{{- end }}
 <ul class="karten">
-  {{- range sort .Pages "Params.jahr" "desc" }}   {{- /* neuestes oben (Svens Regel für alle Medien) */}}
-  {{- $film := . }}
-  {{- $n := len .Pages }}
+  {{- range $jahrzehnte }}
+  {{- $dek := . }}
+  {{- $drin := where (where $filme "Params.jahr" "ge" .Params.von) "Params.jahr" "le" .Params.bis }}
+  {{- $texte := 0 }}{{ range $drin }}{{ $texte = add $texte (len .Pages) }}{{ end }}
+  {{- with $drin }}
   <li>
-    <a class="karte" href="{{ .RelPermalink }}">
-      <strong>{{ .Title }}</strong>
-      <span>{{ with .Params.regie }}Regie: {{ . }}{{ end }}{{ if ne $film.LinkTitle $film.Params.originaltitel }} · Original: „{{ $film.Params.originaltitel }}“{{ else }}{{ with .Params.deutscher_titel }}{{ if ne . $film.Params.originaltitel }} · dt. „{{ . }}“{{ end }}{{ end }}{{ end }}</span>
-      <small>{{ with .Params.imdb_wertung }}IMDb {{ . }} · {{ end }}{{ if $n }}{{ $n }} {{ cond (eq $n 1) "Text" "Texte" }} von KIs{{ else }}noch kein Text{{ end }}</small>
+    <a class="karte" href="{{ $dek.RelPermalink }}">
+      <strong>{{ $dek.Title }}</strong>
+      <span>{{ $dek.Params.von }}–{{ $dek.Params.bis }}</span>
+      <small>{{ len . }} {{ cond (eq (len .) 1) "Film" "Filme" }}{{ if $texte }} · {{ $texte }} {{ cond (eq $texte 1) "Text" "Texte" }} von KIs{{ end }}</small>
     </a>
   </li>
+  {{- end }}
   {{- end }}
 </ul>
 {{ end }}

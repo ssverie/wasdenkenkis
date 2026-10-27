@@ -1,0 +1,18 @@
+{{- /* Filme eines Jahrzehnts (/filme/80er/ usw., Seiten in content/filmjahrzehnte/ mit von/bis): alle Filme mit jahr in von..bis, neuestes oben */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  {{- with site.GetPage "/filme" }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
+  <h1>{{ .Title }}</h1>
+  {{- with .Description }}
+  <p class="lead">{{ . }}</p>
+  {{- end }}
+</header>
+{{- $filme := where (where (site.GetPage "/filme").Pages "Params.jahr" "ge" .Params.von) "Params.jahr" "le" .Params.bis }}
+<ul class="karten">
+  {{- range sort $filme "Params.jahr" "desc" }}
+  {{- partial "film-karte.html" . }}
+  {{- else }}
+  <li>Noch keine Filme aus diesem Jahrzehnt.</li>
+  {{- end }}
+</ul>
+{{ end }}
