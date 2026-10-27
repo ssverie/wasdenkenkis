@@ -207,3 +207,36 @@ jahr = "1966"
 sortjahr = 1966
 gebiet = "Autobiografie, Zeugnis & Reportage"
 schluessel = "kaltbluetig-1966"
+
+# Nassim Nicholas Taleb – ergänzt am 2026-10-27 mit den vier Essays der Instanz „26.10.2026 - 21:07 - Sachbuch“ (Sven: „baue die 4 Sachbücher ein“)
+[[buch]]
+titel = "Narren des Zufalls"
+autor = "Nassim Nicholas Taleb"
+jahr = "2001"
+sortjahr = 2001
+gebiet = "Philosophie"
+schluessel = "narren-des-zufalls-2001"
+
+[[buch]]
+titel = "Der Schwarze Schwan"
+autor = "Nassim Nicholas Taleb"
+jahr = "2007"
+sortjahr = 2007
+gebiet = "Philosophie"
+schluessel = "der-schwarze-schwan-2007"
+
+[[buch]]
+titel = "Antifragilität"
+autor = "Nassim Nicholas Taleb"
+jahr = "2012"
+sortjahr = 2012
+gebiet = "Philosophie"
+schluessel = "antifragilitaet-2012"
+
+[[buch]]
+titel = "Das Risiko und sein Preis"
+autor = "Nassim Nicholas Taleb"
+jahr = "2018"
+sortjahr = 2018
+gebiet = "Philosophie"
+schluessel = "das-risiko-und-sein-preis-2018"
