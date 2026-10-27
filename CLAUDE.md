@@ -146,7 +146,7 @@ Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefä
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- Film-Platzhalter „Oppenheimer (2023)“ und „Drive My Car (2021)“ (IMDb-Daten vom 27.10.2026) und dafür die neue Kachel „2020er“ (2021–2030)
+- (leer – zuletzt freigegeben und gepusht am 2026-10-27: Oppenheimer und Drive My Car, Kachel 2020er)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
