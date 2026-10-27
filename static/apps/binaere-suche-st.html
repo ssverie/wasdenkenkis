@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binäre Suche im geordneten Array (Symboltabelle)</title>
+<!-- Visualisierung der Symboltabelle mit binärer Suche in einem geordneten Array (nach Sedgewick/Wayne, Algorithmen,
+     Algorithmus 3.2, Listings 3.5, 3.7, 3.8) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code
+     (BinaereSucheST statt BinarySearchST; ceiling mit Prüfung auf i == n, floor als eigene Lösung von Übung 3.1.17,
+     keys(von, bis) rechnet rank(bis) nur einmal aus); Testclient SEARCHEXAMPLE, rank-Protokoll wie Abbildung 3.6.
+     Aufbau wie die sequenzielle Suche (sequenzielle-suche.html). -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  .eingabe input { width: 4.2em; font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .eingabe input.taste { width: 3.4em; text-transform: uppercase; }
+  .eingabe + .eingabe { margin-top: 8px; }
+  .eingabe .wofuer { font-size: 13px; color: var(--muted); }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .feld { display: grid; gap: 3px; align-items: end; }
+  .feld .kopf { font-size: 12px; color: var(--muted); text-align: right; padding-right: 6px; font-family: ui-monospace, Consolas, monospace; align-self: center; }
+  .feld .idx { font-size: 10px; color: var(--muted); text-align: center; font-variant-numeric: tabular-nums; }
+  .feld .mk { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; min-height: 16px; }
+  .feld .mk span { font-size: 10px; line-height: 1; padding: 2px 3px; border-radius: 4px; background: var(--panel); border: 1px solid var(--line); color: var(--text); font-family: ui-monospace, Consolas, monospace; }
+  .feld .mk span.mid { border-color: var(--cur); color: var(--cur); font-weight: 700; }
+  .zelle { background: var(--bar); border-radius: 6px; text-align: center; padding: 6px 0; font-size: 14px; font-variant-numeric: tabular-nums; min-height: 1.3em; line-height: 1.3; overflow: hidden; border: 1.5px solid transparent; }
+  .zelle.k { font-weight: 700; }
+  .zelle.frei { background: transparent; border: 1.5px dashed var(--line); color: var(--muted); }
+  .zelle.blass { opacity: .35; }
+  .zelle.cur { background: var(--cur); color: #fff; }
+  .zelle.neu { background: var(--neu); color: #fff; }
+  .zelle.swap { background: var(--swap); color: #fff; }
+  .zelle s { opacity: .7; font-size: 11px; display: block; line-height: 1.1; }
+  @media (prefers-color-scheme: dark) {
+    .zelle.neu, .zelle.cur, .zelle.swap { color: #0d1530; }
+  }
+  .rechnung { margin-top: 12px; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .proto h4 { margin: 4px 0 6px; font-size: 13px; }
+  .proto h4 + p { margin: -2px 0 8px; font-size: 13px; color: var(--muted); }
+  .proto table + h4 { margin-top: 14px; }
+  .proto td.op { text-align: left; font-weight: 600; white-space: nowrap; }
+  .proto td.inhalt { text-align: left; font-family: ui-monospace, Consolas, monospace; font-size: 12px; white-space: nowrap; }
+  .proto td.inhalt span { padding: 0 1px; }
+  .proto td.b { font-family: ui-monospace, Consolas, monospace; font-size: 13px; padding: 2px 3px; }
+  .proto .p-neu { color: var(--neu); font-weight: 700; }
+  .proto .p-versch { color: var(--swap); }
+  .proto .p-ersetzt { color: var(--neu); font-weight: 700; border: 1.5px solid var(--neu); border-radius: 9px; padding: 0 3px; }
+  .proto .p-treffer { color: var(--swap); font-weight: 700; border: 1.5px solid var(--swap); border-radius: 9px; padding: 0 3px; }
+  .proto .p-mid { color: var(--cur); font-weight: 700; }
+  .proto .p-schwarz { color: var(--text); font-weight: 700; }
+  .proto .p-grau { color: var(--muted); opacity: .55; }
+  .proto tr.zuletzt td.op { color: var(--neu); }
+  @media (max-width: 480px) {
+    .zelle { font-size: 12px; padding: 5px 0; }
+    .feld .kopf { font-size: 10px; padding-right: 3px; }
+    .feld .mk span { font-size: 9px; padding: 1px 2px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box">
+    <div class="controls eingabe">
+      <label>Schlüssel <input id="schluessel" class="taste" maxlength="2" value="Q"></label>
+      <label>Wert <input type="number" id="wert" min="0" max="99" value="13"></label>
+      <button id="put">put</button>
+      <button id="get">get</button>
+      <button id="rank">rank</button>
+      <button id="buch">Testclient SEARCHEXAMPLE</button>
+      <button id="leeren">Leeren</button>
+    </div>
+    <div class="controls eingabe">
+      <span class="wofuer">Geordnet:</span>
+      <button id="min">min</button>
+      <button id="max">max</button>
+      <button id="ceiling">ceiling(Schlüssel)</button>
+      <button id="floor">floor(Schlüssel)</button>
+      <label>k <input type="number" id="k" min="0" max="11" value="3"></label>
+      <button id="select">select(k)</button>
+      <label>bis <input id="bis" class="taste" maxlength="2" value="P"></label>
+      <button id="keys">keys(Schlüssel, bis)</button>
+    </div>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="feld" id="feld"></div>
+    <div class="rechnung" id="rechnung"></div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>neu eingesetzt bzw. Wert ersetzt</span>
+      <span><i style="background:var(--cur)"></i>keys[mid] wird verglichen</span>
+      <span><i style="background:var(--swap)"></i>verschoben bzw. Ergebnis</span>
+      <span><i style="background:var(--bar);opacity:.35"></i>außerhalb von lo..hi</span>
+      <span><i style="background:transparent;border:1.5px dashed var(--line)"></i>frei (null)</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bisfertig" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 3.2, Listings 3.5, 3.7, 3.8)</div><pre id="code"></pre></div>
+    <div class="box"><div class="h">Protokoll</div><div class="proto" id="proto"></div></div>
+  </div>
+</div>
+<script>
+(function () {
+  const KAP = 12;              // feste Kapazität – die Größenanpassung (Algorithmus 1.1) lässt auch das Buch weg
+  const CODE = [
+    'public class BinaereSucheST<Key extends Comparable<Key>, Value>',
+    '{',
+    '   private Key[] keys;          // sortiert',
+    '   private Value[] vals;        // vals[i] gehört zu keys[i]',
+    '   private int n;              // Anzahl der Schlüssel',
+    '',
+    '   public BinaereSucheST(int kapazitaet)',
+    '   {  // ohne Größenanpassung (siehe Algorithmus 1.1)',
+    '      keys = (Key[]) new Comparable[kapazitaet];',
+    '      vals = (Value[]) new Object[kapazitaet];',
+    '   }',
+    '',
+    '   public int size()  {  return n;  }',
+    '',
+    '   public int rank(Key key)',
+    '   {  // Anzahl der Schlüssel, die kleiner als key sind',
+    '      int lo = 0, hi = n - 1;',
+    '      while (lo <= hi)',
+    '      {',
+    '         int mid = lo + (hi - lo) / 2;',
+    '         int cmp = key.compareTo(keys[mid]);',
+    '         if      (cmp < 0) hi = mid - 1;   // links weiter',
+    '         else if (cmp > 0) lo = mid + 1;   // rechts weiter',
+    '         else return mid;                  // gefunden',
+    '      }',
+    '      return lo;                           // nicht gefunden: Einfügestelle',
+    '   }',
+    '',
+    '   public Value get(Key key)',
+    '   {',
+    '      if (n == 0) return null;',
+    '      int i = rank(key);',
+    '      if (i < n && keys[i].compareTo(key) == 0) return vals[i];',
+    '      return null;',
+    '   }',
+    '',
+    '   public void put(Key key, Value val)',
+    '   {  // gefunden: Wert ersetzen; neu: größere Einträge nach rechts schieben',
+    '      int i = rank(key);',
+    '      if (i < n && keys[i].compareTo(key) == 0)',
+    '      {  vals[i] = val;  return;  }',
+    '      for (int j = n; j > i; j--)',
+    '      {  keys[j] = keys[j-1];  vals[j] = vals[j-1];  }',
+    '      keys[i] = key;  vals[i] = val;',
+    '      n++;',
+    '   }',
+    '',
+    '   public Key min()          {  return keys[0];  }',
+    '   public Key max()          {  return keys[n-1];  }',
+    '   public Key select(int k)  {  return keys[k];  }',
+    '',
+    '   public Key ceiling(Key key)',
+    '   {  // kleinster Schlüssel >= key',
+    '      int i = rank(key);',
+    '      if (i == n) return null;             // key größer als alle Schlüssel',
+    '      return keys[i];',
+    '   }',
+    '',
+    '   public Key floor(Key key)',
+    '   {  // größter Schlüssel <= key (im Buch Übung 3.1.17)',
+    '      int i = rank(key);',
+    '      if (i < n && keys[i].compareTo(key) == 0) return keys[i];',
+    '      if (i == 0) return null;             // key kleiner als alle Schlüssel',
+    '      return keys[i-1];',
+    '   }',
+    '',
+    '   public Iterable<Key> keys(Key von, Key bis)',
+    '   {  // alle Schlüssel von „von“ bis „bis“, gesammelt in einer Queue (Algorithmus 1.3)',
+    '      Queue<Key> q = new Queue<>();',
+    '      if (von.compareTo(bis) > 0) return q;  // leerer Bereich',
+    '      int b = rank(bis);                     // nur einmal ausrechnen',
+    '      for (int i = rank(von); i < b; i++)',
+    '         q.enqueue(keys[i]);',
+    '      if (b < n && keys[b].compareTo(bis) == 0)',
+    '         q.enqueue(keys[b]);                 // bis selbst gehört dazu',
+    '      return q;',
+    '   }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient: Wert = Position im Wort',
+    '      String[] a = "SEARCHEXAMPLE".split("");',
+    '      BinaereSucheST<String, Integer> st = new BinaereSucheST<>(12);',
+    '      for (int i = 0; i < a.length; i++)',
+    '         st.put(a[i], i);',
+    '   }',
+    '}'
+  ];
+  // Codezeile suchen (ab = Methodenkopf, ab dem gesucht wird; genau = ganze Zeile ohne Einrückung)
+  function finde(s, ab, genau) {
+    const start = ab ? CODE.findIndex(l => l.includes(ab)) : 0;
+    const i = CODE.findIndex((l, k) => k >= start && (genau ? l.trim() === s : l.includes(s)));
+    if (start < 0 || i < 0) throw new Error('Codezeile fehlt: ' + s);
+    return i;
+  }
+  const L = { start: finde('private Key[] keys;'),
+    rLoHi: finde('int lo = 0, hi = n - 1;'), rCmp: finde('int cmp = key.compareTo(keys[mid]);'), rMid: finde('else return mid;'), rLo: finde('return lo;'),
+    gLeer: finde('if (n == 0) return null;'), gIf: finde('return vals[i];'), gNull: finde('return null;', 'public Value get(', true),
+    pIf: finde('if (i < n && keys[i].compareTo(key) == 0)', 'public void put(', true), pErs: finde('vals[i] = val;  return;'),
+    pFor: finde('for (int j = n; j > i; j--)'), pShift: finde('keys[j] = keys[j-1];'), pSet: finde('keys[i] = key;  vals[i] = val;'), pN: finde('n++;'),
+    min: finde('public Key min()'), max: finde('public Key max()'), sel: finde('public Key select('),
+    cNull: finde('if (i == n) return null;'), cRet: finde('return keys[i];', 'public Key ceiling(', true),
+    fIf: finde('return keys[i];', 'public Key floor('), fNull: finde('if (i == 0) return null;'), fRet: finde('return keys[i-1];'),
+    kLeer: finde('if (von.compareTo(bis) > 0) return q;'), kBis: finde('int b = rank(bis);'), kFor: finde('for (int i = rank(von); i < b; i++)'),
+    kEnq: finde('q.enqueue(keys[i]);'), kIf: finde('if (b < n && keys[b].compareTo(bis) == 0)'), kEnqB: finde('q.enqueue(keys[b]);'), kRet: finde('return q;'),
+    client: finde('st.put(a[i], i);') };
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+  const vgl = (a, b) => a < b ? -1 : a > b ? 1 : 0;           // wie String.compareTo (nur das Vorzeichen zählt)
+  const grenze = n => n ? Math.floor(Math.log2(n)) + 1 : 0;   // höchstens so viele Vergleiche braucht rank
+  const ve = c => `${c} Vergleich${c === 1 ? '' : 'e'}`;
+
+  // Zustand
+  let keys = Array(KAP).fill(null), vals = Array(KAP).fill(null), n = 0;
+  let ops = [], rks = [], vergleicheGesamt = 0, verschobenGesamt = 0, anzahlOps = 0, opVergl = 0, opRank = 0, opVersch = 0;
+  let steps = [], pos = 0, timer = null;
+
+  // Momentaufnahme der Arrays: je Platz Klasse (Schlüssel und Wert), eigene Klasse für den Wert, alter Wert, Marken
+  function bild(fn) {
+    const z = keys.map(k => ({ cls: k === null ? 'frei' : '', vcls: '', alt: undefined, marken: [] }));
+    if (fn) fn(z);
+    return { k: keys.slice(), v: vals.slice(), z };
+  }
+  function snap(line, msg, b, o) {
+    steps.push(Object.assign({ line, msg, b, n, ops: ops.slice(), rks: rks.map(r => ({ ...r, zeilen: r.zeilen.slice() })),
+      opVergl, opRank, opVersch, vergleicheGesamt, verschobenGesamt, anzahlOps }, o));
+  }
+  function beginne() { anzahlOps++; opVergl = 0; opRank = 0; opVersch = 0; rks = []; }
+  function vergleich() { vergleicheGesamt++; opVergl++; }
+  // Protokollzeile: Tabelle nach der Operation, jeder Eintrag mit Zustand neu | versch | ersetzt | treffer
+  function protoOp(op, ergebnis, zustand) {
+    ops.push({ op, ergebnis, vergl: opVergl, versch: opVersch, n, inhalt: keys.slice(0, n).map((k, j) => ({ key: k, val: vals[j], z: zustand(j) })) });
+  }
+
+  // rank wie Listing 3.7: je Vergleich ein Schritt; rks bekommt die Zeilen für das Protokoll wie Abbildung 3.6
+  function rank(key, wozu) {
+    const r = { key, zeilen: [], ende: '', k: keys.slice(0, n) };
+    rks.push(r);
+    let lo = 0, hi = n - 1, c = 0;
+    const markiere = (z, lo, hi, mid) => {
+      for (let i = 0; i < n; i++) if (i < lo || i > hi) z[i].cls = 'blass';
+      if (mid !== undefined) z[mid].cls = 'cur';
+      if (lo >= 0 && lo < KAP) z[lo].marken.push('lo');
+      if (mid !== undefined) z[mid].marken.push('mid');
+      if (hi >= 0 && hi < KAP) z[hi].marken.push('hi');
+    };
+    snap(L.rLoHi, `${wozu}rank(${key}): lo = 0, hi = n − 1 = ${hi}.${n === 0 ? ' Die Tabelle ist leer – die Schleife läuft gar nicht.' : ' Gesucht wird zunächst im ganzen Array.'}`,
+      bild(z => markiere(z, lo, hi)), { zeiger: { lo, hi } });
+    while (lo <= hi) {
+      const mid = lo + Math.floor((hi - lo) / 2);
+      const cmp = vgl(key, keys[mid]);
+      vergleich(); opRank++; c++;
+      r.zeilen.push({ lo, hi, mid });
+      const folge = cmp < 0 ? `„${key}“ ist kleiner → links weiter: hi = mid − 1 = ${mid - 1}.`
+                  : cmp > 0 ? `„${key}“ ist größer → rechts weiter: lo = mid + 1 = ${mid + 1}.` : 'gleich → gefunden.';
+      snap(L.rCmp, `mid = lo + (hi − lo) / 2 = ${lo} + ${hi - lo} / 2 = ${mid}. Vergleich ${c}: „${key}“ mit keys[${mid}] = „${keys[mid]}“: ${folge}`,
+        bild(z => markiere(z, lo, hi, mid)), { zeiger: { lo, hi, mid } });
+      if (cmp < 0) hi = mid - 1;
+      else if (cmp > 0) lo = mid + 1;
+      else {
+        r.ende = `Schleife endet bei keys[mid] = ${key}: liefert ${mid}`;
+        snap(L.rMid, `return mid → ${mid}. „${key}“ steht an Index ${mid}, also sind genau ${mid} Schlüssel kleiner. ${ve(c)} in rank (höchstens ⌊lg ${n}⌋ + 1 = ${grenze(n)}).`,
+          bild(z => { markiere(z, lo, hi, mid); z[mid].cls = 'swap'; }), { zeiger: { lo, hi, mid } });
+        return mid;
+      }
+    }
+    if (n) r.zeilen.push({ lo, hi, mid: null });
+    r.ende = `Schleife endet bei lo > hi: liefert ${lo}`;
+    snap(L.rLo, n === 0 ? 'return lo → 0.'
+      : `lo = ${lo} > hi = ${hi}: Die Schleife endet ohne Treffer → return lo = ${lo}. Genau ${lo} Schlüssel sind kleiner als „${key}“, und an Index ${lo} gehört „${key}“ hin. ${ve(c)} in rank (höchstens ⌊lg ${n}⌋ + 1 = ${grenze(n)}).`,
+      bild(z => { for (let i = 0; i < n; i++) z[i].cls = 'blass'; if (lo < KAP) z[lo].marken.push('lo'); if (hi >= 0) z[hi].marken.push('hi'); }), { zeiger: { lo, hi } });
+    return lo;
+  }
+
+  function put(key, val) {
+    beginne();
+    const i = rank(key, `put(${key}, ${val}): Zuerst `);
+    const da = i < n && keys[i] === key;
+    if (i < n) vergleich();
+    snap(L.pIf, i < n
+      ? (da ? `i = ${i}: keys[${i}] = „${keys[i]}“ ist der gesuchte Schlüssel (compareTo liefert 0).`
+            : `i = ${i}: keys[${i}] = „${keys[i]}“ ≠ „${key}“ → „${key}“ ist neu und gehört an Index ${i}.`)
+      : `i = ${i} = n: „${key}“ ist größer als alle Schlüssel${n ? '' : ' (die Tabelle ist leer)'} und kommt ans Ende – kein Vergleich nötig, i < n ist schon falsch.`,
+      bild(z => { if (i < KAP) { z[i].marken.push('i'); if (i < n) z[i].cls = da ? 'swap' : 'cur'; } }));
+    if (da) {
+      const alt = vals[i];
+      vals[i] = val;
+      protoOp(`put ${key} ${val}`, `${alt} → ${val}`, j => j === i ? 'ersetzt' : '');
+      snap(L.pErs, `vals[${i}] = ${val} ersetzt den alten Wert ${alt}. Nichts wird verschoben, n bleibt ${n}.`,
+        bild(z => { z[i].vcls = 'neu'; z[i].alt = alt; z[i].marken.push('i'); }), { opEnde: true, cls: 'neu' });
+      return;
+    }
+    if (i === n) snap(L.pFor, `j = n = ${n} = i: Die Schleife läuft nicht – nichts zu verschieben.`, bild(z => { if (i < KAP) z[i].marken.push('i', 'j'); }));
+    for (let j = n; j > i; j--) {
+      keys[j] = keys[j - 1]; vals[j] = vals[j - 1];
+      verschobenGesamt++; opVersch++;
+      snap(L.pShift, `j = ${j}: keys[${j}] = keys[${j - 1}] („${keys[j]}“), vals[${j}] = vals[${j - 1}] (${vals[j]}) – eine Stelle nach rechts.` +
+        (j - 1 === i ? ` Damit ist Platz ${i} frei für „${key}“ (dort steht noch die alte Kopie von „${keys[i]}“).` : ''),
+        bild(z => { for (let m = j; m <= n; m++) z[m].cls = 'swap'; z[i].marken.push('i'); z[j].marken.push('j'); }));
+    }
+    keys[i] = key; vals[i] = val;
+    snap(L.pSet, `keys[${i}] = „${key}“, vals[${i}] = ${val}: Der neue Eintrag sitzt an seiner Stelle, die Schlüssel bleiben sortiert.`,
+      bild(z => { z[i].cls = 'neu'; for (let m = i + 1; m <= n; m++) z[m].cls = 'swap'; z[i].marken.push('i'); }));
+    n++;
+    protoOp(`put ${key} ${val}`, 'neu', j => j === i ? 'neu' : j > i ? 'versch' : '');
+    snap(L.pN, `n++ → n = ${n}. ${opVersch === 0 ? 'Nichts verschoben – der neue Schlüssel ist der größte.' : `${opVersch} Eintr${opVersch === 1 ? 'ag' : 'äge'} nach rechts verschoben – das Verschieben ist der teure Teil von put.`}`,
+      bild(z => { z[i].cls = 'neu'; for (let m = i + 1; m < n; m++) z[m].cls = 'swap'; }), { opEnde: true, cls: 'neu' });
+  }
+
+  function get(key) {
+    beginne();
+    if (n === 0) {
+      protoOp(`get ${key}`, 'null', () => '');
+      snap(L.gLeer, `get(${key}): Die Tabelle ist leer → return null, ohne einen einzigen Vergleich.`, bild(), { opEnde: true });
+      return null;
+    }
+    const i = rank(key, `get(${key}): `);
+    const da = i < n && keys[i] === key;
+    if (i < n) vergleich();
+    if (da) {
+      protoOp(`get ${key}`, String(vals[i]), j => j === i ? 'treffer' : '');
+      snap(L.gIf, `keys[${i}] = „${key}“ – gefunden: return vals[${i}] → ${vals[i]}.`,
+        bild(z => { z[i].cls = 'swap'; z[i].marken.push('i'); }), { opEnde: true, cls: 'swap' });
+      return vals[i];
+    }
+    snap(L.gIf, i < n ? `i = ${i}: keys[${i}] = „${keys[i]}“ ≠ „${key}“ → „${key}“ steht nicht in der Tabelle.`
+                      : `i = ${i} = n: „${key}“ ist größer als alle Schlüssel → steht nicht in der Tabelle.`,
+      bild(z => { if (i < n) { z[i].cls = 'cur'; z[i].marken.push('i'); } }));
+    protoOp(`get ${key}`, 'null', () => '');
+    snap(L.gNull, `Erfolglose Suche: return null. Dafür reichten ${ve(opRank)} in rank – die sequenzielle Suche hätte alle ${n} Schlüssel verglichen.`, bild(), { opEnde: true });
+    return null;
+  }
+
+  function rankOp(key) {
+    beginne();
+    const r = rank(key, '');
+    protoOp(`rank ${key}`, String(r), j => j === r && keys[j] === key ? 'treffer' : '');
+    steps[steps.length - 1].opEnde = true;
+    steps[steps.length - 1].ops = ops.slice();
+    return r;
+  }
+
+  function minMax(welche) {
+    beginne();
+    const line = welche === 'min' ? L.min : L.max;
+    if (n === 0) {
+      protoOp(`${welche}()`, welche === 'min' ? 'null' : 'Exception', () => '');
+      snap(line, welche === 'min' ? 'min(): Die Tabelle ist leer – keys[0] ist null, min() liefert null.'
+                                  : 'max(): Die Tabelle ist leer – keys[n − 1] wäre keys[−1] → ArrayIndexOutOfBoundsException.', bild(), { opEnde: true });
+      return null;
+    }
+    const i = welche === 'min' ? 0 : n - 1;
+    protoOp(`${welche}()`, keys[i], j => j === i ? 'treffer' : '');
+    snap(line, `${welche}(): return keys[${welche === 'min' ? '0' : 'n−1'}] → „${keys[i]}“. Kein einziger Vergleich – im sortierten Array steht der ${welche === 'min' ? 'kleinste Schlüssel vorn' : 'größte hinten'}.`,
+      bild(z => { z[i].cls = 'swap'; }), { opEnde: true, cls: 'swap' });
+    return keys[i];
+  }
+
+  function select(k) {
+    beginne();
+    if (k >= n) {
+      protoOp(`select(${k})`, 'null', () => '');
+      snap(L.sel, `select(${k}): keys[${k}] ist frei (null) – es gibt nur ${n} Schlüssel, Index ${k} ist zu groß.`, bild(z => { z[k].marken.push('k'); }), { opEnde: true });
+      return null;
+    }
+    protoOp(`select(${k})`, keys[k], j => j === k ? 'treffer' : '');
+    snap(L.sel, `select(${k}): return keys[${k}] → „${keys[k]}“, der Schlüssel mit Rang ${k} (genau ${k} Schlüssel sind kleiner). Kein Vergleich nötig.`,
+      bild(z => { z[k].cls = 'swap'; z[k].marken.push('k'); }), { opEnde: true, cls: 'swap' });
+    return keys[k];
+  }
+
+  function ceiling(key) {
+    beginne();
+    const i = rank(key, `ceiling(${key}): `);
+    if (i === n) {
+      protoOp(`ceiling ${key}`, 'null', () => '');
+      snap(L.cNull, `i = n = ${n}: „${key}“ ist größer als alle Schlüssel → return null. Im Buchcode fehlt diese Prüfung: Er läse keys[${n}] – ` +
+        (n < KAP ? 'hier ist der Platz frei, das Ergebnis wäre zufällig auch null; bei vollem Array liegt keys[n] dahinter → ArrayIndexOutOfBoundsException.' : 'das liegt hinter dem Array → ArrayIndexOutOfBoundsException.'),
+        bild(), { opEnde: true });
+      return null;
+    }
+    protoOp(`ceiling ${key}`, keys[i], j => j === i ? 'treffer' : '');
+    snap(L.cRet, `return keys[${i}] → „${keys[i]}“: der kleinste Schlüssel ≥ „${key}“. rank liefert genau diese Stelle, egal ob „${key}“ selbst in der Tabelle steht.`,
+      bild(z => { z[i].cls = 'swap'; z[i].marken.push('i'); }), { opEnde: true, cls: 'swap' });
+    return keys[i];
+  }
+
+  function floor(key) {
+    beginne();
+    const i = rank(key, `floor(${key}): `);
+    const da = i < n && keys[i] === key;
+    if (i < n) vergleich();
+    if (da) {
+      protoOp(`floor ${key}`, keys[i], j => j === i ? 'treffer' : '');
+      snap(L.fIf, `keys[${i}] = „${key}“: Der Schlüssel selbst steht in der Tabelle → return keys[${i}].`,
+        bild(z => { z[i].cls = 'swap'; z[i].marken.push('i'); }), { opEnde: true, cls: 'swap' });
+      return keys[i];
+    }
+    snap(L.fIf, i < n ? `i = ${i}: keys[${i}] = „${keys[i]}“ ≠ „${key}“ – „${key}“ selbst fehlt.` : `i = ${i} = n: „${key}“ selbst fehlt.`,
+      bild(z => { if (i < n) { z[i].cls = 'cur'; z[i].marken.push('i'); } }));
+    if (i === 0) {
+      protoOp(`floor ${key}`, 'null', () => '');
+      snap(L.fNull, `i = 0: Kein Schlüssel ist kleiner als „${key}“ → return null.`, bild(), { opEnde: true });
+      return null;
+    }
+    protoOp(`floor ${key}`, keys[i - 1], j => j === i - 1 ? 'treffer' : '');
+    snap(L.fRet, `return keys[${i - 1}] → „${keys[i - 1]}“: rank liefert die Einfügestelle, der Schlüssel links davon ist der größte ≤ „${key}“.`,
+      bild(z => { z[i - 1].cls = 'swap'; z[i - 1].marken.push('i−1'); }), { opEnde: true, cls: 'swap' });
+    return keys[i - 1];
+  }
+
+  function keysOp(von, bis) {
+    beginne();
+    const q = [];
+    vergleich();
+    if (vgl(von, bis) > 0) {
+      protoOp(`keys ${von} ${bis}`, '(leer)', () => '');
+      snap(L.kLeer, `keys(${von}, ${bis}): „${von}“ ist größer als „${bis}“ – der Bereich ist leer → return q (leer).`, bild(), { opEnde: true });
+      return q;
+    }
+    snap(L.kLeer, `keys(${von}, ${bis}): „${von}“ ≤ „${bis}“, der Bereich ist nicht leer.`, bild());
+    const b = rank(bis, 'Zuerst ');
+    snap(L.kBis, `b = rank(${bis}) = ${b}: So viele Schlüssel sind kleiner als „${bis}“. Der Wert wird nur einmal ausgerechnet (im Buch steht rank(hi) in der Schleifenbedingung und läuft in jeder Runde neu).`,
+      bild(z => { if (b < KAP) z[b].marken.push('b'); }));
+    const a = rank(von, 'Dann ');
+    const markeB = z => { if (b < KAP) z[b].marken.push('b'); };
+    if (a >= b) snap(L.kFor, `i = rank(${von}) = ${a} ≥ b = ${b}: Die Schleife läuft nicht.`, bild(markeB));
+    for (let i = a; i < b; i++) {
+      q.push(keys[i]);
+      snap(L.kEnq, `i = ${i}: q.enqueue(keys[${i}]) → „${keys[i]}“. q = [${q.join(' ')}]`,
+        bild(z => { for (let m = a; m <= i; m++) z[m].cls = 'swap'; z[i].marken.push('i'); markeB(z); }));
+    }
+    const da = b < n && keys[b] === bis;
+    if (b < n) vergleich();
+    const fertig = z => { for (let m = a; m < b; m++) z[m].cls = 'swap'; markeB(z); };
+    snap(L.kIf, b < n ? (da ? `keys[${b}] = „${bis}“: „${bis}“ steht selbst in der Tabelle und gehört dazu.` : `keys[${b}] = „${keys[b]}“ ≠ „${bis}“: „${bis}“ selbst steht nicht in der Tabelle.`)
+                      : `b = n: „${bis}“ ist größer als alle Schlüssel, steht also nicht in der Tabelle.`,
+      bild(z => { fertig(z); if (b < n) z[b].cls = da ? 'swap' : 'cur'; }));
+    if (da) {
+      q.push(bis);
+      snap(L.kEnqB, `q.enqueue(keys[${b}]) → „${bis}“. q = [${q.join(' ')}]`, bild(z => { fertig(z); z[b].cls = 'swap'; }));
+    }
+    protoOp(`keys ${von} ${bis}`, q.length ? q.join(' ') : '(leer)', j => (j >= a && j < b) || (da && j === b) ? 'treffer' : '');
+    snap(L.kRet, `return q → [${q.join(' ')}]: ${q.length} Schlüssel im Bereich „${von}“ bis „${bis}“, schon sortiert – ${ve(opVergl)}, egal wie groß die Tabelle ist, plus ein Schritt je Treffer.`,
+      bild(z => { fertig(z); if (da) z[b].cls = 'swap'; }), { opEnde: true, cls: 'swap' });
+    return q;
+  }
+
+  // ---------- Anzeige ----------
+  function render() {
+    const s = steps[pos];
+    const zg = s.zeiger ? ' · ' + ['lo', 'hi', 'mid'].filter(x => s.zeiger[x] !== undefined).map(x => `${x} = <b>${s.zeiger[x] < 0 ? '−' + -s.zeiger[x] : s.zeiger[x]}</b>`).join(' · ') : '';
+    $('titel').innerHTML = `Geordnetes Array · n = <b>${s.n}</b> von ${KAP} Plätzen · ${s.anzahlOps} Operation${s.anzahlOps === 1 ? '' : 'en'}${zg}`;
+    let h = '<span></span>' + s.b.z.map((_, i) => `<span class="idx">${i}</span>`).join('');
+    h += '<span></span>' + s.b.z.map(z => `<span class="mk">${z.marken.map(m => `<span class="${m === 'mid' ? 'mid' : ''}">${esc(m)}</span>`).join('')}</span>`).join('');
+    h += '<span class="kopf">keys[]</span>' + s.b.z.map((z, i) => `<span class="zelle k ${z.cls}">${s.b.k[i] === null ? '·' : esc(s.b.k[i])}</span>`).join('');
+    h += '<span class="kopf">vals[]</span>' + s.b.z.map((z, i) => `<span class="zelle ${z.vcls || z.cls}">${s.b.v[i] === null ? '·' : (z.alt !== undefined ? `<s>${esc(z.alt)}</s>` : '') + esc(s.b.v[i])}</span>`).join('');
+    $('feld').style.gridTemplateColumns = `auto repeat(${KAP}, minmax(0, 1fr))`;
+    $('feld').innerHTML = h;
+    $('rechnung').innerHTML = `Diese Operation: <b>${s.opVergl}</b> Vergleiche${s.opRank !== s.opVergl ? ` (davon in rank ${s.opRank})` : ''}, <b>${s.opVersch}</b> verschoben · insgesamt: <b>${s.vergleicheGesamt}</b> Vergleiche, <b>${s.verschobenGesamt}</b> verschoben`;
+    const msg = $('msg');
+    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
+    let p = '';
+    s.rks.forEach(r => {
+      p += `<h4>rank(${esc(r.key)}) – wie Abbildung 3.6</h4>`;
+      if (!r.k.length) { p += '<p>Leere Tabelle: lo = 0, hi = −1, die Schleife läuft nicht.</p>'; return; }
+      p += `<table><tr><th>lo</th><th>hi</th><th>mid</th>${r.k.map((_, i) => `<th>${i}</th>`).join('')}</tr>` + r.zeilen.map(z =>
+        `<tr><td>${z.lo}</td><td>${z.hi}</td><td>${z.mid === null ? '' : z.mid}</td>${r.k.map((k, i) =>
+          `<td class="b ${z.mid === i ? 'p-mid' : z.mid !== null && i >= z.lo && i <= z.hi ? 'p-schwarz' : 'p-grau'}">${esc(k)}</td>`).join('')}</tr>`).join('') + '</table>';
+      if (r.ende) p += `<p>${esc(r.ende)}</p>`;
+    });
+    p += s.ops.length
+      ? `<h4>Operationen</h4><table><tr><th style="text-align:left">Operation</th><th>Ergebnis</th><th>Vergl.</th><th>versch.</th><th style="text-align:left">keys[] mit vals[] danach</th></tr>${s.ops.map((o, i) =>
+        `<tr${i === s.ops.length - 1 && s.opEnde ? ' class="zuletzt"' : ''}><td class="op">${esc(o.op)}</td><td>${esc(o.ergebnis)}</td><td>${o.vergl}</td><td>${o.versch}</td><td class="inhalt">${o.inhalt.map(k => `<span class="p-${k.z}">${esc(k.key)}${esc(k.val)}</span>`).join(' ')}</td></tr>`).join('')}</table>`
+      : '<p class="count">Noch keine Operation. Oben einen Schlüssel mit put eintragen oder den Testclient starten.</p>';
+    $('proto').innerHTML = p;
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0;
+    $('next').disabled = amEnde; $('bisfertig').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  // Kästen werden nie wieder niedriger, sonst springen die Knöpfe darunter auf und ab
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  window.addEventListener('resize', () => ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }));
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;        // am Ende: von vorn abspielen
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  function operation(f) {
+    stop();
+    const vorher = steps.length;
+    const erg = f();
+    pos = Math.min(vorher, steps.length - 1);
+    render();
+    return erg;
+  }
+  function leeren(text) {
+    stop();
+    keys = Array(KAP).fill(null); vals = Array(KAP).fill(null); n = 0;
+    ops = []; rks = []; vergleicheGesamt = 0; verschobenGesamt = 0; anzahlOps = 0; opVergl = 0; opRank = 0; opVersch = 0; steps = [];
+    snap(L.start, text || `Leere Symboltabelle mit Platz für ${KAP} Schlüssel: n = 0. Oben einen Schlüssel mit put eintragen.`, bild(), { opEnde: true });
+    pos = 0; render();
+  }
+  const WORT = 'SEARCHEXAMPLE';
+  function testclient() {
+    leeren(`Testclient: Die Buchstaben von ${WORT} kommen nacheinander mit put in die Tabelle, der Wert ist jeweils die Position im Wort (S 0, E 1, A 2 …). Mit „Abspielen“ oder „Schritt“ geht es los.`);
+    [...WORT].forEach((c, i) => {
+      snap(L.client, `Testclient: st.put(a[${i}], ${i}) – „${c}“ mit Wert ${i}.`, bild(), { rks: [] });
+      put(c, i);
+    });
+    snap(L.client, `Fertig: ${WORT.length} Eingaben, ${n} verschiedene Schlüssel, sortiert: ${keys.slice(0, n).join(' ')}. Insgesamt ${vergleicheGesamt} Vergleiche (bei der sequenziellen Suche waren es 64) und ${verschobenGesamt} verschobene Einträge – Suchen ist billig geworden, das Verschieben kostet.`,
+      bild(), { opEnde: true, rks: [] });
+    pos = 0; render();
+  }
+
+  const schluessel = () => $('schluessel').value.trim().toUpperCase();
+  const ohne = (el) => { el.focus(); return true; };
+  function mitSchluessel(f) { const k = schluessel(); if (!k) return ohne($('schluessel')); operation(() => f(k)); }
+  $('put').addEventListener('click', () => {
+    const k = schluessel(), v = Math.round(+$('wert').value);
+    if (!k) return ohne($('schluessel'));
+    if (!(v >= 0 && v <= 99) || $('wert').value === '') return ohne($('wert'));
+    if (n >= KAP && !keys.includes(k)) { $('msg').textContent = `Das Array ist voll (${KAP} Plätze) – ohne Größenanpassung passt nichts mehr hinein. Bitte erst „Leeren“.`; return; }
+    operation(() => put(k, v));
+  });
+  $('get').addEventListener('click', () => mitSchluessel(get));
+  $('rank').addEventListener('click', () => mitSchluessel(rankOp));
+  $('ceiling').addEventListener('click', () => mitSchluessel(ceiling));
+  $('floor').addEventListener('click', () => mitSchluessel(floor));
+  $('min').addEventListener('click', () => operation(() => minMax('min')));
+  $('max').addEventListener('click', () => operation(() => minMax('max')));
+  $('select').addEventListener('click', () => {
+    const k = Math.round(+$('k').value);
+    if ($('k').value === '' || !(k >= 0 && k < KAP)) return ohne($('k'));
+    operation(() => select(k));
+  });
+  $('keys').addEventListener('click', () => {
+    const von = schluessel(), bis = $('bis').value.trim().toUpperCase();
+    if (!von) return ohne($('schluessel'));
+    if (!bis) return ohne($('bis'));
+    operation(() => keysOp(von, bis));
+  });
+  $('schluessel').addEventListener('keydown', e => { if (e.key === 'Enter') $('get').click(); });
+  $('wert').addEventListener('keydown', e => { if (e.key === 'Enter') $('put').click(); });
+  $('buch').addEventListener('click', testclient);
+  $('neu').addEventListener('click', testclient);   // Neustart = Zustand beim ersten Öffnen
+  $('leeren').addEventListener('click', () => leeren());
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bisfertig').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests
+  window.__bs = { put: (k, v) => operation(() => put(k, v)), get: k => operation(() => get(k)), rank: k => operation(() => rankOp(k)),
+    min: () => operation(() => minMax('min')), max: () => operation(() => minMax('max')), select: k => operation(() => select(k)),
+    ceiling: k => operation(() => ceiling(k)), floor: k => operation(() => floor(k)), keys: (a, b) => operation(() => keysOp(a, b)),
+    leeren: () => leeren(), testclient, get tabKeys() { return keys.slice(0, n); }, get tabVals() { return vals.slice(0, n); }, get n() { return n; },
+    get steps() { return steps; }, get ops() { return ops; }, get vergleiche() { return vergleicheGesamt; }, get verschoben() { return verschobenGesamt; },
+    get pos() { return pos; }, KAP, CODE, L };
+
+  testclient();
+})();
+</script>
+</body>
+</html>
