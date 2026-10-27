@@ -16,7 +16,7 @@
   .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 8px; }
   .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
   .baum-rahmen { overflow-x: auto; }
-  .baum-rahmen svg { display: block; width: 100%; height: auto; }
+  .baum-rahmen svg { display: block; width: 100%; height: auto; margin: 0 auto; }
   .baum-rahmen .leer { font-family: ui-monospace, Consolas, monospace; font-size: 13px; color: var(--muted); padding: 14px 0; }
   svg .kante { stroke: var(--muted); stroke-width: 1.6; }
   svg .knoten circle { fill: var(--bar); stroke: transparent; stroke-width: 2.5; }
@@ -643,7 +643,7 @@
     const pf = new Set(s.pfad), er = new Set(s.erg), mk = {};
     const linksKind = new Set(s.b.kn.map(k => k.l).filter(l => l !== null));   // dort läuft die Kante nach rechts oben – N kommt nach links
     s.marken.forEach(([id, m]) => (mk[id] = mk[id] || []).push(m));
-    let h = `<svg viewBox="0 0 ${breite} ${hoch}" style="min-width:${Math.max(i, 4) * 27}px" role="img" aria-label="Binärer Suchbaum">`;
+    let h = `<svg viewBox="0 0 ${breite} ${hoch}" style="min-width:${Math.max(i, 4) * 27}px;max-width:${breite}px" role="img" aria-label="Binärer Suchbaum">`;
     s.b.kn.forEach(k => [k.l, k.r].forEach(c => { if (c !== null) h += `<line class="kante" x1="${X(k.id)}" y1="${Y(k.id)}" x2="${X(c)}" y2="${Y(c)}"/>`; }));
     s.b.kn.forEach(k => {
       const cls = k.id === s.cur ? 'cur' : k.id === s.neu ? 'neu' : er.has(k.id) ? 'erg' : '';

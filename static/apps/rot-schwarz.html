@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rot-Schwarz-Baum (Symboltabelle)</title>
+<!-- Visualisierung des linksgerichteten Rot-Schwarz-Baums (nach Sedgewick/Wayne, Algorithmen, Algorithmus 3.4, Listing 3.16)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code (RotSchwarzBaum statt RedBlackBST, isRed,
+     rotateLeft, rotateRight und flipColors eigene Fassung – im Listing nur Verweise auf Abbildungen); Testclient SEARCHEXAMPLE
+     und aufsteigende Folge wie Abbildung 3.46. Darunter derselbe Baum als 2-3-Baum. Aufbau wie bst.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23f3f; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7b72; } }
+  .eingabe input { width: 4.2em; font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .eingabe input.taste { width: 3.4em; text-transform: uppercase; }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 8px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .baum-rahmen { overflow-x: auto; }
+  .baum-rahmen svg { display: block; width: 100%; height: auto; margin: 0 auto; }
+  .baum-rahmen .leer { font-family: ui-monospace, Consolas, monospace; font-size: 13px; color: var(--muted); padding: 14px 0; }
+  .zwischen { font-size: 13px; color: var(--muted); margin: 10px 0 4px; border-top: 1px solid var(--line); padding-top: 8px; }
+  svg .kante { stroke: var(--muted); stroke-width: 1.6; }
+  svg .kante.rot { stroke: var(--rot); stroke-width: 5; }
+  svg .kante.offen { stroke-dasharray: 5 4; }
+  svg .knoten circle { fill: var(--bar); stroke: transparent; stroke-width: 2.5; }
+  svg .knoten .k { font: 700 15px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten .v { font: 10px system-ui, sans-serif; fill: var(--muted); text-anchor: middle; }
+  svg .knoten .n { font: 10px ui-monospace, Consolas, monospace; fill: var(--muted); }
+  svg .knoten .m { font: 700 10px ui-monospace, Consolas, monospace; fill: var(--cur); text-anchor: middle; }
+  svg .knoten.pfad circle { stroke: var(--text); }
+  svg .knoten.cur circle { fill: var(--cur); }
+  svg .knoten.neu circle { fill: var(--neu); }
+  svg .knoten.erg circle { fill: var(--swap); }
+  svg .knoten.cur .k, svg .knoten.neu .k, svg .knoten.erg .k { fill: #fff; }
+  svg.zwei .box { fill: var(--bar); stroke: var(--line); stroke-width: 1.5; }
+  svg.zwei .box.vier { stroke: var(--rot); stroke-width: 2.5; stroke-dasharray: 5 3; }
+  svg.zwei .k { font: 700 14px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg.zwei .kante { stroke: var(--muted); stroke-width: 1.4; }
+  @media (prefers-color-scheme: dark) {
+    svg .knoten.cur .k, svg .knoten.neu .k, svg .knoten.erg .k { fill: #0d1530; }
+  }
+  .stapel { margin-top: 10px; font-size: 13px; }
+  .stapel .h2 { color: var(--muted); margin-bottom: 4px; }
+  .stapel ol { list-style: none; margin: 0; padding: 0; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+  .stapel li { padding: 2px 6px; border-left: 3px solid var(--line); margin-bottom: 2px; }
+  .stapel li.oben { border-left-color: var(--cur); color: var(--cur); font-weight: 700; }
+  .rechnung { margin-top: 10px; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .proto td.op { text-align: left; font-weight: 600; white-space: nowrap; }
+  .proto td.umbau { text-align: left; font-size: 12px; white-space: nowrap; }
+  .proto td.inhalt { text-align: left; font-family: ui-monospace, Consolas, monospace; font-size: 12px; white-space: nowrap; }
+  .proto .p-neu { color: var(--neu); font-weight: 700; }
+  .proto tr.zuletzt td.op { color: var(--neu); }
+  @media (max-width: 480px) { .stapel ol { font-size: 11.5px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box">
+    <div class="controls eingabe">
+      <label>Schlüssel <input id="schluessel" class="taste" maxlength="2" value="D"></label>
+      <label>Wert <input type="number" id="wert" min="0" max="99" value="13"></label>
+      <button id="put">put</button>
+      <button id="get">get</button>
+      <button id="buch">Testclient SEARCHEXAMPLE</button>
+      <button id="aufsteigend">Aufsteigend ACEHLMPRSX</button>
+      <button id="leeren">Leeren</button>
+    </div>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="baum-rahmen" id="baum"></div>
+    <div class="zwischen">Derselbe Baum als 2-3-Baum (rot verbundene Knoten = ein Knoten; rot gestrichelt = temporärer 4-Knoten):</div>
+    <div class="baum-rahmen" id="baum23"></div>
+    <div class="stapel" id="stapel"></div>
+    <div class="rechnung" id="rechnung"></div>
+    <div class="legende">
+      <span><i style="background:var(--rot)"></i>rote Referenz (klebt zwei Knoten zusammen)</span>
+      <span><i style="background:transparent;border-top:2px dashed var(--muted);height:0;margin-top:6px"></i>wird erst beim Rücksprung eingehängt</span>
+      <span><i style="background:var(--cur)"></i>h – um diesen Knoten geht es gerade</span>
+      <span><i style="background:var(--bar);outline:2px solid var(--text)"></i>schon verglichen</span>
+      <span><i style="background:var(--neu)"></i>neu eingefügt bzw. Wert ersetzt</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bisfertig" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 3.4, Listing 3.16)</div><pre id="code"></pre></div>
+    <div class="box"><div class="h">Protokoll</div><div class="proto" id="proto"></div></div>
+  </div>
+</div>
+<script>
+(function () {
+  const KAP = 16;              // mehr Knoten passen nicht gut auf den Bildschirm – der Baum selbst hätte keine Grenze
+  const CODE = [
+    'public class RotSchwarzBaum<Key extends Comparable<Key>, Value>',
+    '{',
+    '   private static final boolean RED   = true;',
+    '   private static final boolean BLACK = false;',
+    '   private Node root;',
+    '',
+    '   private class Node',
+    '   {',
+    '      Key key;  Value val;',
+    '      Node left, right;',
+    '      int N;                                  // Knoten im Teilbaum',
+    '      boolean color;                          // Farbe der Referenz vom Elternknoten',
+    '      Node(Key key, Value val, int N, boolean color)',
+    '      {  this.key = key;  this.val = val;  this.N = N;  this.color = color;  }',
+    '   }',
+    '',
+    '   private boolean isRed(Node x)',
+    '   {  return x != null && x.color == RED;  }   // null gilt als schwarz',
+    '   private int size(Node x)  {  return x == null ? 0 : x.N;  }',
+    '   public int size()  {  return size(root);  }',
+    '',
+    '   private Node rotateLeft(Node h)',
+    '   {  // rote Referenz h–x zeigt nach rechts: x wird Kopf, h sein linkes Kind',
+    '      Node x = h.right;',
+    '      h.right = x.left;',
+    '      x.left = h;',
+    '      x.color = h.color;',
+    '      h.color = RED;',
+    '      x.N = h.N;',
+    '      h.N = 1 + size(h.left) + size(h.right);',
+    '      return x;',
+    '   }',
+    '',
+    '   private Node rotateRight(Node h)',
+    '   {  // spiegelbildlich: rote Referenz h–x zeigt danach nach rechts',
+    '      Node x = h.left;',
+    '      h.left = x.right;',
+    '      x.right = h;',
+    '      x.color = h.color;',
+    '      h.color = RED;',
+    '      x.N = h.N;',
+    '      h.N = 1 + size(h.left) + size(h.right);',
+    '      return x;',
+    '   }',
+    '',
+    '   private void flipColors(Node h)',
+    '   {  // temporären 4-Knoten aufspalten: Kinder schwarz, h rot',
+    '      h.color = RED;',
+    '      h.left.color = BLACK;',
+    '      h.right.color = BLACK;',
+    '   }',
+    '',
+    '   public Value get(Key key)',
+    '   {  // wie im binären Suchbaum – die Farben stören nicht',
+    '      Node x = root;',
+    '      while (x != null)',
+    '      {',
+    '         int cmp = key.compareTo(x.key);',
+    '         if      (cmp < 0) x = x.left;',
+    '         else if (cmp > 0) x = x.right;',
+    '         else return x.val;',
+    '      }',
+    '      return null;',
+    '   }',
+    '',
+    '   public void put(Key key, Value val)',
+    '   {',
+    '      root = put(root, key, val);',
+    '      root.color = BLACK;',
+    '   }',
+    '',
+    '   private Node put(Node h, Key key, Value val)',
+    '   {',
+    '      if (h == null) return new Node(key, val, 1, RED);   // neu: immer rot angehängt',
+    '      int cmp = key.compareTo(h.key);',
+    '      if      (cmp < 0) h.left  = put(h.left,  key, val);',
+    '      else if (cmp > 0) h.right = put(h.right, key, val);',
+    '      else h.val = val;',
+    '',
+    '      if (isRed(h.right) && !isRed(h.left))    h = rotateLeft(h);',
+    '      if (isRed(h.left) && isRed(h.left.left)) h = rotateRight(h);',
+    '      if (isRed(h.left) && isRed(h.right))     flipColors(h);',
+    '',
+    '      h.N = size(h.left) + size(h.right) + 1;',
+    '      return h;',
+    '   }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient: Wert = Position im Wort',
+    '      String[] a = "SEARCHEXAMPLE".split("");',
+    '      RotSchwarzBaum<String, Integer> st = new RotSchwarzBaum<>();',
+    '      for (int i = 0; i < a.length; i++)',
+    '         st.put(a[i], i);',
+    '   }',
+    '}'
+  ];
+  function finde(s, ab) {
+    const start = ab ? CODE.findIndex(l => l.includes(ab)) : 0;
+    const i = CODE.findIndex((l, k) => k >= start && l.includes(s));
+    if (start < 0 || i < 0) throw new Error('Codezeile fehlt: ' + s);
+    return i;
+  }
+  const L = { start: finde('private Node root;'), client: finde('st.put(a[i], i);'),
+    getStart: finde('Node x = root;'), gLinks: finde('x = x.left;'), gRechts: finde('x = x.right;'), gTreffer: finde('else return x.val;'), gNull: finde('return null;', 'public Value get('),
+    putPub: finde('root = put(root, key, val);'), rootSchwarz: finde('root.color = BLACK;'),
+    pNull: finde('return new Node(key, val, 1, RED);'), pCmp: finde('int cmp = key.compareTo(h.key);'),
+    pLinks: finde('h.left  = put(h.left,  key, val);'), pRechts: finde('h.right = put(h.right, key, val);'), pGleich: finde('else h.val = val;'),
+    r1: finde('h = rotateLeft(h);'), r2: finde('h = rotateRight(h);'), r3: finde('flipColors(h);', 'private Node put('), pN: finde('h.N = size(h.left) + size(h.right) + 1;'),
+    rlRet: finde('return x;', 'private Node rotateLeft('), rrRet: finde('return x;', 'private Node rotateRight('), flip: finde('h.right.color = BLACK;') };
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+  const vgl = (a, b) => a < b ? -1 : a > b ? 1 : 0;           // wie String.compareTo (nur das Vorzeichen zählt)
+  const nm = x => x ? x.key : 'null';
+  const ve = c => `${c} Vergleich${c === 1 ? '' : 'e'}`;
+  const RED = true, BLACK = false;
+
+  // ---------- Baum und Zustand ----------
+  let root = null, naechsteId = 1, reihe = [];
+  const knoten = (key, val) => ({ id: naechsteId++, key, val, left: null, right: null, N: 1, color: RED });
+  const isRed = x => !!x && x.color === RED;
+  const size = x => x ? x.N : 0;
+  const hoehe = x => x ? 1 + Math.max(hoehe(x.left), hoehe(x.right)) : -1;   // nur die Wurzel: Höhe 0
+  const schwarzhoehe = () => { let h = 0, x = root; while (x) { if (!isRed(x)) h++; x = x.left; } return h; };   // schwarze Knoten bis null, wie die Höhe des 2-3-Baums + 1
+  function inorder(x, a) { if (x) { inorder(x.left, a); a.push(x); inorder(x.right, a); } return a; }
+  function bstHoehe(folge) {     // Höhe eines einfachen Suchbaums mit derselben Einfügereihenfolge
+    let r = null;
+    for (const k of folge) { if (!r) { r = { k, l: null, r: null }; continue; } let x = r; for (;;) { const s = k < x.k ? 'l' : 'r'; if (!x[s]) { x[s] = { k, l: null, r: null }; break; } x = x[s]; } }
+    const h = x => x ? 1 + Math.max(h(x.l), h(x.r)) : -1; return h(r);
+  }
+
+  let frames = [], H, ops = [], vergleicheGesamt = 0, anzahlOps = 0, opVergl = 0, umbauGesamt = { L: 0, R: 0, F: 0 };
+  let steps = [], pos = 0, timer = null;
+  const neuH = () => ({ pfad: new Set(), neu: null, ersetzt: null, alt: null, umbau: [] });
+  function beginne() { anzahlOps++; opVergl = 0; frames = []; H = neuH(); }
+  function vergleich() { vergleicheGesamt++; opVergl++; }
+
+  // Abbild für die Anzeige: so, wie die laufenden Aufrufe den Baum sehen – Rückgabewerte, die der Aufrufer
+  // noch einhängen wird, stehen schon an ihrer Stelle (die Kante ist dann „offen“, gestrichelt)
+  function abbild() {
+    const ers = new Map();
+    for (let i = 0; i + 1 < frames.length; i++) {
+      const f = frames[i];
+      if (f.x && f.seite) { const m = ers.get(f.x.id) || {}; m[f.seite] = frames[i + 1].x; ers.set(f.x.id, m); }
+    }
+    const start = frames.length ? frames[0].x : root;
+    const kn = [];
+    (function w(x) {
+      if (!x) return;
+      const m = ers.get(x.id) || {};
+      const l = 'left' in m ? m.left : x.left, r = 'right' in m ? m.right : x.right;
+      kn.push({ id: x.id, key: x.key, val: x.val, N: x.N, rot: x.color === RED, l: l ? l.id : null, r: r ? r.id : null, lOffen: l !== x.left, rOffen: r !== x.right });
+      w(l); w(r);
+    })(start);
+    return { root: start ? start.id : null, rootOffen: start !== root, kn };
+  }
+  function snap(line, msg, o) {
+    o = o || {};
+    const oben = frames[frames.length - 1];
+    const marken = [];
+    const b = abbild();
+    if (b.root !== null) marken.push([b.root, b.rootOffen ? 'root (bald)' : 'root']);
+    if (oben && oben.x) marken.push([oben.x.id, 'h']);
+    (o.marken || []).forEach(([k, m]) => marken.push([k.id, m]));
+    steps.push({ line, msg, b, marken, cur: o.cur ? o.cur.id : null, pfad: [...H.pfad].map(k => k.id),
+      neu: H.neu ? H.neu.id : (H.ersetzt ? H.ersetzt.id : null), frames: frames.map(f => f.text).concat(o.extraRahmen ? [o.extraRahmen] : []),
+      ops: ops.slice(), opVergl, vergleicheGesamt, anzahlOps, n: size(root), h: hoehe(root), sh: schwarzhoehe(),
+      bh: bstHoehe(H.neu && !reihe.includes(H.neu.key) ? reihe.concat([H.neu.key]) : reihe),
+      umbau: { ...umbauGesamt }, opEnde: !!o.opEnde, cls: o.cls || '' });
+  }
+  function protoOp(op) {
+    ops.push({ op, umbau: H.umbau.join(', ') || '–', vergl: opVergl, h: hoehe(root),
+      inhalt: inorder(root, []).map(k => ({ key: k.key, val: k.val, z: k === H.neu || k === H.ersetzt ? 'neu' : '' })) });
+  }
+
+  // ---------- put ----------
+  function put(key, val) {
+    beginne();
+    snap(L.putPub, `put(${key}, ${val}): root = put(root, …) – Abstieg ab root${root ? ` (${root.key})` : ' = null'}, genau wie im binären Suchbaum.`);
+    const r = putRek(root, key, val);
+    frames = [];
+    root = r;
+    if (H.neu) reihe.push(key);
+    const warRot = root.color === RED;
+    root.color = BLACK;
+    if (warRot) H.umbau.push('Wurzel schwarz');
+    protoOp(`put ${key} ${val}`);
+    snap(L.rootSchwarz, warRot
+      ? `root.color = BLACK: Die Wurzel ${root.key} war rot geworden und wird wieder schwarz – damit ist der Baum um eine Ebene gewachsen (im 2-3-Baum: neue Wurzel). Schwarzhöhe jetzt ${schwarzhoehe()}, Höhe ${hoehe(root)}.`
+      : `root.color = BLACK: Die Wurzel ist schon schwarz. ${H.umbau.length ? `Umbau auf dem Rückweg: ${H.umbau.join(', ')}.` : 'Kein Umbau nötig.'} Höhe ${hoehe(root)}, ${ve(opVergl)}.`,
+      { opEnde: true, cls: 'neu' });
+  }
+  function putRek(h, key, val) {
+    const f = { text: `put(h = ${nm(h)}, key = ${key})`, x: h, seite: null };
+    frames.push(f);
+    if (h === null) {
+      const neu = knoten(key, val);
+      H.neu = neu; f.x = neu;
+      snap(L.pNull, `h = null: Hier kommt „${key}“ hin – als neuer Knoten mit roter Referenz, also mit dem Elternknoten verklebt (im 2-3-Baum: ein Schlüssel mehr im Knoten darüber).`);
+      frames.pop();
+      return neu;
+    }
+    vergleich(); H.pfad.add(h);
+    const cmp = vgl(key, h.key);
+    snap(L.pCmp, `„${key}“ mit h.key = „${h.key}“ vergleichen → ${cmp < 0 ? 'kleiner, also links weiter' : cmp > 0 ? 'größer, also rechts weiter' : 'gleich'}.`, { cur: h });
+    if (cmp !== 0) {
+      const seite = cmp < 0 ? 'left' : 'right';
+      f.seite = seite;
+      const vorher = h[seite];
+      const r = putRek(vorher, key, val);
+      h[seite] = r; f.seite = null;
+      snap(cmp < 0 ? L.pLinks : L.pRechts, r !== vorher
+        ? `Zurück bei ${h.key}: h.${seite} = ${r.key} – jetzt fest eingehängt.`
+        : `Zurück bei ${h.key}: h.${seite} = ${r.key} – derselbe Knoten wie vorher.`, { cur: h });
+    } else {
+      H.ersetzt = h; H.alt = h.val;
+      h.val = val;
+      snap(L.pGleich, `„${key}“ gibt es schon: h.val = ${val} ersetzt ${H.alt}. Die drei Regeln laufen trotzdem – sie finden nur nichts zu tun.`, { cur: h });
+    }
+    let gegriffen = false;
+    if (isRed(h.right) && !isRed(h.left)) {
+      gegriffen = true;
+      snap(L.r1, `Regel 1 bei ${h.key}: h.right (${h.right.key}) ist rot, h.left ${h.left ? `(${h.left.key}) schwarz` : 'null'} → rotateLeft(${h.key}). Rote Referenzen müssen nach links zeigen.`,
+        { cur: h, marken: [[h.right, 'x']] });
+      h = drehe(h, 'links', f);
+    }
+    if (isRed(h.left) && isRed(h.left.left)) {
+      gegriffen = true;
+      snap(L.r2, `Regel 2 bei ${h.key}: h.left (${h.left.key}) und h.left.left (${h.left.left.key}) sind beide rot – zwei rote hintereinander → rotateRight(${h.key}).`,
+        { cur: h, marken: [[h.left, 'x']] });
+      h = drehe(h, 'rechts', f);
+    }
+    if (isRed(h.left) && isRed(h.right)) {
+      gegriffen = true;
+      h.color = RED; h.left.color = BLACK; h.right.color = BLACK;
+      H.umbau.push(`flipColors(${h.key})`); umbauGesamt.F++;
+      snap(L.r3, `Regel 3 bei ${h.key}: Beide Kinder waren rot – ein temporärer 4-Knoten. flipColors(${h.key}): ${h.left.key} und ${h.right.key} werden schwarz, die Referenz zu ${h.key} wird rot. Im 2-3-Baum: Der 4-Knoten spaltet sich, ${h.key} wandert eine Ebene nach oben.`,
+        { cur: h, extraRahmen: `flipColors(h = ${h.key})` });
+    }
+    const alt = h.N;
+    h.N = size(h.left) + size(h.right) + 1;
+    snap(L.pN, `${gegriffen ? '' : `Rückweg bei ${h.key}: Keine der drei Regeln greift. `}h.N = ${size(h.left)} + ${size(h.right)} + 1 = ${h.N}${alt !== h.N ? ` (vorher ${alt})` : ''}. Dann return h (${h.key}).`, { cur: h });
+    frames.pop();
+    return h;
+  }
+  // rotateLeft/rotateRight: Ergebnis wird gleich h zugewiesen (h = rotateLeft(h)) – der Schritt zeigt den Zustand danach
+  function drehe(h, richtung, f) {
+    const links = richtung === 'links';
+    const x = links ? h.right : h.left;
+    const wandert = links ? x.left : x.right;
+    if (links) { h.right = x.left; x.left = h; } else { h.left = x.right; x.right = h; }
+    x.color = h.color; h.color = RED;
+    x.N = h.N; h.N = 1 + size(h.left) + size(h.right);
+    f.x = x;
+    H.umbau.push(`${links ? 'rotateLeft' : 'rotateRight'}(${h.key})`); umbauGesamt[links ? 'L' : 'R']++;
+    snap(links ? L.rlRet : L.rrRet, `${links ? 'rotateLeft' : 'rotateRight'}(${h.key}) ist fertig, h = ${x.key}: ${x.key} ist neuer Kopf des Teilbaums, ${h.key} sein ${links ? 'linkes' : 'rechtes'} Kind. ` +
+      `${x.key} übernimmt die Farbe der Referenz von ${h.key} (${x.color === RED ? 'rot' : 'schwarz'}), die Referenz zu ${h.key} ist jetzt rot.` +
+      (wandert ? ` ${wandert.key} wechselt von ${x.key} zu ${h.key}.` : '') + ' Die Sortierung von links nach rechts bleibt gleich.',
+      { cur: x, marken: [[h, 'alt h']], extraRahmen: `${links ? 'rotateLeft' : 'rotateRight'}(h = ${h.key}) → return x = ${x.key}` });
+    return x;
+  }
+
+  // ---------- get ----------
+  function get(key) {
+    beginne();
+    let x = root;
+    snap(L.getStart, `get(${key}): x = root${root ? ` (${root.key})` : ' = null'} – Suchen geht genau wie im binären Suchbaum, die Farben spielen keine Rolle.`, { cur: x });
+    while (x) {
+      vergleich(); H.pfad.add(x);
+      const cmp = vgl(key, x.key);
+      if (cmp === 0) {
+        protoOp(`get ${key}`);
+        ops[ops.length - 1].umbau = `→ ${x.val}`;
+        snap(L.gTreffer, `„${key}“ = „${x.key}“ → gefunden: ${x.val}. ${ve(opVergl)} – höchstens Höhe + 1.`, { cur: x, opEnde: true, cls: 'swap' });
+        return x.val;
+      }
+      const nach = cmp < 0 ? x.left : x.right;
+      snap(cmp < 0 ? L.gLinks : L.gRechts, `„${key}“ ${cmp < 0 ? '<' : '>'} „${x.key}“ → x = x.${cmp < 0 ? 'left' : 'right'} (${nm(nach)}).`, { cur: nach || x });
+      x = nach;
+    }
+    protoOp(`get ${key}`);
+    ops[ops.length - 1].umbau = '→ null';
+    snap(L.gNull, `x = null: „${key}“ steht nicht im Baum → return null. ${ve(opVergl)}.`, { opEnde: true });
+    return null;
+  }
+
+  // ---------- Anzeige ----------
+  const W = 44, RAND = 14;
+  function lage(s) {
+    const by = {}; s.b.kn.forEach(k => by[k.id] = k);
+    const px = {}, tf = {}; let i = 0, maxT = 0;
+    (function io(id, d) { if (id === null) return; const k = by[id]; io(k.l, d + 1); px[id] = i++; tf[id] = d; if (d > maxT) maxT = d; io(k.r, d + 1); })(s.b.root, 0);
+    const spalten = Math.max(i, 4);
+    const X = id => RAND + (px[id] + .5) * W + (spalten - i) * W / 2;
+    return { by, px, tf, maxT, spalten, X, breite: spalten * W + 2 * RAND };
+  }
+  function zeichneBaum(s, g) {
+    if (!s.b.root) return '<div class="leer">root → null (leerer Baum)</div>';
+    const R = 15, DY = g.maxT > 6 ? 50 : 60, OBEN = 30, hoch = OBEN + g.maxT * DY + 46;
+    const Y = id => OBEN + g.tf[id] * DY;
+    const pf = new Set(s.pfad), mk = {};
+    s.marken.forEach(([id, m]) => (mk[id] = mk[id] || []).push(m));
+    const linksKind = new Set(s.b.kn.map(k => k.l).filter(l => l !== null));
+    let h = `<svg viewBox="0 0 ${g.breite} ${hoch}" style="min-width:${g.spalten * 27}px;max-width:${g.breite}px" role="img" aria-label="Rot-Schwarz-Baum">`;
+    s.b.kn.forEach(k => [[k.l, k.lOffen], [k.r, k.rOffen]].forEach(([c, offen]) => {
+      if (c !== null) h += `<line class="kante${g.by[c].rot ? ' rot' : ''}${offen ? ' offen' : ''}" x1="${g.X(k.id)}" y1="${Y(k.id)}" x2="${g.X(c)}" y2="${Y(c)}"/>`;
+    }));
+    s.b.kn.forEach(k => {
+      const cls = k.id === s.cur ? 'cur' : k.id === s.neu ? 'neu' : '';
+      const x = g.X(k.id), y = Y(k.id);
+      h += `<g class="knoten ${cls}${pf.has(k.id) ? ' pfad' : ''}"><circle cx="${x}" cy="${y}" r="${R}"/><text class="k" x="${x}" y="${y}">${esc(k.key)}</text>` +
+        (linksKind.has(k.id) ? `<text class="n" x="${x - R - 1}" y="${y - R + 4}" text-anchor="end">${k.N}</text>` : `<text class="n" x="${x + R + 1}" y="${y - R + 4}">${k.N}</text>`) +
+        `<text class="v" x="${x}" y="${y + R + 12}">${esc(k.val)}</text>` +
+        (mk[k.id] ? `<text class="m" x="${x}" y="${y - R - 5}">${esc(mk[k.id].join(' '))}</text>` : '') + '</g>';
+    });
+    return h + '</svg>';
+  }
+  // 2-3-Ansicht: alle über rote Referenzen verbundenen Knoten bilden einen Knoten; Tiefe = Zahl der schwarzen Referenzen
+  function zeichne23(s, g) {
+    if (!s.b.root) return '<div class="leer">leer</div>';
+    const comps = [];
+    (function w(id, c) {
+      if (id === null) return;
+      const k = g.by[id];
+      let eigene = c;
+      if (c === null || !k.rot) { comps.push({ ids: [], tiefe: c === null ? 0 : comps[c].tiefe + 1, eltern: c }); eigene = comps.length - 1; }
+      comps[eigene].ids.push(id);
+      w(k.l, eigene); w(k.r, eigene);
+    })(s.b.root, null);
+    const DY = 52, OBEN = 8, HB = 26, maxT = Math.max(...comps.map(c => c.tiefe)), hoch = OBEN + maxT * DY + HB + 8;
+    const box = c => { const xs = c.ids.map(id => g.X(id)); return { x1: Math.min(...xs) - 15, x2: Math.max(...xs) + 15, y: OBEN + c.tiefe * DY }; };
+    let h = `<svg class="zwei" viewBox="0 0 ${g.breite} ${hoch}" style="min-width:${g.spalten * 27}px;max-width:${g.breite}px" role="img" aria-label="Derselbe Baum als 2-3-Baum">`;
+    comps.forEach(c => {
+      if (c.eltern === null) return;
+      const p = box(comps[c.eltern]), b = box(c), mitte = (b.x1 + b.x2) / 2;
+      const ax = Math.min(Math.max(mitte, p.x1 + 6), p.x2 - 6);
+      h += `<line class="kante" x1="${ax}" y1="${p.y + HB}" x2="${mitte}" y2="${b.y}"/>`;
+    });
+    comps.forEach(c => {
+      const b = box(c);
+      h += `<rect class="box${c.ids.length > 2 ? ' vier' : ''}" x="${b.x1}" y="${b.y}" width="${b.x2 - b.x1}" height="${HB}" rx="7"/>`;
+      c.ids.forEach(id => { h += `<text class="k" x="${g.X(id)}" y="${b.y + HB / 2}">${esc(g.by[id].key)}</text>`; });
+    });
+    return h + '</svg>';
+  }
+  function render() {
+    const s = steps[pos];
+    const g = lage(s);
+    const n = s.b.kn.length, hh = n ? g.maxT : -1;    // so, wie der Baum gerade angezeigt wird
+    $('titel').innerHTML = `Rot-Schwarz-Baum · N = <b>${n}</b> · Höhe <b>${hh < 0 ? '–' : hh}</b>${n > 1 ? ` (höchstens 2 lg N ≈ ${(2 * Math.log2(n)).toFixed(1)})` : ''} · einfacher Suchbaum mit derselben Reihenfolge: Höhe <b>${s.bh < 0 ? '–' : s.bh}</b> · ${s.anzahlOps} Operation${s.anzahlOps === 1 ? '' : 'en'} · klein am Knoten: N oben, Wert unten`;
+    $('baum').innerHTML = zeichneBaum(s, g);
+    $('baum23').innerHTML = zeichne23(s, g);
+    $('stapel').innerHTML = s.frames.length
+      ? `<div class="h2">Aufrufstapel (oben der laufende Aufruf):</div><ol>${s.frames.slice().reverse().map((f, i) => `<li class="${i === 0 ? 'oben' : ''}">${esc(f)}</li>`).join('')}</ol>`
+      : '<div class="h2">Aufrufstapel: leer</div>';
+    $('rechnung').innerHTML = `Diese Operation: <b>${s.opVergl}</b> Vergleiche · insgesamt: <b>${s.vergleicheGesamt}</b> Vergleiche, <b>${s.umbau.L}</b> × rotateLeft, <b>${s.umbau.R}</b> × rotateRight, <b>${s.umbau.F}</b> × flipColors`;
+    const msg = $('msg');
+    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
+    $('proto').innerHTML = s.ops.length
+      ? `<table><tr><th style="text-align:left">Operation</th><th style="text-align:left">Umbau bzw. Ergebnis</th><th>Vergl.</th><th>Höhe</th><th style="text-align:left">Schlüssel inorder (mit Wert) danach</th></tr>${s.ops.map((o, i) =>
+        `<tr${i === s.ops.length - 1 && s.opEnde ? ' class="zuletzt"' : ''}><td class="op">${esc(o.op)}</td><td class="umbau">${esc(o.umbau)}</td><td>${o.vergl}</td><td>${o.h < 0 ? '–' : o.h}</td><td class="inhalt">${o.inhalt.map(k => `<span class="p-${k.z}">${esc(k.key)}${esc(k.val)}</span>`).join(' ')}</td></tr>`).join('')}</table>`
+      : '<p class="count">Noch keine Operation. Oben einen Schlüssel mit put eintragen oder den Testclient starten.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0;
+    $('next').disabled = amEnde; $('bisfertig').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  // Kästen werden nie wieder niedriger, sonst springen die Knöpfe darunter auf und ab
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  window.addEventListener('resize', () => ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }));
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;        // am Ende: von vorn abspielen
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  function operation(f) {
+    stop();
+    const vorher = steps.length;
+    const erg = f();
+    pos = Math.min(vorher, steps.length - 1);
+    render();
+    return erg;
+  }
+  function leeren(text) {
+    stop();
+    root = null; reihe = []; ops = []; vergleicheGesamt = 0; anzahlOps = 0; opVergl = 0; steps = []; umbauGesamt = { L: 0, R: 0, F: 0 };
+    H = neuH(); frames = [];
+    snap(L.start, text || 'Leerer Baum: root = null. Oben einen Schlüssel mit put eintragen.', { opEnde: true });
+    pos = 0; render();
+  }
+  function fuelle(wort, text, schluss) {
+    leeren(text);
+    [...wort].forEach((c, i) => {
+      H = neuH(); frames = [];
+      snap(L.client, `st.put(a[${i}], ${i}) – „${c}“ mit Wert ${i}.`);
+      put(c, i);
+    });
+    H = neuH(); frames = [];
+    snap(L.client, schluss(), { opEnde: true });
+    pos = 0; render();
+  }
+  const testclient = () => fuelle('SEARCHEXAMPLE',
+    'Testclient: Die Buchstaben von SEARCHEXAMPLE kommen nacheinander mit put in den Baum (Wert = Position im Wort) – links in Abbildung 3.46. Mit „Abspielen“ oder „Schritt“ geht es los.',
+    () => `Fertig: ${size(root)} Schlüssel, Höhe ${hoehe(root)} (der einfache Suchbaum hatte bei derselben Reihenfolge Höhe ${bstHoehe(reihe)}). Umbau insgesamt: ${umbauGesamt.L} × rotateLeft, ${umbauGesamt.R} × rotateRight, ${umbauGesamt.F} × flipColors, ${vergleicheGesamt} Vergleiche.`);
+  const aufsteigend = () => fuelle('ACEHLMPRSX',
+    'Dieselben Schlüssel in aufsteigender Reihenfolge – rechts in Abbildung 3.46. Beim einfachen Suchbaum gäbe das eine Kette.',
+    () => `Fertig: Aufsteigend eingefügt und trotzdem Höhe ${hoehe(root)} – der einfache Suchbaum hätte hier Höhe ${bstHoehe(reihe)} (eine Kette). Umbau: ${umbauGesamt.L} × rotateLeft, ${umbauGesamt.R} × rotateRight, ${umbauGesamt.F} × flipColors.`);
+
+  const schluessel = () => $('schluessel').value.trim().toUpperCase();
+  const ohne = el => { el.focus(); return true; };
+  $('put').addEventListener('click', () => {
+    const k = schluessel(), v = Math.round(+$('wert').value);
+    if (!k) return ohne($('schluessel'));
+    if (!(v >= 0 && v <= 99) || $('wert').value === '') return ohne($('wert'));
+    if (size(root) >= KAP && !inorder(root, []).some(x => x.key === k)) { $('msg').textContent = `Mehr als ${KAP} Knoten passen hier nicht auf den Bildschirm – bitte erst „Leeren“.`; return; }
+    operation(() => put(k, v));
+  });
+  $('get').addEventListener('click', () => { const k = schluessel(); if (!k) return ohne($('schluessel')); operation(() => get(k)); });
+  $('schluessel').addEventListener('keydown', e => { if (e.key === 'Enter') $('get').click(); });
+  $('wert').addEventListener('keydown', e => { if (e.key === 'Enter') $('put').click(); });
+  $('buch').addEventListener('click', testclient);
+  $('aufsteigend').addEventListener('click', aufsteigend);
+  $('neu').addEventListener('click', testclient);   // Neustart = Zustand beim ersten Öffnen
+  $('leeren').addEventListener('click', () => leeren());
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bisfertig').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests
+  window.__rs = { put: (k, v) => operation(() => put(k, v)), get: k => operation(() => get(k)), leeren: () => leeren(), testclient, aufsteigend,
+    get inorder() { return inorder(root, []).map(k => k.key + k.val).join(' '); },
+    get struktur() { const s = x => x ? `(${s(x.left)} ${x.color === RED ? '*' : ''}${x.key}${x.N} ${s(x.right)})` : '-'; return s(root); },
+    get n() { return size(root); }, get hoehe() { return hoehe(root); }, get schwarzhoehe() { return schwarzhoehe(); }, get steps() { return steps; }, get ops() { return ops; },
+    get vergleiche() { return vergleicheGesamt; }, get umbau() { return { ...umbauGesamt }; }, get pos() { return pos; }, KAP, CODE, L };
+
+  testclient();
+})();
+</script>
+</body>
+</html>
