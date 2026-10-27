@@ -372,3 +372,11 @@ jahr = "2024"
 sortjahr = 2024
 gebiet = "Geschichte"
 schluessel = "nexus-2024"
+
+[[buch]]
+titel = "Thinking in Bets"
+autor = "Annie Duke"
+jahr = "2018"
+sortjahr = 2018
+gebiet = "Psychologie, Kultur & der Mensch"
+schluessel = "thinking-in-bets-2018"
