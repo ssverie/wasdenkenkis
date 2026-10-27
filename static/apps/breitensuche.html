@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breitensuche für Pfade</title>
+<!-- Visualisierung der Breitensuche für Pfade in einem ungerichteten Graphen (nach Sedgewick/Wayne, Algorithmen,
+     Algorithmus 4.2, Listing 4.6) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code
+     (BreitensuchePfade statt BreadthFirstPaths, dieselbe Graph-Klasse wie bei der Tiefensuche, Queue aus Algorithmus 1.3,
+     Stack aus Algorithmus 1.2); Beispielgraph tinyCG wie bei der Tiefensuche (Abbildung 4.16). Aufbau wie tiefensuche.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  .eingabe select { font: inherit; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .bild { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .bild svg { display: block; width: 100%; height: auto; }
+  .bild .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  svg .kante { stroke: var(--grau); stroke-width: 2; }
+  svg .kante.baum { stroke: var(--text); stroke-width: 3.5; }
+  svg .kante.pruef { stroke: var(--cur); stroke-width: 4; stroke-dasharray: 7 4; }
+  svg .kante.pfad { stroke: var(--swap); stroke-width: 5; }
+  svg .knoten circle { fill: var(--panel); stroke: var(--muted); stroke-width: 2; }
+  svg .knoten text { font: 700 15px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten.markiert circle { fill: var(--sortiert); stroke: var(--sortiert); }
+  svg .knoten.schlange circle { stroke: var(--text); stroke-width: 2.5; stroke-dasharray: 4 3; }
+  svg .knoten.aktiv circle { fill: var(--neu); stroke: var(--neu); }
+  svg .knoten.aktiv text, svg .knoten.pfad text { fill: #fff; }
+  svg .knoten.pfad circle { fill: var(--swap); stroke: var(--swap); }
+  svg .knoten.pruef circle { stroke: var(--cur); stroke-width: 5; stroke-dasharray: none; }
+  svg .knoten.unerreicht { opacity: .4; }
+  svg .knoten.neu-x circle { stroke: var(--neu); stroke-width: 4; }
+  svg .marke { font: 11px ui-monospace, Consolas, monospace; fill: var(--muted); text-anchor: middle; }
+  svg .marke.s { fill: var(--cur); font-weight: 700; }
+  svg .ebene { font: 11px system-ui, sans-serif; fill: var(--muted); }
+  svg .ebene-linie { stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 3; }
+  @media (prefers-color-scheme: dark) {
+    svg .knoten.aktiv text, svg .knoten.pfad text { fill: #0d1530; }
+  }
+  .adj { font-family: ui-monospace, Consolas, monospace; font-size: 13px; margin: 0 0 10px; }
+  .adj div { padding: 1px 0; white-space: nowrap; }
+  .adj .kopf { color: var(--muted); font-family: system-ui, sans-serif; margin-bottom: 2px; }
+  .adj span.e { display: inline-block; min-width: 1.5em; text-align: center; border-radius: 4px; margin-right: 2px; }
+  .adj span.e.erledigt { color: var(--muted); opacity: .55; }
+  .adj span.e.jetzt { background: var(--cur); color: #fff; font-weight: 700; }
+  .adj span.e.neu { background: var(--neu); color: #fff; font-weight: 700; }
+  .adj div.laeuft { font-weight: 700; }
+  @media (prefers-color-scheme: dark) { .adj span.e.jetzt, .adj span.e.neu { color: #0d1530; } }
+  table.arr { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; margin-bottom: 10px; }
+  table.arr th, table.arr td { border: 1px solid var(--line); padding: 3px 8px; text-align: center; }
+  table.arr th { color: var(--muted); font-weight: 600; }
+  table.arr td.leer { color: var(--muted); }
+  table.arr td.geaendert { background: var(--neu); color: #fff; font-weight: 700; }
+  @media (prefers-color-scheme: dark) { table.arr td.geaendert { color: #0d1530; } }
+  .schlange-box, .pfadstapel { font-size: 13px; margin-bottom: 10px; }
+  .schlange-box .h2, .pfadstapel .h2 { color: var(--muted); }
+  .zellen { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; align-items: flex-start; }
+  .zellen span { min-width: 1.8em; padding: 4px 6px; border-radius: 6px; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .zellen span small { display: block; font-weight: 400; font-size: 10px; opacity: .85; }
+  .schlange-box .zellen span { background: var(--sortiert); color: var(--text); border: 2px dashed var(--text); }
+  .schlange-box .zellen span.neu { background: var(--neu); color: #fff; border-style: solid; border-color: var(--neu); }
+  .schlange-box .zellen span.raus { background: var(--neu); color: #fff; border-style: solid; border-color: var(--neu); opacity: .55; text-decoration: line-through; }
+  .pfadstapel .zellen span { background: var(--swap); color: #fff; }
+  .pfadstapel .zellen span.oben { outline: 2px solid var(--text); outline-offset: 1px; }
+  @media (prefers-color-scheme: dark) { .schlange-box .zellen span.neu, .schlange-box .zellen span.raus, .pfadstapel .zellen span { color: #0d1530; } }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto td.op { text-align: left; font-weight: 600; white-space: nowrap; }
+  .proto td.neu { color: var(--neu); font-weight: 700; }
+  .proto td.leer { color: var(--muted); }
+  .proto td.q { text-align: left; font-family: ui-monospace, Consolas, monospace; white-space: nowrap; }
+  .proto tr.zuletzt td.op { color: var(--neu); }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .proto td.pfad { text-align: left; font-family: ui-monospace, Consolas, monospace; }
+  @media (max-width: 640px) {
+    .bild { grid-template-columns: minmax(0, 1fr); }
+    .adj { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="buch">Testclient (Graph aus Abbildung 4.16)</button>
+    <button id="zufall">Zufallsgraph</button>
+    <label>Start s <select id="start"></select></label>
+    <button id="suche">Breitensuche ab s</button>
+    <label>v <select id="ziel"></select></label>
+    <button id="pfad">pathTo(v)</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="bild">
+      <div>
+        <div class="h2">Graph</div>
+        <svg id="graph" role="img" aria-label="Der Graph mit dem Stand der Breitensuche"></svg>
+        <div class="h2" style="margin-top:10px">edgeTo[] als Baum (Wurzel s), jede Ebene ein Abstand</div>
+        <svg id="baum" role="img" aria-label="Der Baum aus edgeTo"></svg>
+      </div>
+      <div>
+        <div class="schlange-box" id="schlange"></div>
+        <div class="adj" id="adj"></div>
+        <div id="arrays"></div>
+        <div class="pfadstapel" id="pfadstapel"></div>
+      </div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>herausgenommen, Nachbarn werden geprüft</span>
+      <span><i style="background:var(--sortiert);outline:2px dashed var(--text)"></i>markiert, wartet in der Schlange</span>
+      <span><i style="background:var(--panel);outline:3px solid var(--cur)"></i>Nachbar wird geprüft</span>
+      <span><i style="background:var(--sortiert)"></i>fertig</span>
+      <span><i style="background:var(--text)"></i>Kante aus edgeTo[]</span>
+      <span><i style="background:var(--swap)"></i>Pfad</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der aktuelle Abschnitt fertig ist (ein herausgenommener Knoten, ein Pfad)">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 4.2, Listing 4.6)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'public class BreitensuchePfade',
+    '{',
+    '   private boolean[] marked;   // ist ein kürzester Pfad hierher bekannt?',
+    '   private int[] edgeTo;       // letzter Knoten auf diesem kürzesten Pfad',
+    '   private final int s;        // Startknoten',
+    '',
+    '   public BreitensuchePfade(Graph G, int s)',
+    '   {',
+    '      marked = new boolean[G.V()];',
+    '      edgeTo = new int[G.V()];',
+    '      this.s = s;',
+    '      bfs(G, s);',
+    '   }',
+    '',
+    '   private void bfs(Graph G, int s)',
+    '   {  // ringförmig nach außen: erst Abstand 1, dann 2, ...',
+    '      Queue<Integer> queue = new Queue<Integer>();',
+    '      marked[s] = true;           // den Start markieren ...',
+    '      queue.enqueue(s);           // ... und einreihen',
+    '      while (!queue.isEmpty())',
+    '      {',
+    '         int v = queue.dequeue(); // vorderen Knoten herausnehmen',
+    '         for (int w : G.adj(v))',
+    '            if (!marked[w])',
+    '            {',
+    '               edgeTo[w] = v;     // letzte Kante eines kürzesten Pfads nach w',
+    '               marked[w] = true;  // markiert schon beim Einreihen',
+    '               queue.enqueue(w);  // hinten anstellen',
+    '            }',
+    '      }',
+    '   }',
+    '',
+    '   public boolean hasPathTo(int v)  {  return marked[v];  }',
+    '',
+    '   public Iterable<Integer> pathTo(int v)',
+    '   {  // genau wie bei der Tiefensuche',
+    '      if (!hasPathTo(v)) return null;',
+    '      Stack<Integer> path = new Stack<Integer>();',
+    '      for (int x = v; x != s; x = edgeTo[x])',
+    '         path.push(x);',
+    '      path.push(s);',
+    '      return path;',
+    '   }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient: derselbe Graph wie bei der Tiefensuche, Start 0',
+    '      int[][] kanten = { {0, 5}, {2, 4}, {2, 3}, {1, 2}, {0, 1}, {3, 4}, {3, 5}, {0, 2} };',
+    '      Graph G = new Graph(6);',
+    '      for (int[] k : kanten)',
+    '         G.addEdge(k[0], k[1]);',
+    '      int s = 0;',
+    '      BreitensuchePfade suche = new BreitensuchePfade(G, s);',
+    '      for (int v = 0; v < G.V(); v++)',
+    '      {',
+    '         System.out.print(s + " nach " + v + ": ");',
+    '         if (suche.hasPathTo(v))',
+    '            for (int x : suche.pathTo(v))',
+    '               System.out.print(x == s ? "" + x : "-" + x);',
+    '         System.out.println();',
+    '      }',
+    '   }',
+    '}',
+    '',
+    '// ---- Graph: wie bei der Tiefensuche, Adjazenzlisten mit dem Bag aus Algorithmus 1.4 ----',
+    'public class Graph',
+    '{',
+    '   private final int V;          // Anzahl der Knoten',
+    '   private int E;                // Anzahl der Kanten',
+    '   private Bag<Integer>[] adj;   // adj[v]: die Nachbarn von v',
+    '',
+    '   @SuppressWarnings("unchecked")',
+    '   public Graph(int V)',
+    '   {',
+    '      this.V = V;',
+    '      adj = (Bag<Integer>[]) new Bag[V];',
+    '      for (int v = 0; v < V; v++)',
+    '         adj[v] = new Bag<Integer>();',
+    '   }',
+    '',
+    '   public int V()  {  return V;  }',
+    '   public int E()  {  return E;  }',
+    '',
+    '   public void addEdge(int v, int w)',
+    '   {  // ungerichtet: die Kante steht in beiden Listen',
+    '      adj[v].add(w);',
+    '      adj[w].add(v);',
+    '      E++;',
+    '   }',
+    '',
+    '   public Iterable<Integer> adj(int v)  {  return adj[v];  }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    kanten: zeile('int[][] kanten'), neuG: zeile('Graph G = new Graph(6);'), addEdge: zeile('G.addEdge(k[0], k[1]);'),
+    sMain: zeile('int s = 0;'), neuSuche: zeile('new BreitensuchePfade(G, s);'),
+    markedNeu: zeile('marked = new boolean[G.V()];'), edgeToNeu: zeile('edgeTo = new int[G.V()];'), thisS: zeile('this.s = s;'), bfsS: zeile('bfs(G, s);'),
+    neuQ: zeile('Queue<Integer> queue = new Queue'), markS: zeile('marked[s] = true;'), enqS: zeile('queue.enqueue(s);'),
+    whileQ: zeile('while (!queue.isEmpty())'), deq: zeile('int v = queue.dequeue();'), ifW: zeile('if (!marked[w])'),
+    edgeTo: zeile('edgeTo[w] = v;'), markW: zeile('marked[w] = true;'), enqW: zeile('queue.enqueue(w);'),
+    hasPath: zeile('if (!hasPathTo(v)) return null;'), neuStack: zeile('Stack<Integer> path = new Stack'),
+    forX: zeile('for (int x = v; x != s; x = edgeTo[x])'), pushX: zeile('path.push(x);'), pushS: zeile('path.push(s);'),
+    retPath: zeile('return path;'), druck: zeile('System.out.print(s + " nach "'), println: zeile('System.out.println();')
+  };
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Graphen ----------
+  // tinyCG wie bei der Tiefensuche (Abbildung 4.16), Kanten in der Reihenfolge der Datei; Lage der Knoten wie im Buch
+  const BUCH = { V: 6, kanten: [[0, 5], [2, 4], [2, 3], [1, 2], [0, 1], [3, 4], [3, 5], [0, 2]],
+    pos: [[40, 36], [118, 104], [292, 36], [160, 158], [296, 190], [40, 190]], breite: 336, hoehe: 226 };
+
+  function graph(V, kanten) {           // wie Graph.addEdge: Bag fügt vorne an, also umgekehrte Reihenfolge
+    const adj = Array.from({ length: V }, () => []);
+    kanten.forEach(([v, w]) => { adj[v].unshift(w); adj[w].unshift(v); });
+    return adj;
+  }
+  let zufallsZahl = Date.now() % 2147483647;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsgraph() {
+    const V = 8, ziel = 7 + zufall(4), kanten = [], hat = new Set();
+    while (kanten.length < ziel) {
+      const v = zufall(V), w = zufall(V);
+      if (v === w || hat.has(Math.min(v, w) + '-' + Math.max(v, w))) continue;
+      hat.add(Math.min(v, w) + '-' + Math.max(v, w)); kanten.push([v, w]);
+    }
+    const pos = Array.from({ length: V }, (_, i) => [168 + 132 * Math.sin(2 * Math.PI * i / V), 118 - 98 * Math.cos(2 * Math.PI * i / V)].map(Math.round));
+    return { V, kanten, pos, breite: 336, hoehe: 236, zufall: true };
+  }
+
+  // ---------- Aufzeichnung ----------
+  let G, adj, s, Z, P, konsole, p19, p16, steps, pos = 0, timer = null, gebaut, adjNeu;
+  function neuerZustand() {
+    Z = { marked: Array(G.V).fill(false), edgeTo: Array(G.V).fill(null), dist: Array(G.V).fill(null), baum: [], queue: [], v: null, i: -1,
+          fertig: new Set(), geprueft: 0, laeuft: false, vorbei: false };
+    P = null; p16 = [];
+  }
+  function snap(line, msg, o) {
+    o = o || {};
+    steps.push(Object.assign({
+      line, msg, gebaut, adj: adj.map(a => a.slice()), adjNeu, s,
+      marked: Z.marked.slice(), edgeTo: Z.edgeTo.slice(), dist: Z.dist.slice(), baum: Z.baum.map(k => k.slice()), queue: Z.queue.slice(),
+      v: Z.v, i: Z.i, fertig: [...Z.fertig], geprueft: Z.geprueft, laeuft: Z.laeuft, vorbei: Z.vorbei,
+      pfad: P ? { stack: P.stack.slice(), x: P.x, v: P.v, fertig: P.fertig } : null,
+      konsole: konsole.slice(), p19: p19.map(r => ({ ...r, queue: r.queue.slice(), edgeTo: r.edgeTo.slice(), neu: r.neu.slice() })), p16: p16.map(r => ({ ...r, stack: r.stack.slice() }))
+    }, o));
+  }
+  const grad = v => adj[v].length;
+  const nb = (v, i) => `${i + 1} von ${adj[v].length}`;
+  const qText = q => q.length ? q.join(' ') : 'leer';
+
+  // bfs(G, s) – genau wie der Java-Code, jeder Schritt einzeln
+  function bfs() {
+    snap(L.neuQ, `Eine leere Warteschlange (die Queue aus Algorithmus 1.3): vorne wird herausgenommen, hinten angestellt.`);
+    Z.marked[s] = true; Z.dist[s] = 0;
+    snap(L.markS, `marked[${s}] = true: Der Startknoten ist markiert – sein kürzester Pfad (null Kanten) ist bekannt.`, { aend: { marked: s } });
+    Z.queue.push(s);
+    snap(L.enqS, `queue.enqueue(${s}): Der Start steht als einziger Knoten in der Schlange.`, { neuQ: [s] });
+    let vorher = null;
+    while (Z.queue.length) {
+      const v = Z.queue.shift(); Z.v = v; Z.i = -1;
+      const neu = [];
+      snap(L.deq, `${vorher === null ? '' : `Alle Nachbarn von ${vorher} sind geprüft. `}while: Die Schlange ist nicht leer. v = queue.dequeue() = ${v} – Abstand ${Z.dist[v]} von ${s}. Seine Nachbarn: adj[${v}] = ${adj[v].join(' ') || '(keine)'}.`, { raus: v });
+      for (let i = 0; i < adj[v].length; i++) {
+        const w = adj[v][i];
+        Z.i = i; Z.geprueft++;
+        if (Z.marked[w]) {
+          const grund = w === v ? 'eine Schleife zu sich selbst'
+            : Z.queue.includes(w) ? `${w} steht schon in der Warteschlange. Genau dafür wird beim Einreihen markiert – sonst käme ${w} ein zweites Mal hinein`
+            : w === s ? 'der Startknoten' : `${w} wurde schon herausgenommen und bearbeitet`;
+          snap(L.ifW, `Nachbar ${w} von ${v} (${nb(v, i)}): marked[${w}] ist true – ${grund}. Nichts zu tun.`, { kante: [v, w], w });
+        } else {
+          snap(L.ifW, `Nachbar ${w} von ${v} (${nb(v, i)}): marked[${w}] ist false – ${w} wird zum ersten Mal erreicht.`, { kante: [v, w], w });
+          Z.edgeTo[w] = v; Z.baum.push([v, w]); Z.dist[w] = Z.dist[v] + 1;
+          snap(L.edgeTo, `edgeTo[${w}] = ${v}: Die Kante ${v}–${w} ist die letzte Kante eines kürzesten Pfads nach ${w} – Abstand ${Z.dist[w]}.`, { kante: [v, w], w, aend: { edgeTo: w } });
+          Z.marked[w] = true;
+          snap(L.markW, `marked[${w}] = true – schon jetzt, beim Einreihen, nicht erst beim Herausnehmen.`, { kante: [v, w], w, aend: { marked: w } });
+          Z.queue.push(w); neu.push(w);
+          snap(L.enqW, `queue.enqueue(${w}): ${w} stellt sich hinten an. Schlange jetzt: ${qText(Z.queue)}.`, { kante: [v, w], w, neuQ: [w] });
+        }
+      }
+      Z.fertig.add(v); Z.i = -1;
+      p19.push({ v, queue: Z.queue.slice(), edgeTo: Z.edgeTo.slice(), neu });
+      vorher = v;
+      snap(L.whileQ, `${v} ist fertig${neu.length ? `, neu eingereiht: ${neu.join(', ')}` : ' – kein neuer Knoten'}. Schlange: ${qText(Z.queue)}.`, { opEnde: true });
+    }
+    Z.v = null;
+  }
+  function suche(mitText) {
+    neuerZustand(); p19 = [];
+    Z.laeuft = true;
+    snap(L.neuSuche, mitText || `new BreitensuchePfade(G, ${s}): Breitensuche ab Startknoten s = ${s}.`);
+    snap(L.markedNeu, `marked = new boolean[${G.V}]: Noch ist kein Knoten markiert.`);
+    snap(L.edgeToNeu, `edgeTo = new int[${G.V}]: Noch kein Eintrag gesetzt (in Java stehen dort Nullen, die Anzeige zeigt „–“).`);
+    snap(L.thisS, `this.s = ${s}: Der Startknoten wird die Wurzel des Baums aus edgeTo[].`);
+    snap(L.bfsS, `bfs(G, ${s}): Die Suche beginnt.`);
+    bfs();
+    Z.laeuft = false; Z.vorbei = true;
+    const k = Z.marked.filter(Boolean).length, gradSumme = Z.marked.reduce((a, m, v) => a + (m ? grad(v) : 0), 0);
+    const tief = Math.max(...Z.dist.filter(d => d !== null));
+    snap(L.whileQ, `while: Die Schlange ist leer, die Breitensuche ist beendet. ${k} von ${G.V} Knoten ${k === 1 ? 'ist' : 'sind'} markiert${k < G.V ? ` – ${G.V - k === 1 ? `einer ist nicht mit ${s} verbunden und bleibt` : `${G.V - k} sind nicht mit ${s} verbunden und bleiben`} unerreicht` : ''}. Der Baum aus edgeTo[] hat ${tief + 1} Ebene${tief ? 'n' : ''} – jede Ebene ein Abstand. Geprüft wurden ${Z.geprueft} Einträge in Adjazenzlisten, die Summe der Grade der markierten Knoten (${gradSumme}).`, { opEnde: true, cls: 'neu' });
+  }
+  // zum Vergleich: der Pfad der Tiefensuche (Algorithmus 4.1) im selben Graphen
+  function dfsPfad(ziel) {
+    const m = Array(G.V).fill(false), e = Array(G.V).fill(null);
+    (function dfs(v) { m[v] = true; for (const w of adj[v]) if (!m[w]) { e[w] = v; dfs(w); } })(s);
+    if (!m[ziel]) return null;
+    const st = []; for (let x = ziel; x !== s; x = e[x]) st.unshift(x); st.unshift(s); return st;
+  }
+  // pathTo(v) – ausführlich, jeder Schritt einzeln
+  function pfadAusfuehrlich(v, imClient) {
+    P = { stack: [], x: null, v, fertig: false }; p16 = [];
+    if (!Z.marked[v]) {
+      snap(L.hasPath, `pathTo(${v}): hasPathTo(${v}) liefert marked[${v}] = false – ${v} ist von ${s} aus nicht erreichbar → return null.`, { opEnde: !imClient, ziel: v });
+      P = null; return null;
+    }
+    snap(L.hasPath, `pathTo(${v}): hasPathTo(${v}) liefert marked[${v}] = true – es gibt einen Pfad von ${s} nach ${v}.`, { ziel: v });
+    snap(L.neuStack, `Ein leerer Stapel path – ab hier genau wie bei der Tiefensuche: von ${v} aus rückwärts über edgeTo[].`, { ziel: v });
+    let x = v;
+    while (x !== s) {
+      P.x = x;
+      snap(L.forX, x === v ? `x = ${v}: x ≠ s, also weiter.` : `x = edgeTo[${P.stack[0]}] = ${x}: x ≠ s, also weiter.`, { ziel: v });
+      P.stack.unshift(x); p16.push({ x, stack: P.stack.slice() });
+      snap(L.pushX, `path.push(${x}) – ${x} liegt jetzt oben auf dem Stapel.`, { ziel: v });
+      x = Z.edgeTo[x];
+    }
+    P.x = x;
+    snap(L.forX, v === s ? `x = ${v} = s: Die Schleife läuft kein einziges Mal – der Pfad zum Startknoten ist nur der Startknoten selbst.` : `x = edgeTo[${P.stack[0]}] = ${x} = s: Die Wurzel ist erreicht, die Schleife endet.`, { ziel: v });
+    P.stack.unshift(s); p16.push({ x: s, stack: P.stack.slice() });
+    snap(L.pushS, `path.push(${s}) – der Startknoten liegt zuletzt oben.`, { ziel: v });
+    P.fertig = true;
+    const laenge = P.stack.length - 1, tiefe = dfsPfad(v);
+    const vergleich = tiefe && tiefe.join(' ') !== P.stack.join(' ')
+      ? ` Die Tiefensuche (Algorithmus 4.1) liefert im selben Graphen ${tiefe.join(' ')} – ${tiefe.length - 1 > laenge ? `${tiefe.length - 1} Kanten statt ${laenge}` : 'gleich lang, aber ein anderer Weg'}.`
+      : v === s ? '' : ' Die Tiefensuche findet hier denselben Pfad.';
+    snap(L.retPath, `return path: Der Stapel gibt ${P.stack.join(' ')} aus, den Pfad von ${s} nach ${v} mit ${laenge} Kante${laenge === 1 ? '' : 'n'} – ein kürzester, weniger geht nicht (Satz B).${vergleich}`, { opEnde: !imClient, cls: 'swap', ziel: v });
+    return P.stack.slice();
+  }
+  function pfadKurz(v) {                  // pathTo(v) ohne Einzelschritte: nur das Ergebnis
+    if (!Z.marked[v]) return null;
+    const st = []; for (let x = v; x !== s; x = Z.edgeTo[x]) st.unshift(x); st.unshift(s); return st;
+  }
+  const zeileAus = (v, p) => `${s} nach ${v}: ` + (p ? p.map(x => x === s ? '' + x : '-' + x).join('') : '');
+
+  // main(): Graph bauen, Breitensuche, dann pathTo für jeden Knoten
+  function lauf(neuG, startS, detail) {
+    stop();
+    G = neuG; s = startS; steps = []; konsole = []; p19 = []; adjNeu = null;
+    adj = Array.from({ length: G.V }, () => []); gebaut = 0;
+    neuerZustand();
+    if (!G.zufall) {
+      snap(L.kanten, `Testclient: dieselben ${G.kanten.length} Kanten wie bei der Tiefensuche (Abbildung 4.16, tinyCG).`);
+      snap(L.neuG, `new Graph(6): sechs Knoten 0 bis 5, jede Adjazenzliste ist ein leerer Bag.`);
+      G.kanten.forEach(([v, w], i) => {
+        adj[v].unshift(w); adj[w].unshift(v); gebaut = i + 1; adjNeu = [v, w];
+        snap(L.addEdge, `addEdge(${v}, ${w}): ${w} kommt vorne in adj[${v}], ${v} vorne in adj[${w}].`);
+      });
+      adjNeu = null;
+      snap(L.sMain, `Der Graph ist fertig: ${G.V} Knoten, ${G.kanten.length} Kanten, dieselben Adjazenzlisten wie bei der Tiefensuche. Startknoten s = ${s}.`, { opEnde: true });
+    } else {
+      adj = graph(G.V, G.kanten); gebaut = G.kanten.length;
+      snap(L.sMain, `Zufallsgraph statt der Kanten aus main(): ${G.V} Knoten, ${G.kanten.length} Kanten, eingefügt mit addEdge in dieser Reihenfolge: ${G.kanten.map(([a, b]) => `${a}–${b}`).join(', ')}. Startknoten s = ${s}.`, { opEnde: true });
+    }
+    suche();
+    if (detail === undefined) {           // der ausführlich gezeigte Pfad: im Buch 5 (Vergleich mit der Tiefensuche), sonst der längste
+      let best = s; for (let v = 0; v < G.V; v++) { const p = pfadKurz(v); if (p && p.length > (pfadKurz(best) || []).length) best = v; }
+      detail = G.zufall || s !== 0 ? best : 5;
+    }
+    for (let v = 0; v < G.V; v++) {
+      if (v === detail) {
+        snap(L.druck, `main(): pathTo(${v}) – diesmal ausführlich${!G.zufall && s === 0 ? '. Bei der Tiefensuche war das 0 2 3 5' : ''}.`, { ziel: v });
+        const p = pfadAusfuehrlich(v, true);
+        konsole.push(zeileAus(v, p));
+        snap(L.println, `Ausgabe: „${zeileAus(v, p).trimEnd()}“.`, { opEnde: true, cls: p ? 'swap' : '', ziel: v });
+        P = null;
+      } else {
+        const p = pfadKurz(v);
+        P = p ? { stack: p, x: null, v, fertig: true } : null;
+        konsole.push(zeileAus(v, p));
+        snap(L.druck, p
+          ? `main(): pathTo(${v}) in einem Schritt – ${p.join(' ')}${v === s ? ' (nur der Startknoten)' : ''}.`
+          : `main(): hasPathTo(${v}) ist false – ${v} ist nicht mit ${s} verbunden, die Zeile bleibt leer.`, { opEnde: true, ziel: v });
+        P = null;
+      }
+    }
+    snap(L.println, `main() ist fertig. Mit „pathTo(v)“ oben lässt sich jeder Pfad noch einmal Schritt für Schritt ansehen.`, { opEnde: true });
+    fuelleAuswahl();
+    pos = 0; render();
+  }
+  function nurSuche() {                    // Knopf „Breitensuche ab s“: neue Suche im selben Graphen
+    stop(); const vorher = steps.length;
+    s = +$('start').value; konsole = [];
+    suche(`new BreitensuchePfade(G, ${s}): neue Breitensuche im selben Graphen, diesmal ab s = ${s}.`);
+    pos = Math.min(vorher, steps.length - 1); render();
+  }
+  function nurPfad() {
+    stop(); const vorher = steps.length;
+    pfadAusfuehrlich(+$('ziel').value, false); P = null;
+    pos = Math.min(vorher, steps.length - 1); render();
+  }
+  function fuelleAuswahl() {
+    const opt = (sel, wert) => { sel.innerHTML = Array.from({ length: G.V }, (_, v) => `<option${v === wert ? ' selected' : ''}>${v}</option>`).join(''); };
+    opt($('start'), s); opt($('ziel'), G.zufall ? G.V - 1 : 5);
+  }
+
+  // ---------- Anzeige ----------
+  function zeichneGraph(st) {
+    const svg = $('graph'), R = 16;
+    svg.setAttribute('viewBox', `0 0 ${G.breite} ${G.hoehe}`); svg.style.maxWidth = G.breite * 1.25 + 'px';
+    const baumKante = new Set(st.baum.map(([a, b]) => a + '>' + b));
+    const pfadKante = new Set(); const pf = st.pfad ? st.pfad.stack : [];
+    for (let i = 0; i + 1 < pf.length; i++) { pfadKante.add(pf[i] + '-' + pf[i + 1]); pfadKante.add(pf[i + 1] + '-' + pf[i]); }
+    const inQ = new Set(st.queue);
+    let h = `<defs><marker id="pf" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>`;
+    const kanten = G.zufall ? G.kanten : G.kanten.slice(0, st.gebaut);
+    kanten.forEach(([v, w]) => {
+      let a = v, b = w, cls = 'kante';
+      if (baumKante.has(w + '>' + v)) { a = w; b = v; cls += ' baum'; } else if (baumKante.has(v + '>' + w)) cls += ' baum';
+      if (st.kante && ((st.kante[0] === v && st.kante[1] === w) || (st.kante[0] === w && st.kante[1] === v))) { cls = 'kante pruef'; a = st.kante[0]; b = st.kante[1]; }
+      if (pfadKante.has(v + '-' + w)) cls = 'kante pfad';
+      if (st.adjNeu && st.adjNeu[0] === v && st.adjNeu[1] === w) cls = 'kante pruef';
+      const [x1, y1] = G.pos[a], [x2, y2] = G.pos[b], d = Math.hypot(x2 - x1, y2 - y1) || 1, ux = (x2 - x1) / d, uy = (y2 - y1) / d;
+      const pfeil = cls === 'kante baum';
+      h += `<line class="${cls}" x1="${(x1 + ux * R).toFixed(1)}" y1="${(y1 + uy * R).toFixed(1)}" x2="${(x2 - ux * (R + (pfeil ? 3 : 0))).toFixed(1)}" y2="${(y2 - uy * (R + (pfeil ? 3 : 0))).toFixed(1)}"${pfeil ? ' marker-end="url(#pf)" style="color:var(--text)"' : ''}/>`;
+    });
+    for (let v = 0; v < G.V; v++) {
+      const [x, y] = G.pos[v];
+      let cls = 'knoten';
+      if (st.pfad && st.pfad.stack.includes(v)) cls += ' pfad';
+      else if (v === st.v) cls += ' aktiv';
+      else if (st.marked[v]) cls += ' markiert' + (inQ.has(v) ? ' schlange' : '');
+      if (st.w === v) cls += ' pruef';
+      if (st.pfad && st.pfad.x === v && !st.pfad.fertig) cls += ' neu-x';
+      if (st.vorbei && !st.marked[v]) cls += ' unerreicht';
+      h += `<g class="${cls}"><circle cx="${x}" cy="${y}" r="${R}"/><text x="${x}" y="${y}">${v}</text></g>`;
+      const marken = [];
+      if (v === st.s && (st.laeuft || st.vorbei)) marken.push(['s', 's']);
+      if (st.pfad && st.pfad.x === v && !st.pfad.fertig) marken.push(['x', '']);
+      if (marken.length) h += `<text class="marke ${marken[0][1]}" x="${x}" y="${y - R - 5 >= 12 ? y - R - 5 : y + R + 13}">${marken.map(m => m[0]).join(' ')}</text>`;
+    }
+    svg.innerHTML = h;
+  }
+  function zeichneBaum(st) {
+    const svg = $('baum');
+    if (!st.marked[st.s] || !(st.laeuft || st.vorbei)) { svg.setAttribute('viewBox', '0 0 300 30'); svg.style.maxWidth = '300px'; svg.innerHTML = `<text class="marke" x="150" y="18">(noch leer)</text>`; return; }
+    const kinder = {}; st.baum.forEach(([a, b]) => (kinder[a] = kinder[a] || []).push(b));
+    const lage = {}; let naechst = 0, tiefMax = 0;
+    (function lege(v, t) {
+      tiefMax = Math.max(tiefMax, t);
+      const k = kinder[v] || [];
+      k.forEach(c => lege(c, t + 1));
+      lage[v] = [k.length ? (lage[k[0]][0] + lage[k[k.length - 1]][0]) / 2 : naechst++, t];
+    })(st.s, 0);
+    const DX = 40, DY = 44, R = 13, LINKS = 34, B = LINKS + Math.max(naechst, 1) * DX + 10, H = tiefMax * DY + 2 * R + 12;
+    const px = v => LINKS + lage[v][0] * DX + DX / 2 + 5, py = v => lage[v][1] * DY + R + 6;
+    const inQ = new Set(st.queue), pf = st.pfad ? st.pfad.stack : [];
+    let h = '';
+    for (let t = 0; t <= tiefMax; t++) {
+      const y = t * DY + R + 6;
+      h += `<line class="ebene-linie" x1="${LINKS - 4}" y1="${y}" x2="${B - 4}" y2="${y}"/><text class="ebene" x="2" y="${y + 4}">d = ${t}</text>`;
+    }
+    st.baum.forEach(([a, b]) => { const inPfad = pf.includes(a) && pf.includes(b) && Math.abs(pf.indexOf(a) - pf.indexOf(b)) === 1;
+      h += `<line class="kante ${inPfad ? 'pfad' : 'baum'}" x1="${px(a)}" y1="${py(a)}" x2="${px(b)}" y2="${py(b)}"/>`; });
+    Object.keys(lage).forEach(k => { const v = +k;
+      let cls = 'knoten markiert'; if (pf.includes(v)) cls = 'knoten pfad'; else if (v === st.v) cls = 'knoten aktiv'; else if (inQ.has(v)) cls += ' schlange';
+      h += `<g class="${cls}"><circle cx="${px(v)}" cy="${py(v)}" r="${R}"/><text x="${px(v)}" y="${py(v)}" style="font-size:13px">${v}</text></g>`; });
+    svg.setAttribute('viewBox', `0 0 ${B} ${H}`); svg.style.maxWidth = B * 1.1 + 'px';
+    svg.innerHTML = h;
+  }
+  function render() {
+    const st = steps[pos];
+    const k = st.marked.filter(Boolean).length;
+    $('titel').innerHTML = `${G.zufall ? 'Zufallsgraph' : 'Graph aus Abbildung 4.16'} · <b>${G.V}</b> Knoten, <b>${st.gebaut}</b> Kanten · Start s = <b>${st.s}</b> · markiert: <b>${k}</b> · geprüfte Nachbarn: <b>${st.geprueft}</b>`;
+    zeichneGraph(st); zeichneBaum(st);
+    // Warteschlange, vorne links; die Zahl darunter ist der Abstand von s
+    const zelle = (v, c) => `<span class="${c || ''}">${v}<small>d = ${st.dist[v]}</small></span>`;
+    $('schlange').innerHTML = (st.laeuft || st.vorbei)
+      ? `<div class="h2">queue (vorne links, d = Abstand von s):</div><div class="zellen">${st.raus !== undefined ? zelle(st.raus, 'raus') : ''}${st.queue.map(v => zelle(v, st.neuQ && st.neuQ.includes(v) ? 'neu' : '')).join('') || (st.raus === undefined ? '<em style="color:var(--muted)">leer</em>' : '')}</div>`
+      : '';
+    // Adjazenzlisten: nur die Liste des herausgenommenen Knotens wird gerade durchlaufen
+    const fertig = new Set(st.fertig);
+    $('adj').innerHTML = `<div class="kopf">Adjazenzlisten:</div>` + st.adj.map((a, v) => `<div class="${v === st.v ? 'laeuft' : ''}">adj[${v}]: ${a.map((w, i) => {
+      let c = 'e';
+      if (st.adjNeu && i === 0 && ((st.adjNeu[0] === v && st.adjNeu[1] === w) || (st.adjNeu[1] === v && st.adjNeu[0] === w))) c += ' neu';
+      else if (fertig.has(v)) c += ' erledigt';
+      else if (v === st.v && st.i >= 0) c += i < st.i ? ' erledigt' : i === st.i ? ' jetzt' : '';
+      return `<span class="${c}">${w}</span>`; }).join('') || '<span class="e erledigt">–</span>'}</div>`).join('');
+    let t = '<table class="arr"><tr><th>v</th>';
+    for (let v = 0; v < G.V; v++) t += `<th>${v}</th>`;
+    t += '</tr><tr><th>marked</th>';
+    st.marked.forEach((m, v) => t += `<td class="${st.aend && st.aend.marked === v ? 'geaendert' : m ? '' : 'leer'}">${m ? 'T' : 'F'}</td>`);
+    t += '</tr><tr><th>edgeTo</th>';
+    st.edgeTo.forEach((e, v) => t += `<td class="${st.aend && st.aend.edgeTo === v ? 'geaendert' : e === null ? 'leer' : ''}">${e === null ? '–' : e}</td>`);
+    $('arrays').innerHTML = t + '</tr></table>';
+    $('pfadstapel').innerHTML = st.pfad
+      ? `<div class="h2">path (Stapel, oben links)${st.pfad.x !== null && !st.pfad.fertig ? ` · x = ${st.pfad.x}` : ''}:</div><div class="zellen">${st.pfad.stack.map((x, i) => `<span class="${i === 0 ? 'oben' : ''}">${x}</span>`).join('') || '<em style="color:var(--muted)">leer</em>'}</div>`
+      : '';
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg' + (st.cls ? ' ' + st.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    let p = '';
+    if (st.p19.length) {
+      p += `<h4>Nach jedem herausgenommenen Knoten: Schlange und edgeTo[]</h4><table><tr><th style="text-align:left">dequeue</th><th style="text-align:left">Schlange danach</th>${Array.from({ length: G.V }, (_, v) => `<th>${v}</th>`).join('')}</tr>${st.p19.map((r, i) =>
+        `<tr${i === st.p19.length - 1 && st.opEnde && st.laeuft ? ' class="zuletzt"' : ''}><td class="op">${r.v}</td><td class="q">${r.queue.join(' ') || '–'}</td>${r.edgeTo.map((e, v) => `<td class="${r.neu.includes(v) ? 'neu' : e === null ? 'leer' : ''}">${e === null ? '' : e}</td>`).join('')}</tr>`).join('')}</table>`;
+    }
+    if (st.p16.length) {
+      p += `<h4>pathTo(${st.ziel}): Stapel nach jedem push</h4><table><tr><th>x</th><th style="text-align:left">path</th></tr>${st.p16.map(r => `<tr><td>${r.x}</td><td class="pfad">${r.stack.join(' ')}</td></tr>`).join('')}</table>`;
+    }
+    $('proto').innerHTML = p || '<p class="count">Noch nichts – der Graph wird gerade gebaut.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  // Kästen werden nie wieder niedriger, sonst springen die Knöpfe darunter auf und ab
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;        // am Ende: von vorn abspielen
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const buch = () => { lockern(); lauf(BUCH, 0); };
+  $('buch').addEventListener('click', buch);
+  $('neu').addEventListener('click', buch);     // Neustart = Zustand beim ersten Öffnen
+  $('zufall').addEventListener('click', () => { lockern(); lauf(zufallsgraph(), 0); });
+  $('suche').addEventListener('click', nurSuche);
+  $('pfad').addEventListener('click', nurPfad);
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(V, kanten, s) spielt Breitensuche und alle pathTo mit beliebigen Kanten durch (ohne Anzeige)
+  function rechne(V, kanten, start) {
+    const alt = { G, adj, s, Z, P, konsole, p19, p16, steps, gebaut, adjNeu };
+    G = { V, kanten, pos: kanten.map(() => [0, 0]), zufall: true }; s = start; steps = []; konsole = []; p19 = []; adjNeu = null;
+    adj = graph(V, kanten); gebaut = kanten.length; neuerZustand(); suche();
+    const ergebnis = { marked: Z.marked.slice(), edgeTo: Z.edgeTo.slice(), dist: Z.dist.slice(), baum: Z.baum.map(k => k.slice()), geprueft: Z.geprueft, pfade: [] };
+    for (let v = 0; v < V; v++) { ergebnis.pfade.push(pfadAusfuehrlich(v, false)); P = null; }
+    ergebnis.steps = steps;
+    ({ G, adj, s, Z, P, konsole, p19, p16, steps, gebaut, adjNeu } = alt);
+    return ergebnis;
+  }
+  window.__bfs = { rechne, buch, get steps() { return steps; }, get pos() { return pos; }, set pos(p) { pos = p; render(); }, get adj() { return adj; }, CODE, L };
+
+  buch();
+})();
+</script>
+</body>
+</html>
