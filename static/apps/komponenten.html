@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zusammenhangskomponenten</title>
+<!-- Visualisierung der Zusammenhangskomponenten mit Tiefensuche (nach Sedgewick/Wayne, Algorithmen, Algorithmus 4.3,
+     Listing 4.8) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code (Komponenten statt CC,
+     dieselbe Graph-Klasse wie bei Tiefen- und Breitensuche, Bag aus Algorithmus 1.4 im Testclient); Beispielgraph tinyG
+     (13 Knoten, 13 Kanten) wie im Buch. Aufbau wie tiefensuche.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --k0: #9db4ec; --k1: #8fd1a6; --k2: #ead77a; --k3: #c9a8e6; --k4: #eba3b5; --k5: #8ccfcf; --ktext: #1c1c1f; }
+  @media (prefers-color-scheme: dark) {
+    :root { --k0: #3d5590; --k1: #2f6e48; --k2: #6b5d1e; --k3: #5b3f7a; --k4: #7a3a4c; --k5: #2f6464; --ktext: #ececef; }
+  }
+  .eingabe select { font: inherit; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .bild { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .bild svg { display: block; width: 100%; height: auto; }
+  .bild .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  svg .kante { stroke: var(--grau); stroke-width: 2; }
+  svg .kante.pruef { stroke: var(--cur); stroke-width: 4; stroke-dasharray: 7 4; }
+  svg .knoten circle { fill: var(--panel); stroke: var(--muted); stroke-width: 2; }
+  svg .knoten text { font: 700 15px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten.markiert circle { fill: var(--f); stroke: var(--f); }
+  svg .knoten.markiert text { fill: var(--ktext); }
+  svg .knoten.wartet circle { stroke: var(--neu); stroke-width: 3.5; }
+  svg .knoten.aktiv circle { fill: var(--neu); stroke: var(--neu); }
+  svg .knoten.aktiv text { fill: #fff; }
+  svg .knoten.pruef circle, svg .knoten.frage circle { stroke: var(--cur); stroke-width: 5; }
+  svg .knoten.start circle { stroke: var(--text); stroke-width: 3; stroke-dasharray: 4 3; }
+  svg .marke { font: 11px ui-monospace, Consolas, monospace; fill: var(--muted); text-anchor: middle; }
+  svg .marke.s { fill: var(--cur); font-weight: 700; }
+  @media (prefers-color-scheme: dark) { svg .knoten.aktiv text { fill: #0d1530; } }
+  .komp { font-size: 13px; margin-top: 8px; display: flex; flex-direction: column; gap: 3px; }
+  .komp .z { font-family: ui-monospace, Consolas, monospace; }
+  .komp i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; vertical-align: -1px; margin-right: 4px; }
+  .adj { font-family: ui-monospace, Consolas, monospace; font-size: 13px; margin: 0 0 10px; }
+  .adj div { padding: 1px 0; white-space: nowrap; }
+  .adj .kopf { color: var(--muted); font-family: system-ui, sans-serif; margin-bottom: 2px; }
+  .adj span.e { display: inline-block; min-width: 1.5em; text-align: center; border-radius: 4px; margin-right: 2px; }
+  .adj span.e.erledigt { color: var(--muted); opacity: .55; }
+  .adj span.e.jetzt { background: var(--cur); color: #fff; font-weight: 700; }
+  .adj span.e.wartet { outline: 2px solid var(--neu); font-weight: 700; }
+  .adj span.e.neu { background: var(--neu); color: #fff; font-weight: 700; }
+  @media (prefers-color-scheme: dark) { .adj span.e.jetzt, .adj span.e.neu { color: #0d1530; } }
+  .arr-box { overflow-x: auto; margin-bottom: 10px; }
+  table.arr { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  table.arr th, table.arr td { border: 1px solid var(--line); padding: 3px 6px; text-align: center; }
+  table.arr th { color: var(--muted); font-weight: 600; }
+  table.arr td.leer { color: var(--muted); }
+  table.arr td.geaendert { background: var(--neu); color: #fff; font-weight: 700; }
+  table.arr th.s-zeiger { color: var(--cur); }
+  @media (prefers-color-scheme: dark) { table.arr td.geaendert { color: #0d1530; } }
+  .stapel { font-size: 13px; margin-bottom: 10px; }
+  .stapel .h2 { color: var(--muted); margin-bottom: 4px; }
+  .stapel ol { list-style: none; margin: 0; padding: 0; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+  .stapel li { padding: 2px 6px; border-left: 3px solid var(--line); margin-bottom: 2px; }
+  .stapel li.oben { border-left-color: var(--neu); color: var(--neu); font-weight: 700; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto td.op { text-align: left; font-weight: 600; }
+  .proto td.leer { color: var(--muted); }
+  .proto tr.zuletzt td.op { color: var(--neu); }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .proto td.liste { text-align: left; }
+  @media (max-width: 640px) {
+    .bild { grid-template-columns: minmax(0, 1fr); }
+    .adj { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="buch">Testclient (tinyG)</button>
+    <button id="zufall">Zufallsgraph</button>
+    <label>v <select id="v1"></select></label>
+    <label>w <select id="v2"></select></label>
+    <button id="frage">connected(v, w)</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="bild">
+      <div>
+        <div class="h2">Graph – jede Komponente in ihrer Farbe</div>
+        <svg id="graph" role="img" aria-label="Der Graph mit dem Stand der Komponentensuche"></svg>
+        <div class="komp" id="komp"></div>
+      </div>
+      <div>
+        <div class="adj" id="adj"></div>
+        <div class="arr-box" id="arrays"></div>
+        <div class="stapel" id="stapel"></div>
+      </div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>laufender dfs-Aufruf</span>
+      <span><i style="background:var(--panel);outline:2px solid var(--neu)"></i>wartet auf einen tieferen Aufruf</span>
+      <span><i style="background:var(--panel);outline:3px solid var(--cur)"></i>Nachbar wird geprüft</span>
+      <span><i style="background:var(--panel);outline:2px dashed var(--text)"></i>s der for-Schleife</span>
+      <span><i style="background:var(--k0)"></i><i style="background:var(--k1)"></i><i style="background:var(--k2)"></i>Komponente 0, 1, 2 …</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der aktuelle Abschnitt fertig ist (eine Komponente, eine Zeile der Ausgabe)">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 4.3, Listing 4.8)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'public class Komponenten',
+    '{',
+    '   private boolean[] marked;   // schon von einer Tiefensuche erreicht?',
+    '   private int[] id;           // Nummer der Komponente je Knoten',
+    '   private int count;          // Anzahl der Komponenten bisher',
+    '',
+    '   public Komponenten(Graph G)',
+    '   {',
+    '      marked = new boolean[G.V()];',
+    '      id = new int[G.V()];',
+    '      for (int s = 0; s < G.V(); s++)',
+    '         if (!marked[s])',
+    '         {  // noch unerreicht: hier beginnt eine neue Komponente',
+    '            dfs(G, s);',
+    '            count++;',
+    '         }',
+    '   }',
+    '',
+    '   private void dfs(Graph G, int v)',
+    '   {',
+    '      marked[v] = true;',
+    '      id[v] = count;            // statt edgeTo: die Nummer der Komponente',
+    '      for (int w : G.adj(v))',
+    '         if (!marked[w])',
+    '            dfs(G, w);',
+    '   }                            // alle Nachbarn geprüft: zurück zum Aufrufer',
+    '',
+    '   public boolean connected(int v, int w)  {  return id[v] == id[w];  }',
+    '   public int id(int v)  {  return id[v];  }',
+    '   public int count()  {  return count;  }',
+    '',
+    '   @SuppressWarnings("unchecked")',
+    '   public static void main(String[] args)',
+    '   {  // Testclient: der Graph tinyG (13 Knoten, 13 Kanten)',
+    '      int[][] kanten = { {0, 5}, {4, 3}, {0, 1}, {9, 12}, {6, 4}, {5, 4}, {0, 2},',
+    '                         {11, 12}, {9, 10}, {0, 6}, {7, 8}, {9, 11}, {5, 3} };',
+    '      Graph G = new Graph(13);',
+    '      for (int[] k : kanten)',
+    '         G.addEdge(k[0], k[1]);',
+    '      Komponenten cc = new Komponenten(G);',
+    '      int M = cc.count();',
+    '      System.out.println(M + " Komponenten");',
+    '      Bag<Integer>[] komponenten = (Bag<Integer>[]) new Bag[M];',
+    '      for (int i = 0; i < M; i++)',
+    '         komponenten[i] = new Bag<Integer>();',
+    '      for (int v = 0; v < G.V(); v++)',
+    '         komponenten[cc.id(v)].add(v);',
+    '      for (int i = 0; i < M; i++)',
+    '      {',
+    '         for (int v : komponenten[i])',
+    '            System.out.print(v + " ");',
+    '         System.out.println();',
+    '      }',
+    '   }',
+    '}',
+    '',
+    '// ---- Graph: wie bei Tiefen- und Breitensuche, Adjazenzlisten mit dem Bag aus Algorithmus 1.4 ----',
+    'public class Graph',
+    '{',
+    '   private final int V;          // Anzahl der Knoten',
+    '   private int E;                // Anzahl der Kanten',
+    '   private Bag<Integer>[] adj;   // adj[v]: die Nachbarn von v',
+    '',
+    '   @SuppressWarnings("unchecked")',
+    '   public Graph(int V)',
+    '   {',
+    '      this.V = V;',
+    '      adj = (Bag<Integer>[]) new Bag[V];',
+    '      for (int v = 0; v < V; v++)',
+    '         adj[v] = new Bag<Integer>();',
+    '   }',
+    '',
+    '   public int V()  {  return V;  }',
+    '   public int E()  {  return E;  }',
+    '',
+    '   public void addEdge(int v, int w)',
+    '   {  // ungerichtet: die Kante steht in beiden Listen',
+    '      adj[v].add(w);',
+    '      adj[w].add(v);',
+    '      E++;',
+    '   }',
+    '',
+    '   public Iterable<Integer> adj(int v)  {  return adj[v];  }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    kanten: zeile('int[][] kanten'), neuG: zeile('Graph G = new Graph(13);'), addEdge: zeile('G.addEdge(k[0], k[1]);'),
+    neuCC: zeile('Komponenten cc = new Komponenten(G);'), markedNeu: zeile('marked = new boolean[G.V()];'), idNeu: zeile('id = new int[G.V()];'),
+    forS: zeile('for (int s = 0; s < G.V(); s++)'), ifS: zeile('if (!marked[s])'), dfsS: zeile('dfs(G, s);'), countPP: zeile('count++;'),
+    markiere: zeile('marked[v] = true;'), setzeId: zeile('id[v] = count;'), ifW: zeile('if (!marked[w])'), dfsW: zeile('dfs(G, w);'),
+    dfsEnde: zeile('// alle Nachbarn geprüft'), connected: zeile('return id[v] == id[w];'),
+    M: zeile('int M = cc.count();'), druckM: zeile('System.out.println(M + " Komponenten");'), bagAdd: zeile('komponenten[cc.id(v)].add(v);'),
+    druckV: zeile('System.out.print(v + " ");'), println: zeile('System.out.println();')
+  };
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+  const farbe = k => `var(--k${k % 6})`;
+
+  // ---------- Graphen ----------
+  // tinyG aus dem Buch, Kanten in der Reihenfolge der Datei tinyG.txt; Lage: die drei Teile nebeneinander
+  const BUCH = { V: 13, kanten: [[0, 5], [4, 3], [0, 1], [9, 12], [6, 4], [5, 4], [0, 2], [11, 12], [9, 10], [0, 6], [7, 8], [9, 11], [5, 3]],
+    pos: [[84, 40], [168, 26], [168, 92], [140, 206], [62, 206], [96, 134], [26, 120], [236, 62], [236, 160], [306, 40], [392, 40], [306, 140], [392, 140]],
+    breite: 420, hoehe: 236 };
+
+  function graph(V, kanten) {           // wie Graph.addEdge: Bag fügt vorne an, also umgekehrte Reihenfolge
+    const adj = Array.from({ length: V }, () => []);
+    kanten.forEach(([v, w]) => { adj[v].unshift(w); adj[w].unshift(v); });
+    return adj;
+  }
+  let zufallsZahl = Date.now() % 2147483647;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsgraph() {
+    const V = 10, ziel = 6 + zufall(4), kanten = [], hat = new Set();
+    while (kanten.length < ziel) {
+      const v = zufall(V), w = zufall(V);
+      if (v === w || hat.has(Math.min(v, w) + '-' + Math.max(v, w))) continue;
+      hat.add(Math.min(v, w) + '-' + Math.max(v, w)); kanten.push([v, w]);
+    }
+    const pos = Array.from({ length: V }, (_, i) => [210 + 170 * Math.sin(2 * Math.PI * i / V), 120 - 95 * Math.cos(2 * Math.PI * i / V)].map(Math.round));
+    return { V, kanten, pos, breite: 420, hoehe: 240, zufall: true };
+  }
+
+  // ---------- Aufzeichnung ----------
+  let G, adj, Z, konsole, p, bags, steps, pos = 0, timer = null, gebaut, adjNeu;
+  function neuerZustand() {
+    Z = { marked: Array(G.V).fill(false), id: Array(G.V).fill(null), count: 0, frames: [], fertig: new Set(), s: null, geprueft: 0, laeuft: false, vorbei: false };
+  }
+  function snap(line, msg, o) {
+    steps.push(Object.assign({
+      line, msg, gebaut, adj: adj.map(a => a.slice()), adjNeu,
+      marked: Z.marked.slice(), id: Z.id.slice(), count: Z.count, frames: Z.frames.map(f => ({ ...f })), fertig: [...Z.fertig], s: Z.s,
+      geprueft: Z.geprueft, laeuft: Z.laeuft, vorbei: Z.vorbei,
+      konsole: konsole.slice(), p: p.map(r => ({ ...r, id: r.id.slice() })), bags: bags ? bags.map(b => b.slice()) : null
+    }, o || {}));
+  }
+  const grad = v => adj[v].length;
+  const nb = (v, i) => `${i + 1} von ${adj[v].length}`;
+  const mitglieder = (id, k) => id.map((x, v) => x === k ? v : -1).filter(v => v >= 0);
+
+  // dfs(G, v) – genau wie der Java-Code, jeder Schritt einzeln
+  function dfs(v) {
+    Z.frames.push({ v, i: -1 });
+    Z.marked[v] = true;
+    snap(L.markiere, `dfs(G, ${v}): marked[${v}] = true.`, { aend: { marked: v } });
+    Z.id[v] = Z.count;
+    p.push({ v, id: Z.id.slice() });
+    snap(L.setzeId, `id[${v}] = count = ${Z.count}: ${v} gehört zur Komponente ${Z.count}. Nachbarn: adj[${v}] = ${adj[v].join(' ') || '(keine)'}.`, { aend: { id: v } });
+    const f = Z.frames[Z.frames.length - 1];
+    for (let i = 0; i < adj[v].length; i++) {
+      const w = adj[v][i];
+      f.i = i; Z.geprueft++;
+      if (Z.marked[w]) {
+        const grund = w === v ? 'eine Schleife zu sich selbst' : Z.frames.some(g => g.v === w) ? `${w} wartet weiter oben auf dem Aufrufstapel` : `${w} ist schon fertig besucht`;
+        snap(L.ifW, `Nachbar ${w} von ${v} (${nb(v, i)}): marked[${w}] ist true – ${grund}. Nichts zu tun.`, { kante: [v, w], w });
+      } else {
+        snap(L.ifW, `Nachbar ${w} von ${v} (${nb(v, i)}): marked[${w}] ist false – noch nicht besucht.`, { kante: [v, w], w });
+        snap(L.dfsW, `Rekursiver Aufruf dfs(G, ${w}): ${w} liegt in derselben Komponente wie ${v}.`, { kante: [v, w], w });
+        dfs(w);
+      }
+    }
+    Z.frames.pop(); Z.fertig.add(v);
+    const oben = Z.frames[Z.frames.length - 1];
+    if (oben) {
+      const rest = adj[oben.v].length - oben.i - 1;
+      snap(L.dfsEnde, `dfs(G, ${v}) ist fertig. Zurück zu dfs(G, ${oben.v})${rest ? `, dort folgt${rest === 1 ? '' : 'en'} noch ${rest} Nachbar${rest === 1 ? '' : 'n'}` : `, das danach ebenfalls fertig ist`}.`);
+    } else {
+      const m = mitglieder(Z.id, Z.count);
+      snap(L.dfsEnde, `dfs(G, ${v}) ist fertig – die Tiefensuche hat alles erreicht, was mit ${v} verbunden ist: ${m.join(' ')}. Das ist die ganze Komponente ${Z.count}.`);
+    }
+  }
+  // Konstruktor: for über alle Knoten, je unmarkiertem Start eine Tiefensuche
+  function konstruktor() {
+    neuerZustand(); p = [];
+    Z.laeuft = true;
+    snap(L.neuCC, `new Komponenten(G): Die ganze Arbeit passiert im Konstruktor (Vorverarbeitung).`);
+    snap(L.markedNeu, `marked = new boolean[${G.V}]: Noch ist kein Knoten erreicht.`);
+    snap(L.idNeu, `id = new int[${G.V}]: In Java stehen dort anfangs Nullen; die Anzeige zeigt „–“, solange nichts eingetragen ist. count = 0.`);
+    for (let s = 0; s < G.V; s++) {
+      Z.s = s;
+      if (Z.marked[s]) {
+        snap(L.ifS, `for: s = ${s}. marked[${s}] ist true – ${s} gehört schon zur Komponente ${Z.id[s]}. Weiter.`);
+        continue;
+      }
+      snap(L.ifS, `for: s = ${s}. marked[${s}] ist false – ${s} wurde von keiner bisherigen Suche erreicht. Hier beginnt Komponente ${Z.count}.`);
+      snap(L.dfsS, `dfs(G, ${s}): Tiefensuche ab ${s}.`);
+      dfs(s);
+      const m = mitglieder(Z.id, Z.count);
+      Z.count++;
+      snap(L.countPP, `count++ → count = ${Z.count}. Komponente ${Z.count - 1} hat ${m.length} Knoten: ${m.join(' ')}.`, { opEnde: true, cls: 'neu' });
+    }
+    Z.s = null; Z.laeuft = false; Z.vorbei = true;
+    snap(L.forS, `for: s = ${G.V} – die Schleife ist durch. ${Z.count} Komponente${Z.count === 1 ? '' : 'n'}. Geprüft wurden ${Z.geprueft} Einträge in Adjazenzlisten – jede Kante zweimal (2 · ${G.kanten.length}), dazu jeder Knoten einmal in der for-Schleife: Zeit proportional zu V + E (Satz C). Ab jetzt beantwortet connected() jede Frage mit einem einzigen Vergleich.`, { opEnde: true });
+  }
+  // main(): Graph bauen, Komponenten bestimmen, Ausgabe über Bags
+  function lauf(neuG) {
+    stop();
+    G = neuG; steps = []; konsole = []; p = []; bags = null; adjNeu = null;
+    adj = Array.from({ length: G.V }, () => []); gebaut = 0;
+    neuerZustand();
+    if (!G.zufall) {
+      snap(L.kanten, `Testclient: die ${G.kanten.length} Kanten von tinyG in der Reihenfolge der Datei tinyG.txt.`);
+      snap(L.neuG, `new Graph(13): 13 Knoten, jede Adjazenzliste ist ein leerer Bag.`);
+      G.kanten.forEach(([v, w], i) => {
+        adj[v].unshift(w); adj[w].unshift(v); gebaut = i + 1; adjNeu = [v, w];
+        snap(L.addEdge, `addEdge(${v}, ${w}): ${w} kommt vorne in adj[${v}], ${v} vorne in adj[${w}].`);
+      });
+      adjNeu = null;
+      snap(L.neuCC, `Der Graph ist fertig: ${G.V} Knoten, ${G.kanten.length} Kanten – die Adjazenzlisten stehen so wie in der Ausgabe von „java Graph tinyG.txt“ im Buch.`, { opEnde: true });
+    } else {
+      adj = graph(G.V, G.kanten); gebaut = G.kanten.length;
+      snap(L.neuCC, `Zufallsgraph statt der Kanten aus main(): ${G.V} Knoten, ${G.kanten.length} Kanten, eingefügt in dieser Reihenfolge: ${G.kanten.map(([a, b]) => `${a}–${b}`).join(', ')}.`, { opEnde: true });
+    }
+    konstruktor();
+    ausgabe();
+    fuelleAuswahl();
+    pos = 0; render();
+  }
+  function ausgabe() {
+    const M = Z.count;
+    snap(L.M, `M = cc.count() = ${M}.`);
+    konsole.push(`${M} Komponenten`);
+    snap(L.druckM, `Ausgabe: „${M} Komponenten“.`);
+    bags = Array.from({ length: M }, () => []);
+    for (let v = 0; v < G.V; v++) bags[Z.id[v]].unshift(v);
+    snap(L.bagAdd, `Für v = 0 bis ${G.V - 1}: komponenten[id(v)].add(v). Jeder Knoten kommt in den Bag seiner Komponente – und weil add vorne einfügt, stehen sie dort rückwärts.`, { bagsZeigen: true });
+    for (let i = 0; i < M; i++) {
+      konsole.push(bags[i].map(v => v + ' ').join(''));
+      snap(L.println, `Komponente ${i}: Der Bag gibt ${bags[i].join(' ')} aus – zuletzt hineingelegt, zuerst heraus.`, { opEnde: true, bagsZeigen: true, zeile: i });
+    }
+  }
+  function frage() {
+    stop(); const vorher = steps.length;
+    const v = +$('v1').value, w = +$('v2').value;
+    const gleich = Z.id[v] === Z.id[w];
+    snap(L.connected, `connected(${v}, ${w}): id[${v}] = ${Z.id[v]}, id[${w}] = ${Z.id[w]} → ${gleich}. ${gleich ? (v === w ? 'Ein Knoten liegt immer mit sich selbst zusammen.' : `${v} und ${w} liegen in derselben Komponente – es gibt einen Weg zwischen ihnen.`) : `Verschiedene Komponenten – kein Weg führt von ${v} nach ${w}.`} Ein einziger Vergleich, egal wie groß der Graph ist.`, { opEnde: true, frage: [v, w], cls: gleich ? 'swap' : '' });
+    pos = Math.min(vorher, steps.length - 1); render();
+  }
+  function fuelleAuswahl() {
+    const opt = (sel, wert) => { sel.innerHTML = Array.from({ length: G.V }, (_, v) => `<option${v === wert ? ' selected' : ''}>${v}</option>`).join(''); };
+    opt($('v1'), G.zufall ? 0 : 3); opt($('v2'), G.zufall ? G.V - 1 : 8);
+  }
+
+  // ---------- Anzeige ----------
+  function zeichneGraph(st) {
+    const svg = $('graph'), R = 15;
+    svg.setAttribute('viewBox', `0 0 ${G.breite} ${G.hoehe}`); svg.style.maxWidth = G.breite * 1.2 + 'px';
+    const oben = st.frames.length ? st.frames[st.frames.length - 1].v : null;
+    const wartend = new Set(st.frames.slice(0, -1).map(f => f.v));
+    let h = '';
+    const kanten = G.zufall ? G.kanten : G.kanten.slice(0, st.gebaut);
+    kanten.forEach(([v, w]) => {
+      let cls = 'kante', stil = '';
+      const pr = (st.kante && ((st.kante[0] === v && st.kante[1] === w) || (st.kante[0] === w && st.kante[1] === v))) || (st.adjNeu && st.adjNeu[0] === v && st.adjNeu[1] === w);
+      if (pr) cls += ' pruef';
+      else if (st.id[v] !== null && st.id[v] === st.id[w]) stil = ` style="stroke:${farbe(st.id[v])};stroke-width:4"`;
+      const [x1, y1] = G.pos[v], [x2, y2] = G.pos[w];
+      h += `<line class="${cls}"${stil} x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+    });
+    for (let v = 0; v < G.V; v++) {
+      const [x, y] = G.pos[v];
+      let cls = 'knoten', stil = '';
+      if (v === oben) cls += ' aktiv';
+      else if (st.id[v] !== null) { cls += ' markiert'; stil = ` style="--f:${farbe(st.id[v])}"`; }
+      if (wartend.has(v)) cls += ' wartet';
+      if (st.w === v) cls += ' pruef';
+      if (st.frage && st.frage.includes(v)) cls += ' frage';
+      if (st.s === v && !st.frames.length) cls += ' start';
+      h += `<g class="${cls}"${stil}><circle cx="${x}" cy="${y}" r="${R}"/><text x="${x}" y="${y}">${v}</text></g>`;
+      const marke = st.s === v ? 's' : st.frage && st.frage[0] === v ? (st.frage[1] === v ? 'v, w' : 'v') : st.frage && st.frage[1] === v ? 'w' : '';
+      if (marke) h += `<text class="marke s" x="${x}" y="${y - R - 5 >= 12 ? y - R - 5 : y + R + 13}">${marke}</text>`;
+    }
+    svg.innerHTML = h;
+  }
+  function render() {
+    const st = steps[pos];
+    const k = st.marked.filter(Boolean).length;
+    $('titel').innerHTML = `${G.zufall ? 'Zufallsgraph' : 'tinyG'} · <b>${G.V}</b> Knoten, <b>${st.gebaut}</b> Kanten · markiert: <b>${k}</b> · count = <b>${st.count}</b> · geprüfte Nachbarn: <b>${st.geprueft}</b>`;
+    zeichneGraph(st);
+    // Komponenten bisher
+    const nummern = [...new Set(st.id.filter(x => x !== null))].sort((a, b) => a - b);
+    $('komp').innerHTML = nummern.length
+      ? nummern.map(n => `<div><i style="background:${farbe(n)}"></i>Komponente ${n}: <span class="z">${mitglieder(st.id, n).join(' ')}</span>${n === st.count && st.laeuft ? ' <span style="color:var(--muted)">(wächst noch)</span>' : ''}</div>`).join('')
+      : '<div style="color:var(--muted)">Noch keine Komponente.</div>';
+    // Adjazenzlisten mit dem Stand jedes laufenden Aufrufs
+    const lauf = {}; st.frames.forEach((f, i) => lauf[f.v] = { i: f.i, oben: i === st.frames.length - 1 });
+    const fertig = new Set(st.fertig);
+    $('adj').innerHTML = `<div class="kopf">Adjazenzlisten:</div>` + st.adj.map((a, v) => `<div>adj[${v}]: ${a.map((w, i) => {
+      let c = 'e';
+      if (st.adjNeu && i === 0 && ((st.adjNeu[0] === v && st.adjNeu[1] === w) || (st.adjNeu[1] === v && st.adjNeu[0] === w))) c += ' neu';
+      else if (fertig.has(v)) c += ' erledigt';
+      else if (lauf[v]) c += i < lauf[v].i ? ' erledigt' : i === lauf[v].i ? (lauf[v].oben ? ' jetzt' : ' wartet') : '';
+      return `<span class="${c}">${w}</span>`; }).join('') || '<span class="e erledigt">–</span>'}</div>`).join('');
+    let t = '<table class="arr"><tr><th>v</th>';
+    for (let v = 0; v < G.V; v++) t += `<th class="${st.s === v ? 's-zeiger' : ''}">${v}</th>`;
+    t += '</tr><tr><th>marked</th>';
+    st.marked.forEach((m, v) => t += `<td class="${st.aend && st.aend.marked === v ? 'geaendert' : m ? '' : 'leer'}">${m ? 'T' : 'F'}</td>`);
+    t += '</tr><tr><th>id</th>';
+    st.id.forEach((e, v) => t += `<td class="${st.aend && st.aend.id === v ? 'geaendert' : e === null ? 'leer' : ''}"${e !== null && !(st.aend && st.aend.id === v) ? ` style="background:${farbe(e)};color:var(--ktext)"` : ''}>${e === null ? '–' : e}</td>`);
+    $('arrays').innerHTML = t + '</tr></table>';
+    $('stapel').innerHTML = st.frames.length
+      ? `<div class="h2">Aufrufstapel (oben der laufende Aufruf):</div><ol>${st.frames.slice().reverse().map((f, i) => `<li class="${i === 0 ? 'oben' : ''}">dfs(G, ${f.v})${f.i < 0 ? '' : ` – ${i === 0 ? 'prüft' : 'wartet bei'} Nachbar ${st.adj[f.v][f.i]} (${f.i + 1} von ${st.adj[f.v].length})`}</li>`).join('')}<li>Konstruktor – for bei s = ${st.s}</li></ol>`
+      : `<div class="h2">Aufrufstapel: ${st.laeuft ? `nur der Konstruktor, for bei s = ${st.s === null ? '–' : st.s}` : 'leer'}</div>`;
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg' + (st.cls ? ' ' + st.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    let h = '';
+    if (st.p.length) {
+      h += `<h4>id[] direkt nach jedem dfs-Aufruf</h4><table><tr><th style="text-align:left">Aufruf</th>${Array.from({ length: G.V }, (_, v) => `<th>${v}</th>`).join('')}</tr>${st.p.map((r, i) =>
+        `<tr${i === st.p.length - 1 && st.laeuft ? ' class="zuletzt"' : ''}><td class="op">dfs(${r.v})</td>${r.id.map((e, v) => `<td class="${v === r.v ? 'neu' : e === null ? 'leer' : ''}">${e === null ? '' : e}</td>`).join('')}</tr>`).join('')}</table>`;
+    }
+    if (st.bagsZeigen && st.bags) {
+      h += `<h4>Bags im Testclient (Iteration von vorn)</h4><table>${st.bags.map((b, i) => `<tr${st.zeile === i ? ' class="zuletzt"' : ''}><td class="op">komponenten[${i}]</td><td class="liste">${b.join(' ')}</td></tr>`).join('')}</table>`;
+    }
+    $('proto').innerHTML = h || '<p class="count">Noch nichts – der Graph wird gerade gebaut.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  // Kästen werden nie wieder niedriger, sonst springen die Knöpfe darunter auf und ab
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;        // am Ende: von vorn abspielen
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const buch = () => { lockern(); lauf(BUCH); };
+  $('buch').addEventListener('click', buch);
+  $('neu').addEventListener('click', buch);     // Neustart = Zustand beim ersten Öffnen
+  $('zufall').addEventListener('click', () => { lockern(); lauf(zufallsgraph()); });
+  $('frage').addEventListener('click', frage);
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(V, kanten) spielt Konstruktor und Ausgabe mit beliebigen Kanten durch (ohne Anzeige)
+  function rechne(V, kanten) {
+    const alt = { G, adj, Z, konsole, p, bags, steps, gebaut, adjNeu };
+    G = { V, kanten, pos: kanten.map(() => [0, 0]), zufall: true }; steps = []; konsole = []; p = []; bags = null; adjNeu = null;
+    adj = graph(V, kanten); gebaut = kanten.length; konstruktor(); ausgabe();
+    const ergebnis = { id: Z.id.slice(), count: Z.count, geprueft: Z.geprueft, konsole: konsole.slice(), steps };
+    ({ G, adj, Z, konsole, p, bags, steps, gebaut, adjNeu } = alt);
+    return ergebnis;
+  }
+  window.__cc = { rechne, buch, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, get adj() { return adj; }, CODE, L };
+
+  buch();
+})();
+</script>
+</body>
+</html>
