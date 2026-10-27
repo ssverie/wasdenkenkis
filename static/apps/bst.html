@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binärer Suchbaum (Symboltabelle)</title>
+<!-- Visualisierung des binären Suchbaums (nach Sedgewick/Wayne, Algorithmen, Algorithmus 3.3, Listings 3.9–3.13 und 3.15)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code (Suchbaum statt BST); Testclient SEARCHEXAMPLE
+     ergibt den Baum aus Abbildung 3.21. Aufbau wie die sequenzielle Suche und die binäre Suche (Kapitel 3). -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  .eingabe input { width: 4.2em; font: inherit; padding: 6px 8px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .eingabe input.taste { width: 3.4em; text-transform: uppercase; }
+  .eingabe + .eingabe { margin-top: 8px; }
+  .eingabe .wofuer { font-size: 13px; color: var(--muted); }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 8px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .baum-rahmen { overflow-x: auto; }
+  .baum-rahmen svg { display: block; width: 100%; height: auto; }
+  .baum-rahmen .leer { font-family: ui-monospace, Consolas, monospace; font-size: 13px; color: var(--muted); padding: 14px 0; }
+  svg .kante { stroke: var(--muted); stroke-width: 1.6; }
+  svg .knoten circle { fill: var(--bar); stroke: transparent; stroke-width: 2.5; }
+  svg .knoten .k { font: 700 15px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten .v { font: 10px system-ui, sans-serif; fill: var(--muted); text-anchor: middle; }
+  svg .knoten .n { font: 10px ui-monospace, Consolas, monospace; fill: var(--muted); }
+  svg .knoten .m { font: 700 10px ui-monospace, Consolas, monospace; fill: var(--cur); text-anchor: middle; }
+  svg .knoten.pfad circle { stroke: var(--text); }
+  svg .knoten.cur circle { fill: var(--cur); }
+  svg .knoten.neu circle { fill: var(--neu); }
+  svg .knoten.erg circle { fill: var(--swap); }
+  svg .knoten.cur .k, svg .knoten.neu .k, svg .knoten.erg .k { fill: #fff; }
+  @media (prefers-color-scheme: dark) {
+    svg .knoten.cur .k, svg .knoten.neu .k, svg .knoten.erg .k { fill: #0d1530; }
+  }
+  .lose { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .lose span { font-size: 12.5px; padding: 3px 8px; border-radius: 7px; border: 1.5px dashed var(--line); color: var(--text); }
+  .lose span.neu { border-color: var(--neu); }
+  .lose span.weg { opacity: .55; text-decoration: line-through; }
+  .stapel { margin-top: 10px; font-size: 13px; }
+  .stapel .h2 { color: var(--muted); margin-bottom: 4px; }
+  .stapel ol { list-style: none; margin: 0; padding: 0; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+  .stapel li { padding: 2px 6px; border-left: 3px solid var(--line); margin-bottom: 2px; }
+  .stapel li.oben { border-left-color: var(--cur); color: var(--cur); font-weight: 700; }
+  .rechnung { margin-top: 10px; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .proto td.op { text-align: left; font-weight: 600; white-space: nowrap; }
+  .proto td.inhalt { text-align: left; font-family: ui-monospace, Consolas, monospace; font-size: 12px; white-space: nowrap; }
+  .proto td.inhalt span { padding: 0 1px; }
+  .proto .p-neu { color: var(--neu); font-weight: 700; }
+  .proto .p-erg { color: var(--swap); font-weight: 700; border: 1.5px solid var(--swap); border-radius: 9px; padding: 0 3px; }
+  .proto tr.zuletzt td.op { color: var(--neu); }
+  @media (max-width: 480px) {
+    .stapel ol, .lose span { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box">
+    <div class="controls eingabe">
+      <label>Schlüssel <input id="schluessel" class="taste" maxlength="2" value="H"></label>
+      <label>Wert <input type="number" id="wert" min="0" max="99" value="13"></label>
+      <button id="put">put</button>
+      <button id="get">get</button>
+      <button id="delete">delete</button>
+      <button id="buch">Testclient SEARCHEXAMPLE</button>
+      <button id="sortiert">Sortiert A–J</button>
+      <button id="leeren">Leeren</button>
+    </div>
+    <div class="controls eingabe">
+      <span class="wofuer">Geordnet:</span>
+      <button id="min">min</button>
+      <button id="max">max</button>
+      <button id="deleteMin">deleteMin</button>
+      <button id="floor">floor(Schlüssel)</button>
+      <button id="ceiling">ceiling(Schlüssel)</button>
+      <button id="rank">rank(Schlüssel)</button>
+      <label>k <input type="number" id="k" min="0" max="15" value="3"></label>
+      <button id="select">select(k)</button>
+      <label>bis <input id="bis" class="taste" maxlength="2" value="T"></label>
+      <button id="keys">keys(Schlüssel, bis)</button>
+    </div>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="baum-rahmen" id="baum"></div>
+    <div class="lose" id="lose"></div>
+    <div class="stapel" id="stapel"></div>
+    <div class="rechnung" id="rechnung"></div>
+    <div class="legende">
+      <span><i style="background:var(--cur)"></i>x – um diesen Knoten geht es gerade</span>
+      <span><i style="background:var(--bar);outline:2px solid var(--text)"></i>schon verglichen</span>
+      <span><i style="background:var(--neu)"></i>neu eingefügt bzw. Wert ersetzt</span>
+      <span><i style="background:var(--swap)"></i>Ergebnis (bei rank: als kleiner gezählt)</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bisfertig" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 3.3, Listings 3.9–3.13, 3.15)</div><pre id="code"></pre></div>
+    <div class="box"><div class="h">Protokoll</div><div class="proto" id="proto"></div></div>
+  </div>
+</div>
+<script>
+(function () {
+  const KAP = 16;              // mehr Knoten passen nicht gut auf den Bildschirm – der Baum selbst hätte keine Grenze
+  const CODE = [
+    'public class Suchbaum<Key extends Comparable<Key>, Value>',
+    '{',
+    '   private Node root;                         // Wurzel des Baums',
+    '',
+    '   private class Node',
+    '   {',
+    '      Key key;  Value val;',
+    '      Node left, right;                       // kleinere links, größere rechts',
+    '      int N;                                  // Knoten im Teilbaum, x selbst mitgezählt',
+    '      Node(Key key, Value val, int N)',
+    '      {  this.key = key;  this.val = val;  this.N = N;  }',
+    '   }',
+    '',
+    '   public int size()  {  return size(root);  }',
+    '   private int size(Node x)  {  return x == null ? 0 : x.N;  }',
+    '',
+    '   public Value get(Key key)  {  return get(root, key);  }',
+    '   private Value get(Node x, Key key)',
+    '   {  // im Teilbaum unter x suchen',
+    '      if (x == null) return null;                     // erfolglos',
+    '      int cmp = key.compareTo(x.key);',
+    '      if      (cmp < 0) return get(x.left, key);',
+    '      else if (cmp > 0) return get(x.right, key);',
+    '      else return x.val;                              // gefunden',
+    '   }',
+    '',
+    '   public void put(Key key, Value val)  {  root = put(root, key, val);  }',
+    '   private Node put(Node x, Key key, Value val)',
+    '   {  // liefert die Wurzel des (evtl. neuen) Teilbaums zurück',
+    '      if (x == null) return new Node(key, val, 1);    // hier hängt der neue Knoten',
+    '      int cmp = key.compareTo(x.key);',
+    '      if      (cmp < 0) x.left  = put(x.left,  key, val);',
+    '      else if (cmp > 0) x.right = put(x.right, key, val);',
+    '      else x.val = val;                               // vorhanden: Wert ersetzen',
+    '      x.N = size(x.left) + size(x.right) + 1;',
+    '      return x;',
+    '   }',
+    '',
+    '   public Key min()  {  return min(root).key;  }',
+    '   private Node min(Node x)',
+    '   {  if (x.left == null) return x;  return min(x.left);  }',
+    '   public Key max()  {  return max(root).key;  }',
+    '   private Node max(Node x)',
+    '   {  if (x.right == null) return x;  return max(x.right);  }',
+    '',
+    '   public Key floor(Key key)',
+    '   {  Node x = floor(root, key);  return x == null ? null : x.key;  }',
+    '   private Node floor(Node x, Key key)',
+    '   {  // größter Schlüssel <= key im Teilbaum unter x',
+    '      if (x == null) return null;',
+    '      int cmp = key.compareTo(x.key);',
+    '      if (cmp == 0) return x;                         // genau getroffen',
+    '      if (cmp < 0)  return floor(x.left, key);        // floor liegt sicher links',
+    '      Node t = floor(x.right, key);                   // rechts ein besserer?',
+    '      if (t != null) return t;',
+    '      else           return x;',
+    '   }',
+    '',
+    '   public Key ceiling(Key key)',
+    '   {  Node x = ceiling(root, key);  return x == null ? null : x.key;  }',
+    '   private Node ceiling(Node x, Key key)',
+    '   {  // kleinster Schlüssel >= key im Teilbaum unter x',
+    '      if (x == null) return null;',
+    '      int cmp = key.compareTo(x.key);',
+    '      if (cmp == 0) return x;',
+    '      if (cmp > 0)  return ceiling(x.right, key);     // ceiling liegt sicher rechts',
+    '      Node t = ceiling(x.left, key);                  // links ein besserer?',
+    '      if (t != null) return t;',
+    '      else           return x;',
+    '   }',
+    '',
+    '   public Key select(int k)  {  return select(root, k).key;  }',
+    '   private Node select(Node x, int k)',
+    '   {  // Knoten mit Rang k im Teilbaum unter x',
+    '      if (x == null) return null;',
+    '      int t = size(x.left);',
+    '      if      (t > k) return select(x.left,  k);',
+    '      else if (t < k) return select(x.right, k - t - 1);',
+    '      else            return x;',
+    '   }',
+    '',
+    '   public int rank(Key key)  {  return rank(key, root);  }',
+    '   private int rank(Key key, Node x)',
+    '   {  // Anzahl der Schlüssel kleiner als key im Teilbaum unter x',
+    '      if (x == null) return 0;',
+    '      int cmp = key.compareTo(x.key);',
+    '      if      (cmp < 0) return rank(key, x.left);',
+    '      else if (cmp > 0) return 1 + size(x.left) + rank(key, x.right);',
+    '      else              return size(x.left);',
+    '   }',
+    '',
+    '   public void deleteMin()  {  root = deleteMin(root);  }',
+    '   private Node deleteMin(Node x)',
+    '   {',
+    '      if (x.left == null) return x.right;             // x fällt heraus',
+    '      x.left = deleteMin(x.left);',
+    '      x.N = size(x.left) + size(x.right) + 1;',
+    '      return x;',
+    '   }',
+    '',
+    '   public void delete(Key key)  {  root = delete(root, key);  }',
+    '   private Node delete(Node x, Key key)',
+    '   {  // nach Hibbard',
+    '      if (x == null) return null;',
+    '      int cmp = key.compareTo(x.key);',
+    '      if      (cmp < 0) x.left  = delete(x.left,  key);',
+    '      else if (cmp > 0) x.right = delete(x.right, key);',
+    '      else',
+    '      {',
+    '         if (x.right == null) return x.left;          // höchstens ein Kind:',
+    '         if (x.left  == null) return x.right;         // das andere rückt nach',
+    '         Node t = x;                                  // zwei Kinder:',
+    '         x = min(t.right);                            // der Nachfolger',
+    '         x.right = deleteMin(t.right);',
+    '         x.left = t.left;',
+    '      }',
+    '      x.N = size(x.left) + size(x.right) + 1;',
+    '      return x;',
+    '   }',
+    '',
+    '   public Iterable<Key> keys(Key lo, Key hi)',
+    '   {',
+    '      Queue<Key> q = new Queue<>();',
+    '      keys(root, q, lo, hi);',
+    '      return q;',
+    '   }',
+    '   private void keys(Node x, Queue<Key> q, Key lo, Key hi)',
+    '   {  // inorder; Teilbäume außerhalb von lo..hi werden abgeschnitten',
+    '      if (x == null) return;',
+    '      int cmplo = lo.compareTo(x.key);',
+    '      int cmphi = hi.compareTo(x.key);',
+    '      if (cmplo < 0) keys(x.left, q, lo, hi);',
+    '      if (cmplo <= 0 && cmphi >= 0) q.enqueue(x.key);',
+    '      if (cmphi > 0) keys(x.right, q, lo, hi);',
+    '   }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient: Wert = Position im Wort',
+    '      String[] a = "SEARCHEXAMPLE".split("");',
+    '      Suchbaum<String, Integer> st = new Suchbaum<>();',
+    '      for (int i = 0; i < a.length; i++)',
+    '         st.put(a[i], i);',
+    '   }',
+    '}'
+  ];
+  // Codezeile suchen (ab = Methodenkopf, ab dem gesucht wird)
+  function finde(s, ab) {
+    const start = ab ? CODE.findIndex(l => l.includes(ab)) : 0;
+    const i = CODE.findIndex((l, k) => k >= start && l.includes(s));
+    if (start < 0 || i < 0) throw new Error('Codezeile fehlt: ' + s);
+    return i;
+  }
+  const L = { start: finde('private Node root;'), client: finde('st.put(a[i], i);'),
+    getPub: finde('public Value get(Key key)'), gNull: finde('if (x == null) return null;', 'private Value get('), gCmp: finde('int cmp', 'private Value get('),
+    gLinks: finde('return get(x.left, key);'), gRechts: finde('return get(x.right, key);'), gTreffer: finde('else return x.val;'),
+    putPub: finde('public void put(Key key, Value val)'), pNull: finde('return new Node(key, val, 1);'), pCmp: finde('int cmp', 'private Node put('),
+    pLinks: finde('x.left  = put(x.left,  key, val);'), pRechts: finde('x.right = put(x.right, key, val);'), pGleich: finde('else x.val = val;'),
+    pN: finde('x.N = size', 'private Node put('),
+    minPub: finde('public Key min()'), minRek: finde('return min(x.left);'), maxPub: finde('public Key max()'), maxRek: finde('return max(x.right);'),
+    floorPub: finde('Node x = floor(root, key);'), fNull: finde('if (x == null) return null;', 'private Node floor('), fGleich: finde('if (cmp == 0) return x;', 'private Node floor('),
+    fLinks: finde('return floor(x.left, key);'), fT: finde('Node t = floor(x.right, key);'), fT1: finde('if (t != null) return t;', 'private Node floor('), fX: finde('else           return x;', 'private Node floor('),
+    ceilPub: finde('Node x = ceiling(root, key);'), cNull: finde('if (x == null) return null;', 'private Node ceiling('), cGleich: finde('if (cmp == 0) return x;', 'private Node ceiling('),
+    cRechts: finde('return ceiling(x.right, key);'), cT: finde('Node t = ceiling(x.left, key);'), cT1: finde('if (t != null) return t;', 'private Node ceiling('), cX: finde('else           return x;', 'private Node ceiling('),
+    selPub: finde('public Key select(int k)'), sT: finde('int t = size(x.left);'), sLinks: finde('return select(x.left,  k);'), sRechts: finde('return select(x.right, k - t - 1);'), sTreffer: finde('else            return x;', 'private Node select('),
+    rankPub: finde('public int rank(Key key)'), rNull: finde('if (x == null) return 0;'), rLinks: finde('return rank(key, x.left);'), rRechts: finde('return 1 + size(x.left) + rank(key, x.right);'), rGleich: finde('else              return size(x.left);'),
+    dmPub: finde('public void deleteMin()'), dmRet: finde('if (x.left == null) return x.right;'), dmRek: finde('x.left = deleteMin(x.left);'), dmN: finde('x.N = size', 'private Node deleteMin('),
+    dPub: finde('public void delete(Key key)'), dNull: finde('if (x == null) return null;', 'private Node delete('), dLinks: finde('x.left  = delete(x.left,  key);'), dRechts: finde('x.right = delete(x.right, key);'),
+    dR: finde('if (x.right == null) return x.left;'), dL: finde('if (x.left  == null) return x.right;'), dT: finde('Node t = x;'), dMin: finde('x = min(t.right);'),
+    dXR: finde('x.right = deleteMin(t.right);'), dXL: finde('x.left = t.left;'), dN: finde('x.N = size', 'private Node delete('),
+    kPub: finde('keys(root, q, lo, hi);'), kRet: finde('return q;'), kNull: finde('if (x == null) return;'), kLo: finde('int cmplo = lo.compareTo(x.key);'),
+    kLinks: finde('if (cmplo < 0) keys(x.left, q, lo, hi);'), kEnq: finde('q.enqueue(x.key);'), kRechts: finde('if (cmphi > 0) keys(x.right, q, lo, hi);') };
+
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+  const vgl = (a, b) => a < b ? -1 : a > b ? 1 : 0;           // wie String.compareTo (nur das Vorzeichen zählt)
+  const nm = x => x ? x.key : 'null';
+  const ve = c => `${c} Vergleich${c === 1 ? '' : 'e'}`;
+
+  // ---------- Baum und Zustand ----------
+  let root = null, naechsteId = 1;
+  const knoten = (key, val) => ({ id: naechsteId++, key, val, left: null, right: null, N: 1 });
+  const size = x => x ? x.N : 0;
+  const hoehe = x => x ? 1 + Math.max(hoehe(x.left), hoehe(x.right)) : -1;   // nur die Wurzel: Höhe 0
+  function tiefe(node) { let d = 0, x = root; while (x && x !== node) { x = vgl(node.key, x.key) < 0 ? x.left : x.right; d++; } return x ? d : -1; }
+  function inorder(x, a) { if (x) { inorder(x.left, a); a.push(x); inorder(x.right, a); } return a; }
+  function teilbaum(x, menge) { if (x) { menge.add(x); teilbaum(x.left, menge); teilbaum(x.right, menge); } }
+
+  let frames = [], H, ops = [], vergleicheGesamt = 0, anzahlOps = 0, opVergl = 0;
+  let steps = [], pos = 0, timer = null;
+  function beginne() { anzahlOps++; opVergl = 0; frames = []; H = { pfad: new Set(), erg: new Set(), neu: null, ersetzt: null, alt: null, weg: [] }; }
+  function vergleich(c) { c = c || 1; vergleicheGesamt += c; opVergl += c; }
+  function rufe(text, x) { const f = { text, x, t: null }; frames.push(f); return f; }
+  function raus() { frames.pop(); }
+
+  function abbild() {
+    const kn = [];
+    (function w(x) { if (!x) return; kn.push({ id: x.id, key: x.key, val: x.val, N: x.N, l: x.left ? x.left.id : null, r: x.right ? x.right.id : null }); w(x.left); w(x.right); })(root);
+    return { root: root ? root.id : null, kn };
+  }
+  function snap(line, msg, o) {
+    o = o || {};
+    const b = abbild(), drin = new Set(b.kn.map(k => k.id));
+    // Knoten, die gerade nicht im Baum hängen: Variablen der Aufrufe, der neue Knoten, gelöschte
+    const kand = [];
+    if (H.neu) kand.push([H.neu, 'neu']);
+    H.weg.forEach(w => kand.push([w, 'weg']));
+    frames.forEach(f => { if (f.x) kand.push([f.x, 'x']); if (f.t) kand.push([f.t, 't']); });
+    const lose = [], gesehen = new Set();
+    for (const [k, rolle] of kand) if (!drin.has(k.id) && !gesehen.has(k.id)) { gesehen.add(k.id); lose.push({ key: k.key, val: k.val, l: nm(k.left), r: nm(k.right), rolle }); }
+    const marken = [];
+    if (root) marken.push([root.id, 'root']);
+    const oben = frames[frames.length - 1];
+    if (oben && oben.x) marken.push([oben.x.id, 'x']);
+    if (oben && oben.t) marken.push([oben.t.id, 't']);
+    steps.push({ line, msg, b, lose, marken, cur: o.cur ? o.cur.id : null, pfad: [...H.pfad].map(k => k.id), erg: [...H.erg].map(k => k.id),
+      neu: H.neu ? H.neu.id : (H.ersetzt ? H.ersetzt.id : null), frames: frames.map(f => f.text), ops: ops.slice(),
+      opVergl, vergleicheGesamt, anzahlOps, n: size(root), h: hoehe(root), opEnde: !!o.opEnde, cls: o.cls || '' });
+  }
+  function protoOp(op, ergebnis) {
+    ops.push({ op, ergebnis, vergl: opVergl, n: size(root), h: hoehe(root),
+      inhalt: inorder(root, []).map(k => ({ key: k.key, val: k.val, z: k === H.neu || k === H.ersetzt ? 'neu' : H.erg.has(k) ? 'erg' : '' })) });
+  }
+
+  // ---------- put ----------
+  function put(key, val) {
+    beginne();
+    snap(L.putPub, `put(${key}, ${val}): root = put(root, …) – der Abstieg beginnt bei root${root ? ` (${root.key})` : ' = null'}.`);
+    root = putRek(root, key, val);
+    protoOp(`put ${key} ${val}`, H.neu ? `neu, Tiefe ${tiefe(H.neu)}` : `${H.alt} → ${val}`);
+    snap(L.putPub, H.neu
+      ? `Zurück in put(): root = ${root.key}. „${key}“ hängt in Tiefe ${tiefe(H.neu)} – ${ve(opVergl)} auf dem Weg dorthin. Auf dem Rückweg hat jeder Knoten des Pfads sein N neu berechnet.`
+      : `Zurück in put(): Nur der Wert von „${key}“ hat sich geändert, der Baum ist gleich geblieben. ${ve(opVergl)}.`,
+      { opEnde: true, cls: 'neu' });
+  }
+  function putRek(x, key, val) {
+    const f = rufe(`put(x = ${nm(x)}, key = ${key})`, x);
+    if (x === null) {
+      const neu = knoten(key, val);
+      H.neu = neu; f.x = neu;
+      snap(L.pNull, `x = null: Hier ist der Platz für „${key}“ → return new Node(${key}, ${val}, 1). Der Knoten hängt noch nirgends – erst der Aufrufer hängt ihn ein.`);
+      raus();
+      return neu;
+    }
+    vergleich(); H.pfad.add(x);
+    const cmp = vgl(key, x.key);
+    snap(L.pCmp, `„${key}“ mit x.key = „${x.key}“ vergleichen → ${cmp < 0 ? 'kleiner, also in den linken Teilbaum' : cmp > 0 ? 'größer, also in den rechten Teilbaum' : 'gleich'}.`, { cur: x });
+    if (cmp !== 0) {
+      const seite = cmp < 0 ? 'left' : 'right';
+      const vorher = x[seite];
+      const r = putRek(vorher, key, val);
+      x[seite] = r;
+      snap(cmp < 0 ? L.pLinks : L.pRechts, r !== vorher
+        ? `Zurück bei ${x.key}: x.${seite} = ${r.key} – der neue Knoten hängt jetzt ${cmp < 0 ? 'links' : 'rechts'} an ${x.key}.`
+        : `Zurück bei ${x.key}: x.${seite} = ${r.key} – derselbe Knoten wie vorher, der Zeiger wird nur neu gesetzt.`, { cur: x });
+    } else {
+      H.ersetzt = x; H.alt = x.val;
+      x.val = val;
+      snap(L.pGleich, `„${key}“ gibt es schon: x.val = ${val} ersetzt den alten Wert ${H.alt}. Kein neuer Knoten.`, { cur: x });
+    }
+    const alt = x.N;
+    x.N = size(x.left) + size(x.right) + 1;
+    snap(L.pN, `x.N = size(x.left) + size(x.right) + 1 = ${size(x.left)} + ${size(x.right)} + 1 = ${x.N}${alt !== x.N ? ` (vorher ${alt})` : ' (unverändert)'}. Dann return x (${x.key}).`, { cur: x });
+    raus();
+    return x;
+  }
+
+  // ---------- get ----------
+  function get(key) {
+    beginne();
+    snap(L.getPub, `get(${key}): Die Suche beginnt bei root${root ? ` (${root.key})` : ' = null'}.`);
+    const r = getRek(root, key);
+    const tief = frames.length;
+    frames = [];
+    protoOp(`get ${key}`, r === null ? 'null' : String(r));
+    snap(L.getPub, r === null
+      ? `Erfolglose Suche: null wandert durch ${tief === 1 ? 'den Aufruf' : `alle ${tief} wartenden Aufrufe`} zurück nach oben – ${ve(opVergl)}.`
+      : `Der Wert ${r} wandert durch die ${tief} wartenden get-Aufrufe zurück nach oben (jeder gibt ihn nur weiter): get(${key}) = ${r}, ${ve(opVergl)}.`,
+      { opEnde: true, cls: r === null ? '' : 'swap' });
+    return r;
+  }
+  function getRek(x, key) {
+    rufe(`get(x = ${nm(x)}, key = ${key})`, x);
+    if (x === null) { snap(L.gNull, `x = null: Der Weg endet, ohne „${key}“ zu treffen → return null.`); return null; }
+    vergleich(); H.pfad.add(x);
+    const cmp = vgl(key, x.key);
+    if (cmp < 0) { snap(L.gLinks, `„${key}“ < „${x.key}“ → links weitersuchen: get(x.left = ${nm(x.left)}).`, { cur: x }); return getRek(x.left, key); }
+    if (cmp > 0) { snap(L.gRechts, `„${key}“ > „${x.key}“ → rechts weitersuchen: get(x.right = ${nm(x.right)}).`, { cur: x }); return getRek(x.right, key); }
+    H.erg.add(x);
+    snap(L.gTreffer, `„${key}“ = „${x.key}“ → gefunden, return x.val = ${x.val}.`, { cur: x });
+    return x.val;
+  }
+
+  // ---------- min, max ----------
+  function minMax(welche) {
+    beginne();
+    const pub = welche === 'min' ? L.minPub : L.maxPub, rek = welche === 'min' ? L.minRek : L.maxRek, seite = welche === 'min' ? 'left' : 'right';
+    if (!root) {
+      protoOp(`${welche}()`, 'Exception');
+      snap(pub, `${welche}(): Der Baum ist leer – ${welche}(root) bekäme null, und .key löst eine NullPointerException aus.`, { opEnde: true });
+      return null;
+    }
+    let x = root;
+    for (;;) {
+      rufe(`${welche}(x = ${x.key})`, x);
+      H.pfad.add(x);
+      if (!x[seite]) break;
+      snap(rek, `x.${seite} = ${x[seite].key} → weiter nach ${welche === 'min' ? 'links' : 'rechts'}.`, { cur: x });
+      x = x[seite];
+    }
+    H.erg.add(x);
+    snap(rek, `x.${seite} = null → ${x.key} ist das ${welche === 'min' ? 'Minimum' : 'Maximum'}, return x.`, { cur: x });
+    frames = [];
+    protoOp(`${welche}()`, x.key);
+    snap(pub, `${welche}() = „${x.key}“ – kein einziger Schlüsselvergleich, nur ${welche === 'min' ? 'links' : 'rechts'} entlang.`, { opEnde: true, cls: 'swap' });
+    return x.key;
+  }
+
+  // ---------- floor, ceiling ----------
+  function floorCeil(welche, key) {
+    beginne();
+    const pub = welche === 'floor' ? L.floorPub : L.ceilPub;
+    snap(pub, `${welche}(${key}): ${welche === 'floor' ? 'größter Schlüssel ≤' : 'kleinster Schlüssel ≥'} „${key}“, Suche ab root${root ? ` (${root.key})` : ' = null'}.`);
+    const x = fcRek(welche, root, key);
+    if (x) H.erg.add(x);
+    protoOp(`${welche} ${key}`, x ? x.key : 'null');
+    snap(pub, x ? `${welche}(${key}) = „${x.key}“, ${ve(opVergl)}.` : `${welche}(${key}) = null – ${welche === 'floor' ? 'kein Schlüssel ist ≤' : 'kein Schlüssel ist ≥'} „${key}“.`,
+      { opEnde: true, cls: x ? 'swap' : '' });
+    return x ? x.key : null;
+  }
+  function fcRek(welche, x, key) {
+    const F = welche === 'floor';
+    const Z = F ? { nul: L.fNull, gleich: L.fGleich, weiter: L.fLinks, t: L.fT, t1: L.fT1, x: L.fX } : { nul: L.cNull, gleich: L.cGleich, weiter: L.cRechts, t: L.cT, t1: L.cT1, x: L.cX };
+    rufe(`${welche}(x = ${nm(x)}, key = ${key})`, x);
+    if (x === null) { snap(Z.nul, 'x = null → return null.'); raus(); return null; }
+    vergleich(); H.pfad.add(x);
+    const cmp = vgl(key, x.key);
+    if (cmp === 0) { snap(Z.gleich, `„${key}“ = „${x.key}“ → genau getroffen, return x.`, { cur: x }); raus(); return x; }
+    const sicher = F ? cmp < 0 : cmp > 0;
+    if (sicher) {
+      snap(Z.weiter, F ? `„${key}“ < „${x.key}“ → x ist zu groß, der floor muss im linken Teilbaum liegen.` : `„${key}“ > „${x.key}“ → x ist zu klein, der ceiling muss im rechten Teilbaum liegen.`, { cur: x });
+      const r = fcRek(welche, F ? x.left : x.right, key);
+      snap(Z.weiter, `Zurück bei ${x.key}: Das Ergebnis ${nm(r)} wird durchgereicht.`, { cur: x });
+      raus();
+      return r;
+    }
+    snap(Z.t, F ? `„${key}“ > „${x.key}“ → x ist ein Kandidat. Rechts könnte aber noch ein größerer Schlüssel ≤ „${key}“ liegen: t = floor(x.right).`
+                : `„${key}“ < „${x.key}“ → x ist ein Kandidat. Links könnte aber noch ein kleinerer Schlüssel ≥ „${key}“ liegen: t = ceiling(x.left).`, { cur: x });
+    const t = fcRek(welche, F ? x.right : x.left, key);
+    if (t) { snap(Z.t1, `Zurück bei ${x.key}: t = ${t.key} – ${F ? 'rechts' : 'links'} gab es einen besseren, return t.`, { cur: x }); raus(); return t; }
+    snap(Z.x, `Zurück bei ${x.key}: t = null – ${F ? 'rechts' : 'links'} passt keiner, also ist x = ${x.key} das Ergebnis.`, { cur: x });
+    raus();
+    return x;
+  }
+
+  // ---------- select, rank ----------
+  function select(k) {
+    beginne();
+    snap(L.selPub, `select(${k}): Gesucht ist der Schlüssel, vor dem genau ${k} kleinere stehen. Dafür braucht es die Teilbaumgrößen N.`);
+    let x = root, kk = k;
+    for (;;) {
+      rufe(`select(x = ${x.key}, k = ${kk})`, x);
+      H.pfad.add(x);
+      const t = size(x.left);
+      if (t > kk) { snap(L.sLinks, `t = size(x.left) = ${t} > k = ${kk}: Links stehen mehr als ${kk} Schlüssel → der gesuchte liegt links.`, { cur: x }); x = x.left; continue; }
+      if (t < kk) { snap(L.sRechts, `t = size(x.left) = ${t} < k = ${kk}: Links und x selbst sind zusammen ${t + 1} → rechts weiter mit k − t − 1 = ${kk - t - 1}.`, { cur: x }); kk = kk - t - 1; x = x.right; continue; }
+      H.erg.add(x);
+      snap(L.sTreffer, `t = size(x.left) = ${t} = k: Genau ${t} Schlüssel stehen links von ${x.key} in diesem Teilbaum → return x.`, { cur: x });
+      break;
+    }
+    frames = [];
+    protoOp(`select(${k})`, x.key);
+    snap(L.selPub, `select(${k}) = „${x.key}“ – ohne einen einzigen Schlüsselvergleich, nur mit den Zahlen N.`, { opEnde: true, cls: 'swap' });
+    return x.key;
+  }
+  function rankOp(key) {
+    beginne();
+    snap(L.rankPub, `rank(${key}): Wie viele Schlüssel sind kleiner als „${key}“? Grün wird, was gezählt ist.`);
+    const r = rankRek(key, root);
+    protoOp(`rank ${key}`, String(r));
+    snap(L.rankPub, `rank(${key}) = ${r}, ${ve(opVergl)}.`, { opEnde: true, cls: 'swap' });
+    return r;
+  }
+  function rankRek(key, x) {
+    rufe(`rank(key = ${key}, x = ${nm(x)})`, x);
+    if (x === null) { snap(L.rNull, 'x = null → return 0.'); raus(); return 0; }
+    vergleich(); H.pfad.add(x);
+    const cmp = vgl(key, x.key);
+    if (cmp < 0) {
+      snap(L.rLinks, `„${key}“ < „${x.key}“ → x und alles rechts davon sind größer, gezählt wird nur im linken Teilbaum.`, { cur: x });
+      const r = rankRek(key, x.left);
+      snap(L.rLinks, `Zurück bei ${x.key}: links ergibt ${r}, das wird durchgereicht.`, { cur: x });
+      raus(); return r;
+    }
+    if (cmp > 0) {
+      H.erg.add(x); teilbaum(x.left, H.erg);
+      snap(L.rRechts, `„${key}“ > „${x.key}“ → x selbst und sein linker Teilbaum (${size(x.left)}) sind kleiner: 1 + ${size(x.left)} + rank(rechts).`, { cur: x });
+      const r = rankRek(key, x.right);
+      const s = 1 + size(x.left) + r;
+      snap(L.rRechts, `Zurück bei ${x.key}: 1 + ${size(x.left)} + ${r} = ${s}.`, { cur: x });
+      raus(); return s;
+    }
+    teilbaum(x.left, H.erg);
+    snap(L.rGleich, `„${key}“ = „${x.key}“ → kleiner ist genau der linke Teilbaum: return size(x.left) = ${size(x.left)}.`, { cur: x });
+    raus(); return size(x.left);
+  }
+
+  // ---------- deleteMin, delete ----------
+  function deleteMin() {
+    beginne();
+    if (!root) {
+      protoOp('deleteMin()', 'Exception');
+      snap(L.dmPub, 'deleteMin(): Der Baum ist leer – deleteMin(null) läse x.left → NullPointerException.', { opEnde: true });
+      return;
+    }
+    snap(L.dmPub, `deleteMin(): root = deleteMin(root) – links hinunter ab ${root.key}.`);
+    const weg = minKnoten(root);
+    root = dmRek(root, false);
+    protoOp('deleteMin()', weg.key);
+    snap(L.dmPub, `Zurück in deleteMin(): root = ${nm(root)}. ${weg.key} hängt nirgends mehr und ist nicht mehr erreichbar – die Speicherbereinigung räumt ihn weg.`, { opEnde: true, cls: 'neu' });
+  }
+  const minKnoten = x => { while (x.left) x = x.left; return x; };
+  function dmRek(x, verschieben) {
+    rufe(`deleteMin(x = ${x.key})`, x);
+    H.pfad.add(x);
+    if (!x.left) {
+      if (!verschieben) H.weg.push(x);
+      snap(L.dmRet, `x.left = null → ${x.key} ist das Minimum. return x.right (${nm(x.right)}): ${verschieben ? `${x.key} löst sich aus dem Teilbaum` : `${x.key} fällt heraus`}, ${x.right ? `sein rechter Teilbaum rückt nach` : 'an seine Stelle kommt null'}.`, { cur: x });
+      raus();
+      return x.right;
+    }
+    snap(L.dmRek, `x.left = ${x.left.key} → weiter nach links.`, { cur: x });
+    const vorher = x.left;
+    const r = dmRek(vorher, verschieben);
+    x.left = r;
+    snap(L.dmRek, r === vorher ? `Zurück bei ${x.key}: x.left = ${nm(r)} – derselbe Knoten wie vorher, der Zeiger wird nur neu gesetzt.`
+                               : `Zurück bei ${x.key}: x.left = ${nm(r)} – ${vorher.key} hängt nicht mehr an ${x.key}.`, { cur: x });
+    const alt = x.N;
+    x.N = size(x.left) + size(x.right) + 1;
+    snap(L.dmN, `x.N = ${size(x.left)} + ${size(x.right)} + 1 = ${x.N} (vorher ${alt}). Dann return x (${x.key}).`, { cur: x });
+    raus();
+    return x;
+  }
+  function del(key) {
+    beginne();
+    snap(L.dPub, `delete(${key}): root = delete(root, …) – Suche ab root${root ? ` (${root.key})` : ' = null'}.`);
+    const n0 = size(root);
+    root = delRek(root, key);
+    const geloescht = size(root) < n0;
+    protoOp(`delete ${key}`, geloescht ? 'gelöscht' : 'nicht da');
+    snap(L.dPub, geloescht
+      ? `Zurück in delete(): root = ${nm(root)}. „${key}“ ist aus dem Baum verschwunden, die N auf dem Pfad sind neu berechnet – ${ve(opVergl)}.`
+      : `„${key}“ stand nicht im Baum, nichts hat sich geändert.`, { opEnde: true, cls: geloescht ? 'neu' : '' });
+  }
+  function delRek(x, key) {
+    const f = rufe(`delete(x = ${nm(x)}, key = ${key})`, x);
+    if (x === null) { snap(L.dNull, `x = null: „${key}“ steht nicht im Baum → return null (an dieser Stelle war schon null).`); raus(); return null; }
+    vergleich(); H.pfad.add(x);
+    const cmp = vgl(key, x.key);
+    if (cmp !== 0) {
+      const seite = cmp < 0 ? 'left' : 'right', zeile = cmp < 0 ? L.dLinks : L.dRechts;
+      snap(zeile, `„${key}“ ${cmp < 0 ? '<' : '>'} „${x.key}“ → im ${cmp < 0 ? 'linken' : 'rechten'} Teilbaum löschen.`, { cur: x });
+      const vorher = x[seite];
+      const r = delRek(vorher, key);
+      x[seite] = r;
+      snap(zeile, `Zurück bei ${x.key}: x.${seite} = ${nm(r)}${r !== vorher ? ` – an dieser Stelle hing vorher ${nm(vorher)}` : r ? ' (derselbe Knoten wie vorher)' : ' (war schon null)'}.`, { cur: x });
+    } else if (!x.right || !x.left) {
+      H.weg.push(x);
+      const nach = x.right ? x.right : x.left;
+      snap(x.right ? L.dL : L.dR, `„${key}“ gefunden. ${x.left || x.right ? `${x.key} hat nur ein Kind` : `${x.key} hat keine Kinder`} → return ${x.right ? 'x.right' : 'x.left'} (${nm(nach)}): ${nach ? `${nach.key} rückt an die Stelle von ${x.key}` : 'an die Stelle kommt null'}.`, { cur: x });
+      raus();
+      return nach;
+    } else {
+      const t = x; f.t = t;
+      snap(L.dT, `„${key}“ gefunden, und ${x.key} hat zwei Kinder – der Fall nach Hibbard. t = x merkt sich den Knoten.`, { cur: t });
+      x = minKnoten(t.right); f.x = x;
+      snap(L.dMin, `x = min(t.right): von ${t.right.key} immer nach links bis ${x.key}. Das ist der Nachfolger, der kleinste Schlüssel größer als „${key}“.`, { cur: x });
+      const r = dmRek(t.right, true);
+      x.right = r;
+      snap(L.dXR, `x.right = deleteMin(t.right) = ${nm(r)}: Der Nachfolger ${x.key} ist aus dem rechten Teilbaum gelöst und übernimmt, was davon übrig ist.`, { cur: x });
+      x.left = t.left;
+      H.weg.push(t);
+      snap(L.dXL, `x.left = t.left (${nm(t.left)}): ${x.key} übernimmt auch den linken Teilbaum von ${t.key}. Noch hängt ${x.key} nirgends – das erledigt gleich der Aufrufer.`, { cur: x });
+    }
+    const alt = x.N;
+    x.N = size(x.left) + size(x.right) + 1;
+    snap(L.dN, `x.N = ${size(x.left)} + ${size(x.right)} + 1 = ${x.N}${alt !== x.N ? ` (vorher ${alt})` : ''}. Dann return x (${x.key}).`, { cur: x });
+    raus();
+    return x;
+  }
+
+  // ---------- keys ----------
+  function keysOp(lo, hi) {
+    beginne();
+    const q = [];
+    snap(L.kPub, `keys(${lo}, ${hi}): leere Queue anlegen, dann keys(root, q, ${lo}, ${hi}) – inorder, aber nur, wo der Bereich hinreicht.`);
+    keysRek(root, q, lo, hi);
+    frames = [];
+    protoOp(`keys ${lo} ${hi}`, q.length ? q.join(' ') : '(leer)');
+    snap(L.kRet, `return q → [${q.join(' ')}]: ${q.length} Schlüssel, schon sortiert. Verglichen wurden ${H.pfad.size} Knoten (umrandet), ${size(root) - H.pfad.size} gar nicht angeschaut.`, { opEnde: true, cls: 'swap' });
+    return q;
+  }
+  function keysRek(x, q, lo, hi) {
+    rufe(`keys(x = ${nm(x)})`, x);
+    if (x === null) { snap(L.kNull, 'x = null → return.'); raus(); return; }
+    vergleich(2); H.pfad.add(x);
+    const cl = vgl(lo, x.key), ch = vgl(hi, x.key), drin = cl <= 0 && ch >= 0;
+    snap(L.kLo, `cmplo: „${lo}“ ${cl < 0 ? '<' : cl > 0 ? '>' : '='} „${x.key}“, cmphi: „${hi}“ ${ch < 0 ? '<' : ch > 0 ? '>' : '='} „${x.key}“ → ${x.key} liegt ${drin ? 'im Bereich' : 'außerhalb'}; ` +
+      `links ${cl < 0 ? 'kann noch etwas liegen' : 'liegt sicher nichts'}, rechts ${ch > 0 ? 'kann noch etwas liegen' : 'liegt sicher nichts'}.`, { cur: x });
+    if (cl < 0) keysRek(x.left, q, lo, hi);
+    if (drin) { q.push(x.key); H.erg.add(x); snap(L.kEnq, `Zurück bei ${x.key}, der linke Teil ist erledigt: q.enqueue(${x.key}) → q = [${q.join(' ')}].`, { cur: x }); }
+    if (ch > 0) keysRek(x.right, q, lo, hi);
+    raus();
+  }
+
+  // ---------- Anzeige ----------
+  function zeichneBaum(s) {
+    if (!s.b.root) return '<div class="leer">root → null (leerer Baum)</div>';
+    const by = {}; s.b.kn.forEach(k => by[k.id] = k);
+    const px = {}, tf = {}; let i = 0, maxT = 0;
+    (function io(id, d) { if (id === null) return; const k = by[id]; io(k.l, d + 1); px[id] = i++; tf[id] = d; if (d > maxT) maxT = d; io(k.r, d + 1); })(s.b.root, 0);
+    const W = 44, R = 15, DY = maxT > 6 ? 50 : 60, OBEN = 30, RAND = 14;
+    const breite = Math.max(i, 4) * W + 2 * RAND, hoch = OBEN + maxT * DY + 46;
+    const X = id => RAND + (px[id] + .5) * W + (Math.max(i, 4) - i) * W / 2, Y = id => OBEN + tf[id] * DY;
+    const pf = new Set(s.pfad), er = new Set(s.erg), mk = {};
+    const linksKind = new Set(s.b.kn.map(k => k.l).filter(l => l !== null));   // dort läuft die Kante nach rechts oben – N kommt nach links
+    s.marken.forEach(([id, m]) => (mk[id] = mk[id] || []).push(m));
+    let h = `<svg viewBox="0 0 ${breite} ${hoch}" style="min-width:${Math.max(i, 4) * 27}px" role="img" aria-label="Binärer Suchbaum">`;
+    s.b.kn.forEach(k => [k.l, k.r].forEach(c => { if (c !== null) h += `<line class="kante" x1="${X(k.id)}" y1="${Y(k.id)}" x2="${X(c)}" y2="${Y(c)}"/>`; }));
+    s.b.kn.forEach(k => {
+      const cls = k.id === s.cur ? 'cur' : k.id === s.neu ? 'neu' : er.has(k.id) ? 'erg' : '';
+      const x = X(k.id), y = Y(k.id);
+      h += `<g class="knoten ${cls}${pf.has(k.id) ? ' pfad' : ''}"><circle cx="${x}" cy="${y}" r="${R}"/><text class="k" x="${x}" y="${y}">${esc(k.key)}</text>` +
+        (linksKind.has(k.id) ? `<text class="n" x="${x - R - 1}" y="${y - R + 4}" text-anchor="end">${k.N}</text>` : `<text class="n" x="${x + R + 1}" y="${y - R + 4}">${k.N}</text>`) +
+        `<text class="v" x="${x}" y="${y + R + 12}">${esc(k.val)}</text>` +
+        (mk[k.id] ? `<text class="m" x="${x}" y="${y - R - 5}">${mk[k.id].join(' ')}</text>` : '') + '</g>';
+    });
+    return h + '</svg>';
+  }
+  function render() {
+    const s = steps[pos];
+    $('titel').innerHTML = `Binärer Suchbaum · N = <b>${s.n}</b> Knoten · Höhe <b>${s.h < 0 ? '–' : s.h}</b>${s.n > 1 ? ` (lg N ≈ ${Math.log2(s.n).toFixed(1)})` : ''} · ${s.anzahlOps} Operation${s.anzahlOps === 1 ? '' : 'en'} · klein am Knoten: N oben, Wert unten`;
+    $('baum').innerHTML = zeichneBaum(s);
+    $('lose').innerHTML = s.lose.map(k => k.rolle === 'neu' ? `<span class="neu">neuer Knoten ${esc(k.key)} (Wert ${esc(k.val)}) – hängt noch nirgends</span>`
+      : k.rolle === 'weg' ? `<span class="weg">${esc(k.key)} gelöscht – nicht mehr erreichbar</span>`
+      : `<span>${k.rolle} = ${esc(k.key)} hängt gerade nicht im Baum · left → ${esc(k.l)}, right → ${esc(k.r)}</span>`).join('');
+    $('stapel').innerHTML = s.frames.length
+      ? `<div class="h2">Aufrufstapel (oben der laufende Aufruf):</div><ol>${s.frames.slice().reverse().map((f, i) => `<li class="${i === 0 ? 'oben' : ''}">${esc(f)}</li>`).join('')}</ol>`
+      : '<div class="h2">Aufrufstapel: leer</div>';
+    $('rechnung').innerHTML = `Diese Operation: <b>${s.opVergl}</b> Vergleiche · insgesamt: <b>${s.vergleicheGesamt}</b>`;
+    const msg = $('msg');
+    msg.textContent = s.msg; msg.className = 'msg' + (s.cls ? ' ' + s.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === s.line));
+    $('proto').innerHTML = s.ops.length
+      ? `<table><tr><th style="text-align:left">Operation</th><th>Ergebnis</th><th>Vergl.</th><th>Höhe</th><th style="text-align:left">Schlüssel inorder (mit Wert) danach</th></tr>${s.ops.map((o, i) =>
+        `<tr${i === s.ops.length - 1 && s.opEnde ? ' class="zuletzt"' : ''}><td class="op">${esc(o.op)}</td><td>${esc(o.ergebnis)}</td><td>${o.vergl}</td><td>${o.h < 0 ? '–' : o.h}</td><td class="inhalt">${o.inhalt.map(k => `<span class="p-${k.z}">${esc(k.key)}${esc(k.val)}</span>`).join(' ')}</td></tr>`).join('')}</table>`
+      : '<p class="count">Noch keine Operation. Oben einen Schlüssel mit put eintragen oder den Testclient starten.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0;
+    $('next').disabled = amEnde; $('bisfertig').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  // Kästen werden nie wieder niedriger, sonst springen die Knöpfe darunter auf und ab
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  window.addEventListener('resize', () => ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }));
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;        // am Ende: von vorn abspielen
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  function operation(f) {
+    stop();
+    const vorher = steps.length;
+    const erg = f();
+    pos = Math.min(vorher, steps.length - 1);
+    render();
+    return erg;
+  }
+  function leeren(text) {
+    stop();
+    root = null; ops = []; vergleicheGesamt = 0; anzahlOps = 0; opVergl = 0; steps = [];
+    H = { pfad: new Set(), erg: new Set(), neu: null, ersetzt: null, alt: null, weg: [] }; frames = [];
+    snap(L.start, text || 'Leerer Baum: root = null. Oben einen Schlüssel mit put eintragen.', { opEnde: true });
+    pos = 0; render();
+  }
+  function fuelle(wort, text, schluss) {
+    leeren(text);
+    [...wort].forEach((c, i) => {
+      H = { pfad: new Set(), erg: new Set(), neu: null, ersetzt: null, alt: null, weg: [] }; frames = [];
+      snap(L.client, `st.put(a[${i}], ${i}) – „${c}“ mit Wert ${i}.`);
+      put(c, i);
+    });
+    H = { pfad: new Set(), erg: new Set(), neu: null, ersetzt: null, alt: null, weg: [] }; frames = [];
+    snap(L.client, schluss(), { opEnde: true });
+    pos = 0; render();
+  }
+  const testclient = () => fuelle('SEARCHEXAMPLE',
+    'Testclient: Die Buchstaben von SEARCHEXAMPLE kommen nacheinander mit put in den Baum, der Wert ist die Position im Wort (S 0, E 1, A 2 …). Mit „Abspielen“ oder „Schritt“ geht es los.',
+    () => `Fertig: 13 Eingaben, ${size(root)} Schlüssel, Höhe ${hoehe(root)} – der Baum aus Abbildung 3.21. Insgesamt ${vergleicheGesamt} Vergleiche (sequenzielle Suche: 64, binäre Suche im Array: 39 plus 20 Verschiebungen). Probiere jetzt keys mit F bis T.`);
+  const sortiert = () => fuelle('ABCDEFGHIJ',
+    'Ungünstige Reihenfolge: A bis J kommen schon sortiert. Jeder neue Schlüssel ist größer als alle bisherigen und hängt rechts am letzten Knoten.',
+    () => `Fertig: Der Baum ist zur Liste entartet, Höhe ${hoehe(root)} bei ${size(root)} Knoten. Insgesamt ${vergleicheGesamt} Vergleiche = 0 + 1 + … + 9 – quadratisch wie bei der sequenziellen Suche.`);
+
+  const schluessel = () => $('schluessel').value.trim().toUpperCase();
+  const ohne = el => { el.focus(); return true; };
+  const hinweis = t => { $('msg').textContent = t; };
+  function mitSchluessel(f) { const k = schluessel(); if (!k) return ohne($('schluessel')); operation(() => f(k)); }
+  $('put').addEventListener('click', () => {
+    const k = schluessel(), v = Math.round(+$('wert').value);
+    if (!k) return ohne($('schluessel'));
+    if (!(v >= 0 && v <= 99) || $('wert').value === '') return ohne($('wert'));
+    if (size(root) >= KAP && !inorder(root, []).some(x => x.key === k)) return hinweis(`Mehr als ${KAP} Knoten passen hier nicht auf den Bildschirm – bitte erst etwas löschen oder „Leeren“.`);
+    operation(() => put(k, v));
+  });
+  $('get').addEventListener('click', () => mitSchluessel(get));
+  $('delete').addEventListener('click', () => mitSchluessel(del));
+  $('floor').addEventListener('click', () => mitSchluessel(k => floorCeil('floor', k)));
+  $('ceiling').addEventListener('click', () => mitSchluessel(k => floorCeil('ceiling', k)));
+  $('rank').addEventListener('click', () => mitSchluessel(rankOp));
+  $('min').addEventListener('click', () => operation(() => minMax('min')));
+  $('max').addEventListener('click', () => operation(() => minMax('max')));
+  $('deleteMin').addEventListener('click', () => operation(deleteMin));
+  $('select').addEventListener('click', () => {
+    const k = Math.round(+$('k').value);
+    if ($('k').value === '' || !(k >= 0)) return ohne($('k'));
+    if (k >= size(root)) return hinweis(`select(k) braucht 0 ≤ k < N = ${size(root)} – sonst liefert select(root, k) null, und .key löst eine NullPointerException aus.`);
+    operation(() => select(k));
+  });
+  $('keys').addEventListener('click', () => {
+    const lo = schluessel(), hi = $('bis').value.trim().toUpperCase();
+    if (!lo) return ohne($('schluessel'));
+    if (!hi) return ohne($('bis'));
+    operation(() => keysOp(lo, hi));
+  });
+  $('schluessel').addEventListener('keydown', e => { if (e.key === 'Enter') $('get').click(); });
+  $('wert').addEventListener('keydown', e => { if (e.key === 'Enter') $('put').click(); });
+  $('buch').addEventListener('click', testclient);
+  $('sortiert').addEventListener('click', sortiert);
+  $('neu').addEventListener('click', testclient);   // Neustart = Zustand beim ersten Öffnen
+  $('leeren').addEventListener('click', () => leeren());
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bisfertig').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests
+  window.__bst = { put: (k, v) => operation(() => put(k, v)), get: k => operation(() => get(k)), delete: k => operation(() => del(k)),
+    deleteMin: () => operation(deleteMin), min: () => operation(() => minMax('min')), max: () => operation(() => minMax('max')),
+    floor: k => operation(() => floorCeil('floor', k)), ceiling: k => operation(() => floorCeil('ceiling', k)),
+    rank: k => operation(() => rankOp(k)), select: k => operation(() => select(k)), keys: (a, b) => operation(() => keysOp(a, b)),
+    leeren: () => leeren(), testclient, sortiert,
+    get inorder() { return inorder(root, []).map(k => k.key + k.val).join(' '); },
+    get struktur() { const s = x => x ? `(${s(x.left)} ${x.key}${x.N} ${s(x.right)})` : '-'; return s(root); },
+    get n() { return size(root); }, get hoehe() { return hoehe(root); }, get steps() { return steps; }, get ops() { return ops; },
+    get vergleiche() { return vergleicheGesamt; }, get pos() { return pos; }, KAP, CODE, L };
+
+  testclient();
+})();
+</script>
+</body>
+</html>
