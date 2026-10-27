@@ -566,6 +566,30 @@ text = "Warum möchten Menschen einzigartig sein und haben gleichzeitig solche A
   [[frage.antwort]]
   pfad = "/fragen/einzigartigkeit-gpt-6"
 
+[[frage]]
+gruppe = "menschheit"
+text = "Gibt es Menschen, die grundsätzlich nicht glücklich werden können, selbst unter idealen Bedingungen? Oder ist Unglück immer ein Zeichen dafür, dass etwas im Leben verändert werden müsste?"
+  [[frage.antwort]]
+  pfad = "/fragen/unglueck-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Wie viel von unserer Persönlichkeit besteht aus Erinnerungen, die wir unbewusst verändert haben? Sind wir vielleicht die Figuren einer Lebensgeschichte, die wir uns selbst erzählen?"
+  [[frage.antwort]]
+  pfad = "/fragen/erzaehltes-ich-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist der Mensch von Natur aus neugierig, oder sucht er eigentlich nur nach Informationen, die seine bestehenden Überzeugungen bestätigen? Wollen wir die Wahrheit wirklich wissen?"
+  [[frage.antwort]]
+  pfad = "/fragen/neugier-wahrheit-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum verlieren Menschen häufig das Interesse an etwas, sobald sie es besitzen? Ist Sehnsucht ein stärkerer Antrieb als Erfüllung?"
+  [[frage.antwort]]
+  pfad = "/fragen/sehnsucht-erfuellung-gpt-6"
+
 
 # ---------- Sven: Svens eigene Fragen ----------
 
