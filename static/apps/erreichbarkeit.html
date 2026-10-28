@@ -7,7 +7,7 @@
 <!-- Visualisierung der Erreichbarkeit in gerichteten Graphen mit Tiefensuche (nach Sedgewick/Wayne, Algorithmen,
      Algorithmus 4.4, Listing 4.13) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code
      (Erreichbarkeit statt DirectedDFS, Digraph mit dem Bag aus Algorithmus 1.4); Beispielgraph tinyDG (13 Knoten,
-     22 Kanten) in der Reihenfolge der Datei tinyDG.txt. Aufbau wie komponenten.html, Kanten mit Pfeilen. -->
+     22 Kanten) in der Fassung des Buchs (Abbildung 4.46). Aufbau wie komponenten.html, Kanten mit Pfeilen. -->
 <link rel="stylesheet" href="sortieren/rahmen.css?v=3">
 <style>
   :root { --erreicht: #8fd1a6; --etext: #1c1c1f; }
@@ -156,8 +156,8 @@
     '   public static void main(String[] args)',
     '   {  // Testclient: der Digraph tinyDG (13 Knoten, 22 Kanten), Startknoten aus args',
     '      int[][] kanten = { {4, 2}, {2, 3}, {3, 2}, {6, 0}, {0, 1}, {2, 0}, {11, 12}, {12, 9},',
-    '                         {9, 10}, {9, 11}, {7, 9}, {10, 12}, {11, 4}, {4, 3}, {3, 5}, {6, 8},',
-    '                         {8, 6}, {5, 4}, {0, 5}, {6, 4}, {6, 9}, {7, 6} };',
+    '                         {9, 10}, {9, 11}, {8, 9}, {10, 12}, {11, 4}, {4, 3}, {3, 5}, {7, 8},',
+    '                         {8, 7}, {5, 4}, {0, 5}, {6, 4}, {6, 9}, {7, 6} };',
     '      Digraph G = new Digraph(13);',
     '      for (int[] k : kanten)',
     '         G.addEdge(k[0], k[1]);',
@@ -214,9 +214,10 @@
   $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
 
   // ---------- Graphen ----------
-  // tinyDG aus dem Buch (Kanten in der Reihenfolge der Datei tinyDG.txt), Lage wie in Abbildung 4.32
+  // tinyDG in der Fassung des Buchs (Abbildung 4.46): wie die Datei tinyDG.txt der Buch-Website, aber 8→9, 7→8, 8→7
+  // statt 7→9, 6→8, 8→6 – an derselben Stelle der Liste, damit die Bags die Reihenfolgen des Buchs ergeben. Lage wie in Abbildung 4.32
   const BUCH = { V: 13,
-    kanten: [[4, 2], [2, 3], [3, 2], [6, 0], [0, 1], [2, 0], [11, 12], [12, 9], [9, 10], [9, 11], [7, 9], [10, 12], [11, 4], [4, 3], [3, 5], [6, 8], [8, 6], [5, 4], [0, 5], [6, 4], [6, 9], [7, 6]],
+    kanten: [[4, 2], [2, 3], [3, 2], [6, 0], [0, 1], [2, 0], [11, 12], [12, 9], [9, 10], [9, 11], [8, 9], [10, 12], [11, 4], [4, 3], [3, 5], [7, 8], [8, 7], [5, 4], [0, 5], [6, 4], [6, 9], [7, 6]],
     pos: [[40, 30], [72, 100], [142, 100], [72, 168], [152, 184], [36, 224], [255, 40], [325, 40], [395, 40], [325, 140], [395, 140], [325, 224], [395, 224]],
     breite: 430, hoehe: 252 };
   function digraph(V, kanten) {         // wie Digraph.addEdge: nur adj[v], Bag fügt vorne an
@@ -317,7 +318,7 @@
     adj = Array.from({ length: G.V }, () => []);
     neuerZustand();
     if (!G.zufall) {
-      snap(L.kanten, `Testclient: die ${G.kanten.length} Kanten von tinyDG in der Reihenfolge der Datei tinyDG.txt. Jede Kante hat eine Richtung: {6, 0} heißt 6→0.`);
+      snap(L.kanten, `Testclient: die ${G.kanten.length} Kanten von tinyDG in der Fassung des Buchs (die Datei tinyDG.txt auf der Buch-Website hat statt 7→8, 8→7, 8→9 die Kanten 6→8, 8→6, 7→9). Jede Kante hat eine Richtung: {6, 0} heißt 6→0.`);
       snap(L.neuG, `new Digraph(13): 13 Knoten, jede Adjazenzliste ist ein leerer Bag.`);
     }
     adj = digraph(G.V, G.kanten); Z.gebaut = true;
