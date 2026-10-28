@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Erreichbarkeit in Digraphen</title>
+<!-- Visualisierung der Erreichbarkeit in gerichteten Graphen mit Tiefensuche (nach Sedgewick/Wayne, Algorithmen,
+     Algorithmus 4.4, Listing 4.13) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code
+     (Erreichbarkeit statt DirectedDFS, Digraph mit dem Bag aus Algorithmus 1.4); Beispielgraph tinyDG (13 Knoten,
+     22 Kanten) in der Reihenfolge der Datei tinyDG.txt. Aufbau wie komponenten.html, Kanten mit Pfeilen. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --erreicht: #8fd1a6; --etext: #1c1c1f; }
+  @media (prefers-color-scheme: dark) { :root { --erreicht: #2f6e48; --etext: #ececef; } }
+  .eingabe select { font: inherit; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .bild { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .bild svg { display: block; width: 100%; height: auto; }
+  .bild .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  svg .kante { stroke: var(--grau); stroke-width: 1.8; fill: none; }
+  svg .pfeil { fill: var(--grau); stroke: none; }
+  svg .kante.baum { stroke: var(--text); stroke-width: 3.2; }
+  svg .pfeil.baum { fill: var(--text); }
+  svg .kante.pruef { stroke: var(--cur); stroke-width: 3.6; stroke-dasharray: 7 4; }
+  svg .pfeil.pruef { fill: var(--cur); }
+  svg .knoten circle { fill: var(--panel); stroke: var(--muted); stroke-width: 2; }
+  svg .knoten text { font: 700 15px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten.markiert circle { fill: var(--erreicht); stroke: var(--erreicht); }
+  svg .knoten.markiert text { fill: var(--etext); }
+  svg .knoten.wartet circle { stroke: var(--neu); stroke-width: 3.5; }
+  svg .knoten.aktiv circle { fill: var(--neu); stroke: var(--neu); }
+  svg .knoten.aktiv text { fill: #fff; }
+  svg .knoten.pruef circle { stroke: var(--cur); stroke-width: 5; }
+  svg .knoten.start circle { stroke-dasharray: 4 3; }
+  svg .knoten.start:not(.aktiv):not(.pruef):not(.wartet) circle { stroke: var(--text); stroke-width: 3; }
+  svg .knoten.unerreicht { opacity: .45; }
+  svg .marke { font: 11px ui-monospace, Consolas, monospace; fill: var(--cur); font-weight: 700; text-anchor: middle; }
+  @media (prefers-color-scheme: dark) { svg .knoten.aktiv text { fill: #0d1530; } }
+  .adj { font-family: ui-monospace, Consolas, monospace; font-size: 13px; margin: 0 0 10px; }
+  .adj div { padding: 1px 0; white-space: nowrap; }
+  .adj .kopf { color: var(--muted); font-family: system-ui, sans-serif; margin-bottom: 2px; }
+  .adj span.e { display: inline-block; min-width: 1.5em; text-align: center; border-radius: 4px; margin-right: 2px; }
+  .adj span.e.erledigt { color: var(--muted); opacity: .55; }
+  .adj span.e.jetzt { background: var(--cur); color: #fff; font-weight: 700; }
+  .adj span.e.wartet { outline: 2px solid var(--neu); font-weight: 700; }
+  @media (prefers-color-scheme: dark) { .adj span.e.jetzt { color: #0d1530; } }
+  .arr-box { overflow-x: auto; margin-bottom: 10px; }
+  table.arr { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  table.arr th, table.arr td { border: 1px solid var(--line); padding: 3px 6px; text-align: center; }
+  table.arr th { color: var(--muted); font-weight: 600; }
+  table.arr td.leer { color: var(--muted); }
+  table.arr td.ja { background: var(--erreicht); color: var(--etext); }
+  table.arr td.geaendert { background: var(--neu); color: #fff; font-weight: 700; }
+  table.arr th.quelle { color: var(--cur); }
+  @media (prefers-color-scheme: dark) { table.arr td.geaendert { color: #0d1530; } }
+  .stapel { font-size: 13px; margin-bottom: 10px; }
+  .stapel .h2 { color: var(--muted); margin-bottom: 4px; }
+  .stapel ol { list-style: none; margin: 0; padding: 0; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+  .stapel li { padding: 2px 6px; border-left: 3px solid var(--line); margin-bottom: 2px; }
+  .stapel li.oben { border-left-color: var(--neu); color: var(--neu); font-weight: 700; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .spur { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; white-space: pre; overflow-x: auto; margin: 0; line-height: 1.45; }
+  .spur span.zuletzt { color: var(--neu); font-weight: 700; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  @media (max-width: 640px) {
+    .bild { grid-template-columns: minmax(0, 1fr); }
+    .adj { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="abb">Abbildung 4.32: ab 0</button>
+    <button id="lauf1">java … 1</button>
+    <button id="lauf2">java … 2</button>
+    <button id="lauf126">java … 1 2 6</button>
+    <label>s <select id="s"></select></label>
+    <button id="abS">ab s</button>
+    <button id="zufall">Zufallsgraph</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="bild">
+      <div>
+        <div class="h2">Digraph – Pfeile zeigen die Richtung der Kanten</div>
+        <svg id="graph" role="img" aria-label="Der gerichtete Graph mit dem Stand der Tiefensuche"></svg>
+      </div>
+      <div>
+        <div class="adj" id="adj"></div>
+        <div class="arr-box" id="arrays"></div>
+        <div class="stapel" id="stapel"></div>
+      </div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>laufender dfs-Aufruf</span>
+      <span><i style="background:var(--panel);outline:2px solid var(--neu)"></i>wartet auf einen tieferen Aufruf</span>
+      <span><i style="background:var(--panel);outline:3px solid var(--cur)"></i>Nachfolger wird geprüft</span>
+      <span><i style="background:var(--erreicht)"></i>erreichbar (marked)</span>
+      <span><i style="background:var(--panel);outline:2px dashed var(--text)"></i>Startknoten</span>
+      <span><i style="background:var(--text)"></i>Kante, über die dfs weiterging</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der aktuelle Abschnitt fertig ist (Graph gebaut, eine Tiefensuche, Ausgabe)">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 4.4, Listing 4.13)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'public class Erreichbarkeit',
+    '{',
+    '   private boolean[] marked;   // von den Startknoten aus erreichbar?',
+    '',
+    '   public Erreichbarkeit(Digraph G, int s)',
+    '   {  // ein Startknoten',
+    '      marked = new boolean[G.V()];',
+    '      dfs(G, s);                 // eine einzige Tiefensuche',
+    '   }',
+    '',
+    '   public Erreichbarkeit(Digraph G, Iterable<Integer> quellen)',
+    '   {  // mehrere Startknoten',
+    '      marked = new boolean[G.V()];   // noch nichts erreicht',
+    '      for (int s : quellen)',
+    '         if (!marked[s]) dfs(G, s);',
+    '   }',
+    '',
+    '   private void dfs(Digraph G, int v)',
+    '   {',
+    '      marked[v] = true;',
+    '      for (int w : G.adj(v))     // nur die Kanten, die von v wegführen',
+    '         if (!marked[w]) dfs(G, w);',
+    '   }                             // alle Nachfolger geprüft: zurück zum Aufrufer',
+    '',
+    '   public boolean marked(int v)  {  return marked[v];  }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient: der Digraph tinyDG (13 Knoten, 22 Kanten), Startknoten aus args',
+    '      int[][] kanten = { {4, 2}, {2, 3}, {3, 2}, {6, 0}, {0, 1}, {2, 0}, {11, 12}, {12, 9},',
+    '                         {9, 10}, {9, 11}, {7, 9}, {10, 12}, {11, 4}, {4, 3}, {3, 5}, {6, 8},',
+    '                         {8, 6}, {5, 4}, {0, 5}, {6, 4}, {6, 9}, {7, 6} };',
+    '      Digraph G = new Digraph(13);',
+    '      for (int[] k : kanten)',
+    '         G.addEdge(k[0], k[1]);',
+    '      Bag<Integer> quellen = new Bag<Integer>();',
+    '      for (String a : args)',
+    '         quellen.add(Integer.parseInt(a));',
+    '      Erreichbarkeit erreichbar = new Erreichbarkeit(G, quellen);',
+    '      for (int v = 0; v < G.V(); v++)',
+    '         if (erreichbar.marked(v)) System.out.print(v + " ");',
+    '      System.out.println();',
+    '   }',
+    '}',
+    '',
+    '// ---- Digraph: Adjazenzlisten mit dem Bag aus Algorithmus 1.4, Kanten nur in einer Richtung ----',
+    'public class Digraph',
+    '{',
+    '   private final int V;          // Anzahl der Knoten',
+    '   private int E;                // Anzahl der Kanten',
+    '   private Bag<Integer>[] adj;   // adj[v]: die Knoten, auf die v zeigt',
+    '',
+    '   @SuppressWarnings("unchecked")',
+    '   public Digraph(int V)',
+    '   {',
+    '      this.V = V;',
+    '      adj = (Bag<Integer>[]) new Bag[V];',
+    '      for (int v = 0; v < V; v++)',
+    '         adj[v] = new Bag<Integer>();',
+    '   }',
+    '',
+    '   public int V()  {  return V;  }',
+    '   public int E()  {  return E;  }',
+    '',
+    '   public void addEdge(int v, int w)',
+    '   {  // gerichtet: nur v → w, in adj[w] ändert sich nichts',
+    '      adj[v].add(w);',
+    '      E++;',
+    '   }',
+    '',
+    '   public Iterable<Integer> adj(int v)  {  return adj[v];  }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    kanten: zeile('int[][] kanten'), neuG: zeile('Digraph G = new Digraph(13);'), addEdge: zeile('G.addEdge(k[0], k[1]);'),
+    bagNeu: zeile('Bag<Integer> quellen = new Bag<Integer>();'), bagAdd: zeile('quellen.add(Integer.parseInt(a));'),
+    neuE: zeile('Erreichbarkeit erreichbar = new Erreichbarkeit(G, quellen);'), markedNeu: zeile('// noch nichts erreicht'),
+    forS: zeile('for (int s : quellen)'), ifS: zeile('if (!marked[s]) dfs(G, s);'),
+    markiere: zeile('marked[v] = true;'), ifW: zeile('if (!marked[w]) dfs(G, w);'), dfsEnde: zeile('// alle Nachfolger geprüft'),
+    forV: zeile('for (int v = 0; v < G.V(); v++)'), druckV: zeile('if (erreichbar.marked(v)) System.out.print(v + " ");'),
+    println: zeile('System.out.println();')
+  };
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Graphen ----------
+  // tinyDG aus dem Buch (Kanten in der Reihenfolge der Datei tinyDG.txt), Lage wie in Abbildung 4.32
+  const BUCH = { V: 13,
+    kanten: [[4, 2], [2, 3], [3, 2], [6, 0], [0, 1], [2, 0], [11, 12], [12, 9], [9, 10], [9, 11], [7, 9], [10, 12], [11, 4], [4, 3], [3, 5], [6, 8], [8, 6], [5, 4], [0, 5], [6, 4], [6, 9], [7, 6]],
+    pos: [[40, 30], [72, 100], [142, 100], [72, 168], [152, 184], [36, 224], [255, 40], [325, 40], [395, 40], [325, 140], [395, 140], [325, 224], [395, 224]],
+    breite: 430, hoehe: 252 };
+  function digraph(V, kanten) {         // wie Digraph.addEdge: nur adj[v], Bag fügt vorne an
+    const adj = Array.from({ length: V }, () => []);
+    kanten.forEach(([v, w]) => adj[v].unshift(w));
+    return adj;
+  }
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsgraph() {
+    const V = 9, ziel = 11 + zufall(5), kanten = [], hat = new Set();
+    while (kanten.length < ziel) {
+      const v = zufall(V), w = zufall(V);
+      if (v === w || hat.has(v + '>' + w)) continue;
+      hat.add(v + '>' + w); kanten.push([v, w]);
+    }
+    const pos = Array.from({ length: V }, (_, i) => [215 + 170 * Math.sin(2 * Math.PI * i / V), 126 - 100 * Math.cos(2 * Math.PI * i / V)].map(Math.round));
+    const a = zufall(V); let b = zufall(V);
+    const quellen = zufall(2) ? [a] : (b === a ? [a] : [a, b]);
+    return { V, kanten, pos, breite: 430, hoehe: 252, zufall: true, args: quellen };
+  }
+
+  // ---------- Aufzeichnung ----------
+  let G, adj, Z, konsole, spur, steps, pos = 0, timer = null, args, quellen;
+  function neuerZustand() {
+    Z = { marked: Array(G.V).fill(false), frames: [], fertig: new Set(), baum: [], s: null, geprueft: 0, laeuft: false, vorbei: false, gebaut: false };
+  }
+  function snap(line, msg, o) {
+    steps.push(Object.assign({
+      line, msg, gebaut: Z.gebaut, adj: adj.map(a => a.slice()), quellen: quellen ? quellen.slice() : null,
+      marked: Z.marked.slice(), frames: Z.frames.map(f => ({ ...f })), fertig: [...Z.fertig], baum: Z.baum.slice(), s: Z.s,
+      geprueft: Z.geprueft, laeuft: Z.laeuft, vorbei: Z.vorbei, konsole: konsole.slice(), spur: spur.slice()
+    }, o || {}));
+  }
+  const nf = (v, i) => `${i + 1} von ${adj[v].length}`;
+  const tiefe = () => '  '.repeat(Z.frames.length - 1);
+
+  // dfs(G, v) – genau wie der Java-Code, jeder Schritt einzeln
+  function dfs(v, von) {
+    Z.frames.push({ v, i: -1 });
+    if (von !== undefined) Z.baum.push([von, v]);
+    spur.push(tiefe() + `dfs(${v})`);
+    Z.marked[v] = true;
+    snap(L.markiere, `dfs(G, ${v}): marked[${v}] = true – ${v} ist erreichbar. Nachfolger (Kanten, die von ${v} wegführen): adj[${v}] = ${adj[v].join(' ') || '(keine)'}.`, { aend: v });
+    const f = Z.frames[Z.frames.length - 1];
+    for (let i = 0; i < adj[v].length; i++) {
+      const w = adj[v][i];
+      f.i = i; Z.geprueft++;
+      if (Z.marked[w]) {
+        spur.push(tiefe() + `  prüfe ${w}`);
+        const grund = Z.frames.some(g => g.v === w) ? `${w} wartet weiter oben auf dem Aufrufstapel` : `${w} ist schon erreicht`;
+        snap(L.ifW, `Kante ${v}→${w} (${nf(v, i)}): marked[${w}] ist true – ${grund}. Nichts zu tun.`, { kante: [v, w], w });
+      } else {
+        snap(L.ifW, `Kante ${v}→${w} (${nf(v, i)}): marked[${w}] ist false – ${w} ist neu. Rekursiver Aufruf dfs(G, ${w}).`, { kante: [v, w], w });
+        dfs(w, v);
+      }
+    }
+    spur.push(tiefe() + `${v} fertig`);          // auf der Höhe von „dfs(v)“, wie in Abbildung 4.32
+    Z.frames.pop(); Z.fertig.add(v);
+    const oben = Z.frames[Z.frames.length - 1];
+    if (oben) {
+      const rest = adj[oben.v].length - oben.i - 1;
+      snap(L.dfsEnde, `dfs(G, ${v}) ist fertig${adj[v].length ? '' : ' – ' + v + ' hat keine ausgehenden Kanten'}. Zurück zu dfs(G, ${oben.v})${rest ? `, dort folgt${rest === 1 ? '' : 'en'} noch ${rest} Nachfolger` : `, das danach ebenfalls fertig ist`}.`);
+    } else {
+      snap(L.dfsEnde, `dfs(G, ${v}) ist fertig – alles, was von ${v} aus über Pfeile erreichbar ist, ist markiert.`, { opEnde: true });
+    }
+  }
+  // Konstruktor mit mehreren Startknoten (Bag quellen)
+  function konstruktor() {
+    Z.laeuft = true;
+    snap(L.neuE, `new Erreichbarkeit(G, quellen): Der Konstruktor mit der Menge der Startknoten. Er durchläuft den Bag in seiner Reihenfolge: ${quellen.join(' ')}.`);
+    snap(L.markedNeu, `marked = new boolean[${G.V}]: Noch ist kein Knoten erreicht.`);
+    for (const s of quellen) {
+      Z.s = s;
+      if (Z.marked[s]) {
+        snap(L.ifS, `Startknoten s = ${s}: marked[${s}] ist true – ${s} wurde schon von einem früheren Startknoten aus erreicht. Keine neue Suche.`);
+        continue;
+      }
+      snap(L.ifS, `Startknoten s = ${s}: marked[${s}] ist false – Tiefensuche ab ${s}.`);
+      dfs(s);
+    }
+    Z.s = null; Z.laeuft = false; Z.vorbei = true;
+    const m = Z.marked.map((x, v) => x ? v : -1).filter(v => v >= 0);
+    const summe = m.reduce((a, v) => a + adj[v].length, 0);
+    snap(L.forS, `Alle Startknoten durch. Erreichbar: ${m.join(' ')} (${m.length} von ${G.V}). Geprüft wurden ${Z.geprueft} Kanten – genau die Summe der Ausgangsgrade der markierten Knoten (${m.map(v => adj[v].length).join(' + ')} = ${summe}), wie Satz D sagt.${m.length < G.V ? ` Nicht erreicht: ${Z.marked.map((x, v) => x ? -1 : v).filter(v => v >= 0).join(' ')}.` : ''}`, { opEnde: true });
+  }
+  function ausgabe() {
+    const zeile = Z.marked.map((x, v) => x ? v + ' ' : '').join('');
+    snap(L.forV, `for v = 0 bis ${G.V - 1}: Für jeden Knoten wird marked(v) gefragt.`);
+    konsole.push(zeile);
+    snap(L.druckV, `Ausgabe der erreichbaren Knoten: ${zeile.trim() || '(keiner)'}.`);
+    snap(L.println, `println() beendet die Zeile.`, { opEnde: true });
+  }
+  // main(): Graph bauen, Startknoten in den Bag, Erreichbarkeit bestimmen, ausgeben
+  function lauf(neuG, neueArgs) {
+    stop();
+    G = neuG; args = neueArgs; steps = []; konsole = [`% java Erreichbarkeit ${args.join(' ')}`]; spur = []; quellen = null;
+    adj = Array.from({ length: G.V }, () => []);
+    neuerZustand();
+    if (!G.zufall) {
+      snap(L.kanten, `Testclient: die ${G.kanten.length} Kanten von tinyDG in der Reihenfolge der Datei tinyDG.txt. Jede Kante hat eine Richtung: {6, 0} heißt 6→0.`);
+      snap(L.neuG, `new Digraph(13): 13 Knoten, jede Adjazenzliste ist ein leerer Bag.`);
+    }
+    adj = digraph(G.V, G.kanten); Z.gebaut = true;
+    snap(L.addEdge, `addEdge für alle ${G.kanten.length} Kanten: Jede Kante v→w landet nur in adj[v] – vorne, weil der Bag vorne einfügt. Von 6→0 erfährt adj[0] nichts: Knoten 0 kommt zu 6 nicht zurück. Knoten ${adj.findIndex(a => !a.length) >= 0 ? adj.findIndex(a => !a.length) + ' hat gar keine ausgehenden Kanten' : 'jeder hat ausgehende Kanten'}.`, { opEnde: true });
+    quellen = [];
+    snap(L.bagNeu, `Startknoten aus der Befehlszeile: ${args.join(' ')}. Sie kommen in einen Bag.`);
+    for (const a of args) {
+      quellen.unshift(a);
+      snap(L.bagAdd, `quellen.add(${a}) – vorne in den Bag. Bag jetzt: ${quellen.join(' ')}.`);
+    }
+    if (args.length > 1) snap(L.bagAdd, `Der Bag gibt die Startknoten rückwärts heraus: ${quellen.join(' ')} – die erste Tiefensuche beginnt bei ${quellen[0]}, nicht bei ${args[0]}.`);
+    konstruktor();
+    ausgabe();
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  function kantenGeometrie(v, w, R) {          // gerade, oder als Bogen bei Gegenkante bzw. wenn die Gerade einen Knoten streift
+    const [x1, y1] = G.pos[v], [x2, y2] = G.pos[w];
+    const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+    let biege = G.kanten.some(([a, b]) => a === w && b === v) ? 14 : 0;
+    for (let u = 0; u < G.V; u++) {
+      if (u === v || u === w) continue;
+      const [ux, uy] = G.pos[u], t = ((ux - x1) * dx + (uy - y1) * dy) / (len * len);
+      if (t > 0 && t < 1 && Math.abs((ux - x1) * nx + (uy - y1) * ny) < R + 6) biege = Math.max(biege, 32);
+    }
+    if (!biege) {
+      const sx = x1 + dx / len * R, sy = y1 + dy / len * R, ex = x2 - dx / len * R, ey = y2 - dy / len * R;
+      return { d: `M${sx.toFixed(1)},${sy.toFixed(1)} L${ex.toFixed(1)},${ey.toFixed(1)}`, ex, ey, tx: dx / len, ty: dy / len };
+    }
+    const cx = (x1 + x2) / 2 + nx * biege * 2, cy = (y1 + y2) / 2 + ny * biege * 2;
+    const a1 = Math.hypot(cx - x1, cy - y1), a2 = Math.hypot(x2 - cx, y2 - cy);
+    const sx = x1 + (cx - x1) / a1 * R, sy = y1 + (cy - y1) / a1 * R, tx = (x2 - cx) / a2, ty = (y2 - cy) / a2;
+    const ex = x2 - tx * R, ey = y2 - ty * R;
+    return { d: `M${sx.toFixed(1)},${sy.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)}`, ex, ey, tx, ty };
+  }
+  function zeichneGraph(st) {
+    const svg = $('graph'), R = 15;
+    svg.setAttribute('viewBox', `0 0 ${G.breite} ${G.hoehe}`); svg.style.maxWidth = G.breite * 1.2 + 'px';
+    const oben = st.frames.length ? st.frames[st.frames.length - 1].v : null;
+    const wartend = new Set(st.frames.slice(0, -1).map(f => f.v));
+    const baum = new Set(st.baum.map(([a, b]) => a + '>' + b));
+    let h = '';
+    if (st.gebaut) G.kanten.forEach(([v, w]) => {
+      const k = kantenGeometrie(v, w, R);
+      let cls = '';
+      if (st.kante && st.kante[0] === v && st.kante[1] === w) cls = ' pruef';
+      else if (baum.has(v + '>' + w)) cls = ' baum';
+      const nx = -k.ty, ny = k.tx, bx = k.ex - k.tx * 9, by = k.ey - k.ty * 9;
+      h += `<path class="kante${cls}" d="${k.d}"/><polygon class="pfeil${cls}" points="${k.ex.toFixed(1)},${k.ey.toFixed(1)} ${(bx + nx * 4.5).toFixed(1)},${(by + ny * 4.5).toFixed(1)} ${(bx - nx * 4.5).toFixed(1)},${(by - ny * 4.5).toFixed(1)}"/>`;
+    });
+    const qs = new Set(st.quellen || []);
+    for (let v = 0; v < G.V; v++) {
+      const [x, y] = G.pos[v];
+      let cls = 'knoten';
+      if (v === oben) cls += ' aktiv';
+      else if (st.marked[v]) cls += ' markiert';
+      else if (st.vorbei) cls += ' unerreicht';
+      if (wartend.has(v)) cls += ' wartet';
+      if (st.w === v) cls += ' pruef';
+      if (qs.has(v)) cls += ' start';
+      h += `<g class="${cls}"><circle cx="${x}" cy="${y}" r="${R}"/><text x="${x}" y="${y}">${v}</text></g>`;
+      if (st.s === v) h += y - R - 5 >= 12 ? `<text class="marke" x="${x}" y="${y - R - 5}">s</text>`
+        : `<text class="marke" x="${x - R - 8 >= 6 ? x - R - 8 : x + R + 8}" y="${y + 4}">s</text>`;   // oben kein Platz: daneben
+    }
+    svg.innerHTML = h;
+  }
+  function render() {
+    const st = steps[pos];
+    const k = st.marked.filter(Boolean).length;
+    $('titel').innerHTML = `${G.zufall ? 'Zufallsdigraph' : 'tinyDG'} · <b>${G.V}</b> Knoten, <b>${st.gebaut ? G.kanten.length : 0}</b> Kanten · Startknoten: <b>${args.join(' ')}</b> · erreicht: <b>${k}</b> · geprüfte Kanten: <b>${st.geprueft}</b>`;
+    zeichneGraph(st);
+    const lauf = {}; st.frames.forEach((f, i) => lauf[f.v] = { i: f.i, oben: i === st.frames.length - 1 });
+    const fertig = new Set(st.fertig);
+    $('adj').innerHTML = `<div class="kopf">Adjazenzlisten (Nachfolger):</div>` + (st.gebaut ? st.adj.map((a, v) => `<div>adj[${v}]: ${a.map((w, i) => {
+      let c = 'e';
+      if (fertig.has(v)) c += ' erledigt';
+      else if (lauf[v]) c += i < lauf[v].i ? ' erledigt' : i === lauf[v].i ? (lauf[v].oben ? ' jetzt' : ' wartet') : '';
+      return `<span class="${c}">${w}</span>`; }).join('') || '<span class="e erledigt">–</span>'}</div>`).join('') : '<div style="color:var(--muted)">noch leer</div>');
+    const qs = new Set(st.quellen || []);
+    let t = '<table class="arr"><tr><th>v</th>';
+    for (let v = 0; v < G.V; v++) t += `<th class="${qs.has(v) ? 'quelle' : ''}">${v}</th>`;
+    t += '</tr><tr><th>marked</th>';
+    st.marked.forEach((m, v) => t += `<td class="${st.aend === v ? 'geaendert' : m ? 'ja' : 'leer'}">${m ? 'T' : 'F'}</td>`);
+    $('arrays').innerHTML = t + '</tr></table>';
+    $('stapel').innerHTML = st.frames.length
+      ? `<div class="h2">Aufrufstapel (oben der laufende Aufruf):</div><ol>${st.frames.slice().reverse().map((f, i) => `<li class="${i === 0 ? 'oben' : ''}">dfs(G, ${f.v})${f.i < 0 ? '' : ` – ${i === 0 ? 'prüft' : 'wartet bei'} Nachfolger ${st.adj[f.v][f.i]} (${f.i + 1} von ${st.adj[f.v].length})`}</li>`).join('')}<li>Konstruktor – Startknoten s = ${st.s}</li></ol>`
+      : `<div class="h2">Aufrufstapel: ${st.laeuft ? `nur der Konstruktor${st.s === null ? '' : `, Startknoten s = ${st.s}`}` : 'leer'}</div>`;
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg' + (st.cls ? ' ' + st.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    $('proto').innerHTML = st.spur.length
+      ? `<h4>Ablauf wie in Abbildung 4.32</h4><pre class="spur">${st.spur.map((z, i) => i === st.spur.length - 1 && st.laeuft ? `<span class="zuletzt">${esc(z)}</span>` : esc(z)).join('\n')}</pre>`
+      : '<p class="count">Noch nichts – die Tiefensuche hat nicht begonnen.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  // Kästen werden nie wieder niedriger, sonst springen die Knöpfe darunter auf und ab
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+  function fuelleAuswahl() { $('s').innerHTML = Array.from({ length: G.V }, (_, v) => `<option${v === (args[0] || 0) ? ' selected' : ''}>${v}</option>`).join(''); }
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;        // am Ende: von vorn abspielen
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const buch = a => { lockern(); lauf(BUCH, a); fuelleAuswahl(); };
+  const start = () => buch([0]);
+  $('abb').addEventListener('click', start);
+  $('neu').addEventListener('click', start);     // Neustart = Zustand beim ersten Öffnen
+  $('lauf1').addEventListener('click', () => buch([1]));
+  $('lauf2').addEventListener('click', () => buch([2]));
+  $('lauf126').addEventListener('click', () => buch([1, 2, 6]));
+  $('abS').addEventListener('click', () => { const s = +$('s').value; lockern(); lauf(G.zufall ? G : BUCH, [s]); fuelleAuswahl(); });
+  $('zufall').addEventListener('click', () => { lockern(); const z = zufallsgraph(); lauf(z, z.args); fuelleAuswahl(); });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(V, kanten, args) spielt main() mit beliebigen Kanten und Startknoten durch (ohne Anzeige)
+  function rechne(V, kanten, a) {
+    const alt = { G, adj, Z, konsole, spur, steps, args, quellen };
+    lauf({ V, kanten, pos: Array.from({ length: V }, () => [0, 0]), zufall: true, breite: 10, hoehe: 10 }, a);
+    const ergebnis = { marked: Z.marked.slice(), geprueft: Z.geprueft, konsole: konsole.slice(), spur: spur.slice(), steps, adj: adj.map(x => x.slice()) };
+    ({ G, adj, Z, konsole, spur, steps, args, quellen } = alt);
+    pos = 0; render();
+    return ergebnis;
+  }
+  window.__dg = { rechne, buch, BUCH, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, get adj() { return adj; }, kantenGeometrie, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
