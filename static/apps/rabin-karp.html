@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rabin-Karp</title>
+<!-- Visualisierung der Rabin-Karp-Fingerprint-Suche (nach Sedgewick/Wayne, Algorithmen, Algorithmus 5.8, Listing 5.21
+     und 5.22) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Java-Code wie in den Listings, longRandomPrime()
+     (im Buch Übung 5.3.33) eigene Fassung wie auf der Website zum Buch, main() wie Listing 5.19.
+     Zwei Rechenarten: wie Abbildung 5.47 (Ziffern als Zahlen, R = 10, Q = 997) und wie der Code (Zeichencodes,
+     R = 256, Q fest 2147483647 statt zufällig, damit die Zahlen beim Abspielen gleich bleiben). Aufbau wie kmp.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --gruen: #8fd1a6; --gtext: #1c1c1f; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --gruen: #2f6e48; --gtext: #ececef; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; overflow-wrap: anywhere; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .msg { overflow-wrap: anywhere; }
+  .h2 { font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+  .eingabe input, .eingabe select { font: 14px ui-monospace, Consolas, monospace; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .eingabe select { font-family: inherit; font-size: 13px; max-width: 100%; }
+  .eingabe input.muster { width: 8em; }
+  .eingabe input.text { width: 16em; max-width: 100%; }
+  .werte { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font: 13px ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; }
+  .werte dt { color: var(--muted); }
+  .werte dd { margin: 0; overflow-wrap: anywhere; }
+  .werte dd.neu { color: var(--neu); font-weight: 700; }
+  .werte dd.gleich { color: var(--gtext); background: var(--gruen); border-radius: 4px; padding: 0 4px; justify-self: start; }
+  .rechnung { font: 13px ui-monospace, Consolas, monospace; background: var(--code-bg); border-radius: 8px; padding: 6px 8px; min-height: 1.4em; overflow-wrap: anywhere; }
+  .band { display: flex; flex-wrap: wrap; gap: 6px 0; padding: 4px 0; font-family: ui-monospace, Consolas, monospace; }
+  .band .zelle { width: 1.45em; text-align: center; line-height: 1.35; }
+  .band .zelle b { display: block; font-size: 15px; font-weight: 400; border-radius: 3px; }
+  .band .zelle small { display: block; font-size: 9.5px; color: var(--muted); }
+  .band .fenster b { background: var(--bar); }
+  .band .raus b { background: var(--neu); color: #fff; }
+  .band .rein b { background: var(--cur); color: #fff; }
+  .band .passt b { background: var(--gruen); color: var(--gtext); }
+  .band .falsch b { background: var(--rot); color: #fff; }
+  @media (prefers-color-scheme: dark) { .band .raus b, .band .rein b, .band .falsch b { color: #0d1530; } }
+  .klein { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .spur { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; white-space: pre; overflow-x: auto; margin: 0; line-height: 1.45; }
+  .spur span.zuletzt { color: var(--neu); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="buch">Abbildung 5.47</button>
+    <button id="kollision">Kollision</button>
+    <button id="woerter">Text mit R = 256</button>
+    <label>Muster <input id="pat" class="muster" maxlength="10" value="26535"></label>
+    <label>Text <input id="txt" class="text" maxlength="40" value="3141592653589793"></label>
+    <select id="art" aria-label="Rechenart">
+      <option value="ziffer">wie Abbildung 5.47: Ziffern, R = 10, Q = 997</option>
+      <option value="code">wie der Code: Zeichencodes, R = 256, Q = 2147483647</option>
+    </select>
+    <button id="los">suchen</button>
+    <span class="klein" id="hinweis"></span>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <dl class="werte" id="werte"></dl>
+    <div class="h2">Rechnung im aktuellen Schritt</div>
+    <div class="rechnung" id="rechnung"></div>
+    <div class="h2">Text – das Fenster der Länge M ist hinterlegt</div>
+    <div class="band" id="band"></div>
+    <div class="legende">
+      <span><i style="background:var(--bar)"></i>Fenster, dessen Hash gerade gilt</span>
+      <span><i style="background:var(--neu)"></i>führende Ziffer fällt heraus</span>
+      <span><i style="background:var(--cur)"></i>neue Ziffer kommt dazu</span>
+      <span><i style="background:var(--gruen)"></i>Treffer</span>
+      <span><i style="background:var(--rot)"></i>gleicher Hash, aber anderer Text (Kollision)</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der Muster-Hash fertig ist, der erste Text-Hash fertig ist oder das Fenster weiterrückt">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (nach Algorithmus 5.8, Listing 5.21 und 5.22)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'import java.math.BigInteger;',
+    'import java.util.Random;',
+    '',
+    'public class RabinKarp',
+    '{',
+    '   private String pat;      // Muster (nur für Las Vegas benötigt)',
+    '   private long patHash;    // Muster-Hashwert',
+    '   private int M;           // Musterlänge',
+    '   private long Q;          // eine große Primzahl',
+    '   private int R = 256;     // Alphabetgröße',
+    '   private long RM;         // R^(M-1) % Q',
+    '',
+    '   public RabinKarp(String pat)',
+    '   {',
+    '      this.pat = pat;          // speichert Muster (nur für Las Vegas benötigt)',
+    '      this.M = pat.length();',
+    '      Q = longRandomPrime();                 // Siehe Übung 5.3.33',
+    '      RM = 1;',
+    '      for (int i = 1; i <= M-1; i++)         // Berechnet R^(M-1) % Q, um damit die',
+    '         RM = (R * RM) % Q;                  //    führende Ziffer zu entfernen.',
+    '      patHash = hash(pat, M);',
+    '   }',
+    '',
+    '   public boolean check(int i)  // Monte Carlo (siehe Text)',
+    '   {  return true;  }           //    Für Las Vegas, prüfe pat gegen txt(i..i-M+1).',
+    '',
+    '   private long hash(String key, int M)',
+    '   {  // Berechnet den Hash für key[0..M-1]. (Listing 5.21)',
+    '      long h = 0;',
+    '      for (int j = 0; j < M; j++)',
+    '         h = (R * h + key.charAt(j)) % Q;',
+    '      return h;',
+    '   }',
+    '',
+    '   private int search(String txt)',
+    '   {  // Sucht nach einer Hashwertübereinstimmung im Text.',
+    '      int N = txt.length();',
+    '      long txtHash = hash(txt, M);',
+    '      if (patHash == txtHash && check(0)) return 0;   // Übereinstimmung am Anfang',
+    '      for (int i = M; i < N; i++)',
+    '      {  // Entfernt vorangehende Ziffer, addiert Ziffer, prüft auf',
+    '         // Übereinstimmung.',
+    '         txtHash = (txtHash + Q - RM*txt.charAt(i-M) % Q) % Q;',
+    '         txtHash = (txtHash*R + txt.charAt(i)) % Q;',
+    '         if (patHash == txtHash)',
+    '            if (check(i - M + 1)) return i - M + 1;   // Übereinstimmung',
+    '      }',
+    '      return N;                                        // keine Übereinstimmung gefunden',
+    '   }',
+    '',
+    '   private static long longRandomPrime()',
+    '   {  // eigene Fassung wie auf der Website zum Buch: zufällige Primzahl mit 31 Bit',
+    '      BigInteger prime = BigInteger.probablePrime(31, new Random());',
+    '      return prime.longValue();',
+    '   }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient wie Listing 5.19, mit System.out statt StdOut und Vorgabewerten',
+    '      String pat = args.length > 0 ? args[0] : "26535";',
+    '      String txt = args.length > 1 ? args[1] : "3141592653589793";',
+    '      RabinKarp rk = new RabinKarp(pat);',
+    '      System.out.println("text:    " + txt);',
+    '      int offset = rk.search(txt);',
+    '      System.out.print("pattern: ");',
+    '      for (int i = 0; i < offset; i++)',
+    '         System.out.print(" ");',
+    '      System.out.println(pat);',
+    '   }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    args: zeile('String pat = args.length > 0'), neu: zeile('RabinKarp rk = new RabinKarp(pat);'), q: zeile('Q = longRandomPrime();'), rm1: zeile('RM = 1;'),
+    rm: zeile('RM = (R * RM) % Q;'), patHash: zeile('patHash = hash(pat, M);'), h0: zeile('long h = 0;'), horner: zeile('h = (R * h + key.charAt(j)) % Q;'),
+    druckText: zeile('System.out.println("text:    " + txt);'), suche: zeile('int offset = rk.search(txt);'), txtHash: zeile('long txtHash = hash(txt, M);'),
+    anfang: zeile('if (patHash == txtHash && check(0)) return 0;'), raus: zeile('txtHash = (txtHash + Q - RM*txt.charAt(i-M) % Q) % Q;'),
+    rein: zeile('txtHash = (txtHash*R + txt.charAt(i)) % Q;'), vergl: zeile('if (patHash == txtHash)'), treffer: zeile('if (check(i - M + 1)) return i - M + 1;'),
+    keiner: zeile('return N;'), druckMuster: zeile('System.out.println(pat);')
+  };
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Aufzeichnung ----------
+  let PAT, TXT, ART, R, Q, Z, konsole, spur, steps, pos = 0, timer = null;
+  const wert = ch => ART === 'ziffer' ? ch.charCodeAt(0) - 48 : ch.charCodeAt(0);
+  const zeig = ch => ART === 'ziffer' ? `${ch}` : `'${ch}' (${ch.charCodeAt(0)})`;
+  function snap(line, msg, o) {
+    steps.push(Object.assign({ line, msg, RM: Z.RM, patHash: Z.patHash, h: Z.h, txtHash: Z.txtHash, fenster: Z.fenster, phase: Z.phase, konsole: konsole.slice(), spur: spur.slice() }, o || {}));
+  }
+  function lauf(pat, txt, art) {
+    stop();
+    PAT = pat; TXT = txt; ART = art; R = art === 'ziffer' ? 10 : 256; Q = art === 'ziffer' ? 997 : 2147483647;
+    steps = []; konsole = []; spur = [];
+    const M = pat.length, N = txt.length;
+    Z = { RM: null, patHash: null, h: null, txtHash: null, fenster: null, phase: 'bau' };
+    snap(L.args, `Muster ${pat} (M = ${M}), Text ${txt} (N = ${N}). ${art === 'ziffer' ? 'Gerechnet wird wie in Abbildung 5.47: jede Ziffer als Zahl 0 bis 9, R = 10, Q = 997.' : 'Gerechnet wird wie im Code: jedes Zeichen mit seinem Code, R = 256. Q ist hier fest 2147483647 statt zufällig, damit die Zahlen beim Abspielen gleich bleiben.'}`);
+    snap(L.neu, `new RabinKarp(${JSON.stringify(pat)}): Der Konstruktor berechnet RM und den Hash des Musters.`);
+    snap(L.q, `Q = ${Q}${art === 'ziffer' ? ' – im Buch zur Anschauung klein, damit man nachrechnen kann.' : ' – eine Primzahl mit 31 Bit, wie sie longRandomPrime() liefert.'}`);
+    Z.RM = 1;
+    snap(L.rm1, `RM = 1.`);
+    for (let i = 1; i <= M - 1; i++) {
+      const alt = Z.RM; Z.RM = (R * Z.RM) % Q;
+      snap(L.rm, `i = ${i}: RM = (${R} · ${alt}) % ${Q} = ${Z.RM}.`, { rechnung: `(${R} · ${alt}) % ${Q} = ${Z.RM}`, neuW: 'RM' });
+    }
+    spur.push(`RM = ${R}^${M - 1} % ${Q} = ${Z.RM}`);
+    // Hash des Musters nach Horner (Listing 5.21) – wie Abbildung 5.45
+    Z.phase = 'muster'; Z.h = 0;
+    snap(L.h0, `patHash = hash(pat, ${M}): h = 0, dann Zeichen für Zeichen nach dem Horner-Schema.`, { rechnung: 'h = 0' });
+    spur.push('Muster (Horner, wie Abbildung 5.45):');
+    for (let j = 0; j < M; j++) {
+      const alt = Z.h; Z.h = (R * alt + wert(pat[j])) % Q;
+      spur.push(`  ${pat.slice(0, j + 1).padEnd(M)}  (${alt}·${R} + ${wert(pat[j])}) % ${Q} = ${Z.h}`);
+      snap(L.horner, `j = ${j}, Zeichen ${zeig(pat[j])}: h = (${R} · ${alt} + ${wert(pat[j])}) % ${Q} = ${Z.h}.`, { rechnung: `(${R} · ${alt} + ${wert(pat[j])}) % ${Q} = ${Z.h}`, neuW: 'h', musterBis: j, opEnde: j === M - 1 });
+    }
+    Z.patHash = Z.h; Z.h = null;
+    snap(L.patHash, `patHash = ${Z.patHash} – der Fingerabdruck des Musters.`, { neuW: 'patHash' });
+    Z.phase = 'suche';
+    konsole.push(`text:    ${txt}`);
+    snap(L.druckText, `Ausgabe der Textzeile, dann search(txt).`);
+    let erg = N;
+    if (N < M) {
+      snap(L.txtHash, `Der Text ist kürzer als das Muster – hash(txt, M) würde über das Textende hinaus lesen und eine Ausnahme werfen. Hier abgefangen: nicht gefunden.`, { opEnde: true });
+    } else {
+      // Hash der ersten M Textzeichen
+      Z.h = 0;
+      spur.push('Text (wie Abbildung 5.47):');
+      for (let j = 0; j < M; j++) {
+        const alt = Z.h; Z.h = (R * alt + wert(txt[j])) % Q;
+        spur.push(`  i=${String(j).padStart(2)}  ${txt.slice(0, j + 1).padStart(M + j - j)}  (${alt}·${R} + ${wert(txt[j])}) % ${Q} = ${Z.h}`);
+        snap(L.horner, `txtHash = hash(txt, ${M}): j = ${j}, Zeichen ${zeig(txt[j])}: h = (${R} · ${alt} + ${wert(txt[j])}) % ${Q} = ${Z.h}.`, { rechnung: `(${R} · ${alt} + ${wert(txt[j])}) % ${Q} = ${Z.h}`, neuW: 'h', textBis: j });
+      }
+      Z.txtHash = Z.h; Z.h = null; Z.fenster = 0;
+      const gleich0 = Z.txtHash === Z.patHash;
+      snap(L.txtHash, `txtHash = ${Z.txtHash} für das Fenster ab Position 0.`, { neuW: 'txtHash', opEnde: true });
+      if (gleich0) {
+        const echt = txt.slice(0, M) === pat;
+        spur.push(`  → gleicher Hash bei 0${echt ? '' : ' – Kollision, check() liefert trotzdem true'}`);
+        snap(L.anfang, `patHash == txtHash und check(0) liefert true: Treffer am Anfang${echt ? '' : ` – aber der Text ist ${txt.slice(0, M)}, nicht ${pat}! Eine Kollision, und Monte Carlo merkt es nicht`}.`, { treffer: 0, echt, opEnde: true });
+        erg = 0;
+      } else {
+        snap(L.anfang, `patHash ${Z.patHash} ≠ txtHash ${Z.txtHash} – weiter.`, {});
+        for (let i = M; i < N; i++) {
+          const alt = Z.txtHash, aus = wert(txt[i - M]);
+          const zw = (alt + Q - (Z.RM * aus) % Q) % Q;
+          Z.txtHash = zw;
+          snap(L.raus, `i = ${i}: Die führende Ziffer ${zeig(txt[i - M])} fällt heraus: (${alt} + ${Q} − (${Z.RM} · ${aus}) % ${Q}) % ${Q} = ${zw}. Das + Q verhindert negative Werte.`, { rechnung: `(${alt} + ${Q} − (${Z.RM} · ${aus}) % ${Q}) % ${Q} = ${zw}`, raus: i - M, neuW: 'txtHash', fensterVon: i - M + 1, fensterBis: i - 1 });
+          const neu = wert(txt[i]);
+          Z.txtHash = (zw * R + neu) % Q; Z.fenster = i - M + 1;
+          spur.push(`  i=${String(i).padStart(2)}  ${txt.slice(i - M + 1, i + 1)}  ((${alt} + ${Q} − ${Z.RM}·${aus} % ${Q}) % ${Q} · ${R} + ${neu}) % ${Q} = ${Z.txtHash}`);
+          snap(L.rein, `Neue Ziffer ${zeig(txt[i])} kommt dazu: (${zw} · ${R} + ${neu}) % ${Q} = ${Z.txtHash} – der Hash des Fensters ab ${i - M + 1}, ohne die übrigen Zeichen anzuschauen.`, { rechnung: `(${zw} · ${R} + ${neu}) % ${Q} = ${Z.txtHash}`, rein: i, neuW: 'txtHash' });
+          if (Z.patHash === Z.txtHash) {
+            const echt = txt.slice(i - M + 1, i + 1) === pat;
+            spur[spur.length - 1] += echt ? '  Übereinstimmung' : '  Kollision!';
+            snap(L.treffer, `patHash == txtHash: check(${i - M + 1}) liefert true, Treffer bei i − M + 1 = ${i - M + 1}${echt ? '' : ` – aber im Fenster steht ${txt.slice(i - M + 1, i + 1)}, nicht ${pat}! Eine Kollision: Monte Carlo liegt hier falsch, Las Vegas hätte die Zeichen verglichen und weitergesucht`}.`, { treffer: i - M + 1, echt, opEnde: true });
+            erg = i - M + 1; break;
+          }
+          snap(L.vergl, `patHash ${Z.patHash} ≠ txtHash ${Z.txtHash} – kein Treffer, weiter.`, { opEnde: true });
+        }
+      }
+    }
+    if (erg === N && N >= M) snap(L.keiner, `Ende des Texts: kein gleicher Hash, search liefert N = ${N}.`, { opEnde: true });
+    konsole.push(`pattern: ${' '.repeat(erg)}${pat}`);
+    snap(L.druckMuster, erg < N ? `Ausgabe: das Muster unter dem Text an Position ${erg}.` : `Ausgabe: ${N} Leerzeichen und dann das Muster – es steht hinter dem Text.`, { treffer: erg < N ? erg : null, echt: erg < N ? TXT.slice(erg, erg + M) === PAT : null, opEnde: true });
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  function render() {
+    const st = steps[pos], M = PAT.length;
+    $('titel').innerHTML = `Muster <b>${esc(PAT)}</b> · M = <b>${M}</b> · N = <b>${TXT.length}</b> · R = <b>${R}</b> · Q = <b>${Q}</b>`;
+    const w = (name, v, extra) => `<dt>${name}</dt><dd class="${st.neuW === name ? 'neu' : ''} ${extra || ''}">${v === null || v === undefined ? '–' : v}</dd>`;
+    const gleich = st.patHash !== null && st.txtHash !== null && st.patHash === st.txtHash;
+    $('werte').innerHTML = w('RM', st.RM) + w('patHash', st.patHash, gleich ? 'gleich' : '') + (st.h !== null && st.h !== undefined ? w('h', st.h) : '') + w('txtHash', st.txtHash, gleich ? 'gleich' : '');
+    $('rechnung').textContent = st.rechnung || '–';
+    let b = '';
+    const ziel = st.musterBis !== undefined ? null : st.textBis !== undefined ? [0, st.textBis] : st.fensterVon !== undefined ? [st.fensterVon, st.fensterBis] : st.fenster !== null && st.fenster !== undefined ? [st.fenster, st.fenster + M - 1] : null;
+    [...TXT].forEach((ch, k) => {
+      let cls = '';
+      if (st.treffer !== null && st.treffer !== undefined && k >= st.treffer && k < st.treffer + M) cls = st.echt === false ? 'falsch' : 'passt';
+      else if (st.raus === k) cls = 'raus';
+      else if (st.rein === k) cls = 'rein';
+      else if (ziel && k >= ziel[0] && k <= ziel[1]) cls = 'fenster';
+      b += `<div class="zelle ${cls}"><b>${esc(ch) || '&nbsp;'}</b><small>${k}</small></div>`;
+    });
+    $('band').innerHTML = b || '<span class="klein">(leerer Text)</span>';
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg';
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    $('proto').innerHTML = st.spur.length ? `<h4>Wie Abbildung 5.45 und 5.47: jedes Fenster mit seiner Rechnung und seinem Hash</h4><pre class="spur">${st.spur.map((z, k) => k === st.spur.length - 1 && pos < steps.length - 1 ? `<span class="zuletzt">${esc(z)}</span>` : esc(z)).join('\n')}</pre>` : '<p class="count">Noch nichts.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const setze = (p, t, a) => { $('pat').value = p; $('txt').value = t; $('art').value = a; $('hinweis').textContent = ''; lockern(); lauf(p, t, a); };
+  const start = () => setze('26535', '3141592653589793', 'ziffer');
+  $('buch').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('kollision').addEventListener('click', () => setze('26535', '3141501610265358', 'ziffer'));
+  $('woerter').addEventListener('click', () => setze('NEEDLE', 'FINDINAHAYSTACKNEEDLEINA', 'code'));
+  $('los').addEventListener('click', () => {
+    const p = $('pat').value, t = $('txt').value, a = $('art').value;
+    if (!p.length) { $('hinweis').textContent = 'Das Muster braucht mindestens ein Zeichen.'; return; }
+    if (a === 'ziffer' && !/^[0-9]*$/.test(p + t)) { $('hinweis').textContent = 'Für R = 10 nur Ziffern 0 bis 9 – oder unten „wie der Code“ wählen.'; return; }
+    if ([...p + t].some(ch => ch.charCodeAt(0) > 255)) { $('hinweis').textContent = 'nur Zeichen mit Code unter 256 (R = 256)'; return; }
+    $('hinweis').textContent = ''; lockern(); lauf(p, t, a);
+  });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(pat, txt, art) liefert Hashwerte und Ausgabe (Anzeige danach wie vorher)
+  function rechne(pat, txt, art) {
+    const alt = { PAT, TXT, ART, R, Q, Z, konsole, spur, steps };
+    lauf(pat, txt, art);
+    const e = { RM: Z.RM, patHash: Z.patHash, ausgabe: konsole.slice(), spur: spur.slice(), steps };
+    ({ PAT, TXT, ART, R, Q, Z, konsole, spur, steps } = alt); pos = 0; render();
+    return e;
+  }
+  window.__rk = { rechne, start, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
