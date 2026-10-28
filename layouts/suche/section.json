@@ -29,13 +29,21 @@
         {{- else if reflect.IsSlice $v }}{{ range $v }}{{ if reflect.IsSlice . }}{{ $text = printf "%s %s" $text (delimit . " ") }}{{ else if eq (printf "%T" .) "string" }}{{ $text = printf "%s %s" $text . }}{{ end }}{{ end }}{{ end }}
       {{- end }}
     {{- end }}
+    {{- /* Links aus dem Seitenkopf (youtube, imdb, wikipedia, sendung_youtube, webseite, [[hintergrund]] …), damit eine
+           eingefügte Adresse ihre Seite findet (Sven, 2026-10-28): jedes Feld, das mit http beginnt, auch eine Ebene tiefer */}}
+    {{- $links := slice }}
+    {{- range $k, $v := .Params }}
+      {{- if and (eq (printf "%T" $v) "string") (hasPrefix $v "http") }}{{ $links = $links | append $v }}
+      {{- else if reflect.IsSlice $v }}{{ range $v }}{{ if reflect.IsMap . }}{{ range $k2, $v2 := . }}{{ if and (eq (printf "%T" $v2) "string") (hasPrefix $v2 "http") }}{{ $links = $links | append $v2 }}{{ end }}{{ end }}{{ end }}{{ end }}
+      {{- end }}
+    {{- end }}
     {{- $eintraege = $eintraege | append (dict
         "t" .Title
         "u" .RelPermalink
         "r" $rubrik
         "d" (.Description | default "")
         "m" (.Params.modell | default "")
-        "k" (delimit (slice (.Params.autor | default "") (.Params.regie | default "") (.Params.originaltitel | default "") (delimit (.Params.darsteller | default slice) " ")) " ")
+        "k" (delimit (slice (.Params.autor | default "") (.Params.regie | default "") (.Params.originaltitel | default "") (delimit (.Params.darsteller | default slice) " ") (delimit $links " ")) " ")
         "x" ($text | htmlUnescape | replaceRE `\s+` " ")
       ) }}
   {{- end }}
