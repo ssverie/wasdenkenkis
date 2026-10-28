@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LZW-Komprimierung</title>
+<!-- Visualisierung der LZW-Komprimierung (nach Sedgewick/Wayne, Algorithmen, Algorithmus 5.11, Listing 5.41 und 5.42)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Java-Code wie in den Listings, TST wie Algorithmus 5.5
+     (tst.html), longestPrefixOf() für den TST eigene Fassung, main() wie bei Huffman. Beispiele: abraLZW.txt und
+     ababLZW.txt aus dem Buch. Aufbau der Seite wie huffman.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --gruen: #8fd1a6; --gtext: #1c1c1f; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --gruen: #2f6e48; --gtext: #ececef; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .bild { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .eingabe input { font: inherit; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); width: 14em; max-width: 100%; }
+  .klein { font-size: 12px; color: var(--muted); margin: 6px 0 4px; }
+  .band { display: flex; flex-wrap: wrap; gap: 6px 0; padding: 2px 0 4px; font-family: ui-monospace, Consolas, monospace; }
+  .band .zelle { width: 1.45em; text-align: center; line-height: 1.35; }
+  .band .zelle b { display: block; font-size: 15px; font-weight: 400; border-radius: 3px; }
+  .band .zelle small { display: block; font-size: 9.5px; color: var(--muted); }
+  .band .fertig b { color: var(--muted); }
+  .band .passt b { background: var(--gruen); color: var(--gtext); }
+  .band .vor b { outline: 2px solid var(--neu); outline-offset: -2px; }
+  .band .neu b { background: var(--neu); color: #fff; }
+  @media (prefers-color-scheme: dark) { .band .neu b { color: #0d1530; } }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; min-height: 2.6em; }
+  .chips .chip { font-family: ui-monospace, Consolas, monospace; text-align: center; border: 1px solid var(--line); border-radius: 6px; padding: 1px 5px; background: var(--bg); min-width: 2.6em; }
+  .chips .chip b { display: block; font-size: 13.5px; }
+  .chips .chip small { display: block; font-size: 10.5px; color: var(--muted); white-space: pre; }
+  .chips .chip.lang b { color: var(--cur); }
+  .chips .chip.eof b { color: var(--muted); }
+  .chips .chip.jetzt { background: var(--neu); border-color: var(--neu); }
+  .chips .chip.jetzt b, .chips .chip.jetzt small { color: #fff; }
+  .chips .chip.gelesen { opacity: .45; }
+  @media (prefers-color-scheme: dark) { .chips .chip.jetzt b, .chips .chip.jetzt small { color: #0d1530; } }
+  .tabelle { border-collapse: collapse; font: 13px ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; }
+  .tabelle th, .tabelle td { padding: 1px 6px; text-align: left; white-space: nowrap; }
+  .tabelle th { color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--line); font-family: system-ui, sans-serif; font-size: 12px; }
+  .tabelle td.c { color: var(--cur); font-weight: 700; }
+  .tabelle td.h { color: var(--muted); }
+  .tabelle tr.an td { background: var(--hl); }
+  .tabelle tr.neu td { background: var(--neu); color: #fff; }
+  .tabelle tr.knifflig td { background: var(--rot); color: #fff; }
+  @media (prefers-color-scheme: dark) { .tabelle tr.neu td, .tabelle tr.knifflig td { color: #0d1530; } }
+  .var { font: 13px ui-monospace, Consolas, monospace; background: var(--code-bg); border-radius: 8px; padding: 6px 8px; overflow-wrap: anywhere; white-space: pre-wrap; min-height: 1.6em; }
+  .var b { color: var(--neu); }
+  .var .rot { color: var(--rot); font-weight: 700; }
+  .msg.knifflig { color: var(--rot); font-weight: 600; }
+  .summe { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+  .summe b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  @media (max-width: 640px) { .bild { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="abra">abraLZW.txt</button>
+    <button id="abab">ababLZW.txt (knifflig)</button>
+    <button id="zufall">Zufallstext</button>
+  </div>
+  <div class="box controls eingabe">
+    <input id="eigen" value="TOBEORNOTTOBEORTOBEORNOT" aria-label="Eigener Text" maxlength="80">
+    <button id="eigenLos">komprimieren</button>
+    <span class="klein" id="eigenHinweis"></span>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="klein" id="bandTitel"></div>
+    <div class="band" id="band"></div>
+    <div class="bild">
+      <div>
+        <div class="klein" id="chipsTitel"></div>
+        <div class="chips" id="chips"></div>
+        <div class="summe" id="summe"></div>
+        <div class="klein">Variablen:</div>
+        <div class="var" id="var"></div>
+      </div>
+      <div>
+        <div class="klein">Codetabelle (hex) – 00 bis FF die Einzelzeichen, 100 Dateiende, dazu die gelernten Folgen:</div>
+        <table class="tabelle" id="tabelle"></table>
+      </div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--gruen)"></i>längster Präfix s</span>
+      <span><i style="background:var(--panel);outline:2px solid var(--neu)"></i>nächstes Zeichen</span>
+      <span><i style="background:var(--neu)"></i>neu / gerade gelesen</span>
+      <span><i style="background:var(--cur)"></i>Codewort für eine Folge</span>
+      <span><i style="background:var(--rot)"></i>knifflige Situation</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der aktuelle Abschnitt fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (nach Algorithmus 5.11, Listing 5.41 und 5.42)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Konsole wie im Buch</div><div class="konsole" id="konsole"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    `public class LZW`,
+    `{`,
+    `   private static final int R = 256;        // Anzahl der Eingabezeichen`,
+    `   private static final int L = 4096;       // Anzahl der Codewörter = 2^12`,
+    `   private static final int W = 12;         // Codewortbreite`,
+    ``,
+    `   public static void compress()`,
+    `   {`,
+    `      String input = BinaryStdIn.readString();`,
+    `      TST<Integer> st = new TST<Integer>();`,
+    `      for (int i = 0; i < R; i++)`,
+    `         st.put("" + (char) i, i);`,
+    `      int code = R+1;  // R ist Codewort für Dateiende.`,
+    `      while (input.length() > 0)`,
+    `      {`,
+    `         String s = st.longestPrefixOf(input);  // Findet max.`,
+    `                                                // Präfixübereinstimmung.`,
+    `         BinaryStdOut.write(st.get(s), W);      // Gibt Codierung von s aus.`,
+    `         int t = s.length();`,
+    `         if (t < input.length() && code < L)    // Fügt s zur Symboltabelle`,
+    `                                                // hinzu.`,
+    `            st.put(input.substring(0, t + 1), code++);`,
+    `         input = input.substring(t);            // Sucht über s in der`,
+    `                                                // Eingabe hinaus.`,
+    `      }`,
+    `      BinaryStdOut.write(R, W);                 // Schreibt Dateiende.`,
+    `      BinaryStdOut.close();`,
+    `   }`,
+    ``,
+    `   public static void expand()`,
+    `   {`,
+    `      String[] st = new String[L];`,
+    `      int i; // Nächster verfügbarer Codewort-Wert`,
+    `      for (i = 0; i < R; i++)              // Initialisiert Tabelle für Zeichen.`,
+    `         st[i] = "" + (char) i;`,
+    `      st[i++] = " ";  // (nicht genutztes) Vorausschauzeichen für EOF`,
+    `      int codeword = BinaryStdIn.readInt(W);`,
+    `      String val = st[codeword];`,
+    `      while (true)`,
+    `      {`,
+    `         BinaryStdOut.write(val);               // Schreibt aktuellen Teilstring.`,
+    `         codeword = BinaryStdIn.readInt(W);`,
+    `         if (codeword == R) break;`,
+    `         String s = st[codeword];               // Liest nächstes Codewort.`,
+    `         if (i == codeword)                     // Wenn Vorausschauzeichen ungültig ist,`,
+    `            s = val + val.charAt(0);            //    erstelle Codewort aus dem letzten.`,
+    `         if (i < L)`,
+    `            st[i++] = val + s.charAt(0);        // Fügt neuen Eintrag in Codetabelle ein.`,
+    `         val = s;                               // Aktualisiert aktuelles Codewort.`,
+    `      }`,
+    `      BinaryStdOut.close();`,
+    `   }`,
+    ``,
+    `   public static void main(String[] args)`,
+    `   {  // wie bei Huffman: "-" komprimiert, "+" dekomprimiert`,
+    `      if      (args[0].equals("-")) compress();`,
+    `      else if (args[0].equals("+")) expand();`,
+    `   }`,
+    `}`,
+    ``,
+    `// aus der Klasse TST<Value> (Algorithmus 5.5, Listing 5.13);`,
+    `// longestPrefixOf() wie beim Trie in Listing 5.11, angepasst an den TST`,
+    `public String longestPrefixOf(String s)`,
+    `{`,
+    `   int length = search(root, s, 0, 0);`,
+    `   return s.substring(0, length);`,
+    `}`,
+    ``,
+    `private int search(Node x, String s, int d, int length)`,
+    `{`,
+    `   if (x == null) return length;`,
+    `   if (d == s.length()) return length;`,
+    `   char c = s.charAt(d);`,
+    `   if      (c < x.c) return search(x.left,  s, d, length);`,
+    `   else if (c > x.c) return search(x.right, s, d, length);`,
+    `   if (x.val != null) length = d + 1;`,
+    `   return search(x.mid, s, d+1, length);`,
+    `}`
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    lesen: zeile('String input = BinaryStdIn.readString();'), tst: zeile('st.put("" + (char) i, i);'), code0: zeile('int code = R+1;'),
+    lpo: zeile('String s = st.longestPrefixOf(input);'), schreib: zeile('BinaryStdOut.write(st.get(s), W);'),
+    put: zeile('st.put(input.substring(0, t + 1), code++);'), weiter: zeile('input = input.substring(t);'),
+    eof: zeile('BinaryStdOut.write(R, W);'),
+    init: zeile('st[i] = "" + (char) i;'), platzhalter: zeile('st[i++] = " ";'), erstes: zeile('int codeword = BinaryStdIn.readInt(W);'),
+    val0: zeile('String val = st[codeword];'), aus: zeile('BinaryStdOut.write(val);'), lies: zeile('         codeword = BinaryStdIn.readInt(W);'),
+    ende: zeile('if (codeword == R) break;'), s: zeile('String s = st[codeword];'), knifflig: zeile('s = val + val.charAt(0);'),
+    eintrag: zeile('st[i++] = val + s.charAt(0);'), valS: zeile('val = s;')
+  };
+  const SCHLUSS = CODE.reduce((a, l, i) => l.includes('BinaryStdOut.close();') ? a.concat(i) : a, []);
+  L.close = SCHLUSS[0]; L.closeExpand = SCHLUSS[1];
+  if (SCHLUSS.length !== 2 || L.close !== L.eof + 1 || L.closeExpand !== L.valS + 2) throw new Error('Codezeile verschoben');
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Beispiele ----------
+  const ABRA = 'ABRACADABRABRABRA', ABAB = 'ABABABA';
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsText() {
+    const abc = 'ABCD'.slice(0, 2 + zufall(3)), n = 12 + zufall(20); let s = '';
+    for (let i = 0; i < n; i++) s += abc[Math.min(zufall(abc.length), zufall(abc.length))];
+    return s;
+  }
+  const R = 256, LL = 4096, W = 12;
+  const hex = v => v.toString(16).toUpperCase().padStart(3, '0');
+  const zeig = s => [...s].map(ch => ch === ' ' ? '␣' : ch).join('');
+  const q = s => '"' + esc(zeig(s)) + '"';          // String für die Variablen-Anzeige (HTML)
+  const DATEI = { abra: 'abraLZW.txt', abab: 'ababLZW.txt', zufall: 'zufall.txt', eigen: 'eingabe.txt' };
+
+  // ---------- TST (Listing 5.13) mit longestPrefixOf ----------
+  let wurzel, besucht;
+  function put(key, val) {
+    const rek = (x, d) => {
+      const c = key.charCodeAt(d);
+      if (!x) x = { c, left: null, mid: null, right: null, val: null };
+      if (c < x.c) x.left = rek(x.left, d);
+      else if (c > x.c) x.right = rek(x.right, d);
+      else if (d < key.length - 1) x.mid = rek(x.mid, d + 1);
+      else x.val = val;
+      return x;
+    };
+    wurzel = rek(wurzel, 0);
+  }
+  function get(key) { let x = wurzel, d = 0; while (x) { const c = key.charCodeAt(d); if (c < x.c) x = x.left; else if (c > x.c) x = x.right; else if (d < key.length - 1) { x = x.mid; d++; } else return x.val; } return null; }
+  function longestPrefixOf(s) {          // wie Listing 5.11, angepasst an den TST
+    besucht = 0;
+    const search = (x, d, length) => {
+      if (x === null) return length;
+      if (d === s.length) return length;
+      besucht++;
+      const c = s.charCodeAt(d);
+      if (c < x.c) return search(x.left, d, length);
+      else if (c > x.c) return search(x.right, d, length);
+      if (x.val !== null) length = d + 1;
+      return search(x.mid, d + 1, length);
+    };
+    return s.substring(0, search(wurzel, 0, 0));
+  }
+
+  // ---------- Aufzeichnung ----------
+  let steps, pos = 0, timer = null, TEXT = ABRA, ART = 'abra', OUT, CODES, EXP, TAB, Z;
+  function snap(line, msg, o) {
+    steps.push(Object.assign({ line, msg, phase: Z.phase, codes: CODES.length, tab: TAB.length, bits: OUT.length, ausgabe: Z.ausgabe, konsole: Z.konsole.slice(), vars: Z.vars }, o || {}));
+  }
+  const schreibInt = (v, n) => { for (let i = n - 1; i >= 0; i--) OUT += (v >>> i) & 1; };
+
+  function compress(text) {
+    Z.phase = 'compress';
+    let input = text, weg = 0;           // weg = Zeichen schon verarbeitet
+    Z.vars = `input = ${q(input)}`;
+    snap(L.lesen, ART === 'abra' ? `Eingabe abraLZW.txt: ABRACADABRABRABRA – ${text.length} Zeichen zu je 8 Bit = ${text.length * 8} Bit.` : ART === 'abab' ? `Eingabe ababLZW.txt: ABABABA – hier tritt beim Dekomprimieren die knifflige Situation auf.` : `Eingabe: ${text.length} Zeichen = ${text.length * 8} Bit.`);
+    wurzel = null;
+    for (let i = 0; i < R; i++) put(String.fromCharCode(i), i);
+    snap(L.tst, `Die Codetabelle ist ein TST. Zuerst kommen die 256 Einzelzeichen mit ihrem eigenen Code hinein: A hat 041, B 042 usw. (hex).`);
+    let code = R + 1;
+    Z.vars = `code = ${hex(code)}   input = ${q(input)}`;
+    snap(L.code0, `code = R + 1 = ${hex(code)}: Das erste freie Codewort. ${hex(R)} ist für das Dateiende reserviert.`, { opEnde: true });
+    while (input.length > 0) {
+      const s = longestPrefixOf(input), b = besucht;
+      const t = s.length, cw = get(s);
+      Z.vars = `code = ${hex(code)}   input = ${q(input)}\ns = ${q(s)}`;
+      snap(L.lpo, `longestPrefixOf: „${zeig(s)}“ ist der längste Anfang der Resteingabe, der in der Tabelle steht${t < input.length ? ` – „${zeig(input.slice(0, t + 1))}“ steht noch nicht drin` : ''}. (${b} TST-Knoten besucht)`, { von: weg, bis: weg + t, sCode: cw });
+      CODES.push({ cw, s });
+      schreibInt(cw, W);
+      Z.vars = `code = ${hex(code)}   input = ${q(input)}\ns = ${q(s)}   st.get(s) = ${hex(cw)}`;
+      snap(L.schreib, `write(st.get(s), W): Codewort ${hex(cw)} für „${zeig(s)}“ in 12 Bit.`, { von: weg, bis: weg + t, sCode: cw, neuChip: true });
+      if (t < input.length && code < LL) {
+        const neu = input.substring(0, t + 1);
+        put(neu, code); TAB.push({ cw: code, s: neu, aus: `${zeig(s)} + ${zeig(input[t])}` }); code++;
+        Z.vars = `code = ${hex(code)}   t = ${t}\ns = ${q(s)}   neu: ${q(neu)} = ${hex(code - 1)}`;
+        snap(L.put, `st.put("${zeig(neu)}", ${hex(code - 1)}): s plus das nächste Zeichen ${zeig(input[t])} ist eine neue Folge. Kommt sie wieder vor, reicht ein Codewort.`, { von: weg, bis: weg + t, vor: weg + t, neuZeile: code - 1 });
+      } else {
+        snap(L.weiter, t >= input.length ? `Die Eingabe ist zu Ende – kein neuer Eintrag mehr.` : `Die Tabelle ist voll (L = 4096) – kein neuer Eintrag.`, { von: weg, bis: weg + t });
+      }
+      input = input.substring(t); weg += t;
+    }
+    steps[steps.length - 1].opEnde = true;
+    schreibInt(R, W); CODES.push({ cw: R, s: '' });
+    Z.vars = `code = ${hex(code)}   input = ""`;
+    snap(L.eof, `write(R, W): Codewort 100 als Dateiende.`, { von: weg, neuChip: true });
+    const pad = (8 - OUT.length % 8) % 8; OUT += '0'.repeat(pad);
+    const bytes = OUT.match(/.{8}/g).map(b => parseInt(b, 2).toString(16).padStart(2, '0'));
+    Z.konsole.push(`% java LZW - < ${DATEI[ART]} | java HexDump 20`);
+    for (let i = 0; i < bytes.length; i += 20) Z.konsole.push(bytes.slice(i, i + 20).join(' '));
+    Z.konsole.push(`${OUT.length} bits`);
+    snap(L.close, `close(): ${CODES.length} Codewörter × 12 Bit = ${CODES.length * 12} Bit${pad ? `, dazu ${pad} Füllbits bis zum vollen Byte` : ''} – ${OUT.length} Bit statt ${text.length * 8}.`, { von: weg, opEnde: true });
+  }
+
+  function expand() {
+    Z.phase = 'expand'; Z.ausgabe = '';
+    let p = 0; const readInt = n => { let v = 0; for (let k = 0; k < n; k++) v = v * 2 + (OUT[p++] === '1' ? 1 : 0); return v; };
+    const st = []; let i;
+    for (i = 0; i < R; i++) st[i] = String.fromCharCode(i);
+    TAB.length = 0; let nr = 0;
+    Z.konsole.push(`% java LZW - < ${DATEI[ART]} | java LZW +`);
+    Z.vars = 'i = 100';
+    snap(L.init, `expand: Die Tabelle ist jetzt ein Array String[] – nachgeschlagen wird vom Codewort zum String. Erst die 256 Einzelzeichen.`, { lesend: -1 });
+    st[i++] = ' ';
+    Z.vars = `i = ${hex(i)}`;
+    snap(L.platzhalter, `st[100] bekommt einen Platzhalter für das Dateiende, i = ${hex(i)} ist der nächste freie Platz – wie code beim Komprimieren.`, { lesend: -1 });
+    let codeword = readInt(W); let val = st[codeword];
+    Z.vars = `i = ${hex(i)}   codeword = ${hex(codeword)}\nval = ${q(val)}`;
+    snap(L.val0, `Erstes Codewort ${hex(codeword)}: val = „${zeig(val)}“. Das erste Codewort ist immer ein Einzelzeichen.`, { lesend: nr, opEnde: true });
+    while (true) {
+      const vorher = Z.ausgabe.length;
+      Z.ausgabe += val;
+      snap(L.aus, `write(val): „${zeig(val)}“ ausgeben.`, { lesend: nr, ausVon: vorher, gelesenBis: nr });
+      codeword = readInt(W); nr++;
+      if (codeword === R) {
+        Z.vars = `i = ${hex(i)}   codeword = 100`;
+        snap(L.ende, `Codewort 100 = Dateiende – fertig.`, { lesend: nr, gelesenBis: nr });
+        break;
+      }
+      let s = st[codeword];
+      const knifflig = i === codeword;
+      Z.vars = `i = ${hex(i)}   codeword = ${hex(codeword)}\nval = ${q(val)}   s = ${knifflig ? '<span class="rot">null</span>' : `${q(s)}`}`;
+      snap(L.s, knifflig ? `Codewort ${hex(codeword)} gelesen – aber st[${hex(codeword)}] ist noch leer! Der Kodierer hat diesen Eintrag im Schritt davor angelegt und gleich benutzt.` : `Codewort ${hex(codeword)} gelesen: s = st[${hex(codeword)}] = „${zeig(s)}“.`, { lesend: nr, gelesenBis: nr, knifflig, tabAn: knifflig ? null : codeword });
+      if (knifflig) {
+        s = val + val.charAt(0);
+        Z.vars = `i = ${hex(i)}   codeword = ${hex(codeword)}\nval = ${q(val)}   s = <span class="rot">${q(s)}</span>`;
+        snap(L.knifflig, `Die knifflige Situation: i == codeword. Der fehlende Eintrag ist val plus dessen erstes Zeichen: „${zeig(val)}“ + ${zeig(val[0])} = „${zeig(s)}“.`, { lesend: nr, gelesenBis: nr, knifflig: true });
+      }
+      if (i < LL) {
+        st[i] = val + s.charAt(0);
+        TAB.push({ cw: i, s: st[i], aus: `${zeig(val)} + ${zeig(s[0])}` });
+        i++;
+      }
+      Z.vars = `i = ${hex(i)}   codeword = ${hex(codeword)}\nval = ${q(s)}`;
+      snap(L.eintrag, `st[${hex(i - 1)}] = val + s.charAt(0) = „${zeig(val)}“ + ${zeig(s[0])} = „${zeig(st[i - 1])}“ – denselben Eintrag hat der Kodierer gemacht, einen Schritt früher. Dann val = s.`, { lesend: nr, gelesenBis: nr, neuZeile: i - 1, knifflig: knifflig ? 'zeile' : false });
+      val = s;
+    }
+    EXP = Z.ausgabe;
+    Z.konsole.push(EXP);
+    snap(L.closeExpand, EXP === TEXT ? `Fertig: „${zeig(EXP)}“ – genau die Eingabe, ohne dass die Tabelle mitgeschickt wurde.` : 'Fehler: Die Ausgabe weicht von der Eingabe ab.', { gelesenBis: nr + 1, opEnde: true });
+  }
+
+  function lauf(text, art) {
+    stop();
+    TEXT = text; ART = art; steps = []; OUT = ''; CODES = []; TAB = [];
+    Z = { phase: 'compress', ausgabe: '', konsole: [], vars: '' };
+    compress(text);
+    const tabC = TAB.slice();
+    expand();
+    TAB_C = tabC; TAB_E = TAB.slice();
+    pos = 0; render();
+  }
+  let TAB_C = [], TAB_E = [];
+
+  // ---------- Anzeige ----------
+  function render() {
+    const st = steps[pos], kompr = st.phase === 'compress';
+    let b = '';
+    if (kompr) {
+      $('bandTitel').textContent = 'Eingabe:';
+      [...TEXT].forEach((ch, i) => {
+        let cls = '';
+        if (st.von !== undefined) { if (i < st.von) cls = 'fertig'; else if (i < st.bis) cls = 'passt'; else if (i === st.vor) cls = 'vor'; }
+        b += `<div class="zelle ${cls}"><b>${esc(zeig(ch))}</b><small>${i}</small></div>`;
+      });
+    } else {
+      $('bandTitel').textContent = 'Ausgabe von expand():';
+      [...st.ausgabe].forEach((ch, i) => { b += `<div class="zelle ${st.ausVon !== undefined && i >= st.ausVon ? 'neu' : ''}"><b>${esc(zeig(ch))}</b><small>${i}</small></div>`; });
+      if (!st.ausgabe) b = '<span class="klein">(noch nichts ausgegeben)</span>';
+    }
+    $('band').innerHTML = b;
+    // Codewörter
+    $('chipsTitel').textContent = kompr ? 'Ausgabe: Codewörter zu 12 Bit (hex)' : 'Eingabe: die Codewörter aus compress()';
+    const n = kompr ? st.codes : CODES.length;
+    $('chips').innerHTML = CODES.slice(0, n).map((c, k) => {
+      let cls = 'chip' + (c.cw === R ? ' eof' : c.cw > R ? ' lang' : '');
+      if (kompr ? (st.neuChip && k === n - 1) : k === st.lesend) cls += ' jetzt';
+      else if (!kompr && st.gelesenBis !== undefined && k < st.gelesenBis) cls += ' gelesen';
+      return `<span class="${cls}"><b>${hex(c.cw)}</b><small>${c.cw === R ? 'EOF' : esc(zeig(c.s))}</small></span>`;
+    }).join('') || '<span class="klein">(noch keine)</span>';
+    $('summe').innerHTML = kompr ? `<b>${st.bits}</b> Bit geschrieben` : `<b>${Math.min(st.gelesenBis === undefined ? 0 : st.gelesenBis + 1, CODES.length) * 12}</b> von ${CODES.length * 12} Bit gelesen`;
+    if (kompr && st.line === L.close) $('summe').innerHTML = `<b>${CODES.length}</b> × 12 = <b>${CODES.length * 12}</b> Bit + Auffüllen <b>${OUT.length - CODES.length * 12}</b> = <b>${OUT.length}</b> Bit statt <b>${TEXT.length * 8}</b>`;
+    $('var').innerHTML = st.vars || '–';
+    // Tabelle
+    const tab = (kompr ? TAB_C : TAB_E).slice(0, st.tab);
+    $('tabelle').innerHTML = '<tr><th>Code</th><th>Folge</th><th>entstanden aus</th></tr>' + (tab.length ? tab.map(e => {
+      const cls = e.cw === st.neuZeile ? (st.knifflig === 'zeile' ? 'knifflig' : 'neu') : e.cw === st.tabAn || e.cw === st.sCode ? 'an' : '';
+      return `<tr${cls ? ` class="${cls}"` : ''}><td class="c">${hex(e.cw)}</td><td>${esc(zeig(e.s))}</td><td class="h">${esc(e.aus)}</td></tr>`;
+    }).join('') : '<tr><td colspan="3" class="h">noch keine gelernte Folge</td></tr>');
+    $('titel').innerHTML = `${DATEI[ART]} · ${kompr ? 'compress()' : 'expand()'} · Zeichen: <b>${TEXT.length}</b> · Codewörter: <b>${CODES.length}</b>`;
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg' + (st.knifflig === true ? ' knifflig' : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const start = () => { lockern(); lauf(ABRA, 'abra'); };
+  $('abra').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('abab').addEventListener('click', () => { lockern(); lauf(ABAB, 'abab'); });
+  $('zufall').addEventListener('click', () => { lockern(); lauf(zufallsText(), 'zufall'); });
+  $('eigenLos').addEventListener('click', () => {
+    const text = $('eigen').value;
+    if (!text.length) { $('eigenHinweis').textContent = 'Bitte mindestens ein Zeichen.'; return; }
+    if ([...text].some(ch => ch.charCodeAt(0) < 32 || ch.charCodeAt(0) > 126)) { $('eigenHinweis').textContent = 'Bitte nur ASCII-Zeichen (ohne Umlaute) – BinaryStdIn liest jedes Zeichen als ein Byte.'; return; }
+    $('eigenHinweis').textContent = '';
+    lockern(); lauf(text, 'eigen');
+  });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(text) komprimiert und dekomprimiert (Anzeige danach wie vorher)
+  function rechne(text) {
+    const alt = { steps, TEXT, ART, OUT, CODES, EXP, TAB, TAB_C, TAB_E, Z };
+    lauf(text, 'eigen');
+    const e = { bits: OUT, codes: CODES.map(c => c.cw), ausgabe: EXP, schritte: steps.length, knifflig: steps.some(s => s.knifflig === true) };
+    ({ steps, TEXT, ART, OUT, CODES, EXP, TAB, TAB_C, TAB_E, Z } = alt);
+    pos = 0; render();
+    return e;
+  }
+  window.__lzw = { rechne, start, ABRA, ABAB, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>

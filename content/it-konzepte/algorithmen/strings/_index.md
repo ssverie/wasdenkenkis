@@ -1,6 +1,6 @@
 +++
 title = "Strings"
-description = "Kapitel 5 des Buchs: Sortieren von Strings mit dem LSD- und dem MSD-Sortierverfahren und dem 3-Wege-Quicksort für Strings, dazu Tries und ternäre Suchtries als Symboltabellen für Strings die Teilstringsuche nach Knuth-Morris-Pratt, Boyer-Moore und Rabin-Karp und die Mustersuche mit regulären Ausdrücken."
+description = "Kapitel 5 des Buchs: Sortieren von Strings mit dem LSD- und dem MSD-Sortierverfahren und dem 3-Wege-Quicksort für Strings, dazu Tries und ternäre Suchtries als Symboltabellen für Strings, die Teilstringsuche nach Knuth-Morris-Pratt, Boyer-Moore und Rabin-Karp und die Mustersuche mit regulären Ausdrücken, dazu die Datenkomprimierung nach Huffman und nach Lempel-Ziv-Welch."
 weight = 5
 oben = "/it-konzepte/algorithmen"
 sortieren_nach = "reihenfolge"   # wie bisher nach Algorithmus-Nummer absteigend (Sven, 2026-10-26)

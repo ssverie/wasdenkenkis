@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Huffman-Komprimierung</title>
+<!-- Visualisierung der Huffman-Komprimierung (nach Sedgewick/Wayne, Algorithmen, Algorithmus 5.10, Listing 5.33
+     bis 5.40) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Java-Code wie in den Listings, MinPQ wie
+     MaxPQ aus Algorithmus 2.6 mit umgedrehtem Vergleich, main() wie die Aufrufe in Abbildung 5.69.
+     Beispiele: ABRACADABRA! (Abbildung 5.65) und tinytinyTale.txt (Abbildung 5.69). Aufbau der Seite wie tst.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --gruen: #8fd1a6; --gtext: #1c1c1f; --code1: #b45309; --code2: #7c3aed; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --gruen: #2f6e48; --gtext: #ececef; --code1: #f0a058; --code2: #c4a5ff; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .bild { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .bild svg { display: block; width: 100%; height: auto; }
+  .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  svg .kante { stroke: var(--muted); stroke-width: 1.6; fill: none; }
+  svg .kante.pfad { stroke: var(--cur); stroke-width: 3; }
+  svg .bit { font: 600 10px ui-monospace, Consolas, monospace; fill: var(--muted); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten circle, svg .knoten rect { fill: var(--panel); stroke: var(--muted); stroke-width: 1.8; }
+  svg .knoten text { font: 700 12px ui-monospace, Consolas, monospace; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten.blatt rect { stroke: var(--text); stroke-width: 2.2; }
+  svg .knoten.pfad circle, svg .knoten.pfad rect { stroke: var(--cur); stroke-width: 3; }
+  svg .knoten.xy circle, svg .knoten.xy rect { stroke: var(--neu); stroke-width: 3; }
+  svg .knoten.neu circle, svg .knoten.neu rect, svg .knoten.aktiv circle, svg .knoten.aktiv rect { fill: var(--neu); stroke: var(--neu); }
+  svg .knoten.neu text, svg .knoten.aktiv text { fill: #fff; }
+  svg .knoten.fund rect { fill: var(--gruen); stroke: var(--gruen); }
+  svg .knoten.fund text { fill: var(--gtext); }
+  svg .freq { font: 700 10.5px ui-monospace, Consolas, monospace; fill: var(--rot); text-anchor: middle; }
+  svg .wurzel { font: 600 10px system-ui, sans-serif; fill: var(--muted); text-anchor: middle; }
+  @media (prefers-color-scheme: dark) { svg .knoten.neu text, svg .knoten.aktiv text { fill: #0d1530; } }
+  .eingabe input { font: inherit; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); width: 14em; max-width: 100%; }
+  .klein { font-size: 12px; color: var(--muted); margin: 6px 0 4px; }
+  .band { display: flex; flex-wrap: wrap; gap: 6px 0; padding: 2px 0 4px; font-family: ui-monospace, Consolas, monospace; }
+  .band .zelle { width: 1.45em; text-align: center; line-height: 1.35; }
+  .band .zelle b { display: block; font-size: 15px; font-weight: 400; border-radius: 3px; }
+  .band .zelle small { display: block; font-size: 9.5px; color: var(--muted); }
+  .band .fertig b { color: var(--muted); }
+  .band .jetzt b { background: var(--neu); color: #fff; }
+  .band .aus b { background: var(--gruen); color: var(--gtext); }
+  @media (prefers-color-scheme: dark) { .band .jetzt b { color: #0d1530; } }
+  .tabelle { border-collapse: collapse; font: 13px ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; }
+  .tabelle th, .tabelle td { padding: 1px 6px; text-align: left; white-space: nowrap; }
+  .tabelle th { color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--line); font-family: system-ui, sans-serif; font-size: 12px; }
+  .tabelle td.z { font-weight: 700; }
+  .tabelle tr.an td { background: var(--hl); }
+  .pq { font: 12.5px ui-monospace, Consolas, monospace; background: var(--code-bg); border-radius: 8px; padding: 5px 8px; margin-top: 8px; overflow-wrap: anywhere; min-height: 1.6em; }
+  .bits { font: 13px/1.6 ui-monospace, Consolas, monospace; background: var(--code-bg); border-radius: 8px; padding: 6px 8px; overflow-wrap: anywhere; word-break: break-all; min-height: 1.6em; }
+  .bits span { border-radius: 2px; }
+  .bits .k { color: var(--cur); font-weight: 700; }
+  .bits .zc { color: var(--text); }
+  .bits .n { color: var(--muted); }
+  .bits .c1 { color: var(--code1); font-weight: 700; }
+  .bits .c2 { color: var(--code2); font-weight: 700; }
+  .bits .pad { color: var(--grau); text-decoration: underline dotted; }
+  .bits .gelesen { opacity: .38; }
+  .bits mark { background: var(--hl); color: inherit; border-radius: 2px; }
+  .bits .trenn { display: inline-block; width: .35em; }
+  .summe { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+  .summe b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  @media (max-width: 640px) { .bild { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="abra">ABRACADABRA! (Abb. 5.65)</button>
+    <button id="tale">tinytinyTale.txt (Abb. 5.69)</button>
+    <button id="zufall">Zufallstext</button>
+  </div>
+  <div class="box controls eingabe">
+    <input id="eigen" value="MISSISSIPPI" aria-label="Eigener Text" maxlength="60">
+    <button id="eigenLos">komprimieren</button>
+    <span class="klein" id="eigenHinweis"></span>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="klein" id="bandTitel"></div>
+    <div class="band" id="band"></div>
+    <div class="bild">
+      <div>
+        <div class="h2" id="baumTitel"></div>
+        <svg id="graph" role="img" aria-label="Die Bäume der Vorrangwarteschlange oder der fertige Huffman-Trie"></svg>
+      </div>
+      <div>
+        <table class="tabelle" id="tabelle"></table>
+        <div class="pq" id="pq"></div>
+      </div>
+    </div>
+    <div class="klein">Ausgabe von BinaryStdOut, Bit für Bit:</div>
+    <div class="bits" id="bits"></div>
+    <div class="summe" id="summe"></div>
+    <div class="legende">
+      <span><i style="background:var(--cur)"></i>Trie: Knotenbit</span>
+      <span><i style="background:var(--text)"></i>Trie: Zeichen (8 Bit)</span>
+      <span><i style="background:var(--muted)"></i>Anzahl (32 Bit)</span>
+      <span><i style="background:var(--code1)"></i><i style="background:var(--code2)"></i>Codewörter, abwechselnd</span>
+      <span><i style="background:var(--hl)"></i>gerade geschrieben / gelesen</span>
+      <span><i style="background:var(--neu)"></i>aktueller Knoten</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der aktuelle Abschnitt fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (nach Algorithmus 5.10, Listing 5.33 bis 5.40)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Konsole wie in Abbildung 5.69</div><div class="konsole" id="konsole"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    `public class Huffman`,
+    `{`,
+    `   private static int R = 256;   // ASCII-Alphabet`,
+    ``,
+    `   private static class Node implements Comparable<Node>`,
+    `   {  // Huffman-Trieknoten`,
+    `      private char ch;   // nicht genutzt für interne Knoten`,
+    `      private int freq;  // nicht genutzt für Dekomprimierung`,
+    `      private final Node left, right;`,
+    ``,
+    `      Node(char ch, int freq, Node left, Node right)`,
+    `      {  this.ch = ch; this.freq = freq; this.left = left; this.right = right;  }`,
+    ``,
+    `      public boolean isLeaf()`,
+    `      {  return left == null && right == null;  }`,
+    ``,
+    `      public int compareTo(Node that)`,
+    `      {  return this.freq - that.freq;  }`,
+    `   }`,
+    ``,
+    `   public static void compress()`,
+    `   {`,
+    `      // Liest Eingabe.`,
+    `      String s = BinaryStdIn.readString();`,
+    `      char[] input = s.toCharArray();`,
+    ``,
+    `      // Tabelliert Häufigkeitszahlen.`,
+    `      int[] freq = new int[R];`,
+    `      for (int i = 0; i < input.length; i++)`,
+    `         freq[input[i]]++;`,
+    ``,
+    `      // Erstellt den Huffman-Codierungs-Trie.`,
+    `      Node root = buildTrie(freq);`,
+    ``,
+    `      // Erstellt Codetabelle (rekursiv).`,
+    `      String[] st = new String[R];`,
+    `      buildCode(st, root, "");`,
+    ``,
+    `      // Gibt Trie für Decoder aus (rekursiv).`,
+    `      writeTrie(root);`,
+    ``,
+    `      // Gibt die Anzahl der Zeichen aus.`,
+    `      BinaryStdOut.write(input.length);`,
+    ``,
+    `      // Codiert die Eingabe mithilfe des Huffman-Codes.`,
+    `      for (int i = 0; i < input.length; i++)`,
+    `      {`,
+    `         String code = st[input[i]];`,
+    `         for (int j = 0; j < code.length(); j++)`,
+    `            if (code.charAt(j) == '1')`,
+    `               BinaryStdOut.write(true);`,
+    `            else BinaryStdOut.write(false);`,
+    `      }`,
+    `      BinaryStdOut.close();`,
+    `   }`,
+    ``,
+    `   private static Node buildTrie(int[] freq)`,
+    `   {`,
+    `      // Initialisiert Vorrangwarteschlange mit Singleton-Bäumen.`,
+    `      MinPQ<Node> pq = new MinPQ<Node>();`,
+    `      for (char c = 0; c < R; c++)`,
+    `         if (freq[c] > 0)`,
+    `            pq.insert(new Node(c, freq[c], null, null));`,
+    ``,
+    `      while (pq.size() > 1)`,
+    `      {  // Führt zwei kleinste Bäume zusammen.`,
+    `         Node x = pq.delMin();`,
+    `         Node y = pq.delMin();`,
+    `         Node parent = new Node('\\0', x.freq + y.freq, x, y);`,
+    `         pq.insert(parent);`,
+    `      }`,
+    `      return pq.delMin();`,
+    `   }`,
+    ``,
+    `   private static void buildCode(String[] st, Node x, String s)`,
+    `   {  // Erstellt eine Nachschlagtabelle aus dem Trie (rekursiv).`,
+    `      if (x.isLeaf())`,
+    `      {  st[x.ch] = s; return;  }`,
+    `      buildCode(st, x.left,  s + '0');`,
+    `      buildCode(st, x.right, s + '1');`,
+    `   }`,
+    ``,
+    `   private static void writeTrie(Node x)`,
+    `   {  // Schreibt bitfolgencodierten Trie.`,
+    `      if (x.isLeaf())`,
+    `      {`,
+    `         BinaryStdOut.write(true);`,
+    `         BinaryStdOut.write(x.ch);`,
+    `         return;`,
+    `      }`,
+    `      BinaryStdOut.write(false);`,
+    `      writeTrie(x.left);`,
+    `      writeTrie(x.right);`,
+    `   }`,
+    ``,
+    `   private static Node readTrie()`,
+    `   {`,
+    `      if (BinaryStdIn.readBoolean())`,
+    `         return new Node(BinaryStdIn.readChar(), 0, null, null);`,
+    `      return new Node('\\0', 0, readTrie(), readTrie());`,
+    `   }`,
+    ``,
+    `   public static void expand()`,
+    `   {`,
+    `      Node root = readTrie();`,
+    `      int N = BinaryStdIn.readInt();`,
+    `      for (int i = 0; i < N; i++)`,
+    `      {  // Dekomprimiert i-tes Codewort.`,
+    `         Node x = root;`,
+    `         while (!x.isLeaf())`,
+    `            if (BinaryStdIn.readBoolean())`,
+    `               x = x.right;`,
+    `            else x = x.left;`,
+    `         BinaryStdOut.write(x.ch);`,
+    `      }`,
+    `      BinaryStdOut.close();`,
+    `   }`,
+    ``,
+    `   public static void main(String[] args)`,
+    `   {  // wie in Abbildung 5.69: "-" komprimiert, "+" dekomprimiert`,
+    `      if      (args[0].equals("-")) compress();`,
+    `      else if (args[0].equals("+")) expand();`,
+    `   }`,
+    `}`
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    lesen: zeile('String s = BinaryStdIn.readString();'), zaehle: zeile('freq[input[i]]++;'), buildTrie: zeile('Node root = buildTrie(freq);'),
+    neuPQ: zeile('MinPQ<Node> pq = new MinPQ<Node>();'), insertBlatt: zeile('pq.insert(new Node(c, freq[c], null, null));'),
+    x: zeile('Node x = pq.delMin();'), y: zeile('Node y = pq.delMin();'), parent: zeile('Node parent = new Node('), insertParent: zeile('pq.insert(parent);'),
+    wurzel: zeile('return pq.delMin();'), codeAufruf: zeile('buildCode(st, root, "");'), codeBlatt: zeile('{  st[x.ch] = s; return;  }'),
+    codeL: zeile(`buildCode(st, x.left,  s + '0');`), codeR: zeile(`buildCode(st, x.right, s + '1');`),
+    trieAufruf: zeile('writeTrie(root);'), wtKopf: zeile('private static void writeTrie(Node x)'),
+    anzahl: zeile('BinaryStdOut.write(input.length);'), kodiere: zeile('String code = st[input[i]];'),
+    lies: zeile('Node root = readTrie();'), liesBlatt: zeile('return new Node(BinaryStdIn.readChar(), 0, null, null);'), liesInnen: zeile(`return new Node('\\0', 0, readTrie(), readTrie());`),
+    liesN: zeile('int N = BinaryStdIn.readInt();')
+  };
+  // Zeilen, die zweimal vorkommen: die erste hinter einer eindeutigen Zeile
+  const nach = (ab, t) => CODE.findIndex((l, i) => i > ab && l.includes(t));
+  const SCHLUSS = CODE.reduce((a, l, i) => l.includes('BinaryStdOut.close();') ? a.concat(i) : a, []);
+  L.close = SCHLUSS[0]; L.closeExpand = SCHLUSS[1];
+  L.schreibBlatt = nach(L.wtKopf, 'BinaryStdOut.write(true);'); L.schreibInnen = nach(L.wtKopf, 'BinaryStdOut.write(false);');
+  L.dekodiere = nach(L.liesN, 'BinaryStdOut.write(x.ch);');
+  if (L.schreibBlatt !== L.wtKopf + 4 || L.schreibInnen !== L.wtKopf + 8 || L.dekodiere !== L.liesN + 8 || SCHLUSS.length !== 2 || L.closeExpand !== L.dekodiere + 2) throw new Error('Codezeile verschoben');
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Beispiele ----------
+  const ABRA = 'ABRACADABRA!';
+  const TALE = 'it was the best of times it was the worst of times\n';
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsText() {
+    const abc = 'ABCDEFGH'.slice(0, 3 + zufall(5)), n = 10 + zufall(15); let s = '';
+    for (let i = 0; i < n; i++) s += abc[Math.min(zufall(abc.length), zufall(abc.length))];   // ungleich verteilt: vorne häufiger
+    return s;
+  }
+  const zeig = c => c === 32 ? '␣' : c === 10 ? '↵' : String.fromCharCode(c);
+  const jz = c => c === 10 ? `'\\n'` : c === 39 ? `'\\''` : `'${String.fromCharCode(c)}'`;
+
+  // ---------- Huffman und Aufzeichnung ----------
+  let T, steps, pos = 0, timer = null, TEXT = ABRA, ART = 'abra', OUT, SEGS, CHARS, ROOT, PRE, CODES, EXP;
+  // Knoten: { id, ch, freq, left, right }; die Lage im Bild kommt aus dem fertigen Trie
+  const neuerKnoten = (ch, freq, left, right) => { const n = { id: T.length, ch, freq, left, right }; T.push(n); return n.id; };
+  const blatt = id => T[id].left === null && T[id].right === null;
+  let Z;
+  function snap(line, msg, o) {
+    steps.push(Object.assign({
+      line, msg, phase: Z.phase, anzahl: T.length, freq: Z.freq.slice(), codes: Z.codes.slice(), pq: Z.pq.slice(),
+      bits: OUT.length, gelesen: Z.gelesen, ausgabe: Z.ausgabe, konsole: Z.konsole.slice(), geleseneK: Z.geleseneK
+    }, o || {}));
+  }
+
+  // MinPQ wie MaxPQ aus Algorithmus 2.6 (pq[1..n]), nur mit umgedrehtem Vergleich
+  const pq = [null];
+  const greater = (i, j) => T[pq[i]].freq - T[pq[j]].freq > 0;
+  const exch = (i, j) => { const t = pq[i]; pq[i] = pq[j]; pq[j] = t; };
+  function insert(id) { pq.push(id); let k = pq.length - 1; while (k > 1 && greater(k >> 1, k)) { exch(k >> 1, k); k >>= 1; } }
+  function delMin() {
+    const min = pq[1], n = pq.length - 1; exch(1, n); pq.pop();
+    let k = 1; const m = pq.length - 1;
+    while (2 * k <= m) { let j = 2 * k; if (j < m && greater(j, j + 1)) j++; if (!greater(k, j)) break; exch(k, j); k = j; }
+    return min;
+  }
+  const blaetter = id => blatt(id) ? zeig(T[id].ch) : blaetter(T[id].left) + blaetter(T[id].right);
+  const pqText = () => pq.slice(1).map(id => `${blatt(id) ? zeig(T[id].ch) : '{' + blaetter(id) + '}'}:${T[id].freq}`);
+
+  function schreib(bits, art) { SEGS.push({ von: OUT.length, bis: OUT.length + bits.length, art }); OUT += bits; }
+  const binaer = (v, n) => { let s = ''; for (let i = n - 1; i >= 0; i--) s += (v >>> i) & 1; return s; };
+  const ci = c => CHARS.indexOf(c);
+
+  function compress(text) {
+    const input = [...text].map(ch => ch.charCodeAt(0));
+    Z.phase = 'lesen';
+    snap(L.lesen, ART === 'abra' ? `Eingabe abra.txt: ABRACADABRA! – ${input.length} Zeichen zu je 8 Bit = ${input.length * 8} Bit (Testfall in Abbildung 5.69).` : ART === 'tale' ? `Eingabe tinytinyTale.txt: „it was the best of times it was the worst of times“ mit Zeilenende (↵) – ${input.length} Zeichen = ${input.length * 8} Bit.` : `Eingabe: ${input.length} Zeichen = ${input.length * 8} Bit.`, { opEnde: true });
+    Z.phase = 'zaehlen';
+    input.forEach((c, i) => {
+      Z.freq[ci(c)]++;
+      snap(L.zaehle, `input[${i}] = ${jz(c)} – freq[${jz(c)}] wird ${Z.freq[ci(c)]}.`, { inPos: i, zeileT: ci(c), opEnde: i === input.length - 1 });
+    });
+    // buildTrie
+    Z.phase = 'trie';
+    snap(L.neuPQ, `buildTrie: Jedes Zeichen mit freq > 0 wird ein einzelner Baum, alle kommen in eine Min-Vorrangwarteschlange (Heap in pq[1..n], wie bei Algorithmus 2.6).`);
+    CHARS.forEach((c, k) => {
+      const id = neuerKnoten(c, Z.freq[k], null, null); insert(id); Z.pq = pqText();
+      snap(L.insertBlatt, `c = ${jz(c)}: freq = ${Z.freq[k]} – neues Blatt, pq.insert(). Der Heap hält das kleinste freq vorn in pq[1].`, { neuK: id, zeileT: k, wald: pq.slice(1) });
+    });
+    while (pq.length - 1 > 1) {
+      const x = delMin(); Z.pq = pqText();
+      snap(L.x, `x = pq.delMin(): ${blatt(x) ? `Blatt ${jz(T[x].ch)}` : `Baum {${blaetter(x)}}`} mit freq ${T[x].freq} – der seltenste Baum.`, { xy: [x], wald: [x].concat(pq.slice(1)) });
+      const y = delMin(); Z.pq = pqText();
+      snap(L.y, `y = pq.delMin(): ${blatt(y) ? `Blatt ${jz(T[y].ch)}` : `Baum {${blaetter(y)}}`} mit freq ${T[y].freq} – der zweitseltenste.${T[x].freq === T[y].freq ? ' Bei gleicher Häufigkeit entscheidet die Lage im Heap.' : ''}`, { xy: [x, y], wald: [x, y].concat(pq.slice(1)) });
+      const p = neuerKnoten(0, T[x].freq + T[y].freq, x, y);
+      snap(L.parent, `Neuer innerer Knoten mit freq ${T[x].freq} + ${T[y].freq} = ${T[p].freq}: x wird links (Bit 0), y rechts (Bit 1).`, { neuK: p, xy: [x, y], wald: [p].concat(pq.slice(1)) });
+      insert(p); Z.pq = pqText();
+      snap(L.insertParent, `pq.insert(parent) – jetzt ${pq.length - 1} Baum${pq.length - 1 === 1 ? '' : 'e'} in der Warteschlange.`, { neuK: p, wald: pq.slice(1) });
+    }
+    ROOT = delMin(); Z.pq = [];
+    snap(L.wurzel, `Nur noch ein Baum übrig: Er ist der Huffman-Trie, seine Wurzel hat freq ${T[ROOT].freq} = Anzahl der Zeichen.`, { wald: [ROOT], opEnde: true });
+    // buildCode
+    Z.phase = 'code';
+    snap(L.codeAufruf, `buildCode: Den Trie rekursiv durchlaufen und den Weg als String mitführen – links '0', rechts '1'.`, { wald: [ROOT], weg: [ROOT] });
+    const code = (id, s, weg) => {
+      if (blatt(id)) {
+        Z.codes[ci(T[id].ch)] = s; CODES[T[id].ch] = s;
+        snap(L.codeBlatt, `Blatt ${jz(T[id].ch)} erreicht: st[${jz(T[id].ch)}] = "${s}"${s === '' ? ' – der Trie hat nur ein Blatt, das Codewort ist leer' : ''}.`, { wald: [ROOT], weg, aktiv: id, zeileT: ci(T[id].ch) });
+        return;
+      }
+      snap(L.codeL, `Innerer Knoten, s = "${s}": erst nach links mit "${s}0".`, { wald: [ROOT], weg, aktiv: id });
+      code(T[id].left, s + '0', weg.concat(T[id].left));
+      snap(L.codeR, `Zurück am Knoten mit s = "${s}": jetzt nach rechts mit "${s}1".`, { wald: [ROOT], weg, aktiv: id });
+      code(T[id].right, s + '1', weg.concat(T[id].right));
+    };
+    code(ROOT, '', [ROOT]);
+    steps[steps.length - 1].opEnde = true;
+    // writeTrie
+    Z.phase = 'schreiben';
+    snap(L.trieAufruf, `writeTrie: Der Empfänger braucht den Trie. Er wird in Präorder geschrieben – innerer Knoten = Bit 0, Blatt = Bit 1 und dahinter das Zeichen in 8 Bit.`, { wald: [ROOT] });
+    PRE = [];
+    const wt = id => {
+      PRE.push(id);
+      if (blatt(id)) {
+        schreib('1', 'k'); schreib(binaer(T[id].ch, 8), 'zc');
+        snap(L.schreibBlatt, `Blatt ${jz(T[id].ch)}: write(true), dann write(x.ch) = ${binaer(T[id].ch, 8)} (Zeichencode ${T[id].ch}).`, { wald: [ROOT], aktiv: id, neuBits: 9 });
+        return;
+      }
+      schreib('0', 'k');
+      snap(L.schreibInnen, `Innerer Knoten: write(false), dann links und rechts weiter.`, { wald: [ROOT], aktiv: id, neuBits: 1 });
+      wt(T[id].left); wt(T[id].right);
+    };
+    wt(ROOT);
+    const trieBits = OUT.length;
+    steps[steps.length - 1].opEnde = true;
+    schreib(binaer(input.length, 32), 'n');
+    snap(L.anzahl, `write(input.length): die Anzahl ${input.length} als int in 32 Bit. Der Trie hat ${trieBits} Bit gebraucht.`, { wald: [ROOT], neuBits: 32, opEnde: true });
+    input.forEach((c, i) => {
+      const s = CODES[c];
+      schreib(s, i % 2 ? 'c2' : 'c1');
+      snap(L.kodiere, `input[${i}] = ${jz(c)}: st[${jz(c)}] = "${s}" – ${s.length} Bit geschrieben.`, { wald: [ROOT], inPos: i, zeileT: ci(c), weg: wegZu(c), neuBits: s.length, opEnde: i === input.length - 1 });
+    });
+    const pad = (8 - OUT.length % 8) % 8;
+    schreib('0'.repeat(pad), 'pad');
+    Z.konsole.push(`% java Huffman - < ${DATEI[ART]} | java BinaryDump ${BREITE_DUMP[ART]}`);
+    for (let i = 0; i < OUT.length; i += BREITE_DUMP[ART]) Z.konsole.push(OUT.slice(i, i + BREITE_DUMP[ART]));
+    Z.konsole.push(`${OUT.length} bits`);
+    snap(L.close, `close(): ${pad ? `${pad} Nullbit${pad === 1 ? '' : 's'} auffüllen bis zum vollen Byte – ` : ''}${OUT.length} Bit statt ${input.length * 8}, Komprimierungsrate ${Math.round(OUT.length / (input.length * 8) * 100)} %.`, { wald: [ROOT], neuBits: pad, opEnde: true });
+    return input;
+  }
+  function wegZu(c) { const w = []; let id = ROOT; w.push(id); for (const b of CODES[c]) { id = b === '0' ? T[id].left : T[id].right; w.push(id); } return w; }
+
+  function expand() {
+    // liest die Bits wieder ein, wie BinaryStdIn
+    Z.phase = 'expand'; Z.gelesen = 0; Z.geleseneK = 0;
+    let p = 0;
+    const readBoolean = () => OUT[p++] === '1';
+    const readBits = n => { let v = 0; for (let i = 0; i < n; i++) v = v * 2 + (OUT[p++] === '1' ? 1 : 0); return v; };
+    Z.konsole.push(`% java Huffman - < ${DATEI[ART]} | java Huffman +`);
+    snap(L.lies, `expand: Der Empfänger hat nur die Bits. Zuerst liest readTrie() den Trie wieder ein, in derselben Präorder.`, { wald: [ROOT], opStart: true });
+    let k = 0; const ZU = new Map();       // gelesener Knoten → Knoten im Bild (gleiche Präorder-Stelle)
+    const rt = () => {
+      const von = p, orig = PRE[k++];
+      if (readBoolean()) {
+        const ch = readBits(8); const n = { ch, left: null, right: null }; ZU.set(n, orig);
+        Z.gelesen = p; Z.geleseneK = k;
+        snap(L.liesBlatt, `Bit 1: ein Blatt – die nächsten 8 Bit ${OUT.slice(von + 1, p)} sind das Zeichen ${jz(ch)}. freq bleibt 0, sie wird nicht mehr gebraucht.`, { wald: [ROOT], aktiv: orig, liesVon: von });
+        return n;
+      }
+      Z.gelesen = p; Z.geleseneK = k;
+      snap(L.liesInnen, `Bit 0: ein innerer Knoten – erst den linken, dann den rechten Teiltrie lesen.`, { wald: [ROOT], aktiv: orig, liesVon: von });
+      const n = { ch: 0 }; ZU.set(n, orig);
+      n.left = rt(); n.right = rt();
+      return n;
+    };
+    const root = rt();
+    steps[steps.length - 1].opEnde = true;
+    const von = p; const N = readBits(32); Z.gelesen = p;
+    snap(L.liesN, `readInt(): die nächsten 32 Bit ergeben N = ${N}.`, { wald: [ROOT], liesVon: von, opEnde: true });
+    let aus = '';
+    for (let i = 0; i < N; i++) {
+      let x = root; const vonC = p, weg = [ZU.get(x)];
+      while (x.left !== null) { x = readBoolean() ? x.right : x.left; weg.push(ZU.get(x)); }
+      aus += String.fromCharCode(x.ch); Z.gelesen = p; Z.ausgabe = aus;
+      snap(L.dekodiere, `Zeichen ${i}: Bits ${OUT.slice(vonC, p) || '(keine)'} führen von der Wurzel zum Blatt ${jz(x.ch)}.`, { wald: [ROOT], weg, fundK: ZU.get(x), liesVon: vonC, outPos: i, zeileT: ci(x.ch), opEnde: i === N - 1 });
+    }
+    EXP = aus;
+    aus.split('\n').forEach((z, i, a) => { if (i < a.length - 1 || z) Z.konsole.push(z); });
+    snap(L.closeExpand, aus === TEXT ? `Fertig: ${N} Zeichen dekomprimiert – genau die Eingabe. Die ${p}. Bit-Stelle ist erreicht, danach kommen nur noch die Füllbits.` : 'Fehler: Die Ausgabe weicht von der Eingabe ab.', { wald: [ROOT], liesVon: p, opEnde: true });
+  }
+  const DATEI = { abra: 'abra.txt', tale: 'tinytinyTale.txt', zufall: 'zufall.txt', eigen: 'eingabe.txt' };
+  const BREITE_DUMP = { abra: 60, tale: 64, zufall: 60, eigen: 60 };
+
+  function lauf(text, art) {
+    stop();
+    TEXT = text; ART = art; T = []; steps = []; OUT = ''; SEGS = []; CODES = {}; pq.length = 1;
+    CHARS = [...new Set([...text].map(ch => ch.charCodeAt(0)))].sort((a, b) => a - b);
+    Z = { phase: 'lesen', freq: CHARS.map(() => 0), codes: CHARS.map(() => null), pq: [], gelesen: 0, ausgabe: '', konsole: [], geleseneK: 0 };
+    compress(text);
+    expand();
+    lage();
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  const W = 30, DY = 46;
+  let LAGE = [], TIEFE = 0;
+  function lage() {          // Lage im fertigen Trie: Blätter von links nach rechts, innere Knoten über der Mitte ihrer Kinder
+    LAGE = []; TIEFE = 0;
+    const tiefe = (id, t) => { TIEFE = Math.max(TIEFE, t); if (!blatt(id)) { tiefe(T[id].left, t + 1); tiefe(T[id].right, t + 1); } };
+    tiefe(ROOT, 0);
+  }
+  function waldLage(wurzeln) {          // jeder Baum für sich, nebeneinander, Wurzeln oben
+    const P = []; let platz = 0;
+    const setze = (id, t) => {
+      if (blatt(id)) { P[id] = [platz * W + W / 2 + 4, t * DY + 32]; platz++; return; }
+      setze(T[id].left, t + 1); setze(T[id].right, t + 1);
+      P[id] = [(P[T[id].left][0] + P[T[id].right][0]) / 2, t * DY + 32];
+    };
+    wurzeln.forEach(id => setze(id, 0));
+    return P;
+  }
+  function render() {
+    const st = steps[pos];
+    // Band: Eingabe oder Ausgabe von expand
+    const input = [...TEXT];
+    $('bandTitel').textContent = st.phase === 'expand' ? 'Ausgabe von expand():' : 'Eingabe input[]:';
+    let b = '';
+    if (st.phase === 'expand') {
+      [...st.ausgabe].forEach((ch, i) => { b += `<div class="zelle ${i === st.outPos ? 'jetzt' : 'aus'}"><b>${esc(zeig(ch.charCodeAt(0)))}</b><small>${i}</small></div>`; });
+      if (!st.ausgabe) b = '<span class="klein">(noch nichts ausgegeben)</span>';
+    } else input.forEach((ch, i) => {
+      const cls = i === st.inPos ? 'jetzt' : (st.inPos !== undefined && i < st.inPos) ? 'fertig' : '';
+      b += `<div class="zelle ${cls}"><b>${esc(zeig(ch.charCodeAt(0)))}</b><small>${i}</small></div>`;
+    });
+    $('band').innerHTML = b;
+    // Bild
+    const wald = (st.wald || []).slice();
+    if (st.phase === 'trie') wald.sort((a, c) => T[a].freq - T[c].freq);   // stabil: bei Gleichstand bleibt die Reihenfolge
+    const P = waldLage(wald);
+    const sichtbar = new Set();
+    const sammle = id => { if (id === undefined || id === null || id >= st.anzahl) return; sichtbar.add(id); if (!blatt(id)) { sammle(T[id].left); sammle(T[id].right); } };
+    wald.forEach(sammle);
+    if (st.phase === 'expand') { sichtbar.clear(); PRE.slice(0, st.geleseneK).forEach(id => sichtbar.add(id)); }
+    const weg = new Set(st.weg || []), xy = new Set(st.xy || []);
+    const breite = CHARS.length * W + 8, hoehe = (TIEFE + 1) * DY + 30;
+    const svg = $('graph');
+    svg.setAttribute('viewBox', `0 0 ${breite} ${hoehe}`); svg.style.maxWidth = Math.max(breite * 1.3, 260) + 'px';
+    let k = '', h = '';
+    const ohneFreq = st.phase === 'expand';
+    sichtbar.forEach(id => {
+      const [x, y] = P[id];
+      if (!blatt(id)) [[T[id].left, '0'], [T[id].right, '1']].forEach(([c, bit]) => {
+        if (!sichtbar.has(c)) return;
+        const [cx, cy] = P[c]; const a = Math.atan2(cy - y, cx - x);
+        k += `<line class="kante${weg.has(id) && weg.has(c) ? ' pfad' : ''}" x1="${(x + 12 * Math.cos(a)).toFixed(1)}" y1="${(y + 12 * Math.sin(a)).toFixed(1)}" x2="${(cx - 13 * Math.cos(a)).toFixed(1)}" y2="${(cy - 13 * Math.sin(a)).toFixed(1)}"/>`;
+        k += `<text class="bit" x="${((x + cx) / 2 + (bit === '0' ? -7 : 7)).toFixed(1)}" y="${((y + cy) / 2 - 3).toFixed(1)}">${bit}</text>`;
+      });
+      let cls = 'knoten' + (blatt(id) ? ' blatt' : '');
+      if (id === st.neuK) cls += ' neu';
+      else if (id === st.fundK) cls += ' fund';
+      else if (id === st.aktiv) cls += ' aktiv';
+      if (weg.has(id)) cls += ' pfad';
+      if (xy.has(id)) cls += ' xy';
+      if (blatt(id)) {
+        h += `<g class="${cls}"><rect x="${x - 12}" y="${y - 12}" width="24" height="24" rx="5"/><text x="${x}" y="${y}">${esc(zeig(T[id].ch))}</text></g>`;
+        if (!ohneFreq) h += `<text class="freq" x="${x}" y="${y + 24}">${T[id].freq}</text>`;
+      } else h += `<g class="${cls}"><circle cx="${x}" cy="${y}" r="12"/><text x="${x}" y="${y}">${ohneFreq ? '' : T[id].freq}</text></g>`;
+      if (wald.length === 1 && id === ROOT) h += `<text class="wurzel" x="${x}" y="${y - 17}">root</text>`;
+    });
+    svg.innerHTML = k + h || `<text x="8" y="30" class="wurzel" style="text-anchor:start">${st.phase === 'expand' ? 'noch kein Knoten gelesen' : st.phase === 'trie' ? 'pq ist leer' : 'erst zählen, dann kommen die Bäume'}</text>`;
+    $('baumTitel').textContent = st.phase === 'trie' ? 'Die Bäume in der Warteschlange (nach freq, bei Gleichstand nach Lage im Heap) – orange umrandet: x und y'
+      : st.phase === 'expand' ? 'Der Trie, wie readTrie() ihn aufbaut (ohne freq)' : (st.phase === 'lesen' || st.phase === 'zaehlen') ? 'Noch kein Trie' : 'Der Huffman-Trie – unter den Blättern freq';
+    // Tabelle
+    $('tabelle').innerHTML = '<tr><th>Zeichen</th><th>freq</th><th>Code</th></tr>' + CHARS.map((c, i) =>
+      `<tr${i === st.zeileT ? ' class="an"' : ''}><td class="z">${esc(zeig(c))}</td><td>${st.freq[i]}</td><td>${st.codes[i] === null ? '' : st.codes[i] || '""'}</td></tr>`).join('');
+    $('pq').innerHTML = st.phase === 'trie' ? `pq[1..${st.pq.length}]: ${st.pq.length ? esc(st.pq.join('  ')) : '–'}` : st.phase === 'expand' ? `gelesen: ${st.gelesen} von ${OUT.length} Bit` : `Bits geschrieben: ${st.bits}`;
+    $('pq').style.display = st.phase === 'lesen' || st.phase === 'zaehlen' ? 'none' : '';
+    // Bits
+    let t = '';
+    const neuVon = st.neuBits ? st.bits - st.neuBits : -1;
+    SEGS.forEach(s => {
+      if (s.von >= st.bits || s.von === s.bis) return;
+      let teil = '';
+      for (let i = s.von; i < Math.min(s.bis, st.bits); i++) {
+        const markiert = st.phase === 'expand' ? (i >= st.liesVon && i < st.gelesen) : i >= neuVon && neuVon >= 0;
+        const z = OUT[i];
+        teil += markiert ? `<mark>${z}</mark>` : st.phase === 'expand' && i < (st.liesVon === undefined ? st.gelesen : st.liesVon) ? `<span class="gelesen">${z}</span>` : z;
+      }
+      t += `<span class="${s.art}">${teil}</span>${s.art === 'k' ? '' : '<span class="trenn"></span>'}`;
+    });
+    $('bits').innerHTML = t || '<span class="klein">(noch nichts geschrieben)</span>';
+    const anteil = art => SEGS.filter(s => art.includes(s.art)).reduce((a, s) => a + s.bis - s.von, 0);
+    const fertig = st.bits === OUT.length;
+    $('summe').innerHTML = fertig ? `Trie <b>${anteil(['k', 'zc'])}</b> + Anzahl <b>32</b> + Codewörter <b>${anteil(['c1', 'c2'])}</b> + Auffüllen <b>${anteil(['pad'])}</b> = <b>${OUT.length}</b> Bit statt <b>${input.length * 8}</b>` : `<b>${st.bits}</b> Bit bisher`;
+    // Titel und Rest
+    const phasen = { lesen: 'Eingabe lesen', zaehlen: 'Häufigkeiten zählen', trie: 'buildTrie()', code: 'buildCode()', schreiben: 'Trie, Anzahl und Codewörter schreiben', expand: 'expand()' };
+    $('titel').innerHTML = `${ART === 'abra' ? 'Abbildung 5.65' : ART === 'tale' ? 'tinytinyTale.txt' : ART === 'zufall' ? 'Zufallstext' : 'eigener Text'} · ${phasen[st.phase]} · Zeichen: <b>${input.length}</b> · verschiedene: <b>${CHARS.length}</b>`;
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg';
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const start = () => { lockern(); lauf(ABRA, 'abra'); };
+  $('abra').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('tale').addEventListener('click', () => { lockern(); lauf(TALE, 'tale'); });
+  $('zufall').addEventListener('click', () => { lockern(); lauf(zufallsText(), 'zufall'); });
+  $('eigenLos').addEventListener('click', () => {
+    const text = $('eigen').value;
+    if (!text.length) { $('eigenHinweis').textContent = 'Bei leerer Eingabe ist die Warteschlange leer – pq.delMin() würde eine Ausnahme werfen.'; return; }
+    if ([...text].some(ch => ch.charCodeAt(0) < 32 || ch.charCodeAt(0) > 126)) { $('eigenHinweis').textContent = 'Bitte nur ASCII-Zeichen (ohne Umlaute) – BinaryStdIn liest jedes Zeichen als ein Byte.'; return; }
+    $('eigenHinweis').textContent = '';
+    lockern(); lauf(text, 'eigen');
+  });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(text) komprimiert und dekomprimiert (Anzeige danach wie vorher)
+  function rechne(text) {
+    const alt = { T, steps, TEXT, ART, OUT, SEGS, CHARS, ROOT, PRE, CODES, EXP, LAGE, TIEFE, Z, pqAlt: pq.slice() };
+    lauf(text, 'eigen');
+    const e = { bits: OUT, codes: Object.assign({}, CODES), ausgabe: EXP, schritte: steps.length,
+      trie: SEGS.filter(s => s.art === 'k' || s.art === 'zc').reduce((a, s) => a + s.bis - s.von, 0) };
+    ({ T, steps, TEXT, ART, OUT, SEGS, CHARS, ROOT, PRE, CODES, EXP, LAGE, TIEFE, Z } = alt); pq.length = 0; alt.pqAlt.forEach(v => pq.push(v));
+    pos = 0; render();
+    return e;
+  }
+  window.__huffman = { rechne, start, ABRA, TALE, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
