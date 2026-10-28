@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LSD-Sortierverfahren</title>
+<!-- Visualisierung des LSD-Sortierverfahrens (nach Sedgewick/Wayne, Algorithmen, Algorithmus 5.1, Listing 5.3) für
+     wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Java-Code wie im Listing, dazu ein eigener Testclient mit den
+     13 Kennzeichen aus der Abbildung zum Listing. Jeder String trägt in der Anzeige seine Eingabe-Nummer, damit man
+     die Stabilität sieht. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --gruen: #8fd1a6; --gtext: #1c1c1f; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --gruen: #2f6e48; --gtext: #ececef; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .felder { display: grid; grid-template-columns: auto auto auto; gap: 18px; justify-content: start; align-items: start; }
+  .felder .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  .arr-box { overflow-x: auto; }
+  table.arr { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  table.arr th, table.arr td { border: 1px solid var(--line); padding: 2px 6px; text-align: center; }
+  table.arr th { color: var(--muted); font-weight: 600; }
+  table.arr td.s { font-family: ui-monospace, Consolas, monospace; letter-spacing: .02em; text-align: left; }
+  table.arr td.s b { color: var(--rot); }
+  table.arr td.nr { color: var(--muted); font-size: 11px; }
+  table.arr td.leer { color: var(--muted); }
+  table.arr td.neu { background: var(--neu); color: #fff; }
+  table.arr td.neu b, table.arr td.neu.s b { color: #fff; text-decoration: underline; }
+  table.arr td.ja { background: var(--gruen); color: var(--gtext); }
+  table.arr tr.aktiv td, table.arr tr.aktiv th { outline: 2px solid var(--cur); outline-offset: -2px; }
+  @media (prefers-color-scheme: dark) { table.arr td.neu, table.arr td.neu b { color: #0d1530; } }
+  .klein { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  table.lauf { border-collapse: collapse; font: 12.5px ui-monospace, Consolas, monospace; }
+  table.lauf th { font: 600 11px system-ui, sans-serif; color: var(--muted); padding: 0 6px 3px; text-align: left; white-space: nowrap; }
+  table.lauf td { padding: 0 6px; white-space: nowrap; }
+  table.lauf td b { color: var(--rot); }
+  table.lauf th.jetzt { color: var(--neu); }
+  @media (max-width: 640px) {
+    .felder { grid-template-columns: auto auto; gap: 10px; }
+    .felder > .aux { grid-column: 1 / -1; }
+    table.arr { font-size: 12px; }
+    table.arr th, table.arr td { padding: 2px 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls">
+    <button id="buch">Testclient (13 Kennzeichen, W = 7)</button>
+    <button id="zufall">Zufallsdaten</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="felder">
+      <div><div class="h2">a[] – rot das Zeichen d</div><div class="arr-box" id="feldA"></div></div>
+      <div><div class="h2" id="countTitel">count[]</div><div class="arr-box" id="feldCount"></div></div>
+      <div class="aux"><div class="h2">aux[]</div><div class="arr-box" id="feldAux"></div></div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--rot)"></i>Zeichen an Position d (danach wird sortiert)</span>
+      <span><i style="background:var(--panel);outline:2px solid var(--cur)"></i>gerade bearbeitet</span>
+      <span><i style="background:var(--neu)"></i>gerade geändert</span>
+      <span><i style="background:var(--gruen)"></i>Durchgang fertig</span>
+      <span>#k = Platz in der Eingabe (zeigt die Stabilität)</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis die aktuelle Phase fertig ist (Zählen, Indizes, Verteilen, Zurückkopieren)">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (nach Algorithmus 5.1, Listing 5.3)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'public class LSD',
+    '{',
+    '   public static void sort(String[] a, int W)',
+    '   {  // a[] auf den führenden W Zeichen sortieren.',
+    '      int N = a.length;',
+    '      int R = 256;',
+    '      String[] aux = new String[N];',
+    '',
+    '      for (int d = W-1; d >= 0; d--)',
+    '      {  // Durch schlüsselindiziertes Zählen nach dem d-ten Zeichen sortieren.',
+    '',
+    '         int[] count = new int[R+1];      // Häufigkeiten berechnen.',
+    '         for (int i = 0; i < N; i++)',
+    '            count[a[i].charAt(d) + 1]++;',
+    '',
+    '         for (int r = 0; r < R; r++)      // Häufigkeiten in Indizes umwandeln.',
+    '            count[r+1] += count[r];',
+    '',
+    '         for (int i = 0; i < N; i++)      // Verteilen.',
+    '            aux[count[a[i].charAt(d)]++] = a[i];',
+    '',
+    '         for (int i = 0; i < N; i++)      // Zurückkopieren.',
+    '            a[i] = aux[i];',
+    '      }',
+    '   }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient (eigene Fassung): die 13 Kennzeichen aus der Abbildung zu Listing 5.3',
+    '      String[] a = { "4PGC938", "2IYE230", "3CIO720", "1ICK750", "1OHV845", "4JZY524", "1ICK750",',
+    '                     "3CIO720", "1OHV845", "1OHV845", "2RLA629", "2RLA629", "3ATW723" };',
+    '      int W = a[0].length();',
+    '      sort(a, W);',
+    '      for (String s : a)',
+    '         System.out.println(s);',
+    '   }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    eingabe: zeile('String[] a = { "4PGC938"'), W: zeile('int W = a[0].length();'), sortAufruf: zeile('sort(a, W);'), N: zeile('int N = a.length;'),
+    R: zeile('int R = 256;'), aux: zeile('String[] aux = new String[N];'), forD: zeile('for (int d = W-1; d >= 0; d--)'),
+    count: zeile('int[] count = new int[R+1];'), zaehlen: zeile('count[a[i].charAt(d) + 1]++;'), forR: zeile('for (int r = 0; r < R; r++)'),
+    summe: zeile('count[r+1] += count[r];'), verteilen: zeile('aux[count[a[i].charAt(d)]++] = a[i];'), kopieren: zeile('a[i] = aux[i];'),
+    druck: zeile('System.out.println(s);')
+  };
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Daten ----------
+  const BUCH = ['4PGC938', '2IYE230', '3CIO720', '1ICK750', '1OHV845', '4JZY524', '1ICK750', '3CIO720', '1OHV845', '1OHV845', '2RLA629', '2RLA629', '3ATW723'];
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsdaten() {        // kleines Alphabet, damit gleiche Zeichen häufig sind und die Stabilität zu sehen ist
+    const N = 8 + zufall(7), W = 3 + zufall(3), abc = 'ABC123';
+    return Array.from({ length: N }, () => Array.from({ length: W }, () => abc[zufall(abc.length)]).join(''));
+  }
+
+  // ---------- Aufzeichnung ----------
+  let A, W, N, Z, konsole, laeufe, steps, pos = 0, timer = null, istBuch = true;
+  const kopie = arr => arr && arr.map(x => x && { s: x.s, nr: x.nr });
+  function snap(line, msg, o) {
+    steps.push(Object.assign({ line, msg, a: kopie(Z.a), aux: kopie(Z.aux), count: Z.count && Z.count.slice(), d: Z.d, phase: Z.phase,
+      zeichen: Z.zeichen, konsole: konsole.slice(), laeufe: laeufe.slice() }, o || {}));
+  }
+  const zei = c => c === ' ' ? '␣' : c;
+  function lauf(daten, buch) {
+    stop();
+    istBuch = buch; A = daten.slice(); N = A.length; W = A[0].length; steps = []; konsole = []; laeufe = [];
+    Z = { a: A.map((s, nr) => ({ s, nr })), aux: null, count: null, d: null, phase: null, zeichen: [] };
+    laeufe.push({ titel: buch ? 'Eingabe (W = 7)' : `Eingabe (W = ${W})`, d: null, werte: Z.a.map(x => x.s) });
+    snap(L.eingabe, buch ? `Testclient: die ${N} Kennzeichen aus der Abbildung zu Listing 5.3, alle genau 7 Zeichen lang.` : `Zufallsdaten: ${N} Strings mit je ${W} Zeichen aus dem Alphabet A, B, C, 1, 2, 3 – viele gleiche Zeichen, damit die Stabilität zu sehen ist.`);
+    snap(L.W, `W = ${W}: Alle Strings haben dieselbe Länge, das setzt LSD voraus.`);
+    snap(L.sortAufruf, `sort(a, ${W}).`);
+    snap(L.N, `N = ${N}.`);
+    snap(L.R, `R = 256: das Alphabet (erweitertes ASCII). count[] bekommt R + 1 Plätze, angezeigt werden nur die Zeichen, die in der Spalte vorkommen.`);
+    Z.aux = Array(N).fill(null);
+    snap(L.aux, `aux[] mit ${N} Plätzen – hierhin wird in jedem Durchgang verteilt.`, { opEnde: true });
+    for (let d = W - 1; d >= 0; d--) {
+      Z.d = d; Z.phase = 'start'; Z.count = null; Z.aux = Array(N).fill(null);
+      Z.zeichen = [...new Set(Z.a.map(x => x.s[d]))].sort((p, q) => p.charCodeAt(0) - q.charCodeAt(0));
+      snap(L.forD, `Durchgang d = ${d}: sortieren nach dem ${d + 1}. Zeichen (rot)${d === W - 1 ? ' – dem letzten, LSD fängt rechts an' : ''}${d === 0 ? ' – dem ersten, das ist der letzte Durchgang' : ''}. Vorkommende Zeichen: ${Z.zeichen.map(zei).join(' ')}.`);
+      Z.count = Array(257).fill(0); Z.phase = 'zaehlen';
+      snap(L.count, `count = new int[257], alles 0.`);
+      for (let i = 0; i < N; i++) {
+        const c = Z.a[i].s.charCodeAt(d);
+        Z.count[c + 1]++;
+        snap(L.zaehlen, `a[${i}] = ${Z.a[i].s}, Zeichen '${zei(Z.a[i].s[d])}' (Code ${c}): count[${c} + 1]++ → count[${c + 1}] = ${Z.count[c + 1]}.`, { i, cNeu: Z.a[i].s[d] });
+      }
+      Z.phase = 'indizes';
+      for (let r = 0; r < 256; r++) Z.count[r + 1] += Z.count[r];
+      snap(L.summe, `Häufigkeiten in Indizes umwandeln: count[r+1] += count[r] für r = 0 bis 255. Jetzt steht in count[r], ab welchem Platz die Strings mit Zeichen r landen: ${Z.zeichen.map(c => `'${zei(c)}' ab ${Z.count[c.charCodeAt(0)]}`).join(', ')}.`, { opEnde: true, alleNeu: true });
+      Z.phase = 'verteilen';
+      for (let i = 0; i < N; i++) {
+        const ch = Z.a[i].s[d], c = ch.charCodeAt(0), ziel = Z.count[c];
+        Z.aux[ziel] = Z.a[i]; Z.count[c]++;
+        snap(L.verteilen, `a[${i}] = ${Z.a[i].s} hat '${zei(ch)}': aux[count[${c}]++] = aux[${ziel}]. count[${c}] ist jetzt ${Z.count[c]}, der nächste '${zei(ch)}' kommt dahinter.${i > 0 && Z.a.slice(0, i).some(x => x.s[d] === ch) ? ' Gleiche Zeichen landen in der Reihenfolge, in der sie in a[] stehen – stabil.' : ''}`, { i, ziel, cNeu: ch });
+      }
+      Z.phase = 'kopieren';
+      Z.a = Z.aux.slice();
+      laeufe.push({ titel: `d = ${d}`, d, werte: Z.a.map(x => x.s) });
+      snap(L.kopieren, `Zurückkopieren: a[i] = aux[i] für alle i. Nach diesem Durchgang ist a[] nach den letzten ${W - d} Zeichen sortiert.`, { opEnde: true, fertig: true });
+    }
+    Z.d = null; Z.phase = 'ende'; Z.count = null;
+    laeufe.push({ titel: 'Ausgabe', d: null, werte: Z.a.map(x => x.s), ausgabe: true });
+    Z.a.forEach((x, i) => { konsole.push(x.s); snap(L.druck, `${x.s}${i === N - 1 ? ' – fertig, ohne einen einzigen Vergleich zweier Strings.' : ''}`, { i, opEnde: i === N - 1, fertig: true }); });
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  const markiere = (s, d) => d === null || d === undefined ? esc(s) : esc(s.slice(0, d)) + `<b>${esc(s[d])}</b>` + esc(s.slice(d + 1));
+  function render() {
+    const st = steps[pos];
+    $('titel').innerHTML = `${istBuch ? 'Kennzeichen' : 'Zufallsdaten'} · N = <b>${N}</b>, W = <b>${W}</b> · ${st.d === null ? (st.phase === 'ende' ? 'sortiert' : 'vor dem ersten Durchgang') : `Durchgang <b>d = ${st.d}</b> (${W - st.d}. von ${W})`}`;
+    let t = '<table class="arr"><tr><th>i</th><th>a[i]</th><th>#</th></tr>';
+    st.a.forEach((x, i) => {
+      const akt = st.i === i && (st.phase === 'zaehlen' || st.phase === 'verteilen' || st.phase === 'ende');
+      t += `<tr class="${akt ? 'aktiv' : ''}"><th>${i}</th><td class="s${st.fertig ? ' ja' : ''}">${markiere(x.s, st.d)}</td><td class="nr">#${x.nr}</td></tr>`;
+    });
+    $('feldA').innerHTML = t + '</table>';
+    if (st.count) {
+      const plus = st.phase === 'zaehlen';
+      $('countTitel').textContent = plus ? 'count[r+1] – Häufigkeiten' : st.phase === 'verteilen' ? 'count[r] – nächster freier Platz' : 'count[r] – Startplatz';
+      let c = `<table class="arr"><tr><th>Zeichen</th><th>r</th><th>${plus ? 'count[r+1]' : 'count[r]'}</th></tr>`;
+      st.zeichen.forEach(ch => {
+        const r = ch.charCodeAt(0), wert = plus ? st.count[r + 1] : st.count[r];
+        c += `<tr><td class="s"><b>${esc(zei(ch))}</b></td><td class="nr">${r}</td><td class="${st.cNeu === ch || st.alleNeu ? 'neu' : ''}">${wert}</td></tr>`;
+      });
+      $('feldCount').innerHTML = c + '</table>';
+    } else { $('countTitel').textContent = 'count[]'; $('feldCount').innerHTML = `<div class="klein">${st.phase === 'ende' ? 'nicht mehr gebraucht' : 'noch nicht angelegt'}</div>`; }
+    if (st.aux) {
+      let x = '<table class="arr"><tr><th>i</th><th>aux[i]</th><th>#</th></tr>';
+      st.aux.forEach((e, i) => { x += `<tr><th>${i}</th><td class="s${e === null ? ' leer' : ''}${st.ziel === i ? ' neu' : ''}">${e === null ? '–' : markiere(e.s, st.d)}</td><td class="nr">${e === null ? '' : '#' + e.nr}</td></tr>`; });
+      $('feldAux').innerHTML = x + '</table>';
+    } else $('feldAux').innerHTML = '<div class="klein">noch nicht angelegt</div>';
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg';
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    let p = '<h4>a[] nach jedem Durchgang (wie die Abbildung zu Listing 5.3, rot das Zeichen, nach dem sortiert wurde)</h4><div class="arr-box"><table class="lauf"><tr>';
+    st.laeufe.forEach((l, k) => { p += `<th class="${k === st.laeufe.length - 1 && st.phase !== 'ende' && k > 0 ? 'jetzt' : ''}">${esc(l.titel)}</th>`; });
+    p += '</tr>';
+    for (let i = 0; i < N; i++) { p += '<tr>'; st.laeufe.forEach(l => { p += `<td>${markiere(l.werte[i], l.d)}</td>`; }); p += '</tr>'; }
+    $('proto').innerHTML = p + '</table></div>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const start = () => { lockern(); lauf(BUCH, true); };
+  $('buch').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('zufall').addEventListener('click', () => { lockern(); lauf(zufallsdaten(), false); });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(daten) spielt main() durch (Anzeige danach wie vorher)
+  function rechne(daten) {
+    const alt = { A, W, N, Z, konsole, laeufe, steps, istBuch };
+    lauf(daten, false);
+    const e = { ausgabe: konsole.slice(), laeufe: laeufe.map(l => l.werte.slice()), nr: Z.a.map(x => x.nr), steps };
+    ({ A, W, N, Z, konsole, laeufe, steps, istBuch } = alt); pos = 0; render();
+    return e;
+  }
+  window.__lsd = { rechne, start, BUCH, zufallsdaten, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
