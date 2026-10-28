@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MSD-Sortierverfahren</title>
+<!-- Visualisierung des MSD-Sortierverfahrens (nach Sedgewick/Wayne, Algorithmen, Algorithmus 5.2, Listing 5.4 und 5.5)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Java-Code wie in den Listings; M ist hier nicht final,
+     damit der Testclient wie Abbildung 5.13 mit M = 0 laufen kann; exch() und main() eigene Fassung.
+     Beispiel: die 14 Strings aus Abbildung 5.12. Aufbau der Tabellen wie lsd.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --gruen: #8fd1a6; --gtext: #1c1c1f; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --gruen: #2f6e48; --gtext: #ececef; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .felder { display: grid; grid-template-columns: auto auto auto; gap: 18px; justify-content: start; align-items: start; }
+  .felder .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  .eingabe select { font: inherit; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .arr-box { overflow-x: auto; }
+  table.arr { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  table.arr th, table.arr td { border: 1px solid var(--line); padding: 2px 6px; text-align: center; }
+  table.arr th { color: var(--muted); font-weight: 600; }
+  table.arr td.s { font-family: ui-monospace, Consolas, monospace; text-align: left; }
+  table.arr td.s b { color: var(--rot); }
+  table.arr td.s i { color: var(--rot); font-style: normal; font-weight: 700; }
+  table.arr td.nr { color: var(--muted); font-size: 11px; }
+  table.arr td.leer { color: var(--muted); }
+  table.arr td.aus { opacity: .45; }
+  table.arr td.neu { background: var(--neu); color: #fff; }
+  table.arr td.neu b, table.arr td.neu i { color: #fff; text-decoration: underline; }
+  table.arr td.ja { background: var(--gruen); color: var(--gtext); }
+  table.arr td.bereich { box-shadow: inset 3px 0 0 var(--cur); }
+  table.arr tr.aktiv td, table.arr tr.aktiv th { outline: 2px solid var(--cur); outline-offset: -2px; }
+  @media (prefers-color-scheme: dark) { table.arr td.neu, table.arr td.neu b, table.arr td.neu i { color: #0d1530; } }
+  .klein { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
+  .stapel { font: 12.5px ui-monospace, Consolas, monospace; margin: 8px 0 0; line-height: 1.5; }
+  .stapel div.oben { color: var(--neu); font-weight: 700; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .spur { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; white-space: pre; overflow-x: auto; margin: 0; line-height: 1.45; }
+  .spur span.zuletzt { color: var(--neu); font-weight: 700; }
+  @media (max-width: 640px) {
+    .felder { grid-template-columns: auto auto; gap: 10px; }
+    .felder > .aux { grid-column: 1 / -1; }
+    table.arr { font-size: 12px; }
+    table.arr th, table.arr td { padding: 2px 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="buch">Testclient (14 Strings aus Abbildung 5.12)</button>
+    <label>M <select id="m"><option value="0" selected>0 – wie Abbildung 5.13</option><option value="3">3</option><option value="15">15 – wie Listing 5.4</option></select></label>
+    <button id="zufall">Zufallsdaten</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="felder">
+      <div><div class="h2">a[] – rot das Zeichen d, blau der Bereich lo..hi</div><div class="arr-box" id="feldA"></div></div>
+      <div><div class="h2" id="countTitel">count[]</div><div class="arr-box" id="feldCount"></div><div class="stapel" id="stapel"></div></div>
+      <div class="aux"><div class="h2">aux[] (ab 0 für lo..hi)</div><div class="arr-box" id="feldAux"></div></div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--rot)"></i>Zeichen an Position d · <b style="color:var(--rot)">▪</b> = String zu Ende (charAt liefert −1)</span>
+      <span><i style="background:var(--panel);box-shadow:inset 3px 0 0 var(--cur);outline:1px solid var(--line)"></i>aktueller Bereich lo..hi</span>
+      <span><i style="background:var(--panel);outline:2px solid var(--cur)"></i>gerade bearbeitet</span>
+      <span><i style="background:var(--neu)"></i>gerade geändert</span>
+      <span><i style="background:var(--gruen)"></i>Platz endgültig</span>
+      <span>#k = Platz in der Eingabe</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis die aktuelle Phase fertig ist (Zählen, Indizes, Verteilen, Zurückkopieren, Insertionsort, Aufruf)">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (nach Algorithmus 5.2, Listing 5.4 und 5.5)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'public class MSD',
+    '{',
+    '   private static int R = 256;          // Radix',
+    '   private static int M = 15;           // Wechsel für kleine Teilarrays (im Buch final)',
+    '   private static String[] aux;         // Hilfsarray für die Verteilung',
+    '',
+    '   private static int charAt(String s, int d)',
+    '   {  if (d < s.length()) return s.charAt(d); else return -1;  }',
+    '',
+    '   public static void sort(String[] a)',
+    '   {',
+    '      int N = a.length;',
+    '      aux = new String[N];',
+    '      sort(a, 0, N-1, 0);',
+    '   }',
+    '',
+    '   private static void sort(String[] a, int lo, int hi, int d)',
+    '   {  // Sortiert von a[lo] bis a[hi], wobei mit dem d-ten Zeichen begonnen wird.',
+    '      if (hi <= lo + M)',
+    '      {  Insertion.sort(a, lo, hi, d);  return;  }',
+    '',
+    '      int[] count = new int[R+2];         // Berechnet Häufigkeiten.',
+    '      for (int i = lo; i <= hi; i++)',
+    '         count[charAt(a[i], d) + 2]++;',
+    '',
+    '      for (int r = 0; r < R+1; r++)       // Wandelt Häufigkeiten in Indizes um.',
+    '         count[r+1] += count[r];',
+    '',
+    '      for (int i = lo; i <= hi; i++)      // Verteilt.',
+    '         aux[count[charAt(a[i], d) + 1]++] = a[i];',
+    '',
+    '      for (int i = lo; i <= hi; i++)      // Kopiert zurück.',
+    '         a[i] = aux[i - lo];',
+    '',
+    '      // Sortiert rekursiv nach jedem Zeichenwert.',
+    '      for (int r = 0; r < R; r++)',
+    '         sort(a, lo + count[r], lo + count[r+1] - 1, d+1);',
+    '   }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient (eigene Fassung): die 14 Strings aus Abbildung 5.12, M aus args, sonst 0 wie in Abbildung 5.13',
+    '      String[] a = { "she", "sells", "seashells", "by", "the", "sea", "shore",',
+    '                     "the", "shells", "she", "sells", "are", "surely", "seashells" };',
+    '      M = args.length > 0 ? Integer.parseInt(args[0]) : 0;',
+    '      sort(a);',
+    '      for (String s : a)',
+    '         System.out.println(s);',
+    '   }',
+    '}',
+    '',
+    '// ---- Insertion: Listing 5.5, Insertionsort für Strings, deren erste d Zeichen gleich sind ----',
+    'public class Insertion',
+    '{',
+    '   public static void sort(String[] a, int lo, int hi, int d)',
+    '   {  // Sortiert von a[lo] bis a[hi], ab dem d-ten Zeichen.',
+    '      for (int i = lo; i <= hi; i++)',
+    '         for (int j = i; j > lo && less(a[j], a[j-1], d); j--)',
+    '            exch(a, j, j-1);',
+    '   }',
+    '',
+    '   private static boolean less(String v, String w, int d)',
+    '   {  return v.substring(d).compareTo(w.substring(d)) < 0;  }',
+    '',
+    '   private static void exch(String[] a, int i, int j)',
+    '   {  String t = a[i];  a[i] = a[j];  a[j] = t;  }   // eigene Fassung, im Buch nicht abgedruckt',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    eingabe: zeile('String[] a = { "she"'), mArg: zeile('M = args.length > 0'), sortAufruf: zeile('      sort(a);'), N: zeile('int N = a.length;'),
+    aux: zeile('aux = new String[N];'), sort0: zeile('sort(a, 0, N-1, 0);'), kopf: zeile('private static void sort(String[] a, int lo, int hi, int d)'),
+    ifM: zeile('if (hi <= lo + M)'), ins: zeile('{  Insertion.sort(a, lo, hi, d);  return;  }'), count: zeile('int[] count = new int[R+2];'),
+    zaehlen: zeile('count[charAt(a[i], d) + 2]++;'), summe: zeile('count[r+1] += count[r];'), verteilen: zeile('aux[count[charAt(a[i], d) + 1]++] = a[i];'),
+    kopieren: zeile('a[i] = aux[i - lo];'), forR: zeile('for (int r = 0; r < R; r++)'), rek: zeile('sort(a, lo + count[r], lo + count[r+1] - 1, d+1);'),
+    druck: zeile('System.out.println(s);'), insKopf: zeile('{  // Sortiert von a[lo] bis a[hi], ab dem d-ten Zeichen.'), insFor: zeile('for (int j = i; j > lo && less(a[j], a[j-1], d); j--)'),
+    exch: zeile('            exch(a, j, j-1);')
+  };
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Daten ----------
+  const BUCH = ['she', 'sells', 'seashells', 'by', 'the', 'sea', 'shore', 'the', 'shells', 'she', 'sells', 'are', 'surely', 'seashells'];
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsdaten() {        // kurze Strings aus a, b, c – viele gemeinsame Präfixe, verschiedene Längen
+    const N = 8 + zufall(9);
+    return Array.from({ length: N }, () => Array.from({ length: 1 + zufall(4) }, () => 'abc'[zufall(3)]).join(''));
+  }
+  const charAt = (s, d) => d < s.length ? s.charCodeAt(d) : -1;
+
+  // ---------- Aufzeichnung ----------
+  let N, M, Z, konsole, spur, steps, pos = 0, timer = null, istBuch = true, mWahl = 0;
+  const kopie = arr => arr && arr.map(x => x && { s: x.s, nr: x.nr });
+  function snap(line, msg, o) {
+    steps.push(Object.assign({ line, msg, a: kopie(Z.a), aux: kopie(Z.aux), count: Z.count && Z.count.slice(), ruf: Z.ruf.map(r => Object.assign({}, r)),
+      fertig: Z.fertig.slice(), phase: Z.phase, werte: Z.werte, konsole: konsole.slice(), spur: spur.slice() }, o || {}));
+  }
+  const zeiName = c => c === -1 ? 'Ende' : `'${String.fromCharCode(c)}'`;
+  const rufText = r => `sort(a, ${r.lo}, ${r.hi}, ${r.d})`;
+  let leer = 0, einzeln = 0;
+
+  function insertion(lo, hi, d) {
+    const r = Z.ruf[Z.ruf.length - 1];
+    Z.phase = 'ins'; Z.count = null; Z.werte = null;
+    snap(L.insKopf, `Insertion.sort(a, ${lo}, ${hi}, ${d}): ${hi - lo + 1} Strings, verglichen wird mit substring(${d}) – die ersten ${d} Zeichen sind in diesem Bereich ohnehin gleich.`, { bereich: [lo, hi], d });
+    let tausch = 0;
+    const b = { bereich: [lo, hi], d };
+    for (let i = lo; i <= hi; i++) {
+      for (let j = i; j > lo; j--) {
+        const v = Z.a[j].s.slice(d), w = Z.a[j - 1].s.slice(d), kleiner = v < w;
+        snap(L.insFor, `less("${Z.a[j].s}", "${Z.a[j - 1].s}", ${d}): "${v}" ${kleiner ? '<' : '≥'} "${w}"${kleiner ? ' – tauschen.' : ' – steht richtig, weiter mit dem nächsten i.'}`, Object.assign({ i: j, j: j - 1 }, b));
+        if (!kleiner) break;
+        [Z.a[j], Z.a[j - 1]] = [Z.a[j - 1], Z.a[j]]; tausch++;
+        snap(L.exch, `exch(a, ${j}, ${j - 1}).`, Object.assign({ neuA: [j - 1, j] }, b));
+      }
+    }
+    for (let k = lo; k <= hi; k++) Z.fertig[k] = true;
+    spur.push(`${'  '.repeat(r.tiefe)}${rufText(r)} → Insertion, ${hi - lo + 1} Strings, ${tausch} Tausch${tausch === 1 ? '' : 'e'}`);
+    snap(L.insKopf + 4, `Insertion.sort fertig: a[${lo}..${hi}] ist sortiert, diese Plätze sind endgültig.`, { opEnde: true });
+  }
+
+  function sortRek(lo, hi, d, tiefe) {
+    const ruf = { lo, hi, d, tiefe, r: null };
+    Z.ruf.push(ruf);
+    Z.phase = 'aufruf'; Z.count = null; Z.werte = null;
+    const n = hi - lo + 1;
+    if (hi <= lo + M) {
+      if (n <= 0) leer++; else if (n === 1) { einzeln++; Z.fertig[lo] = true; }
+      else {
+        snap(L.ifM, `${rufText(ruf)}: hi = ${hi} ≤ lo + M = ${lo + M} – nur ${n} Strings, darum Insertionsort statt schlüsselindiziertem Zählen.`, { bereich: [lo, hi], d });
+        insertion(lo, hi, d);
+      }
+      Z.ruf.pop(); return;
+    }
+    snap(L.kopf, `${rufText(ruf)}: ${n} Strings von a[${lo}] bis a[${hi}], sortiert wird nach dem Zeichen an Position ${d}${d ? ` – die ersten ${d} Zeichen sind in diesem Bereich gleich` : ''}.`, { bereich: [lo, hi], d });
+    const werte = [...new Set(Z.a.slice(lo, hi + 1).map(x => charAt(x.s, d)))].sort((p, q) => p - q);
+    Z.werte = werte; Z.count = Array(258).fill(0); Z.phase = 'zaehlen'; Z.aux = Array(N).fill(null);
+    snap(L.count, `count = new int[R+2] – 258 Plätze, weil −1 (String zu Ende) als eigener Wert dazukommt. Angezeigt werden nur die Werte, die vorkommen: ${werte.map(zeiName).join(', ')}.`, { bereich: [lo, hi], d });
+    for (let i = lo; i <= hi; i++) {
+      const c = charAt(Z.a[i].s, d);
+      Z.count[c + 2]++;
+      snap(L.zaehlen, `a[${i}] = ${Z.a[i].s}: charAt(…, ${d}) = ${c === -1 ? '−1 (String zu Ende)' : `${c} ${zeiName(c)}`}, count[${c} + 2]++ → count[${c + 2}] = ${Z.count[c + 2]}.`, { bereich: [lo, hi], d, i, cNeu: c });
+    }
+    Z.phase = 'indizes';
+    for (let r = 0; r < 257; r++) Z.count[r + 1] += Z.count[r];
+    snap(L.summe, `Aufsummieren für r = 0 bis R: Jetzt steht in count[c + 1], ab welchem Platz (gezählt ab lo) die Gruppe mit Wert c beginnt: ${werte.map(c => `${zeiName(c)} ab ${Z.count[c + 1]}`).join(', ')}.`, { bereich: [lo, hi], d, opEnde: true, alleNeu: true });
+    Z.phase = 'verteilen';
+    for (let i = lo; i <= hi; i++) {
+      const c = charAt(Z.a[i].s, d), ziel = Z.count[c + 1];
+      Z.aux[ziel] = Z.a[i]; Z.count[c + 1]++;
+      snap(L.verteilen, `a[${i}] = ${Z.a[i].s} (${zeiName(c)}): aux[count[${c} + 1]++] = aux[${ziel}].`, { bereich: [lo, hi], d, i, ziel, cNeu: c });
+    }
+    Z.phase = 'kopieren';
+    for (let i = lo; i <= hi; i++) Z.a[i] = Z.aux[i - lo];
+    snap(L.kopieren, `Zurückkopieren: a[i] = aux[i − lo] für i = ${lo} bis ${hi}. Jetzt stehen die Gruppen hintereinander, ${werte.includes(-1) ? 'zuerst die Strings, die schon zu Ende sind, dann ' : ''}nach dem Zeichen ${d} geordnet.`, { bereich: [lo, hi], d, opEnde: true, neuA: Array.from({ length: n }, (_, k) => lo + k) });
+    const endet = werte.includes(-1) ? Z.count[0] : 0;
+    for (let k = lo; k < lo + endet; k++) Z.fertig[k] = true;
+    Z.phase = 'rek';
+    const gruppen = werte.filter(c => c >= 0).map(c => ({ c, von: lo + Z.count[c], bis: lo + Z.count[c + 1] - 1 }));
+    spur.push(`${'  '.repeat(tiefe)}${rufText(ruf)} · ${n} Strings · ${werte.map(c => `${c === -1 ? '▪' : String.fromCharCode(c)}:${c === -1 ? Z.count[0] : Z.count[c + 1] - Z.count[c]}`).join(' ')}`);
+    snap(L.forR, `Jetzt rekursiv jede Gruppe, ab Position ${d + 1}: ${gruppen.map(g => `${zeiName(g.c)} → sort(a, ${g.von}, ${g.bis}, ${d + 1})`).join(', ')}.${endet ? ` Die ${endet} String${endet === 1 ? '' : 's'}, die bei Position ${d} enden, bleiben, wo sie sind – sie sind gleich.` : ''} Die übrigen ${256 - gruppen.length} Aufrufe der Schleife haben leere Teilarrays und kehren sofort zurück.`, { bereich: [lo, hi], d, glo: lo });
+    const gespeichert = Z.count.slice();
+    for (const g of gruppen) {
+      ruf.r = g.c; Z.count = gespeichert;
+      snap(L.rek, `r = ${g.c} ${zeiName(g.c)}: sort(a, ${g.von}, ${g.bis}, ${d + 1}) – ${g.bis - g.von + 1} String${g.bis === g.von ? '' : 's'}.`, { bereich: [g.von, g.bis], d: d + 1, glo: lo, gNeu: g.c });
+      sortRek(g.von, g.bis, d + 1, tiefe + 1);
+      Z.count = gespeichert; Z.werte = werte; Z.phase = 'rek';
+    }
+    leer += 256 - gruppen.length;
+    Z.ruf.pop();
+    Z.count = null; Z.werte = null; Z.phase = 'aufruf';
+    snap(L.kopf + 21, `${rufText(ruf)} ist fertig: a[${lo}..${hi}] ist sortiert.`, { opEnde: true, bereich: [lo, hi], d });
+  }
+
+  function lauf(daten, buch) {
+    stop();
+    istBuch = buch; N = daten.length; M = mWahl; steps = []; konsole = []; spur = []; leer = 0; einzeln = 0;
+    Z = { a: daten.map((s, nr) => ({ s, nr })), aux: null, count: null, ruf: [], fertig: Array(N).fill(false), phase: null, werte: null };
+    snap(L.eingabe, buch ? `Testclient: die 14 Strings aus Abbildung 5.12, verschieden lang.` : `Zufallsdaten: ${N} Strings aus a, b, c mit 1 bis 4 Zeichen – viele gemeinsame Präfixe und Strings, die früh enden.`);
+    snap(L.mArg, `M = ${M}${M === 0 ? ' wie in Abbildung 5.13: nur Teilarrays mit höchstens einem String gehen an Insertionsort.' : M === 15 ? ' wie im Listing: Teilarrays bis 16 Strings gehen an Insertionsort.' : `: Teilarrays bis ${M + 1} Strings gehen an Insertionsort.`}`);
+    snap(L.sortAufruf, `sort(a).`);
+    snap(L.N, `N = ${N}.`);
+    Z.aux = Array(N).fill(null);
+    snap(L.aux, `aux = new String[${N}].`);
+    snap(L.sort0, `sort(a, 0, ${N - 1}, 0): der ganze Bereich, angefangen beim ersten Zeichen.`, { opEnde: true, bereich: [0, N - 1], d: 0 });
+    sortRek(0, N - 1, 0, 0);
+    Z.ruf = []; Z.count = null; Z.phase = 'ende'; Z.werte = null; Z.fertig = Array(N).fill(true);
+    spur.push(`(${leer} Aufrufe mit leerem Teilarray und ${einzeln} mit einem String nicht aufgeführt)`);
+    Z.a.forEach((x, i) => { konsole.push(x.s); snap(L.druck, `${x.s}${i === N - 1 ? ' – fertig.' : ''}`, { i, opEnde: i === N - 1 }); });
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  const markiere = (s, d) => d === null || d === undefined ? esc(s) : d < s.length ? esc(s.slice(0, d)) + `<b>${esc(s[d])}</b>` + esc(s.slice(d + 1)) : esc(s) + '<i>▪</i>';
+  function render() {
+    const st = steps[pos];
+    const oben = st.ruf[st.ruf.length - 1];
+    $('titel').innerHTML = `${istBuch ? 'Abbildung 5.12' : 'Zufallsdaten'} · N = <b>${N}</b> · M = <b>${M}</b> · ${st.phase === 'ende' ? 'sortiert' : oben ? `Rekursionstiefe <b>${oben.tiefe}</b>` : 'vor dem ersten Aufruf'}`;
+    const [blo, bhi] = st.bereich || [-1, -2];
+    let t = '<table class="arr"><tr><th>i</th><th>a[i]</th><th>#</th></tr>';
+    st.a.forEach((x, i) => {
+      const drin = i >= blo && i <= bhi, akt = st.i === i || st.j === i;
+      const cls = ['s', drin ? 'bereich' : '', st.fertig[i] ? 'ja' : '', (st.neuA || []).includes(i) ? 'neu' : '', !drin && st.bereich && !st.fertig[i] ? 'aus' : ''].join(' ');
+      t += `<tr class="${akt ? 'aktiv' : ''}"><th>${i}</th><td class="${cls}">${markiere(x.s, drin ? st.d : null)}</td><td class="nr">#${x.nr}</td></tr>`;
+    });
+    $('feldA').innerHTML = t + '</table>';
+    if (st.count && st.werte) {
+      const plus2 = st.phase === 'zaehlen';
+      $('countTitel').textContent = plus2 ? 'count[c+2] – Häufigkeiten' : st.phase === 'indizes' ? 'count[c+1] – Startplatz ab lo' : st.phase === 'verteilen' ? 'count[c+1] – nächster freier Platz' : 'Gruppen: count[c] bis count[c+1] − 1';
+      const rek = st.phase === 'rek';
+      let c = `<table class="arr"><tr><th>c</th>${rek ? '<th>Teilarray</th>' : '<th>Index</th><th>Wert</th>'}</tr>`;
+      st.werte.forEach(w => {
+        const idx = plus2 ? w + 2 : w + 1;
+        const glo = st.glo !== undefined ? st.glo : blo;
+        const rechts = rek ? (w === -1 ? `<td class="leer">bleibt</td>` : `<td class="${st.gNeu === w ? 'neu' : ''}">${glo + st.count[w]}..${glo + st.count[w + 1] - 1}</td>`)
+          : `<td class="nr">${idx}</td><td class="${st.cNeu === w || st.alleNeu ? 'neu' : ''}">${st.count[idx]}</td>`;
+        c += `<tr><td class="s">${w === -1 ? '<i>▪</i> −1' : `<b>${esc(String.fromCharCode(w))}</b> ${w}`}</td>${rechts}</tr>`;
+      });
+      $('feldCount').innerHTML = c + '</table>';
+    } else { $('countTitel').textContent = 'count[]'; $('feldCount').innerHTML = `<div class="klein">${st.phase === 'ins' ? 'Insertionsort braucht kein count[]' : st.phase === 'ende' ? 'fertig' : 'noch nicht angelegt'}</div>`; }
+    $('stapel').innerHTML = st.ruf.length ? '<div class="klein">Aufrufstapel (oben der laufende):</div>' + st.ruf.slice().reverse().map((r, k) => `<div class="${k === 0 ? 'oben' : ''}">${'&nbsp;'.repeat(r.tiefe)}${rufText(r)}${r.r !== null ? ` · r = '${esc(String.fromCharCode(r.r))}'` : ''}</div>`).join('') : '';
+    if (st.aux && st.bereich && (st.phase === 'zaehlen' || st.phase === 'indizes' || st.phase === 'verteilen' || st.phase === 'kopieren')) {
+      let x = '<table class="arr"><tr><th>k</th><th>aux[k]</th><th>#</th></tr>';
+      for (let k = 0; k <= bhi - blo; k++) { const e = st.aux[k]; x += `<tr><th>${k}</th><td class="s${e === null ? ' leer' : ''}${st.ziel === k ? ' neu' : ''}">${e === null ? '–' : markiere(e.s, st.d)}</td><td class="nr">${e === null ? '' : '#' + e.nr}</td></tr>`; }
+      $('feldAux').innerHTML = x + '</table>';
+    } else $('feldAux').innerHTML = '<div class="klein">wird beim Verteilen gebraucht</div>';
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg';
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    $('proto').innerHTML = st.spur.length
+      ? `<h4>Aufrufe mit schlüsselindiziertem Zählen (eingerückt nach Rekursionstiefe, je Wert die Gruppengröße, ▪ = zu Ende)</h4><pre class="spur">${st.spur.map((z, i) => i === st.spur.length - 1 && st.phase !== 'ende' ? `<span class="zuletzt">${esc(z)}</span>` : esc(z)).join('\n')}</pre>`
+      : '<p class="count">Noch kein Aufruf fertig gezählt.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  let letzteDaten = BUCH, letztesBuch = true;
+  const start = () => { lockern(); mWahl = 0; $('m').value = '0'; letzteDaten = BUCH; letztesBuch = true; lauf(BUCH, true); };
+  $('buch').addEventListener('click', () => { lockern(); letzteDaten = BUCH; letztesBuch = true; lauf(BUCH, true); });
+  $('neu').addEventListener('click', start);
+  $('m').addEventListener('change', () => { lockern(); mWahl = +$('m').value; lauf(letzteDaten, letztesBuch); });
+  $('zufall').addEventListener('click', () => { lockern(); letzteDaten = zufallsdaten(); letztesBuch = false; lauf(letzteDaten, false); });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(daten, m) spielt main() durch (Anzeige danach wie vorher)
+  function rechne(daten, m) {
+    const alt = { N, M, Z, konsole, spur, steps, istBuch, mWahl };
+    mWahl = m; lauf(daten, false);
+    const e = { ausgabe: konsole.slice(), spur: spur.slice(), steps };
+    ({ N, M, Z, konsole, spur, steps, istBuch, mWahl } = alt); pos = 0; render();
+    return e;
+  }
+  window.__msd = { rechne, start, BUCH, zufallsdaten, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
