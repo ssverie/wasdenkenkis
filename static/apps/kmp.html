@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knuth-Morris-Pratt</title>
+<!-- Visualisierung der Knuth-Morris-Pratt-Teilstringsuche (nach Sedgewick/Wayne, Algorithmen, Algorithmus 5.6,
+     Listing 5.18 und 5.19) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Java-Code wie in den Listings,
+     main() mit System.out statt StdOut und Vorgabewerten. Aufbau des DEA abgeglichen mit Abbildung 5.39. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --gruen: #8fd1a6; --gtext: #1c1c1f; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --gruen: #2f6e48; --gtext: #ececef; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; overflow-wrap: anywhere; }
+  .msg { overflow-wrap: anywhere; }   /* lange Muster und Texte ohne Leerzeichen dürfen umbrechen */
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .h2 { font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+  .eingabe input { font: 14px ui-monospace, Consolas, monospace; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .eingabe input.muster { width: 8em; }
+  .eingabe input.text { width: 16em; max-width: 100%; }
+  #graph { display: block; width: 100%; height: auto; max-width: 560px; }
+  svg .zustand circle { fill: var(--panel); stroke: var(--muted); stroke-width: 1.8; }
+  svg .zustand text { font: 700 13px ui-monospace, Consolas, monospace; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .zustand.ziel circle { stroke: var(--text); stroke-width: 3; }
+  svg .zustand.aktiv circle { fill: var(--neu); stroke: var(--neu); }
+  svg .zustand.aktiv text { fill: #fff; }
+  svg .zustand.x circle { stroke: var(--cur); stroke-width: 3.5; stroke-dasharray: 4 3; }
+  svg .zustand.fund circle { fill: var(--gruen); stroke: var(--gruen); }
+  svg .zustand.fund text { fill: var(--gtext); }
+  svg .pfeil { fill: none; stroke: var(--muted); stroke-width: 1.6; }
+  svg .pfeil.vor { stroke: var(--text); stroke-width: 2.2; }
+  svg .pfeil.neu { stroke: var(--neu); stroke-width: 3; }
+  svg .pfeil.lauf { stroke: var(--cur); stroke-width: 3; }
+  svg .spitze { fill: var(--muted); }
+  svg .spitze.vor { fill: var(--text); }
+  svg .spitze.neu { fill: var(--neu); }
+  svg .spitze.lauf { fill: var(--cur); }
+  svg .zeichen { font: 700 11px ui-monospace, Consolas, monospace; fill: var(--muted); text-anchor: middle; paint-order: stroke; stroke: var(--bg); stroke-width: 3px; }
+  svg .zeichen.vor { fill: var(--text); }
+  svg .zeichen.neu { fill: var(--neu); }
+  svg .zeichen.lauf { fill: var(--cur); }
+  @media (prefers-color-scheme: dark) { svg .zustand.aktiv text { fill: #0d1530; } }
+  .arr-box { overflow-x: auto; }
+  table.arr { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  table.arr th, table.arr td { border: 1px solid var(--line); padding: 3px 7px; text-align: center; }
+  table.arr th { color: var(--muted); font-weight: 600; }
+  table.arr th.mu { font-family: ui-monospace, Consolas, monospace; color: var(--text); }
+  table.arr td.leer { color: var(--muted); }
+  table.arr td.neu { background: var(--neu); color: #fff; font-weight: 700; }
+  table.arr td.kopie { background: var(--bar); }
+  table.arr td.quelle { box-shadow: inset 0 0 0 2px var(--cur); }
+  table.arr td.lauf { background: var(--cur); color: #fff; font-weight: 700; }
+  table.arr td.vor { font-weight: 700; }
+  @media (prefers-color-scheme: dark) { table.arr td.neu, table.arr td.lauf { color: #0d1530; } }
+  .band { display: flex; flex-wrap: wrap; gap: 6px 0; padding: 4px 0; font-family: ui-monospace, Consolas, monospace; }
+  .band .zelle { width: 1.45em; text-align: center; line-height: 1.35; }
+  .band .zelle b { display: block; font-size: 15px; font-weight: 400; border-radius: 3px; }
+  .band .zelle i { display: block; font-style: normal; font-size: 13px; font-weight: 700; color: var(--cur); min-height: 1.3em; }
+  .band .zelle small { display: block; font-size: 9.5px; color: var(--muted); }
+  .band .gelesen b { color: var(--muted); }
+  .band .jetzt b { background: var(--neu); color: #fff; }
+  .band .passt b { background: var(--gruen); color: var(--gtext); }
+  @media (prefers-color-scheme: dark) { .band .jetzt b { color: #0d1530; } }
+  .klein { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .spur { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; white-space: pre; overflow-x: auto; margin: 0; line-height: 1.45; }
+  .spur span.zuletzt { color: var(--neu); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="buch">Testclient (AACAA)</button>
+    <button id="abab">ABABAC (Abbildung 5.39)</button>
+    <label>Muster <input id="pat" class="muster" maxlength="10" value="AACAA"></label>
+    <label>Text <input id="txt" class="text" maxlength="40" value="AABRAACADABRAACAADABRA"></label>
+    <button id="los">suchen</button>
+    <span class="klein" id="hinweis"></span>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="h2" style="margin-top:0">Der DEA – Zustand j = so viele Musterzeichen passen gerade; Übergänge nach 0 sind nicht gezeichnet</div>
+    <svg id="graph" role="img" aria-label="Der Automat aus dem Muster"></svg>
+    <div class="h2">dfa[c][j] – Zeile = gelesenes Zeichen, Spalte = Zustand j</div>
+    <div class="arr-box" id="tabelle"></div>
+    <div class="h2">Text</div>
+    <div class="band" id="band"></div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>gerade gesetzt / aktueller Zustand / gelesenes Zeichen</span>
+      <span><i style="background:var(--bar)"></i>aus Spalte X kopiert (Nichtübereinstimmung)</span>
+      <span><i style="background:var(--panel);outline:2px dashed var(--cur)"></i>Neustartzustand X</span>
+      <span><i style="background:var(--cur)"></i>Übergang, den die Suche gerade nimmt</span>
+      <span><i style="background:var(--gruen)"></i>gefunden</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der Automat fertig gebaut oder die Suche fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (nach Algorithmus 5.6, Listing 5.18)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'public class KMP',
+    '{',
+    '   private String pat;',
+    '   private int[][] dfa;',
+    '   public KMP(String pat)',
+    '   {  // Erstellt DEA aus Muster.',
+    '      this.pat = pat;',
+    '      int M = pat.length();',
+    '      int R = 256;',
+    '      dfa = new int[R][M];',
+    '      dfa[pat.charAt(0)][0] = 1;',
+    '      for (int X = 0, j = 1; j < M; j++)',
+    '      {  // Berechnet dfa[][j].',
+    '         for (int c = 0; c < R; c++)',
+    '            dfa[c][j] = dfa[c][X];        // Kopiert Nichtübereinstimmungsfälle.',
+    '         dfa[pat.charAt(j)][j] = j+1;     // Setzt den Übereinstimmungsfall.',
+    '         X = dfa[pat.charAt(j)][X];       // Aktualisiert den Neustartzustand.',
+    '      }',
+    '   }',
+    '',
+    '   public int search(String txt)',
+    '   {  // Simuliert Operation von DEA auf txt.',
+    '      int i, j, N = txt.length(), M = pat.length();',
+    '      for (i = 0, j = 0; i < N && j < M; i++)',
+    '         j = dfa[txt.charAt(i)][j];',
+    '      if (j == M) return i - M;   // gefunden (am Ende des Musters angekommen)',
+    '      else        return N;       // nicht gefunden (am Ende vom Text angekommen)',
+    '   }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient wie Listing 5.19, mit System.out statt StdOut und Vorgabewerten',
+    '      String pat = args.length > 0 ? args[0] : "AACAA";',
+    '      String txt = args.length > 1 ? args[1] : "AABRAACADABRAACAADABRA";',
+    '      KMP kmp = new KMP(pat);',
+    '      System.out.println("text:    " + txt);',
+    '      int offset = kmp.search(txt);',
+    '      System.out.print("pattern: ");',
+    '      for (int i = 0; i < offset; i++)',
+    '         System.out.print(" ");',
+    '      System.out.println(pat);',
+    '   }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    args: zeile('String pat = args.length > 0'), neu: zeile('KMP kmp = new KMP(pat);'), konstr: zeile('// Erstellt DEA aus Muster.'), M: zeile('int M = pat.length();'),
+    tab: zeile('dfa = new int[R][M];'), erst: zeile('dfa[pat.charAt(0)][0] = 1;'), forJ: zeile('for (int X = 0, j = 1; j < M; j++)'),
+    kopie: zeile('dfa[c][j] = dfa[c][X];'), treffer: zeile('dfa[pat.charAt(j)][j] = j+1;'), x: zeile('X = dfa[pat.charAt(j)][X];'),
+    druckText: zeile('System.out.println("text:    " + txt);'), suche: zeile('int offset = kmp.search(txt);'), forI: zeile('for (i = 0, j = 0; i < N && j < M; i++)'),
+    schritt: zeile('j = dfa[txt.charAt(i)][j];'), gef: zeile('if (j == M) return i - M;'), nicht: zeile('else        return N;'), druckMuster: zeile('System.out.println(pat);')
+  };
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Aufzeichnung ----------
+  let PAT, TXT, ZEICHEN, Z, konsole, spur, steps, pos = 0, timer = null, art = 'buch';
+  function snap(line, msg, o) {
+    steps.push(Object.assign({ line, msg, dfa: Z.dfa ? Z.dfa.map(r => r.slice()) : null, gesetzt: Z.gesetzt, X: Z.X, j: Z.j, i: Z.i, phase: Z.phase, konsole: konsole.slice(), spur: spur.slice() }, o || {}));
+  }
+  const zz = ch => `'${ch}'`;
+  function lauf(pat, txt, welche) {
+    stop();
+    PAT = pat; TXT = txt; art = welche; steps = []; konsole = []; spur = [];
+    ZEICHEN = [...new Set(pat)].sort((a, b) => a.charCodeAt(0) - b.charCodeAt(0));
+    const zeile = ch => ZEICHEN.indexOf(ch);           // Zeile in der Anzeige, -1 = Zeichen kommt im Muster nicht vor
+    const M = pat.length, N = txt.length;
+    Z = { dfa: null, gesetzt: 0, X: null, j: null, i: null, phase: 'bau' };
+    snap(L.args, `Muster ${pat} (M = ${M}), Text ${txt} (N = ${N}).`);
+    snap(L.neu, `new KMP(${JSON.stringify(pat)}): Der Konstruktor baut den Automaten.`);
+    snap(L.M, `M = ${M}: Zustände 0 bis ${M}, Zustand ${M} heißt „gefunden“.`);
+    Z.dfa = ZEICHEN.map(() => Array(M).fill(0));
+    snap(L.tab, `dfa = new int[256][${M}] – alles 0. Angezeigt werden nur die Zeilen der Zeichen im Muster; jedes andere Zeichen führt in jedem Zustand nach 0.`);
+    Z.dfa[zeile(pat[0])][0] = 1; Z.gesetzt = 1;
+    snap(L.erst, `dfa[${zz(pat[0])}][0] = 1: Im Startzustand führt nur das erste Musterzeichen weiter.`, { neuZ: [[zeile(pat[0]), 0]], opEnde: M === 1 });
+    spur.push(`j=0: ${pat[0]}→1`);
+    let X = 0; Z.X = 0;
+    for (let j = 1; j < M; j++) {
+      Z.j = j;
+      for (let r = 0; r < ZEICHEN.length; r++) Z.dfa[r][j] = Z.dfa[r][X];
+      Z.gesetzt = j + 1;
+      snap(L.kopie, `j = ${j}, X = ${X}: Spalte ${X} nach Spalte ${j} kopieren – bei einem falschen Zeichen im Zustand ${j} verhält sich der Automat wie im Zustand ${X}.`, { kopieSp: j, quelleSp: X });
+      const r = zeile(pat[j]);
+      Z.dfa[r][j] = j + 1;
+      snap(L.treffer, `Übereinstimmung: dfa[${zz(pat[j])}][${j}] = ${j + 1} – das richtige Zeichen führt einen Zustand weiter.`, { neuZ: [[r, j]], kopieSp: j });
+      const altX = X; X = Z.dfa[r][X]; Z.X = X;
+      spur.push(`j=${j}: Spalte ${altX} kopiert, ${pat[j]}→${j + 1}, X = dfa[${pat[j]}][${altX}] = ${X}`);
+      snap(L.x, `X = dfa[${zz(pat[j])}][${altX}] = ${X} – so weit wäre der Automat mit „${pat.slice(1, j + 1)}“ gekommen, dem Muster ohne sein erstes Zeichen.`, { opEnde: j === M - 1, xNeu: true });
+    }
+    Z.X = null; Z.j = null; Z.phase = 'suche';
+    konsole.push(`text:    ${txt}`);
+    snap(L.druckText, `Der Automat ist fertig. Ausgabe der Textzeile, dann search(txt).`);
+    let j = 0, i;
+    Z.j = 0;
+    spur.push('Suche:');
+    for (i = 0; i < N && j < M; i++) {
+      Z.i = i;
+      const ch = txt[i], r = zeile(ch), alt = j;
+      j = r < 0 ? 0 : Z.dfa[r][j]; Z.j = j;
+      spur.push(`i=${String(i).padStart(2)} ${ch}  ${alt}→${j}`);
+      snap(L.schritt, `i = ${i}, Zeichen ${zz(ch)}: j = dfa[${zz(ch)}][${alt}] = ${j}${j === M ? ' – Zustand M erreicht!' : j > alt ? ' – eins weiter' : j === 0 ? ` – zurück auf 0${r < 0 ? `, ${zz(ch)} kommt im Muster gar nicht vor` : ''}` : ` – zurück auf ${j}, die letzten ${j} Zeichen taugen wieder als Anfang`}. Der Text wird dabei nie zurückgelesen.`, { lauf: [r, alt, j], vonZ: alt });
+    }
+    Z.i = i;
+    const erg = j === M ? i - M : N;
+    snap(j === M ? L.gef : L.nicht, j === M ? `j == M: gefunden, search liefert i − M = ${i} − ${M} = ${erg}.` : `Ende des Texts, j = ${j} < M: nicht gefunden, search liefert N = ${N}.`, { fund: j === M ? erg : null, opEnde: true });
+    konsole.push(`pattern: ${' '.repeat(erg)}${pat}`);
+    snap(L.druckMuster, j === M ? `Ausgabe: das Muster unter dem Text an Position ${erg}.` : `Ausgabe: ${N} Leerzeichen und dann das Muster – es steht hinter dem Text, wie im Testclient des Buchs.`, { fund: j === M ? erg : null, opEnde: true });
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  function zeichneDEA(st) {
+    const M = PAT.length, dx = 46, x0 = 22, R = 13, svg = $('graph');
+    const bogen = (von, nach) => 14 + (von - nach) * 8;      // Höhe eines Rücksprungs
+    let hoch = 40;                                         // mindestens Platz für eine Schleife
+    if (st.dfa) for (let j = 0; j < Math.min(st.gesetzt, M); j++) ZEICHEN.forEach((_, r) => { const n = st.dfa[r][j]; if (n && n < j) hoch = Math.max(hoch, bogen(j, n) + 6); });
+    const y0 = R + hoch + 8, breite = x0 * 2 + dx * M, hoehe = y0 + R + 8;
+    svg.setAttribute('viewBox', `0 0 ${breite} ${hoehe}`);
+    let k = '', s = '', t = '';
+    const kante = (von, nach, ch, cls) => {
+      const ax = x0 + von * dx, bx = x0 + nach * dx;
+      if (nach === von + 1) {        // Übereinstimmung: gerade nach rechts
+        k += `<path class="pfeil ${cls}" d="M${ax + R},${y0} L${bx - R - 1},${y0}"/>`;
+        s += `<polygon class="spitze ${cls}" points="${bx - R},${y0} ${bx - R - 7},${y0 - 4} ${bx - R - 7},${y0 + 4}"/>`;
+        t += `<text class="zeichen ${cls}" x="${(ax + bx) / 2}" y="${y0 - 5}">${esc(ch)}</text>`;
+      } else if (nach === von) {     // Schleife über dem Zustand
+        k += `<path class="pfeil ${cls}" d="M${ax - 6},${y0 - R + 1} C${ax - 16},${y0 - 40} ${ax + 16},${y0 - 40} ${ax + 6},${y0 - R + 1}"/>`;
+        s += `<polygon class="spitze ${cls}" points="${ax + 6},${y0 - R + 1} ${ax + 4},${y0 - R - 7} ${ax + 11},${y0 - R - 4}"/>`;
+        t += `<text class="zeichen ${cls}" x="${ax}" y="${y0 - 36}">${esc(ch)}</text>`;
+      } else {                       // Rücksprung als Bogen über den Zuständen
+        const h = bogen(von, nach), mx = (ax + bx) / 2;
+        k += `<path class="pfeil ${cls}" d="M${ax - 4},${y0 - R} Q${mx},${y0 - R - h * 2} ${bx + 4},${y0 - R}"/>`;
+        s += `<polygon class="spitze ${cls}" points="${bx + 4},${y0 - R} ${bx + 4},${y0 - R - 8} ${bx + 10},${y0 - R - 4}"/>`;
+        t += `<text class="zeichen ${cls}" x="${mx}" y="${y0 - R - h + 2}">${esc(ch)}</text>`;
+      }
+    };
+    if (st.dfa) for (let j = 0; j < Math.min(st.gesetzt, M); j++) ZEICHEN.forEach((ch, r) => {
+      const nach = st.dfa[r][j]; if (!nach) return;
+      const neu = (st.neuZ || []).some(([a, b]) => a === r && b === j);
+      const laeuft = st.lauf && st.lauf[0] === r && st.lauf[1] === j;
+      kante(j, nach, ch, laeuft ? 'lauf' : neu ? 'neu' : nach === j + 1 ? 'vor' : '');
+    });
+    let z = '';
+    for (let j = 0; j <= M; j++) {
+      let cls = 'zustand';
+      if (j === M) cls += ' ziel';
+      if (st.fund !== null && st.fund !== undefined && j === M) cls += ' fund';
+      else if (st.phase === 'suche' && st.j === j) cls += ' aktiv';
+      else if (st.phase === 'bau' && st.j === j) cls += ' aktiv';
+      if (st.X === j && st.phase === 'bau') cls += ' x';
+      z += `<g class="${cls}"><circle cx="${x0 + j * dx}" cy="${y0}" r="${R}"/><text x="${x0 + j * dx}" y="${y0}">${j}</text></g>`;
+    }
+    svg.innerHTML = k + s + z + t;
+  }
+  function render() {
+    const st = steps[pos], M = PAT.length;
+    $('titel').innerHTML = `Muster <b>${esc(PAT)}</b> · M = <b>${M}</b> · N = <b>${TXT.length}</b> · ${st.phase === 'bau' ? `Automat bauen${st.X !== null && st.X !== undefined ? ` · X = <b>${st.X}</b>` : ''}` : `Suche · j = <b>${st.j}</b>`}`;
+    zeichneDEA(st);
+    if (st.dfa) {
+      let t = '<table class="arr"><tr><th>c \\ j</th>';
+      for (let j = 0; j < M; j++) t += `<th class="mu">${j}<br>${esc(PAT[j])}</th>`;
+      t += '</tr>';
+      ZEICHEN.forEach((ch, r) => {
+        t += `<tr><th class="mu">${esc(ch)}</th>`;
+        for (let j = 0; j < M; j++) {
+          const gesetzt = j < st.gesetzt, w = st.dfa[r][j];
+          let cls = !gesetzt ? 'leer' : w === j + 1 ? 'vor' : '';
+          if ((st.neuZ || []).some(([a, b]) => a === r && b === j)) cls = 'neu';
+          else if (st.lauf && st.lauf[0] === r && st.lauf[1] === j) cls = 'lauf';
+          else if (st.kopieSp === j) cls += ' kopie';
+          if (st.quelleSp === j) cls += ' quelle';
+          t += `<td class="${cls}">${gesetzt ? w : ''}</td>`;
+        }
+        t += '</tr>';
+      });
+      t += `<tr><th class="mu" style="font-weight:400">sonst</th>${Array.from({ length: M }, (_, j) => `<td class="leer">${j < st.gesetzt ? 0 : ''}</td>`).join('')}</tr>`;
+      $('tabelle').innerHTML = t + '</table>';
+    } else $('tabelle').innerHTML = '<div class="klein">noch nicht angelegt</div>';
+    // je Textzeichen eine Spalte: Zeichen, darunter das gerade passende Musterzeichen, darunter die Position – bricht um
+    const start = st.phase === 'suche' && st.j > 0 && st.line === L.schritt ? st.i - st.j + 1 : null;
+    let b = '';
+    [...TXT].forEach((ch, i) => {
+      let cls = '';
+      if (st.fund !== null && st.fund !== undefined && i >= st.fund && i < st.fund + M) cls = 'passt';
+      else if (st.phase === 'suche' && st.i !== null && st.i !== undefined) { if (i === st.i && st.line === L.schritt) cls = 'jetzt'; else if (i < st.i || (i === st.i && st.line !== L.schritt)) cls = 'gelesen'; }
+      const mu = start !== null && i >= start && i <= st.i ? esc(PAT[i - start]) : '';
+      b += `<div class="zelle ${cls}"><b>${esc(ch) || '&nbsp;'}</b><i>${mu}</i><small>${i}</small></div>`;
+    });
+    $('band').innerHTML = b || '<span class="klein">(leerer Text)</span>';
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg';
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    $('proto').innerHTML = st.spur.length ? `<h4>Aufbau Spalte für Spalte, dann jedes Textzeichen mit dem Zustandswechsel</h4><pre class="spur">${st.spur.map((z, i) => i === st.spur.length - 1 && pos < steps.length - 1 ? `<span class="zuletzt">${esc(z)}</span>` : esc(z)).join('\n')}</pre>` : '<p class="count">Noch nichts.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const setze = (p, t, w) => { $('pat').value = p; $('txt').value = t; $('hinweis').textContent = ''; lockern(); lauf(p, t, w); };
+  const start = () => setze('AACAA', 'AABRAACADABRAACAADABRA', 'buch');
+  $('buch').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('abab').addEventListener('click', () => setze('ABABAC', 'BCBAABACAABABACAA', 'abab'));
+  $('los').addEventListener('click', () => {
+    const p = $('pat').value, t = $('txt').value;
+    if (!p.length) { $('hinweis').textContent = 'Das Muster braucht mindestens ein Zeichen – sonst wirft pat.charAt(0) eine Ausnahme.'; return; }
+    if ([...p + t].some(ch => ch.charCodeAt(0) > 255)) { $('hinweis').textContent = 'nur Zeichen mit Code unter 256 (R = 256)'; return; }
+    $('hinweis').textContent = ''; lockern(); lauf(p, t, 'eigen');
+  });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(pat, txt) liefert Tabelle und Ausgabe (Anzeige danach wie vorher)
+  function rechne(pat, txt) {
+    const alt = { PAT, TXT, ZEICHEN, Z, konsole, spur, steps, art };
+    lauf(pat, txt, 'eigen');
+    const e = { zeichen: ZEICHEN.slice(), dfa: Z.dfa.map(r => r.slice()), ausgabe: konsole.slice(), steps };
+    ({ PAT, TXT, ZEICHEN, Z, konsole, spur, steps, art } = alt); pos = 0; render();
+    return e;
+  }
+  window.__kmp = { rechne, start, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
