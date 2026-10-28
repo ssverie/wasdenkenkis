@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimaler Spannbaum nach Kruskal</title>
+<!-- Visualisierung des MST-Algorithmus von Kruskal (nach Sedgewick/Wayne, Algorithmen, Algorithmus 4.8, Listing 4.25)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code: KruskalMST nach dem Listing, dazu eigene
+     Fassungen von MinPQ (wie Algorithmus 2.6, umgekehrter Vergleich), Edge und EdgeWeightedGraph (wie in prim.html, dazu
+     edges()), Union-Find aus Algorithmus 1.5 (WeightedQuickUnionUF statt UF), Queue aus 1.3, Bag aus 1.4.
+     Beispielgraph tinyEWG, Lage wie in prim.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --k0: #9db4ec; --k1: #8fd1a6; --k2: #ead77a; --k3: #c9a8e6; --k4: #eba3b5; --k5: #8ccfcf; --ktext: #1c1c1f; }
+  @media (prefers-color-scheme: dark) {
+    :root { --rot: #ff7676; --k0: #3d5590; --k1: #2f6e48; --k2: #6b5d1e; --k3: #5b3f7a; --k4: #7a3a4c; --k5: #2f6464; --ktext: #ececef; }
+  }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .bild { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .bild svg { display: block; width: 100%; height: auto; }
+  .bild .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  svg .kante { stroke: var(--grau); stroke-width: 1.6; }
+  svg .kante.offen { opacity: .45; }
+  svg .kante.mst { stroke: var(--text); stroke-width: 4; }
+  svg .kante.zyklus { stroke: var(--rot); stroke-width: 1.6; stroke-dasharray: 3 4; }
+  svg .kante.pfad { stroke: var(--rot); stroke-width: 4; opacity: .55; }
+  svg .kante.pruef { stroke: var(--cur); stroke-width: 4; stroke-dasharray: 7 4; }
+  svg .gewicht { font: 600 10.5px ui-monospace, Consolas, monospace; fill: var(--muted); text-anchor: middle; dominant-baseline: central; paint-order: stroke; stroke: var(--bg); stroke-width: 3px; }
+  svg .gewicht.mst { fill: var(--text); }
+  svg .gewicht.zyklus { fill: var(--rot); }
+  svg .gewicht.pruef { fill: var(--cur); }
+  svg .gewicht.offen { opacity: .5; }
+  svg .knoten circle { fill: var(--panel); stroke: var(--muted); stroke-width: 2; }
+  svg .knoten text { font: 700 15px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten.baum circle { fill: var(--f); stroke: var(--f); }
+  svg .knoten.baum text { fill: var(--ktext); }
+  svg .knoten.pruef circle { stroke: var(--cur); stroke-width: 5; }
+  .arr-box { overflow-x: auto; margin-bottom: 10px; }
+  table.arr { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  table.arr th, table.arr td { border: 1px solid var(--line); padding: 3px 6px; text-align: center; }
+  table.arr th { color: var(--muted); font-weight: 600; }
+  table.arr td.leer { color: var(--muted); }
+  table.arr td.blass { color: var(--muted); opacity: .55; }
+  table.arr td.geaendert { background: var(--neu); color: #fff; font-weight: 700; }
+  table.arr tr.jetzt td { outline: 2px solid var(--cur); outline-offset: -2px; font-weight: 700; }
+  table.arr tr.offen td { color: var(--muted); }
+  table.arr td.ja { color: var(--text); font-weight: 700; }
+  table.arr td.nein { color: var(--rot); }
+  @media (prefers-color-scheme: dark) { table.arr td.geaendert { color: #0d1530; } }
+  .kantenliste table.arr td { text-align: left; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .proto p { margin: 0 0 6px; font-size: 13px; }
+  .bild .klein { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
+  @media (max-width: 640px) {
+    .bild { grid-template-columns: minmax(0, 1fr); }
+    table.arr { font-size: 12px; }
+    table.arr th, table.arr td { padding: 3px 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls">
+    <button id="buch">Testclient (tinyEWG)</button>
+    <button id="zufall">Zufallsgraph</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="bild">
+      <div>
+        <div class="h2">Kantengewichteter Graph – gleiche Farbe = gleicher Baum im Wald</div>
+        <svg id="graph" role="img" aria-label="Der Graph mit dem Stand des Kruskal-Algorithmus"></svg>
+        <div class="klein" id="uf-kopf">Union-Find (gewichtet, Algorithmus 1.5): id[] zeigt auf den Elternknoten, sz[] gilt nur für Wurzeln.</div>
+        <div class="arr-box" id="uf"></div>
+      </div>
+      <div class="kantenliste">
+        <div class="arr-box" id="liste"></div>
+      </div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--panel);outline:3px solid var(--cur)"></i>Kante wird geprüft</span>
+      <span><i style="background:var(--text)"></i>Kante im minimalen Spannbaum</span>
+      <span><i style="background:var(--rot)"></i>verworfen: schlösse einen Zyklus (dick: der Weg, den es schon gibt)</span>
+      <span><i style="background:var(--k0)"></i><i style="background:var(--k1)"></i><i style="background:var(--k2)"></i>Bäume des Waldes</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der aktuelle Abschnitt fertig ist (Graph gebaut, eine Kante entschieden, Ausgabe)">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 4.8, Listing 4.25)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'import java.util.Locale;',
+    '',
+    'public class KruskalMST',
+    '{',
+    '   private Queue<Edge> mst;        // die Kanten des minimalen Spannbaums',
+    '',
+    '   public KruskalMST(EdgeWeightedGraph G)',
+    '   {',
+    '      mst = new Queue<Edge>();',
+    '      MinPQ<Edge> pq = new MinPQ<Edge>(G.E());',
+    '      for (Edge e : G.edges())        // alle Kanten in die Vorrangwarteschlange',
+    '         pq.insert(e);',
+    '      WeightedQuickUnionUF uf = new WeightedQuickUnionUF(G.V());   // jeder Knoten ein eigener Baum',
+    '',
+    '      while (!pq.isEmpty() && mst.size() < G.V() - 1)',
+    '      {',
+    '         Edge e = pq.delMin();          // leichteste noch nicht geprüfte Kante',
+    '         int v = e.either(), w = e.other(v);',
+    '         if (uf.connected(v, w)) continue;   // schon im selben Baum: e schlösse einen Zyklus',
+    '         uf.union(v, w);                // zwei Bäume verschmelzen',
+    '         mst.enqueue(e);                // e gehört zum minimalen Spannbaum',
+    '      }',
+    '   }',
+    '',
+    '   public Iterable<Edge> edges()  {  return mst;  }',
+    '',
+    '   public double weight()',
+    '   {  // Gesamtgewicht (eigene Lösung von Übung 4.3.31)',
+    '      double summe = 0.0;',
+    '      for (Edge e : mst)',
+    '         summe += e.weight();',
+    '      return summe;',
+    '   }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient: der Graph tinyEWG (8 Knoten, 16 Kanten)',
+    '      double[][] kanten = { {4, 5, .35}, {4, 7, .37}, {5, 7, .28}, {0, 7, .16}, {1, 5, .32}, {0, 4, .38},',
+    '                            {2, 3, .17}, {1, 7, .19}, {0, 2, .26}, {1, 2, .36}, {1, 3, .29}, {2, 7, .34},',
+    '                            {6, 2, .40}, {3, 6, .52}, {6, 0, .58}, {6, 4, .93} };',
+    '      EdgeWeightedGraph G = new EdgeWeightedGraph(8);',
+    '      for (double[] k : kanten)',
+    '         G.addEdge(new Edge((int) k[0], (int) k[1], k[2]));',
+    '      KruskalMST mst = new KruskalMST(G);',
+    '      for (Edge e : mst.edges())',
+    '         System.out.println(e);',
+    '      System.out.printf(Locale.ROOT, "%.2f%n", mst.weight());',
+    '   }',
+    '}',
+    '',
+    '// ---- MinPQ: die Vorrangwarteschlange aus Algorithmus 2.6, nur mit umgekehrtem Vergleich ----',
+    'public class MinPQ<Key extends Comparable<Key>>',
+    '{',
+    '   private Key[] pq;     // Heap in pq[1..n], das kleinste Element in pq[1]',
+    '   private int n;',
+    '',
+    '   @SuppressWarnings("unchecked")',
+    '   public MinPQ(int maxN)  {  pq = (Key[]) new Comparable[maxN + 1];  }',
+    '',
+    '   public boolean isEmpty()  {  return n == 0;  }',
+    '',
+    '   public void insert(Key k)',
+    '   {  pq[++n] = k;  swim(n);  }',
+    '',
+    '   public Key delMin()',
+    '   {',
+    '      Key min = pq[1];',
+    '      exch(1, n--);',
+    '      pq[n + 1] = null;           // kein Loitering',
+    '      sink(1);',
+    '      return min;',
+    '   }',
+    '',
+    '   private boolean greater(int i, int j)  {  return pq[i].compareTo(pq[j]) > 0;  }',
+    '   private void exch(int i, int j)  {  Key t = pq[i];  pq[i] = pq[j];  pq[j] = t;  }',
+    '',
+    '   private void swim(int k)',
+    '   {',
+    '      while (k > 1 && greater(k / 2, k))',
+    '      {  exch(k / 2, k);  k = k / 2;  }',
+    '   }',
+    '',
+    '   private void sink(int k)',
+    '   {',
+    '      while (2 * k <= n)',
+    '      {',
+    '         int j = 2 * k;',
+    '         if (j < n && greater(j, j + 1)) j++;',
+    '         if (!greater(k, j)) break;',
+    '         exch(k, j);',
+    '         k = j;',
+    '      }',
+    '   }',
+    '}',
+    '',
+    '// ---- Edge: eine ungerichtete Kante mit Gewicht (wie bei Prim) ----',
+    'public class Edge implements Comparable<Edge>',
+    '{',
+    '   private final int v, w;',
+    '   private final double weight;',
+    '',
+    '   public Edge(int v, int w, double weight)',
+    '   {  this.v = v;  this.w = w;  this.weight = weight;  }',
+    '',
+    '   public double weight()  {  return weight;  }',
+    '   public int either()     {  return v;  }',
+    '   public int other(int x)  {  return x == v ? w : v;  }   // das andere Ende',
+    '   public int compareTo(Edge that)  {  return Double.compare(weight, that.weight);  }',
+    '   public String toString()',
+    '   {  return String.format(Locale.ROOT, "%d-%d %.2f", v, w, weight);  }',
+    '}',
+    '',
+    '// ---- EdgeWeightedGraph: wie bei Prim, dazu edges() ----',
+    'public class EdgeWeightedGraph',
+    '{',
+    '   private final int V;',
+    '   private int E;',
+    '   private Bag<Edge>[] adj;',
+    '   private Bag<Edge> alle;       // jede Kante einmal, für edges()',
+    '',
+    '   @SuppressWarnings("unchecked")',
+    '   public EdgeWeightedGraph(int V)',
+    '   {',
+    '      this.V = V;',
+    '      adj = (Bag<Edge>[]) new Bag[V];',
+    '      for (int v = 0; v < V; v++)',
+    '         adj[v] = new Bag<Edge>();',
+    '      alle = new Bag<Edge>();',
+    '   }',
+    '',
+    '   public int V()  {  return V;  }',
+    '   public int E()  {  return E;  }',
+    '',
+    '   public void addEdge(Edge e)',
+    '   {  // dieselbe Kante kommt in beide Adjazenzlisten',
+    '      int v = e.either(), w = e.other(v);',
+    '      adj[v].add(e);',
+    '      adj[w].add(e);',
+    '      alle.add(e);',
+    '      E++;',
+    '   }',
+    '',
+    '   public Iterable<Edge> adj(int v)  {  return adj[v];  }',
+    '   public Iterable<Edge> edges()  {  return alle;  }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    kanten: zeile('double[][] kanten'), neuG: zeile('EdgeWeightedGraph G = new EdgeWeightedGraph(8);'), addEdge: zeile('G.addEdge(new Edge('),
+    neuK: zeile('KruskalMST mst = new KruskalMST(G);'), mstNeu: zeile('mst = new Queue<Edge>();'), pqNeu: zeile('MinPQ<Edge> pq = new MinPQ<Edge>(G.E());'),
+    insert: zeile('pq.insert(e);'), ufNeu: zeile('WeightedQuickUnionUF uf = new WeightedQuickUnionUF(G.V());'),
+    whileLoop: zeile('while (!pq.isEmpty() && mst.size() < G.V() - 1)'), delMin: zeile('Edge e = pq.delMin();'),
+    connected: zeile('if (uf.connected(v, w)) continue;'), union: zeile('uf.union(v, w);'), enqueue: zeile('mst.enqueue(e);'),
+    forEdges: zeile('for (Edge e : mst.edges())'), druckE: zeile('System.out.println(e);'), druckW: zeile('System.out.printf(Locale.ROOT, "%.2f%n", mst.weight());')
+  };
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+  const f2 = x => x.toFixed(2);
+  const farbe = k => `var(--k${k % 6})`;
+
+  // ---------- Graphen ----------
+  // tinyEWG (Reihenfolge der Datei tinyEWG.txt), Lage wie in prim.html / Abbildung 4.61
+  const BUCH = { V: 8,
+    kanten: [[4, 5, .35], [4, 7, .37], [5, 7, .28], [0, 7, .16], [1, 5, .32], [0, 4, .38], [2, 3, .17], [1, 7, .19], [0, 2, .26], [1, 2, .36], [1, 3, .29], [2, 7, .34], [6, 2, .40], [3, 6, .52], [6, 0, .58], [6, 4, .93]],
+    pos: [[185, 165], [165, 30], [278, 118], [278, 40], [45, 220], [40, 82], [395, 198], [138, 108]],
+    breite: 430, hoehe: 245 };
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsgraph() {            // meist zusammenhängend (zufälliger Baum plus Kanten), manchmal zwei Teile; Gewichte verschieden
+    const V = 8, kanten = [], hat = new Set(), gewichte = [];
+    for (let g = 10; g < 100; g++) gewichte.push(g / 100);
+    const nimmGewicht = () => gewichte.splice(zufall(gewichte.length), 1)[0];
+    const getrennt = zufall(4) === 0 ? 4 + zufall(3) : V;     // bei getrennt: Knoten ab „getrennt“ bilden einen eigenen Teil
+    for (let v = 1; v < V; v++) {
+      const u = v < getrennt ? zufall(v) : (v === getrennt ? -1 : getrennt + zufall(v - getrennt));
+      if (u < 0) continue;
+      hat.add(Math.min(u, v) + '-' + Math.max(u, v)); kanten.push([u, v, nimmGewicht()]);
+    }
+    const ziel = kanten.length + 5 + zufall(4);
+    let versuche = 0;
+    while (kanten.length < ziel && versuche++ < 500) {
+      const v = zufall(V), w = zufall(V), k = Math.min(v, w) + '-' + Math.max(v, w);
+      if (v === w || hat.has(k) || (v < getrennt) !== (w < getrennt)) continue;
+      hat.add(k); kanten.push([v, w, nimmGewicht()]);
+    }
+    for (let i = kanten.length - 1; i > 0; i--) { const j = zufall(i + 1); [kanten[i], kanten[j]] = [kanten[j], kanten[i]]; }
+    const pos = Array.from({ length: V }, (_, i) => [215 + 170 * Math.sin(2 * Math.PI * i / V), 122 - 100 * Math.cos(2 * Math.PI * i / V)].map(Math.round));
+    return { V, kanten, pos, breite: 430, hoehe: 245, zufall: true };
+  }
+
+  // ---------- MinPQ und Union-Find wie im Java-Code ----------
+  let G, gew;
+  function pqInsert(q, e) { q.pq[++q.n] = e; let k = q.n; while (k > 1 && gew(q.pq[k >> 1]) > gew(q.pq[k])) { [q.pq[k >> 1], q.pq[k]] = [q.pq[k], q.pq[k >> 1]]; k >>= 1; } }
+  function pqDelMin(q) {
+    const min = q.pq[1]; [q.pq[1], q.pq[q.n]] = [q.pq[q.n], q.pq[1]]; q.n--; q.pq[q.n + 1] = null;
+    let k = 1;
+    while (2 * k <= q.n) { let j = 2 * k; if (j < q.n && gew(q.pq[j]) > gew(q.pq[j + 1])) j++; if (!(gew(q.pq[k]) > gew(q.pq[j]))) break; [q.pq[k], q.pq[j]] = [q.pq[j], q.pq[k]]; k = j; }
+    return min;
+  }
+  const find = (u, p) => { while (p !== u.id[p]) p = u.id[p]; return p; };
+  function union(u, p, q) {
+    const i = find(u, p), j = find(u, q);
+    if (i === j) return;
+    if (u.sz[i] < u.sz[j]) { u.id[i] = j; u.sz[j] += u.sz[i]; } else { u.id[j] = i; u.sz[i] += u.sz[j]; }
+    u.count--;
+  }
+
+  // ---------- Aufzeichnung ----------
+  let adj, Z, konsole, steps, pos = 0, timer = null;
+  function neuerZustand() { Z = { gebaut: false, pq: null, uf: null, mst: [], status: Array(G.kanten.length).fill(null), reihe: [], fertig: false }; }
+  function snap(line, msg, o) {
+    steps.push(Object.assign({
+      line, msg, gebaut: Z.gebaut, pqN: Z.pq ? Z.pq.n : 0, pqInhalt: Z.pq ? Z.pq.pq.slice(1, Z.pq.n + 1) : [],
+      uf: Z.uf && { id: Z.uf.id.slice(), sz: Z.uf.sz.slice(), count: Z.uf.count }, mst: Z.mst.slice(), status: Z.status.slice(), reihe: Z.reihe.slice(),
+      fertig: Z.fertig, konsole: konsole.slice()
+    }, o || {}));
+  }
+  const kn = e => `${G.kanten[e][0]}-${G.kanten[e][1]}`;
+  function wegImWald(a, b) {         // Weg von a nach b über die schon gewählten Kanten (für die Erklärung des Zyklus)
+    const nb = Array.from({ length: G.V }, () => []);
+    Z.mst.forEach(e => { const [x, y] = G.kanten[e]; nb[x].push([y, e]); nb[y].push([x, e]); });
+    const vor = Array(G.V).fill(null), gesehen = new Set([a]), q = [a];
+    while (q.length) { const x = q.shift(); if (x === b) break; nb[x].forEach(([y, e]) => { if (!gesehen.has(y)) { gesehen.add(y); vor[y] = [x, e]; q.push(y); } }); }
+    const knoten = [b], kanten = []; let x = b;
+    while (x !== a) { const [p, e] = vor[x]; kanten.push(e); knoten.push(p); x = p; }
+    return { knoten: knoten.reverse(), kanten };
+  }
+  function lauf(neuG) {
+    stop();
+    G = neuG; gew = e => G.kanten[e][2];
+    steps = []; konsole = ['% java KruskalMST'];
+    neuerZustand();
+    if (!G.zufall) {
+      snap(L.kanten, `Testclient: die ${G.kanten.length} Kanten von tinyEWG mit ihren Gewichten – derselbe Graph wie bei Prim.`);
+      snap(L.neuG, `new EdgeWeightedGraph(8): 8 Knoten, leere Adjazenzlisten.`);
+    }
+    adj = Array.from({ length: G.V }, () => []);
+    G.kanten.forEach(([v, w], e) => { adj[v].unshift(e); adj[w].unshift(e); });
+    Z.gebaut = true;
+    snap(L.addEdge, `addEdge für alle ${G.kanten.length} Kanten${G.zufall ? ` (${G.kanten.map(([a, b, g]) => `${a}-${b} ${f2(g)}`).join(', ')})` : ''}.`, { opEnde: true });
+    snap(L.neuK, `new KruskalMST(G): Die ganze Arbeit passiert im Konstruktor.`);
+    snap(L.mstNeu, `mst = new Queue<Edge>(): Hier sammeln sich die gewählten Kanten, in der Reihenfolge, in der sie dazukommen.`);
+    Z.pq = { n: 0, pq: [null] };
+    snap(L.pqNeu, `pq = new MinPQ<Edge>(${G.kanten.length}): eine Vorrangwarteschlange für Kanten. Verglichen wird über compareTo – also nach Gewicht.`);
+    const alle = []; G.kanten.forEach((_, e) => alle.unshift(e));     // G.edges(): der Bag gibt die Kanten rückwärts heraus
+    alle.forEach(e => pqInsert(Z.pq, e));
+    snap(L.insert, `Alle ${G.kanten.length} Kanten kommen in pq. Ganz oben im Heap steht jetzt die leichteste: ${kn(Z.pq.pq[1])} mit ${f2(gew(Z.pq.pq[1]))}.`, { opEnde: true });
+    Z.uf = { id: Array.from({ length: G.V }, (_, i) => i), sz: Array(G.V).fill(1), count: G.V };
+    snap(L.ufNeu, `uf = new WeightedQuickUnionUF(${G.V}): ${G.V} Bäume aus je einem Knoten – der Wald, mit dem Kruskal anfängt.`, { opEnde: true });
+    while (Z.pq.n && Z.mst.length < G.V - 1) {
+      snap(L.whileLoop, `pq hat noch ${Z.pq.n} Kante${Z.pq.n === 1 ? '' : 'n'}, mst erst ${Z.mst.length} von ${G.V - 1} – weiter.`);
+      const e = pqDelMin(Z.pq), [v, w] = G.kanten[e];
+      Z.reihe.push(e);
+      snap(L.delMin, `pq.delMin() liefert ${kn(e)} mit ${f2(gew(e))} – die leichteste Kante, die noch nicht geprüft wurde. v = ${v}, w = ${w}.`, { kante: e, vw: [v, w] });
+      const rv = find(Z.uf, v), rw = find(Z.uf, w);
+      if (rv === rw) {
+        const weg = wegImWald(v, w);
+        Z.status[e] = 'zyklus';
+        snap(L.connected, `uf.connected(${v}, ${w}): find(${v}) = ${rv}, find(${w}) = ${rw} – gleiche Wurzel, ${v} und ${w} liegen schon im selben Baum. Es gibt bereits den Weg ${weg.knoten.join('-')}, mit ${kn(e)} entstünde ein Zyklus. Verworfen.`, { kante: e, vw: [v, w], pfad: weg.kanten, opEnde: true, cls: '' });
+        continue;
+      }
+      snap(L.connected, `uf.connected(${v}, ${w}): find(${v}) = ${rv}, find(${w}) = ${rw} – verschiedene Wurzeln, also zwei verschiedene Bäume. Die Kante verbindet sie und schließt keinen Zyklus.`, { kante: e, vw: [v, w] });
+      const vorher = { i: Z.uf.sz[rv] < Z.uf.sz[rw] ? rv : rw, j: Z.uf.sz[rv] < Z.uf.sz[rw] ? rw : rv };
+      union(Z.uf, v, w);
+      snap(L.union, `uf.union(${v}, ${w}): Die Wurzel ${vorher.i} kommt unter ${vorher.j} (der kleinere Baum unter den größeren, bei Gleichstand w unter v). ${Z.uf.count} Bäume übrig.`, { kante: e, vw: [v, w], aendId: vorher.i });
+      Z.mst.push(e); Z.status[e] = 'mst';
+      snap(L.enqueue, `mst.enqueue(${kn(e)}): ${Z.mst.length}. Kante des minimalen Spannbaums.`, { kante: e, opEnde: true, cls: 'swap' });
+    }
+    Z.fertig = true;
+    const summe = Z.mst.reduce((s, e) => s + gew(e), 0);
+    const ungeprueft = Z.pq.n;
+    snap(L.whileLoop, Z.mst.length === G.V - 1
+      ? `mst hat ${G.V - 1} = V − 1 Kanten – fertig.${ungeprueft ? ` Die ${ungeprueft} schwersten Kanten (${Z.pq.pq.slice(1, Z.pq.n + 1).sort((a, b) => gew(a) - gew(b)).map(kn).join(', ')}) liegen noch in pq und werden gar nicht mehr angeschaut.` : ''} Gesamtgewicht ${f2(summe)}.`
+      : `pq ist leer, aber mst hat erst ${Z.mst.length} von ${G.V - 1} Kanten: Der Graph ist nicht zusammenhängend. Kruskal liefert dann einen Spannwald – je ein minimaler Spannbaum pro Teil (${Z.uf.count} Teile). Gesamtgewicht ${f2(summe)}.`, { opEnde: true });
+    snap(L.forEdges, `mst.edges(): die Warteschlange in der Reihenfolge des Einfügens – aufsteigend nach Gewicht.`);
+    Z.mst.forEach(e => { konsole.push(`${kn(e)} ${f2(gew(e))}`); snap(L.druckE, `${kn(e)} ${f2(gew(e))}`, { kante: e }); });
+    konsole.push(f2(summe));
+    snap(L.druckW, `mst.weight() = ${f2(summe)}.`, { opEnde: true });
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  function labelLagen() {    // wie in prim.html: entlang der Kante verschieben, bis die Zahl frei steht
+    const B = 22, H = 13, frei = [], lagen = [];
+    const stoesst = (x, y) => x - B / 2 < 2 || x + B / 2 > G.breite - 2 || y - H / 2 < 2 || y + H / 2 > G.hoehe - 2
+      || G.pos.some(([cx, cy]) => Math.hypot(Math.max(x - B / 2 - cx, 0, cx - x - B / 2), Math.max(y - H / 2 - cy, 0, cy - y - H / 2)) < 16)
+      || frei.some(([fx, fy]) => Math.abs(fx - x) < B && Math.abs(fy - y) < H);
+    G.kanten.forEach(([v, w]) => {
+      const [x1, y1] = G.pos[v], [x2, y2] = G.pos[w];
+      const len = Math.hypot(x2 - x1, y2 - y1) || 1, nx = -(y2 - y1) / len, ny = (x2 - x1) / len;
+      let best = null;
+      for (const t of [0.5, 0.38, 0.62, 0.28, 0.72, 0.2, 0.8]) for (const s of [9, -9, 15, -15]) {
+        if (best) break;
+        const x = x1 + (x2 - x1) * t + nx * s, y = y1 + (y2 - y1) * t + ny * s;
+        if (!stoesst(x, y)) best = [x, y];
+      }
+      if (!best) best = [(x1 + x2) / 2 + nx * 9, (y1 + y2) / 2 + ny * 9];
+      frei.push(best); lagen.push(best);
+    });
+    return lagen;
+  }
+  function baumFarben(st) {     // je Baum mit mehr als einem Knoten eine Farbe, in der Reihenfolge des kleinsten Knotens
+    const f = Array(G.V).fill(null);
+    if (!st.uf) return f;
+    const wurzel = v => { while (v !== st.uf.id[v]) v = st.uf.id[v]; return v; };
+    const nr = new Map();
+    for (let v = 0; v < G.V; v++) { const r = wurzel(v); if (st.uf.sz[r] > 1) { if (!nr.has(r)) nr.set(r, nr.size); f[v] = nr.get(r); } }
+    return f;
+  }
+  function zeichneGraph(st) {
+    if (!G.labels) G.labels = labelLagen();
+    const svg = $('graph'), R = 14;
+    svg.setAttribute('viewBox', `0 0 ${G.breite} ${G.hoehe}`); svg.style.maxWidth = G.breite * 1.25 + 'px';
+    const pfad = new Set(st.pfad || []);
+    let h = '', t = '';
+    if (st.gebaut) G.kanten.forEach(([v, w, g], e) => {
+      const [x1, y1] = G.pos[v], [x2, y2] = G.pos[w];
+      let cls = '';
+      if (st.kante === e) cls = 'pruef';
+      else if (pfad.has(e)) cls = 'mst pfad';
+      else if (st.status[e] === 'mst') cls = 'mst';
+      else if (st.status[e] === 'zyklus') cls = 'zyklus';
+      else if (st.fertig) cls = 'offen';
+      h += `<line class="kante ${cls}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+      let [mx, my] = G.labels[e];
+      mx = Math.min(Math.max(mx, 14), G.breite - 14); my = Math.min(Math.max(my, 8), G.hoehe - 8);
+      t += `<text class="gewicht ${cls.split(' ')[0]}" x="${mx.toFixed(1)}" y="${my.toFixed(1)}">${f2(g).replace(/^0/, '')}</text>`;
+    });
+    h += t;
+    const f = baumFarben(st);
+    for (let v = 0; v < G.V; v++) {
+      const [x, y] = G.pos[v];
+      let cls = 'knoten', stil = '';
+      if (f[v] !== null) { cls += ' baum'; stil = ` style="--f:${farbe(f[v])}"`; }
+      if (st.vw && st.vw.includes(v)) cls += ' pruef';
+      h += `<g class="${cls}"${stil}><circle cx="${x}" cy="${y}" r="${R}"/><text x="${x}" y="${y}">${v}</text></g>`;
+    }
+    svg.innerHTML = h;
+  }
+  function render() {
+    const st = steps[pos];
+    $('titel').innerHTML = `${G.zufall ? 'Zufallsgraph' : 'tinyEWG'} · <b>${G.V}</b> Knoten, <b>${st.gebaut ? G.kanten.length : 0}</b> Kanten · in pq: <b>${st.pqN}</b> · im Spannbaum: <b>${st.mst.length}</b> von ${G.V - 1} · Bäume im Wald: <b>${st.uf ? st.uf.count : G.V}</b>`;
+    zeichneGraph(st);
+    // Kantenliste: erst die geprüften in ihrer Reihenfolge, dann der Rest von pq nach Gewicht
+    const rest = st.pqInhalt.slice().sort((a, b) => G.kanten[a][2] - G.kanten[b][2]);
+    let t = '<table class="arr"><tr><th>Kante</th><th>Gewicht</th><th>Ergebnis</th></tr>';
+    st.reihe.forEach(e => {
+      const s = st.status[e];
+      const erg = s === 'mst' ? '✓' : s === 'zyklus' ? '✗ Zyklus' : '?';
+      t += `<tr class="${st.kante === e && st.reihe[st.reihe.length - 1] === e && s === null ? 'jetzt' : st.kante === e ? 'jetzt' : ''}"><td>${kn(e)}</td><td>${f2(G.kanten[e][2])}</td><td class="${s === 'mst' ? 'ja' : s === 'zyklus' ? 'nein' : 'leer'}">${erg}</td></tr>`;
+    });
+    rest.forEach(e => { t += `<tr class="offen"><td>${kn(e)}</td><td>${f2(G.kanten[e][2])}</td><td class="leer">${st.fertig ? 'nicht angeschaut' : 'in pq'}</td></tr>`; });
+    if (!st.pqN && !st.reihe.length) t += `<tr class="offen"><td colspan="3" class="leer">pq noch leer</td></tr>`;
+    $('liste').innerHTML = t + '</table>';
+    if (st.uf) {
+      let u = '<table class="arr"><tr><th>v</th>';
+      for (let v = 0; v < G.V; v++) u += `<th>${v}</th>`;
+      u += '</tr><tr><th>id[]</th>';
+      st.uf.id.forEach((x, v) => u += `<td class="${st.aendId === v ? 'geaendert' : ''}">${x}</td>`);
+      u += '</tr><tr><th>sz[]</th>';
+      st.uf.sz.forEach((x, v) => u += `<td class="${st.uf.id[v] === v ? '' : 'blass'}">${x}</td>`);
+      $('uf').innerHTML = u + '</tr></table>';
+    } else $('uf').innerHTML = '<div class="klein">noch nicht angelegt</div>';
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg' + (st.cls ? ' ' + st.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    const summe = st.mst.reduce((s, e) => s + G.kanten[e][2], 0);
+    $('proto').innerHTML = st.reihe.length
+      ? `<h4>Geprüfte Kanten in der Reihenfolge von delMin()</h4><p>${st.reihe.map(e => `${kn(e)} ${f2(G.kanten[e][2])} ${st.status[e] === 'mst' ? '✓' : st.status[e] === 'zyklus' ? '✗' : '…'}`).join(' · ')}</p><h4>Spannbaum bisher</h4><p>${st.mst.length} Kante${st.mst.length === 1 ? '' : 'n'}, Gewicht ${f2(summe)}</p>`
+      : '<p class="count">Noch nichts – erst kommen alle Kanten in die Vorrangwarteschlange.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const start = () => { lockern(); lauf(BUCH); };
+  $('buch').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('zufall').addEventListener('click', () => { lockern(); lauf(zufallsgraph()); });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(V, kanten) spielt main() durch (Anzeige danach wie vorher)
+  function rechne(V, kanten) {
+    const alt = { G, gew, adj, Z, konsole, steps };
+    lauf({ V, kanten, pos: Array.from({ length: V }, (_, i) => [215 + 170 * Math.sin(2 * Math.PI * i / V), 122 - 100 * Math.cos(2 * Math.PI * i / V)]), zufall: true, breite: 430, hoehe: 245 });
+    const e = { mst: Z.mst.slice(), reihe: Z.reihe.slice(), status: Z.status.slice(), uf: { id: Z.uf.id.slice(), count: Z.uf.count }, konsole: konsole.slice(), steps };
+    ({ G, gew, adj, Z, konsole, steps } = alt); pos = 0; render();
+    return e;
+  }
+  window.__kruskal = { rechne, start, BUCH, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, get G() { return G; }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
