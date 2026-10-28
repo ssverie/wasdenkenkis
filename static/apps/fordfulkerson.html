@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ford-Fulkerson</title>
+<!-- Visualisierung des Max-Fluss-Algorithmus nach Ford-Fulkerson mit kürzestem augmentierendem Pfad (nach Sedgewick/Wayne,
+     Algorithmen, Algorithmus 6.3, Listing 6.11 bis 6.13) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5.
+     FordFulkerson, hasAugmentingPath und FlowEdge wie in den Listings, FlowEdge.other() und FlowNetwork eigene Fassung
+     (wie Edge und EdgeWeightedDigraph, Adjazenzlisten als Bag). Beispiel: tinyFN.txt aus den Abbildungen 6.21 und 6.22. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --gruen: #8fd1a6; --gtext: #1c1c1f; --schnitt: #e3f4e9; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --gruen: #2f6e48; --gtext: #ececef; --schnitt: #1f3328; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .bilder { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+  .bilder svg { display: block; width: 100%; height: auto; max-width: 420px; margin: 0 auto; }
+  .h2 { font-size: 13px; color: var(--muted); margin: 0 0 2px; text-align: center; }
+  svg .kante { stroke: var(--grau); stroke-width: 1.6; fill: none; }
+  svg .kante.fluss { stroke: var(--rot); stroke-width: 3; }
+  svg .kante.rueck { stroke: var(--rot); stroke-width: 1.8; }
+  svg .kante.vor { stroke: var(--muted); stroke-width: 1.6; }
+  svg .kante.baum { stroke: var(--cur); stroke-width: 3.2; }
+  svg .kante.pruef { stroke: var(--neu); stroke-width: 3.6; }
+  svg .kante.pfad { stroke: var(--cur); stroke-width: 4.5; }
+  svg .lab { font: 700 10.5px ui-monospace, Consolas, monospace; fill: var(--text); text-anchor: middle; dominant-baseline: central; paint-order: stroke; stroke: var(--panel); stroke-width: 3px; }
+  svg .lab.rot { fill: var(--rot); }
+  svg .lab.pfad { fill: var(--cur); }
+  svg .knoten circle { fill: var(--panel); stroke: var(--text); stroke-width: 1.8; }
+  svg .knoten text { font: 700 13px ui-monospace, Consolas, monospace; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten.markiert circle { fill: var(--bar); }
+  svg .knoten.schnitt circle { fill: var(--gruen); }
+  svg .knoten.schnitt text { fill: var(--gtext); }
+  svg .knoten.aktiv circle { fill: var(--neu); stroke: var(--neu); }
+  svg .knoten.aktiv text { fill: #fff; }
+  @media (prefers-color-scheme: dark) { svg .knoten.aktiv text { fill: #0d1530; } }
+  svg .st { font: 600 10px system-ui, sans-serif; fill: var(--muted); text-anchor: middle; }
+  .eingabe label { font-size: 13px; }
+  .var { font: 13px ui-monospace, Consolas, monospace; background: var(--code-bg); border-radius: 8px; padding: 6px 8px; overflow-wrap: anywhere; white-space: pre-wrap; min-height: 1.6em; margin-top: 8px; }
+  .var b { color: var(--neu); }
+  .klein { font-size: 12px; color: var(--muted); margin: 6px 0 4px; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .spur { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; white-space: pre; overflow-x: auto; margin: 0; line-height: 1.45; }
+  .spur span.zuletzt { color: var(--neu); font-weight: 700; }
+  @media (max-width: 640px) { .bilder { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="tiny">tinyFN.txt</button>
+    <button id="abb">wie Abbildung 6.22</button>
+    <button id="instanz">Beispiel der Instanz</button>
+    <button id="zufall">Zufallsnetz</button>
+  </div>
+  <div class="box controls eingabe">
+    <label><input type="checkbox" id="reihe"> Adjazenzlisten in Einfügereihenfolge statt als Bag</label>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="bilder">
+      <div><div class="h2">Flussnetzwerk – Fluss/Kapazität</div><svg id="netz" role="img" aria-label="Das Flussnetzwerk mit Fluss und Kapazität"></svg></div>
+      <div><div class="h2">Restnetzwerk – grau vorwärts (Restkapazität), rot rückwärts (Fluss)</div><svg id="rest" role="img" aria-label="Das Restnetzwerk"></svg></div>
+    </div>
+    <div class="var" id="var"></div>
+    <div class="legende">
+      <span><i style="background:var(--rot)"></i>Kante mit Fluss / Rückwärtskante</span>
+      <span><i style="background:var(--neu)"></i>gerade geprüft / aktueller Knoten</span>
+      <span><i style="background:var(--bar)"></i>markiert</span>
+      <span><i style="background:var(--cur)"></i>edgeTo[] / augmentierender Pfad</span>
+      <span><i style="background:var(--gruen)"></i>s-Seite des minimalen Schnitts</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis die aktuelle Runde fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (Algorithmus 6.3, Listing 6.11 bis 6.13)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    `public class FordFulkerson`,
+    `{`,
+    `   private boolean[] marked;     // Ist s->v-Pfad im Restgraphen?`,
+    `   private FlowEdge[] edgeTo;    // Letzte Kante auf kürzestem s->v-Pfad`,
+    `   private double value;         // Aktueller Wert von Max-Fluss`,
+    ``,
+    `   public FordFulkerson(FlowNetwork G, int s, int t)`,
+    `   {  // Finde Max-Fluss in Flussnetzwerk G von s zu t.`,
+    `      while (hasAugmentingPath(G, s, t))`,
+    `      {  // Solange ein augmentierender Pfad besteht, nutze ihn.`,
+    ``,
+    `         // Berechne Engpasskapazität.`,
+    `         double bottle = Double.POSITIVE_INFINITY;`,
+    `         for (int v = t; v != s; v = edgeTo[v].other(v))`,
+    `            bottle = Math.min(bottle, edgeTo[v].residualCapacityTo(v));`,
+    ``,
+    `         // Augmentiere den Fluss.`,
+    `         for (int v = t; v != s; v = edgeTo[v].other(v))`,
+    `            edgeTo[v].addResidualFlowTo(v, bottle);`,
+    ``,
+    `         value += bottle;`,
+    `      }`,
+    `   }`,
+    ``,
+    `   private boolean hasAugmentingPath(FlowNetwork G, int s, int t)`,
+    `   {  // Listing 6.12`,
+    `      marked = new boolean[G.V()];  // Ist der Pfad zu diesem Knoten bekannt?`,
+    `      edgeTo = new FlowEdge[G.V()]; // Letzte Kante auf dem Pfad`,
+    `      Queue<Integer> q = new Queue<Integer>();`,
+    ``,
+    `      marked[s] = true;             // Markiert die Quelle`,
+    `      q.enqueue(s);                 //   und stellt sie in die Warteschlange.`,
+    `      while (!q.isEmpty())`,
+    `      {`,
+    `         int v = q.dequeue();`,
+    `         for (FlowEdge e : G.adj(v))`,
+    `         {`,
+    `            int w = e.other(v);`,
+    `            if (e.residualCapacityTo(w) > 0 && !marked[w])`,
+    `            {  // Für jede Kante zu einem unmarkierten Knoten (im Restnetzwerk)`,
+    `               edgeTo[w] = e;       // Speichert die letzte Kante auf einem Pfad.`,
+    `               marked[w] = true;    // Markiert w, da ein Pfad bekannt ist,`,
+    `               q.enqueue(w);        //   und fügt w zur Warteschlange hinzu.`,
+    `            }`,
+    `         }`,
+    `      }`,
+    `      return marked[t];`,
+    `   }`,
+    ``,
+    `   public double value()       {  return value;      }`,
+    `   public boolean inCut(int v) {  return marked[v];  }`,
+    ``,
+    `   public static void main(String[] args)`,
+    `   {`,
+    `      FlowNetwork G = new FlowNetwork(new In(args[0]));`,
+    `      int s = 0, t = G.V() - 1;`,
+    `      FordFulkerson maxflow = new FordFulkerson(G, s, t);`,
+    ``,
+    `      StdOut.println("Max flow from " + s + " to " + t);`,
+    `      for (int v = 0; v < G.V(); v++)`,
+    `         for (FlowEdge e : G.adj(v))`,
+    `            if ((v == e.from()) && e.flow() > 0)`,
+    `               StdOut.println("   " + e);`,
+    `      StdOut.println("Max flow value = " +  maxflow.value());`,
+    `   }`,
+    `}`,
+    ``,
+    `public class FlowEdge`,
+    `{  // Listing 6.11`,
+    `   private final int v;             // Kantenquelle`,
+    `   private final int w;             // Kantenziel`,
+    `   private final double capacity;   // Kapazität`,
+    `   private double flow;             // Fluss`,
+    ``,
+    `   public FlowEdge(int v, int w, double capacity)`,
+    `   {`,
+    `      this.v = v;`,
+    `      this.w = w;`,
+    `      this.capacity = capacity;`,
+    `      this.flow = 0.0;`,
+    `   }`,
+    ``,
+    `   public int from()          {  return v;         }`,
+    `   public int to()            {  return w;         }`,
+    `   public double capacity()   {  return capacity;  }`,
+    `   public double flow()       {  return flow;      }`,
+    ``,
+    `   public int other(int vertex)`,
+    `   {  // wie für Edge – im Buch nicht ausgeschrieben, hier eigene Fassung`,
+    `      if      (vertex == v) return w;`,
+    `      else if (vertex == w) return v;`,
+    `      else throw new RuntimeException("Inconsistent edge");`,
+    `   }`,
+    ``,
+    `   public double residualCapacityTo(int vertex)`,
+    `   {`,
+    `      if      (vertex == v) return flow;`,
+    `      else if (vertex == w) return capacity - flow;`,
+    `      else throw new RuntimeException("Inconsistent edge");`,
+    `   }`,
+    ``,
+    `   public void addResidualFlowTo(int vertex, double delta)`,
+    `   {`,
+    `      if      (vertex == v) flow -= delta;`,
+    `      else if (vertex == w) flow += delta;`,
+    `      else throw new RuntimeException("Inconsistent edge");`,
+    `   }`,
+    ``,
+    `   public String toString()`,
+    `   {  return String.format("%d->%d %.2f %.2f", v, w, capacity, flow);  }`,
+    `}`,
+    ``,
+    `public class FlowNetwork`,
+    `{  // eigene Fassung wie EdgeWeightedDigraph (Abschnitt 4.4):`,
+    `   // jede Kante steht in den Listen beider Endpunkte`,
+    `   private final int V;`,
+    `   private int E;`,
+    `   private Bag<FlowEdge>[] adj;`,
+    ``,
+    `   public FlowNetwork(In in)`,
+    `   {`,
+    `      V = in.readInt();`,
+    `      adj = (Bag<FlowEdge>[]) new Bag[V];`,
+    `      for (int v = 0; v < V; v++)`,
+    `         adj[v] = new Bag<FlowEdge>();`,
+    `      int anzahl = in.readInt();`,
+    `      for (int i = 0; i < anzahl; i++)`,
+    `      {`,
+    `         int v = in.readInt(), w = in.readInt();`,
+    `         addEdge(new FlowEdge(v, w, in.readDouble()));`,
+    `      }`,
+    `   }`,
+    ``,
+    `   public int V()  {  return V;  }`,
+    `   public int E()  {  return E;  }`,
+    ``,
+    `   public void addEdge(FlowEdge e)`,
+    `   {`,
+    `      adj[e.from()].add(e);`,
+    `      adj[e.to()].add(e);`,
+    `      E++;`,
+    `   }`,
+    ``,
+    `   public Iterable<FlowEdge> adj(int v)`,
+    `   {  return adj[v];  }`,
+    `}`
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    whileAug: zeile('while (hasAugmentingPath(G, s, t))'), bottle: zeile('bottle = Math.min(bottle,'), aug: zeile('edgeTo[v].addResidualFlowTo(v, bottle);'),
+    value: zeile('value += bottle;'), start: zeile('q.enqueue(s);'), deq: zeile('int v = q.dequeue();'), pruef: zeile('if (e.residualCapacityTo(w) > 0 && !marked[w])'),
+    edgeTo: zeile('edgeTo[w] = e;       //'), ret: zeile('return marked[t];'), neuFF: zeile('FordFulkerson maxflow = new FordFulkerson(G, s, t);'),
+    druck: zeile('StdOut.println("   " + e);'), wert: zeile('StdOut.println("Max flow value = "'), netz: zeile('FlowNetwork G = new FlowNetwork(new In(args[0]));')
+  };
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Beispiele ----------
+  const TINY = { V: 6, kanten: [[0, 1, 2], [0, 2, 3], [1, 3, 3], [1, 4, 1], [2, 3, 1], [2, 4, 1], [3, 5, 2], [4, 5, 3]],
+    lage: [[150, 26], [55, 100], [245, 100], [55, 220], [245, 220], [150, 294]], datei: 'tinyFN.txt' };
+  const INST = { V: 4, kanten: [[0, 1, 1], [0, 2, 1], [1, 2, 1], [1, 3, 1], [2, 3, 1]], lage: [[30, 160], [150, 50], [150, 270], [270, 160]], datei: 'instanz.txt' };
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function kreis(V) { return Array.from({ length: V }, (_, i) => { const a = Math.PI - i * 2 * Math.PI / V; return [150 + 118 * Math.cos(a), 160 - 118 * Math.sin(a)]; }); }
+  function zufallsNetz() {
+    const V = 5 + zufall(3), kanten = [], da = new Set();
+    for (let v = 0; v < V - 1; v++) { const w = v + 1 + zufall(Math.min(2, V - 1 - v)); kanten.push([v, w, 1 + zufall(5)]); da.add(v + '-' + w); }
+    for (let k = 0; k < V; k++) { const v = zufall(V - 1), w = 1 + zufall(V - 1); if (v !== w && !da.has(v + '-' + w) && !da.has(w + '-' + v)) { kanten.push([v, w, 1 + zufall(5)]); da.add(v + '-' + w); } }
+    return { V, kanten, lage: kreis(V), datei: 'zufall.txt' };
+  }
+
+  // ---------- Algorithmus und Aufzeichnung ----------
+  let NETZ = TINY, ART = 'tiny', steps, pos = 0, timer = null, E, ADJ, Z, konsole, spur;
+  const fmt = x => Number.isInteger(x) ? x.toFixed(1) : String(x);
+  const other = (e, x) => x === E[e].v ? E[e].w : x === E[e].w ? E[e].v : null;
+  const restZu = (e, x) => x === E[e].v ? E[e].flow : E[e].cap - E[e].flow;
+  function snap(line, msg, o) {
+    steps.push(Object.assign({ line, msg, flows: E.map(e => e.flow), marked: Z.marked.slice(), edgeTo: Z.edgeTo.slice(), q: Z.q.slice(), value: Z.value, konsole: konsole.slice(), spur: spur.slice(), vars: Z.vars }, o || {}));
+  }
+  const kn = e => `${E[e].v}->${E[e].w}`;
+
+  function lauf(netz, art, einfuege) {
+    stop();
+    NETZ = netz; ART = art; steps = []; konsole = []; spur = [];
+    E = netz.kanten.map(([v, w, c]) => ({ v, w, cap: c, flow: 0 }));
+    ADJ = Array.from({ length: netz.V }, () => []);
+    E.forEach((e, i) => { [e.v, e.w].forEach(x => { if (einfuege) ADJ[x].push(i); else ADJ[x].unshift(i); }); });   // Bag: neue Kante vorn
+    const s = 0, t = netz.V - 1, V = netz.V;
+    Z = { marked: new Array(V).fill(false), edgeTo: new Array(V).fill(null), q: [], value: 0, vars: '' };
+    snap(L.netz, `${netz.datei}: ${V} Knoten, ${E.length} Kanten, Quelle s = ${s}, Senke t = ${t}. Jede Kante steht in den Listen beider Endpunkte – ${einfuege ? 'hier in der Reihenfolge der Datei' : 'als Bag, die zuletzt eingefügte Kante zuerst'}.`, { opEnde: true });
+    let runde = 0;
+    while (true) {
+      runde++;
+      Z.marked = new Array(V).fill(false); Z.edgeTo = new Array(V).fill(null); Z.q = [];
+      Z.marked[s] = true; Z.q.push(s);
+      Z.vars = `Runde ${runde}   q = [${Z.q.join(', ')}]`;
+      snap(L.start, `Runde ${runde}: hasAugmentingPath() – Breitensuche im Restnetzwerk ab s = ${s}.`, { aktiv: s, opStart: true });
+      while (Z.q.length) {
+        const v = Z.q.shift();
+        Z.vars = `Runde ${runde}   v = ${v}   q = [${Z.q.join(', ')}]`;
+        snap(L.deq, `v = ${v} aus der Warteschlange. Jetzt alle Kanten in G.adj(${v}): ${ADJ[v].map(kn).join(', ')}.`, { aktiv: v });
+        for (const e of ADJ[v]) {
+          const w = other(e, v), rc = restZu(e, w), vor = w === E[e].w;
+          if (rc > 0 && !Z.marked[w]) {
+            Z.edgeTo[w] = e; Z.marked[w] = true; Z.q.push(w);
+            Z.vars = `Runde ${runde}   v = ${v}   w = ${w}   q = [${Z.q.join(', ')}]`;
+            snap(L.edgeTo, `Kante ${kn(e)}: ${vor ? 'vorwärts' : 'rückwärts'} von ${v} nach ${w} mit Restkapazität ${fmt(rc)} > 0, ${w} unmarkiert – edgeTo[${w}] = ${kn(e)}, ${w} markieren und einreihen.`, { aktiv: v, pruef: [e, w] });
+          } else {
+            Z.vars = `Runde ${runde}   v = ${v}   w = ${w}   q = [${Z.q.join(', ')}]`;
+            snap(L.pruef, `Kante ${kn(e)}: ${vor ? 'vorwärts' : 'rückwärts'} nach ${w} – ${rc > 0 ? `${w} ist schon markiert` : `Restkapazität 0, ${vor ? 'die Kante ist voll' : 'auf ihr fließt nichts'}`}.`, { aktiv: v, pruef: [e, w] });
+          }
+        }
+      }
+      if (!Z.marked[t]) {
+        const seite = Z.marked.map((m, i) => m ? i : -1).filter(i => i >= 0);
+        const schnitt = E.filter(e => Z.marked[e.v] && !Z.marked[e.w]).reduce((a, e) => a + e.cap, 0);
+        Z.vars = `marked[${t}] = false   value = ${fmt(Z.value)}`;
+        snap(L.ret, `Die Senke ${t} ist nicht erreichbar – es gibt keinen augmentierenden Pfad mehr, der Fluss ist maximal. Die markierten Knoten {${seite.join(', ')}} sind die s-Seite des minimalen Schnitts (inCut). Kapazität der Kanten über den Schnitt: ${fmt(schnitt)} = value.`, { schnitt: true, opEnde: true });
+        spur.push(`Runde ${runde}: kein Pfad, Schnitt {${seite.join(', ')}}`);
+        break;
+      }
+      // Pfad
+      const pfad = []; let bottle = Infinity;
+      for (let v = t; v !== s; v = other(Z.edgeTo[v], v)) { pfad.unshift(v); bottle = Math.min(bottle, restZu(Z.edgeTo[v], v)); }
+      pfad.unshift(s);
+      const kanten = pfad.slice(1).map(v => Z.edgeTo[v]);
+      Z.vars = `Pfad ${pfad.join('->')}   bottle = ${fmt(bottle)}`;
+      snap(L.bottle, `marked[${t}] ist true: augmentierender Pfad ${pfad.join('->')} (${pfad.length - 1} Kanten). Engpass: die kleinste Restkapazität darauf ist ${fmt(bottle)}.${kanten.some((e, i) => E[e].w !== pfad[i + 1]) ? ' Der Pfad benutzt eine Rückwärtskante – dort wird Fluss zurückgenommen.' : ''}`, { pfad: kanten, pfadKnoten: pfad });
+      kanten.forEach((e, i) => { const x = pfad[i + 1]; if (x === E[e].v) E[e].flow -= bottle; else E[e].flow += bottle; });
+      Z.value += bottle;
+      Z.vars = `Pfad ${pfad.join('->')}   bottle = ${fmt(bottle)}   value = ${fmt(Z.value)}`;
+      snap(L.aug, `addResidualFlowTo(): Auf jeder Kante des Pfads ${fmt(bottle)} mehr Fluss${kanten.some((e, i) => E[e].w !== pfad[i + 1]) ? ' (rückwärts: weniger)' : ''}. value = ${fmt(Z.value)}.`, { pfad: kanten, pfadKnoten: pfad, opEnde: true });
+      spur.push(`Runde ${runde}: ${pfad.join('->')}  +${fmt(bottle)}  value ${fmt(Z.value)}`);
+      steps[steps.length - 1].spur = spur.slice();
+    }
+    konsole.push(`% java FordFulkerson ${NETZ.datei}`, `Max flow from ${s} to ${t}`);
+    for (let v = 0; v < V; v++) for (const e of ADJ[v]) if (v === E[e].v && E[e].flow > 0) konsole.push(`   ${E[e].v}->${E[e].w} ${E[e].cap.toFixed(2)} ${E[e].flow.toFixed(2)}`);
+    konsole.push(`Max flow value = ${fmt(Z.value)}`);
+    snap(L.wert, `Testclient: alle Kanten mit Fluss > 0, je Knoten in der Reihenfolge von G.adj(v), dann der Wert ${fmt(Z.value)}.`, { schnitt: true, opEnde: true });
+    lockern(); pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  const PF = { g: 'var(--grau)', m: 'var(--muted)', r: 'var(--rot)', b: 'var(--cur)', o: 'var(--neu)' };
+  const marker = Object.entries(PF).map(([k, c]) => `<marker id="p${k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${c}"/></marker>`).join('');
+  function pfeil(x1, y1, x2, y2, versatz, cls, farbe, lab, labCls) {
+    const dx = x2 - x1, dy = y2 - y1, d = Math.hypot(dx, dy), ux = dx / d, uy = dy / d, nx = -uy * versatz, ny = ux * versatz;
+    const a = [x1 + ux * 15 + nx, y1 + uy * 15 + ny], b = [x2 - ux * 16 + nx, y2 - uy * 16 + ny];
+    let h = `<line class="kante ${cls}" x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" marker-end="url(#p${farbe})"/>`;
+    if (lab !== null) { const lx = (a[0] + b[0]) / 2 + nx * 2.4, ly = (a[1] + b[1]) / 2 + ny * 2.4; h += `<text class="lab ${labCls || ''}" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}">${lab}</text>`; }
+    return h;
+  }
+  function render() {
+    const st = steps[pos], P = NETZ.lage, V = NETZ.V, t = V - 1;
+    const pfad = new Set(st.pfad || []), baum = new Set(st.pfad || st.schnitt ? [] : st.edgeTo.filter(e => e !== null));   // beim Pfad nur den Pfad zeigen
+    const pruefE = st.pruef ? st.pruef[0] : null;
+    const knoten = cls => P.map(([x, y], i) => `<g class="knoten ${cls(i)}"><circle cx="${x}" cy="${y}" r="14"/><text x="${x}" y="${y}">${i}</text></g>`).join('')
+      + `<text class="st" x="${P[0][0]}" y="${P[0][1] - 19}">s</text><text class="st" x="${P[t][0]}" y="${P[t][1] + 25}">t</text>`;
+    const kcls = i => (st.schnitt && st.marked[i]) ? 'schnitt' : i === st.aktiv ? 'aktiv' : st.marked[i] ? 'markiert' : '';
+    // Flussnetzwerk
+    let a = '';
+    E.forEach((e, i) => {
+      const f = st.flows[i], [x1, y1] = P[e.v], [x2, y2] = P[e.w];
+      const cls = pfad.has(i) ? 'pfad' : f > 0 ? 'fluss' : '';
+      a += pfeil(x1, y1, x2, y2, 0, cls, pfad.has(i) ? 'b' : f > 0 ? 'r' : 'g', `${fmt(f).replace('.0', '')}/${fmt(e.cap).replace('.0', '')}`, pfad.has(i) ? 'pfad' : f > 0 ? 'rot' : '');
+    });
+    $('netz').setAttribute('viewBox', '0 -8 300 340');
+    $('netz').innerHTML = `<defs>${marker}</defs>` + a + knoten(kcls);
+    // Restnetzwerk
+    let r = '';
+    E.forEach((e, i) => {
+      const f = st.flows[i], [x1, y1] = P[e.v], [x2, y2] = P[e.w];
+      const vorwaerts = e.cap - f, beide = vorwaerts > 0 && f > 0, vs = beide ? 4 : 0;
+      const markiere = (richtungW) => {
+        if (pfad.has(i) && st.pfadKnoten) { const k = st.pfadKnoten.indexOf(richtungW ? e.w : e.v); if (k > 0 && st.pfadKnoten[k - 1] === (richtungW ? e.v : e.w)) return 'pfad'; }
+        if (pruefE === i && st.pruef[1] === (richtungW ? e.w : e.v)) return 'pruef';
+        if (baum.has(i) && st.edgeTo[richtungW ? e.w : e.v] === i) return 'baum';
+        return null;
+      };
+      if (vorwaerts > 0 || markiere(true)) { const m = markiere(true); r += pfeil(x1, y1, x2, y2, vs, m || 'vor', m === 'pfad' || m === 'baum' ? 'b' : m === 'pruef' ? 'o' : 'm', fmt(vorwaerts).replace('.0', ''), m === 'pfad' ? 'pfad' : ''); }
+      if (f > 0 || markiere(false)) { const m = markiere(false); r += pfeil(x2, y2, x1, y1, vs, m || 'rueck', m === 'pfad' || m === 'baum' ? 'b' : m === 'pruef' ? 'o' : 'r', fmt(f).replace('.0', ''), m === 'pfad' ? 'pfad' : 'rot'); }
+    });
+    $('rest').setAttribute('viewBox', '0 -8 300 340');
+    $('rest').innerHTML = `<defs>${marker.replace(/id="p/g, 'id="r')}</defs>` + r.replace(/url\(#p/g, 'url(#r') + knoten(kcls);
+    $('var').innerHTML = esc(st.vars || '–') + (st.q.length ? '' : '');
+    $('titel').innerHTML = `${ART === 'abb' ? 'tinyFN.txt wie Abbildung 6.22' : ART === 'tiny' ? 'tinyFN.txt' : ART === 'instanz' ? 'Beispiel der Instanz' : 'Zufallsnetz'} · ${$('reihe').checked ? 'Einfügereihenfolge' : 'Bag'} · Wert des Flusses: <b>${fmt(st.value)}</b>`;
+    $('msg').textContent = st.msg;
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    $('proto').innerHTML = st.spur.length
+      ? `<h4>Augmentierende Pfade</h4><pre class="spur">${st.spur.map((z, i) => i === st.spur.length - 1 && pos < steps.length - 1 ? `<span class="zuletzt">${esc(z)}</span>` : esc(z)).join('\n')}</pre>`
+      : '<p class="count">Noch kein Pfad.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const start = () => { $('reihe').checked = false; lauf(TINY, 'tiny', false); };
+  $('tiny').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('abb').addEventListener('click', () => { $('reihe').checked = true; lauf(TINY, 'abb', true); });
+  $('instanz').addEventListener('click', () => lauf(INST, 'instanz', $('reihe').checked));
+  $('zufall').addEventListener('click', () => lauf(zufallsNetz(), 'zufall', $('reihe').checked));
+  $('reihe').addEventListener('change', () => lauf(NETZ, ART === 'abb' || ART === 'tiny' ? ($('reihe').checked ? 'abb' : 'tiny') : ART, $('reihe').checked));
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(V, kanten, einfuege) liefert Ausgabe von main() und die Pfade
+  function rechne(V, kanten, einfuege) {
+    const alt = { NETZ, ART, steps, E, ADJ, Z, konsole, spur };
+    lauf({ V, kanten, lage: kreis(V), datei: 'test.txt' }, 'zufall', !!einfuege);
+    const e = { ausgabe: konsole.slice(1), pfade: spur.slice(), schnitt: Z.marked.slice(), wert: Z.value, flows: E.map(x => x.flow) };
+    ({ NETZ, ART, steps, E, ADJ, Z, konsole, spur } = alt); pos = 0; render();
+    return e;
+  }
+  window.__ff = { rechne, start, TINY, INST, get steps() { return steps; }, get pos() { return pos; }, set pos(p) { pos = p; render(); }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
