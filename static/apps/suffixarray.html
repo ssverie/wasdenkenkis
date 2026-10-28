@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suffixarray</title>
+<!-- Visualisierung des Suffixarrays (nach Sedgewick/Wayne, Algorithmen, Algorithmus 6.2, Listing 6.9 mit lcp() aus
+     Listing 6.6) und der Clients LRS (Listing 6.7) und KWIC (Listing 6.8) für wasdenkenkis.de – gebaut von Claude Code
+     Opus 5.5. Beispiele: der Text aus Abbildung 6.14, tinyTale.txt und „banana“. Aufbau der Seite wie lzw.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --gruen: #8fd1a6; --gtext: #1c1c1f; --bereich: #e7eefc; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --gruen: #2f6e48; --gtext: #ececef; --bereich: #222c44; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .eingabe input { font: inherit; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .eingabe input#eigen { width: 16em; max-width: 100%; }
+  .eingabe input#frage { width: 7em; }
+  .eingabe input#kontext { width: 3.5em; }
+  .klein { font-size: 12px; color: var(--muted); margin: 6px 0 4px; }
+  .band { display: flex; flex-wrap: wrap; gap: 4px 0; padding: 2px 0 4px; font-family: ui-monospace, Consolas, monospace; }
+  .band .zelle { width: 1.3em; text-align: center; line-height: 1.3; }
+  .band .zelle b { display: block; font-size: 14px; font-weight: 400; border-radius: 3px; }
+  .band .zelle small { display: block; font-size: 8.5px; color: var(--muted); }
+  .band .a b { background: var(--gruen); color: var(--gtext); }
+  .band .b b { outline: 2px solid var(--neu); outline-offset: -2px; }
+  .band .ab b { background: var(--gruen); color: var(--gtext); outline: 2px solid var(--neu); outline-offset: -2px; }
+  .band .kw b { background: var(--hl); }
+  .tabwrap { max-height: 24em; overflow: auto; border: 1px solid var(--line); border-radius: 8px; margin-top: 6px; }
+  .tabelle { border-collapse: collapse; font: 12.5px ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; width: 100%; }
+  .tabelle th, .tabelle td { padding: 1px 6px; text-align: right; white-space: nowrap; }
+  .tabelle th { position: sticky; top: 0; background: var(--panel); color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--line); font-family: system-ui, sans-serif; font-size: 12px; }
+  .tabelle td.s { text-align: left; white-space: pre; }
+  .tabelle td.lcp { color: var(--cur); font-weight: 700; }
+  .tabelle td .gl { background: var(--gruen); color: var(--gtext); }
+  .tabelle td .ab { background: var(--rot); color: #fff; }
+  .tabelle tr.bereich td { background: var(--bereich); }
+  .tabelle tr.paar td { background: var(--hl); }
+  .tabelle tr.mid td, .tabelle tr.sel td { background: var(--neu); color: #fff; }
+  .tabelle tr.mid td .gl, .tabelle tr.sel td .gl { color: var(--gtext); }
+  .tabelle tr.treffer td { background: var(--gruen); color: var(--gtext); }
+  @media (prefers-color-scheme: dark) { .tabelle tr.mid td, .tabelle tr.sel td, .tabelle td .ab { color: #0d1530; } }
+  .var { font: 13px ui-monospace, Consolas, monospace; background: var(--code-bg); border-radius: 8px; padding: 6px 8px; overflow-wrap: anywhere; white-space: pre-wrap; min-height: 1.6em; margin-top: 8px; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="abb">Abbildung 6.14</button>
+    <button id="tale">tinyTale.txt</button>
+    <button id="banana">banana</button>
+  </div>
+  <div class="box controls eingabe">
+    <input id="eigen" value="to be or not to be that is the question" aria-label="Eigener Text" maxlength="80">
+    <label>Abfrage <input id="frage" value="to" aria-label="Abfrage für KWIC" maxlength="20"></label>
+    <label>Kontext <input id="kontext" type="number" min="0" max="20" value="4" aria-label="Kontext für KWIC"></label>
+    <button id="eigenLos">ausführen</button>
+    <span class="klein" id="eigenHinweis"></span>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="klein">Text (darunter die Position):</div>
+    <div class="band" id="band"></div>
+    <div class="var" id="var"></div>
+    <div class="tabwrap" id="tabwrap"><table class="tabelle" id="tabelle"></table></div>
+    <div class="legende">
+      <span><i style="background:var(--gruen)"></i>gemeinsamer Anfang (lcp) / Treffer</span>
+      <span><i style="background:var(--rot)"></i>erstes verschiedenes Zeichen</span>
+      <span><i style="background:var(--hl)"></i>verglichenes Paar</span>
+      <span><i style="background:var(--bereich)"></i>Bereich lo..hi der Binärsuche</span>
+      <span><i style="background:var(--neu)"></i>mid / select(i)</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der aktuelle Abschnitt fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (Algorithmus 6.2, Listing 6.9 mit 6.6, Clients 6.7 und 6.8)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Konsole wie im Buch</div><div class="konsole" id="konsole"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    `public class SuffixArray`,
+    `{`,
+    `   private final String[] suffixes;   // Suffixarray`,
+    `   private final int N;               // Länge des Strings (und Array)`,
+    ``,
+    `   public SuffixArray(String s)`,
+    `   {`,
+    `      N = s.length();`,
+    `      suffixes = new String[N];`,
+    `      for (int i = 0; i < N; i++)`,
+    `         suffixes[i] = s.substring(i);`,
+    `      Quick3way.sort(suffixes);`,
+    `   }`,
+    ``,
+    `   public int length()          { return N; }`,
+    `   public String select(int i)  { return suffixes[i]; }`,
+    `   public int index(int i)      { return N - suffixes[i].length(); }`,
+    ``,
+    `   private static int lcp(String s, String t)`,
+    `   {  // Listing 6.6`,
+    `      int N = Math.min(s.length(), t.length());`,
+    `      for (int i = 0; i < N; i++)`,
+    `         if (s.charAt(i) != t.charAt(i)) return i;`,
+    `      return N;`,
+    `   }`,
+    ``,
+    `   public int lcp(int i)`,
+    `   {  return lcp(suffixes[i], suffixes[i-1]);  }`,
+    ``,
+    `   public int rank(String key)`,
+    `   {  // Binärsuche`,
+    `      int lo = 0, hi = N - 1;`,
+    `      while (lo <= hi)`,
+    `      {`,
+    `         int mid = lo + (hi - lo) / 2;`,
+    `         int cmp = key.compareTo(suffixes[mid]);`,
+    `         if      (cmp < 0) hi = mid - 1;`,
+    `         else if (cmp > 0) lo = mid + 1;`,
+    `         else return mid;`,
+    `      }`,
+    `      return lo;`,
+    `   }`,
+    `}`,
+    ``,
+    `public class LRS`,
+    `{`,
+    `   public static void main(String[] args)`,
+    `   {`,
+    `      String text = StdIn.readAll();`,
+    `      int N = text.length();`,
+    `      SuffixArray sa = new SuffixArray(text);`,
+    `      String lrs = "";`,
+    `      for (int i = 1; i < N; i++)`,
+    `      {`,
+    `         int length = sa.lcp(i);`,
+    `         if (length > lrs.length())`,
+    `            lrs = sa.select(i).substring(0, length);`,
+    `      }`,
+    `      StdOut.println(lrs);`,
+    `   }`,
+    `}`,
+    ``,
+    `public class KWIC`,
+    `{`,
+    `   public static void main(String[] args)`,
+    `   {`,
+    `      In in = new In(args[0]);`,
+    `      int context = Integer.parseInt(args[1]);`,
+    ``,
+    `      String text = in.readAll().replaceAll("\\\\s+", " ");;`,
+    `      int N = text.length();`,
+    `      SuffixArray sa = new SuffixArray(text);`,
+    ``,
+    `      while (StdIn.hasNextLine())`,
+    `      {`,
+    `         String q = StdIn.readLine();`,
+    `         for (int i = sa.rank(q); i < N && sa.select(i).startsWith(q); i++)`,
+    `         {`,
+    `            int from = Math.max(0, sa.index(i) - context);`,
+    `            int to   = Math.min(N-1, from + q.length() + 2*context);`,
+    `            StdOut.println(text.substring(from, to));`,
+    `         }`,
+    `         StdOut.println();`,
+    `      }`,
+    `   }`,
+    `}`
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    substr: zeile('suffixes[i] = s.substring(i);'), sort: zeile('Quick3way.sort(suffixes);'), select: zeile('public String select(int i)'),
+    index: zeile('public int index(int i)'), lcpI: zeile('{  return lcp(suffixes[i], suffixes[i-1]);  }'),
+    mid: zeile('int mid = lo + (hi - lo) / 2;'), rankLo: zeile('return lo;'), rankMid: zeile('else return mid;'),
+    lrsStart: zeile('String lrs = "";'), lrsLcp: zeile('int length = sa.lcp(i);'), lrsNeu: zeile('lrs = sa.select(i).substring(0, length);'),
+    lrsAus: zeile('StdOut.println(lrs);'), kwicText: zeile('replaceAll('), kwicSA: zeile('int context = Integer.parseInt(args[1]);'),
+    kwicQ: zeile('String q = StdIn.readLine();'), kwicFor: zeile('for (int i = sa.rank(q);'), kwicAus: zeile('StdOut.println(text.substring(from, to));'),
+    kwicLeer: zeile('         StdOut.println();')
+  };
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Beispiele ----------
+  const ABB = 'it was the best of times it was the';
+  const TALE = ['it was the best of times it was the worst of times', 'it was the age of wisdom it was the age of foolishness',
+    'it was the epoch of belief it was the epoch of incredulity', 'it was the season of light it was the season of darkness',
+    'it was the spring of hope it was the winter of despair'].join('\n') + '\n';
+  const VOR = { abb: { text: ABB, fragen: ['th'], kontext: 5 }, tale: { text: TALE, fragen: ['the s'], kontext: 10 }, banana: { text: 'banana', fragen: ['an'], kontext: 2 } };
+  const zeig = s => s.replace(/\n/g, '↵');
+  const q = s => '"' + esc(zeig(s)) + '"';
+
+  // ---------- Suffixarray und Aufzeichnung ----------
+  let steps, pos = 0, timer = null, ART = 'abb', TEXT, Z, konsole, AUS;
+  function baue(s) { const N = s.length, suf = []; for (let i = 0; i < N; i++) suf.push(s.substring(i)); return { s, N, unsortiert: suf.slice(), suf: suf.slice().sort() }; }
+  const lcp2 = (s, t) => { const N = Math.min(s.length, t.length); for (let i = 0; i < N; i++) if (s[i] !== t[i]) return i; return N; };
+  const index = (sa, i) => sa.N - sa.suf[i].length;
+  function snap(line, msg, o) {
+    steps.push(Object.assign({ line, msg, sa: Z.sa, sortiert: Z.sortiert, lcps: Z.lcps, konsole: konsole.slice(), vars: Z.vars, phase: Z.phase }, o || {}));
+  }
+
+  function lauf(text, fragen, kontext, art) {
+    stop();
+    ART = art; TEXT = text; steps = []; konsole = [];
+    Z = { sa: null, sortiert: false, lcps: null, vars: '', phase: 'bau' };
+    // Konstruktor
+    const sa = baue(text); Z.sa = sa;
+    Z.vars = `N = ${sa.N}`;
+    snap(L.substr, `Konstruktor: Für jede Position i ist suffixes[i] = s.substring(i) das Endstück ab i. ${sa.N} Suffixe, hier noch in Textreihenfolge.`);
+    Z.sortiert = true;
+    snap(L.sort, `Quick3way.sort(suffixes): Danach stehen die Suffixe alphabetisch, das Leerzeichen kommt vor allen Buchstaben. Die Spalte index(i) sagt, wo jedes Suffix im Text beginnt.`, { opEnde: true });
+    // LRS
+    Z.phase = 'lrs'; Z.lcps = []; let lrs = '';
+    Z.vars = `lrs = ""`;
+    snap(L.lrsStart, `LRS (Listing 6.7): Der längste sich wiederholende Teilstring ist der längste gemeinsame Anfang zweier Nachbarn im sortierten Array.`);
+    for (let i = 1; i < sa.N; i++) {
+      const len = lcp2(sa.suf[i], sa.suf[i - 1]); Z.lcps = Z.lcps.slice(); Z.lcps[i] = len;
+      const besser = len > lrs.length;
+      if (besser) lrs = sa.suf[i].substring(0, len);
+      Z.vars = `i = ${i}   length = sa.lcp(${i}) = ${len}\nlrs = ${q(lrs)}`;
+      snap(besser ? L.lrsNeu : L.lrsLcp, besser ? `lcp(${i}) = ${len} ist länger als alles bisher – lrs = ${zeig(sa.suf[i].substring(0, len))}. Im Text steht er an Position ${index(sa, i - 1)} und ${index(sa, i)}.` : `lcp(${i}) = ${len}: Suffix ${i} und ${i - 1} haben ${len} Zeichen gemeinsam${len ? '' : ''}, nicht länger als lrs.`, { paar: i, lcpLen: len, besser, opEnde: i === sa.N - 1 });
+    }
+    konsole.push(`% java LRS < ${ART === 'tale' ? 'tinyTale.txt' : 'text.txt'}`, zeig(lrs));
+    AUS = { lrs, kwic: [] };
+    Z.vars = `lrs = ${q(lrs)}`;
+    snap(L.lrsAus, (lrs ? `Ausgabe: ${zeig(lrs)} – ${lrs.length} Zeichen, kommt mindestens zweimal vor.` : 'Ausgabe: leer – kein Zeichen kommt zweimal vor.') + (ART === 'tale' ? ' Im Buch steht „st of times it was the“. Das kommt heraus, wenn die Zeilenenden vorher Leerzeichen werden, wie bei KWIC – Listing 6.7 liest den Text aber unverändert.' : ''), { opEnde: true });
+    // Abbildung 6.14: select(9), index(9), lcp(20)
+    if (ART === 'abb') {
+      Z.vars = `select(9) = ${q(sa.suf[9])}\nindex(9) = N - ${sa.suf[9].length} = ${index(sa, 9)}`;
+      snap(L.select, `select(9) ist das Suffix auf Platz 9 der sortierten Liste. index(9) = N − Länge = ${sa.N} − ${sa.suf[9].length} = ${index(sa, 9)}: Dort beginnt es im Text – wie in Abbildung 6.14.`, { sel: 9, markText: [index(sa, 9), sa.suf[9].length] });
+      Z.vars = `lcp(20) = ${Z.lcps[20]}`;
+      snap(L.lcpI, `lcp(20) vergleicht Suffix 20 mit seinem Vorgänger 19: ${Z.lcps[20]} gemeinsame Zeichen – „${zeig(sa.suf[20].slice(0, Z.lcps[20]))}“, das längste in diesem Text.`, { paar: 20, lcpLen: Z.lcps[20], opEnde: true });
+    }
+    // KWIC
+    Z.phase = 'kwic';
+    const text2 = text.replace(/\s+/g, ' ');
+    let sa2 = sa;
+    if (text2 !== text) {
+      sa2 = baue(text2); Z.sa = sa2; Z.lcps = null;
+      Z.vars = `N = ${sa2.N}`;
+      snap(L.kwicText, `KWIC (Listing 6.8): replaceAll("\\s+", " ") macht aus Zeilenenden und mehrfachen Leerzeichen je ein Leerzeichen. Dafür entsteht ein neues Suffixarray.`, { opEnde: true });
+    } else {
+      Z.vars = `context = ${kontext}`;
+      snap(L.kwicSA, `KWIC (Listing 6.8) mit context = ${kontext}: Der Text hat keine Zeilenenden, das Suffixarray bleibt dasselbe.`, { opEnde: true });
+    }
+    konsole.push(`% java KWIC ${ART === 'tale' ? 'tinyTale.txt' : 'text.txt'} ${kontext}`);
+    fragen.forEach(qq => {
+      konsole.push(qq);
+      Z.vars = `q = ${q(qq)}`;
+      snap(L.kwicQ, `Abfrage ${zeig(qq)}: Zuerst sucht rank() mit Binärsuche die erste Stelle, an der ${zeig(qq)} einsortiert würde.`);
+      let lo = 0, hi = sa2.N - 1, r = null;
+      while (lo <= hi) {
+        const mid = lo + ((hi - lo) >> 1), m = sa2.suf[mid];
+        const cmp = qq < m ? -1 : qq > m ? 1 : 0;
+        Z.vars = `q = ${q(qq)}   lo = ${lo}   hi = ${hi}   mid = ${mid}\nsuffixes[mid] = ${q(m.slice(0, 30))}${m.length > 30 ? '…' : ''}`;
+        snap(L.mid, `lo = ${lo}, hi = ${hi}, mid = ${mid}: ${zeig(qq)} ist ${cmp < 0 ? 'kleiner' : cmp > 0 ? 'größer' : 'gleich'} als Suffix ${mid}${cmp < 0 ? ' – links weiter' : cmp > 0 ? ' – rechts weiter' : ''}.`, { lo, hi, mid });
+        if (cmp < 0) hi = mid - 1; else if (cmp > 0) lo = mid + 1; else { r = mid; break; }
+      }
+      if (r === null) r = lo;
+      Z.vars = `q = ${q(qq)}   rank(q) = ${r}`;
+      snap(r === lo ? L.rankLo : L.rankMid, `rank(${zeig(qq)}) = ${r}: ${r} Suffixe sind kleiner. Ab hier stehen alle Suffixe, die mit ${zeig(qq)} beginnen, direkt untereinander.`, { sel: r < sa2.N ? r : null });
+      let i = r;
+      for (; i < sa2.N && sa2.suf[i].startsWith(qq); i++) {
+        const from = Math.max(0, index(sa2, i) - kontext), to = Math.min(sa2.N - 1, from + qq.length + 2 * kontext);
+        konsole.push(zeig(sa2.s.substring(from, to))); AUS.kwic.push(sa2.s.substring(from, to));
+        Z.vars = `q = ${q(qq)}   i = ${i}   index(i) = ${index(sa2, i)}\nfrom = ${from}   to = ${to}`;
+        snap(L.kwicAus, `Suffix ${i} beginnt mit ${zeig(qq)}, im Text an Position ${index(sa2, i)}. Ausgabe von text.substring(${from}, ${to}).`, { treffer: [r, i], markText: [index(sa2, i), qq.length], kontextText: [from, to] });
+      }
+      konsole.push(''); AUS.kwic.push('');
+      Z.vars = `q = ${q(qq)}   i = ${i}`;
+      snap(L.kwicLeer, i === r ? `Kein Suffix beginnt mit ${zeig(qq)} – keine Ausgabe.` : `Suffix ${i < sa2.N ? i : 'N'} ${i < sa2.N ? 'beginnt nicht mehr' : 'gibt es nicht mehr'} mit ${zeig(qq)} – fertig, ${i - r} Treffer.`, { treffer: [r, i - 1], opEnde: true });
+    });
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  function render() {
+    const st = steps[pos], sa = st.sa;
+    // Text
+    let b = '';
+    const mark = st.markText, paarPos = st.paar !== undefined && st.sortiert ? [index(sa, st.paar - 1), index(sa, st.paar)] : null;
+    [...sa.s].forEach((ch, i) => {
+      let cls = '';
+      if (paarPos && st.lcpLen) { const a = i >= paarPos[0] && i < paarPos[0] + st.lcpLen, c = i >= paarPos[1] && i < paarPos[1] + st.lcpLen; cls = a && c ? 'ab' : a ? 'a' : c ? 'a' : ''; }
+      if (st.kontextText && i >= st.kontextText[0] && i < st.kontextText[1]) cls = 'kw';
+      if (mark && i >= mark[0] && i < mark[0] + mark[1]) cls = 'a';
+      b += `<div class="zelle ${cls}"><b>${esc(ch === ' ' ? ' ' : zeig(ch))}</b><small>${i}</small></div>`;
+    });
+    $('band').innerHTML = b;
+    $('var').innerHTML = st.vars || '–';
+    // Tabelle
+    const rows = st.sortiert ? sa.suf : sa.unsortiert;
+    let t = `<tr><th>i</th>${st.sortiert ? '<th>index(i)</th>' : ''}${st.lcps ? '<th>lcp(i)</th>' : ''}<th style="text-align:left">${st.sortiert ? 'Suffix (sortiert)' : 'Suffix ab Position i'}</th></tr>`;
+    rows.forEach((s, i) => {
+      let cls = '';
+      if (st.lo !== undefined && i >= st.lo && i <= st.hi) cls = 'bereich';
+      if (st.paar !== undefined && (i === st.paar || i === st.paar - 1)) cls = 'paar';
+      if (st.treffer && i >= st.treffer[0] && i <= st.treffer[1]) cls = 'treffer';
+      if (i === st.mid || i === st.sel) cls = st.mid === i ? 'mid' : 'sel';
+      const kurz = s.length > 40 ? s.slice(0, 40) : s;
+      let zelle = esc(zeig(kurz));
+      if (st.paar !== undefined && (i === st.paar || i === st.paar - 1)) {
+        const n = st.lcpLen, rest = zeig(kurz.slice(n + 1));
+        zelle = `<span class="gl">${esc(zeig(kurz.slice(0, n)))}</span>${n < kurz.length ? `<span class="ab">${esc(zeig(kurz[n]))}</span>` : ''}${esc(rest)}`;
+      }
+      t += `<tr data-i="${i}"${cls ? ` class="${cls}"` : ''}><td>${i}</td>${st.sortiert ? `<td>${index(sa, i)}</td>` : ''}${st.lcps ? `<td class="lcp">${st.lcps[i] === undefined ? (i === 0 ? '–' : '') : st.lcps[i]}</td>` : ''}<td class="s">${zelle}${s.length > 40 ? '…' : ''}</td></tr>`;
+    });
+    $('tabelle').innerHTML = t;
+    const fokus = st.mid ?? st.sel ?? st.paar ?? (st.treffer ? st.treffer[1] : undefined);
+    const box = $('tabwrap');
+    if (fokus !== undefined && fokus !== null) {
+      const tr = box.querySelector(`tr[data-i="${fokus}"]`);
+      if (tr) box.scrollTop = tr.offsetTop - box.clientHeight / 2;
+    } else box.scrollTop = 0;
+    $('titel').innerHTML = `${ART === 'abb' ? 'Abbildung 6.14' : ART === 'tale' ? 'tinyTale.txt' : ART === 'banana' ? 'banana' : 'eigener Text'} · N = <b>${sa.N}</b> · ${st.phase === 'bau' ? 'Konstruktor' : st.phase === 'lrs' ? 'LRS' : 'KWIC'}`;
+    $('msg').textContent = st.msg;
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const vor = k => () => { lockern(); const v = VOR[k]; $('frage').value = v.fragen[0]; $('kontext').value = v.kontext; lauf(v.text, v.fragen, v.kontext, k); };
+  const start = vor('abb');
+  $('abb').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('tale').addEventListener('click', vor('tale'));
+  $('banana').addEventListener('click', vor('banana'));
+  $('eigenLos').addEventListener('click', () => {
+    const text = $('eigen').value, frage = $('frage').value, k = Math.max(0, Math.min(20, Math.floor(+$('kontext').value || 0)));
+    const ok = s => [...s].every(ch => ch.charCodeAt(0) >= 32 && ch.charCodeAt(0) <= 126);
+    if (text.length < 2 || !ok(text) || !frage.length || !ok(frage)) { $('eigenHinweis').textContent = 'Bitte Text (mindestens 2 Zeichen) und Abfrage aus ASCII-Zeichen ohne Umlaute.'; return; }
+    $('eigenHinweis').textContent = '';
+    lockern(); lauf(text, [frage], k, 'eigen');
+  });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(text, fragen, kontext) liefert Suffixarray, LRS und KWIC-Ausgabe
+  function rechne(text, fragen, kontext) {
+    const alt = { steps, ART, TEXT, Z, konsole, AUS };
+    lauf(text, fragen, kontext, 'eigen');
+    const sa = baue(text);
+    const e = { index: sa.suf.map((s, i) => index(sa, i)), lcp: sa.suf.map((s, i) => i ? lcp2(s, sa.suf[i - 1]) : 0), lrs: AUS.lrs, kwic: AUS.kwic.slice(), schritte: steps.length };
+    ({ steps, ART, TEXT, Z, konsole, AUS } = alt); pos = 0; render();
+    return e;
+  }
+  window.__sa = { rechne, start, VOR, get steps() { return steps; }, get pos() { return pos; }, set pos(p) { pos = p; render(); }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
