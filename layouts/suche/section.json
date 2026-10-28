@@ -15,7 +15,7 @@
       {{- else }}{{ with index hugo.Data . }}{{ $liste = index . ($p.Params.eintrag | default "buch") }}{{ end }}{{ end }}
     {{- end }}
     {{- /* Links: nur Seiten ohne Unterseiten nehmen ihre Einträge mit (kategorie, ggf. thema), Kachelseiten keine */}}
-    {{- if and (in (slice "links" "kanaele") .Section) (eq .Kind "section") .Params.kategorie (not .Sections) }}
+    {{- if and (in (slice "links" "kanaele" "tools") .Section) (eq .Kind "section") .Params.kategorie (not .Sections) }}
       {{- $liste = where hugo.Data.links.eintrag "kategorie" .Params.kategorie }}
       {{- with .Params.thema }}{{ $liste = where $liste "thema" . }}{{ end }}
     {{- end }}

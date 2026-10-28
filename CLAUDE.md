@@ -36,7 +36,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 - **Werkzeugkompass** – KI-Tools nüchtern getestet und verglichen.
 - **Wissen › KI:** KI-Begriffe (`/erklaert/`, Lesereihenfolge, `perl skripte/begriffe-erzeugen.pl`), KI-Philosophie (`/philosophie/`), KI-Tools (`/ki-tools/`, `data/kitools.toml`) – Details `notizen/wissen-ki.md`.
 - **Wissen › IT-Konzepte** (Gruppenseite `/wissen/it/`: Grundlagen, Algorithmen, Design Patterns, Weitere Muster, Integration Patterns, IT-Übungen). Aufbau, Menü, Grundlagen (Erklär-Reihe, `begriffe-erzeugen.pl it`): `notizen/it-konzepte.md` · GoF-Muster mit Ablauf-Apps, Integration Patterns, Weitere Muster (`pattern-einlesen.pl`, `reihe-einlesen.pl`): `notizen/it-muster.md` · Übungsblätter (JSON, `uebungen-pruefen.pl`): `notizen/it-uebungen.md` · Algorithmen-Visualisierungen nach Sedgewick (Regeln, Tests, jede einzelne App): `notizen/algorithmen.md`.
-- **Spiele, Schach, Tools** (`/spiele/`, `/schach/` als erster Punkt unter Spiele, `/tools/`; Quelle `input-f5\apps\` – nie löschen, nie verschieben, nie committen) – Details `notizen/spiele-schach-tools.md`.
+- **Spiele, Schach, Tools** (`/spiele/`, `/schach/` als erster Punkt unter Spiele, `/tools/` mit den Kacheln Werkzeugkasten und Links; Quelle `input-f5\apps\` – nie löschen, nie verschieben, nie committen) – Details `notizen/spiele-schach-tools.md`.
 - **Sprachen** (`/sprachen/`: 100, 1000, 3000 Wörter, Sätze, Lernmodus; `perl skripte/sprache-einlesen.pl`; persönliche Angaben in Beispielsätzen prüfen) – Details `notizen/sprachen.md`.
 - **Fragen** (`/fragen/`, `data/fragen.toml`, Gruppen ki, welt, menschheit, sven, cc; je Antwort `content/fragen/<kurz>-<modell>.md`, Menschheit per `perl skripte/menschheit-einlesen.pl`; die Dubletten-Prüfung verbietet doppelte Fragen) – Details und alle bisherigen Lieferungen `notizen/fragen.md`.
 - **Bücher** (unter Media; Listen Belletristik, Sachbuch, IT-Buch, Schach-Buch; Buchseiten `content/buecher/<schluessel>/`, Essays `content/buchtexte/`, Einbau per `perl skripte/buchtext-einlesen.pl`; **Sachbuch-Lieferungen darf ich selbständig live nehmen**) – Details und alle Lieferungen `notizen/buecher.md`.
@@ -123,7 +123,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-10-28: Suche findet Links aus dem Seitenkopf)
+- (leer – zuletzt freigegeben und gepusht am 2026-10-28: Tools in zwei Kacheln mit IBAN-Rechner Niederlande)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 

@@ -219,3 +219,10 @@ abonnenten = 1660000
 stand = 2026-10-27
 seit = 2026-10-27
 text = "Kanal über Lernen, Denken und Selbstverbesserung, nach eigener Beschreibung „Ideas about success, modern life, and being human“. Etwa die Hälfte der jüngsten Videos zeigt KI-Werkzeuge im Alltag – Claude, Claude Code, NotebookLM, KI-Agenten –, der Rest dreht sich um Gewohnheiten, Bücher, Notizsysteme und Geld. Die Titel sind stark zugespitzt („… besser als 99 % der Leute“) und erscheinen in Deutschland größtenteils übersetzt."
+
+[[eintrag]]
+name = "IBAN-Rechner Niederlande (bank.codes)"
+url = "https://bank.codes/iban/generate/netherlands/"
+kategorie = "Tools"
+seit = 2026-10-28
+text = "Berechnet aus BIC und Kontonummer die IBAN eines niederländischen Kontos; die BIC wählt man aus einer langen Liste niederländischer Banken und Finanzhäuser. Nach eigener Angabe speichert die Seite die eingegebenen Daten nicht."

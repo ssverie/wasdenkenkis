@@ -1,0 +1,33 @@
+{{- /* Tools (seit 2026-10-28 zwei Kacheln, Sven: „bei Tools bitte 2 Kacheln, Werkzeugkasten und Links“):
+       – /tools/: eine Kachel je Unterbereich mit Anzahl (Werkzeugkasten zählt Seiten, Links zählt Einträge aus data/links.toml)
+       – /tools/werkzeugkasten/: Liste der von KIs programmierten Werkzeuge (Seiten mit Shortcode spiel)
+       – /tools/links/: Einträge aus data/links.toml mit kategorie = "Tools", Darstellung wie unter /links/ (Partial links-baum.html) */ -}}
+{{ define "main" }}
+{{- if .Params.kategorie }}
+{{ partial "links-baum.html" . }}
+{{- else }}
+<header class="seitenkopf">
+  {{- if ne .RelPermalink "/tools/" }}{{ with .Parent }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+{{- with .Sections.ByWeight }}
+<ul class="karten">
+  {{- range . }}
+  {{- $n := 0 }}{{ $paar := .Params.einheit | default (slice "Link" "Links") }}
+  {{- if .Params.kategorie }}{{ $n = len (partial "links-filter.html" (dict "alle" hugo.Data.links.eintrag "seite" .)) }}
+  {{- else }}{{ $n = len .RegularPages }}{{ end }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .Title }}</strong>
+      {{- with .Description }}<span>{{ . }}</span>{{ end }}
+      <small>{{ if $n }}{{ $n }} {{ cond (eq $n 1) (index $paar 0) (index $paar 1) }}{{ else }}folgt{{ end }}</small>
+    </a>
+  </li>
+  {{- end }}
+</ul>
+{{- else }}
+{{ partial "liste.html" (where .RegularPages "Params.archiv" "!=" true) }}
+{{- end }}
+{{- end }}
+{{ end }}

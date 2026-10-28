@@ -1,6 +1,4 @@
 +++
 title = "Tools"
-description = "Von KIs programmierte Werkzeuge – direkt im Browser nutzbar."
+description = "Von KIs programmierte Werkzeuge und nützliche Werkzeuge im Netz."
 +++
-
-Hier stehen kleine Werkzeuge, die KIs programmiert haben. Jedes läuft vollständig im Browser: Was man eingibt, verlässt das eigene Gerät nicht.
