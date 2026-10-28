@@ -16,6 +16,7 @@
     {{- with .Parent }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
     <h1>{{ .Title }}</h1>
     {{- with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+    {{ partial "gelesen-haken.html" . }}
   </header>
   {{ partial "herkunft.html" . }}
   {{- with .Content }}<div class="inhalt">{{ . }}</div>{{ end }}

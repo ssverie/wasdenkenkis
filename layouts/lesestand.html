@@ -1,0 +1,43 @@
+{{ define "main" }}
+{{- /* Lesestand (seit 2026-10-28, Sven): alle Beiträge mit Haken „gelesen“, neueste zuerst.
+       Was gelesen ist, steht nur im Browser (assets/js/gelesen.js); ohne Skript ist es eine schlichte Liste aller Beiträge.
+       Gedacht zum Aussortieren: Sven liest später und entscheidet, was wieder von der Seite darf. */ -}}
+<header class="seitenkopf">
+  <h1>{{ .Title }}</h1>
+  {{- with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+</header>
+{{- $seiten := slice }}
+{{- range site.RegularPages }}
+  {{- if and .RelPermalink (ne .Params.archiv true) (ne .Section "filmjahrzehnte") }}{{ $seiten = $seiten | append . }}{{ end }}
+{{- end }}
+<div class="lesestand-leiste" hidden>
+  <p class="lesestand-zahl" data-lesestand-zahl></p>
+  <div class="lesestand-knoepfe" role="group" aria-label="Anzeigen">
+    <button type="button" data-filter="ungelesen">Ungelesen</button>
+    <button type="button" data-filter="gelesen">Gelesen</button>
+    <button type="button" data-filter="alle">Alle</button>
+  </div>
+  <label class="lesestand-rubrik">Rubrik <select data-rubrik-wahl><option value="">alle Rubriken</option></select></label>
+</div>
+<p class="meta" data-lesestand-leer hidden>Hier ist gerade nichts.</p>
+<ul class="lesestand" data-lesestand>
+  {{- range sort $seiten "Date" "desc" }}
+  {{- /* Rubrik: Unterbereiche mit ihrer Gruppe („Sprachen › 100 Wörter“, „Kolumnen › Innenansichten“);
+         unter IT-Konzepte reicht der Unterbereich, dessen Wurzel heißt „Grundlagen“ */}}
+  {{- $rubrik := .CurrentSection.Title }}
+  {{- $bereich := .Section }}
+  {{- with .CurrentSection.Parent }}
+    {{- if and (not .IsHome) (ne $bereich "it-konzepte") }}{{ $rubrik = printf "%s › %s" .Title $rubrik }}{{ end }}
+  {{- end }}
+  {{- if and (eq .Section "it-konzepte") (eq .CurrentSection.RelPermalink "/it-konzepte/") }}{{ $rubrik = "IT-Grundlagen" }}{{ end }}
+  <li data-pfad="{{ .RelPermalink }}" data-rubrik="{{ $rubrik }}">
+    <label class="lesestand-haken"><input type="checkbox" data-gelesen="{{ .RelPermalink }}" aria-label="{{ .Title }} als gelesen markieren" hidden></label>
+    <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+    <small>{{ $rubrik }} · {{ .Date | time.Format "02.01.2006" }}{{ with .Params.modell }} · {{ . }}{{ end }}<span data-gelesen-am></span></small>
+  </li>
+  {{- end }}
+</ul>
+{{- with resources.Get "js/gelesen.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
+{{ end }}

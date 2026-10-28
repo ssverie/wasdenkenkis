@@ -20,6 +20,7 @@
     {{- with .Description }}
     <p class="lead">{{ . }}</p>
     {{- end }}
+    {{ partial "gelesen-haken.html" . }}
   </header>
   {{ partial "herkunft.html" . }}
   <div class="uebung-leiste" hidden>

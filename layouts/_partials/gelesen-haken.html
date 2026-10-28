@@ -1,0 +1,9 @@
+{{- /* Haken „gelesen“ unter dem Seitenkopf jedes Beitrags (seit 2026-10-28, Sven) – nur im Browser, assets/js/gelesen.js;
+       ohne Skript unsichtbar. Übersicht aller Beiträge: /lesestand/. Archivierte Fassungen und Jahrzehnt-Seiten bekommen keinen Haken. */ -}}
+{{- if and (ne .Params.archiv true) (ne .Section "filmjahrzehnte") }}
+<p class="gelesen-zeile-rahmen"><label class="gelesen-zeile" hidden><input type="checkbox" data-gelesen="{{ .RelPermalink }}"> gelesen</label>
+{{- with site.GetPage "/lesestand" }} <a class="gelesen-link" href="{{ .RelPermalink }}">Lesestand</a>{{ end }}</p>
+{{- with resources.Get "js/gelesen.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
+{{- end }}

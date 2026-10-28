@@ -8,6 +8,13 @@
     <input type="search" id="start-suche" name="q" placeholder="Suchen …">
   </form>
   {{- end }}
+  {{- /* Lesestand (seit 2026-10-28): Zahl der Haken „gelesen“ aus dem Browser, ohne Skript unsichtbar */}}
+  {{- with site.GetPage "/lesestand" }}
+  <p class="lesestand-kurz" data-lesestand-kurz hidden><a href="{{ .RelPermalink }}">Lesestand</a>: <span data-zahl></span></p>
+  {{- with resources.Get "js/gelesen.js" | minify | fingerprint }}
+  <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+  {{- end }}
+  {{- end }}
 </section>
 
 {{- /* Rubriken = Hauptmenü in seiner Reihenfolge (ohne Suche): Gruppen nennen ihre Unterpunkte, Einzelrubriken ihre Anzahl */}}

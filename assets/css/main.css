@@ -632,3 +632,25 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .ideen-muster { margin-top: .5rem; }
 .ideen-muster summary { cursor: pointer; color: var(--akzent); font-size: .95rem; }
 .ideen-muster ul { margin: .4rem 0 0; padding-left: 1.3rem; line-height: 1.55; }
+
+/* Haken „gelesen“ und Lesestand (assets/js/gelesen.js, seit 2026-10-28) */
+.gelesen-zeile-rahmen { margin: .6rem 0 0; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.gelesen-zeile { display: inline-flex; align-items: center; gap: .5rem; font-size: .95rem; color: var(--text-leise); cursor: pointer; user-select: none; }
+.gelesen-zeile input, .lesestand-haken input { width: 20px; height: 20px; margin: 0; accent-color: var(--akzent); cursor: pointer; }
+.gelesen-zeile[hidden] + .gelesen-link { display: none; }
+.gelesen-link { font-size: .85rem; color: var(--text-leise); }
+.lesestand-kurz { margin-top: .8rem; color: var(--text-leise); }
+.lesestand-leiste { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1rem; margin: 0 0 1rem; }
+.lesestand-zahl { margin: 0; font-weight: 600; }
+.lesestand-knoepfe { display: inline-flex; border: 1px solid var(--linie); border-radius: var(--radius); overflow: hidden; }
+.lesestand-knoepfe button { font: inherit; font-size: .95rem; padding: .4rem .9rem; border: 0; background: var(--fläche); color: var(--text); cursor: pointer; }
+.lesestand-knoepfe button + button { border-left: 1px solid var(--linie); }
+.lesestand-knoepfe button[aria-pressed="true"] { background: var(--akzent); color: var(--bg); }
+.lesestand-rubrik { font-size: .95rem; color: var(--text-leise); }
+.lesestand-rubrik select { font: inherit; padding: .35rem .5rem; border: 1px solid var(--linie); border-radius: 6px; background: var(--fläche); color: var(--text); max-width: 100%; }
+.lesestand { list-style: none; padding: 0; margin: 0; }
+.lesestand li { display: grid; grid-template-columns: auto 1fr; column-gap: .7rem; padding: .5rem 0; border-bottom: 1px solid var(--linie); }
+.lesestand li > a { font-weight: 600; overflow-wrap: anywhere; }
+.lesestand li small { grid-column: 2; color: var(--text-leise); }
+.lesestand-haken { grid-row: span 2; padding-top: .15rem; }
+.lesestand li.ist-gelesen > a { font-weight: 400; color: var(--text-leise); }
