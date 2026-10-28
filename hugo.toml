@@ -237,8 +237,22 @@ enableRobotsTXT = true
     weight = 5
   [[menus.main]]
     name = "Tools"
+    identifier = "tools"
     pageRef = "/tools"
     weight = 33
+  [[menus.main]]
+    # Tools seit 2026-10-28 mit zwei Unterpunkten (Sven: „2 Untermenüs, wie bei den anderen“); eigene Kennungen, weil „Links“ auch unter Wissen steht
+    name = "Werkzeugkasten"
+    identifier = "tools-werkzeugkasten"
+    pageRef = "/tools/werkzeugkasten"
+    parent = "tools"
+    weight = 1
+  [[menus.main]]
+    name = "Links"
+    identifier = "tools-links"
+    pageRef = "/tools/links"
+    parent = "tools"
+    weight = 2
   [[menus.main]]
     name = "Schach"
     pageRef = "/schach/klassisch"
