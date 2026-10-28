@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3-Wege-Quicksort für Strings</title>
+<!-- Visualisierung des 3-Wege-Quicksort für Strings (nach Sedgewick/Wayne, Algorithmen, Algorithmus 5.3, Listing 5.6)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Java-Code wie im Listing, exch() und main() eigene Fassung.
+     Beispiel: die 14 Strings aus Abbildung 5.18. Aufbau wie msd.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --gruen: #8fd1a6; --gtext: #1c1c1f; --kl: #c9d6f2; --gl: #fde68a; --gr: #e8d5f5; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --gruen: #2f6e48; --gtext: #ececef; --kl: #2a3552; --gl: #5a4a12; --gr: #3f2a52; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .felder { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; justify-content: start; align-items: start; }
+  .felder .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  .arr-box { overflow-x: auto; }
+  table.arr { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  table.arr th, table.arr td { border: 1px solid var(--line); padding: 2px 6px; text-align: center; }
+  table.arr th { color: var(--muted); font-weight: 600; }
+  table.arr td.s { font-family: ui-monospace, Consolas, monospace; text-align: left; }
+  table.arr td.s b { color: var(--rot); }
+  table.arr td.s i { color: var(--rot); font-style: normal; font-weight: 700; }
+  table.arr td.nr { color: var(--muted); font-size: 11px; }
+  table.arr td.z { font: 700 11px ui-monospace, Consolas, monospace; color: var(--cur); text-align: left; white-space: nowrap; }
+  table.arr td.aus { opacity: .45; }
+  table.arr td.kl { background: var(--kl); }
+  table.arr td.gl { background: var(--gl); }
+  table.arr td.gr { background: var(--gr); }
+  table.arr td.neu { background: var(--neu); color: #fff; }
+  table.arr td.neu b, table.arr td.neu i { color: #fff; text-decoration: underline; }
+  table.arr td.ja { background: var(--gruen); color: var(--gtext); }
+  table.arr td.bereich { box-shadow: inset 3px 0 0 var(--cur); }
+  table.arr tr.aktiv td, table.arr tr.aktiv th { outline: 2px solid var(--cur); outline-offset: -2px; }
+  @media (prefers-color-scheme: dark) { table.arr td.neu, table.arr td.neu b, table.arr td.neu i { color: #0d1530; } }
+  .klein { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
+  .stapel { font: 12.5px ui-monospace, Consolas, monospace; line-height: 1.5; }
+  .stapel div.oben { color: var(--neu); font-weight: 700; }
+  .var { font: 13px ui-monospace, Consolas, monospace; margin: 0 0 10px; line-height: 1.6; }
+  .var b { color: var(--rot); }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .spur { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; white-space: pre; overflow-x: auto; margin: 0; line-height: 1.45; }
+  .spur span.zuletzt { color: var(--neu); font-weight: 700; }
+  @media (max-width: 640px) {
+    .felder { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    table.arr { font-size: 12px; }
+    table.arr th, table.arr td { padding: 2px 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls">
+    <button id="buch">Testclient (14 Strings aus Abbildung 5.18)</button>
+    <button id="zufall">Zufallsdaten</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="felder">
+      <div><div class="h2">a[] – rot das Zeichen d, blau der Bereich lo..hi</div><div class="arr-box" id="feldA"></div></div>
+      <div><div class="h2">Partitionierung</div><div class="var" id="vars"></div><div class="stapel" id="stapel"></div></div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--kl)"></i>kleiner als v (vor lt)</span>
+      <span><i style="background:var(--gl)"></i>gleich v (lt bis i − 1)</span>
+      <span><i style="background:var(--gr)"></i>größer als v (nach gt)</span>
+      <span><i style="background:var(--panel);outline:2px solid var(--cur)"></i>a[i] wird geprüft</span>
+      <span><i style="background:var(--neu)"></i>gerade getauscht</span>
+      <span><i style="background:var(--gruen)"></i>Platz endgültig</span>
+      <span><b style="color:var(--rot)">▪</b> = String zu Ende (charAt liefert −1) · #k = Platz in der Eingabe</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis die aktuelle Partitionierung oder der aktuelle Aufruf fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (nach Algorithmus 5.3, Listing 5.6)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'public class Quick3string',
+    '{',
+    '   private static int charAt(String s, int d)',
+    '   {  if (d < s.length()) return s.charAt(d); else return -1;  }',
+    '',
+    '   public static void sort(String[] a)',
+    '   {  sort(a, 0, a.length - 1, 0);  }',
+    '',
+    '   private static void sort(String[] a, int lo, int hi, int d)',
+    '   {',
+    '      if (hi <= lo) return;',
+    '      int lt = lo, gt = hi;',
+    '      int v = charAt(a[lo], d);',
+    '      int i = lo + 1;',
+    '      while (i <= gt)',
+    '      {',
+    '         int t = charAt(a[i], d);',
+    '         if      (t < v) exch(a, lt++, i++);',
+    '         else if (t > v) exch(a, i, gt--);',
+    '         else            i++;',
+    '      }',
+    '',
+    '      // a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi]',
+    '      sort(a, lo, lt-1, d);',
+    '      if (v >= 0) sort(a, lt, gt, d+1);',
+    '      sort(a, gt+1, hi, d);',
+    '   }',
+    '',
+    '   private static void exch(String[] a, int i, int j)',
+    '   {  String t = a[i];  a[i] = a[j];  a[j] = t;  }   // eigene Fassung, im Buch nicht abgedruckt',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient (eigene Fassung): die 14 Strings aus Abbildung 5.18',
+    '      String[] a = { "she", "sells", "seashells", "by", "the", "sea", "shore",',
+    '                     "the", "shells", "she", "sells", "are", "surely", "seashells" };',
+    '      sort(a);',
+    '      for (String s : a)',
+    '         System.out.println(s);',
+    '   }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    eingabe: zeile('String[] a = { "she"'), sortAufruf: zeile('      sort(a);'), sort0: zeile('{  sort(a, 0, a.length - 1, 0);  }'),
+    kopf: zeile('private static void sort(String[] a, int lo, int hi, int d)'), ltgt: zeile('int lt = lo, gt = hi;'), v: zeile('int v = charAt(a[lo], d);'),
+    i: zeile('int i = lo + 1;'), wh: zeile('while (i <= gt)'), t: zeile('int t = charAt(a[i], d);'), kl: zeile('if      (t < v) exch(a, lt++, i++);'),
+    gr: zeile('else if (t > v) exch(a, i, gt--);'), gl: zeile('else            i++;'), inv: zeile('// a[lo..lt-1] < v = a[lt..gt] < a[gt+1..hi]'),
+    rekKl: zeile('sort(a, lo, lt-1, d);'), rekGl: zeile('if (v >= 0) sort(a, lt, gt, d+1);'), rekGr: zeile('sort(a, gt+1, hi, d);'), druck: zeile('System.out.println(s);')
+  };
+  const ende = L.rekGr + 1;
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Daten ----------
+  const BUCH = ['she', 'sells', 'seashells', 'by', 'the', 'sea', 'shore', 'the', 'shells', 'she', 'sells', 'are', 'surely', 'seashells'];
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsdaten() {        // kurze Strings aus a, b, c – viele gemeinsame Präfixe, verschiedene Längen
+    const N = 8 + zufall(9);
+    return Array.from({ length: N }, () => Array.from({ length: 1 + zufall(4) }, () => 'abc'[zufall(3)]).join(''));
+  }
+  const charAt = (s, d) => d < s.length ? s.charCodeAt(d) : -1;
+  const zei = c => c === -1 ? '−1 (zu Ende)' : `'${String.fromCharCode(c)}'`;
+
+  // ---------- Aufzeichnung ----------
+  let N, Z, konsole, spur, steps, pos = 0, timer = null, istBuch = true, leer = 0, vergleiche = 0;
+  const kopie = arr => arr.map(x => ({ s: x.s, nr: x.nr }));
+  function snap(line, msg, o) {
+    steps.push(Object.assign({ line, msg, a: kopie(Z.a), ruf: Z.ruf.map(r => Object.assign({}, r)), fertig: Z.fertig.slice(), p: Z.p && Object.assign({}, Z.p),
+      vergleiche, konsole: konsole.slice(), spur: spur.slice() }, o || {}));
+  }
+  const rufText = r => `sort(a, ${r.lo}, ${r.hi}, ${r.d})`;
+  const exch = (i, j) => { const x = Z.a[i]; Z.a[i] = Z.a[j]; Z.a[j] = x; };
+
+  function sortRek(lo, hi, d, tiefe) {
+    if (hi <= lo) { if (hi === lo) Z.fertig[lo] = true; leer++; return; }
+    const ruf = { lo, hi, d, tiefe, teil: null };
+    Z.ruf.push(ruf); Z.p = null;
+    const b = { bereich: [lo, hi], d };
+    snap(L.kopf, `${rufText(ruf)}: ${hi - lo + 1} Strings von a[${lo}] bis a[${hi}], partitioniert wird nach dem Zeichen an Position ${d}${d ? ` – die ersten ${d} Zeichen sind in diesem Bereich gleich` : ''}.`, b);
+    Z.p = { lt: lo, gt: hi, v: null, i: null, t: null };
+    snap(L.ltgt, `lt = ${lo}, gt = ${hi}.`, b);
+    Z.p.v = charAt(Z.a[lo].s, d);
+    snap(L.v, `v = charAt(a[${lo}], ${d}) = ${zei(Z.p.v)} – das Zeichen von ${Z.a[lo].s} an Position ${d} ist das Partitionszeichen.`, b);
+    Z.p.i = lo + 1;
+    snap(L.i, `i = ${lo + 1}.`, b);
+    while (Z.p.i <= Z.p.gt) {
+      const i = Z.p.i, t = charAt(Z.a[i].s, d); Z.p.t = t; vergleiche++;
+      snap(L.t, `i = ${i} ≤ gt = ${Z.p.gt}: t = charAt(a[${i}], ${d}) = ${zei(t)} (${Z.a[i].s}) – ${t < Z.p.v ? 'kleiner als' : t > Z.p.v ? 'größer als' : 'gleich'} v = ${zei(Z.p.v)}.`, Object.assign({ zeig: i }, b));
+      if (t < Z.p.v) {
+        const lt = Z.p.lt; exch(lt, i); Z.p.lt++; Z.p.i++;
+        snap(L.kl, `kleiner: exch(a, ${lt}, ${i}) – ${Z.a[lt].s} kommt nach links in den Kleiner-Teil, lt und i rücken vor.`, Object.assign({ neuA: [lt, i] }, b));
+      } else if (t > Z.p.v) {
+        const gt = Z.p.gt; exch(i, gt); Z.p.gt--;
+        snap(L.gr, `größer: exch(a, ${i}, ${gt}) – ${Z.a[gt].s} kommt nach rechts in den Größer-Teil, gt rückt zurück. i bleibt, denn auf Platz ${i} steht jetzt ein noch ungeprüfter String (${Z.a[i].s}).`, Object.assign({ neuA: [i, gt] }, b));
+      } else {
+        Z.p.i++;
+        snap(L.gl, `gleich: nur i rückt vor, ${Z.a[i].s} bleibt im Gleich-Teil.`, b);
+      }
+    }
+    const { lt, gt, v } = Z.p;
+    Z.p.t = null; Z.p.fertig = true;
+    if (v < 0) for (let k = lt; k <= gt; k++) Z.fertig[k] = true;
+    spur.push(`${'  '.repeat(tiefe)}${rufText(ruf)} v=${v < 0 ? '▪' : String.fromCharCode(v)} · kleiner ${lt > lo ? `${lo}..${lt - 1}` : '–'} · gleich ${lt}..${gt}${v < 0 ? ' (fertig)' : ''} · größer ${gt < hi ? `${gt + 1}..${hi}` : '–'}`);
+    snap(L.inv, `Partitionierung fertig: a[${lo}..${lt - 1}] < v = a[${lt}..${gt}] < a[${gt + 1}..${hi}]. Kleiner-Teil ${lt - lo}, Gleich-Teil ${gt - lt + 1}, Größer-Teil ${hi - gt} String${hi - gt === 1 ? '' : 's'}.`, Object.assign({ opEnde: true }, b));
+    const teile = [
+      { line: L.rekKl, von: lo, bis: lt - 1, d, name: 'Kleiner-Teil', teil: 'kl' },
+      { line: L.rekGl, von: lt, bis: gt, d: d + 1, name: 'Gleich-Teil', teil: 'gl', aus: v < 0 },
+      { line: L.rekGr, von: gt + 1, bis: hi, d, name: 'Größer-Teil', teil: 'gr' }
+    ];
+    const gespeichert = Object.assign({}, Z.p);
+    for (const tl of teile) {
+      ruf.teil = tl.teil; Z.p = Object.assign({}, gespeichert);
+      const n = tl.bis - tl.von + 1;
+      if (tl.aus) { snap(tl.line, `v = −1: Alle Strings im Gleich-Teil sind schon zu Ende, also komplett gleich – kein Aufruf.`, Object.assign({ opEnde: false }, b)); continue; }
+      snap(tl.line, `${tl.name}: sort(a, ${tl.von}, ${tl.bis}, ${tl.d})${n <= 0 ? ' – leer, kehrt sofort zurück.' : n === 1 ? ' – nur ein String, kehrt sofort zurück.' : tl.teil === 'gl' ? ` – ${n} Strings, deren Zeichen ${d} gleich ist, also weiter mit dem nächsten Zeichen.` : ` – ${n} Strings, wieder nach Zeichen ${d}.`}`, b);
+      sortRek(tl.von, tl.bis, tl.d, tiefe + 1);
+      Z.p = Object.assign({}, gespeichert);
+    }
+    ruf.teil = null; Z.p = null;
+    snap(ende, `${rufText(ruf)} ist fertig: a[${lo}..${hi}] ist sortiert.`, Object.assign({ opEnde: true }, b));
+    Z.ruf.pop();
+  }
+
+  function lauf(daten, buch) {
+    stop();
+    istBuch = buch; N = daten.length; steps = []; konsole = []; spur = []; leer = 0; vergleiche = 0;
+    Z = { a: daten.map((s, nr) => ({ s, nr })), ruf: [], fertig: Array(N).fill(false), p: null };
+    snap(L.eingabe, buch ? `Testclient: die 14 Strings aus Abbildung 5.18, verschieden lang.` : `Zufallsdaten: ${N} Strings aus a, b, c mit 1 bis 4 Zeichen – viele gemeinsame Präfixe und gleiche Strings.`);
+    snap(L.sortAufruf, `sort(a).`);
+    snap(L.sort0, `sort(a, 0, ${N - 1}, 0): der ganze Bereich, angefangen beim ersten Zeichen.`, { opEnde: true, bereich: [0, N - 1], d: 0 });
+    sortRek(0, N - 1, 0, 0);
+    Z.fertig = Array(N).fill(true);
+    spur.push(`(${leer} Aufrufe mit leerem Teilarray oder einem String nicht aufgeführt; ${vergleiche} Zeichenvergleiche)`);
+    Z.a.forEach((x, i) => { konsole.push(x.s); snap(L.druck, `${x.s}${i === N - 1 ? ' – fertig.' : ''}`, { i: i, opEnde: i === N - 1 }); });
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  const markiere = (s, d) => d === null || d === undefined ? esc(s) : d < s.length ? esc(s.slice(0, d)) + `<b>${esc(s[d])}</b>` + esc(s.slice(d + 1)) : esc(s) + '<i>▪</i>';
+  function render() {
+    const st = steps[pos], p = st.p;
+    const oben = st.ruf[st.ruf.length - 1];
+    $('titel').innerHTML = `${istBuch ? 'Abbildung 5.18' : 'Zufallsdaten'} · N = <b>${N}</b> · Zeichenvergleiche: <b>${st.vergleiche}</b> · ${oben ? `Rekursionstiefe <b>${oben.tiefe}</b>` : st.fertig.every(Boolean) ? 'sortiert' : 'vor dem ersten Aufruf'}`;
+    const [blo, bhi] = st.bereich || (oben ? [oben.lo, oben.hi] : [-1, -2]);
+    let t = '<table class="arr"><tr><th>i</th><th>a[i]</th><th>#</th><th></th></tr>';
+    st.a.forEach((x, k) => {
+      const drin = k >= blo && k <= bhi;
+      let teil = '';
+      if (p && drin && oben && k >= oben.lo && k <= oben.hi) { if (k < p.lt) teil = 'kl'; else if (p.i !== null && k < (p.fertig ? p.gt + 1 : p.i)) teil = 'gl'; else if (k > p.gt) teil = 'gr'; }
+      const cls = ['s', drin ? 'bereich' : '', st.fertig[k] ? 'ja' : teil, (st.neuA || []).includes(k) ? 'neu' : '', !drin && st.bereich && !st.fertig[k] ? 'aus' : ''].join(' ');
+      const zeiger = p && oben && k >= oben.lo && k <= oben.hi ? [k === p.lt ? 'lt' : '', !p.fertig && k === p.i ? 'i' : '', k === p.gt ? 'gt' : ''].filter(Boolean).join(',') : '';
+      t += `<tr class="${st.zeig === k || st.i === k ? 'aktiv' : ''}"><th>${k}</th><td class="${cls}">${markiere(x.s, drin ? st.d : null)}</td><td class="nr">#${x.nr}</td><td class="z">${zeiger}</td></tr>`;
+    });
+    $('feldA').innerHTML = t + '</table>';
+    $('vars').innerHTML = p ? `lt = ${p.lt} · gt = ${p.gt}${p.i !== null && !p.fertig ? ` · i = ${p.i}` : ''}<br>v = ${p.v === null ? '–' : p.v === -1 ? '<b>▪</b> −1' : `<b>${esc(String.fromCharCode(p.v))}</b> (${p.v})`}${p.t !== null && p.t !== undefined ? ` · t = ${p.t === -1 ? '<b>▪</b> −1' : `<b>${esc(String.fromCharCode(p.t))}</b> (${p.t})`}` : ''}` : '<span class="klein">noch keine Partitionierung</span>';
+    const tn = { kl: 'Kleiner-Teil', gl: 'Gleich-Teil', gr: 'Größer-Teil' };
+    $('stapel').innerHTML = st.ruf.length ? '<div class="klein">Aufrufstapel (oben der laufende):</div>' + st.ruf.slice().reverse().map((r, k) => `<div class="${k === 0 ? 'oben' : ''}">${'&nbsp;'.repeat(r.tiefe)}${rufText(r)}${r.teil ? ` · ${tn[r.teil]}` : ''}</div>`).join('') : '';
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg';
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    $('proto').innerHTML = st.spur.length
+      ? `<h4>Partitionierungen (eingerückt nach Rekursionstiefe, ▪ = zu Ende)</h4><pre class="spur">${st.spur.map((z, i) => i === st.spur.length - 1 && !st.fertig.every(Boolean) ? `<span class="zuletzt">${esc(z)}</span>` : esc(z)).join('\n')}</pre>`
+      : '<p class="count">Noch keine Partitionierung fertig.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const start = () => { lockern(); lauf(BUCH, true); };
+  $('buch').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('zufall').addEventListener('click', () => { lockern(); lauf(zufallsdaten(), false); });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(daten) spielt main() durch (Anzeige danach wie vorher)
+  function rechne(daten) {
+    const alt = { N, Z, konsole, spur, steps, istBuch };
+    lauf(daten, false);
+    const e = { ausgabe: konsole.slice(), spur: spur.slice(), steps };
+    ({ N, Z, konsole, spur, steps, istBuch } = alt); pos = 0; render();
+    return e;
+  }
+  window.__q3s = { rechne, start, BUCH, zufallsdaten, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
