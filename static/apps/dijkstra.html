@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kürzeste Pfade nach Dijkstra</title>
+<!-- Visualisierung des Dijkstra-Algorithmus (nach Sedgewick/Wayne, Algorithmen, Algorithmus 4.9, Listing 4.32) für
+     wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code: DijkstraSP nach dem Listing (pathTo eigene
+     Fassung mit dem Stack aus Algorithmus 1.2), dazu eigene DirectedEdge, EdgeWeightedDigraph (Bag aus 1.4) und
+     IndexMinPQ wie in prim.html. Beispielgraph tinyEWD (Datei der Buch-Website), Lage wie Abbildung 4.74;
+     Pfeile und Bögen wie in erreichbarkeit.html, Gewichte wie in prim.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --baum: #8fd1a6; --btext: #1c1c1f; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --baum: #2f6e48; --btext: #ececef; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .bild { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .bild svg { display: block; width: 100%; height: auto; }
+  .bild .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  svg .kante { stroke: var(--grau); stroke-width: 1.6; fill: none; }
+  svg .pfeil { fill: var(--grau); stroke: none; }
+  svg .kante.spt { stroke: var(--text); stroke-width: 3.6; }
+  svg .pfeil.spt { fill: var(--text); }
+  svg .kante.inpq { stroke: var(--rot); stroke-width: 2.4; }
+  svg .pfeil.inpq { fill: var(--rot); }
+  svg .kante.min { stroke: var(--rot); stroke-width: 4.5; }
+  svg .pfeil.min { fill: var(--rot); }
+  svg .kante.pruef { stroke: var(--cur); stroke-width: 3.6; stroke-dasharray: 7 4; }
+  svg .pfeil.pruef { fill: var(--cur); }
+  svg .kante.pfad { stroke: var(--neu); stroke-width: 4.5; }
+  svg .pfeil.pfad { fill: var(--neu); }
+  svg .gewicht { font: 600 10.5px ui-monospace, Consolas, monospace; fill: var(--muted); text-anchor: middle; dominant-baseline: central; paint-order: stroke; stroke: var(--bg); stroke-width: 3px; }
+  svg .gewicht.spt { fill: var(--text); }
+  svg .gewicht.inpq, svg .gewicht.min { fill: var(--rot); }
+  svg .gewicht.pruef { fill: var(--cur); }
+  svg .gewicht.pfad { fill: var(--neu); }
+  svg .knoten circle { fill: var(--panel); stroke: var(--muted); stroke-width: 2; }
+  svg .knoten text { font: 700 15px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten.fertig circle { fill: var(--baum); stroke: var(--baum); }
+  svg .knoten.fertig text { fill: var(--btext); }
+  svg .knoten.inpq circle { stroke: var(--rot); stroke-width: 3.5; }
+  svg .knoten.aktiv circle { fill: var(--neu); stroke: var(--neu); }
+  svg .knoten.aktiv text { fill: #fff; }
+  svg .knoten.pruef circle { stroke: var(--cur); stroke-width: 5; }
+  svg .knoten.start circle { stroke-dasharray: 4 3; }
+  svg .marke { font: 700 11px ui-monospace, Consolas, monospace; fill: var(--cur); text-anchor: middle; }
+  @media (prefers-color-scheme: dark) { svg .knoten.aktiv text { fill: #0d1530; } }
+  .eingabe select { font: inherit; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .arr-box { overflow-x: auto; margin-bottom: 10px; }
+  table.arr { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  table.arr th, table.arr td { border: 1px solid var(--line); padding: 3px 6px; text-align: center; }
+  table.arr th { color: var(--muted); font-weight: 600; }
+  table.arr td.leer { color: var(--muted); }
+  table.arr td.ja { background: var(--baum); color: var(--btext); }
+  table.arr td.geaendert { background: var(--neu); color: #fff; font-weight: 700; }
+  table.arr td.rot { color: var(--rot); font-weight: 700; }
+  table.arr tr.aktiv td { outline: 2px solid var(--neu); outline-offset: -2px; }
+  @media (prefers-color-scheme: dark) { table.arr td.geaendert { color: #0d1530; } }
+  .klein { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .spur { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; white-space: pre; overflow-x: auto; margin: 0; line-height: 1.45; }
+  .spur span.zuletzt { color: var(--neu); font-weight: 700; }
+  @media (max-width: 640px) {
+    .bild { grid-template-columns: minmax(0, 1fr); }
+    table.arr { font-size: 12px; }
+    table.arr th, table.arr td { padding: 3px 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="buch">Testclient (tinyEWD, s = 0)</button>
+    <label>s <select id="s"></select></label>
+    <button id="abS">ab s</button>
+    <button id="zufall">Zufallsgraph</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="bild">
+      <div>
+        <div class="h2">Gerichteter, kantengewichteter Graph – die Zahlen sind die Gewichte</div>
+        <svg id="graph" role="img" aria-label="Der Digraph mit dem Stand des Dijkstra-Algorithmus"></svg>
+      </div>
+      <div>
+        <div class="arr-box" id="tabelle"></div>
+        <div class="h2" style="font-size:13px;color:var(--muted)">IndexMinPQ pq – oben der Heap (pq[Position] = Knoten, Schlüssel = distTo), unten qp[] (Knoten → Position, −1 = nicht drin):</div>
+        <div class="arr-box" id="heap"></div>
+      </div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>relax(v) läuft</span>
+      <span><i style="background:var(--baum)"></i>Abstand endgültig</span>
+      <span><i style="background:var(--panel);outline:3px solid var(--rot)"></i>in pq, rot: bisher beste letzte Kante</span>
+      <span><i style="background:var(--text)"></i>Kante im Baum der kürzesten Pfade</span>
+      <span><i style="background:var(--panel);outline:3px solid var(--cur)"></i>Kante wird relaxiert</span>
+      <span><i style="background:var(--neu)"></i>Ausgabe: pathTo(t)</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der aktuelle Abschnitt fertig ist (Graph gebaut, ein Knoten relaxiert, Ausgabe)">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 4.9, Listing 4.32)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'import java.util.Locale;',
+    '',
+    'public class DijkstraSP',
+    '{',
+    '   private DirectedEdge[] edgeTo;   // letzte Kante auf dem kürzesten bekannten Pfad nach v',
+    '   private double[] distTo;         // Länge dieses Pfads',
+    '   private IndexMinPQ<Double> pq;   // Knoten, deren Abstand noch nicht endgültig ist',
+    '',
+    '   public DijkstraSP(EdgeWeightedDigraph G, int s)',
+    '   {',
+    '      edgeTo = new DirectedEdge[G.V()];',
+    '      distTo = new double[G.V()];',
+    '      pq = new IndexMinPQ<Double>(G.V());',
+    '',
+    '      for (int v = 0; v < G.V(); v++)',
+    '         distTo[v] = Double.POSITIVE_INFINITY;',
+    '      distTo[s] = 0.0;',
+    '',
+    '      pq.insert(s, 0.0);',
+    '      while (!pq.isEmpty())',
+    '         relax(G, pq.delMin());          // Knoten mit dem kleinsten Abstand: seine Kanten relaxieren',
+    '   }',
+    '',
+    '   private void relax(EdgeWeightedDigraph G, int v)',
+    '   {',
+    '      for (DirectedEdge e : G.adj(v))',
+    '      {',
+    '         int w = e.to();',
+    '         if (distTo[w] > distTo[v] + e.weight())',
+    '         {  // über v ist w schneller zu erreichen',
+    '            distTo[w] = distTo[v] + e.weight();',
+    '            edgeTo[w] = e;',
+    '            if (pq.contains(w)) pq.change(w, distTo[w]);',
+    '            else                pq.insert(w, distTo[w]);',
+    '         }',
+    '      }',
+    '   }',
+    '',
+    '   public double distTo(int v)  {  return distTo[v];  }',
+    '   public boolean hasPathTo(int v)  {  return distTo[v] < Double.POSITIVE_INFINITY;  }',
+    '',
+    '   public Iterable<DirectedEdge> pathTo(int v)',
+    '   {  // von v über edgeTo zurück bis s, auf einem Stapel umgedreht (eigene Fassung)',
+    '      if (!hasPathTo(v)) return null;',
+    '      Stack<DirectedEdge> pfad = new Stack<DirectedEdge>();',
+    '      for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.from()])',
+    '         pfad.push(e);',
+    '      return pfad;',
+    '   }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient: der Digraph tinyEWD (8 Knoten, 15 Kanten), Start s aus args, sonst 0',
+    '      double[][] kanten = { {4, 5, .35}, {5, 4, .35}, {4, 7, .37}, {5, 7, .28}, {7, 5, .28}, {5, 1, .32}, {0, 4, .38},',
+    '                            {0, 2, .26}, {7, 3, .39}, {1, 3, .29}, {2, 7, .34}, {6, 2, .40}, {3, 6, .52}, {6, 0, .58},',
+    '                            {6, 4, .93} };',
+    '      EdgeWeightedDigraph G = new EdgeWeightedDigraph(8);',
+    '      for (double[] k : kanten)',
+    '         G.addEdge(new DirectedEdge((int) k[0], (int) k[1], k[2]));',
+    '      int s = args.length > 0 ? Integer.parseInt(args[0]) : 0;',
+    '      DijkstraSP sp = new DijkstraSP(G, s);',
+    '      for (int t = 0; t < G.V(); t++)',
+    '      {',
+    '         System.out.printf(Locale.ROOT, "%d nach %d (%.2f):", s, t, sp.distTo(t));',
+    '         if (sp.hasPathTo(t))',
+    '            for (DirectedEdge e : sp.pathTo(t))',
+    '               System.out.print("  " + e);',
+    '         System.out.println();',
+    '      }',
+    '   }',
+    '}',
+    '',
+    '// ---- DirectedEdge: eine gerichtete Kante v→w mit Gewicht ----',
+    'public class DirectedEdge',
+    '{',
+    '   private final int v, w;',
+    '   private final double weight;',
+    '',
+    '   public DirectedEdge(int v, int w, double weight)',
+    '   {  this.v = v;  this.w = w;  this.weight = weight;  }',
+    '',
+    '   public double weight()  {  return weight;  }',
+    '   public int from()  {  return v;  }',
+    '   public int to()    {  return w;  }',
+    '   public String toString()',
+    '   {  return String.format(Locale.ROOT, "%d->%d %.2f", v, w, weight);  }',
+    '}',
+    '',
+    '// ---- EdgeWeightedDigraph: Adjazenzlisten mit gerichteten Kanten (Bag aus Algorithmus 1.4) ----',
+    'public class EdgeWeightedDigraph',
+    '{',
+    '   private final int V;',
+    '   private int E;',
+    '   private Bag<DirectedEdge>[] adj;',
+    '',
+    '   @SuppressWarnings("unchecked")',
+    '   public EdgeWeightedDigraph(int V)',
+    '   {',
+    '      this.V = V;',
+    '      adj = (Bag<DirectedEdge>[]) new Bag[V];',
+    '      for (int v = 0; v < V; v++)',
+    '         adj[v] = new Bag<DirectedEdge>();',
+    '   }',
+    '',
+    '   public int V()  {  return V;  }',
+    '   public int E()  {  return E;  }',
+    '',
+    '   public void addEdge(DirectedEdge e)',
+    '   {  // nur in die Liste des Anfangsknotens',
+    '      adj[e.from()].add(e);',
+    '      E++;',
+    '   }',
+    '',
+    '   public Iterable<DirectedEdge> adj(int v)  {  return adj[v];  }',
+    '}',
+    '',
+    '// ---- IndexMinPQ: wie beim Prim-Algorithmus (Algorithmus 4.7) ----',
+    'public class IndexMinPQ<Key extends Comparable<Key>>',
+    '{',
+    '   private int n;              // Anzahl der Elemente',
+    '   private int[] pq;           // Heap: pq[i] = Index an Heap-Position i (ab 1)',
+    '   private int[] qp;           // umgekehrt: qp[index] = Heap-Position, -1 = nicht enthalten',
+    '   private Key[] keys;         // keys[index] = Schlüssel',
+    '',
+    '   @SuppressWarnings("unchecked")',
+    '   public IndexMinPQ(int maxN)',
+    '   {',
+    '      pq = new int[maxN + 1];',
+    '      qp = new int[maxN + 1];',
+    '      keys = (Key[]) new Comparable[maxN + 1];',
+    '      for (int i = 0; i <= maxN; i++) qp[i] = -1;',
+    '   }',
+    '',
+    '   public boolean isEmpty()  {  return n == 0;  }',
+    '   public boolean contains(int i)  {  return qp[i] != -1;  }',
+    '',
+    '   public void insert(int i, Key key)',
+    '   {  // neuer Index unten an den Heap, dann aufsteigen',
+    '      n++;',
+    '      qp[i] = n;',
+    '      pq[n] = i;',
+    '      keys[i] = key;',
+    '      swim(n);',
+    '   }',
+    '',
+    '   public void change(int i, Key key)',
+    '   {  // Schlüssel ändern, über qp sofort die Heap-Position finden',
+    '      keys[i] = key;',
+    '      swim(qp[i]);',
+    '      sink(qp[i]);',
+    '   }',
+    '',
+    '   public int delMin()',
+    '   {  // Wurzel entnehmen, letztes Element nach oben, absinken lassen',
+    '      int min = pq[1];',
+    '      exch(1, n--);',
+    '      sink(1);',
+    '      qp[min] = -1;',
+    '      keys[min] = null;',
+    '      pq[n + 1] = -1;',
+    '      return min;',
+    '   }',
+    '',
+    '   private boolean greater(int i, int j)',
+    '   {  return keys[pq[i]].compareTo(keys[pq[j]]) > 0;  }',
+    '',
+    '   private void exch(int i, int j)',
+    '   {  // im Heap tauschen und qp nachziehen',
+    '      int t = pq[i];  pq[i] = pq[j];  pq[j] = t;',
+    '      qp[pq[i]] = i;',
+    '      qp[pq[j]] = j;',
+    '   }',
+    '',
+    '   private void swim(int k)',
+    '   {',
+    '      while (k > 1 && greater(k / 2, k))',
+    '      {  exch(k, k / 2);  k = k / 2;  }',
+    '   }',
+    '',
+    '   private void sink(int k)',
+    '   {',
+    '      while (2 * k <= n)',
+    '      {',
+    '         int j = 2 * k;',
+    '         if (j < n && greater(j, j + 1)) j++;',
+    '         if (!greater(k, j)) break;',
+    '         exch(k, j);',
+    '         k = j;',
+    '      }',
+    '   }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    kanten: zeile('double[][] kanten'), neuG: zeile('EdgeWeightedDigraph G = new EdgeWeightedDigraph(8);'), addEdge: zeile('G.addEdge(new DirectedEdge('),
+    sArg: zeile('int s = args.length > 0'), neuSP: zeile('DijkstraSP sp = new DijkstraSP(G, s);'), edgeToNeu: zeile('edgeTo = new DirectedEdge[G.V()];'),
+    unendlich: zeile('distTo[v] = Double.POSITIVE_INFINITY;'), dist0: zeile('distTo[s] = 0.0;'), insertS: zeile('pq.insert(s, 0.0);'),
+    whileLoop: zeile('while (!pq.isEmpty())'), delMin: zeile('relax(G, pq.delMin());'), forE: zeile('for (DirectedEdge e : G.adj(v))'),
+    ifRelax: zeile('if (distTo[w] > distTo[v] + e.weight())'), setzen: zeile('edgeTo[w] = e;'),
+    change: zeile('if (pq.contains(w)) pq.change(w, distTo[w]);'), insert: zeile('else                pq.insert(w, distTo[w]);'),
+    relaxEnde: zeile('private void relax(') + 13,
+    forT: zeile('for (int t = 0; t < G.V(); t++)'), druckT: zeile('System.out.printf(Locale.ROOT, "%d nach %d (%.2f):", s, t, sp.distTo(t));'),
+    pfad: zeile('System.out.print("  " + e);'), println: zeile('         System.out.println();')
+  };
+  if (CODE[L.relaxEnde].trim() !== '}') throw new Error('Codezeile relax-Ende verschoben');
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+  const f2 = x => x === Infinity ? '∞' : x.toFixed(2);
+  const f2j = x => x === Infinity ? 'Infinity' : x.toFixed(2);     // wie Javas %.2f
+
+  // ---------- Graphen ----------
+  // tinyEWD (Reihenfolge der Datei tinyEWD.txt der Buch-Website), Lage wie in Abbildung 4.74
+  const BUCH = { V: 8,
+    kanten: [[4, 5, .35], [5, 4, .35], [4, 7, .37], [5, 7, .28], [7, 5, .28], [5, 1, .32], [0, 4, .38], [0, 2, .26], [7, 3, .39], [1, 3, .29], [2, 7, .34], [6, 2, .40], [3, 6, .52], [6, 0, .58], [6, 4, .93]],
+    pos: [[185, 165], [165, 30], [278, 118], [278, 40], [45, 220], [40, 82], [395, 198], [138, 108]],
+    breite: 430, hoehe: 245 };
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsgraph() {            // gerichtet, Gewichte 0,10 bis 0,99 (gleiche möglich), keine Schleifen, keine doppelten Kanten
+    const V = 8, ziel = 13 + zufall(5), kanten = [], hat = new Set();
+    while (kanten.length < ziel) {
+      const v = zufall(V), w = zufall(V);
+      if (v === w || hat.has(v + '>' + w)) continue;
+      hat.add(v + '>' + w); kanten.push([v, w, (10 + zufall(90)) / 100]);
+    }
+    const pos = Array.from({ length: V }, (_, i) => [215 + 170 * Math.sin(2 * Math.PI * i / V), 122 - 100 * Math.cos(2 * Math.PI * i / V)].map(Math.round));
+    return { V, kanten, pos, breite: 430, hoehe: 245, zufall: true };
+  }
+
+  // ---------- IndexMinPQ wie im Java-Code ----------
+  function neuePQ(maxN) { return { n: 0, pq: Array(maxN + 1).fill(0), qp: Array(maxN + 1).fill(-1), keys: Array(maxN + 1).fill(null), tausche: 0 }; }
+  const greater = (q, i, j) => q.keys[q.pq[i]] > q.keys[q.pq[j]];
+  function exch(q, i, j) { const t = q.pq[i]; q.pq[i] = q.pq[j]; q.pq[j] = t; q.qp[q.pq[i]] = i; q.qp[q.pq[j]] = j; q.tausche++; }
+  function swim(q, k) { while (k > 1 && greater(q, k >> 1, k)) { exch(q, k, k >> 1); k = k >> 1; } }
+  function sink(q, k) { while (2 * k <= q.n) { let j = 2 * k; if (j < q.n && greater(q, j, j + 1)) j++; if (!greater(q, k, j)) break; exch(q, k, j); k = j; } }
+  function pqInsert(q, i, key) { q.n++; q.qp[i] = q.n; q.pq[q.n] = i; q.keys[i] = key; swim(q, q.n); }
+  function pqChange(q, i, key) { q.keys[i] = key; swim(q, q.qp[i]); sink(q, q.qp[i]); }
+  function pqDelMin(q) { const min = q.pq[1]; exch(q, 1, q.n--); sink(q, 1); q.qp[min] = -1; q.keys[min] = null; q.pq[q.n + 1] = -1; return min; }
+
+  // ---------- Aufzeichnung ----------
+  let G, adj, Z, konsole, spur, steps, pos = 0, timer = null, S = 0;
+  function neuerZustand() {
+    Z = { gebaut: false, edgeTo: Array(G.V).fill(null), distTo: Array(G.V).fill(null), fertig: Array(G.V).fill(false), q: null, v: null, vorbei: false };
+  }
+  function snap(line, msg, o) {
+    steps.push(Object.assign({
+      line, msg, gebaut: Z.gebaut, edgeTo: Z.edgeTo.slice(), distTo: Z.distTo.slice(), fertig: Z.fertig.slice(), v: Z.v, vorbei: Z.vorbei,
+      q: Z.q && { n: Z.q.n, pq: Z.q.pq.slice(), qp: Z.q.qp.slice(), keys: Z.q.keys.slice() }, konsole: konsole.slice(), spur: spur.slice()
+    }, o || {}));
+  }
+  const kn = e => `${G.kanten[e][0]}→${G.kanten[e][1]}`;
+  const gw = e => G.kanten[e][2];
+  const heapText = q => q.n ? Array.from({ length: q.n }, (_, i) => q.pq[i + 1]).join(' ') : '(leer)';
+  function pfadKanten(t) { const k = []; for (let e = Z.edgeTo[t]; e !== null; e = Z.edgeTo[G.kanten[e][0]]) k.unshift(e); return k; }
+
+  function relax(v) {
+    Z.v = v;
+    snap(L.forE, `relax(G, ${v}): distTo[${v}] = ${f2(Z.distTo[v])} ist jetzt endgültig. ${adj[v].length ? `Ausgehende Kanten: ${adj[v].map(e => `${kn(e)} ${f2(gw(e))}`).join(', ')}.` : 'Keine ausgehenden Kanten.'}`);
+    const neu = [], nichts = [];
+    for (const e of adj[v]) {
+      const w = G.kanten[e][1], ueber = Z.distTo[v] + gw(e);
+      if (!(Z.distTo[w] > ueber)) {
+        nichts.push(kn(e));
+        snap(L.ifRelax, `Kante ${kn(e)} (${f2(gw(e))}): distTo[${w}] = ${f2(Z.distTo[w])} ist nicht größer als ${f2(Z.distTo[v])} + ${f2(gw(e))} = ${f2(ueber)} – der Weg über ${v} bringt nichts${Z.fertig[w] ? ` (${w} ist ohnehin schon endgültig)` : ''}.`, { kante: e, w });
+        continue;
+      }
+      const alt = Z.distTo[w];
+      snap(L.ifRelax, `Kante ${kn(e)} (${f2(gw(e))}): distTo[${w}] = ${f2(alt)} > ${f2(Z.distTo[v])} + ${f2(gw(e))} = ${f2(ueber)} – über ${v} ist ${w} schneller zu erreichen.`, { kante: e, w });
+      Z.distTo[w] = ueber; Z.edgeTo[w] = e;
+      snap(L.setzen, `distTo[${w}] = ${f2(ueber)}, edgeTo[${w}] = ${kn(e)}. Anders als bei Prim ist der Schlüssel die ganze Pfadlänge ab s, nicht nur das Gewicht der Kante.`, { kante: e, w, aend: w });
+      Z.q.tausche = 0;
+      if (Z.q.qp[w] !== -1) { pqChange(Z.q, w, ueber); snap(L.change, `${w} ist schon in pq: change(${w}, ${f2(ueber)})${Z.q.tausche ? `, steigt ${Z.q.tausche} Ebene${Z.q.tausche === 1 ? '' : 'n'} auf` : ''}. Heap: ${heapText(Z.q)}.`, { kante: e, w, heapNeu: w }); }
+      else { pqInsert(Z.q, w, ueber); snap(L.insert, `${w} kommt neu in pq: insert(${w}, ${f2(ueber)})${Z.q.tausche ? `, steigt ${Z.q.tausche} Ebene${Z.q.tausche === 1 ? '' : 'n'} auf` : ''}. Heap: ${heapText(Z.q)}.`, { kante: e, w, heapNeu: w }); }
+      neu.push(`${w} (${f2(ueber)})`);
+    }
+    spur.push(`${String(spur.length + 1).padStart(2)}. ${v} raus mit ${f2(Z.distTo[v])}${Z.edgeTo[v] !== null ? ` über ${kn(Z.edgeTo[v])}` : ''}${neu.length ? ` · neu/besser: ${neu.join(', ')}` : ''}${nichts.length ? ` · bringt nichts: ${nichts.join(', ')}` : ''}`);
+    snap(L.relaxEnde, `relax(G, ${v}) ist fertig. ${Z.q.n ? `Als Nächstes kommt ${Z.q.pq[1]} mit distTo ${f2(Z.q.keys[Z.q.pq[1]])} dran.` : 'pq ist leer.'}`, { opEnde: true, min: Z.q.n ? Z.q.pq[1] : null });
+    Z.v = null;
+  }
+  function lauf(neuG, s) {
+    stop();
+    G = neuG; S = s; steps = []; konsole = [`% java DijkstraSP${G.zufall || s !== 0 ? ' ' + s : ''}`]; spur = [];
+    adj = Array.from({ length: G.V }, () => []);
+    neuerZustand();
+    if (!G.zufall) {
+      snap(L.kanten, `Testclient: die ${G.kanten.length} gerichteten Kanten von tinyEWD mit ihren Gewichten, wie in Abbildung 4.74.`);
+      snap(L.neuG, `new EdgeWeightedDigraph(8): 8 Knoten, leere Adjazenzlisten.`);
+    }
+    G.kanten.forEach(([v], e) => adj[v].unshift(e));
+    Z.gebaut = true;
+    snap(L.addEdge, `addEdge für alle ${G.kanten.length} Kanten${G.zufall ? ` (${G.kanten.map(([a, b, g]) => `${a}→${b} ${f2(g)}`).join(', ')})` : ''}: Jede Kante v→w steht nur in der Liste von v.`, { opEnde: true });
+    snap(L.sArg, `Startknoten s = ${s}.`);
+    snap(L.neuSP, `new DijkstraSP(G, ${s}): Die ganze Arbeit passiert im Konstruktor.`);
+    snap(L.edgeToNeu, `edgeTo, distTo und pq werden angelegt.`);
+    Z.distTo = Array(G.V).fill(Infinity); Z.q = neuePQ(G.V);
+    snap(L.unendlich, `distTo[v] = ∞ für alle Knoten: Noch ist kein Weg bekannt.`);
+    Z.distTo[s] = 0;
+    snap(L.dist0, `distTo[${s}] = 0.0 – der Startknoten ist von sich selbst 0 entfernt.`, { aend: s });
+    pqInsert(Z.q, s, 0);
+    snap(L.insertS, `pq.insert(${s}, 0.0).`, { opEnde: true, heapNeu: s });
+    while (Z.q.n) {
+      snap(L.whileLoop, `pq ist nicht leer: ${heapText(Z.q)}.`, { min: Z.q.pq[1] });
+      const v = pqDelMin(Z.q);
+      Z.fertig[v] = true;
+      snap(L.delMin, `pq.delMin() liefert ${v} mit distTo ${f2(Z.distTo[v])} – den kleinsten Abstand aller offenen Knoten. Weil kein Gewicht negativ ist, kann es keinen kürzeren Weg nach ${v} mehr geben: Der Abstand ist endgültig.`, { min: v, v });
+      relax(v);
+    }
+    Z.vorbei = true;
+    const erreicht = Z.distTo.filter(d => d < Infinity).length;
+    snap(L.whileLoop, `pq ist leer – fertig. ${erreicht} von ${G.V} Knoten sind von ${s} aus erreichbar${erreicht < G.V ? `, die übrigen behalten distTo = ∞` : ''}. Die Kanten edgeTo[] bilden den Baum der kürzesten Pfade.`, { opEnde: true });
+    snap(L.forT, `Ausgabe: für jeden Knoten t die Länge und den Pfad, den pathTo(t) über edgeTo[] rückwärts zusammensetzt.`);
+    for (let t = 0; t < G.V; t++) {
+      const k = Z.distTo[t] < Infinity ? pfadKanten(t) : null;
+      konsole.push(`${s} nach ${t} (${f2j(Z.distTo[t])}):` + (k ? k.map(e => `  ${G.kanten[e][0]}->${G.kanten[e][1]} ${f2j(gw(e))}`).join('') : ''));
+      snap(k ? L.pfad : L.druckT, k ? (k.length ? `pathTo(${t}): ${[s, ...k.map(e => G.kanten[e][1])].join('→')}, zusammen ${f2(Z.distTo[t])}.` : `${t} ist der Startknoten, Pfad leer.`) : `${t} ist von ${s} aus nicht erreichbar.`, { pfad: k || [], ziel: t, opEnde: t === G.V - 1 });
+    }
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  function geometrie(e, R) {        // gerade, oder als Bogen bei Gegenkante bzw. wenn die Gerade einen Knoten streift
+    const [v, w] = G.kanten[e], [x1, y1] = G.pos[v], [x2, y2] = G.pos[w];
+    const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+    let biege = G.kanten.some(([a, b]) => a === w && b === v) ? 14 : 0;
+    for (let u = 0; u < G.V; u++) {
+      if (u === v || u === w) continue;
+      const [ux, uy] = G.pos[u], t = ((ux - x1) * dx + (uy - y1) * dy) / (len * len);
+      if (t > 0 && t < 1 && Math.abs((ux - x1) * nx + (uy - y1) * ny) < R + 6) biege = Math.max(biege, 32);
+    }
+    const cx = (x1 + x2) / 2 + nx * biege * 2, cy = (y1 + y2) / 2 + ny * biege * 2;
+    const punkt = t => [(1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * cx + t * t * x2, (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * cy + t * t * y2];
+    if (!biege) {
+      const sx = x1 + dx / len * R, sy = y1 + dy / len * R, ex = x2 - dx / len * R, ey = y2 - dy / len * R;
+      return { d: `M${sx.toFixed(1)},${sy.toFixed(1)} L${ex.toFixed(1)},${ey.toFixed(1)}`, ex, ey, tx: dx / len, ty: dy / len, punkt, nx, ny };
+    }
+    const a1 = Math.hypot(cx - x1, cy - y1), a2 = Math.hypot(x2 - cx, y2 - cy);
+    const sx = x1 + (cx - x1) / a1 * R, sy = y1 + (cy - y1) / a1 * R, tx = (x2 - cx) / a2, ty = (y2 - cy) / a2;
+    const ex = x2 - tx * R, ey = y2 - ty * R;
+    return { d: `M${sx.toFixed(1)},${sy.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)}`, ex, ey, tx, ty, punkt, nx, ny };
+  }
+  function labelLagen() {      // wie in prim.html, aber entlang der echten Kantenform (auch Bögen)
+    const B = 22, H = 13, frei = [], lagen = [];
+    const stoesst = (x, y) => x - B / 2 < 2 || x + B / 2 > G.breite - 2 || y - H / 2 < 2 || y + H / 2 > G.hoehe - 2
+      || G.pos.some(([cx, cy]) => Math.hypot(Math.max(x - B / 2 - cx, 0, cx - x - B / 2), Math.max(y - H / 2 - cy, 0, cy - y - H / 2)) < 16)
+      || frei.some(([fx, fy]) => Math.abs(fx - x) < B && Math.abs(fy - y) < H);
+    G.kanten.forEach((_, e) => {
+      const g = geometrie(e, 15);
+      let best = null;
+      for (const t of [0.5, 0.4, 0.6, 0.3, 0.7, 0.22, 0.78]) for (const s of [9, -9, 15, -15]) {
+        if (best) break;
+        const [px, py] = g.punkt(t), x = px + g.nx * s, y = py + g.ny * s;
+        if (!stoesst(x, y)) best = [x, y];
+      }
+      if (!best) { const [px, py] = g.punkt(0.5); best = [px + g.nx * 9, py + g.ny * 9]; }
+      frei.push(best); lagen.push(best);
+    });
+    return lagen;
+  }
+  function zeichneGraph(st) {
+    if (!G.labels) G.labels = labelLagen();
+    const svg = $('graph'), R = 15;
+    svg.setAttribute('viewBox', `0 0 ${G.breite} ${G.hoehe}`); svg.style.maxWidth = G.breite * 1.25 + 'px';
+    const inpq = new Set(); if (st.q) for (let i = 1; i <= st.q.n; i++) inpq.add(st.q.pq[i]);
+    const spt = new Set(), pqk = new Set();
+    st.edgeTo.forEach((e, v) => { if (e === null) return; if (st.fertig[v] || st.vorbei) spt.add(e); else if (inpq.has(v)) pqk.add(e); });
+    const minK = st.min !== null && st.min !== undefined ? st.edgeTo[st.min] : null;
+    const pfad = new Set(st.pfad || []);
+    let h = '', t = '';
+    if (st.gebaut) G.kanten.forEach(([v, w, g], e) => {
+      const k = geometrie(e, R);
+      let cls = '';
+      if (pfad.has(e)) cls = 'pfad';
+      else if (st.kante === e) cls = 'pruef';
+      else if (e === minK && st.min !== st.v) cls = 'min';
+      else if (spt.has(e)) cls = 'spt';
+      else if (pqk.has(e)) cls = 'inpq';
+      const nx = -k.ty, ny = k.tx, bx = k.ex - k.tx * 9, by = k.ey - k.ty * 9;
+      h += `<path class="kante ${cls}" d="${k.d}"/><polygon class="pfeil ${cls}" points="${k.ex.toFixed(1)},${k.ey.toFixed(1)} ${(bx + nx * 4.5).toFixed(1)},${(by + ny * 4.5).toFixed(1)} ${(bx - nx * 4.5).toFixed(1)},${(by - ny * 4.5).toFixed(1)}"/>`;
+      let [mx, my] = G.labels[e];
+      mx = Math.min(Math.max(mx, 14), G.breite - 14); my = Math.min(Math.max(my, 8), G.hoehe - 8);
+      t += `<text class="gewicht ${cls}" x="${mx.toFixed(1)}" y="${my.toFixed(1)}">${f2(g).replace(/^0/, '')}</text>`;
+    });
+    h += t;
+    for (let v = 0; v < G.V; v++) {
+      const [x, y] = G.pos[v];
+      let cls = 'knoten';
+      if (v === st.v) cls += ' aktiv';
+      else if (st.fertig[v]) cls += ' fertig';
+      else if (inpq.has(v)) cls += ' inpq';
+      if (st.w === v || st.ziel === v) cls += ' pruef';
+      if (v === S) cls += ' start';
+      h += `<g class="${cls}"><circle cx="${x}" cy="${y}" r="${R}"/><text x="${x}" y="${y}">${v}</text></g>`;
+      if (v === S) h += y - R - 5 >= 12 ? `<text class="marke" x="${x}" y="${y - R - 5}">s</text>` : `<text class="marke" x="${x - R - 8 >= 6 ? x - R - 8 : x + R + 8}" y="${y + 4}">s</text>`;
+    }
+    svg.innerHTML = h;
+  }
+  function render() {
+    const st = steps[pos];
+    $('titel').innerHTML = `${G.zufall ? 'Zufallsgraph' : 'tinyEWD'} · <b>${G.V}</b> Knoten, <b>${st.gebaut ? G.kanten.length : 0}</b> Kanten · s = <b>${S}</b> · endgültig: <b>${st.fertig.filter(Boolean).length}</b> · in pq: <b>${st.q ? st.q.n : 0}</b>`;
+    zeichneGraph(st);
+    const inpq = st.q ? st.q.qp.map(p => p !== -1) : [];
+    let t = '<table class="arr"><tr><th>v</th><th>edgeTo[]</th><th>distTo[]</th><th>endgültig</th></tr>';
+    for (let v = 0; v < G.V; v++) {
+      const e = st.edgeTo[v], d = st.distTo[v];
+      const rot = inpq[v] && !st.fertig[v] ? ' rot' : '';
+      t += `<tr class="${v === st.v ? 'aktiv' : ''}"><th>${v}</th>`
+        + `<td class="${st.aend === v && e !== null ? 'geaendert' : e === null ? 'leer' : rot}">${e === null ? 'null' : `${G.kanten[e][0]}->${G.kanten[e][1]} ${f2(gw(e))}`}</td>`
+        + `<td class="${st.aend === v ? 'geaendert' : d === null || d === Infinity ? 'leer' : rot}">${d === null ? '–' : f2(d)}</td>`
+        + `<td class="${st.fertig[v] ? 'ja' : 'leer'}">${st.fertig[v] ? 'ja' : ''}</td></tr>`;
+    }
+    $('tabelle').innerHTML = t + '</table>';
+    if (st.q) {
+      let hp = '<table class="arr"><tr><th>Position</th>';
+      for (let i = 1; i <= G.V; i++) hp += `<th>${i}</th>`;
+      hp += '</tr><tr><th>pq[]</th>';
+      for (let i = 1; i <= G.V; i++) { const x = i <= st.q.n ? st.q.pq[i] : null; hp += `<td class="${x === null ? 'leer' : x === st.heapNeu ? 'geaendert' : ''}">${x === null ? '' : x}</td>`; }
+      hp += '</tr><tr><th>Schlüssel</th>';
+      for (let i = 1; i <= G.V; i++) { const x = i <= st.q.n ? st.q.pq[i] : null; hp += `<td class="${x === null ? 'leer' : ''}">${x === null ? '' : f2(st.q.keys[x])}</td>`; }
+      hp += '</tr></table><table class="arr" style="margin-top:6px"><tr><th>Knoten</th>';
+      for (let v = 0; v < G.V; v++) hp += `<th>${v}</th>`;
+      hp += '</tr><tr><th>qp[]</th>';
+      for (let v = 0; v < G.V; v++) hp += `<td class="${st.q.qp[v] === -1 ? 'leer' : v === st.heapNeu ? 'geaendert' : ''}">${st.q.qp[v]}</td>`;
+      $('heap').innerHTML = hp + '</tr></table>';
+    } else $('heap').innerHTML = '<div class="klein">noch nicht angelegt</div>';
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg' + (st.cls ? ' ' + st.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    $('proto').innerHTML = st.spur.length
+      ? `<h4>Reihenfolge des Herausnehmens (wie die Tabelle zu Abbildung 4.74)</h4><pre class="spur">${st.spur.map((z, i) => i === st.spur.length - 1 && !st.vorbei ? `<span class="zuletzt">${esc(z)}</span>` : esc(z)).join('\n')}</pre>`
+      : '<p class="count">Noch nichts – erst wird der Graph gebaut.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+  function fuelleAuswahl() { $('s').innerHTML = Array.from({ length: G.V }, (_, v) => `<option${v === S ? ' selected' : ''}>${v}</option>`).join(''); }
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const start = () => { lockern(); lauf(BUCH, 0); fuelleAuswahl(); };
+  $('buch').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('abS').addEventListener('click', () => { lockern(); lauf(G.zufall ? G : BUCH, +$('s').value); fuelleAuswahl(); });
+  $('zufall').addEventListener('click', () => { lockern(); lauf(zufallsgraph(), 0); fuelleAuswahl(); });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(V, kanten, s) spielt main() durch (Anzeige danach wie vorher)
+  function rechne(V, kanten, s) {
+    const alt = { G, adj, Z, konsole, spur, steps, S };
+    lauf({ V, kanten, pos: Array.from({ length: V }, (_, i) => [215 + 170 * Math.sin(2 * Math.PI * i / V), 122 - 100 * Math.cos(2 * Math.PI * i / V)]), zufall: true, breite: 430, hoehe: 245 }, s);
+    const e = { edgeTo: Z.edgeTo.slice(), distTo: Z.distTo.slice(), konsole: konsole.slice(), spur: spur.slice(), steps };
+    ({ G, adj, Z, konsole, spur, steps, S } = alt); pos = 0; render(); fuelleAuswahl();
+    return e;
+  }
+  window.__dijkstra = { rechne, start, BUCH, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, get G() { return G; }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
