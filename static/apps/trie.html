@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trie-Symboltabelle</title>
+<!-- Visualisierung der Trie-Symboltabelle (nach Sedgewick/Wayne, Algorithmen, Algorithmus 5.4, Listing 5.8 bis 5.10)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Java-Code wie in den Listings, main() eigene Fassung,
+     Queue aus warteschlange.html. Beispiel: „she sells sea shells by the sea shore“ wie in Abbildung 5.23. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --gruen: #8fd1a6; --gtext: #1c1c1f; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --gruen: #2f6e48; --gtext: #ececef; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .bild { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .bild svg { display: block; width: 100%; height: auto; }
+  .bild .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  svg .kante { stroke: var(--muted); stroke-width: 1.6; fill: none; }
+  svg .kante.pfad { stroke: var(--cur); stroke-width: 3.2; }
+  svg .knoten circle { fill: var(--panel); stroke: var(--muted); stroke-width: 1.8; }
+  svg .knoten text { font: 700 13px ui-monospace, Consolas, monospace; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten.hatwert circle { stroke: var(--text); stroke-width: 2.4; }
+  svg .knoten.pfad circle { stroke: var(--cur); stroke-width: 3; }
+  svg .knoten.neu circle { fill: var(--neu); stroke: var(--neu); }
+  svg .knoten.neu text { fill: #fff; }
+  svg .knoten.aktiv circle { fill: var(--neu); stroke: var(--neu); }
+  svg .knoten.aktiv text { fill: #fff; }
+  svg .knoten.fund circle { fill: var(--gruen); stroke: var(--gruen); }
+  svg .knoten.fund text { fill: var(--gtext); }
+  svg .knoten.fehl circle { stroke: var(--rot); stroke-width: 3; stroke-dasharray: 4 3; }
+  svg .wert { font: 700 11px ui-monospace, Consolas, monospace; fill: var(--rot); }
+  svg .wurzel { font: 600 10px system-ui, sans-serif; fill: var(--muted); text-anchor: middle; }
+  @media (prefers-color-scheme: dark) { svg .knoten.neu text, svg .knoten.aktiv text { fill: #0d1530; } }
+  .eingabe input, .eingabe select { font: inherit; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .eingabe input { width: 9em; }
+  .op { font: 13px ui-monospace, Consolas, monospace; line-height: 1.6; margin-bottom: 8px; }
+  .op b { color: var(--neu); }
+  .schlange { font: 13px ui-monospace, Consolas, monospace; background: var(--code-bg); border-radius: 8px; padding: 6px 8px; min-height: 1.4em; overflow-x: auto; white-space: pre; }
+  .klein { font-size: 12px; color: var(--muted); margin: 6px 0 4px; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .spur { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; white-space: pre; overflow-x: auto; margin: 0; line-height: 1.45; }
+  .spur span.zuletzt { color: var(--neu); font-weight: 700; }
+  @media (max-width: 640px) { .bild { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="buch">Testclient (Abbildung 5.23)</button>
+    <button id="zufall">Zufallsschlüssel</button>
+  </div>
+  <div class="box controls eingabe">
+    <select id="opWahl" aria-label="Operation">
+      <option value="put">put</option><option value="get">get</option>
+      <option value="pre" selected>keysWithPrefix</option><option value="pat">keysThatMatch</option>
+    </select>
+    <input id="opText" value="se" aria-label="Schlüssel, Präfix oder Muster" maxlength="12">
+    <button id="opLos">ausführen</button>
+    <span class="klein" id="opHinweis">. ist im Muster der Platzhalter</span>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="bild">
+      <div>
+        <div class="h2">Der Trie – Zeichen stehen an den Knoten, rote Zahl = val</div>
+        <svg id="graph" role="img" aria-label="Der Trie mit dem Stand der Operation"></svg>
+      </div>
+      <div>
+        <div class="op" id="op"></div>
+        <div class="klein">Warteschlange q (gesammelte Schlüssel):</div>
+        <div class="schlange" id="schlange"></div>
+        <div class="klein" id="speicher"></div>
+      </div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>aktueller Knoten / gerade angelegt</span>
+      <span><i style="background:var(--panel);outline:3px solid var(--cur)"></i>Weg von der Wurzel</span>
+      <span><i style="background:var(--panel);outline:2px solid var(--text)"></i>Knoten mit Wert (Schlüsselende)</span>
+      <span><i style="background:var(--gruen)"></i>gefunden / gesammelt</span>
+      <span><i style="background:var(--panel);outline:2px dashed var(--rot)"></i>null – nicht vorhanden</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (nach Algorithmus 5.4, Listing 5.8 bis 5.10)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'public class TrieST<Value>',
+    '{',
+    '   private static int R = 256;         // Radix',
+    '   private Node root;                  // Wurzel des Trie',
+    '',
+    '   private static class Node',
+    '   {',
+    '      private Object val;',
+    '      private Node[] next = new Node[R];',
+    '   }',
+    '',
+    '   public Value get(String key)',
+    '   {',
+    '      Node x = get(root, key, 0);',
+    '      if (x == null) return null;',
+    '      return (Value) x.val;',
+    '   }',
+    '',
+    '   private Node get(Node x, String key, int d)',
+    '   {  // Liefert den mit dem Schlüssel assoziierten Wert im Teiltrie x.',
+    '      if (x == null) return null;',
+    '      if (d == key.length()) return x;',
+    '      char c = key.charAt(d);   // Identifiziert Teiltrie mit d-tem Schlüsselzeichen.',
+    '      return get(x.next[c], key, d+1);',
+    '   }',
+    '',
+    '   public void put(String key, Value val)',
+    '   {  root = put(root, key, val, 0);  }',
+    '',
+    '   private Node put(Node x, String key, Value val, int d)',
+    '   {  // Ändert den mit dem Schlüssel assoziierten Wert, sofern im Teiltrie x.',
+    '      if (x == null) x = new Node();',
+    '      if (d == key.length()) {  x.val = val; return x;  }',
+    '      char c = key.charAt(d);   // Identifiziert Teiltrie mit d-tem Schlüsselzeichen.',
+    '      x.next[c] = put(x.next[c], key, val, d+1);',
+    '      return x;',
+    '   }',
+    '',
+    '   // ---- Listing 5.9: Die Schlüssel in einem Trie sammeln ----',
+    '   public Iterable<String> keys()',
+    '   {  return keysWithPrefix("");  }',
+    '',
+    '   public Iterable<String> keysWithPrefix(String pre)',
+    '   {',
+    '      Queue<String> q = new Queue<String>();',
+    '      collect(get(root, pre, 0), pre, q);',
+    '      return q;',
+    '   }',
+    '',
+    '   private void collect(Node x, String pre, Queue<String> q)',
+    '   {',
+    '      if (x == null) return;',
+    '      if (x.val != null) q.enqueue(pre);',
+    '      for (char c = 0; c < R; c++)',
+    '         collect(x.next[c], pre + c, q);',
+    '   }',
+    '',
+    '   // ---- Listing 5.10: Platzhalterübereinstimmung in einem Trie ----',
+    '   public Iterable<String> keysThatMatch(String pat)',
+    '   {',
+    '      Queue<String> q = new Queue<String>();',
+    '      collect(root, "", pat, q);',
+    '      return q;',
+    '   }',
+    '',
+    '   public void collect(Node x, String pre, String pat, Queue<String> q)',
+    '   {',
+    '      int d = pre.length();',
+    '      if (x == null) return;',
+    '      if (d == pat.length() && x.val != null) q.enqueue(pre);',
+    '      if (d == pat.length()) return;',
+    '',
+    '      char next = pat.charAt(d);',
+    '      for (char c = 0; c < R; c++)',
+    '         if (next == \'.\' || next == c)',
+    '            collect(x.next[c], pre + c, pat, q);',
+    '   }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient (eigene Fassung): die Schlüssel aus Abbildung 5.23, Wert = Platz in der Eingabe',
+    '      String[] eingabe = { "she", "sells", "sea", "shells", "by", "the", "sea", "shore" };',
+    '      TrieST<Integer> st = new TrieST<Integer>();',
+    '      for (int i = 0; i < eingabe.length; i++)',
+    '         st.put(eingabe[i], i);',
+    '      for (String key : st.keys())',
+    '         System.out.println(key + " " + st.get(key));',
+    '      System.out.println("keysWithPrefix(\\"sh\\"): " + liste(st.keysWithPrefix("sh")));',
+    '      System.out.println("keysThatMatch(\\".he\\"): " + liste(st.keysThatMatch(".he")));',
+    '      System.out.println("get(\\"shell\\"): " + st.get("shell"));',
+    '   }',
+    '',
+    '   private static String liste(Iterable<String> keys)',
+    '   {  // eigene Hilfsmethode für die Ausgabe',
+    '      StringBuilder s = new StringBuilder();',
+    '      for (String k : keys) s.append(k).append(\' \');',
+    '      return s.toString().trim();',
+    '   }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    eingabe: zeile('String[] eingabe = {'), neuST: zeile('TrieST<Integer> st = new TrieST<Integer>();'), putAufruf: zeile('st.put(eingabe[i], i);'),
+    putRoot: zeile('{  root = put(root, key, val, 0);  }'), putNull: zeile('if (x == null) x = new Node();'), putEnde: zeile('if (d == key.length()) {  x.val = val; return x;  }'),
+    putChar: zeile('Ändert den mit dem Schlüssel') + 3, putRek: zeile('x.next[c] = put(x.next[c], key, val, d+1);'), putReturn: zeile('Ändert den mit dem Schlüssel') + 5,
+    getAufruf: zeile('Node x = get(root, key, 0);'), getNullTop: zeile('Node x = get(root, key, 0);') + 1, getWert: zeile('return (Value) x.val;'),
+    getNull: zeile('Liefert den mit dem Schlüssel') + 1, getEnde: zeile('if (d == key.length()) return x;'), getRek: zeile('return get(x.next[c], key, d+1);'),
+    keysAufruf: zeile('for (String key : st.keys())'), druckKey: zeile('System.out.println(key + " " + st.get(key));'), keys: zeile('{  return keysWithPrefix("");  }'),
+    kwpGet: zeile('collect(get(root, pre, 0), pre, q);'), kwpReturn: zeile('collect(get(root, pre, 0), pre, q);') + 1,
+    colNull: zeile('private void collect(Node x, String pre, Queue<String> q)') + 2, colEnq: zeile('if (x.val != null) q.enqueue(pre);'), colRek: zeile('collect(x.next[c], pre + c, q);'),
+    ktm: zeile('collect(root, "", pat, q);'), ktmReturn: zeile('collect(root, "", pat, q);') + 1,
+    patD: zeile('int d = pre.length();'), patEnq: zeile('if (d == pat.length() && x.val != null) q.enqueue(pre);'), patEnde: zeile('if (d == pat.length()) return;'),
+    patNext: zeile('char next = pat.charAt(d);'), patRek: zeile('collect(x.next[c], pre + c, pat, q);'),
+    druckPre: zeile('System.out.println("keysWithPrefix('), druckPat: zeile('System.out.println("keysThatMatch('), druckGet: zeile('System.out.println("get(')
+  };
+  if (!CODE[L.getNullTop].includes('if (x == null) return null;') || !CODE[L.putChar].includes('char c = key.charAt(d);') || !CODE[L.getNull].includes('if (x == null) return null;') || !CODE[L.colNull].includes('if (x == null) return;') || !CODE[L.putReturn].includes('return x;')) throw new Error('Codezeile verschoben');
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Daten ----------
+  const BUCH = ['she', 'sells', 'sea', 'shells', 'by', 'the', 'sea', 'shore'];
+  const BUCH_OPS = [...BUCH.map((k, i) => ({ art: 'put', k, v: i })), { art: 'keys' }, { art: 'pre', k: 'sh' }, { art: 'pat', k: '.he' }, { art: 'get', k: 'shell' }];
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsOps() {        // kurze Schlüssel aus wenigen Buchstaben – viele gemeinsame Präfixe
+    const n = 7 + zufall(5), abc = 'aehst', keys = [];
+    for (let i = 0; i < n; i++) keys.push(Array.from({ length: 1 + zufall(4) }, () => abc[zufall(abc.length)]).join(''));
+    return [...keys.map((k, i) => ({ art: 'put', k, v: i })), { art: 'keys' }, { art: 'pre', k: keys[0].slice(0, 1) }, { art: 'pat', k: '.' + keys[1].slice(1, 2) }, { art: 'get', k: keys[2] + 'a' }];
+  }
+
+  // ---------- Trie und Aufzeichnung ----------
+  let T, Z, konsole, spur, steps, pos = 0, timer = null, ops = BUCH_OPS, basisOps = BUCH_OPS, istBuch = true;
+  const neuerKnoten = (ch, eltern) => { const n = { id: T.length, ch, eltern, val: null, next: new Map() }; T.push(n); return n; };
+  function snap(line, msg, o) {
+    steps.push(Object.assign({ line, msg, anzahl: T.length, vals: T.map(n => n.val), q: Z.q ? Z.q.slice() : null, op: Z.op, konsole: konsole.slice(), spur: spur.slice() }, o || {}));
+  }
+  const kinder = n => [...n.next.keys()].sort((a, b) => a - b).map(c => n.next.get(c));
+  const wegZu = n => { const w = []; for (let x = n; x; x = x.eltern === null ? null : T[x.eltern]) w.unshift(x.id); return w; };
+  const sq = s => `"${s}"`;
+  let wurzel = null;
+
+  function put(key, val) {
+    Z.op = `put(${sq(key)}, ${val})`;
+    snap(L.putRoot, `put(${sq(key)}, ${val}): root = put(root, ${sq(key)}, ${val}, 0) – von der Wurzel aus Zeichen für Zeichen absteigen.`, { opStart: true });
+    let x = wurzel, eltern = null, weg = [];
+    for (let d = 0; ; d++) {
+      let neu = false;
+      if (!x) { x = neuerKnoten(d === 0 ? null : key.charCodeAt(d - 1), eltern ? eltern.id : null); if (eltern) eltern.next.set(key.charCodeAt(d - 1), x); else wurzel = x; neu = true; }
+      weg.push(x.id);
+      snap(L.putNull, neu ? `d = ${d}: Hier war null – new Node()${d === 0 ? ' als Wurzel' : ` für das Zeichen '${key[d - 1]}'`}. Er hat ${256} Verweise, alle null.` : `d = ${d}: Knoten ${d === 0 ? '(Wurzel)' : `'${key[d - 1]}'`} gibt es schon.`, { aktiv: x.id, weg: weg.slice(), neuK: neu ? x.id : null });
+      if (d === key.length) {
+        const alt = x.val; x.val = val;
+        snap(L.putEnde, `d = ${d} = key.length(): Ende des Schlüssels – x.val = ${val}${alt !== null ? ` (vorher ${alt}, der alte Wert wird überschrieben)` : ''}.`, { aktiv: x.id, weg: weg.slice(), wertNeu: x.id });
+        break;
+      }
+      snap(L.putChar, `c = key.charAt(${d}) = '${key[d]}' – weiter im Teiltrie x.next['${key[d]}']${x.next.has(key.charCodeAt(d)) ? '' : ', der noch null ist'}.`, { aktiv: x.id, weg: weg.slice() });
+      eltern = x; x = x.next.get(key.charCodeAt(d)) || null;
+    }
+    spur.push(`put(${sq(key)}, ${val})`);
+    snap(L.putReturn, `Rückweg: Jede Ebene gibt ihren Knoten zurück, der Aufrufer hängt ihn in x.next[c] ein – wie beim BST. Der Schlüssel ${sq(key)} ist der Weg von der Wurzel bis zu diesem Knoten.`, { weg, fundK: weg[weg.length - 1], opEnde: true });
+  }
+  function getKnoten(pre, zeilen, was) {   // gemeinsamer Abstieg für get und keysWithPrefix
+    let x = wurzel, weg = [];
+    for (let d = 0; ; d++) {
+      if (!x) { snap(zeilen.nul, `d = ${d}: x ist null – ${was === 'get' ? `den Schlüssel ${sq(pre)} gibt es nicht` : `kein Knoten für das Präfix ${sq(pre)}`}.`, { weg: weg.slice(), fehl: true }); return null; }
+      weg.push(x.id);
+      if (d === pre.length) { snap(zeilen.ende, `d = ${d} = Länge von ${sq(pre)}: Der Knoten ist erreicht.`, { aktiv: x.id, weg: weg.slice() }); return x; }
+      const nx = x.next.get(pre.charCodeAt(d)) || null;
+      snap(zeilen.rek, `d = ${d}: c = '${pre[d]}' – weiter mit x.next['${pre[d]}']${nx ? '' : ', das ist null'}.`, { aktiv: x.id, weg: weg.slice() });
+      x = nx;
+    }
+  }
+  const getZeilen = { nul: L.getNull, ende: L.getEnde, rek: L.getRek };
+  function get(key, mitDruck) {
+    Z.op = `get(${sq(key)})`;
+    snap(L.getAufruf, `get(${sq(key)}): Node x = get(root, ${sq(key)}, 0).`, { opStart: true });
+    const x = getKnoten(key, getZeilen, 'get');
+    const wert = x ? x.val : null;
+    if (!x) snap(L.getNullTop, `x == null – get liefert null.`, { opEnde: true, fehl: true });
+    else snap(L.getWert, `x.val = ${wert === null ? `null – ${sq(key)} ist nur Präfix anderer Schlüssel, selbst aber kein Schlüssel` : wert}.`, { weg: wegZu(x), fundK: wert === null ? null : x.id, fehlK: wert === null ? x.id : null, opEnde: true });
+    if (mitDruck) { konsole.push(`get(${sq(key)}): ${wert}`); spur.push(`get(${sq(key)}) = ${wert}`); snap(L.druckGet, `Ausgabe: get(${sq(key)}) = ${wert}.`, { opEnde: true }); }
+    return wert;
+  }
+  function keysWithPrefix(pre, art) {
+    Z.op = art === 'keys' ? 'keys()' : `keysWithPrefix(${sq(pre)})`;
+    if (art === 'keys') snap(L.keys, `keys() ruft keysWithPrefix("") auf – das leere Präfix passt auf alle Schlüssel.`, { opStart: true });
+    Z.q = [];
+    snap(L.kwpGet, `keysWithPrefix(${sq(pre)}): Queue q anlegen, mit get(root, ${sq(pre)}, 0) den Knoten des Präfixes suchen und von dort aus sammeln.`, art === 'keys' ? {} : { opStart: true });
+    const start = getKnoten(pre, getZeilen, 'pre');
+    const gesammelt = [];
+    const collect = (x, p) => {
+      const weg = wegZu(x);
+      if (x.val !== null) { Z.q.push(p); gesammelt.push(x.id); }
+      spur.push(`  ${p.padEnd(8)}${x.val !== null ? '  ' + Z.q.join(' ') : ''}`);
+      snap(x.val !== null ? L.colEnq : L.colNull, `collect(x, ${sq(p)}): ${x.val !== null ? `x.val = ${x.val} ist nicht null – ${sq(p)} kommt in die Warteschlange.` : 'x.val ist null, nur ein Präfix – nichts einreihen.'} ${x.next.size ? `Weiter mit den Kindern ${kinder(x).map(k => `'${String.fromCharCode(k.ch)}'`).join(', ')} – die übrigen ${256 - x.next.size} Verweise sind null.` : 'Keine Kinder.'}`, { aktiv: x.id, weg, sammel: gesammelt.slice() });
+      for (const k of kinder(x)) collect(k, p + String.fromCharCode(k.ch));
+    };
+    spur.push(`${Z.op}:`);
+    if (start) collect(start, pre);
+    const erg = Z.q.slice();
+    snap(L.kwpReturn, `return q: ${erg.length ? erg.join(' ') : '(leer)'} – in Zeichenreihenfolge, also sortiert.`, { sammel: gesammelt.slice(), opEnde: true });
+    return erg;
+  }
+  function keysThatMatch(pat) {
+    Z.op = `keysThatMatch(${sq(pat)})`; Z.q = [];
+    snap(L.ktm, `keysThatMatch(${sq(pat)}): Queue q anlegen und ab der Wurzel sammeln – nur Schlüssel genau der Länge ${pat.length}, '.' passt auf jedes Zeichen.`, { opStart: true });
+    const gesammelt = [];
+    spur.push(`${Z.op}:`);
+    const collect = (x, p) => {
+      const d = p.length, weg = wegZu(x);
+      if (d === pat.length) {
+        if (x.val !== null) { Z.q.push(p); gesammelt.push(x.id); }
+        spur.push(`  ${p.padEnd(8)}${x.val !== null ? '  ' + Z.q.join(' ') : ''}`);
+        snap(x.val !== null ? L.patEnq : L.patEnde, `collect(x, ${sq(p)}, ${sq(pat)}): d = ${d} = Länge des Musters – ${x.val !== null ? `x.val = ${x.val}, ${sq(p)} kommt in die Warteschlange.` : 'x.val ist null, kein Schlüssel.'} Längere Schlüssel werden nicht betrachtet.`, { aktiv: x.id, weg, sammel: gesammelt.slice() });
+        return;
+      }
+      const z = pat[d], passend = kinder(x).filter(k => z === '.' || k.ch === pat.charCodeAt(d));
+      spur.push(`  ${p.padEnd(8)}`);
+      snap(L.patNext, `collect(x, ${sq(p)}, ${sq(pat)}): next = pat.charAt(${d}) = '${z}' – ${z === '.' ? 'Platzhalter, also alle Kinder' : `nur das Kind '${z}'`}${passend.length ? `: ${passend.map(k => `'${String.fromCharCode(k.ch)}'`).join(', ')}` : ', das es nicht gibt (null)'}.`, { aktiv: x.id, weg, sammel: gesammelt.slice() });
+      for (const k of passend) collect(k, p + String.fromCharCode(k.ch));
+    };
+    if (wurzel) collect(wurzel, '');
+    const erg = Z.q.slice();
+    snap(L.ktmReturn, `return q: ${erg.length ? erg.join(' ') : '(leer)'}.`, { sammel: gesammelt.slice(), opEnde: true });
+    return erg;
+  }
+
+  function lauf(liste, buch, springeZu) {
+    stop();
+    ops = liste; istBuch = buch; T = []; wurzel = null; steps = []; konsole = []; spur = [];
+    Z = { q: null, op: null };
+    const keys = liste.filter(o => o.art === 'put').map(o => o.k);
+    snap(L.eingabe, buch ? `Testclient: die Schlüssel aus Abbildung 5.23 – „she sells sea shells by the sea shore“, Wert = Platz in der Eingabe.` : `Zufallsschlüssel: ${keys.join(' ')} – kurze Strings aus a, e, h, s, t mit vielen gemeinsamen Präfixen.`);
+    snap(L.neuST, `new TrieST<Integer>(): root ist null, der Trie ist leer.`, { opEnde: true });
+    let ziel = 0;
+    liste.forEach((o, k) => {
+      if (k === springeZu) ziel = steps.length;
+      Z.q = null;
+      if (o.art === 'put') { snap(L.putAufruf, `st.put(${sq(o.k)}, ${o.v}).`); put(o.k, o.v); }
+      else if (o.art === 'get') get(o.k, true);
+      else if (o.art === 'keys') {
+        snap(L.keysAufruf, `Alle Schlüssel mit ihren Werten ausgeben: for (String key : st.keys()).`);
+        const erg = keysWithPrefix('', 'keys');
+        Z.q = null;
+        erg.forEach(key => { const x = T.find(n => n.val !== null && wegZu(n).map(id => T[id].ch).slice(1).map(c => String.fromCharCode(c)).join('') === key); konsole.push(`${key} ${x.val}`); });
+        snap(L.druckKey, `Ausgabe: ${erg.map(key => key).join(', ')} mit ihren Werten.`, { opEnde: true });
+      } else if (o.art === 'pre') {
+        const erg = keysWithPrefix(o.k, 'pre'); konsole.push(`keysWithPrefix(${sq(o.k)}): ${erg.join(' ')}`); Z.q = null;
+        snap(L.druckPre, `Ausgabe: keysWithPrefix(${sq(o.k)}) = ${erg.join(' ') || '(leer)'}.`, { opEnde: true });
+      } else if (o.art === 'pat') {
+        const erg = keysThatMatch(o.k); konsole.push(`keysThatMatch(${sq(o.k)}): ${erg.join(' ')}`); Z.q = null;
+        snap(L.druckPat, `Ausgabe: keysThatMatch(${sq(o.k)}) = ${erg.join(' ') || '(leer)'}.`, { opEnde: true });
+      }
+    });
+    lage();
+    pos = springeZu !== undefined ? ziel : 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  let LAGE = [], BREITE = 300, HOEHE = 100;
+  function lage() {          // Lage aus dem fertigen Trie, damit die Knoten beim Abspielen nicht springen
+    LAGE = []; let blatt = 0, tief = 0;
+    const setze = (n, t) => {
+      tief = Math.max(tief, t);
+      const ks = kinder(n);
+      if (!ks.length) { LAGE[n.id] = [blatt++ * 34 + 22, t * 40 + 34]; return; }
+      ks.forEach(k => setze(k, t + 1));
+      LAGE[n.id] = [(LAGE[ks[0].id][0] + LAGE[ks[ks.length - 1].id][0]) / 2, t * 40 + 34];
+    };
+    if (wurzel) setze(wurzel, 0);
+    BREITE = Math.max(blatt * 34 + 26, 200); HOEHE = tief * 40 + 58;
+  }
+  function render() {
+    const st = steps[pos];
+    const sichtbar = n => n.id < st.anzahl;
+    const weg = new Set(st.weg || []), sammel = new Set(st.sammel || []);
+    let h = '', k = '';
+    const svg = $('graph');
+    svg.setAttribute('viewBox', `0 0 ${BREITE} ${HOEHE}`); svg.style.maxWidth = BREITE * 1.3 + 'px';
+    T.filter(sichtbar).forEach(n => {
+      const [x, y] = LAGE[n.id];
+      if (n.eltern !== null) { const [px, py] = LAGE[n.eltern]; k += `<line class="kante${weg.has(n.id) && weg.has(n.eltern) ? ' pfad' : ''}" x1="${px}" y1="${py + 13}" x2="${x}" y2="${y - 13}"/>`; }
+      let cls = 'knoten';
+      if (st.vals[n.id] !== null) cls += ' hatwert';
+      if (n.id === st.neuK) cls += ' neu';
+      else if (n.id === st.fundK || sammel.has(n.id)) cls += ' fund';
+      else if (n.id === st.aktiv) cls += ' aktiv';
+      if (weg.has(n.id)) cls += ' pfad';
+      if (n.id === st.fehlK) cls += ' fehl';
+      h += `<g class="${cls}"><circle cx="${x}" cy="${y}" r="13"/><text x="${x}" y="${y}">${n.ch === null ? '' : esc(String.fromCharCode(n.ch))}</text></g>`;
+      if (st.vals[n.id] !== null) h += `<text class="wert" x="${x + 15}" y="${y + 13}">${st.vals[n.id]}</text>`;
+      if (n.ch === null) h += `<text class="wurzel" x="${x}" y="${y - 16}">root</text>`;
+    });
+    svg.innerHTML = k + h || '<text x="10" y="30" class="wurzel" style="text-anchor:start">root = null</text>';
+    const knoten = st.anzahl;
+    $('titel').innerHTML = `${istBuch ? 'Abbildung 5.23' : 'Zufallsschlüssel'} · Knoten: <b>${knoten}</b> · Schlüssel: <b>${st.vals.slice(0, knoten).filter(v => v !== null).length}</b>`;
+    $('op').innerHTML = st.op ? `Operation: <b>${esc(st.op)}</b>` : 'noch keine Operation';
+    $('schlange').textContent = st.q ? (st.q.length ? st.q.join(' ') : '(leer)') : '–';
+    $('speicher').textContent = knoten ? `Speicher: ${knoten} Knoten × 256 Verweise = ${knoten * 256} Verweise, davon belegt: ${Math.max(knoten - 1, 0)}.` : '';
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg';
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    $('proto').innerHTML = st.spur.length
+      ? `<h4>Operationen; beim Sammeln wie Abbildung 5.23 je Aufruf von collect() der Schlüssel und der Inhalt von q</h4><pre class="spur">${st.spur.map((z, i) => i === st.spur.length - 1 && pos < steps.length - 1 ? `<span class="zuletzt">${esc(z)}</span>` : esc(z)).join('\n')}</pre>`
+      : '<p class="count">Noch keine Operation.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const start = () => { lockern(); basisOps = BUCH_OPS; lauf(BUCH_OPS, true); };
+  $('buch').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('zufall').addEventListener('click', () => { lockern(); basisOps = zufallsOps(); lauf(basisOps, false); });
+  $('opWahl').addEventListener('change', () => { const w = $('opWahl').value; $('opText').value = { put: 'shell', get: 'shells', pre: 'se', pat: 's..' }[w]; });
+  $('opLos').addEventListener('click', () => {
+    const art = $('opWahl').value, text = $('opText').value;
+    if ([...text].some(ch => ch.charCodeAt(0) > 255)) { $('opHinweis').textContent = 'nur Zeichen mit Code unter 256 (R = 256)'; return; }
+    if (art === 'pat' && !text.length) { $('opHinweis').textContent = 'das Muster braucht mindestens ein Zeichen'; return; }
+    $('opHinweis').textContent = '. ist im Muster der Platzhalter';
+    const o = art === 'put' ? { art, k: text, v: ops.filter(x => x.art === 'put').length } : { art, k: text };
+    lockern(); const liste = [...ops, o]; lauf(liste, istBuch, liste.length - 1);
+  });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(ops) spielt die Operationen durch (Anzeige danach wie vorher)
+  function rechne(liste) {
+    const alt = { T, Z, konsole, spur, steps, ops, istBuch, wurzel, LAGE, BREITE, HOEHE };
+    lauf(liste, false);
+    const e = { ausgabe: konsole.slice(), spur: spur.slice(), knoten: T.length, steps };
+    ({ T, Z, konsole, spur, steps, ops, istBuch, wurzel, LAGE, BREITE, HOEHE } = alt); pos = 0; render();
+    return e;
+  }
+  window.__trie = { rechne, start, BUCH_OPS, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, get T() { return T; }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
