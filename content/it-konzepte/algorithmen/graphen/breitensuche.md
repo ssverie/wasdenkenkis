@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/breitensuche/"]
 title = "Breitensuche für Pfade (Algorithmus 4.2)"
 description = "Die Breitensuche aus Sedgewick/Wayne, Algorithmus 4.2 (Listing 4.6) – Knoten für Knoten aus der Warteschlange, Abstände als Ebenen im Baum aus edgeTo[], kürzeste Pfade mit pathTo(v) und der direkte Vergleich mit der Tiefensuche am selben Graphen."
 date = 2026-10-27T19:32:00+01:00

@@ -47,11 +47,15 @@
 {{- end }}
 {{- /* Algorithmen: statt „Weitere Texte zu Algorithmen“ (Buch) nur der Rückweg zur Übersicht (Sven, 2026-10-26); Design Patterns ebenso */}}
 {{- $rueckweg := dict "/it-konzepte/algorithmen/" "Alle Algorithmen" "/it-konzepte/design-patterns/" "Alle Design Patterns" }}
-{{- $algo := isset $rueckweg .CurrentSection.RelPermalink }}
+{{- /* Algorithmen liegen seit 2026-10-28 in Kapitel-Ordnern: dort führt der Rückweg zum Kapitel und zur Algorithmen-Übersicht */}}
+{{- $bereich := .CurrentSection }}
+{{- $kapitel := false }}
+{{- with .CurrentSection.Parent }}{{ if eq .RelPermalink "/it-konzepte/algorithmen/" }}{{ $kapitel = $.CurrentSection }}{{ $bereich = . }}{{ end }}{{ end }}
+{{- $algo := isset $rueckweg $bereich.RelPermalink }}
 {{- if $algo }}
 <nav class="folgen-nav" aria-label="Zurück">
-  <span></span>
-  <a href="{{ .CurrentSection.RelPermalink }}">← {{ index $rueckweg .CurrentSection.RelPermalink }}</a>
+  <span>{{ with $kapitel }}<a href="{{ .RelPermalink }}">← {{ .Title }}</a>{{ end }}</span>
+  <a href="{{ $bereich.RelPermalink }}">{{ if not $kapitel }}← {{ end }}{{ index $rueckweg $bereich.RelPermalink }}</a>
   <span></span>
 </nav>
 {{- end }}

@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/tiefensuche/"]
 title = "Tiefensuche für Pfade (Algorithmus 4.1)"
 description = "Die Tiefensuche aus Sedgewick/Wayne, Algorithmus 4.1 (Listing 4.5) – dfs Aufruf für Aufruf mit Aufrufstapel, marked[] und edgeTo[], der Baum aus edgeTo[] und pathTo(v) mit dem Stapel, am Graphen aus Abbildung 4.16."
 date = 2026-10-27T19:03:00+01:00

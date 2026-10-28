@@ -27,7 +27,7 @@
   {{- $rubrik := .CurrentSection.Title }}
   {{- $bereich := .Section }}
   {{- with .CurrentSection.Parent }}
-    {{- if and (not .IsHome) (ne $bereich "it-konzepte") }}{{ $rubrik = printf "%s › %s" .Title $rubrik }}{{ end }}
+    {{- if and (not .IsHome) (or (ne $bereich "it-konzepte") (ne .RelPermalink "/it-konzepte/")) }}{{ $rubrik = printf "%s › %s" .Title $rubrik }}{{ end }}
   {{- end }}
   {{- if and (eq .Section "it-konzepte") (eq .CurrentSection.RelPermalink "/it-konzepte/") }}{{ $rubrik = "IT-Grundlagen" }}{{ end }}
   <li data-pfad="{{ .RelPermalink }}" data-rubrik="{{ $rubrik }}">

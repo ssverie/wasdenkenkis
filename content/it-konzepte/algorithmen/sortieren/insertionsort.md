@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/insertionsort/"]
 title = "Insertionsort (Algorithmus 2.2)"
 description = "Sortieren durch Einfügen aus Sedgewick/Wayne, Algorithmus 2.2 (Listing 2.5) – Schritt für Schritt, mit Java-Code, Ablaufprotokoll und Inversionen."
 date = 2026-10-24T17:30:00+02:00

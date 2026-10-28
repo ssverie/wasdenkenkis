@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/heapsort/"]
 title = "Heapsort (Algorithmus 2.7)"
 description = "Sortieren mit dem Heap aus Sedgewick/Wayne, Algorithmus 2.7 (Listing 2.21) – Heap bauen und Sortdown Schritt für Schritt, im Baum und im Array, mit Java-Code und Ablaufprotokoll."
 date = 2026-10-25T14:51:00+01:00
@@ -44,5 +45,5 @@ Kosten:
 Einordnung: Heapsort ist das einzige der bisherigen Verfahren, das beides garantiert: N lg N im schlimmsten Fall und kein Zusatzspeicher. In der Praxis ist es trotzdem meist langsamer als Quicksort, weil `sink` quer durchs Array springt (Index k zu 2k) und damit den Prozessor-Cache schlecht ausnutzt. Deshalb wird es gern als Absicherung eingesetzt, z. B. in Introsort, wenn Quicksort zu tief rekursiert.
 
 {{< anmerkung >}}
-„Der Heap aus [12]“ meint den vorigen Text derselben Instanz, die [Heap-Vorrangwarteschlange](/it-konzepte/algorithmen/heap/). „Die Tabelle“, „Rot“ und „grau“ beziehen sich auf das Buch, Abbildung 2.32. In der Visualisierung sind von `sink` bewegte Elemente orange. Im Code heißen `less` und `exch` hier `kleiner` und `tausche`, und `sink` ist eine eigene Fassung. Mit den Buchstaben SORTEXAMPLE liefert die Visualisierung genau die 15 Zeilen aus Abbildung 2.32. Sie braucht 14 Vergleiche für den Heap und 32 für den Sortdown, beides unter den Grenzen aus dem Text. Dazu kamen 400 Zufallsarrays: Nach Phase 1 und nach jedem `sink` galt die Heap-Ordnung, am Ende war alles sortiert, und keine Grenze wurde überschritten.
+„Der Heap aus [12]“ meint den vorigen Text derselben Instanz, die [Heap-Vorrangwarteschlange](/it-konzepte/algorithmen/sortieren/heap/). „Die Tabelle“, „Rot“ und „grau“ beziehen sich auf das Buch, Abbildung 2.32. In der Visualisierung sind von `sink` bewegte Elemente orange. Im Code heißen `less` und `exch` hier `kleiner` und `tausche`, und `sink` ist eine eigene Fassung. Mit den Buchstaben SORTEXAMPLE liefert die Visualisierung genau die 15 Zeilen aus Abbildung 2.32. Sie braucht 14 Vergleiche für den Heap und 32 für den Sortdown, beides unter den Grenzen aus dem Text. Dazu kamen 400 Zufallsarrays: Nach Phase 1 und nach jedem `sink` galt die Heap-Ordnung, am Ende war alles sortiert, und keine Grenze wurde überschritten.
 {{< /anmerkung >}}

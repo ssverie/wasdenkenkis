@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/rot-schwarz/"]
 title = "Rot-Schwarz-Baum (Algorithmus 3.4)"
 description = "Der linksgerichtete Rot-Schwarz-Baum aus Sedgewick/Wayne, Algorithmus 3.4 (Listing 3.16) – put Schritt für Schritt mit rotateLeft, rotateRight und flipColors auf dem Rückweg, daneben derselbe Baum als 2-3-Baum, mit beiden Einfügefolgen aus Abbildung 3.46."
 date = 2026-10-27T13:47:00+01:00

@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/shellsort/"]
 title = "Shellsort (Algorithmus 2.3)"
 description = "Insertionsort mit Sprüngen aus Sedgewick/Wayne, Algorithmus 2.3 (Listing 2.8) – Schritt für Schritt durch die Abstände 13, 4 und 1, mit Java-Code und Ablaufprotokoll."
 date = 2026-10-24T17:40:00+02:00

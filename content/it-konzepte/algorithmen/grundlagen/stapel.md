@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/stapel/"]
 title = "LIFO-Stapel mit Arrays variabler Größe (Algorithmus 1.1)"
 description = "Der Stapel mit mitwachsendem Array aus Sedgewick/Wayne, Algorithmus 1.1 (Listing 1.37) – push, pop und das Umziehen in ein doppelt oder halb so großes Array Schritt für Schritt, mit Java-Code und Protokoll."
 date = 2026-10-26T10:39:00+01:00

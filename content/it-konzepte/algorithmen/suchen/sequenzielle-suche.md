@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/sequenzielle-suche/"]
 title = "Sequenzielle Suche (Algorithmus 3.1)"
 description = "Die Symboltabelle als ungeordnete verkettete Liste aus Sedgewick/Wayne, Algorithmus 3.1 (Listing 3.4) – put und get Schritt für Schritt, jeder Vergleich einzeln, mit dem Testclient SEARCHEXAMPLE wie in Abbildung 3.3."
 date = 2026-10-27T12:32:00+01:00

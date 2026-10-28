@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/union-find/"]
 title = "Union-Find (Algorithmus 1.5)"
 description = "Dynamische Zusammenhangskomponenten aus Sedgewick/Wayne, Algorithmus 1.5 (Listing 1.54) – Quick-Find, Quick-Union und gewichtetes Quick-Union zum Umschalten, find und union Schritt für Schritt mit Bäumen, id[] und Arrayzugriffen, dazu der Testclient mit tinyUF.txt."
 date = 2026-10-26T12:57:00+01:00

@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/union-find-gewichtet/"]
 title = "Gewichtetes Quick-Union (Algorithmus 1.5, Fortsetzung)"
 description = "Die Union-Find-Variante aus der Praxis nach Sedgewick/Wayne, Algorithmus 1.5 (Fortsetzung, Listing 1.57) – der kleinere Baum kommt unter den größeren, Abbildung 1.61 mit Referenz- und Worst-Case-Eingabe Schritt für Schritt und Satz H zum Nachprüfen."
 date = 2026-10-26T13:16:00+01:00

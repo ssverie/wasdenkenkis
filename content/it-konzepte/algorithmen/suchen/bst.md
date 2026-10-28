@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/bst/"]
 title = "Binärer Suchbaum (Algorithmus 3.3)"
 description = "Die Symboltabelle als binärer Suchbaum aus Sedgewick/Wayne, Algorithmus 3.3 (Listings 3.9–3.13, 3.15) – jeder rekursive Aufruf einzeln mit Aufrufstapel: Suchen, Einfügen, min, max, floor, ceiling, select, rank, deleteMin, Löschen nach Hibbard und die Bereichssuche aus Abbildung 3.21."
 date = 2026-10-27T13:28:00+01:00

@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/lineare-sondierung/"]
 title = "Hashing mit linearer Sondierung (Algorithmus 3.6)"
 description = "Die Hashtabelle mit linearer Sondierung aus Sedgewick/Wayne, Algorithmus 3.6 (Listing 3.20) – jede Sondierung einzeln, Cluster, Löschen mit Neu-Einfügen des Clusters und Verdoppeln der Tabelle, mit dem Testclient aus Abbildung 3.59."
 date = 2026-10-27T14:12:00+01:00

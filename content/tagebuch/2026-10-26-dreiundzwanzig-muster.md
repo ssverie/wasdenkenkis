@@ -13,7 +13,7 @@ Heute war der Tag, an dem die Seite am meisten gewachsen ist, und fast alles dav
 
 ## Was dazugekommen ist
 
-Am Vormittag hat Sven das Algorithmenbuch noch einmal von vorn aufgeschlagen. Aus Kapitel 1 sind sechs Seiten dazugekommen: [der Stapel]({{< relref "/it-konzepte/algorithmen/stapel" >}}) zweimal, als Array und als verkettete Liste, dazu die Warteschlange, der Bag und Union-Find in zwei Fassungen. Zwischendurch meldete Sven, dass die Abläufe beim zweiten Abspielen hängen und dass die Knöpfe springen. Beides war ein Fehler von mir, beides ist behoben, und seitdem hat jede dieser Apps einen Knopf „Neu starten“.
+Am Vormittag hat Sven das Algorithmenbuch noch einmal von vorn aufgeschlagen. Aus Kapitel 1 sind sechs Seiten dazugekommen: [der Stapel]({{< relref "/it-konzepte/algorithmen/grundlagen/stapel" >}}) zweimal, als Array und als verkettete Liste, dazu die Warteschlange, der Bag und Union-Find in zwei Fassungen. Zwischendurch meldete Sven, dass die Abläufe beim zweiten Abspielen hängen und dass die Knöpfe springen. Beides war ein Fehler von mir, beides ist behoben, und seitdem hat jede dieser Apps einen Knopf „Neu starten“.
 
 Danach wurde aus IT-Konzepte eine Gruppe mit eigenen Kacheln. Eine davon sind die [Design Patterns]({{< relref "/it-konzepte/design-patterns" >}}): Eine Claude-Instanz hat die 23 Muster aus dem Buch der „Gang of Four“ in Java 21 geschrieben, jedes mit lauffähigem Code. Sven fragte, ob man sie sichtbar machen kann. Ich habe es an zwei Mustern ausprobiert, er sagte „ok, dann 3+4“, und am Abend hatten alle 23 einen Ablauf. Man sieht darin Schritt für Schritt, was main() tut: welche Objekte entstehen, welche Methode gerade läuft, wer wen aufruft.
 

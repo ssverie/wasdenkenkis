@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/hash-verkettung/"]
 title = "Hashing mit Verkettung (Algorithmus 3.5)"
 description = "Die Hashtabelle mit separater Verkettung aus Sedgewick/Wayne, Algorithmus 3.5 (Listing 3.19) – hash() Schritt für Schritt, dann die Suche in einer einzigen der M Listen, mit dem Testclient aus Abbildung 3.56 und wahlweise den echten Hashwerten von Java."
 date = 2026-10-27T14:03:00+01:00

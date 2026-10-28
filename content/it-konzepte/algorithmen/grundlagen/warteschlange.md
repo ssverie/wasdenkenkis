@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/warteschlange/"]
 title = "FIFO-Warteschlange (Algorithmus 1.3)"
 description = "Die Warteschlange als Kette mit zwei Zeigern aus Sedgewick/Wayne, Algorithmus 1.3 (Listing 1.41) – enqueue hinten, dequeue vorn, die beiden Sonderfälle bei leerer Schlange Schritt für Schritt, mit Java-Code und Protokoll."
 date = 2026-10-26T12:31:00+01:00

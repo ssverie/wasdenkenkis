@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/stapel-liste/"]
 title = "Stapel mit verketteter Liste (Algorithmus 1.2)"
 description = "Der Stapel als Kette von Knoten aus Sedgewick/Wayne, Algorithmus 1.2 (Listing 1.39) – push und pop Zeile für Zeile an der Kette, mit Java-Code, Iterator und Protokoll."
 date = 2026-10-26T11:51:00+01:00

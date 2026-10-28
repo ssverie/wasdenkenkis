@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/binaere-suche-st/"]
 title = "Binäre Suche in geordnetem Array (Algorithmus 3.2)"
 description = "Die Symboltabelle als geordnetes Array aus Sedgewick/Wayne, Algorithmus 3.2 (Listings 3.5, 3.7, 3.8) – rank mit lo, hi und mid Schritt für Schritt wie in Abbildung 3.6, das Verschieben beim Einfügen und die geordneten Operationen min, max, select, ceiling, floor und keys."
 date = 2026-10-27T13:00:00+01:00

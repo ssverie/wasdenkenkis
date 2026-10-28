@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/bag/"]
 title = "Bag / Multimenge (Algorithmus 1.4)"
 description = "Die Multimenge als Kette aus Sedgewick/Wayne, Algorithmus 1.4 (Listing 1.42) – hineinlegen mit add und durchlaufen mit dem Iterator, Schritt für Schritt bis zu Mittelwert und Standardabweichung, mit Java-Code und Protokoll."
 date = 2026-10-26T12:37:00+01:00

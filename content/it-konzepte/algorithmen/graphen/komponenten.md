@@ -1,4 +1,5 @@
 +++
+aliases = ["/it-konzepte/algorithmen/komponenten/"]
 title = "Zusammenhangskomponenten (Algorithmus 4.3)"
 description = "Die Zusammenhangskomponenten aus Sedgewick/Wayne, Algorithmus 4.3 (Listing 4.8) – die for-Schleife des Konstruktors, je Komponente eine Tiefensuche, id[] und count Schritt für Schritt, dazu connected(v, w), am Graphen tinyG aus dem Buch."
 date = 2026-10-27T19:51:00+01:00
