@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B-Baum</title>
+<!-- Visualisierung des B-Baums (nach Sedgewick/Wayne, Algorithmen, Algorithmus 6.1, Listing 6.5) für wasdenkenkis.de –
+     gebaut von Claude Code Opus 5.5. BTreeSET wie im Listing, Page nach der API in Tabelle 6.2 als eigene Fassung im
+     Arbeitsspeicher (im Buch Übung 6.15), main() eigene Fassung. Beispiele: die B-Bäume der Ordnung 6 aus den
+     Abbildungen 6.7 bis 6.9. Aufbau der Seite wie tst.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --gruen: #8fd1a6; --gtext: #1c1c1f; --leer: #f1efe9; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --gruen: #2f6e48; --gtext: #ececef; --leer: #26262b; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .baum { overflow-x: auto; }
+  .baum svg { display: block; height: auto; margin: 0 auto; }
+  svg .kante { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+  svg .kante.pfad { stroke: var(--cur); stroke-width: 3; }
+  svg .zelle { fill: var(--panel); stroke: var(--muted); stroke-width: 1; }
+  svg .zelle.leer { fill: var(--leer); }
+  svg .zelle.neu { fill: var(--neu); stroke: var(--neu); }
+  svg .zelle.fund { fill: var(--gruen); stroke: var(--gruen); }
+  svg .zelle.eintrag { fill: var(--hl); }
+  svg .rahmen { fill: none; stroke: var(--text); stroke-width: 1.6; }
+  svg .rahmen.pfad { stroke: var(--cur); stroke-width: 3; }
+  svg .rahmen.aktiv { stroke: var(--neu); stroke-width: 3.2; }
+  svg .rahmen.voll { stroke: var(--rot); stroke-width: 3; stroke-dasharray: 5 3; }
+  svg .rahmen.fehl { stroke: var(--rot); stroke-width: 3; }
+  svg .rahmen.neuseite { stroke: var(--neu); stroke-width: 3; stroke-dasharray: 2 2; }
+  svg .k { font: 700 12px ui-monospace, Consolas, monospace; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .k.waechter { fill: var(--muted); }
+  svg .k.weiss { fill: #fff; }
+  svg .k.gtext { fill: var(--gtext); }
+  svg .wurzel { font: 600 10px system-ui, sans-serif; fill: var(--muted); }
+  @media (prefers-color-scheme: dark) { svg .k.weiss { fill: #0d1530; } }
+  .eingabe input, .eingabe select { font: inherit; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .eingabe input { width: 6em; }
+  .op { font: 13px ui-monospace, Consolas, monospace; line-height: 1.6; margin: 8px 0 2px; }
+  .op b { color: var(--neu); }
+  .klein { font-size: 12px; color: var(--muted); margin: 6px 0 4px; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .spur { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; white-space: pre; overflow-x: auto; margin: 0; line-height: 1.45; }
+  .spur span.zuletzt { color: var(--neu); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="abb7">Abbildung 6.7 und 6.8</button>
+    <button id="abb9">Abbildung 6.9</button>
+    <button id="zufall">Zufallsschlüssel</button>
+    <label>M <select id="ordnung" aria-label="Ordnung M"><option>4</option><option selected>6</option><option>8</option></select></label>
+  </div>
+  <div class="box controls eingabe">
+    <select id="opWahl" aria-label="Operation"><option value="add">add</option><option value="contains" selected>contains</option></select>
+    <input id="opText" value="G" aria-label="Schlüssel" maxlength="8">
+    <button id="opLos">ausführen</button>
+    <span class="klein" id="opHinweis"></span>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="baum" id="baum"><svg id="graph" role="img" aria-label="Der B-Baum mit dem Stand der Operation"></svg></div>
+    <div class="op" id="op"></div>
+    <div class="legende">
+      <span><i style="background:var(--panel);outline:3px solid var(--cur)"></i>Weg von der Wurzel</span>
+      <span><i style="background:var(--panel);outline:3px solid var(--neu)"></i>aktuelle Seite</span>
+      <span><i style="background:var(--hl)"></i>gewählter Eintrag (next)</span>
+      <span><i style="background:var(--neu)"></i>neuer Schlüssel</span>
+      <span><i style="background:var(--panel);outline:2px dashed var(--rot)"></i>übergelaufen (M Schlüssel)</span>
+      <span><i style="background:var(--gruen)"></i>gefunden</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis die aktuelle Operation fertig ist">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (nach Algorithmus 6.1, Listing 6.5)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von contains()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    `public class BTreeSET<Key extends Comparable<Key>>`,
+    `{`,
+    `   private Page root = new Page(true);`,
+    ``,
+    `   public BTreeSET(Key sentinel)`,
+    `   {  add(sentinel);  }`,
+    ``,
+    `   public boolean contains(Key key)`,
+    `   {  return contains(root, key);  }`,
+    ``,
+    `   private boolean contains(Page h, Key key)`,
+    `   {`,
+    `      if (h.isExternal()) return h.contains(key);`,
+    `      return contains(h.next(key), key);`,
+    `   }`,
+    ``,
+    `   public void add(Key key)`,
+    `   {`,
+    `      add (root, key);`,
+    `      if (root.isFull())`,
+    `      {`,
+    `         Page lefthalf = root;`,
+    `         Page righthalf = root.split();`,
+    `         root = new Page(false);`,
+    `         root.add(lefthalf);`,
+    `         root.add(righthalf);`,
+    `      }`,
+    `   }`,
+    ``,
+    `   public void add(Page h, Key key)`,
+    `   {`,
+    `      if (h.isExternal()) {  h.add(key); return;  }`,
+    `      Page next = h.next(key);`,
+    `      add(next, key);`,
+    `      if (next.isFull())`,
+    `         h.add(next.split());`,
+    `      next.close();`,
+    `   }`,
+    ``,
+    `   public static void main(String[] args)`,
+    `   {  // Testclient (eigene Fassung): baut den B-Baum aus Abbildung 6.7, Wächter "*"`,
+    `      BTreeSET<String> st = new BTreeSET<String>("*");`,
+    `      String[] keys = { "B", "C", "H", "I", "J", "K", "M", "N", "Q", "R",`,
+    `                        "T", "U", "W", "X", "D", "E", "F", "O", "P", "Y" };`,
+    `      for (String key : keys)`,
+    `         st.add(key);`,
+    `      for (String key : new String[] { "E", "G" })`,
+    `         System.out.println(key + " " + st.contains(key));`,
+    `   }`,
+    `}`,
+    ``,
+    `// Page: eigene Fassung im Arbeitsspeicher nach der API in Tabelle 6.2`,
+    `// (im Buch Übung 6.15), Schlüssel sortiert im Array wie bei BinarySearchST`,
+    `import java.util.ArrayList;`,
+    ``,
+    `public class Page<Key extends Comparable<Key>>`,
+    `{`,
+    `   static int M = 6;                         // Ordnung des B-Baums`,
+    `   private final boolean bottom;             // externe Seite?`,
+    `   private Key[] keys = (Key[]) new Comparable[M];   // sortiert`,
+    `   private Page<Key>[] next = new Page[M];   // nur intern: Teilbäume`,
+    `   private int n = 0;`,
+    ``,
+    `   public Page(boolean bottom)`,
+    `   {  this.bottom = bottom;  }`,
+    ``,
+    `   public void close()`,
+    `   {  }                                      // im Arbeitsspeicher nichts zu tun`,
+    ``,
+    `   public void add(Key key)`,
+    `   {  insert(key, null);  }`,
+    ``,
+    `   public void add(Page<Key> p)`,
+    `   {  insert(p.keys[0], p);  }               // kleinster Schlüssel in p`,
+    ``,
+    `   private void insert(Key key, Page<Key> p)`,
+    `   {`,
+    `      int i = rank(key);`,
+    `      if (i < n && keys[i].compareTo(key) == 0) return;   // schon da`,
+    `      for (int j = n; j > i; j--)`,
+    `      {  keys[j] = keys[j-1]; next[j] = next[j-1];  }`,
+    `      keys[i] = key; next[i] = p; n++;`,
+    `   }`,
+    ``,
+    `   private int rank(Key key)`,
+    `   {  // binäre Suche: Platz von key oder Anzahl der kleineren Schlüssel`,
+    `      int lo = 0, hi = n - 1;`,
+    `      while (lo <= hi)`,
+    `      {`,
+    `         int mid = lo + (hi - lo) / 2;`,
+    `         int cmp = key.compareTo(keys[mid]);`,
+    `         if      (cmp < 0) hi = mid - 1;`,
+    `         else if (cmp > 0) lo = mid + 1;`,
+    `         else return mid;`,
+    `      }`,
+    `      return lo;`,
+    `   }`,
+    ``,
+    `   public boolean isExternal()`,
+    `   {  return bottom;  }`,
+    ``,
+    `   public boolean contains(Key key)`,
+    `   {  int i = rank(key); return i < n && keys[i].compareTo(key) == 0;  }`,
+    ``,
+    `   public Page<Key> next(Key key)`,
+    `   {  // Teilbaum zum größten Schlüssel <= key (den gibt es dank Wächter)`,
+    `      int i = rank(key);`,
+    `      if (i < n && keys[i].compareTo(key) == 0) return next[i];`,
+    `      return next[i-1];`,
+    `   }`,
+    ``,
+    `   public boolean isFull()`,
+    `   {  return n == M;  }                      // übergelaufen: M Schlüssel`,
+    ``,
+    `   public Page<Key> split()`,
+    `   {  // die M/2 größten Schlüssel auf eine neue Seite`,
+    `      Page<Key> t = new Page<Key>(bottom);`,
+    `      for (int j = M/2; j < M; j++)`,
+    `      {`,
+    `         t.keys[j - M/2] = keys[j]; t.next[j - M/2] = next[j];`,
+    `         keys[j] = null; next[j] = null;`,
+    `      }`,
+    `      t.n = M - M/2; n = M/2;`,
+    `      return t;`,
+    `   }`,
+    ``,
+    `   public Iterable<Key> keys()`,
+    `   {`,
+    `      ArrayList<Key> liste = new ArrayList<Key>();`,
+    `      for (int i = 0; i < n; i++) liste.add(keys[i]);`,
+    `      return liste;`,
+    `   }`,
+    `}`
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    konstr: zeile('{  add(sentinel);  }'), cPub: zeile('{  return contains(root, key);  }'), cExt: zeile('if (h.isExternal()) return h.contains(key);'),
+    cRek: zeile('return contains(h.next(key), key);'), aPub: zeile('add (root, key);'), rootVoll: zeile('if (root.isFull())'),
+    rootSplit: zeile('Page righthalf = root.split();'), rootNeu: zeile('root.add(righthalf);'), aExt: zeile('if (h.isExternal()) {  h.add(key); return;  }'),
+    aNext: zeile('Page next = h.next(key);'), aVoll: zeile('if (next.isFull())'), aSplit: zeile('h.add(next.split());'),
+    neuST: zeile('BTreeSET<String> st = new BTreeSET<String>("*");'), addAufruf: zeile('st.add(key);'), druck: zeile('System.out.println(key + " " + st.contains(key));')
+  };
+  if (L.rootNeu !== L.rootSplit + 3 || L.aSplit !== L.aVoll + 1) throw new Error('Codezeile verschoben');
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Beispiele ----------
+  const ABB7 = ['B', 'C', 'H', 'I', 'J', 'K', 'M', 'N', 'Q', 'R', 'T', 'U', 'W', 'X', 'D', 'E', 'F', 'O', 'P', 'Y'];
+  const ABB9 = ['B', 'C', 'H', 'I', 'J', 'K', 'M', 'N', 'Q', 'R', 'T', 'U', 'W', 'X', 'O', 'P', 'E', 'F'];
+  const ops = (adds, fragen) => [...adds.map(k => ({ art: 'add', k })), ...fragen.map(k => ({ art: 'contains', k }))];
+  const VOR = { abb7: ops(ABB7, ['E', 'G']), abb9: ops([...ABB9, 'A'], []) };
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsOps() {
+    const abc = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', n = 14 + zufall(12), keys = [];
+    for (let i = 0; i < n; i++) keys.push(abc[zufall(26)]);
+    return ops(keys, [keys[zufall(n)], abc[zufall(26)]]);
+  }
+
+  // ---------- Page (eigene Fassung) und BTreeSET ----------
+  let M = 6, P, root, Z, steps, pos = 0, timer = null, OPS = VOR.abb7, ART = 'abb7', konsole, spur;
+  const neuePage = bottom => { P.push({ id: P.length, bottom, keys: [], next: [] }); return P.length - 1; };
+  function rank(p, key) { let lo = 0, hi = P[p].keys.length - 1; while (lo <= hi) { const mid = lo + ((hi - lo) >> 1); const k = P[p].keys[mid]; if (key < k) hi = mid - 1; else if (key > k) lo = mid + 1; else return mid; } return lo; }
+  function insert(p, key, kind) { const pg = P[p], i = rank(p, key); if (i < pg.keys.length && pg.keys[i] === key) return -1; pg.keys.splice(i, 0, key); pg.next.splice(i, 0, kind); return i; }
+  const pAddKey = (p, key) => insert(p, key, null);
+  const pAddPage = (p, c) => insert(p, P[c].keys[0], c);
+  const pContains = (p, key) => { const i = rank(p, key); return i < P[p].keys.length && P[p].keys[i] === key; };
+  const pNextIdx = (p, key) => { const i = rank(p, key); return i < P[p].keys.length && P[p].keys[i] === key ? i : i - 1; };
+  const voll = p => P[p].keys.length === M;
+  function pSplit(p) { const t = neuePage(P[p].bottom); P[t].keys = P[p].keys.splice(M / 2); P[t].next = P[p].next.splice(M / 2); return t; }
+
+  function snap(line, msg, o) {
+    steps.push(Object.assign({ line, msg, P: P.map(p => ({ bottom: p.bottom, keys: p.keys.slice(), next: p.next.slice() })), wurzeln: [root], op: Z.op, sond: Z.sond, konsole: konsole.slice(), spur: spur.slice() }, o || {}));
+  }
+  const zk = k => k === '*' ? '* (Wächter)' : k;
+
+  function add(key, still) {
+    Z.op = `add("${key}")`; Z.sond = 0;
+    if (!still) snap(L.aPub, `add("${key}"): add(root, "${key}") – rekursiv von der Wurzel nach unten.`, { opStart: true });
+    const rek = (h, weg) => {
+      Z.sond++;
+      if (P[h].bottom) {
+        const i = pAddKey(h, key);
+        snap(L.aExt, i < 0 ? `Externe Seite: "${key}" steht schon drin – eine Menge nimmt ihn nicht doppelt auf.` : `Externe Seite erreicht: "${key}" wird an Platz ${i} eingefügt.${voll(h) ? ` Jetzt hat sie ${M} Schlüssel und ist übergelaufen – darum kümmert sich der Aufrufer.` : ''}`, { aktiv: h, weg, neuKey: i < 0 ? null : [h, key], vollP: voll(h) ? h : null });
+        return;
+      }
+      const i = pNextIdx(h, key), k = P[h].keys, nx = P[h].next[i];
+      snap(L.aNext, `Interne Seite: "${key}" ${i === k.length - 1 ? `≥ "${zk(k[i])}"` : `liegt zwischen "${zk(k[i])}" und "${k[i + 1]}"`} – next() folgt der Referenz von "${zk(k[i])}".`, { aktiv: h, weg, eintrag: [h, i] });
+      rek(nx, weg.concat(nx));
+      if (voll(nx)) {
+        snap(L.aVoll, `Zurück in der Seite darüber: Die Kindseite ist mit ${M} Schlüsseln übergelaufen.`, { aktiv: h, weg: weg.concat(nx), vollP: nx });
+        const t = pSplit(nx); pAddPage(h, t);
+        snap(L.aSplit, `split(): Die ${M / 2} größten Schlüssel ${P[t].keys.map(zk).join(' ')} kommen auf eine neue Seite. Die Seite darüber bekommt einen Eintrag "${P[t].keys[0]}" mit Referenz auf sie.${voll(h) ? ` Jetzt ist auch diese Seite übergelaufen.` : ''}`, { aktiv: h, weg, neuP: t, neuKey: [h, P[t].keys[0]], vollP: voll(h) ? h : null });
+      }
+    };
+    rek(root, [root]);
+    if (voll(root)) {
+      snap(L.rootVoll, `Die Wurzel ist übergelaufen (${M} Schlüssel).`, { vollP: root, aktiv: root });
+      const links = root, rechts = pSplit(root);
+      snap(L.rootSplit, `root.split(): linke Hälfte ${P[links].keys.map(zk).join(' ')}, rechte Hälfte ${P[rechts].keys.map(zk).join(' ')}.`, { wurzeln: [links, rechts], neuP: rechts });
+      root = neuePage(false); pAddPage(root, links); pAddPage(root, rechts); Z.sond += 2;
+      snap(L.rootNeu, `Neue Wurzel mit zwei Einträgen "${zk(P[links].keys[0])}" und "${P[rechts].keys[0]}" – der Baum wächst oben, alle externen Seiten bleiben auf derselben Tiefe.`, { neuP: root });
+    }
+    if (!still) spur.push(`add("${key}")  ${Z.sond} Seite${Z.sond === 1 ? '' : 'n'}`);
+    steps[steps.length - 1].opEnde = true;
+    steps[steps.length - 1].spur = spur.slice();
+  }
+  function contains(key) {
+    Z.op = `contains("${key}")`; Z.sond = 0;
+    snap(L.cPub, `contains("${key}"): von der Wurzel aus eine Seite pro Ebene.`, { opStart: true });
+    let h = root; const weg = [h]; let erg;
+    while (true) {
+      Z.sond++;
+      if (P[h].bottom) {
+        erg = pContains(h, key);
+        snap(L.cExt, erg ? `Externe Seite: "${key}" steht drin – true.` : `Externe Seite: "${key}" steht nicht drin – false.`, { aktiv: h, weg, fundKey: erg ? [h, key] : null, fehlP: erg ? null : h });
+        break;
+      }
+      const i = pNextIdx(h, key), k = P[h].keys;
+      snap(L.cRek, `Interne Seite: "${key}" ${i === k.length - 1 ? `≥ "${zk(k[i])}"` : `liegt zwischen "${zk(k[i])}" und "${k[i + 1]}"`} – dieser Referenz folgen.`, { aktiv: h, weg: weg.slice(), eintrag: [h, i] });
+      h = P[h].next[i]; weg.push(h);
+    }
+    konsole.push(`${key} ${erg}`); spur.push(`contains("${key}") = ${erg}  ${Z.sond} Seite${Z.sond === 1 ? '' : 'n'}`);
+    snap(L.druck, `Ausgabe: ${key} ${erg} – ${Z.sond} Sondierung${Z.sond === 1 ? '' : 'en'}, so viele Ebenen hat der Baum.`, { weg, fundKey: erg ? [h, key] : null, fehlP: erg ? null : h, opEnde: true });
+    return erg;
+  }
+
+  function lauf(liste, art, springeZu) {
+    stop();
+    OPS = liste; ART = art; P = []; steps = []; konsole = []; spur = [];
+    Z = { op: null, sond: 0 };
+    root = neuePage(true);
+    snap(L.neuST, art === 'abb7' ? `Testclient: Die Schlüssel ergeben den B-Baum der Ordnung 6 aus Abbildung 6.7. Danach contains("E") wie in Abbildung 6.8 und contains("G").` : art === 'abb9' ? `Die Schlüssel ergeben den oberen B-Baum aus Abbildung 6.9. Dann wird A eingefügt – mit Teilung einer externen Seite und der Wurzel.` : `Zufallsschlüssel, Ordnung M = ${M}.`);
+    snap(L.konstr, `Konstruktor: Der Wächter "*" kommt als erster Schlüssel hinein. Er ist kleiner als alle anderen, darum findet next() immer einen Eintrag.`, { wurzeln: [root] });
+    add('*', true);
+    let ziel = 0;
+    liste.forEach((o, k) => {
+      if (k === springeZu) ziel = steps.length;
+      if (o.art === 'add') { snap(L.addAufruf, `st.add("${o.k}").`); add(o.k); }
+      else contains(o.k);
+    });
+    lage();
+    pos = springeZu !== undefined ? ziel : 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  const CW = 15, CH = 20, GAP = 10, DY = 62;
+  let BREITE = 300, HOEHE = 100, MAXT = 0;
+  function waldLage(st) {
+    const L2 = {}; let x = 0, tiefe = 0;
+    const w = M * CW;
+    const setze = (id, t) => {
+      tiefe = Math.max(tiefe, t);
+      const pg = st.P[id];
+      if (pg.bottom) { L2[id] = [x, t]; x += w + GAP; return; }
+      pg.next.forEach(c => setze(c, t + 1));
+      const a = L2[pg.next[0]][0], b = L2[pg.next[pg.next.length - 1]][0];
+      L2[id] = [(a + b) / 2, t];
+    };
+    st.wurzeln.forEach(id => setze(id, 0));
+    // Tiefe von unten zählen, damit externe Seiten immer unten stehen
+    return { L2, breite: Math.max(x - GAP, w), tiefe };
+  }
+  function lage() {
+    BREITE = 0; HOEHE = 0;
+    steps.forEach(st => { const l = waldLage(st); BREITE = Math.max(BREITE, l.breite); HOEHE = Math.max(HOEHE, l.tiefe); });
+    MAXT = HOEHE; BREITE += 8; HOEHE = HOEHE * DY + CH + 26;
+  }
+  function render() {
+    const st = steps[pos];
+    const { L2, breite, tiefe } = waldLage(st);
+    const dx = (BREITE - breite) / 2, w = M * CW;
+    const weg = new Set(st.weg || []);
+    const pos2 = id => [L2[id][0] + dx, (MAXT - tiefe + L2[id][1]) * DY + 18];   // externe Seiten immer unten
+    let k = '', h = '';
+    Object.keys(L2).forEach(sid => {
+      const id = +sid, pg = st.P[id], [x, y] = pos2(id);
+      if (!pg.bottom) pg.next.forEach((c, i) => {
+        const [cx, cy] = pos2(c);
+        const pfad = weg.has(id) && weg.has(c);
+        k += `<line class="kante${pfad ? ' pfad' : ''}" x1="${x + i * CW + CW / 2}" y1="${y + CH}" x2="${cx + w / 2}" y2="${cy}"/>`;
+      });
+      for (let i = 0; i < M; i++) {
+        const key = pg.keys[i];
+        let cls = 'zelle' + (key === undefined ? ' leer' : '');
+        let tcls = 'k' + (key === '*' ? ' waechter' : '');
+        if (st.neuKey && st.neuKey[0] === id && st.neuKey[1] === key) { cls += ' neu'; tcls += ' weiss'; }
+        else if (st.fundKey && st.fundKey[0] === id && st.fundKey[1] === key) { cls += ' fund'; tcls += ' gtext'; }
+        else if (st.eintrag && st.eintrag[0] === id && st.eintrag[1] === i) cls += ' eintrag';
+        h += `<rect class="${cls}" x="${x + i * CW}" y="${y}" width="${CW}" height="${CH}"/>`;
+        if (key !== undefined) h += `<text class="${tcls}" x="${x + i * CW + CW / 2}" y="${y + CH / 2}">${esc(key.length > 2 ? key.slice(0, 2) : key)}</text>`;
+      }
+      let r = 'rahmen';
+      if (id === st.vollP) r += ' voll';
+      else if (id === st.fehlP) r += ' fehl';
+      else if (id === st.aktiv) r += ' aktiv';
+      else if (id === st.neuP) r += ' neuseite';
+      else if (weg.has(id)) r += ' pfad';
+      h += `<rect class="${r}" x="${x}" y="${y}" width="${w}" height="${CH}"/>`;
+    });
+    if (st.wurzeln.length === 1) { const [x, y] = pos2(st.wurzeln[0]); h += `<text class="wurzel" x="${x}" y="${y - 5}">root</text>`; }
+    const svg = $('graph');
+    svg.setAttribute('viewBox', `0 0 ${BREITE} ${HOEHE}`);
+    const platz = $('baum').clientWidth || BREITE;
+    const breitePx = Math.max(Math.min(BREITE * 1.15, platz), BREITE * 0.8);
+    svg.style.width = breitePx + 'px';
+    svg.innerHTML = k + h;
+    // ist der Baum breiter als der Kasten, die Seite mit dem Geschehen in die Mitte schieben
+    const fokus = [st.neuP, st.vollP, st.aktiv, st.fehlP].find(id => id !== undefined && id !== null && L2[id]);
+    if ($('baum').scrollWidth > $('baum').clientWidth && fokus !== undefined) $('baum').scrollLeft = (pos2(fokus)[0] + w / 2) * breitePx / BREITE - $('baum').clientWidth / 2;
+    // Kennzahlen
+    const erreichbar = []; const sammle = id => { erreichbar.push(id); if (!st.P[id].bottom) st.P[id].next.forEach(sammle); };
+    st.wurzeln.forEach(sammle);
+    const ext = erreichbar.filter(id => st.P[id].bottom), n = ext.reduce((a, id) => a + st.P[id].keys.length, 0) - 1;
+    $('titel').innerHTML = `${ART === 'abb7' ? 'Abbildung 6.7/6.8' : ART === 'abb9' ? 'Abbildung 6.9' : 'eigene Folge'} · M = <b>${M}</b> · Schlüssel: <b>${Math.max(n, 0)}</b> (+ Wächter) · Seiten: <b>${erreichbar.length}</b> · Höhe: <b>${tiefe}</b>`;
+    $('op').innerHTML = st.op ? `Operation: <b>${esc(st.op)}</b> · Seiten angefasst (Sondierungen): <b>${st.sond}</b>` : 'noch keine Operation';
+    $('msg').textContent = st.msg;
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    $('proto').innerHTML = st.spur.length
+      ? `<h4>Operationen mit den Seiten, die sie angefasst haben</h4><pre class="spur">${st.spur.map((z, i) => i === st.spur.length - 1 && pos < steps.length - 1 ? `<span class="zuletzt">${esc(z)}</span>` : esc(z)).join('\n')}</pre>`
+      : '<p class="count">Noch keine Operation.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', () => { lockern(); render(); });
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const setzeM = m => { M = m; $('ordnung').value = String(m); };
+  const start = () => { lockern(); setzeM(6); lauf(VOR.abb7, 'abb7'); };
+  $('abb7').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('abb9').addEventListener('click', () => { lockern(); setzeM(6); lauf(VOR.abb9, 'abb9'); });
+  $('zufall').addEventListener('click', () => { lockern(); setzeM(+$('ordnung').value); lauf(zufallsOps(), 'zufall'); });
+  $('ordnung').addEventListener('change', () => { lockern(); M = +$('ordnung').value; lauf(OPS, ART === 'zufall' ? 'zufall' : 'eigen'); });
+  $('opWahl').addEventListener('change', () => { $('opText').value = $('opWahl').value === 'add' ? 'L' : 'G'; });
+  $('opLos').addEventListener('click', () => {
+    const art = $('opWahl').value, text = $('opText').value.trim();
+    if (!/^[A-Za-z0-9]{1,8}$/.test(text)) { $('opHinweis').textContent = 'Bitte 1 bis 8 Buchstaben oder Ziffern.'; return; }
+    $('opHinweis').textContent = '';
+    lockern(); const liste = [...OPS, { art, k: text }]; lauf(liste, ART === 'abb7' || ART === 'abb9' ? 'eigen' : ART, liste.length - 1);
+  });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(ops, m) spielt die Operationen durch und gibt Ausgabe und Baum zurück
+  function baumText(st) {
+    const t = id => st.P[id].bottom ? `[${st.P[id].keys.join(' ')}]` : `(${st.P[id].keys.map((k, i) => k + ':' + t(st.P[id].next[i])).join(' ')})`;
+    return t(st.wurzeln[0]);
+  }
+  function rechne(liste, m) {
+    const alt = { M, P, root, Z, steps, OPS, ART, konsole, spur, BREITE, HOEHE };
+    M = m || 6; lauf(liste, 'zufall');
+    const e = { ausgabe: konsole.slice(), baum: baumText(steps[steps.length - 1]), schritte: steps.length };
+    ({ M, P, root, Z, steps, OPS, ART, konsole, spur, BREITE, HOEHE } = alt); pos = 0; render();
+    return e;
+  }
+  window.__btree = { rechne, start, VOR, baumText, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
