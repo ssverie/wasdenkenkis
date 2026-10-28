@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bellman-Ford mit Warteschlange</title>
+<!-- Visualisierung des warteschlangenbasierten Bellman-Ford-Algorithmus (nach Sedgewick/Wayne, Algorithmen,
+     Algorithmus 4.11, Listing 4.36 bis 4.38) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code:
+     BellmanFordSP nach den Listings, pathTo wie in dijkstra.html, EdgeWeightedCycleFinder als eigene Fassung
+     (im Buch nicht abgedruckt), Queue aus warteschlange.html; DirectedEdge und EdgeWeightedDigraph wie in dijkstra.html.
+     Beispielgraphen tinyEWDn und tinyEWDnc wie in Abbildung 4.91 und 4.92, Lage wie Abbildung 4.74. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --rot: #d23b3b; --baum: #8fd1a6; --btext: #1c1c1f; }
+  @media (prefers-color-scheme: dark) { :root { --rot: #ff7676; --baum: #2f6e48; --btext: #ececef; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .bild { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .bild svg { display: block; width: 100%; height: auto; }
+  .bild .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  svg .kante { stroke: var(--muted); stroke-width: 1.6; fill: none; }
+  svg .pfeil { fill: var(--muted); stroke: none; }
+  svg .kante.aus { stroke: var(--grau); stroke-width: 1.4; stroke-dasharray: 4 3; }
+  svg .pfeil.aus { fill: var(--grau); }
+  svg .kante.spt { stroke: var(--text); stroke-width: 3.6; }
+  svg .pfeil.spt { fill: var(--text); }
+  svg .kante.zyklus { stroke: var(--rot); stroke-width: 4.5; }
+  svg .pfeil.zyklus { fill: var(--rot); }
+  svg .kante.pruef { stroke: var(--cur); stroke-width: 3.6; stroke-dasharray: 7 4; }
+  svg .pfeil.pruef { fill: var(--cur); }
+  svg .kante.pfad { stroke: var(--neu); stroke-width: 4.5; }
+  svg .pfeil.pfad { fill: var(--neu); }
+  svg .gewicht { font: 600 10.5px ui-monospace, Consolas, monospace; fill: var(--muted); text-anchor: middle; dominant-baseline: central; paint-order: stroke; stroke: var(--bg); stroke-width: 3px; }
+  svg .gewicht.neg { font-weight: 800; }
+  svg .gewicht.aus { fill: var(--grau); }
+  svg .gewicht.spt { fill: var(--text); }
+  svg .gewicht.zyklus { fill: var(--rot); }
+  svg .gewicht.pruef { fill: var(--cur); }
+  svg .gewicht.pfad { fill: var(--neu); }
+  svg .knoten circle { fill: var(--panel); stroke: var(--muted); stroke-width: 2; }
+  svg .knoten text { font: 700 15px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten.inq circle { stroke: var(--rot); stroke-width: 3.5; }
+  svg .knoten.erreicht circle { fill: var(--baum); stroke: var(--baum); }
+  svg .knoten.erreicht text { fill: var(--btext); }
+  svg .knoten.erreicht.inq circle { stroke: var(--rot); }
+  svg .knoten.aktiv circle { fill: var(--neu); stroke: var(--neu); }
+  svg .knoten.aktiv text { fill: #fff; }
+  svg .knoten.pruef circle { stroke: var(--cur); stroke-width: 5; }
+  svg .knoten.start circle { stroke-dasharray: 4 3; }
+  svg .marke { font: 700 11px ui-monospace, Consolas, monospace; fill: var(--cur); text-anchor: middle; }
+  @media (prefers-color-scheme: dark) { svg .knoten.aktiv text { fill: #0d1530; } }
+  .eingabe select { font: inherit; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .arr-box { overflow-x: auto; margin-bottom: 10px; }
+  table.arr { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  table.arr th, table.arr td { border: 1px solid var(--line); padding: 3px 6px; text-align: center; }
+  table.arr th { color: var(--muted); font-weight: 600; }
+  table.arr td.leer { color: var(--muted); }
+  table.arr td.ja { background: var(--baum); color: var(--btext); }
+  table.arr td.geaendert { background: var(--neu); color: #fff; font-weight: 700; }
+  table.arr td.rot { color: var(--rot); font-weight: 700; }
+  table.arr td.alt { color: var(--rot); text-decoration: line-through; }
+  table.arr tr.aktiv td { outline: 2px solid var(--neu); outline-offset: -2px; }
+  @media (prefers-color-scheme: dark) { table.arr td.geaendert { color: #0d1530; } }
+  .klein { font-size: 12px; color: var(--muted); margin: 2px 0 6px; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .spur { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; white-space: pre; overflow-x: auto; margin: 0; line-height: 1.45; }
+  .spur span.zuletzt { color: var(--neu); font-weight: 700; }
+  @media (max-width: 640px) {
+    .bild { grid-template-columns: minmax(0, 1fr); }
+    table.arr { font-size: 12px; }
+    table.arr th, table.arr td { padding: 3px 4px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="buch">tinyEWDn (s = 0)</button>
+    <button id="zyklus">tinyEWDnc (negativer Zyklus)</button>
+    <label>s <select id="s"></select></label>
+    <button id="abS">ab s</button>
+    <button id="zufall">Zufallsgraph</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="bild">
+      <div>
+        <div class="h2">Gerichteter, kantengewichteter Graph – die Zahlen sind die Gewichte, auch negative</div>
+        <svg id="graph" role="img" aria-label="Der Digraph mit dem Stand des Bellman-Ford-Algorithmus"></svg>
+      </div>
+      <div>
+        <div class="arr-box" id="tabelle"></div>
+        <div class="h2" style="font-size:13px;color:var(--muted)">queue – links wird entnommen, rechts eingereiht (Zahl darunter: Durchlauf):</div>
+        <div class="arr-box" id="schlange"></div>
+      </div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>relax(v) läuft</span>
+      <span><i style="background:var(--panel);outline:3px solid var(--rot)"></i>in der Warteschlange (onQ)</span>
+      <span><i style="background:var(--baum)"></i>Weg von s bekannt</span>
+      <span><i style="background:var(--text)"></i>Kante in edgeTo[]</span>
+      <span><i style="background:var(--panel);outline:3px solid var(--cur)"></i>Kante wird relaxiert</span>
+      <span><i style="background:var(--grau)"></i>nicht auswählbar</span>
+      <span><i style="background:var(--rot)"></i>negativer Zyklus · distTo durchgestrichen: nicht länger gültig</span>
+      <span><i style="background:var(--neu)"></i>Ausgabe: pathTo(t)</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der aktuelle Abschnitt fertig ist (Graph gebaut, ein Knoten relaxiert, Ausgabe)">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 4.11, Listing 4.36 bis 4.38)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'import java.util.Locale;',
+    '',
+    'public class BellmanFordSP',
+    '{',
+    '   private double[] distTo;               // Länge des Pfades zu v',
+    '   private DirectedEdge[] edgeTo;         // letzte Kante im Pfad zu v',
+    '   private boolean[] onQ;                 // Ist dieser Knoten in der Warteschlange?',
+    '   private Queue<Integer> queue;          // Knoten, die relaxiert werden',
+    '   private int cost;                      // Anzahl der Aufrufe von relax()',
+    '   private Iterable<DirectedEdge> cycle;  // negativer Zyklus in edgeTo[]?',
+    '',
+    '   public BellmanFordSP(EdgeWeightedDigraph G, int s)',
+    '   {',
+    '      distTo = new double[G.V()];',
+    '      edgeTo = new DirectedEdge[G.V()];',
+    '      onQ = new boolean[G.V()];',
+    '      queue = new Queue<Integer>();',
+    '      for (int v = 0; v < G.V(); v++)',
+    '         distTo[v] = Double.POSITIVE_INFINITY;',
+    '      distTo[s] = 0.0;',
+    '      queue.enqueue(s);',
+    '      onQ[s] = true;',
+    '      while (!queue.isEmpty() && !this.hasNegativeCycle())',
+    '      {',
+    '         int v = queue.dequeue();',
+    '         onQ[v] = false;',
+    '         relax(G, v);',
+    '      }',
+    '   }',
+    '',
+    '   private void relax(EdgeWeightedDigraph G, int v)',
+    '   {  // Listing 4.36',
+    '      for (DirectedEdge e : G.adj(v))',
+    '      {',
+    '         int w = e.to();',
+    '         if (distTo[w] > distTo[v] + e.weight())',
+    '         {',
+    '            distTo[w] = distTo[v] + e.weight();',
+    '            edgeTo[w] = e;',
+    '            if (!onQ[w])',
+    '            {',
+    '               queue.enqueue(w);',
+    '               onQ[w] = true;',
+    '            }',
+    '         }',
+    '      }',
+    '      if (cost++ % G.V() == 0)',
+    '         findNegativeCycle();',
+    '   }',
+    '',
+    '   public double distTo(int v)  {  return distTo[v];  }',
+    '   public boolean hasPathTo(int v)  {  return distTo[v] < Double.POSITIVE_INFINITY;  }',
+    '',
+    '   public Iterable<DirectedEdge> pathTo(int v)',
+    '   {  // von v über edgeTo zurück bis s, auf einem Stapel umgedreht (eigene Fassung)',
+    '      if (!hasPathTo(v)) return null;',
+    '      Stack<DirectedEdge> pfad = new Stack<DirectedEdge>();',
+    '      for (DirectedEdge e = edgeTo[v]; e != null; e = edgeTo[e.from()])',
+    '         pfad.push(e);',
+    '      return pfad;',
+    '   }',
+    '',
+    '   private void findNegativeCycle()',
+    '   {  // Listing 4.38: die Kanten aus edgeTo[] als eigener Digraph, darin einen Zyklus suchen',
+    '      int V = edgeTo.length;',
+    '      EdgeWeightedDigraph spt;',
+    '      spt = new EdgeWeightedDigraph(V);',
+    '      for (int v = 0; v < V; v++)',
+    '         if (edgeTo[v] != null)',
+    '            spt.addEdge(edgeTo[v]);',
+    '',
+    '      EdgeWeightedCycleFinder cf;',
+    '      cf = new EdgeWeightedCycleFinder(spt);',
+    '',
+    '      cycle = cf.cycle();',
+    '   }',
+    '',
+    '   public boolean hasNegativeCycle()',
+    '   {  return cycle != null;  }',
+    '',
+    '   public Iterable<DirectedEdge> negativeCycle()',
+    '   {  return cycle;  }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient: tinyEWDn (Abbildung 4.91) oder mit "nc" tinyEWDnc (Abbildung 4.92), Start s aus args, sonst 0',
+    '      double[][] tinyEWDn = { {4, 5, .35}, {5, 4, .35}, {4, 7, .37}, {5, 7, .28}, {7, 5, .28}, {5, 1, .32}, {0, 4, .38},',
+    '                              {0, 2, .26}, {7, 3, .39}, {1, 3, .29}, {2, 7, .34}, {6, 2, -1.20}, {3, 6, .52}, {6, 0, -1.40},',
+    '                              {6, 4, -1.25} };',
+    '      double[][] tinyEWDnc = { {4, 5, .35}, {5, 4, -.66}, {4, 7, .37}, {5, 7, .28}, {7, 5, .28}, {5, 1, .32}, {0, 4, .38},',
+    '                               {0, 2, .26}, {7, 3, .39}, {1, 3, .29}, {2, 7, .34}, {6, 2, .40}, {3, 6, .52}, {6, 0, .58},',
+    '                               {6, 4, .93} };',
+    '      double[][] kanten = args.length > 1 && args[1].equals("nc") ? tinyEWDnc : tinyEWDn;',
+    '      EdgeWeightedDigraph G = new EdgeWeightedDigraph(8);',
+    '      for (double[] k : kanten)',
+    '         G.addEdge(new DirectedEdge((int) k[0], (int) k[1], k[2]));',
+    '      int s = args.length > 0 ? Integer.parseInt(args[0]) : 0;',
+    '      BellmanFordSP sp = new BellmanFordSP(G, s);',
+    '      if (sp.hasNegativeCycle())',
+    '      {',
+    '         System.out.println("negativer Zyklus:");',
+    '         for (DirectedEdge e : sp.negativeCycle())',
+    '            System.out.println("   " + e);',
+    '      }',
+    '      else',
+    '         for (int t = 0; t < G.V(); t++)',
+    '         {',
+    '            if (sp.hasPathTo(t))',
+    '            {',
+    '               System.out.printf(Locale.ROOT, "%d to %d (%.2f): ", s, t, sp.distTo(t));',
+    '               for (DirectedEdge e : sp.pathTo(t))',
+    '                  System.out.print(e + "   ");',
+    '               System.out.println();',
+    '            }',
+    '            else',
+    '               System.out.printf("%d to %d: kein Pfad%n", s, t);',
+    '         }',
+    '   }',
+    '}',
+    '',
+    '// ---- EdgeWeightedCycleFinder: gerichteter Zyklus per Tiefensuche (eigene Fassung, im Buch nicht abgedruckt) ----',
+    'public class EdgeWeightedCycleFinder',
+    '{',
+    '   private boolean[] marked;',
+    '   private boolean[] onStack;          // Knoten auf dem aktuellen Rekursionsweg',
+    '   private DirectedEdge[] kanteNach;   // Kante, über die die Suche zu v kam',
+    '   private Stack<DirectedEdge> cycle;  // die Kanten des Zyklus, null = keiner',
+    '',
+    '   public EdgeWeightedCycleFinder(EdgeWeightedDigraph G)',
+    '   {',
+    '      marked = new boolean[G.V()];',
+    '      onStack = new boolean[G.V()];',
+    '      kanteNach = new DirectedEdge[G.V()];',
+    '      for (int v = 0; v < G.V(); v++)',
+    '         if (!marked[v] && cycle == null) dfs(G, v);',
+    '   }',
+    '',
+    '   private void dfs(EdgeWeightedDigraph G, int v)',
+    '   {',
+    '      marked[v] = true;',
+    '      onStack[v] = true;',
+    '      for (DirectedEdge e : G.adj(v))',
+    '      {',
+    '         int w = e.to();',
+    '         if (cycle != null) return;',
+    '         if (!marked[w])',
+    '         {  kanteNach[w] = e;  dfs(G, w);  }',
+    '         else if (onStack[w])',
+    '         {  // Kante zurück auf den Rekursionsweg: von v über kanteNach rückwärts bis w',
+    '            cycle = new Stack<DirectedEdge>();',
+    '            DirectedEdge f = e;',
+    '            while (f.from() != w)',
+    '            {  cycle.push(f);  f = kanteNach[f.from()];  }',
+    '            cycle.push(f);',
+    '         }',
+    '      }',
+    '      onStack[v] = false;',
+    '   }',
+    '',
+    '   public Iterable<DirectedEdge> cycle()  {  return cycle;  }',
+    '}',
+    '',
+    '// ---- DirectedEdge: eine gerichtete Kante v→w mit Gewicht ----',
+    'public class DirectedEdge',
+    '{',
+    '   private final int v, w;',
+    '   private final double weight;',
+    '',
+    '   public DirectedEdge(int v, int w, double weight)',
+    '   {  this.v = v;  this.w = w;  this.weight = weight;  }',
+    '',
+    '   public double weight()  {  return weight;  }',
+    '   public int from()  {  return v;  }',
+    '   public int to()    {  return w;  }',
+    '   public String toString()',
+    '   {  return String.format(Locale.ROOT, "%d->%d %.2f", v, w, weight);  }',
+    '}',
+    '',
+    '// ---- EdgeWeightedDigraph: Adjazenzlisten mit gerichteten Kanten (Bag aus Algorithmus 1.4) ----',
+    'public class EdgeWeightedDigraph',
+    '{',
+    '   private final int V;',
+    '   private int E;',
+    '   private Bag<DirectedEdge>[] adj;',
+    '',
+    '   @SuppressWarnings("unchecked")',
+    '   public EdgeWeightedDigraph(int V)',
+    '   {',
+    '      this.V = V;',
+    '      adj = (Bag<DirectedEdge>[]) new Bag[V];',
+    '      for (int v = 0; v < V; v++)',
+    '         adj[v] = new Bag<DirectedEdge>();',
+    '   }',
+    '',
+    '   public int V()  {  return V;  }',
+    '   public int E()  {  return E;  }',
+    '',
+    '   public void addEdge(DirectedEdge e)',
+    '   {  // nur in die Liste des Anfangsknotens',
+    '      adj[e.from()].add(e);',
+    '      E++;',
+    '   }',
+    '',
+    '   public Iterable<DirectedEdge> adj(int v)  {  return adj[v];  }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    kantenN: zeile('double[][] tinyEWDn = '), kantenNC: zeile('double[][] tinyEWDnc = '), neuG: zeile('EdgeWeightedDigraph G = new EdgeWeightedDigraph(8);'),
+    addEdge: zeile('G.addEdge(new DirectedEdge('), sArg: zeile('int s = args.length > 0'), neuSP: zeile('BellmanFordSP sp = new BellmanFordSP(G, s);'),
+    anlegen: zeile('distTo = new double[G.V()];'), unendlich: zeile('distTo[v] = Double.POSITIVE_INFINITY;'), dist0: zeile('distTo[s] = 0.0;'),
+    enqS: zeile('queue.enqueue(s);'), whileLoop: zeile('while (!queue.isEmpty() && !this.hasNegativeCycle())'), dequeue: zeile('int v = queue.dequeue();'),
+    onQfalse: zeile('onQ[v] = false;'), relaxAufruf: zeile('relax(G, v);'), forE: zeile('{  // Listing 4.36') + 1,
+    ifRelax: zeile('if (distTo[w] > distTo[v] + e.weight())'), setzen: zeile('edgeTo[w] = e;'), enqW: zeile('queue.enqueue(w);'),
+    costIf: zeile('if (cost++ % G.V() == 0)'), findAufruf: zeile('         findNegativeCycle();'),
+    spt: zeile('spt.addEdge(edgeTo[v]);'), cf: zeile('cf = new EdgeWeightedCycleFinder(spt);'), cycleSetzen: zeile('cycle = cf.cycle();'),
+    hatZyklus: zeile('if (sp.hasNegativeCycle())'), druckZyklus: zeile('System.out.println("   " + e);'),
+    forT: zeile('for (int t = 0; t < G.V(); t++)'), pfad: zeile('System.out.print(e + "   ");'), keinPfad: zeile('System.out.printf("%d to %d: kein Pfad%n", s, t);')
+  };
+  if (!CODE[L.forE].includes('for (DirectedEdge e : G.adj(v))')) throw new Error('Codezeile relax-Schleife verschoben');
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+  const f2 = x => x === Infinity ? '∞' : x.toFixed(2);
+
+  // ---------- Graphen ----------
+  // tinyEWDn und tinyEWDnc (Reihenfolge wie in Abbildung 4.91 und 4.92), Lage wie in Abbildung 4.74
+  const LAGE = [[185, 165], [165, 30], [278, 118], [278, 40], [45, 220], [40, 82], [395, 198], [138, 108]];
+  const BUCH = { V: 8, name: 'tinyEWDn', zeile: 'kantenN',
+    kanten: [[4, 5, .35], [5, 4, .35], [4, 7, .37], [5, 7, .28], [7, 5, .28], [5, 1, .32], [0, 4, .38], [0, 2, .26], [7, 3, .39], [1, 3, .29], [2, 7, .34], [6, 2, -1.20], [3, 6, .52], [6, 0, -1.40], [6, 4, -1.25]],
+    pos: LAGE, breite: 430, hoehe: 245 };
+  const BUCH_NC = { V: 8, name: 'tinyEWDnc', zeile: 'kantenNC', nc: true,
+    kanten: [[4, 5, .35], [5, 4, -.66], [4, 7, .37], [5, 7, .28], [7, 5, .28], [5, 1, .32], [0, 4, .38], [0, 2, .26], [7, 3, .39], [1, 3, .29], [2, 7, .34], [6, 2, .40], [3, 6, .52], [6, 0, .58], [6, 4, .93]],
+    pos: LAGE, breite: 430, hoehe: 245 };
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsgraph() {            // gerichtet, Gewichte −0,40 bis 0,99 (nie 0), keine Schleifen, keine doppelten Kanten
+    const V = 8, ziel = 12 + zufall(5), kanten = [], hat = new Set();
+    while (kanten.length < ziel) {
+      const v = zufall(V), w = zufall(V);
+      if (v === w || hat.has(v + '>' + w)) continue;
+      hat.add(v + '>' + w);
+      let g = zufall(140) - 40; if (g === 0) g = 1;
+      kanten.push([v, w, g / 100]);
+    }
+    const pos = Array.from({ length: V }, (_, i) => [215 + 170 * Math.sin(2 * Math.PI * i / V), 122 - 100 * Math.cos(2 * Math.PI * i / V)].map(Math.round));
+    return { V, kanten, pos, breite: 430, hoehe: 245, zufall: true, name: 'Zufallsgraph' };
+  }
+
+  // ---------- Aufzeichnung ----------
+  let G, adj, Z, konsole, spur, steps, pos = 0, timer = null, S = 0;
+  function neuerZustand() {
+    Z = { gebaut: false, edgeTo: Array(G.V).fill(null), distTo: Array(G.V).fill(null), onQ: Array(G.V).fill(false), queue: [], lauf: Array(G.V).fill(0),
+      aus: new Set(), cost: 0, cycle: null, v: null, vorbei: false, relaxe: 0 };
+  }
+  function snap(line, msg, o) {
+    steps.push(Object.assign({
+      line, msg, gebaut: Z.gebaut, edgeTo: Z.edgeTo.slice(), distTo: Z.distTo.slice(), onQ: Z.onQ.slice(), queue: Z.queue.map(v => [v, Z.lauf[v]]),
+      aus: new Set(Z.aus), cost: Z.cost, cycle: Z.cycle, v: Z.v, vorbei: Z.vorbei, konsole: konsole.slice(), spur: spur.slice()
+    }, o || {}));
+  }
+  const kn = e => `${G.kanten[e][0]}→${G.kanten[e][1]}`;
+  const gw = e => G.kanten[e][2];
+  const qText = () => Z.queue.length ? Z.queue.join(' ') : '(leer)';
+  function pfadKanten(t) { const k = []; for (let e = Z.edgeTo[t]; e !== null; e = Z.edgeTo[G.kanten[e][0]]) k.unshift(e); return k; }
+  function ungueltige(edgeTo, distTo) {   // distTo[u] passt nicht mehr zur Summe des edgeTo-Pfads (oder der Pfad läuft im Kreis)
+    const raus = [];
+    for (let u = 0; u < G.V; u++) {
+      if (edgeTo[u] === null || distTo[u] === null || distTo[u] === Infinity) continue;
+      let summe = 0, x = u, n = 0;
+      while (edgeTo[x] !== null && n <= G.V) { summe += gw(edgeTo[x]); x = G.kanten[edgeTo[x]][0]; n++; }
+      if (n > G.V || x !== S || Math.abs(summe - distTo[u]) > 1e-9) raus.push(u);
+    }
+    return raus;
+  }
+  function zyklusSuche() {      // wie EdgeWeightedCycleFinder auf dem Hilfsgraphen aus edgeTo[]
+    const sptAdj = Array.from({ length: G.V }, () => []);
+    for (let v = 0; v < G.V; v++) if (Z.edgeTo[v] !== null) sptAdj[G.kanten[Z.edgeTo[v]][0]].unshift(Z.edgeTo[v]);
+    const marked = Array(G.V).fill(false), onStack = Array(G.V).fill(false), nach = Array(G.V).fill(null);
+    let cycle = null;
+    const dfs = v => {
+      marked[v] = true; onStack[v] = true;
+      for (const e of sptAdj[v]) {
+        const w = G.kanten[e][1];
+        if (cycle) return;
+        if (!marked[w]) { nach[w] = e; dfs(w); }
+        else if (onStack[w]) {
+          cycle = []; let f = e;
+          while (G.kanten[f][0] !== w) { cycle.unshift(f); f = nach[G.kanten[f][0]]; }
+          cycle.unshift(f);
+        }
+      }
+      onStack[v] = false;
+    };
+    for (let v = 0; v < G.V; v++) if (!marked[v] && !cycle) dfs(v);
+    return cycle;
+  }
+
+  function relax(v) {
+    Z.v = v; Z.relaxe++;
+    const lauf = Z.lauf[v];
+    snap(L.forE, `relax(G, ${v}) im ${lauf}. Durchlauf: distTo[${v}] = ${f2(Z.distTo[v])}. ${adj[v].length ? `Ausgehende Kanten: ${adj[v].map(e => `${kn(e)} ${f2(gw(e))}`).join(', ')}.` : 'Keine ausgehenden Kanten.'}`);
+    const neu = [], nichts = [];
+    for (const e of adj[v]) {
+      const w = G.kanten[e][1], ueber = Z.distTo[v] + gw(e);
+      if (!(Z.distTo[w] > ueber)) {
+        nichts.push(kn(e)); if (Z.edgeTo[w] !== e) Z.aus.add(e);
+        snap(L.ifRelax, `Kante ${kn(e)} (${f2(gw(e))}): distTo[${w}] = ${f2(Z.distTo[w])} ist nicht größer als ${f2(Z.distTo[v])} + ${f2(gw(e))} = ${f2(ueber)} – nicht auswählbar.`, { kante: e, w });
+        continue;
+      }
+      const alt = Z.distTo[w], altE = Z.edgeTo[w];
+      snap(L.ifRelax, `Kante ${kn(e)} (${f2(gw(e))}): distTo[${w}] = ${f2(alt)} > ${f2(Z.distTo[v])} + ${f2(gw(e))} = ${f2(ueber)} – über ${v} ist ${w} schneller zu erreichen.`, { kante: e, w });
+      Z.distTo[w] = ueber; Z.edgeTo[w] = e; Z.aus.delete(e);
+      if (altE !== null && altE !== e) Z.aus.add(altE);
+      const ungueltig = ungueltige(Z.edgeTo, Z.distTo);
+      snap(L.setzen, `distTo[${w}] = ${f2(ueber)}, edgeTo[${w}] = ${kn(e)}${altE !== null && altE !== e ? ` (vorher ${kn(altE)})` : ''}.${ungueltig.length ? ` Damit sind die Abstände von ${ungueltig.join(' und ')} nicht länger gültig – sie werden in späteren Durchläufen korrigiert.` : ''}`, { kante: e, w, aend: w });
+      if (!Z.onQ[w]) {
+        Z.queue.push(w); Z.onQ[w] = true; Z.lauf[w] = lauf + 1;
+        snap(L.enqW, `${w} war nicht in der Warteschlange: queue.enqueue(${w}), onQ[${w}] = true. Seine Kanten kommen im ${lauf + 1}. Durchlauf dran. Warteschlange: ${qText()}.`, { kante: e, w, qNeu: w });
+        neu.push(`${kn(e)} (${f2(ueber)}, ${w} eingereiht)`);
+      } else {
+        snap(L.enqW - 2, `${w} steht schon in der Warteschlange (onQ[${w}] = true) – kein zweites Mal einreihen.`, { kante: e, w });
+        neu.push(`${kn(e)} (${f2(ueber)}, ${w} schon drin)`);
+      }
+    }
+    const c = Z.cost; Z.cost++;
+    let pruef = '';
+    if (c % G.V === 0) {
+      snap(L.costIf, `cost = ${c}, ${c} % ${G.V} = 0 – Zeit für die Prüfung auf einen negativen Zyklus (danach ist cost = ${Z.cost}).`);
+      const kanten = Z.edgeTo.map((k, u) => k).filter(k => k !== null);
+      snap(L.spt, `findNegativeCycle(): Die ${kanten.length} Kanten aus edgeTo[] werden ein eigener Digraph spt${kanten.length ? `: ${kanten.map(kn).join(', ')}` : ''}.`, { sptZeigen: true });
+      const cyc = zyklusSuche();
+      snap(L.cf, cyc ? `EdgeWeightedCycleFinder findet in spt einen Zyklus: ${cyc.map(kn).join(', ')}, Länge ${f2(cyc.reduce((a, e) => a + gw(e), 0))} – negativ, wie es Satz Y verspricht.` : `EdgeWeightedCycleFinder findet in spt keinen Zyklus – edgeTo[] ist ein Baum.`, { sptZeigen: true, zyklusKanten: cyc || [] });
+      Z.cycle = cyc;
+      snap(L.cycleSetzen, cyc ? `cycle = cf.cycle(): Der negative Zyklus ist gespeichert, hasNegativeCycle() liefert jetzt true.` : `cycle = cf.cycle() = null.`, { opEnde: true });
+      pruef = cyc ? ` · Prüfung (cost ${c}): Zyklus ${cyc.map(kn).join(' ')}` : ` · Prüfung (cost ${c}): kein Zyklus`;
+    } else {
+      snap(L.costIf, `cost = ${c}, ${c} % ${G.V} = ${c % G.V} – keine Prüfung (danach ist cost = ${Z.cost}). Warteschlange: ${qText()}.`, { opEnde: true });
+    }
+    spur.push(`${String(Z.relaxe).padStart(2)}. Dl. ${lauf} relax(${v}) ${f2(Z.distTo[v])}${neu.length ? ` · neu: ${neu.join(', ')}` : ''}${nichts.length ? ` · nicht auswählbar: ${nichts.join(', ')}` : ''}${adj[v].length ? '' : ' · keine Kanten'}${pruef}`);
+    Z.v = null;
+  }
+  function lauf(neuG, s) {
+    stop();
+    G = neuG; S = s; G.labels = G.labels || null; steps = []; konsole = [`% java BellmanFordSP${G.zufall || s !== 0 || G.nc ? ' ' + s : ''}${G.nc ? ' nc' : ''}`]; spur = [];
+    adj = Array.from({ length: G.V }, () => []);
+    neuerZustand();
+    if (!G.zufall) {
+      snap(L[G.zeile], `Testclient: die ${G.kanten.length} Kanten von ${G.name} wie in Abbildung ${G.nc ? '4.92 – wie tinyEWD, aber 5→4 hat das Gewicht −0,66, und der Kreis 4→5→4 wiegt 0,35 − 0,66 = −0,31: ein negativer Zyklus' : '4.91 – wie tinyEWD, aber die drei Kanten aus 6 sind negativ'}.`);
+      snap(L.neuG, `new EdgeWeightedDigraph(8): 8 Knoten, leere Adjazenzlisten.`);
+    }
+    G.kanten.forEach(([v], e) => adj[v].unshift(e));
+    Z.gebaut = true;
+    snap(L.addEdge, `addEdge für alle ${G.kanten.length} Kanten${G.zufall ? ` (${G.kanten.map(([a, b, g]) => `${a}→${b} ${f2(g)}`).join(', ')}) – negative Gewichte sind erlaubt, negative Zyklen möglich` : ''}: Jede Kante v→w steht nur in der Liste von v.`, { opEnde: true });
+    snap(L.sArg, `Startknoten s = ${s}.`);
+    snap(L.neuSP, `new BellmanFordSP(G, ${s}): Die ganze Arbeit passiert im Konstruktor.`);
+    snap(L.anlegen, `distTo, edgeTo, onQ und die Warteschlange werden angelegt.`);
+    Z.distTo = Array(G.V).fill(Infinity);
+    snap(L.unendlich, `distTo[v] = ∞ für alle Knoten: Noch ist kein Weg bekannt.`);
+    Z.distTo[s] = 0;
+    snap(L.dist0, `distTo[${s}] = 0.0.`, { aend: s });
+    Z.queue.push(s); Z.onQ[s] = true; Z.lauf[s] = 1;
+    snap(L.enqS, `queue.enqueue(${s}), onQ[${s}] = true – der Startknoten bildet den 1. Durchlauf.`, { opEnde: true, qNeu: s });
+    while (Z.queue.length && !Z.cycle) {
+      snap(L.whileLoop, `Warteschlange nicht leer (${qText()}) und noch kein negativer Zyklus gefunden – weiter.`);
+      const v = Z.queue.shift();
+      Z.v = v;
+      snap(L.dequeue, `queue.dequeue() liefert ${v}${Z.lauf[v] ? ` (eingereiht für den ${Z.lauf[v]}. Durchlauf)` : ''}.`, { v });
+      Z.onQ[v] = false;
+      snap(L.onQfalse, `onQ[${v}] = false – ändert sich distTo[${v}] später noch einmal, darf ${v} wieder in die Schlange.`, { v });
+      snap(L.relaxAufruf, `relax(G, ${v}).`, { v });
+      relax(v);
+    }
+    Z.vorbei = true;
+    if (Z.cycle) {
+      snap(L.whileLoop, `hasNegativeCycle() ist true – die Schleife endet, obwohl die Warteschlange noch ${qText()} enthält. Ohne die Prüfung liefe der Algorithmus immer weiter um den Zyklus und senkte die Abstände ohne Ende.`, { opEnde: true, zyklusKanten: Z.cycle });
+      snap(L.hatZyklus, `Ausgabe: sp.hasNegativeCycle() ist true, also gibt main() den Zyklus aus statt kürzester Pfade.`, { zyklusKanten: Z.cycle });
+      konsole.push('negativer Zyklus:');
+      Z.cycle.forEach(e => konsole.push(`   ${G.kanten[e][0]}->${G.kanten[e][1]} ${f2(gw(e))}`));
+      snap(L.druckZyklus, `Der Zyklus ${[G.kanten[Z.cycle[0]][0], ...Z.cycle.map(e => G.kanten[e][1])].join('→')} wiegt zusammen ${f2(Z.cycle.reduce((a, e) => a + gw(e), 0))}.`, { zyklusKanten: Z.cycle, opEnde: true });
+    } else {
+      const erreicht = Z.distTo.filter(d => d < Infinity).length;
+      snap(L.whileLoop, `Die Warteschlange ist leer – fertig nach ${Z.relaxe} relax-Aufrufen. ${erreicht} von ${G.V} Knoten sind von ${s} aus erreichbar${erreicht < G.V ? `, die übrigen behalten distTo = ∞` : ''}. Die Kanten edgeTo[] bilden den Baum der kürzesten Pfade.`, { opEnde: true });
+      snap(L.forT, `Ausgabe: kein negativer Zyklus, also für jeden Knoten t die Länge und den Pfad, den pathTo(t) über edgeTo[] rückwärts zusammensetzt.`);
+      for (let t = 0; t < G.V; t++) {
+        const k = Z.distTo[t] < Infinity ? pfadKanten(t) : null;
+        konsole.push(k ? `${s} to ${t} (${f2(Z.distTo[t])}): ` + k.map(e => `${G.kanten[e][0]}->${G.kanten[e][1]} ${f2(gw(e))}   `).join('') : `${s} to ${t}: kein Pfad`);
+        snap(k ? L.pfad : L.keinPfad, k ? (k.length ? `pathTo(${t}): ${[s, ...k.map(e => G.kanten[e][1])].join('→')}, zusammen ${f2(Z.distTo[t])}.` : `${t} ist der Startknoten, Pfad leer.`) : `${t} ist von ${s} aus nicht erreichbar.`, { pfad: k || [], ziel: t, opEnde: t === G.V - 1 });
+      }
+    }
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  function geometrie(e, R) {        // gerade, oder als Bogen bei Gegenkante bzw. wenn die Gerade einen Knoten streift
+    const [v, w] = G.kanten[e], [x1, y1] = G.pos[v], [x2, y2] = G.pos[w];
+    const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+    let biege = G.kanten.some(([a, b]) => a === w && b === v) ? 14 : 0;
+    for (let u = 0; u < G.V; u++) {
+      if (u === v || u === w) continue;
+      const [ux, uy] = G.pos[u], t = ((ux - x1) * dx + (uy - y1) * dy) / (len * len);
+      if (t > 0 && t < 1 && Math.abs((ux - x1) * nx + (uy - y1) * ny) < R + 6) biege = Math.max(biege, 32);
+    }
+    const cx = (x1 + x2) / 2 + nx * biege * 2, cy = (y1 + y2) / 2 + ny * biege * 2;
+    const punkt = t => [(1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * cx + t * t * x2, (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * cy + t * t * y2];
+    if (!biege) {
+      const sx = x1 + dx / len * R, sy = y1 + dy / len * R, ex = x2 - dx / len * R, ey = y2 - dy / len * R;
+      return { d: `M${sx.toFixed(1)},${sy.toFixed(1)} L${ex.toFixed(1)},${ey.toFixed(1)}`, ex, ey, tx: dx / len, ty: dy / len, punkt, nx, ny };
+    }
+    const a1 = Math.hypot(cx - x1, cy - y1), a2 = Math.hypot(x2 - cx, y2 - cy);
+    const sx = x1 + (cx - x1) / a1 * R, sy = y1 + (cy - y1) / a1 * R, tx = (x2 - cx) / a2, ty = (y2 - cy) / a2;
+    const ex = x2 - tx * R, ey = y2 - ty * R;
+    return { d: `M${sx.toFixed(1)},${sy.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)}`, ex, ey, tx, ty, punkt, nx, ny };
+  }
+  function labelLagen() {      // wie in dijkstra.html, etwas breiter für negative Gewichte
+    const B = 30, H = 13, frei = [], lagen = [];
+    const stoesst = (x, y) => x - B / 2 < 2 || x + B / 2 > G.breite - 2 || y - H / 2 < 2 || y + H / 2 > G.hoehe - 2
+      || G.pos.some(([cx, cy]) => Math.hypot(Math.max(x - B / 2 - cx, 0, cx - x - B / 2), Math.max(y - H / 2 - cy, 0, cy - y - H / 2)) < 16)
+      || frei.some(([fx, fy]) => Math.abs(fx - x) < B && Math.abs(fy - y) < H);
+    G.kanten.forEach((_, e) => {
+      const g = geometrie(e, 15);
+      let best = null;
+      for (const t of [0.5, 0.4, 0.6, 0.3, 0.7, 0.22, 0.78]) for (const s of [9, -9, 15, -15]) {
+        if (best) break;
+        const [px, py] = g.punkt(t), x = px + g.nx * s, y = py + g.ny * s;
+        if (!stoesst(x, y)) best = [x, y];
+      }
+      if (!best) { const [px, py] = g.punkt(0.5); best = [px + g.nx * 9, py + g.ny * 9]; }
+      frei.push(best); lagen.push(best);
+    });
+    return lagen;
+  }
+  function zeichneGraph(st) {
+    if (!G.labels) G.labels = labelLagen();
+    const svg = $('graph'), R = 15;
+    svg.setAttribute('viewBox', `0 0 ${G.breite} ${G.hoehe}`); svg.style.maxWidth = G.breite * 1.25 + 'px';
+    const spt = new Set(st.edgeTo.filter(e => e !== null));
+    const zyk = new Set(st.zyklusKanten || []);
+    const pfad = new Set(st.pfad || []);
+    let h = '', t = '';
+    if (st.gebaut) G.kanten.forEach(([v, w, g], e) => {
+      const k = geometrie(e, R);
+      let cls = '';
+      if (pfad.has(e)) cls = 'pfad';
+      else if (zyk.has(e)) cls = 'zyklus';
+      else if (st.kante === e) cls = 'pruef';
+      else if (spt.has(e)) cls = 'spt';
+      else if (st.aus.has(e)) cls = 'aus';
+      const nx = -k.ty, ny = k.tx, bx = k.ex - k.tx * 9, by = k.ey - k.ty * 9;
+      h += `<path class="kante ${cls}" d="${k.d}"/><polygon class="pfeil ${cls}" points="${k.ex.toFixed(1)},${k.ey.toFixed(1)} ${(bx + nx * 4.5).toFixed(1)},${(by + ny * 4.5).toFixed(1)} ${(bx - nx * 4.5).toFixed(1)},${(by - ny * 4.5).toFixed(1)}"/>`;
+      let [mx, my] = G.labels[e];
+      mx = Math.min(Math.max(mx, 18), G.breite - 18); my = Math.min(Math.max(my, 8), G.hoehe - 8);
+      t += `<text class="gewicht ${cls}${g < 0 ? ' neg' : ''}" x="${mx.toFixed(1)}" y="${my.toFixed(1)}">${f2(g).replace(/^(-?)0/, '$1')}</text>`;
+    });
+    h += t;
+    for (let v = 0; v < G.V; v++) {
+      const [x, y] = G.pos[v];
+      let cls = 'knoten';
+      if (v === st.v) cls += ' aktiv';
+      else if (st.distTo[v] !== null && st.distTo[v] < Infinity) cls += ' erreicht';
+      if (st.onQ[v]) cls += ' inq';
+      if (st.w === v || st.ziel === v) cls += ' pruef';
+      if (v === S) cls += ' start';
+      h += `<g class="${cls}"><circle cx="${x}" cy="${y}" r="${R}"/><text x="${x}" y="${y}">${v}</text></g>`;
+      if (v === S) h += y - R - 5 >= 12 ? `<text class="marke" x="${x}" y="${y - R - 5}">s</text>` : `<text class="marke" x="${x - R - 8 >= 6 ? x - R - 8 : x + R + 8}" y="${y + 4}">s</text>`;
+    }
+    svg.innerHTML = h;
+  }
+  function render() {
+    const st = steps[pos];
+    $('titel').innerHTML = `${G.name} · <b>${G.V}</b> Knoten, <b>${st.gebaut ? G.kanten.length : 0}</b> Kanten · s = <b>${S}</b> · cost = <b>${st.cost}</b> · in der Schlange: <b>${st.queue.length}</b>${st.cycle ? ' · <b style="color:var(--rot)">negativer Zyklus</b>' : ''}`;
+    zeichneGraph(st);
+    let t = '<table class="arr"><tr><th>v</th><th>edgeTo[]</th><th>distTo[]</th><th>onQ[]</th></tr>';
+    const alt = new Set(ungueltige(st.edgeTo, st.distTo));
+    for (let v = 0; v < G.V; v++) {
+      const e = st.edgeTo[v], d = st.distTo[v];
+      const ungueltig = alt.has(v);
+      t += `<tr class="${v === st.v ? 'aktiv' : ''}"><th>${v}</th>`
+        + `<td class="${st.aend === v && e !== null ? 'geaendert' : e === null ? 'leer' : (st.zyklusKanten || []).includes(e) ? 'rot' : ''}">${e === null ? 'null' : `${G.kanten[e][0]}->${G.kanten[e][1]} ${f2(gw(e))}`}</td>`
+        + `<td class="${st.aend === v ? 'geaendert' : d === null || d === Infinity ? 'leer' : ungueltig ? 'alt' : ''}">${d === null ? '–' : f2(d)}</td>`
+        + `<td class="${st.onQ[v] ? 'rot' : 'leer'}">${st.onQ[v] ? 'true' : 'false'}</td></tr>`;
+    }
+    $('tabelle').innerHTML = t + '</table>';
+    if (st.queue.length) {
+      let q = '<table class="arr"><tr>';
+      st.queue.forEach(([v]) => { q += `<td class="${v === st.qNeu ? 'geaendert' : ''}">${v}</td>`; });
+      q += '</tr><tr>';
+      st.queue.forEach(([, l]) => { q += `<td class="leer" style="font-size:11px">${l}.</td>`; });
+      $('schlange').innerHTML = q + '</tr></table>';
+    } else $('schlange').innerHTML = `<div class="klein">${st.cost || st.vorbei ? '(leer)' : 'noch nichts eingereiht'}</div>`;
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg' + (st.cls ? ' ' + st.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    $('proto').innerHTML = st.spur.length
+      ? `<h4>relax-Aufrufe der Reihe nach (Dl. = Durchlauf, wie die Aufzählung zu Abbildung 4.91)</h4><pre class="spur">${st.spur.map((z, i) => i === st.spur.length - 1 && !st.vorbei ? `<span class="zuletzt">${esc(z)}</span>` : esc(z)).join('\n')}</pre>`
+      : '<p class="count">Noch nichts – erst wird der Graph gebaut.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+  function fuelleAuswahl() { $('s').innerHTML = Array.from({ length: G.V }, (_, v) => `<option${v === S ? ' selected' : ''}>${v}</option>`).join(''); }
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const start = () => { lockern(); lauf(BUCH, 0); fuelleAuswahl(); };
+  $('buch').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('zyklus').addEventListener('click', () => { lockern(); lauf(BUCH_NC, 0); fuelleAuswahl(); });
+  $('abS').addEventListener('click', () => { lockern(); lauf(G, +$('s').value); fuelleAuswahl(); });
+  $('zufall').addEventListener('click', () => { lockern(); lauf(zufallsgraph(), 0); fuelleAuswahl(); });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(V, kanten, s) spielt main() durch (Anzeige danach wie vorher)
+  function rechne(V, kanten, s) {
+    const alt = { G, adj, Z, konsole, spur, steps, S };
+    lauf({ V, kanten, name: 'Test', pos: Array.from({ length: V }, (_, i) => [215 + 170 * Math.sin(2 * Math.PI * i / V), 122 - 100 * Math.cos(2 * Math.PI * i / V)]), zufall: true, breite: 430, hoehe: 245 }, s);
+    const e = { edgeTo: Z.edgeTo.slice(), distTo: Z.distTo.slice(), cycle: Z.cycle && Z.cycle.slice(), cost: Z.cost, konsole: konsole.slice(), spur: spur.slice(), steps };
+    ({ G, adj, Z, konsole, spur, steps, S } = alt); pos = 0; render(); fuelleAuswahl();
+    return e;
+  }
+  window.__bellman = { rechne, start, BUCH, BUCH_NC, zufallsgraph, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, get G() { return G; }, CODE, L };
+
+  start();
+})();
+</script>
+</body>
+</html>
