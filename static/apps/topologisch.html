@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Topologisches Sortieren</title>
+<!-- Visualisierung des topologischen Sortierens (nach Sedgewick/Wayne, Algorithmen, Algorithmus 4.5, Listing 4.16)
+     für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code: TopologischeSortierung, dazu eigene
+     Fassungen der im Listing nur verwendeten Klassen (ZyklusSuche statt DirectedCycle, TiefensucheOrdnung statt
+     DepthFirstOrder, SymbolDigraph), Stack aus Algorithmus 1.2. Beispiel: die Vorrangbedingungen aus jobs.txt
+     (Buch-Website). Kanten mit Pfeilen wie in erreichbarkeit.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --erreicht: #8fd1a6; --etext: #1c1c1f; --zyklus: #d23b3b; }
+  @media (prefers-color-scheme: dark) { :root { --erreicht: #2f6e48; --etext: #ececef; --zyklus: #ff7676; } }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .phase { display: inline-block; font-weight: 700; color: var(--text); background: var(--code-bg); border-radius: 6px; padding: 1px 7px; margin-right: 6px; }
+  .bild { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .bild svg { display: block; width: 100%; height: auto; }
+  .bild .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  svg .kante { stroke: var(--grau); stroke-width: 1.8; fill: none; }
+  svg .pfeil { fill: var(--grau); stroke: none; }
+  svg .kante.baum { stroke: var(--text); stroke-width: 3; }
+  svg .pfeil.baum { fill: var(--text); }
+  svg .kante.pruef { stroke: var(--cur); stroke-width: 3.6; stroke-dasharray: 7 4; }
+  svg .pfeil.pruef { fill: var(--cur); }
+  svg .kante.zyklus { stroke: var(--zyklus); stroke-width: 3.6; }
+  svg .pfeil.zyklus { fill: var(--zyklus); }
+  svg .knoten circle { fill: var(--panel); stroke: var(--muted); stroke-width: 2; }
+  svg .knoten text { font: 700 14px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten.markiert circle { fill: var(--erreicht); stroke: var(--erreicht); }
+  svg .knoten.markiert text { fill: var(--etext); }
+  svg .knoten.fertig circle { fill: var(--sortiert); stroke: var(--sortiert); }
+  svg .knoten.pfad circle { stroke: var(--neu); stroke-width: 3.5; stroke-dasharray: 5 3; }
+  svg .knoten.aktiv circle { fill: var(--neu); stroke: var(--neu); stroke-dasharray: none; }
+  svg .knoten.aktiv text { fill: #fff; }
+  svg .knoten.pruef circle { stroke: var(--cur); stroke-width: 5; stroke-dasharray: none; }
+  svg .knoten.imzyklus circle { stroke: var(--zyklus); stroke-width: 4; stroke-dasharray: none; }
+  svg .platz { font: 700 11px ui-monospace, Consolas, monospace; fill: var(--neu); text-anchor: middle; }
+  @media (prefers-color-scheme: dark) { svg .knoten.aktiv text { fill: #0d1530; } }
+  .namen { font-size: 13px; margin: 0 0 10px; border-collapse: collapse; width: 100%; }
+  .namen td, .namen th { padding: 2px 6px; border-bottom: 1px solid var(--line); text-align: left; }
+  .namen th { color: var(--muted); font-weight: 600; }
+  .namen td.n { font-family: ui-monospace, Consolas, monospace; text-align: right; width: 2em; }
+  .namen td.zahl { font-variant-numeric: tabular-nums; text-align: center; width: 3.5em; }
+  .namen tr.aktiv td { color: var(--neu); font-weight: 700; }
+  .namen tr.pfad td.n { outline: 2px dashed var(--neu); outline-offset: -2px; }
+  .namen tr.imzyklus td { color: var(--zyklus); font-weight: 700; }
+  .stapel { font-size: 13px; margin-bottom: 10px; }
+  .stapel .h2 { color: var(--muted); margin-bottom: 4px; }
+  .stapel ol { list-style: none; margin: 0; padding: 0; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+  .stapel li { padding: 2px 6px; border-left: 3px solid var(--line); margin-bottom: 2px; }
+  .stapel li.oben { border-left-color: var(--neu); color: var(--neu); font-weight: 700; }
+  .zwei-stapel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .proto p { margin: 0 0 6px; font-size: 13px; font-family: ui-monospace, Consolas, monospace; }
+  @media (max-width: 640px) {
+    .bild { grid-template-columns: minmax(0, 1fr); }
+    .zwei-stapel { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls">
+    <button id="jobs">Testclient (jobs.txt)</button>
+    <button id="zyklus">mit Zyklus</button>
+    <button id="zufallDag">Zufalls-DAG</button>
+    <button id="zufall">Zufallsgraph</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="bild">
+      <div>
+        <div class="h2">Digraph – Kante v→w heißt „v vor w“</div>
+        <svg id="graph" role="img" aria-label="Der gerichtete Graph mit dem Stand der Suche"></svg>
+      </div>
+      <div>
+        <table class="namen" id="namen"></table>
+        <div class="zwei-stapel">
+          <div class="stapel" id="stapel"></div>
+          <div class="stapel" id="rp"></div>
+        </div>
+      </div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>laufender dfs-Aufruf</span>
+      <span><i style="background:var(--panel);outline:2px dashed var(--neu)"></i>auf dem Rekursionspfad (onStack)</span>
+      <span><i style="background:var(--panel);outline:3px solid var(--cur)"></i>Kante wird geprüft</span>
+      <span><i style="background:var(--erreicht)"></i>besucht</span>
+      <span><i style="background:var(--sortiert)"></i>fertig (Postorder)</span>
+      <span><i style="background:var(--zyklus)"></i>Zyklus</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der aktuelle Abschnitt fertig ist (Graph gebaut, eine Tiefensuche, Ergebnis)">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 4.5, Listing 4.16)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'import java.util.*;',
+    '',
+    'public class TopologischeSortierung',
+    '{',
+    '   private Iterable<Integer> order;   // topologische Ordnung, null falls es keine gibt',
+    '',
+    '   public TopologischeSortierung(Digraph G)',
+    '   {',
+    '      ZyklusSuche zyklus = new ZyklusSuche(G);',
+    '      if (!zyklus.hasCycle())',
+    '      {  // nur ein DAG hat eine topologische Ordnung',
+    '         TiefensucheOrdnung dfs = new TiefensucheOrdnung(G);',
+    '         order = dfs.reversePost();',
+    '      }',
+    '   }',
+    '',
+    '   public Iterable<Integer> order()  {  return order;  }',
+    '   public boolean isDAG()  {  return order != null;  }',
+    '',
+    '   public static void main(String[] args)',
+    '   {  // Testclient: die Vorrangbedingungen aus jobs.txt, Trennzeichen „/“ –',
+    '      // in jeder Zeile kommt das erste Fach vor allen folgenden',
+    '      List<String> zeilen = new ArrayList<>(List.of(',
+    '         "Algorithms/Theoretical CS/Databases/Scientific Computing",',
+    '         "Introduction to CS/Advanced Programming/Algorithms",',
+    '         "Advanced Programming/Scientific Computing",',
+    '         "Scientific Computing/Computational Biology",',
+    '         "Theoretical CS/Computational Biology/Artificial Intelligence",',
+    '         "Linear Algebra/Theoretical CS",',
+    '         "Calculus/Linear Algebra",',
+    '         "Artificial Intelligence/Neural Networks/Robotics/Machine Learning",',
+    '         "Machine Learning/Neural Networks"));',
+    '      zeilen.addAll(List.of(args));          // weitere Zeilen von der Befehlszeile',
+    '      SymbolDigraph sg = new SymbolDigraph(zeilen, "/");',
+    '      TopologischeSortierung top = new TopologischeSortierung(sg.G());',
+    '      if (!top.isDAG())',
+    '      {',
+    '         System.out.println("Kein DAG: Es gibt einen Zyklus, also keine topologische Ordnung.");',
+    '         return;',
+    '      }',
+    '      for (int v : top.order())',
+    '         System.out.println(sg.name(v));',
+    '   }',
+    '}',
+    '',
+    '// ---- ZyklusSuche (eigene Fassung von DirectedCycle): Tiefensuche prüft, ob der Digraph einen Zyklus hat ----',
+    'public class ZyklusSuche',
+    '{',
+    '   private boolean[] marked;',
+    '   private int[] edgeTo;',
+    '   private boolean[] onStack;      // liegt der Knoten auf dem laufenden Rekursionspfad?',
+    '   private Stack<Integer> cycle;   // der gefundene Zyklus, sonst null',
+    '',
+    '   public ZyklusSuche(Digraph G)',
+    '   {',
+    '      onStack = new boolean[G.V()];',
+    '      edgeTo = new int[G.V()];',
+    '      marked = new boolean[G.V()];    // Zyklussuche',
+    '      for (int v = 0; v < G.V(); v++)    // jeder noch unbesuchte Knoten startet eine Suche',
+    '         if (!marked[v] && cycle == null) dfs(G, v);',
+    '   }',
+    '',
+    '   private void dfs(Digraph G, int v)',
+    '   {',
+    '      onStack[v] = true;              // v kommt auf den Pfad',
+    '      marked[v] = true;               // v ist besucht',
+    '      for (int w : G.adj(v))          // jede Kante v→w',
+    '         if (cycle != null) return;    // Zyklus schon gefunden: nur noch zurück',
+    '         else if (!marked[w])',
+    '         {  edgeTo[w] = v;  dfs(G, w);  }',
+    '         else if (onStack[w])',
+    '         {  // w liegt noch auf dem Pfad: die Kante v→w schließt den Kreis',
+    '            cycle = new Stack<Integer>();',
+    '            for (int x = v; x != w; x = edgeTo[x])',
+    '               cycle.push(x);',
+    '            cycle.push(w);',
+    '            cycle.push(v);',
+    '         }',
+    '      onStack[v] = false;             // v verlässt den Pfad',
+    '   }',
+    '',
+    '   public boolean hasCycle()  {  return cycle != null;  }',
+    '   public Iterable<Integer> cycle()  {  return cycle;  }',
+    '}',
+    '',
+    '// ---- TiefensucheOrdnung (eigene Fassung von DepthFirstOrder): merkt sich, wann jeder Knoten fertig wird ----',
+    'public class TiefensucheOrdnung',
+    '{',
+    '   private boolean[] marked;',
+    '   private Stack<Integer> reversePost;   // fertige Knoten, der zuletzt fertige liegt oben',
+    '',
+    '   public TiefensucheOrdnung(Digraph G)',
+    '   {',
+    '      reversePost = new Stack<Integer>();',
+    '      marked = new boolean[G.V()];    // Ordnung',
+    '      for (int v = 0; v < G.V(); v++)    // alle Knoten, auch die ohne Vorgänger',
+    '         if (!marked[v]) dfs(G, v);',
+    '   }',
+    '',
+    '   private void dfs(Digraph G, int v)',
+    '   {',
+    '      marked[v] = true;               // besucht (Ordnung)',
+    '      for (int w : G.adj(v))          // alle Nachfolger zuerst',
+    '         if (!marked[w]) dfs(G, w);',
+    '      reversePost.push(v);            // v ist fertig (Postorder): oben auf den Stapel',
+    '   }',
+    '',
+    '   public Iterable<Integer> reversePost()  {  return reversePost;  }',
+    '}',
+    '',
+    '// ---- SymbolDigraph (eigene Fassung): Namen in Knotennummern übersetzen und zurück ----',
+    'public class SymbolDigraph',
+    '{',
+    '   private HashMap<String, Integer> nummer = new HashMap<>();   // Name → Knoten',
+    '   private String[] name;                                        // Knoten → Name',
+    '   private Digraph G;',
+    '',
+    '   public SymbolDigraph(List<String> zeilen, String trenner)',
+    '   {',
+    '      for (String z : zeilen)     // 1. Durchgang: jeder neue Name bekommt die nächste Nummer',
+    '         for (String n : z.split(trenner))',
+    '            if (!nummer.containsKey(n)) nummer.put(n, nummer.size());',
+    '      name = new String[nummer.size()];',
+    '      for (String n : nummer.keySet()) name[nummer.get(n)] = n;',
+    '      G = new Digraph(nummer.size());',
+    '      for (String z : zeilen)     // 2. Durchgang: das erste Fach vor jedem weiteren',
+    '      {',
+    '         String[] t = z.split(trenner);',
+    '         for (int i = 1; i < t.length; i++)',
+    '            G.addEdge(nummer.get(t[0]), nummer.get(t[i]));',
+    '      }',
+    '   }',
+    '',
+    '   public Digraph G()  {  return G;  }',
+    '   public String name(int v)  {  return name[v];  }',
+    '}',
+    '',
+    '// ---- Digraph: wie bei der Erreichbarkeit, Kanten nur in einer Richtung ----',
+    'public class Digraph',
+    '{',
+    '   private final int V;          // Anzahl der Knoten',
+    '   private int E;                // Anzahl der Kanten',
+    '   private Bag<Integer>[] adj;   // adj[v]: die Knoten, auf die v zeigt',
+    '',
+    '   @SuppressWarnings("unchecked")',
+    '   public Digraph(int V)',
+    '   {',
+    '      this.V = V;',
+    '      adj = (Bag<Integer>[]) new Bag[V];',
+    '      for (int v = 0; v < V; v++)',
+    '         adj[v] = new Bag<Integer>();',
+    '   }',
+    '',
+    '   public int V()  {  return V;  }',
+    '   public int E()  {  return E;  }',
+    '',
+    '   public void addEdge(int v, int w)',
+    '   {  // gerichtet: nur v → w',
+    '      adj[v].add(w);',
+    '      E++;',
+    '   }',
+    '',
+    '   public Iterable<Integer> adj(int v)  {  return adj[v];  }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    zeilen: zeile('List<String> zeilen = new ArrayList<>(List.of('), addAll: zeile('zeilen.addAll(List.of(args));'),
+    neuSG: zeile('SymbolDigraph sg = new SymbolDigraph(zeilen, "/");'), pass1: zeile('// 1. Durchgang'), addEdge: zeile('G.addEdge(nummer.get(t[0]), nummer.get(t[i]));'),
+    neuTop: zeile('TopologischeSortierung top = new TopologischeSortierung(sg.G());'), neuZ: zeile('ZyklusSuche zyklus = new ZyklusSuche(G);'),
+    zMarkedNeu: zeile('marked = new boolean[G.V()];    // Zyklussuche'), zForV: zeile('// jeder noch unbesuchte Knoten startet eine Suche'),
+    zIfV: zeile('if (!marked[v] && cycle == null) dfs(G, v);'), zOnStack: zeile('// v kommt auf den Pfad'), zMarked: zeile('// v ist besucht'),
+    zReturn: zeile('// Zyklus schon gefunden: nur noch zurück'), zIfW: zeile('else if (!marked[w])'), zEdgeTo: zeile('{  edgeTo[w] = v;  dfs(G, w);  }'),
+    zOnStackW: zeile('else if (onStack[w])'), zCycle: zeile('cycle = new Stack<Integer>();'), zCyclePushV: zeile('            cycle.push(v);'),
+    zOff: zeile('// v verlässt den Pfad'), hasCycle: zeile('if (!zyklus.hasCycle())'),
+    neuO: zeile('TiefensucheOrdnung dfs = new TiefensucheOrdnung(G);'), oMarkedNeu: zeile('marked = new boolean[G.V()];    // Ordnung'),
+    oForV: zeile('// alle Knoten, auch die ohne Vorgänger'), oIfV: zeile('         if (!marked[v]) dfs(G, v);'), oMarked: zeile('// besucht (Ordnung)'),
+    oIfW: zeile('         if (!marked[w]) dfs(G, w);'), oPush: zeile('reversePost.push(v);'), order: zeile('order = dfs.reversePost();'),
+    isDAG: zeile('if (!top.isDAG())'), keinDAG: zeile('Kein DAG: Es gibt einen Zyklus'), forOrder: zeile('for (int v : top.order())'),
+    druck: zeile('System.out.println(sg.name(v));')
+  };
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+
+  // ---------- Daten ----------
+  const JOBS = ['Algorithms/Theoretical CS/Databases/Scientific Computing', 'Introduction to CS/Advanced Programming/Algorithms',
+    'Advanced Programming/Scientific Computing', 'Scientific Computing/Computational Biology', 'Theoretical CS/Computational Biology/Artificial Intelligence',
+    'Linear Algebra/Theoretical CS', 'Calculus/Linear Algebra', 'Artificial Intelligence/Neural Networks/Robotics/Machine Learning', 'Machine Learning/Neural Networks'];
+  const ZYKLUS = 'Theoretical CS/Introduction to CS';
+  function symbol(zeilen) {                 // wie SymbolDigraph: Nummern in der Reihenfolge des ersten Auftretens
+    const nummer = new Map(), kanten = [];
+    zeilen.forEach(z => z.split('/').forEach(n => { if (!nummer.has(n)) nummer.set(n, nummer.size); }));
+    zeilen.forEach(z => { const t = z.split('/'); for (let i = 1; i < t.length; i++) kanten.push([nummer.get(t[0]), nummer.get(t[i])]); });
+    return { namen: [...nummer.keys()], kanten };
+  }
+  function digraph(V, kanten) { const adj = Array.from({ length: V }, () => []); kanten.forEach(([v, w]) => adj[v].unshift(w)); return adj; }
+  function lage(V, kanten) {               // Stufen über längste Wege; bei einem Zyklus ein Kreis
+    const ein = Array(V).fill(0), stufe = Array(V).fill(0), adj = digraph(V, kanten), q = [];
+    kanten.forEach(([, w]) => ein[w]++);
+    for (let v = 0; v < V; v++) if (!ein[v]) q.push(v);
+    let n = 0;
+    while (q.length) { const v = q.shift(); n++; adj[v].forEach(w => { stufe[w] = Math.max(stufe[w], stufe[v] + 1); if (!--ein[w]) q.push(w); }); }
+    if (n < V) return Array.from({ length: V }, (_, i) => [215 + 170 * Math.sin(2 * Math.PI * i / V), 128 - 100 * Math.cos(2 * Math.PI * i / V)].map(Math.round));
+    const maxS = Math.max(...stufe), spalten = Array.from({ length: maxS + 1 }, () => []);
+    for (let v = 0; v < V; v++) spalten[stufe[v]].push(v);
+    const pos = [];
+    spalten.forEach((sp, s) => sp.forEach((v, i) => { pos[v] = [Math.round(30 + (maxS ? s * 370 / maxS : 185)), Math.round(30 + (i + 0.5) * 210 / sp.length + (s % 2 ? 12 : -12))]; }));
+    return pos;
+  }
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsZeilen(dag) {           // Buchstaben als Namen; beim DAG zeigt jede Kante zu einem späteren Buchstaben
+    const V = 7 + zufall(3), zeilen = [];
+    const m = V - 1 + zufall(4);
+    for (let i = 0; i < m; i++) {
+      const v = zufall(dag ? V - 1 : V), k = 1 + zufall(2), t = [v];
+      for (let j = 0; j < k; j++) { const w = dag ? v + 1 + zufall(V - 1 - v) : zufall(V); if (w !== v) t.push(w); }
+      if (t.length > 1) zeilen.push(t.map(x => String.fromCharCode(65 + x)).join('/'));
+    }
+    return zeilen;
+  }
+
+  // ---------- Aufzeichnung ----------
+  let G, adj, Z, konsole, steps, pos = 0, timer = null, extra;
+  function neuerZustand() {
+    Z = { phase: 'bau', gebaut: false, mZ: Array(G.V).fill(false), onStack: Array(G.V).fill(false), edgeTo: Array(G.V).fill(null), cycle: null, frames: [],
+      mO: Array(G.V).fill(false), post: [], baum: [], order: null, laeuft: false, ausgabe: -1 };
+  }
+  function snap(line, msg, o) {
+    steps.push(Object.assign({
+      line, msg, phase: Z.phase, gebaut: Z.gebaut, adj: adj.map(a => a.slice()), mZ: Z.mZ.slice(), onStack: Z.onStack.slice(), cycle: Z.cycle && Z.cycle.slice(),
+      frames: Z.frames.map(f => ({ ...f })), mO: Z.mO.slice(), post: Z.post.slice(), baum: Z.baum.slice(), order: Z.order && Z.order.slice(),
+      laeuft: Z.laeuft, ausgabe: Z.ausgabe, konsole: konsole.slice()
+    }, o || {}));
+  }
+  const N = v => `${v} (${G.namen[v]})`;
+  const nf = (v, i) => `${i + 1} von ${adj[v].length}`;
+
+  // Phase 1: ZyklusSuche
+  function dfsZ(v, von) {
+    Z.frames.push({ v, i: -1 });
+    if (von !== undefined) Z.baum.push([von, v]);
+    Z.onStack[v] = true;
+    snap(L.zOnStack, `dfs(G, ${N(v)}): onStack[${v}] = true – ${v} liegt jetzt auf dem Rekursionspfad${Z.frames.length > 1 ? ' ' + Z.frames.map(f => f.v).join(' → ') : ''}.`);
+    Z.mZ[v] = true;
+    snap(L.zMarked, `marked[${v}] = true. Kanten von ${v} aus: adj[${v}] = ${adj[v].join(' ') || '(keine)'}.`);
+    const f = Z.frames[Z.frames.length - 1];
+    for (let i = 0; i < adj[v].length; i++) {
+      const w = adj[v][i];
+      f.i = i;
+      if (Z.cycle) { snap(L.zReturn, `Der Zyklus ist schon gefunden – dfs(G, ${v}) kehrt sofort zurück, ohne die übrigen Kanten zu prüfen.`, { kante: [v, w] }); Z.frames.pop(); return; }
+      if (!Z.mZ[w]) {
+        snap(L.zIfW, `Kante ${v}→${w} (${nf(v, i)}): ${w} ist noch nicht besucht.`, { kante: [v, w], w });
+        Z.edgeTo[w] = v;
+        snap(L.zEdgeTo, `edgeTo[${w}] = ${v}, dann dfs(G, ${w}).`, { kante: [v, w], w });
+        dfsZ(w, v);
+      } else if (Z.onStack[w]) {
+        snap(L.zOnStackW, `Kante ${v}→${w} (${nf(v, i)}): ${w} ist besucht und liegt noch auf dem Pfad (onStack[${w}] = true). Der Weg ${w} → … → ${v} plus die Kante ${v}→${w} ergibt einen Kreis!`, { kante: [v, w], w, rueck: [v, w] });
+        const c = []; for (let x = v; x !== w; x = Z.edgeTo[x]) c.unshift(x); c.unshift(w); c.unshift(v);
+        Z.cycle = c;
+        snap(L.zCyclePushV, `Zyklus gespeichert (über edgeTo von ${v} zurück bis ${w}, dann ${w} und ${v} obenauf): ${c.slice(1).join(' → ')} → ${c[1]}, also ${c.slice(1).map(x => G.namen[x]).join(' → ')} → ${G.namen[c[1]]}.`, { kante: [v, w] });
+      } else {
+        snap(L.zOnStackW, `Kante ${v}→${w} (${nf(v, i)}): ${w} ist besucht, aber schon fertig (nicht mehr auf dem Pfad). Kein Kreis über diese Kante.`, { kante: [v, w], w });
+      }
+    }
+    Z.onStack[v] = false;
+    Z.frames.pop();
+    snap(L.zOff, `onStack[${v}] = false – dfs(G, ${v}) ist fertig, ${v} verlässt den Pfad${Z.frames.length ? `. Zurück zu dfs(G, ${Z.frames[Z.frames.length - 1].v})` : ''}.`, { opEnde: !Z.frames.length });
+  }
+  // Phase 2: TiefensucheOrdnung
+  function dfsO(v, von) {
+    Z.frames.push({ v, i: -1 });
+    if (von !== undefined) Z.baum.push([von, v]);
+    Z.mO[v] = true;
+    snap(L.oMarked, `dfs(G, ${N(v)}): marked[${v}] = true. Zuerst alle Nachfolger: adj[${v}] = ${adj[v].join(' ') || '(keine)'}.`);
+    const f = Z.frames[Z.frames.length - 1];
+    for (let i = 0; i < adj[v].length; i++) {
+      const w = adj[v][i]; f.i = i;
+      if (Z.mO[w]) snap(L.oIfW, `Kante ${v}→${w} (${nf(v, i)}): ${w} ist schon besucht${Z.post.includes(w) ? ' und fertig – liegt also schon auf dem Stapel, unter v' : ''}.`, { kante: [v, w], w });
+      else { snap(L.oIfW, `Kante ${v}→${w} (${nf(v, i)}): ${w} ist neu – dfs(G, ${w}).`, { kante: [v, w], w }); dfsO(w, v); }
+    }
+    Z.post.push(v);
+    snap(L.oPush, `${N(v)} ist fertig – als ${Z.post.length}. Knoten (Postorder). push(${v}): oben auf den Stapel. Alles, was nach ${v} kommen muss, liegt schon darunter.`, { neuOben: v });
+    Z.frames.pop();
+    if (!Z.frames.length) snap(L.oIfV, `Die Suche ab ${v} ist durch. Stapel von oben: ${Z.post.slice().reverse().join(' ')}.`, { opEnde: true });
+  }
+  function lauf(daten, mitExtra) {
+    stop();
+    const zeilen = daten.zeilen.concat(mitExtra || []);
+    const sym = symbol(zeilen);
+    // Lage nur aus den Grundzeilen: Die Zyklus-Zeile verschiebt dann keinen Knoten (sie bringt keine neuen Namen)
+    G = { V: sym.namen.length, namen: sym.namen, kanten: sym.kanten, pos: lage(sym.namen.length, symbol(daten.zeilen).kanten), breite: 430, hoehe: 262, name: daten.name };
+    extra = mitExtra || [];
+    steps = []; konsole = [`% java TopologischeSortierung${extra.map(z => ` "${z}"`).join('')}`]; adj = Array.from({ length: G.V }, () => []);
+    neuerZustand();
+    snap(L.zeilen, `Testclient: ${daten.zeilen.length} Zeilen Vorrangbedingungen${daten.name === 'jobs' ? ' aus jobs.txt' : ''}. In jeder Zeile kommt das erste Fach vor allen folgenden.`);
+    if (extra.length) snap(L.addAll, `Von der Befehlszeile kommt noch eine Zeile dazu: „${extra.join('“, „')}“ – damit kommt ${extra[0].split('/')[0]} vor ${extra[0].split('/').slice(1).join(', ')}.`);
+    snap(L.pass1, `SymbolDigraph, 1. Durchgang: ${G.V} verschiedene Namen, jeder bekommt die nächste freie Nummer – in der Reihenfolge, in der er zum ersten Mal vorkommt (rechts die Tabelle).`, { namenZeigen: true });
+    adj = digraph(G.V, G.kanten); Z.gebaut = true;
+    snap(L.addEdge, `2. Durchgang: ${G.kanten.length} Kanten, je erste Zahl vor jeder weiteren der Zeile. Kante v→w heißt „v vor w“.`, { opEnde: true, namenZeigen: true });
+    // Konstruktor
+    Z.phase = 'zyklus'; Z.laeuft = true;
+    snap(L.neuTop, `new TopologischeSortierung(sg.G()): Erst wird geprüft, ob es überhaupt eine Ordnung gibt.`);
+    snap(L.neuZ, `new ZyklusSuche(G): Tiefensuche mit dem zusätzlichen Array onStack[] – es kennt die Knoten auf dem gerade laufenden Rekursionspfad.`);
+    snap(L.zMarkedNeu, `marked, edgeTo, onStack: alle leer.`);
+    for (let v = 0; v < G.V && !Z.cycle; v++) {
+      if (Z.mZ[v]) { snap(L.zIfV, `v = ${v}: schon besucht.`); continue; }
+      snap(L.zIfV, `v = ${N(v)}: noch nicht besucht und noch kein Zyklus – Tiefensuche ab ${v}.`);
+      dfsZ(v);
+      Z.frames = [];
+    }
+    Z.baum = [];
+    if (Z.cycle) {
+      snap(L.hasCycle, `hasCycle() ist true – der Digraph hat einen Zyklus (${Z.cycle.slice(1).join(' → ')} → ${Z.cycle[1]}). Dann gibt es keine Reihenfolge, in der jedes Fach nach seinen Voraussetzungen kommt: order bleibt null.`, { opEnde: true, cls: 'swap' });
+      Z.laeuft = false; Z.phase = 'ausgabe';
+      snap(L.isDAG, `isDAG() ist false (order == null).`);
+      konsole.push('Kein DAG: Es gibt einen Zyklus, also keine topologische Ordnung.');
+      snap(L.keinDAG, `main() meldet es und endet. Ohne diese Prüfung bräche die for-Schleife über order() mit einer NullPointerException ab.`, { opEnde: true });
+      pos = 0; render(); return;
+    }
+    snap(L.hasCycle, `hasCycle() ist false – kein Zyklus, der Digraph ist ein DAG. Jetzt die eigentliche Sortierung.`, { opEnde: true });
+    Z.phase = 'ordnung';
+    snap(L.neuO, `new TiefensucheOrdnung(G): eine ganz normale Tiefensuche, die sich nur merkt, wann jeder Knoten fertig wird.`);
+    snap(L.oMarkedNeu, `marked leer, der Stapel reversePost leer.`);
+    for (let v = 0; v < G.V; v++) {
+      if (Z.mO[v]) { snap(L.oIfV, `v = ${v}: schon besucht.`); continue; }
+      snap(L.oIfV, `v = ${N(v)}: noch nicht besucht – Tiefensuche ab ${v}.`);
+      dfsO(v);
+    }
+    Z.order = Z.post.slice().reverse();
+    snap(L.order, `order = dfs.reversePost(): Der Stapel, von oben gelesen, ist die umgekehrte Postorder – nach Satz F eine topologische Ordnung: ${Z.order.join(' ')}.`, { opEnde: true });
+    Z.laeuft = false; Z.phase = 'ausgabe';
+    snap(L.isDAG, `isDAG() ist true (order != null).`);
+    snap(L.forOrder, `for (int v : top.order()): die Knoten in topologischer Ordnung, als Namen ausgegeben.`);
+    Z.order.forEach((v, i) => {
+      konsole.push(G.namen[v]); Z.ausgabe = i;
+      snap(L.druck, `${i + 1}. ${G.namen[v]}${(() => { const vor = G.kanten.filter(([a, b]) => b === v).map(([a]) => G.namen[a]); return vor.length ? ` – Voraussetzung${vor.length > 1 ? 'en' : ''} ${vor.join(', ')} ${vor.length > 1 ? 'stehen' : 'steht'} schon davor` : ' – ohne Voraussetzung'; })()}.`, { opEnde: i === Z.order.length - 1 });
+    });
+    pos = 0; render();
+  }
+
+  // ---------- Anzeige ----------
+  function kantenGeometrie(v, w, R) {          // gerade, oder als Bogen bei Gegenkante bzw. wenn die Gerade einen Knoten streift
+    const [x1, y1] = G.pos[v], [x2, y2] = G.pos[w];
+    const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+    if (v === w) { const d = `M${x1 - 8},${y1 - R + 2} C${x1 - 30},${y1 - 48} ${x1 + 30},${y1 - 48} ${x1 + 8},${y1 - R + 2}`; return { d, ex: x1 + 8, ey: y1 - R + 2, tx: -0.45, ty: 0.9 }; }
+    let biege = G.kanten.some(([a, b]) => a === w && b === v) ? 14 : 0;
+    for (let u = 0; u < G.V; u++) {
+      if (u === v || u === w) continue;
+      const [ux, uy] = G.pos[u], t = ((ux - x1) * dx + (uy - y1) * dy) / (len * len);
+      if (t > 0 && t < 1 && Math.abs((ux - x1) * nx + (uy - y1) * ny) < R + 6) biege = Math.max(biege, 30);
+    }
+    if (!biege) {
+      const sx = x1 + dx / len * R, sy = y1 + dy / len * R, ex = x2 - dx / len * R, ey = y2 - dy / len * R;
+      return { d: `M${sx.toFixed(1)},${sy.toFixed(1)} L${ex.toFixed(1)},${ey.toFixed(1)}`, ex, ey, tx: dx / len, ty: dy / len };
+    }
+    const cx = (x1 + x2) / 2 + nx * biege * 2, cy = (y1 + y2) / 2 + ny * biege * 2;
+    const a1 = Math.hypot(cx - x1, cy - y1), a2 = Math.hypot(x2 - cx, y2 - cy);
+    const sx = x1 + (cx - x1) / a1 * R, sy = y1 + (cy - y1) / a1 * R, tx = (x2 - cx) / a2, ty = (y2 - cy) / a2;
+    const ex = x2 - tx * R, ey = y2 - ty * R;
+    return { d: `M${sx.toFixed(1)},${sy.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)}`, ex, ey, tx, ty };
+  }
+  function zeichneGraph(st) {
+    const svg = $('graph'), R = 14;
+    svg.setAttribute('viewBox', `0 0 ${G.breite} ${G.hoehe}`); svg.style.maxWidth = G.breite * 1.2 + 'px';
+    const oben = st.frames.length ? st.frames[st.frames.length - 1].v : null;
+    const baum = new Set(st.baum.map(([a, b]) => a + '>' + b));
+    const zk = new Set();
+    if (st.cycle) for (let i = 0; i < st.cycle.length - 1; i++) zk.add(st.cycle[i] + '>' + st.cycle[i + 1]);
+    const imZyklus = new Set(st.cycle ? st.cycle : []);
+    let h = '';
+    if (st.gebaut) G.kanten.forEach(([v, w]) => {
+      const k = kantenGeometrie(v, w, R);
+      let cls = '';
+      if (zk.has(v + '>' + w)) cls = ' zyklus';
+      else if (st.kante && st.kante[0] === v && st.kante[1] === w) cls = ' pruef';
+      else if (baum.has(v + '>' + w)) cls = ' baum';
+      const nx = -k.ty, ny = k.tx, bx = k.ex - k.tx * 9, by = k.ey - k.ty * 9;
+      h += `<path class="kante${cls}" d="${k.d}"/><polygon class="pfeil${cls}" points="${k.ex.toFixed(1)},${k.ey.toFixed(1)} ${(bx + nx * 4.5).toFixed(1)},${(by + ny * 4.5).toFixed(1)} ${(bx - nx * 4.5).toFixed(1)},${(by - ny * 4.5).toFixed(1)}"/>`;
+    });
+    for (let v = 0; v < G.V; v++) {
+      const [x, y] = G.pos[v];
+      let cls = 'knoten';
+      if (v === oben) cls += ' aktiv';
+      else if (st.phase === 'zyklus' || (st.phase === 'ausgabe' && st.cycle)) { if (st.mZ[v]) cls += ' markiert'; }
+      else if (st.post.includes(v)) cls += ' fertig';
+      else if (st.mO[v]) cls += ' markiert';
+      if (st.phase === 'zyklus' && st.onStack[v] && v !== oben) cls += ' pfad';
+      if (st.w === v) cls += ' pruef';
+      if (imZyklus.has(v) && !(st.w === v)) cls += ' imzyklus';
+      h += `<g class="${cls}"><circle cx="${x}" cy="${y}" r="${R}"/><text x="${x}" y="${y}">${v}</text></g>`;
+      if (st.order) { const p = st.order.indexOf(v); h += `<text class="platz" x="${x + (x + R + 14 > G.breite ? -R - 7 : R + 7)}" y="${y - R + 2 < 9 ? y + R + 8 : y - R + 2}">${p + 1}.</text>`; }
+    }
+    svg.innerHTML = h;
+  }
+  function render() {
+    const st = steps[pos];
+    const phasen = { bau: 'Graph bauen', zyklus: 'Phase 1: ZyklusSuche', ordnung: 'Phase 2: TiefensucheOrdnung', ausgabe: 'Ausgabe' };
+    $('titel').innerHTML = `<span class="phase">${phasen[st.phase]}</span>${G.name === 'jobs' ? 'jobs.txt' : 'Zufallsgraph'}${extra.length ? ' + 1 Zeile' : ''} · <b>${G.V}</b> Knoten, <b>${st.gebaut ? G.kanten.length : 0}</b> Kanten`;
+    zeichneGraph(st);
+    const oben = st.frames.length ? st.frames[st.frames.length - 1].v : null;
+    const imZyklus = new Set(st.cycle || []);
+    let t = '<tr><th>v</th><th>Name</th><th class="zahl">fertig</th><th class="zahl">Platz</th></tr>';
+    for (let v = 0; v < G.V; v++) {
+      const p = st.post.indexOf(v), o = st.order ? st.order.indexOf(v) : -1;
+      const cls = v === oben ? 'aktiv' : imZyklus.has(v) ? 'imzyklus' : st.phase === 'zyklus' && st.onStack[v] ? 'pfad' : '';
+      t += `<tr class="${cls}"><td class="n">${v}</td><td>${esc(G.namen[v])}</td><td class="zahl">${p >= 0 ? p + 1 + '.' : ''}</td><td class="zahl">${o >= 0 ? o + 1 + '.' : ''}</td></tr>`;
+    }
+    $('namen').innerHTML = t;
+    $('stapel').innerHTML = st.frames.length
+      ? `<div class="h2">Aufrufstapel:</div><ol>${st.frames.slice().reverse().map((f, i) => `<li class="${i === 0 ? 'oben' : ''}">dfs(G, ${f.v})${f.i < 0 ? '' : ` – ${i === 0 ? 'Kante' : 'wartet bei'} ${f.v}→${st.adj[f.v][f.i]}`}</li>`).join('')}</ol>`
+      : `<div class="h2">Aufrufstapel: leer</div>`;
+    const rp = st.post.slice().reverse();
+    $('rp').innerHTML = st.phase === 'ordnung' || (st.phase === 'ausgabe' && !st.cycle)
+      ? `<div class="h2">Stapel reversePost (oben zuerst):</div><ol>${rp.map((v, i) => `<li class="${i === 0 && st.neuOben === v ? 'oben' : ''}">${v} ${esc(G.namen[v])}</li>`).join('') || '<li>(leer)</li>'}</ol>`
+      : st.cycle ? `<div class="h2">Gefundener Zyklus:</div><ol>${st.cycle.slice(1).map(v => `<li>${v} ${esc(G.namen[v])}</li>`).join('')}<li>→ zurück zu ${st.cycle[1]}</li></ol>` : '';
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg' + (st.cls ? ' ' + st.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    let p = '';
+    if (st.post.length) p += `<h4>Postorder (Reihenfolge des Fertigwerdens)</h4><p>${st.post.join(' ')}</p>`;
+    if (st.order) p += `<h4>Umgekehrte Postorder = topologische Ordnung</h4><p>${st.order.join(' ')}</p><h4>Probe: jede Kante zeigt nach vorn</h4><p>${G.kanten.every(([a, b]) => st.order.indexOf(a) < st.order.indexOf(b)) ? `alle ${G.kanten.length} Kanten v→w: Platz(v) &lt; Platz(w) ✓` : 'nicht erfüllt'}</p>`;
+    if (st.cycle && st.phase !== 'zyklus') p += `<h4>Zyklus</h4><p>${st.cycle.slice(1).join(' → ')} → ${st.cycle[1]}</p>`;
+    $('proto').innerHTML = p || '<p class="count">Noch nichts – erst kommt die Zyklussuche.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const JOBS_DATEN = { zeilen: JOBS, name: 'jobs' };
+  const start = () => { lockern(); lauf(JOBS_DATEN); };
+  $('jobs').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('zyklus').addEventListener('click', () => { lockern(); lauf(JOBS_DATEN, [ZYKLUS]); });
+  $('zufallDag').addEventListener('click', () => { lockern(); lauf({ zeilen: zufallsZeilen(true), name: 'zufall' }); });
+  $('zufall').addEventListener('click', () => { lockern(); lauf({ zeilen: zufallsZeilen(false), name: 'zufall' }); });
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(zeilen) spielt main() durch und liefert Ordnung, Zyklus, Ausgabe (Anzeige danach wie vorher)
+  function rechne(zeilen) {
+    const alt = { G, adj, Z, konsole, steps, extra };
+    lauf({ zeilen, name: 'zufall' });
+    const e = { namen: G.namen.slice(), kanten: G.kanten.slice(), order: Z.order && Z.order.slice(), cycle: Z.cycle && Z.cycle.slice(), konsole: konsole.slice(), steps };
+    ({ G, adj, Z, konsole, steps, extra } = alt); pos = 0; render();
+    return e;
+  }
+  window.__topo = { rechne, start, mitZyklus: () => lauf(JOBS_DATEN, [ZYKLUS]), get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, get G() { return G; }, CODE, L, zufallsZeilen };
+
+  start();
+})();
+</script>
+</body>
+</html>
