@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starke Komponenten nach Kosaraju</title>
+<!-- Visualisierung des Kosaraju-Algorithmus für starke Zusammenhangskomponenten (nach Sedgewick/Wayne, Algorithmen,
+     Algorithmus 4.6, Listing 4.17) für wasdenkenkis.de – gebaut von Claude Code Opus 5.5. Eigener Java-Code
+     (StarkeKomponenten statt KosarajuSCC, TiefensucheOrdnung wie in topologisch.html, Digraph mit reverse() und dem
+     Bag aus Algorithmus 1.4); Beispielgraph tinyDG in der Reihenfolge der Datei tinyDG.txt (Buch-Website).
+     Pfeile wie in erreichbarkeit.html, Komponentenfarben wie in komponenten.html. -->
+<link rel="stylesheet" href="sortieren/rahmen.css?v=3">
+<style>
+  :root { --k0: #9db4ec; --k1: #8fd1a6; --k2: #ead77a; --k3: #c9a8e6; --k4: #eba3b5; --k5: #8ccfcf; --ktext: #1c1c1f; --erreicht: #8fd1a6; }
+  @media (prefers-color-scheme: dark) {
+    :root { --k0: #3d5590; --k1: #2f6e48; --k2: #6b5d1e; --k3: #5b3f7a; --k4: #7a3a4c; --k5: #2f6464; --ktext: #ececef; --erreicht: #2f6e48; }
+  }
+  .eingabe select { font: inherit; padding: 5px 6px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--text); }
+  .reihe-titel { font-size: 13px; color: var(--muted); margin: 4px 0 10px; }
+  .reihe-titel b { color: var(--text); font-variant-numeric: tabular-nums; }
+  .phase { display: inline-block; font-weight: 700; color: var(--text); background: var(--code-bg); border-radius: 6px; padding: 1px 7px; margin-right: 6px; }
+  .bild { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .bild svg { display: block; width: 100%; height: auto; }
+  .bild .h2 { font-size: 13px; color: var(--muted); margin: 0 0 4px; }
+  svg .kante { stroke: var(--grau); stroke-width: 1.8; fill: none; }
+  svg .pfeil { fill: var(--grau); stroke: none; }
+  svg .kante.baum { stroke: var(--text); stroke-width: 3.2; }
+  svg .pfeil.baum { fill: var(--text); }
+  svg .kante.pruef { stroke: var(--cur); stroke-width: 3.6; stroke-dasharray: 7 4; }
+  svg .pfeil.pruef { fill: var(--cur); }
+  svg .kante.neu { stroke: var(--neu); stroke-width: 3; }
+  svg .pfeil.neu { fill: var(--neu); }
+  svg .knoten circle { fill: var(--panel); stroke: var(--muted); stroke-width: 2; }
+  svg .knoten text { font: 700 15px system-ui, sans-serif; fill: var(--text); text-anchor: middle; dominant-baseline: central; }
+  svg .knoten.markiert circle { fill: var(--f); stroke: var(--f); }
+  svg .knoten.markiert text { fill: var(--ktext); }
+  svg .knoten.wartet circle { stroke: var(--neu); stroke-width: 3.5; }
+  svg .knoten.aktiv circle { fill: var(--neu); stroke: var(--neu); }
+  svg .knoten.aktiv text { fill: #fff; }
+  svg .knoten.pruef circle, svg .knoten.frage circle { stroke: var(--cur); stroke-width: 5; }
+  svg .knoten.start circle { stroke: var(--text); stroke-width: 3; stroke-dasharray: 4 3; }
+  svg .marke { font: 11px ui-monospace, Consolas, monospace; fill: var(--cur); font-weight: 700; text-anchor: middle; }
+  @media (prefers-color-scheme: dark) { svg .knoten.aktiv text { fill: #0d1530; } }
+  .adj { font-family: ui-monospace, Consolas, monospace; font-size: 13px; margin: 0 0 10px; }
+  .adj div { padding: 1px 0; white-space: nowrap; }
+  .adj .kopf { color: var(--muted); font-family: system-ui, sans-serif; margin-bottom: 2px; white-space: normal; }
+  .adj span.e { display: inline-block; min-width: 1.5em; text-align: center; border-radius: 4px; margin-right: 2px; }
+  .adj span.e.erledigt { color: var(--muted); opacity: .55; }
+  .adj span.e.jetzt { background: var(--cur); color: #fff; font-weight: 700; }
+  .adj span.e.wartet { outline: 2px solid var(--neu); font-weight: 700; }
+  .adj span.e.neu { background: var(--neu); color: #fff; font-weight: 700; }
+  @media (prefers-color-scheme: dark) { .adj span.e.jetzt, .adj span.e.neu { color: #0d1530; } }
+  .arr-box { overflow-x: auto; margin-bottom: 10px; }
+  table.arr { border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; }
+  table.arr th, table.arr td { border: 1px solid var(--line); padding: 3px 6px; text-align: center; }
+  table.arr th { color: var(--muted); font-weight: 600; }
+  table.arr td.leer { color: var(--muted); }
+  table.arr td.ja { background: var(--erreicht); color: var(--ktext); }
+  table.arr td.geaendert { background: var(--neu); color: #fff; font-weight: 700; }
+  @media (prefers-color-scheme: dark) { table.arr td.geaendert { color: #0d1530; } }
+  .reihe { font-size: 13px; margin-bottom: 10px; }
+  .reihe .h2 { color: var(--muted); margin-bottom: 4px; }
+  .reihe .z { font-family: ui-monospace, Consolas, monospace; display: flex; flex-wrap: wrap; gap: 3px; }
+  .reihe .z span { min-width: 1.7em; text-align: center; border: 1px solid var(--line); border-radius: 4px; padding: 1px 2px; }
+  .reihe .z span.jetzt { border: 2px dashed var(--text); font-weight: 700; }
+  .reihe .z span.oben { border-color: var(--neu); color: var(--neu); font-weight: 700; }
+  .reihe .z span.vorbei { opacity: .5; }
+  .stapel { font-size: 13px; margin-bottom: 10px; }
+  .stapel .h2 { color: var(--muted); margin-bottom: 4px; }
+  .stapel ol { list-style: none; margin: 0; padding: 0; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+  .stapel li { padding: 2px 6px; border-left: 3px solid var(--line); margin-bottom: 2px; }
+  .stapel li.oben { border-left-color: var(--neu); color: var(--neu); font-weight: 700; }
+  .komp { font-size: 13px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 3px; }
+  .komp .z { font-family: ui-monospace, Consolas, monospace; }
+  .komp i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; vertical-align: -1px; margin-right: 4px; }
+  .konsole { font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; background: var(--code-bg); border-radius: 8px; padding: 8px 10px; white-space: pre; overflow-x: auto; min-height: 1.5em; }
+  .proto h4 { margin: 12px 0 4px; font-size: 13px; color: var(--muted); font-weight: 600; }
+  .proto p { margin: 0 0 6px; font-size: 13px; font-family: ui-monospace, Consolas, monospace; }
+  @media (max-width: 640px) {
+    .bild { grid-template-columns: minmax(0, 1fr); }
+    .adj { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="box controls eingabe">
+    <button id="buch">Testclient (tinyDG)</button>
+    <button id="zufall">Zufallsgraph</button>
+    <label>v <select id="v1"></select></label>
+    <label>w <select id="v2"></select></label>
+    <button id="frage">stronglyConnected(v, w)</button>
+  </div>
+  <div class="box" id="anzeige">
+    <div class="reihe-titel" id="titel"></div>
+    <div class="bild">
+      <div>
+        <div class="h2" id="graphkopf"></div>
+        <svg id="graph" role="img" aria-label="Der gerichtete Graph mit dem Stand des Algorithmus"></svg>
+        <div class="komp" id="komp"></div>
+      </div>
+      <div>
+        <div class="reihe" id="ordnung"></div>
+        <div class="adj" id="adj"></div>
+        <div class="arr-box" id="arrays"></div>
+        <div class="stapel" id="stapel"></div>
+      </div>
+    </div>
+    <div class="legende">
+      <span><i style="background:var(--neu)"></i>laufender dfs-Aufruf</span>
+      <span><i style="background:var(--panel);outline:2px solid var(--neu)"></i>wartet auf einen tieferen Aufruf</span>
+      <span><i style="background:var(--panel);outline:3px solid var(--cur)"></i>Nachfolger wird geprüft</span>
+      <span><i style="background:var(--erreicht)"></i>Phase 1: besucht</span>
+      <span><i style="background:var(--sortiert)"></i>Phase 1: fertig</span>
+      <span><i style="background:var(--k0)"></i><i style="background:var(--k2)"></i><i style="background:var(--k3)"></i>Phase 2: starke Komponente 0, 1, 2 …</span>
+    </div>
+  </div>
+  <div class="box">
+    <div class="controls" style="margin-bottom:10px">
+      <div class="group">
+        <button id="back" aria-label="Schritt zurück">◀ Zurück</button>
+        <button id="play" class="primary">▶ Abspielen</button>
+        <button id="next" aria-label="Nächster Schritt">Schritt ▶</button>
+        <button id="bis" title="Bis der aktuelle Abschnitt fertig ist (Graph umgedreht, eine Tiefensuche, eine Komponente, Ausgabe)">Bis fertig ▶▶</button>
+        <button id="neu" title="Alles zurücksetzen wie beim ersten Öffnen">↺ Neu starten</button>
+      </div>
+      <label>Tempo <input type="range" id="speed" min="1" max="10" value="5"></label>
+    </div>
+    <div class="msg" id="msg"></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="two">
+    <div class="box"><div class="h">Java (eigene Fassung, nach Algorithmus 4.6, Listing 4.17)</div><pre id="code"></pre></div>
+    <div class="box">
+      <div class="h">Ausgabe von main()</div><div class="konsole" id="konsole"></div>
+      <div class="h" style="margin-top:12px">Protokoll</div><div class="proto" id="proto"></div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  const CODE = [
+    'public class StarkeKomponenten',
+    '{',
+    '   private boolean[] marked;   // schon von einer Tiefensuche erreicht?',
+    '   private int[] id;           // Nummer der starken Komponente je Knoten',
+    '   private int count;          // Anzahl der starken Komponenten bisher',
+    '',
+    '   public StarkeKomponenten(Digraph G)',
+    '   {',
+    '      marked = new boolean[G.V()];',
+    '      id = new int[G.V()];',
+    '      // 1. Ordnung aus dem umgekehrten Digraphen',
+    '      TiefensucheOrdnung order = new TiefensucheOrdnung(G.reverse());',
+    '      for (int s : order.reversePost())   // 2. Startknoten in genau dieser Reihenfolge',
+    '         if (!marked[s])',
+    '         {  // noch unerreicht: hier beginnt eine neue starke Komponente',
+    '            dfs(G, s);',
+    '            count++;',
+    '         }',
+    '   }',
+    '',
+    '   private void dfs(Digraph G, int v)',
+    '   {  // gewöhnliche Tiefensuche im ursprünglichen Digraphen',
+    '      marked[v] = true;',
+    '      id[v] = count;            // ganze Komponente bekommt dieselbe Nummer',
+    '      for (int w : G.adj(v))',
+    '         if (!marked[w])',
+    '            dfs(G, w);',
+    '   }                            // alle Nachfolger geprüft: zurück zum Aufrufer',
+    '',
+    '   public boolean stronglyConnected(int v, int w)  {  return id[v] == id[w];  }',
+    '   public int id(int v)  {  return id[v];  }',
+    '   public int count()  {  return count;  }',
+    '',
+    '   @SuppressWarnings("unchecked")',
+    '   public static void main(String[] args)',
+    '   {  // Testclient: der Digraph tinyDG (13 Knoten, 22 Kanten)',
+    '      int[][] kanten = { {4, 2}, {2, 3}, {3, 2}, {6, 0}, {0, 1}, {2, 0}, {11, 12}, {12, 9},',
+    '                         {9, 10}, {9, 11}, {7, 9}, {10, 12}, {11, 4}, {4, 3}, {3, 5}, {6, 8},',
+    '                         {8, 6}, {5, 4}, {0, 5}, {6, 4}, {6, 9}, {7, 6} };',
+    '      Digraph G = new Digraph(13);',
+    '      for (int[] k : kanten)',
+    '         G.addEdge(k[0], k[1]);',
+    '      StarkeKomponenten scc = new StarkeKomponenten(G);',
+    '      int M = scc.count();',
+    '      System.out.println(M + " starke Komponenten");',
+    '      Bag<Integer>[] komponenten = (Bag<Integer>[]) new Bag[M];',
+    '      for (int i = 0; i < M; i++)',
+    '         komponenten[i] = new Bag<Integer>();',
+    '      for (int v = 0; v < G.V(); v++)',
+    '         komponenten[scc.id(v)].add(v);',
+    '      for (int i = 0; i < M; i++)',
+    '      {',
+    '         for (int v : komponenten[i])',
+    '            System.out.print(v + " ");',
+    '         System.out.println();',
+    '      }',
+    '   }',
+    '}',
+    '',
+    '// ---- TiefensucheOrdnung: wie beim topologischen Sortieren (Algorithmus 4.5) ----',
+    'public class TiefensucheOrdnung',
+    '{',
+    '   private boolean[] marked;',
+    '   private Stack<Integer> reversePost;   // fertige Knoten, der zuletzt fertige liegt oben',
+    '',
+    '   public TiefensucheOrdnung(Digraph G)',
+    '   {',
+    '      reversePost = new Stack<Integer>();',
+    '      marked = new boolean[G.V()];',
+    '      for (int v = 0; v < G.V(); v++)    // alle Knoten, auch die ohne Vorgänger',
+    '         if (!marked[v]) dfs(G, v);',
+    '   }',
+    '',
+    '   private void dfs(Digraph G, int v)',
+    '   {',
+    '      marked[v] = true;',
+    '      for (int w : G.adj(v))          // alle Nachfolger zuerst',
+    '         if (!marked[w]) dfs(G, w);',
+    '      reversePost.push(v);            // v ist fertig (Postorder): oben auf den Stapel',
+    '   }',
+    '',
+    '   public Iterable<Integer> reversePost()  {  return reversePost;  }',
+    '}',
+    '',
+    '// ---- Digraph: wie bei der Erreichbarkeit, dazu reverse() ----',
+    'public class Digraph',
+    '{',
+    '   private final int V;          // Anzahl der Knoten',
+    '   private int E;                // Anzahl der Kanten',
+    '   private Bag<Integer>[] adj;   // adj[v]: die Knoten, auf die v zeigt',
+    '',
+    '   @SuppressWarnings("unchecked")',
+    '   public Digraph(int V)',
+    '   {',
+    '      this.V = V;',
+    '      adj = (Bag<Integer>[]) new Bag[V];',
+    '      for (int v = 0; v < V; v++)',
+    '         adj[v] = new Bag<Integer>();',
+    '   }',
+    '',
+    '   public int V()  {  return V;  }',
+    '   public int E()  {  return E;  }',
+    '',
+    '   public void addEdge(int v, int w)',
+    '   {  // gerichtet: nur v → w',
+    '      adj[v].add(w);',
+    '      E++;',
+    '   }',
+    '',
+    '   public Iterable<Integer> adj(int v)  {  return adj[v];  }',
+    '',
+    '   public Digraph reverse()',
+    '   {  // derselbe Graph mit umgedrehten Kanten',
+    '      Digraph R = new Digraph(V);',
+    '      for (int v = 0; v < V; v++)',
+    '         for (int w : adj(v))',
+    '            R.addEdge(w, v);',
+    '      return R;',
+    '   }',
+    '}'
+  ];
+  const zeile = t => { const i = CODE.findIndex(l => l.includes(t)); if (i < 0 || CODE.findIndex((l, j) => j > i && l.includes(t)) >= 0) throw new Error('Codezeile nicht eindeutig: ' + t); return i; };
+  const L = {
+    kanten: zeile('int[][] kanten'), neuG: zeile('Digraph G = new Digraph(13);'), addEdge: zeile('G.addEdge(k[0], k[1]);'),
+    neuScc: zeile('StarkeKomponenten scc = new StarkeKomponenten(G);'),
+    neuOrder: zeile('TiefensucheOrdnung order = new TiefensucheOrdnung(G.reverse());'), revFor: zeile('for (int w : adj(v))'),
+    revAdd: zeile('R.addEdge(w, v);'), revReturn: zeile('return R;'),
+    oForV: zeile('// alle Knoten, auch die ohne Vorgänger'), oIfV: zeile('         if (!marked[v]) dfs(G, v);'),
+    oIfW: zeile('         if (!marked[w]) dfs(G, w);'), oPush: zeile('reversePost.push(v);'),
+    forS: zeile('for (int s : order.reversePost())'), ifS: zeile('         if (!marked[s])'), dfsS: zeile('            dfs(G, s);'), countPP: zeile('count++;'),
+    markiere: zeile('// gewöhnliche Tiefensuche'), idSetzen: zeile('id[v] = count;'),
+    dfsEnde: zeile('// alle Nachfolger geprüft'), sc: zeile('return id[v] == id[w];'),
+    M: zeile('int M = scc.count();'), druckM: zeile('System.out.println(M + " starke Komponenten");'),
+    bagAdd: zeile('komponenten[scc.id(v)].add(v);'), druckV: zeile('System.out.print(v + " ");')
+  };
+  // Zeilen, die mehrfach vorkommen: über ihre Nachbarn bestimmen
+  L.markedNeu = CODE.indexOf('      marked = new boolean[G.V()];');
+  L.markiere = L.markiere + 1;                              // „marked[v] = true;“ in StarkeKomponenten.dfs
+  L.ifW = L.idSetzen + 2;                                   // „if (!marked[w])“ in StarkeKomponenten.dfs
+  L.oMarkiere = CODE.indexOf('   private void dfs(Digraph G, int v)', L.oForV) + 2;
+  L.println = CODE.indexOf('         System.out.println();');
+  if (CODE[L.markiere].trim() !== 'marked[v] = true;' || CODE[L.ifW].trim() !== 'if (!marked[w])' || CODE[L.oMarkiere].trim() !== 'marked[v] = true;' || L.markedNeu < 0 || L.println < 0) throw new Error('Codezeilen verschoben');
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  $('code').innerHTML = CODE.map((l, i) => `<span class="ln" data-i="${i}">${esc(l) || ' '}</span>`).join('');
+  const farbe = k => `var(--k${k % 6})`;
+
+  // ---------- Graphen ----------
+  // tinyDG (Kanten in der Reihenfolge der Datei tinyDG.txt), Lage wie in erreichbarkeit.html
+  const BUCH = { V: 13,
+    kanten: [[4, 2], [2, 3], [3, 2], [6, 0], [0, 1], [2, 0], [11, 12], [12, 9], [9, 10], [9, 11], [7, 9], [10, 12], [11, 4], [4, 3], [3, 5], [6, 8], [8, 6], [5, 4], [0, 5], [6, 4], [6, 9], [7, 6]],
+    pos: [[40, 30], [72, 100], [142, 100], [72, 168], [152, 184], [36, 224], [255, 40], [325, 40], [395, 40], [325, 140], [395, 140], [325, 224], [395, 224]],
+    breite: 430, hoehe: 252 };
+  function digraph(V, kanten) { const adj = Array.from({ length: V }, () => []); kanten.forEach(([v, w]) => adj[v].unshift(w)); return adj; }
+  let zufallsZahl = Date.now() % 2147483647 || 1;
+  const zufall = n => { zufallsZahl = (zufallsZahl * 48271) % 2147483647; return zufallsZahl % n; };
+  function zufallsgraph() {
+    const V = 9, ziel = 12 + zufall(5), kanten = [], hat = new Set();
+    while (kanten.length < ziel) {
+      const v = zufall(V), w = zufall(V);
+      if (v === w || hat.has(v + '>' + w)) continue;
+      hat.add(v + '>' + w); kanten.push([v, w]);
+    }
+    const pos = Array.from({ length: V }, (_, i) => [215 + 170 * Math.sin(2 * Math.PI * i / V), 126 - 100 * Math.cos(2 * Math.PI * i / V)].map(Math.round));
+    return { V, kanten, pos, breite: 430, hoehe: 252, zufall: true };
+  }
+
+  // ---------- Aufzeichnung ----------
+  let G, adj, radj, Z, konsole, steps, pos = 0, timer = null, bags;
+  function neuerZustand() {
+    Z = { phase: 'bau', gebaut: false, umgedreht: 0, rFertig: false, mR: Array(G.V).fill(false), post: [], order: null, sIdx: -1,
+      frames: [], baum: [], marked: Array(G.V).fill(false), id: Array(G.V).fill(null), count: 0, s: null, laeuft: false, vorbei: false };
+  }
+  function snap(line, msg, o) {
+    steps.push(Object.assign({
+      line, msg, phase: Z.phase, gebaut: Z.gebaut, umgedreht: Z.umgedreht, rFertig: Z.rFertig, radj: radj.map(a => a.slice()),
+      mR: Z.mR.slice(), post: Z.post.slice(), order: Z.order, sIdx: Z.sIdx, frames: Z.frames.map(f => ({ ...f })), baum: Z.baum.slice(),
+      marked: Z.marked.slice(), id: Z.id.slice(), count: Z.count, s: Z.s, laeuft: Z.laeuft, vorbei: Z.vorbei, konsole: konsole.slice(),
+      bags: bags && bags.map(b => b.slice())
+    }, o || {}));
+  }
+  const nf = (a, v, i) => `${i + 1} von ${a[v].length}`;
+  const mitglieder = (id, k) => id.map((x, v) => x === k ? v : -1).filter(v => v >= 0);
+
+  // Phase 1: G.reverse(), dann TiefensucheOrdnung auf R
+  function umdrehen() {
+    Z.phase = 'umkehren';
+    radj = Array.from({ length: G.V }, () => []);
+    snap(L.neuOrder, `Schritt 1: Erst wird der Digraph umgedreht – G.reverse() baut einen neuen Digraphen R mit denselben ${G.V} Knoten, aber jede Kante zeigt in die andere Richtung.`);
+    for (let v = 0; v < G.V; v++) {
+      Z.umgedreht = v + 1;
+      if (!adj[v].length) { snap(L.revFor, `v = ${v}: adj[${v}] ist leer – keine Kante zum Umdrehen.`, { rV: v }); continue; }
+      adj[v].forEach(w => radj[w].unshift(v));
+      snap(L.revAdd, `v = ${v}: ${adj[v].map(w => `${v}→${w}`).join(', ')} ${adj[v].length > 1 ? 'werden' : 'wird'} in R zu ${adj[v].map(w => `${w}→${v}`).join(', ')}. R.addEdge(w, ${v}) legt ${v} jeweils vorne in radj[w].`, { rV: v, rNeu: adj[v].map(w => [w, v]) });
+    }
+    Z.rFertig = true; Z.phase = 'ordnung';
+    snap(L.revReturn, `R ist fertig: ${G.kanten.length} Kanten, alle umgedreht. Was in G von v aus erreichbar ist, erreicht in R umgekehrt v. Die starken Komponenten sind in G und R dieselben – nur die Kanten zwischen ihnen zeigen andersherum.`, { opEnde: true });
+  }
+  function dfsR(v) {
+    Z.frames.push({ v, i: -1 });
+    Z.mR[v] = true;
+    snap(L.oMarkiere, `dfs(R, ${v}): marked[${v}] = true (Phase 1, im umgedrehten Digraphen). Nachfolger in R: ${radj[v].join(' ') || '(keine)'}.`, { aendR: v });
+    const f = Z.frames[Z.frames.length - 1];
+    for (let i = 0; i < radj[v].length; i++) {
+      const w = radj[v][i]; f.i = i;
+      if (Z.mR[w]) snap(L.oIfW, `Kante ${v}→${w} in R (${nf(radj, v, i)}): ${w} ist schon besucht.`, { kante: [v, w], w });
+      else { snap(L.oIfW, `Kante ${v}→${w} in R (${nf(radj, v, i)}): ${w} ist neu – dfs(R, ${w}).`, { kante: [v, w], w }); dfsR(w); }
+    }
+    Z.post.push(v);
+    snap(L.oPush, `${v} ist fertig – als ${Z.post.length}. Knoten. push(${v}): oben auf den Stapel reversePost.`, { neuOben: v });
+    Z.frames.pop();
+    if (!Z.frames.length) snap(L.oIfV, `Die Suche ab ${v} in R ist durch. Stapel von oben: ${Z.post.slice().reverse().join(' ')}.`, { opEnde: true });
+  }
+  function ordnung() {
+    for (let v = 0; v < G.V; v++) {
+      if (Z.mR[v]) { snap(L.oIfV, `v = ${v}: in R schon besucht.`, { oV: v }); continue; }
+      snap(L.oIfV, `v = ${v}: in R noch nicht besucht – Tiefensuche in R ab ${v}.`, { oV: v });
+      dfsR(v);
+    }
+    Z.order = Z.post.slice().reverse();
+    Z.phase = 'scc';
+    snap(L.forS, `order.reversePost() = ${Z.order.join(' ')}. Das ist die umgekehrte Postorder von R. Schritt 2 nimmt die Startknoten genau in dieser Reihenfolge statt 0, 1, 2 … – die erste Suche beginnt bei ${Z.order[0]}.`, { opEnde: true });
+  }
+  // Phase 2: wie Komponenten, nur mit dieser Reihenfolge
+  function dfs(v, von) {
+    Z.frames.push({ v, i: -1 });
+    if (von !== undefined) Z.baum.push([von, v]);
+    Z.marked[v] = true;
+    snap(L.markiere, `dfs(G, ${v}): marked[${v}] = true.`, { aend: v });
+    Z.id[v] = Z.count;
+    snap(L.idSetzen, `id[${v}] = ${Z.count} – ${v} gehört zur starken Komponente ${Z.count}. Nachfolger in G: ${adj[v].join(' ') || '(keine)'}.`, { aendId: v });
+    const f = Z.frames[Z.frames.length - 1];
+    for (let i = 0; i < adj[v].length; i++) {
+      const w = adj[v][i]; f.i = i;
+      if (Z.marked[w]) {
+        const grund = Z.id[w] === Z.count ? `${w} gehört schon zur selben Komponente ${Z.count}` : `${w} gehört zur früher gefundenen Komponente ${Z.id[w]} – genau deshalb läuft die Suche nicht in sie hinüber`;
+        snap(L.ifW, `Kante ${v}→${w} (${nf(adj, v, i)}): marked[${w}] ist true – ${grund}.`, { kante: [v, w], w });
+      } else {
+        snap(L.ifW, `Kante ${v}→${w} (${nf(adj, v, i)}): ${w} ist neu – dfs(G, ${w}).`, { kante: [v, w], w });
+        dfs(w, v);
+      }
+    }
+    Z.frames.pop();
+    const oben = Z.frames[Z.frames.length - 1];
+    snap(L.dfsEnde, oben ? `dfs(G, ${v}) ist fertig. Zurück zu dfs(G, ${oben.v}).` : `dfs(G, ${v}) ist fertig – die Suche ab ${v} ist in ihrer Komponente geblieben.`);
+  }
+  function konstruktor() {
+    Z.laeuft = true;
+    snap(L.neuScc, `new StarkeKomponenten(G): Die ganze Arbeit passiert im Konstruktor.`);
+    snap(L.markedNeu, `marked = new boolean[${G.V}], id = new int[${G.V}], count = 0. (In Java steht in id anfangs 0; die Anzeige zeigt „–“, solange nichts eingetragen ist.)`);
+    umdrehen();
+    ordnung();
+    for (let i = 0; i < Z.order.length; i++) {
+      const s = Z.order[i]; Z.sIdx = i; Z.s = s;
+      if (Z.marked[s]) { snap(L.ifS, `s = ${s} (${i + 1}. in der Ordnung): marked[${s}] ist true – ${s} gehört schon zur Komponente ${Z.id[s]}.`); continue; }
+      snap(L.ifS, `s = ${s} (${i + 1}. in der Ordnung): marked[${s}] ist false – hier beginnt die starke Komponente ${Z.count}.`);
+      snap(L.dfsS, `dfs(G, ${s}): Tiefensuche im ursprünglichen Digraphen ab ${s}.`);
+      dfs(s);
+      const m = mitglieder(Z.id, Z.count);
+      Z.count++;
+      snap(L.countPP, `count++ → count = ${Z.count}. Starke Komponente ${Z.count - 1}: ${m.join(' ')}. Jede Kante, die aus ihr hinausführt, endet in einer früher gefundenen Komponente.`, { opEnde: true, cls: 'neu' });
+    }
+    Z.s = null; Z.sIdx = Z.order.length; Z.laeuft = false; Z.vorbei = true; Z.phase = 'ausgabe';
+    snap(L.forS, `Die Ordnung ist durch: ${Z.count} starke Komponente${Z.count === 1 ? '' : 'n'}. Zwei Tiefensuchen, eine Umkehrung – Zeit proportional zu V + E (Satz H). Ab jetzt beantwortet stronglyConnected() jede Frage mit einem Vergleich.`, { opEnde: true });
+  }
+  function ausgabe() {
+    const M = Z.count;
+    snap(L.M, `M = scc.count() = ${M}.`);
+    konsole.push(`${M} starke Komponenten`);
+    snap(L.druckM, `Ausgabe: „${M} starke Komponenten“.`);
+    bags = Array.from({ length: M }, () => []);
+    for (let v = 0; v < G.V; v++) bags[Z.id[v]].unshift(v);
+    snap(L.bagAdd, `Für v = 0 bis ${G.V - 1}: komponenten[id(v)].add(v). Der Bag fügt vorne ein, darum stehen die Knoten jeder Komponente rückwärts.`);
+    for (let i = 0; i < M; i++) {
+      konsole.push(bags[i].map(v => v + ' ').join(''));
+      snap(L.println, `Komponente ${i}: ${bags[i].join(' ')}.`, { opEnde: i === M - 1, zeile: i });
+    }
+  }
+  function lauf(neuG) {
+    stop();
+    G = neuG; steps = []; konsole = [`% java StarkeKomponenten`]; bags = null;
+    adj = Array.from({ length: G.V }, () => []); radj = Array.from({ length: G.V }, () => []);
+    neuerZustand();
+    if (!G.zufall) {
+      snap(L.kanten, `Testclient: die ${G.kanten.length} Kanten von tinyDG in der Reihenfolge der Datei tinyDG.txt – derselbe Digraph wie bei der Erreichbarkeit.`);
+      snap(L.neuG, `new Digraph(13): 13 Knoten, jede Adjazenzliste ist ein leerer Bag.`);
+    }
+    adj = digraph(G.V, G.kanten); Z.gebaut = true;
+    snap(L.addEdge, `addEdge für alle ${G.kanten.length} Kanten${G.zufall ? ` (${G.kanten.map(([a, b]) => `${a}→${b}`).join(', ')})` : ''}: Jede Kante v→w landet vorne in adj[v].`, { opEnde: true });
+    konstruktor();
+    ausgabe();
+    fuelleAuswahl();
+    pos = 0; render();
+  }
+  function frage() {
+    stop();
+    const v = +$('v1').value, w = +$('v2').value, gleich = Z.id[v] === Z.id[w];
+    const vorher = steps.length;
+    snap(L.sc, `stronglyConnected(${v}, ${w}): id[${v}] = ${Z.id[v]}, id[${w}] = ${Z.id[w]} → ${gleich}. ${gleich ? (v === w ? 'Ein Knoten ist immer mit sich selbst stark verbunden.' : `Es gibt einen Weg ${v}→…→${w} und einen Weg ${w}→…→${v}.`) : `Mindestens eine Richtung fehlt: ${erreicht(v, w) ? `${v} erreicht ${w}, aber ${w} kommt nicht zu ${v} zurück` : erreicht(w, v) ? `${w} erreicht ${v}, aber ${v} kommt nicht zu ${w} zurück` : `keiner der beiden erreicht den anderen`}.`}`, { opEnde: true, frage: [v, w], cls: gleich ? 'swap' : '' });
+    pos = Math.min(vorher, steps.length - 1); render();
+  }
+  function erreicht(a, b) { const m = new Set([a]), q = [a]; while (q.length) { const x = q.pop(); adj[x].forEach(y => { if (!m.has(y)) { m.add(y); q.push(y); } }); } return m.has(b); }
+  function fuelleAuswahl() {
+    const opt = (sel, wert) => { sel.innerHTML = Array.from({ length: G.V }, (_, v) => `<option${v === wert ? ' selected' : ''}>${v}</option>`).join(''); };
+    opt($('v1'), 0); opt($('v2'), G.zufall ? G.V - 1 : 1);
+  }
+
+  // ---------- Anzeige ----------
+  function kantenGeometrie(v, w, R, kanten) {    // gerade, oder als Bogen bei Gegenkante bzw. wenn die Gerade einen Knoten streift
+    const [x1, y1] = G.pos[v], [x2, y2] = G.pos[w];
+    const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+    let biege = kanten.some(([a, b]) => a === w && b === v) ? 14 : 0;
+    for (let u = 0; u < G.V; u++) {
+      if (u === v || u === w) continue;
+      const [ux, uy] = G.pos[u], t = ((ux - x1) * dx + (uy - y1) * dy) / (len * len);
+      if (t > 0 && t < 1 && Math.abs((ux - x1) * nx + (uy - y1) * ny) < R + 6) biege = Math.max(biege, 32);
+    }
+    if (!biege) {
+      const sx = x1 + dx / len * R, sy = y1 + dy / len * R, ex = x2 - dx / len * R, ey = y2 - dy / len * R;
+      return { d: `M${sx.toFixed(1)},${sy.toFixed(1)} L${ex.toFixed(1)},${ey.toFixed(1)}`, ex, ey, tx: dx / len, ty: dy / len };
+    }
+    const cx = (x1 + x2) / 2 + nx * biege * 2, cy = (y1 + y2) / 2 + ny * biege * 2;
+    const a1 = Math.hypot(cx - x1, cy - y1), a2 = Math.hypot(x2 - cx, y2 - cy);
+    const sx = x1 + (cx - x1) / a1 * R, sy = y1 + (cy - y1) / a1 * R, tx = (x2 - cx) / a2, ty = (y2 - cy) / a2;
+    const ex = x2 - tx * R, ey = y2 - ty * R;
+    return { d: `M${sx.toFixed(1)},${sy.toFixed(1)} Q${cx.toFixed(1)},${cy.toFixed(1)} ${ex.toFixed(1)},${ey.toFixed(1)}`, ex, ey, tx, ty };
+  }
+  const inR = st => st.phase === 'umkehren' || st.phase === 'ordnung';
+  function zeichneGraph(st) {
+    const svg = $('graph'), R = 15;
+    svg.setAttribute('viewBox', `0 0 ${G.breite} ${G.hoehe}`); svg.style.maxWidth = G.breite * 1.2 + 'px';
+    const oben = st.frames.length ? st.frames[st.frames.length - 1].v : null;
+    const wartend = new Set(st.frames.slice(0, -1).map(f => f.v));
+    const baum = new Set(st.baum.map(([a, b]) => a + '>' + b));
+    const neu = new Set((st.rNeu || []).map(([a, b]) => a + '>' + b));
+    // angezeigte Kanten: in Phase 1 die umgedrehten (beim Umdrehen nur die schon bearbeiteten)
+    const kanten = !st.gebaut ? [] : G.kanten.map(([v, w]) => (st.phase === 'ordnung' || (st.phase === 'umkehren' && v < st.umgedreht)) ? [w, v] : [v, w]);
+    let h = '';
+    kanten.forEach(([v, w]) => {
+      const k = kantenGeometrie(v, w, R, kanten);
+      let cls = '';
+      if (st.kante && st.kante[0] === v && st.kante[1] === w) cls = ' pruef';
+      else if (neu.has(v + '>' + w)) cls = ' neu';
+      else if (!inR(st) && baum.has(v + '>' + w)) cls = ' baum';
+      const nx = -k.ty, ny = k.tx, bx = k.ex - k.tx * 9, by = k.ey - k.ty * 9;
+      h += `<path class="kante${cls}" d="${k.d}"/><polygon class="pfeil${cls}" points="${k.ex.toFixed(1)},${k.ey.toFixed(1)} ${(bx + nx * 4.5).toFixed(1)},${(by + ny * 4.5).toFixed(1)} ${(bx - nx * 4.5).toFixed(1)},${(by - ny * 4.5).toFixed(1)}"/>`;
+    });
+    for (let v = 0; v < G.V; v++) {
+      const [x, y] = G.pos[v];
+      let cls = 'knoten', stil = '';
+      if (v === oben) cls += ' aktiv';
+      else if (st.phase === 'ordnung') {
+        if (st.post.includes(v)) { cls += ' markiert'; stil = ' style="--f:var(--sortiert)"'; }
+        else if (st.mR[v]) { cls += ' markiert'; stil = ' style="--f:var(--erreicht)"'; }
+      } else if (st.id[v] !== null) { cls += ' markiert'; stil = ` style="--f:${farbe(st.id[v])}"`; }
+      if (wartend.has(v)) cls += ' wartet';
+      if (st.w === v) cls += ' pruef';
+      if (st.frage && st.frage.includes(v)) cls += ' frage';
+      if (st.s === v && v !== oben && !wartend.has(v)) cls += ' start';
+      h += `<g class="${cls}"${stil}><circle cx="${x}" cy="${y}" r="${R}"/><text x="${x}" y="${y}">${v}</text></g>`;
+      if (st.s === v) h += y - R - 5 >= 12 ? `<text class="marke" x="${x}" y="${y - R - 5}">s</text>`
+        : `<text class="marke" x="${x - R - 8 >= 6 ? x - R - 8 : x + R + 8}" y="${y + 4}">s</text>`;
+    }
+    svg.innerHTML = h;
+  }
+  function render() {
+    const st = steps[pos];
+    const phasen = { bau: 'Graph bauen', umkehren: 'Phase 1: G.reverse()', ordnung: 'Phase 1: Ordnung in R', scc: 'Phase 2: Tiefensuchen in G', ausgabe: 'Ergebnis' };
+    $('titel').innerHTML = `<span class="phase">${phasen[st.phase]}</span>${G.zufall ? 'Zufallsdigraph' : 'tinyDG'} · <b>${G.V}</b> Knoten, <b>${st.gebaut ? G.kanten.length : 0}</b> Kanten · starke Komponenten: <b>${st.count}</b>`;
+    $('graphkopf').textContent = inR(st) ? 'Umgekehrter Digraph R = G.reverse() – alle Pfeile andersherum' : 'Digraph G – Pfeile zeigen die Richtung der Kanten';
+    zeichneGraph(st);
+    // Komponenten
+    const nummern = [...new Set(st.id.filter(x => x !== null))].sort((a, b) => a - b);
+    $('komp').innerHTML = nummern.map(n => `<div><i style="background:${farbe(n)}"></i>Komponente ${n}: <span class="z">${mitglieder(st.id, n).join(' ')}</span>${n === st.count && st.laeuft ? ' <span style="color:var(--muted)">(wächst noch)</span>' : ''}</div>`).join('');
+    // Ordnung bzw. Stapel
+    if (st.order) $('ordnung').innerHTML = `<div class="h2">Startreihenfolge order.reversePost():</div><div class="z">${st.order.map((v, i) => `<span class="${i === st.sIdx ? 'jetzt' : i < st.sIdx ? 'vorbei' : ''}">${v}</span>`).join('')}</div>`;
+    else if (st.phase === 'ordnung') $('ordnung').innerHTML = `<div class="h2">Stapel reversePost (oben zuerst):</div><div class="z">${st.post.slice().reverse().map((v, i) => `<span class="${i === 0 && st.neuOben === v ? 'oben' : ''}">${v}</span>`).join('') || '<span>leer</span>'}</div>`;
+    else $('ordnung').innerHTML = '';
+    // Adjazenzlisten
+    const lauf = {}; st.frames.forEach((f, i) => lauf[f.v] = { i: f.i, oben: i === st.frames.length - 1 });
+    const liste = inR(st) ? st.radj : (st.gebaut ? digraph(G.V, G.kanten) : []);
+    const fertigR = new Set(st.post);
+    const neuR = new Set((st.rNeu || []).map(([a, b]) => a + '>' + b));
+    $('adj').innerHTML = `<div class="kopf">${inR(st) ? 'Adjazenzlisten von R:' : 'Adjazenzlisten von G:'}</div>` + (st.gebaut ? liste.map((a, v) => `<div>${inR(st) ? 'R' : 'G'}.adj[${v}]: ${a.map((w, i) => {
+      let c = 'e';
+      if (st.phase === 'umkehren' && neuR.has(v + '>' + w) && i === 0) c += ' neu';
+      else if (st.phase === 'ordnung' && fertigR.has(v)) c += ' erledigt';
+      else if (lauf[v]) c += i < lauf[v].i ? ' erledigt' : i === lauf[v].i ? (lauf[v].oben ? ' jetzt' : ' wartet') : '';
+      else if (!inR(st) && st.id[v] !== null && !lauf[v]) c += ' erledigt';
+      return `<span class="${c}">${w}</span>`; }).join('') || '<span class="e erledigt">–</span>'}</div>`).join('') : '<div style="color:var(--muted)">noch leer</div>');
+    // Arrays
+    let t = '<table class="arr"><tr><th>v</th>';
+    for (let v = 0; v < G.V; v++) t += `<th>${v}</th>`;
+    t += '</tr>';
+    if (st.phase === 'ordnung' || st.phase === 'umkehren') {
+      t += '<tr><th>marked (R)</th>'; st.mR.forEach((m, v) => t += `<td class="${st.aendR === v ? 'geaendert' : m ? 'ja' : 'leer'}">${m ? 'T' : 'F'}</td>`); t += '</tr>';
+    } else {
+      t += '<tr><th>marked</th>'; st.marked.forEach((m, v) => t += `<td class="${st.aend === v ? 'geaendert' : m ? 'ja' : 'leer'}">${m ? 'T' : 'F'}</td>`); t += '</tr>';
+      t += '<tr><th>id</th>'; st.id.forEach((e, v) => t += `<td class="${st.aendId === v ? 'geaendert' : e === null ? 'leer' : ''}"${e !== null && st.aendId !== v ? ` style="background:${farbe(e)};color:var(--ktext)"` : ''}>${e === null ? '–' : e}</td>`); t += '</tr>';
+    }
+    $('arrays').innerHTML = t + '</table>';
+    // Aufrufstapel
+    const g = inR(st) ? 'R' : 'G';
+    $('stapel').innerHTML = st.frames.length
+      ? `<div class="h2">Aufrufstapel (oben der laufende Aufruf):</div><ol>${st.frames.slice().reverse().map((f, i) => `<li class="${i === 0 ? 'oben' : ''}">dfs(${g}, ${f.v})${f.i < 0 ? '' : ` – ${i === 0 ? 'prüft' : 'wartet bei'} ${f.v}→${(inR(st) ? st.radj : liste)[f.v][f.i]}`}</li>`).join('')}<li>${inR(st) ? 'TiefensucheOrdnung – for über v' : `Konstruktor – s = ${st.s}`}</li></ol>`
+      : `<div class="h2">Aufrufstapel: ${st.laeuft ? 'nur der Konstruktor' : 'leer'}</div>`;
+    const msg = $('msg'); msg.textContent = st.msg; msg.className = 'msg' + (st.cls ? ' ' + st.cls : '');
+    $('count').innerHTML = `Schritt ${pos + 1} von ${steps.length}`;
+    document.querySelectorAll('#code .ln').forEach(el => el.classList.toggle('on', +el.dataset.i === st.line));
+    $('konsole').textContent = st.konsole.join('\n');
+    let p = '';
+    if (st.post.length) p += `<h4>Phase 1 – Postorder in R (Reihenfolge des Fertigwerdens)</h4><p>${st.post.join(' ')}</p>`;
+    if (st.order) p += `<h4>Umgekehrte Postorder = Startreihenfolge für Phase 2</h4><p>${st.order.join(' ')}</p>`;
+    if (nummern.length) p += `<h4>Phase 2 – starke Komponenten in der Reihenfolge ihres Fundes</h4><p>${nummern.map(n => '{' + mitglieder(st.id, n).join(', ') + '}').join(' ')}</p>`;
+    if (st.vorbei) {
+      const kern = new Set(); G.kanten.forEach(([v, w]) => { if (st.id[v] !== st.id[w]) kern.add(st.id[v] + '→' + st.id[w]); });
+      p += `<h4>Kerndigraph (jede Komponente ein Knoten)</h4><p>${[...kern].sort().join(', ') || 'keine Kanten zwischen Komponenten'}</p><p style="font-family:system-ui,sans-serif;color:var(--muted)">Jede Kante führt von einer später gefundenen Komponente zu einer früher gefundenen – die erste war eine Senke.</p>`;
+    }
+    $('proto').innerHTML = p || '<p class="count">Noch nichts – erst wird der Graph gebaut.</p>';
+    const amEnde = pos === steps.length - 1;
+    $('back').disabled = pos === 0; $('next').disabled = amEnde; $('bis').disabled = amEnde;
+    stabil($('anzeige')); stabil($('msg'));
+    if (amEnde) stop();
+  }
+  function stabil(el) { const h = el.offsetHeight; if (h > (el._hoch || 0)) { el._hoch = h; el.style.minHeight = h + 'px'; } }
+  function lockern() { ['anzeige', 'msg'].forEach(id => { $(id)._hoch = 0; $(id).style.minHeight = ''; }); }
+  window.addEventListener('resize', lockern);
+
+  function stop() { clearInterval(timer); timer = null; $('play').textContent = '▶ Abspielen'; }
+  function play() {
+    if (pos === steps.length - 1) pos = 0;
+    $('play').textContent = '❚❚ Pause';
+    timer = setInterval(() => { if (pos < steps.length - 1) { pos++; render(); } else stop(); }, 2000 / +$('speed').value);
+    render();
+  }
+  const start = () => { lockern(); lauf(BUCH); };
+  $('buch').addEventListener('click', start);
+  $('neu').addEventListener('click', start);
+  $('zufall').addEventListener('click', () => { lockern(); lauf(zufallsgraph()); });
+  $('frage').addEventListener('click', frage);
+  $('play').addEventListener('click', () => timer ? stop() : play());
+  $('next').addEventListener('click', () => { stop(); if (pos < steps.length - 1) { pos++; render(); } });
+  $('back').addEventListener('click', () => { stop(); if (pos > 0) { pos--; render(); } });
+  $('bis').addEventListener('click', () => { stop(); do { pos++; } while (pos < steps.length - 1 && !steps[pos].opEnde); render(); });
+  $('speed').addEventListener('input', () => { if (timer) { stop(); play(); } });
+
+  // für automatische Tests: rechne(V, kanten) spielt main() durch (Anzeige danach wie vorher)
+  function rechne(V, kanten) {
+    const alt = { G, adj, radj, Z, konsole, steps, bags };
+    lauf({ V, kanten, pos: Array.from({ length: V }, (_, i) => [215 + 170 * Math.sin(2 * Math.PI * i / V), 126 - 100 * Math.cos(2 * Math.PI * i / V)]), zufall: true, breite: 430, hoehe: 252 });
+    const e = { id: Z.id.slice(), count: Z.count, order: Z.order.slice(), konsole: konsole.slice(), steps, adj: adj.map(a => a.slice()), radj: radj.map(a => a.slice()) };
+    ({ G, adj, radj, Z, konsole, steps, bags } = alt); pos = 0; render(); fuelleAuswahl();
+    return e;
+  }
+  window.__scc = { rechne, start, BUCH, get steps() { return steps; }, get pos() { return pos; }, set pos(q) { pos = q; render(); }, get G() { return G; }, CODE, L, kantenGeometrie };
+
+  start();
+})();
+</script>
+</body>
+</html>
