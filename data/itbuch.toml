@@ -1,6 +1,14 @@
 # IT-Buch – Svens IT-Bücher, Reihenfolge der Anzeige: nach sortjahr (neuestes oben)
 
 [[buch]]
+titel = "Effective Java"
+autor = "Joshua Bloch"
+jahr = "2018"
+sortjahr = 2018
+gebiet = "Java, Softwaredesign"
+schluessel = "effective-java-2018"
+
+[[buch]]
 titel = "Algorithmen"
 autor = "Robert Sedgewick, Kevin Wayne"
 jahr = "2011"

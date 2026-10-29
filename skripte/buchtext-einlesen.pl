@@ -1,4 +1,5 @@
-# Baut einen Essay zu einem Buch aus einer Word-Datei (Claude Docs) ein – seit 2026-10-27 für die Lieferungen der Instanz „Sachbuch“.
+# Baut einen Essay zu einem Buch aus einer Word-Datei (Claude Docs) ein – seit 2026-10-27 für die Lieferungen der Instanz „Sachbuch“,
+# seit 2026-10-29 auch „IT-Books“ (deren Kopf hat zwischen Titel und Datumszeile einen Untertitel -> description).
 #   perl skripte/buchtext-einlesen.pl "<Anfang des Dateinamens in input/>" <buchschluessel> <seitenname> "<instanz>" "<kontext>"
 # - Umwandlung mit skripte/docx2md.pl (Ebene 0); Kopf: „# Titel“ (wortgleich -> title) und Datumszeile „Oct 27, 2026 · @Sven“ (fällt weg)
 # - Wortvergleich Word-Text <-> Markdown, bei Abweichung Abbruch ohne zu schreiben
@@ -26,9 +27,10 @@ sub lies { my $d = shift; open my $f, '<:encoding(UTF-8)', $d or die "$d: $!"; l
 
 open(my $p, '-|', 'perl', 'skripte/docx2md.pl', $datei, '0') or die; my $md = do { local $/; <$p> }; close $p or die "Umwandlung fehlgeschlagen\n";
 $md = decode('UTF-8', $md);
-$md =~ s/^# (.+)\n\n\w{3} \d\d?, \d{4} · \@Sven\n\n//s or die "Kopf unerwartet (Titel, Datumszeile)\n";
-my $titel = $1;
+$md =~ s/^# ([^\n]+)\n\n(?:([^\n]+)\n\n)?\w{3} \d\d?, \d{4} · \@Sven\n\n//s or die "Kopf unerwartet (Titel, Datumszeile)\n";
+my ($titel, $untertitel) = ($1, $2);   # Untertitel (seit 2026-10-29, IT-Books) -> description, ohne Kursiv-Sterne
 die "Titel enthält \\ oder \"\n" if $titel =~ /[\\"]/;
+if (defined $untertitel) { $untertitel =~ s/(?<!\\)\*//g; die "Untertitel enthält \\ oder \"\n" if $untertitel =~ /[\\"]/; }
 
 # Wortvergleich
 my $roh; unzip($datei => \$roh, Name => 'word/document.xml') or die; $roh = decode('UTF-8', $roh);
@@ -38,12 +40,15 @@ while ($roh =~ m{<w:p\b[^>]*>(.*?)</w:p>}sg) {
   $t .= defined $1 ? xml($1) : ' ' while $q =~ m{<w:t\b[^>]*>(.*?)</w:t>|<w:(?:tab|br)\b[^>]*/>}sg;
   push @abs, $t if $t =~ /\S/;
 }
-shift @abs for 1 .. 2;
+shift @abs for 1 .. (defined $untertitel ? 3 : 2);
 my $ist = $md;
+my @code; $ist =~ s/^```\w*\n(.*?)\n```$/push @code, $1; "\x{E000}$#code\x{E000}"/mgse;   # Codeblöcke unverändert vergleichen
+$ist =~ s/(?<!\\)`([^`\n]+)`/push @code, $1; "\x{E000}$#code\x{E000}"/ge;               # ebenso Code im Fließtext
 $ist =~ s/^<!-- bild: .*? -->$//mg;
 $ist =~ s/(?<!\\)\[((?:\\.|[^\]\\])*)\]\([^)\s]*\)/$1/g;   # Links: nur der sichtbare Text zählt
 $ist =~ s/^(?:\d+\.|-) //mg; $ist =~ s/^#+ //mg; $ist =~ s/^\|[-|]+\|$//mg;
 $ist =~ s/(?<!\\)\|/ /g; $ist =~ s/(?<!\\)\*//g; $ist =~ s/\\(.)/$1/g;
+$ist =~ s/\x{E000}(\d+)\x{E000}/$code[$1]/g;
 my ($a, $b) = (woerter(join ' ', @abs), woerter($ist));
 unless ("@$a" eq "@$b") {
   my $i = 0; $i++ while $i < @$a && $i < @$b && $a->[$i] eq $b->[$i];
@@ -70,7 +75,7 @@ if (-e $ziel) { ($alt) = lies($ziel) =~ /(\n\{\{< anmerkung >\}\}.*)\z/s; $alt /
 my $fm = <<"FM";
 +++
 title = "$titel"
-date = $datum
+${\ (defined $untertitel ? qq(description = "$untertitel"\n) : '')}date = $datum
 modelle = ["Claude"]
 modell = "Claude Opus 5.5"
 modell_id = "claude-opus-5-5"

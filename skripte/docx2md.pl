@@ -1,7 +1,7 @@
 # Wandelt eine .docx-Datei wortgetreu in Markdown um (Text unverändert) – Perl-Fassung von docx2md.ps1 (seit 2026-10-27,
 # weil PowerShell-Skripte unter Windows standardmäßig gesperrt sind und wir die Sperre nicht aufheben).
 # Übernimmt: Überschriften (Title/Heading1-3), nummerierte und Aufzählungslisten, Links, Fett/Kursiv, Tabellen.
-# Absätze mit Formatvorlage "Subtitle" werden kursiv.
+# Absätze mit Formatvorlage "Subtitle" werden kursiv; Vorlage "Code" wird Codeblock, Zeichenvorlage "CodeChar" `Code` (seit 2026-10-29).
 #
 # Aufruf:  perl skripte/docx2md.pl <datei.docx> [Ebene] > ausgabe.md
 #   Ebene: um wie viele Stufen Überschriften tiefer gesetzt werden (Heading1 -> ## bei 1), Standard 1
@@ -52,8 +52,10 @@ sub lauf {
     if (defined $2) { $t .= ' ' } elsif (defined $1) { $t .= xml($1) }
   }
   return '' unless length $t;
-  $t = maskiere($t);
   my ($rpr) = $r =~ m{<w:rPr>(.*?)</w:rPr>}s; $rpr //= '';
+  # Zeichenvorlage "CodeChar" (seit 2026-10-29, IT-Books): Code im Fließtext unmaskiert in Backticks
+  return "`$t`" if $rpr =~ /<w:rStyle w:val="CodeChar"/ && $t !~ /`/;
+  $t = maskiere($t);
   if ($t =~ /\S/) {
     $t = "**$t**" if an($rpr, 'b');
     $t = "*$t*" if an($rpr, 'i');
@@ -110,9 +112,22 @@ while ($body =~ m{(<w:tbl>.*?</w:tbl>)|(<w:p\b[^>]*/>)|(<w:p\b[^>]*>.*?</w:p>)}s
     push @aus, '' if @aus && $aus[-1] ne '';
     push @aus, "<!-- bild: $links{$rid} | " . xml($descr // '') . " -->", '';
   }
+  my ($stil) = $p =~ m{<w:pStyle\b[^>]*w:val="([^"]+)"}; $stil //= '';
+  # Absatzvorlage "Code" (seit 2026-10-29, IT-Books): Codeblock, Zeilenumbrüche (w:br) bleiben, Sprache aus der Textmarke bongo_lang_<sprache>
+  if ($stil eq 'Code') {
+    my $c = '';
+    while ($p =~ m{<w:t\b[^>]*>(.*?)</w:t>|<w:(tab|br)\b[^>]*/>}sg) {
+      $c .= defined $1 ? xml($1) : $2 eq 'br' ? "\n" : '    ';
+    }
+    next unless $c =~ /\S/;
+    my ($sprache) = $p =~ /w:name="bongo_lang_([a-z]+)_/; $sprache //= '';
+    if (defined $letzteListe) { push @aus, ''; undef $letzteListe; }
+    push @aus, '' if @aus && $aus[-1] ne '';
+    push @aus, "```$sprache", $c, '```', '';
+    next;
+  }
   my $text = trim(lauftext($p));
   next unless length $text;
-  my ($stil) = $p =~ m{<w:pStyle\b[^>]*w:val="([^"]+)"}; $stil //= '';
   my ($numId) = $p =~ m{<w:numPr>.*?<w:numId\b[^>]*w:val="(\d+)"}s;
   my ($nid, $art);
   if ($stil eq 'ListNumber' && !defined $numId) { ($art, $nid) = ('decimal', 'ListNumber') }
