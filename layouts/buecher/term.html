@@ -16,7 +16,7 @@
       {{- with .Params.erschienen }}<dt>Erschienen</dt><dd>{{ . }}</dd>{{ end }}
       {{- with .Params.gattung }}<dt>Gattung</dt><dd>{{ . }}</dd>{{ end }}
       {{- with .Params.webseite }}<dt>Website</dt><dd><a href="{{ . }}" rel="noopener">{{ (urls.Parse .).Host }} ↗</a></dd>{{ end }}
-      {{- with .Params.wikipedia }}<dt>Wikipedia</dt><dd><a href="{{ . }}" rel="noopener">Zum Buch auf Wikipedia ↗</a></dd>{{ end }}
+      {{- with .Params.wikipedia }}<dt>Wikipedia</dt><dd><a href="{{ . }}" rel="noopener">{{ $.Params.wikipedia_text | default "Zum Buch auf Wikipedia" }} ↗</a></dd>{{ end }}
     </dl>
   </aside>
 

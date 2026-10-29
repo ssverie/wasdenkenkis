@@ -9,6 +9,54 @@ gebiet = "Java, Softwaredesign"
 schluessel = "effective-java-2018"
 
 [[buch]]
+titel = "A Philosophy of Software Design"
+autor = "John Ousterhout"
+jahr = "2021"
+sortjahr = 2021
+gebiet = "Softwaredesign"
+schluessel = "a-philosophy-of-software-design-2021"
+
+[[buch]]
+titel = "Refactoring"
+autor = "Martin Fowler"
+jahr = "2018"
+sortjahr = 2018
+gebiet = "Refactoring, Softwaredesign"
+schluessel = "refactoring-2018"
+
+[[buch]]
+titel = "Clean Code"
+autor = "Robert C. Martin"
+jahr = "2008"
+sortjahr = 2008
+gebiet = "Codequalität, Softwaredesign"
+schluessel = "clean-code-2008"
+
+[[buch]]
+titel = "Working Effectively with Legacy Code"
+autor = "Michael C. Feathers"
+jahr = "2004"
+sortjahr = 2004
+gebiet = "Legacy Code, Testen, Refactoring"
+schluessel = "working-effectively-with-legacy-code-2004"
+
+[[buch]]
+titel = "Domain-Driven Design"
+autor = "Eric Evans"
+jahr = "2003"
+sortjahr = 2003
+gebiet = "Softwaredesign, Architektur"
+schluessel = "domain-driven-design-2003"
+
+[[buch]]
+titel = "Design Patterns"
+autor = "Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides"
+jahr = "1994"
+sortjahr = 1994
+gebiet = "Entwurfsmuster"
+schluessel = "design-patterns-1994"
+
+[[buch]]
 titel = "Algorithmen"
 autor = "Robert Sedgewick, Kevin Wayne"
 jahr = "2011"
