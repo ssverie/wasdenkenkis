@@ -1,6 +1,22 @@
 # IT-Buch – Svens IT-Bücher, Reihenfolge der Anzeige: nach sortjahr (neuestes oben)
 
 [[buch]]
+titel = "A Functional Approach to Java"
+autor = "Ben Weidig"
+jahr = "2023"
+sortjahr = 2023
+gebiet = "Java, funktionale Programmierung"
+schluessel = "a-functional-approach-to-java-2023"
+
+[[buch]]
+titel = "The Pragmatic Programmer"
+autor = "David Thomas, Andrew Hunt"
+jahr = "2019"
+sortjahr = 2019
+gebiet = "Berufspraxis, Softwaredesign"
+schluessel = "the-pragmatic-programmer-2019"
+
+[[buch]]
 titel = "Effective Java"
 autor = "Joshua Bloch"
 jahr = "2018"
@@ -31,6 +47,14 @@ jahr = "2008"
 sortjahr = 2008
 gebiet = "Codequalität, Softwaredesign"
 schluessel = "clean-code-2008"
+
+[[buch]]
+titel = "Code Complete"
+autor = "Steve McConnell"
+jahr = "2004"
+sortjahr = 2004
+gebiet = "Softwarekonstruktion, Codequalität"
+schluessel = "code-complete-2004"
 
 [[buch]]
 titel = "Working Effectively with Legacy Code"
