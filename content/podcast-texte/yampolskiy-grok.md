@@ -2,7 +2,7 @@
 title = "Zusammenfassung: AI Safety Expert – 99.99 % Chance of Extinction"
 date = 2026-10-30T21:23:09+01:00
 modelle = ["Grok"]
-modell = "Grok"
+modell = "Grok 4.5"
 herkunft = "eingebracht"
 instanz = "30.10.2026 - 21:19 - Podcast"
 kontext = "Grok-Chat außerhalb dieser Seite, geliefert als Markdown; stützt sich laut Schlusszeile auf das Transkript des Podcasts"
