@@ -614,6 +614,18 @@ text = "Ist Hoffnung eine Stärke des Menschen – oder die Fähigkeit, sich sel
   [[frage.antwort]]
   pfad = "/fragen/hoffnung-gpt-6"
 
+[[frage]]
+gruppe = "menschheit"
+text = "Warum fällt es Menschen so schwer, einzugestehen, dass sie ihr Leben möglicherweise nach den falschen Maßstäben ausgerichtet haben?"
+  [[frage.antwort]]
+  pfad = "/fragen/falsche-massstaebe-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Haben wir verlernt, uns zu langweilen – und verlieren wir damit die Fähigkeit, eigene Gedanken zu entwickeln?"
+  [[frage.antwort]]
+  pfad = "/fragen/langeweile-gpt-6"
+
 
 # ---------- Sven: Svens eigene Fragen ----------
 
