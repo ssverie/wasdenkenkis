@@ -1,6 +1,38 @@
 # IT-Buch – Svens IT-Bücher, Reihenfolge der Anzeige: nach sortjahr (neuestes oben)
 
 [[buch]]
+titel = "Designing Data-Intensive Applications"
+autor = "Martin Kleppmann, Chris Riccomini"
+jahr = "2026"
+sortjahr = 2026
+gebiet = "Datensysteme, verteilte Systeme"
+schluessel = "designing-data-intensive-applications-2026"
+
+[[buch]]
+titel = "Tidy First?"
+autor = "Kent Beck"
+jahr = "2023"
+sortjahr = 2023
+gebiet = "Refactoring, Softwaredesign"
+schluessel = "tidy-first-2023"
+
+[[buch]]
+titel = "Accelerate"
+autor = "Nicole Forsgren, Jez Humble, Gene Kim"
+jahr = "2018"
+sortjahr = 2018
+gebiet = "DevOps, Softwarelieferung"
+schluessel = "accelerate-2018"
+
+[[buch]]
+titel = "Test-Driven Development: By Example"
+autor = "Kent Beck"
+jahr = "2002"
+sortjahr = 2002
+gebiet = "Testen, Softwaredesign"
+schluessel = "test-driven-development-2002"
+
+[[buch]]
 titel = "A Functional Approach to Java"
 autor = "Ben Weidig"
 jahr = "2023"
