@@ -1,7 +1,8 @@
 {{- /* Kacheln einer Menügruppe (Werke, Bücher, Wissen, auch Untergruppen wie IT-Konzepte): eine Kachel je Unterpunkt des Menüs, mit Anzahl.
        Aufruf: partial "gruppe-kacheln.html" "<identifier der Gruppe>" */ -}}
 {{- $gruppen := slice }}
-{{- range site.Menus.main }}{{ $gruppen = $gruppen | append . }}{{ range .Children }}{{ $gruppen = $gruppen | append . }}{{ end }}{{ end }}
+{{- /* drei Ebenen: auch Untergruppen dritter Ebene (Media › Bücher › IT-Buch) haben Kacheln */}}
+{{- range site.Menus.main }}{{ $gruppen = $gruppen | append . }}{{ range .Children }}{{ $gruppen = $gruppen | append . }}{{ range .Children }}{{ $gruppen = $gruppen | append . }}{{ end }}{{ end }}{{ end }}
 <ul class="karten">
   {{- range $gruppen }}
     {{- if eq .Identifier $ }}

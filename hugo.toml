@@ -188,10 +188,22 @@ enableRobotsTXT = true
     parent = "buecher"
     weight = 27
   [[menus.main]]
+    # IT-Buch seit 2026-10-30 mit zwei Listen als Kacheln (Sven: „IT-Klassik, IT-KI“); vierte Ebene, im Aufklappmenü nicht gezeigt
     name = "IT-Buch"
+    identifier = "it-buch"
     pageRef = "/it-buch"
     parent = "buecher"
     weight = 28
+  [[menus.main]]
+    name = "IT-Klassik"
+    pageRef = "/it-buch/klassik"
+    parent = "it-buch"
+    weight = 1
+  [[menus.main]]
+    name = "IT-KI"
+    pageRef = "/it-buch/ki"
+    parent = "it-buch"
+    weight = 2
   [[menus.main]]
     name = "Schach-Buch"
     pageRef = "/schach-buch"

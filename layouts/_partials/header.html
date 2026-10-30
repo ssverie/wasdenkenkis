@@ -12,10 +12,11 @@
   {{- if eq $e.URL $seite.RelPermalink }}{{ $aktiv = true }}{{ end }}
   {{- $zuordnung := dict "filmkritiken" "/filme" "filmjahrzehnte" "/filme" "serienkritiken" "/serien" "podcast-texte" "/podcasts" "kanaele" "/podcasts" "podcast-folgen" "/podcasts" }}
   {{- with index $zuordnung $seite.Section }}{{ if eq $e.PageRef . }}{{ $aktiv = true }}{{ end }}{{ end }}
-  {{- /* Buchseiten und Buchtexte zählen zu der Liste, aus der das Buch stammt (liste = belletristik | sachbuch | it-buch | schach-buch) */}}
+  {{- /* Buchseiten und Buchtexte zählen zu der Liste, aus der das Buch stammt (liste = belletristik | sachbuch | it-buch/klassik | it-buch/ki | schach-buch);
+         seit 2026-10-30 auch zur übergeordneten Liste (IT-Buch), weil die Unterlisten im Aufklappmenü fehlen */}}
   {{- $buch := cond (and (eq $seite.Section "buecher") (eq $seite.Kind "term")) $seite nil }}
   {{- if eq $seite.Section "buchtexte" }}{{ range first 1 ($seite.GetTerms "buecher") }}{{ $buch = . }}{{ end }}{{ end }}
-  {{- with $buch }}{{ if eq $e.PageRef (printf "/%s" (.Params.liste | default "belletristik")) }}{{ $aktiv = true }}{{ end }}{{ end }}
+  {{- with $buch }}{{ if and $e.PageRef (hasPrefix (printf "/%s/" (.Params.liste | default "belletristik")) (printf "%s/" $e.PageRef)) }}{{ $aktiv = true }}{{ end }}{{ end }}
   {{- return $aktiv }}
 {{- end }}
 <header class="site-header">

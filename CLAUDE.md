@@ -39,7 +39,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 - **Spiele, Schach, Tools** (`/spiele/`, `/schach/` als erster Punkt unter Spiele, `/tools/` mit den Kacheln Werkzeugkasten und Links; Quelle `input-f5\apps\` – nie löschen, nie verschieben, nie committen) – Details `notizen/spiele-schach-tools.md`.
 - **Sprachen** (`/sprachen/`: 100, 1000, 3000 Wörter, Sätze, Lernmodus; `perl skripte/sprache-einlesen.pl`; persönliche Angaben in Beispielsätzen prüfen) – Details `notizen/sprachen.md`.
 - **Fragen** (`/fragen/`, `data/fragen.toml`, Gruppen ki, welt, menschheit, sven, cc; je Antwort `content/fragen/<kurz>-<modell>.md`, Menschheit per `perl skripte/menschheit-einlesen.pl`; die Dubletten-Prüfung verbietet doppelte Fragen) – Details und alle bisherigen Lieferungen `notizen/fragen.md`.
-- **Bücher** (unter Media; Listen Belletristik, Sachbuch, IT-Buch, Schach-Buch; Buchseiten `content/buecher/<schluessel>/`, Essays `content/buchtexte/`, Einbau per `perl skripte/buchtext-einlesen.pl`; **Sachbuch-Lieferungen darf ich selbständig live nehmen**) – Details und alle Lieferungen `notizen/buecher.md`.
+- **Bücher** (unter Media; Listen Belletristik, Sachbuch, IT-Buch mit IT-Klassik und IT-KI, Schach-Buch; Buchseiten `content/buecher/<schluessel>/`, Essays `content/buchtexte/`, Einbau per `perl skripte/buchtext-einlesen.pl`; **Sachbuch-Lieferungen darf ich selbständig live nehmen**) – Details und alle Lieferungen `notizen/buecher.md`.
 - **Was denken KIs über …?** – Kernformat: dieselbe Frage an mehrere Modelle, Antworten nebeneinander.
 - **Chats** – lohnende Gesprächsprotokolle.
 - **Geschichten** – von KIs geschrieben.
@@ -123,7 +123,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-10-30: vierte IT-Books-Lieferung – Test-Driven Development, Tidy First?, Accelerate, Designing Data-Intensive Applications)
+- (leer – zuletzt freigegeben und gepusht am 2026-10-30: IT-Buch mit Kacheln IT-Klassik und IT-KI, 16 weitere IT-Books-Zusammenfassungen, IT-Klassik jetzt 31 Bücher)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 

@@ -1,4 +1,4 @@
-# IT-Buch – Svens IT-Bücher, Reihenfolge der Anzeige: nach sortjahr (neuestes oben)
+# IT-Klassik (Liste unter IT-Buch seit 2026-10-30) – Svens IT-Bücher, Reihenfolge der Anzeige: nach sortjahr (neuestes oben)
 
 [[buch]]
 titel = "Designing Data-Intensive Applications"
@@ -119,3 +119,131 @@ jahr = "2011"
 sortjahr = 2011
 gebiet = "Algorithmen und Datenstrukturen, Java"
 schluessel = "algorithmen-2011"
+
+[[buch]]
+titel = "Building Evolutionary Architectures"
+autor = "Neal Ford, Rebecca Parsons, Patrick Kua, Pramod Sadalage"
+jahr = "2022"
+sortjahr = 2022
+gebiet = "Architektur, Governance"
+schluessel = "building-evolutionary-architectures-2022"
+
+[[buch]]
+titel = "Building Microservices"
+autor = "Sam Newman"
+jahr = "2021"
+sortjahr = 2021
+gebiet = "Microservices, Architektur"
+schluessel = "building-microservices-2021"
+
+[[buch]]
+titel = "Clean Architecture"
+autor = "Robert C. Martin"
+jahr = "2017"
+sortjahr = 2017
+gebiet = "Softwarearchitektur"
+schluessel = "clean-architecture-2017"
+
+[[buch]]
+titel = "Continuous Delivery"
+autor = "Jez Humble, David Farley"
+jahr = "2010"
+sortjahr = 2010
+gebiet = "Auslieferung, DevOps"
+schluessel = "continuous-delivery-2010"
+
+[[buch]]
+titel = "Enterprise Integration Patterns"
+autor = "Gregor Hohpe, Bobby Woolf"
+jahr = "2003"
+sortjahr = 2003
+gebiet = "Integration, Messaging"
+schluessel = "enterprise-integration-patterns-2003"
+
+[[buch]]
+titel = "Fundamentals of Software Architecture"
+autor = "Mark Richards, Neal Ford"
+jahr = "2025"
+sortjahr = 2025
+gebiet = "Softwarearchitektur"
+schluessel = "fundamentals-of-software-architecture-2025"
+
+[[buch]]
+titel = "Growing Object-Oriented Software, Guided by Tests"
+autor = "Steve Freeman, Nat Pryce"
+jahr = "2009"
+sortjahr = 2009
+gebiet = "Testen, objektorientiertes Design"
+schluessel = "growing-object-oriented-software-2009"
+
+[[buch]]
+titel = "Java Concurrency in Practice"
+autor = "Brian Goetz, Tim Peierls, Joshua Bloch, Joseph Bowbeer, David Holmes, Doug Lea"
+jahr = "2006"
+sortjahr = 2006
+gebiet = "Java, Nebenläufigkeit"
+schluessel = "java-concurrency-in-practice-2006"
+
+[[buch]]
+titel = "Patterns of Enterprise Application Architecture"
+autor = "Martin Fowler"
+jahr = "2002"
+sortjahr = 2002
+gebiet = "Softwarearchitektur, Persistenz"
+schluessel = "patterns-of-enterprise-application-architecture-2002"
+
+[[buch]]
+titel = "Peopleware"
+autor = "Tom DeMarco, Timothy Lister"
+jahr = "2013"
+sortjahr = 2013
+gebiet = "Teams, Management"
+schluessel = "peopleware-2013"
+
+[[buch]]
+titel = "Release It!"
+autor = "Michael T. Nygard"
+jahr = "2018"
+sortjahr = 2018
+gebiet = "Betrieb, Stabilität"
+schluessel = "release-it-2018"
+
+[[buch]]
+titel = "Site Reliability Engineering"
+autor = "Betsy Beyer, Chris Jones, Jennifer Petoff, Niall Richard Murphy (Hrsg.)"
+jahr = "2016"
+sortjahr = 2016
+gebiet = "Betrieb, Zuverlässigkeit"
+schluessel = "site-reliability-engineering-2016"
+
+[[buch]]
+titel = "Software Architecture: The Hard Parts"
+autor = "Neal Ford, Mark Richards, Pramod Sadalage, Zhamak Dehghani"
+jahr = "2021"
+sortjahr = 2021
+gebiet = "Softwarearchitektur, verteilte Systeme"
+schluessel = "software-architecture-the-hard-parts-2021"
+
+[[buch]]
+titel = "Team Topologies"
+autor = "Matthew Skelton, Manuel Pais"
+jahr = "2025"
+sortjahr = 2025
+gebiet = "Organisation, Teams"
+schluessel = "team-topologies-2025"
+
+[[buch]]
+titel = "The Mythical Man-Month"
+autor = "Frederick P. Brooks Jr."
+jahr = "1995"
+sortjahr = 1995
+gebiet = "Projektmanagement, Softwaretechnik"
+schluessel = "the-mythical-man-month-1995"
+
+[[buch]]
+titel = "Unit Testing"
+autor = "Vladimir Khorikov"
+jahr = "2020"
+sortjahr = 2020
+gebiet = "Testen"
+schluessel = "unit-testing-2020"

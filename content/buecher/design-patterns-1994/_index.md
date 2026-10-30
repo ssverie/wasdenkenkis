@@ -6,7 +6,7 @@ autor = "Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides"
 jahr = 1994
 erschienen = "1994 bei Addison-Wesley (Originaltitel: Design Patterns: Elements of Reusable Object-Oriented Software); deutsch 1996 bei Addison-Wesley als „Entwurfsmuster: Elemente wiederverwendbarer objektorientierter Software“, später bei mitp"
 gattung = "Fachbuch, Softwaretechnik"
-liste = "it-buch"
+liste = "it-buch/klassik"
 wikipedia = "https://de.wikipedia.org/wiki/Entwurfsmuster_(Buch)"
 abgerufen = 2026-10-29
 +++

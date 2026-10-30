@@ -3,10 +3,13 @@
        Ein Titel wird zum Link, sobald es die Buchseite /buecher/<schluessel>/ gibt. */ -}}
 {{ define "main" }}
 <header class="seitenkopf">
+  {{- /* Unterliste (IT-Buch › IT-Klassik, IT-KI): Link zurück zur Übersicht */}}
+  {{- with .Parent }}{{ if eq .Layout "gruppe" }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}{{ end }}
   <h1>{{ .Title }}</h1>
   {{ .Content }}
 </header>
 {{- $buecher := sort (index hugo.Data .Params.daten).buch "sortjahr" "desc" }}
+{{- if not $buecher }}<p>Noch keine Bücher in dieser Liste.</p>{{ end }}
 {{- $alle := .Params.epochen | default (slice (dict "name" "" "bis" 99999)) }}
 {{- range sort $alle "bis" "desc" }}
   {{- $name := .name }}{{ $bis := .bis }}
