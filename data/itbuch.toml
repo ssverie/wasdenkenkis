@@ -247,3 +247,67 @@ jahr = "2020"
 sortjahr = 2020
 gebiet = "Testen"
 schluessel = "unit-testing-2020"
+
+[[buch]]
+titel = "The Software Architect Elevator"
+autor = "Gregor Hohpe"
+jahr = "2020"
+sortjahr = 2020
+gebiet = "Architektur, Rolle des Architekten"
+schluessel = "the-software-architect-elevator-2020"
+
+[[buch]]
+titel = "The Staff Engineer's Path"
+autor = "Tanya Reilly"
+jahr = "2022"
+sortjahr = 2022
+gebiet = "Berufspraxis, technische Führung"
+schluessel = "the-staff-engineers-path-2022"
+
+[[buch]]
+titel = "Facilitating Software Architecture"
+autor = "Andrew Harmel-Law"
+jahr = "2024"
+sortjahr = 2024
+gebiet = "Architektur, Entscheidungen"
+schluessel = "facilitating-software-architecture-2024"
+
+[[buch]]
+titel = "Crucial Conversations"
+autor = "Kerry Patterson, Joseph Grenny, Ron McMillan, Al Switzler, Emily Gregory"
+jahr = "2021"
+sortjahr = 2021
+gebiet = "Kommunikation"
+schluessel = "crucial-conversations-2021"
+
+[[buch]]
+titel = "Radical Candor"
+autor = "Kim Scott"
+jahr = "2017"
+sortjahr = 2017
+gebiet = "Führung, Feedback"
+schluessel = "radical-candor-2017"
+
+[[buch]]
+titel = "Debugging Teams"
+autor = "Brian W. Fitzpatrick, Ben Collins-Sussman"
+jahr = "2015"
+sortjahr = 2015
+gebiet = "Teams, Zusammenarbeit"
+schluessel = "debugging-teams-2015"
+
+[[buch]]
+titel = "Deep Work"
+autor = "Cal Newport"
+jahr = "2016"
+sortjahr = 2016
+gebiet = "Arbeitsweise, Konzentration"
+schluessel = "konzentriert-arbeiten-2016"
+
+[[buch]]
+titel = "The Clean Coder"
+autor = "Robert C. Martin"
+jahr = "2011"
+sortjahr = 2011
+gebiet = "Berufspraxis, Professionalität"
+schluessel = "the-clean-coder-2011"
