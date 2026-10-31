@@ -12,5 +12,6 @@ darsteller = ["Emilia Clarke", "Peter Dinklage", "Kit Harington"]
 genre = ["Drama", "Fantasy"]
 imdb = "https://www.imdb.com/de/title/tt0944947/"
 imdb_wertung = "9.2"
+daten = "game-of-thrones"
 abgerufen = 2026-10-25
 +++

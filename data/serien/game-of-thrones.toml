@@ -1,0 +1,63 @@
+# IMDb-Wertungen der Episoden von Game of Thrones.
+# Quelle: IMDb-Episodenübersicht, Screenshots von Sven (31.10.2026, alle acht Staffeln, 73 Folgen; 8.6 im Bild halb abgeschnitten, als 4.0 gelesen).
+# IMDb nennt oben 74 Episoden; die vierundsiebzigste steht in keiner der acht Staffeln (vermutlich eines der Specials,
+# etwa die Dokumentation „The Last Watch“ von 2019) – im Raster nicht enthalten.
+# Je Staffel: Anzahl Folgen, IMDb-Durchschnitt der Staffel, Wertungen in Folgen-Reihenfolge.
+# titel: englische Folgentitel aus dem Wikipedia-Artikel „List of Game of Thrones episodes“ (abgerufen 31.10.2026).
+abgerufen = 2026-10-31
+
+[[staffel]]
+  nummer = 1
+  folgen = 10
+  titel = ["Winter Is Coming", "The Kingsroad", "Lord Snow", "Cripples, Bastards, and Broken Things", "The Wolf and the Lion", "A Golden Crown", "You Win or You Die", "The Pointy End", "Baelor", "Fire and Blood"]
+  schnitt = 9.0
+  imdb = [8.9, 8.6, 8.5, 8.6, 9.0, 9.1, 9.2, 8.9, 9.6, 9.4]
+
+[[staffel]]
+  nummer = 2
+  folgen = 10
+  titel = ["The North Remembers", "The Night Lands", "What Is Dead May Never Die", "Garden of Bones", "The Ghost of Harrenhal", "The Old Gods and the New", "A Man Without Honor", "The Prince of Winterfell", "Blackwater", "Valar Morghulis"]
+  schnitt = 8.8
+  imdb = [8.6, 8.3, 8.6, 8.6, 8.6, 8.9, 8.8, 8.6, 9.7, 9.3]
+
+[[staffel]]
+  nummer = 3
+  folgen = 10
+  titel = ["Valar Dohaeris", "Dark Wings, Dark Words", "Walk of Punishment", "And Now His Watch Is Ended", "Kissed by Fire", "The Climb", "The Bear and the Maiden Fair", "Second Sons", "The Rains of Castamere", "Mhysa"]
+  schnitt = 8.9
+  imdb = [8.6, 8.4, 8.7, 9.5, 8.9, 8.7, 8.6, 8.9, 9.9, 9.1]
+
+[[staffel]]
+  nummer = 4
+  folgen = 10
+  titel = ["Two Swords", "The Lion and the Rose", "Breaker of Chains", "Oathkeeper", "First of His Name", "The Laws of Gods and Men", "Mockingbird", "The Mountain and the Viper", "The Watchers on the Wall", "The Children"]
+  schnitt = 9.3
+  imdb = [9.0, 9.7, 8.8, 8.7, 8.6, 9.7, 9.1, 9.7, 9.6, 9.7]
+
+[[staffel]]
+  nummer = 5
+  folgen = 10
+  titel = ["The Wars to Come", "The House of Black and White", "High Sparrow", "Sons of the Harpy", "Kill the Boy", "Unbowed, Unbent, Unbroken", "The Gift", "Hardhome", "The Dance of Dragons", "Mother's Mercy"]
+  schnitt = 8.7
+  imdb = [8.3, 8.3, 8.3, 8.5, 8.5, 7.9, 8.8, 9.8, 9.4, 9.2]
+
+[[staffel]]
+  nummer = 6
+  folgen = 10
+  titel = ["The Red Woman", "Home", "Oathbreaker", "Book of the Stranger", "The Door", "Blood of My Blood", "The Broken Man", "No One", "Battle of the Bastards", "The Winds of Winter"]
+  schnitt = 9.0
+  imdb = [8.4, 9.2, 8.6, 9.0, 9.7, 8.3, 8.5, 8.3, 9.9, 9.9]
+
+[[staffel]]
+  nummer = 7
+  folgen = 7
+  titel = ["Dragonstone", "Stormborn", "The Queen's Justice", "The Spoils of War", "Eastwatch", "Beyond the Wall", "The Dragon and the Wolf"]
+  schnitt = 9.0
+  imdb = [8.5, 8.7, 9.1, 9.7, 8.6, 9.0, 9.4]
+
+[[staffel]]
+  nummer = 8
+  folgen = 6
+  titel = ["Winterfell", "A Knight of the Seven Kingdoms", "The Long Night", "The Last of the Starks", "The Bells", "The Iron Throne"]
+  schnitt = 6.4
+  imdb = [7.6, 7.9, 7.5, 5.5, 5.9, 4.0]
