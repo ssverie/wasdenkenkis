@@ -74,6 +74,12 @@ abonnenten = 8730000
 stand = 2026-10-31
 seit = 2026-10-31
 text = "Englischsprachiger Kanal des Mathematikers Grant Sanderson: Mathematik und angrenzende Gebiete wie Physik und Informatik, erklärt mit eigens programmierten Animationen. Bekannt ist die Reihe über neuronale Netze bis zu Transformern und Aufmerksamkeit (Kapitel 1 bis 7); zuletzt die Reihe „Compression is Intelligence“ über Entropie, ein Video zur letzten Mathe-Olympiade-Aufgabe, die eine KI nicht lösen konnte, sowie Laplace-Transformation und Quantencomputer. Wenige, sehr sorgfältige Videos."
+  [[eintrag.unterlinks]]
+  name = "Verwandt: Neuronales Netz in den KI-Begriffen"
+  url = "/erklaert/neuronales-netz/"
+  [[eintrag.unterlinks]]
+  name = "Verwandt: Transformer in den KI-Begriffen"
+  url = "/erklaert/transformer/"
 
 [[eintrag]]
 name = "Scams"
