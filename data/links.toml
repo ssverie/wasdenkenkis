@@ -65,6 +65,20 @@ text = "Steven Bartletts englischsprachiger Interview-Podcast, meist lange Gespr
   url = "/podcasts/doac-jeffrey-ladish/"
 
 [[eintrag]]
+name = "Scams"
+url = "https://www.youtube.com/@scams_here/videos"
+kategorie = "YouTube-Kanäle"
+thema = "ki"
+sprache = "en"
+abonnenten = 46100
+stand = 2026-10-31
+seit = 2026-10-31
+text = "Englischsprachiger Kanal, der nach eigener Beschreibung Dokumentationen über die größten Betrugsfälle, Raubzüge und Finanzschwindel zeigt – bis vor einem Jahr tatsächlich solche Filme. Seit etwa einem Monat fast nur noch KI-Warnungen mit zugespitzten Titeln wie „AI Whistleblower WARNS“, zusammengestellt aus Aussagen bekannter Leute (Hinton, ein früherer Google-Chef, Dario Amodei); Gesprächspartner und Quellen des Materials nennen die Beschreibungen nicht."
+  [[eintrag.unterlinks]]
+  name = "Folge mit Geoffrey Hinton auf dieser Seite"
+  url = "/podcasts/scams-geoffrey-hinton/"
+
+[[eintrag]]
 name = "Jon Hernández"
 url = "https://www.youtube.com/@JonHernandezAI/videos"
 kategorie = "YouTube-Kanäle"
