@@ -1,0 +1,48 @@
+# IMDb-Wertungen der Episoden von Better Call Saul.
+# Quelle: IMDb-Episodenübersicht, Screenshots von Sven (31.10.2026, vollständig alle 63 Folgen).
+# Je Staffel: Anzahl Folgen, IMDb-Durchschnitt der Staffel, Wertungen in Folgen-Reihenfolge.
+# titel: englische Folgentitel aus dem Wikipedia-Artikel „List of Better Call Saul episodes“ (abgerufen 31.10.2026).
+# Staffel 6 lief bei AMC in zwei Teilen (Folge 1–7 und 8–13); im Raster eine Zeile, weil 13 Folgen hineinpassen.
+abgerufen = 2026-10-31
+
+[[staffel]]
+  nummer = 1
+  folgen = 10
+  titel = ["Uno", "Mijo", "Nacho", "Hero", "Alpine Shepherd Boy", "Five-O", "Bingo", "RICO", "Pimento", "Marco"]
+  schnitt = 8.7
+  imdb = [8.4, 8.9, 8.6, 8.3, 8.0, 9.4, 8.6, 8.6, 9.4, 8.6]
+
+[[staffel]]
+  nummer = 2
+  folgen = 10
+  titel = ["Switch", "Cobbler", "Amarillo", "Gloves Off", "Rebecca", "Bali Ha'i", "Inflatable", "Fifi", "Nailed", "Klick"]
+  schnitt = 8.5
+  imdb = [8.2, 8.4, 8.2, 8.9, 8.0, 8.4, 8.3, 8.3, 9.3, 9.0]
+
+[[staffel]]
+  nummer = 3
+  folgen = 10
+  titel = ["Mabel", "Witness", "Sunk Costs", "Sabrosito", "Chicanery", "Off Brand", "Expenses", "Slip", "Fall", "Lantern"]
+  schnitt = 8.7
+  imdb = [8.1, 9.0, 8.4, 8.9, 9.7, 8.4, 8.2, 8.5, 8.8, 9.2]
+
+[[staffel]]
+  nummer = 4
+  folgen = 10
+  titel = ["Smoke", "Breathe", "Something Beautiful", "Talk", "Quite a Ride", "Piñata", "Something Stupid", "Coushatta", "Wiedersehen", "Winner"]
+  schnitt = 8.6
+  imdb = [8.2, 8.8, 8.4, 8.2, 8.4, 8.5, 8.3, 8.8, 9.1, 9.6]
+
+[[staffel]]
+  nummer = 5
+  folgen = 10
+  titel = ["Magic Man", "50% Off", "The Guy for This", "Namaste", "Dedicado a Max", "Wexler v. Goodman", "JMM", "Bagman", "Bad Choice Road", "Something Unforgivable"]
+  schnitt = 9.1
+  imdb = [8.7, 8.7, 9.0, 8.5, 8.5, 9.3, 9.1, 9.7, 9.7, 9.4]
+
+[[staffel]]
+  nummer = 6
+  folgen = 13
+  titel = ["Wine and Roses", "Carrot and Stick", "Rock and Hard Place", "Hit and Run", "Black and Blue", "Axe and Grind", "Plan and Execution", "Point and Shoot", "Fun and Games", "Nippy", "Breaking Bad", "Waterworks", "Saul Gone"]
+  schnitt = 9.1
+  imdb = [8.8, 9.1, 9.7, 8.6, 8.1, 8.2, 9.9, 9.8, 9.4, 8.5, 9.0, 9.4, 9.8]

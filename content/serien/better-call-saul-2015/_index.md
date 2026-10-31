@@ -12,5 +12,6 @@ darsteller = ["Bob Odenkirk", "Rhea Seehorn", "Jonathan Banks"]
 genre = ["Krimi", "Drama"]
 imdb = "https://www.imdb.com/de/title/tt3032476/"
 imdb_wertung = "9.0"
+daten = "better-call-saul"
 abgerufen = 2026-10-25
 +++
