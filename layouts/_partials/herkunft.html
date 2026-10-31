@@ -35,16 +35,21 @@
     {{- end }}
     {{- with .GetTerms "serien" }}
     <dt>Serie</dt>
-    <dd>{{ range first 1 . }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}{{ with $.Params.staffel }}, Staffel {{ . }}{{ end }}{{ with $.Params.folge }}, Folge {{ . }}{{ end }}</dd>
       {{- $imdb := 0.0 }}
+      {{- $lfd := 0 }}{{ $gesamt := 0 }}{{- /* laufende Nummer über alle Staffeln, z. B. 1/92 bei Mad Men (Sven, 2026-10-31) */}}
       {{- range first 1 . }}
         {{- with .Params.daten }}{{ with index hugo.Data.serien . }}
           {{- range where .staffel "nummer" $.Params.staffel }}
             {{- $i := sub $.Params.folge 1 }}
             {{- if lt $i (len .imdb) }}{{ $imdb = index .imdb $i }}{{ end }}
           {{- end }}
+          {{- if and $.Params.staffel $.Params.folge }}
+            {{- range .staffel }}{{ $gesamt = add $gesamt .folgen }}{{ if lt .nummer $.Params.staffel }}{{ $lfd = add $lfd .folgen }}{{ end }}{{ end }}
+            {{- $lfd = add $lfd $.Params.folge }}
+          {{- end }}
         {{- end }}{{ end }}
       {{- end }}
+    <dd>{{ range first 1 . }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}{{ with $.Params.staffel }}, Staffel {{ . }}{{ end }}{{ with $.Params.folge }}, Folge {{ . }}{{ end }}{{ if gt $gesamt 0 }}, {{ $lfd }}/{{ $gesamt }}{{ end }}</dd>
     <dt>Wertung</dt>
     <dd>{{ with $.Params.claude_wertung }}{{ . }}/10 von Claude{{ end }}{{ with $.Params.wertung }}{{ . }}/10 von {{ $.Params.modell }}{{ end }}{{ if gt $imdb 0.0 }} · {{ printf "%.1f" $imdb }} auf IMDb{{ end }}</dd>
     {{- end }}
