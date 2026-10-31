@@ -65,6 +65,20 @@ text = "Steven Bartletts englischsprachiger Interview-Podcast, meist lange Gespr
   url = "/podcasts/doac-jeffrey-ladish/"
 
 [[eintrag]]
+name = "Tom Bilyeu"
+url = "https://www.youtube.com/@TomBilyeu/videos"
+kategorie = "YouTube-Kanäle"
+thema = "allgemein"
+sprache = "en"
+abonnenten = 4640000
+stand = 2026-10-31
+seit = 2026-10-31
+text = "Tom Bilyeus englischsprachiger Kanal mit dem Podcast „Impact Theory“, nach eigener Beschreibung über Weltgeschehen, Finanzen, KI und Zukunftstechnik sowie Mindset. Zuletzt vor allem Videos zu Staatsschulden, Geldpolitik und Märkten, dazwischen immer wieder KI-Risiken und lange Gespräche mit Gästen. Die Titel sind stark zugespitzt (etwa „NOTFALL-PODCAST: ASI wird uns alle umbringen!“), YouTube zeigt sie teils automatisch übersetzt."
+  [[eintrag.unterlinks]]
+  name = "Folge mit Roman Yampolskiy auf dieser Seite"
+  url = "/podcasts/impact-theory-roman-yampolskiy/"
+
+[[eintrag]]
 name = "Lex Fridman"
 url = "https://www.youtube.com/@lexfridman/videos"
 kategorie = "YouTube-Kanäle"
