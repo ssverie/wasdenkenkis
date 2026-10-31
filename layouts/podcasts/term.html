@@ -17,7 +17,9 @@
     <dl>
       {{- with .Params.sendung }}<dt>Sendung</dt><dd>{{ with $.Params.sendung_youtube }}<a href="{{ . }}" rel="noopener">{{ $.Params.sendung }}</a> (YouTube-Kanal){{ else }}{{ . }}{{ end }}</dd>{{ end }}
       {{- with .Params.moderation }}<dt>Moderation</dt><dd>{{ . }}</dd>{{ end }}
-      {{- with .Params.gast }}<dt>Gast</dt><dd>{{ . }}</dd>{{ end }}
+      {{- with .Params.gast }}<dt>Gast</dt><dd>{{ . }}
+        {{- /* Rücklink zur Forscherseite (Wissen › KI › KI-Forscher), wenn deren `suchname` im Gast steht – seit 2026-10-31 */}}
+        {{- range where site.RegularPages "Params.layout" "forscher" }}{{ if findRE .Params.suchname $.Params.gast }} · <a href="{{ .RelPermalink }}">mehr zu {{ .Title }}</a>{{ end }}{{ end }}</dd>{{ end }}
       {{- with .Params.erschienen }}<dt>Erschienen</dt><dd>{{ . | time.Format ":date_long" }}</dd>{{ end }}
       {{- with .Params.laenge }}<dt>Länge</dt><dd>{{ . }}</dd>{{ end }}
       {{- with .Params.sprache }}<dt>Sprache</dt><dd>{{ . }}</dd>{{ end }}
