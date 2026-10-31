@@ -65,6 +65,26 @@ text = "Steven Bartletts englischsprachiger Interview-Podcast, meist lange Gespr
   url = "/podcasts/doac-jeffrey-ladish/"
 
 [[eintrag]]
+name = "Smart Girl Dumb Questions (Nayeema Raza)"
+url = "https://www.youtube.com/@SmartGirlDumbQuestions/videos"
+kategorie = "YouTube-Kanäle"
+thema = "allgemein"
+sprache = "en"
+abonnenten = 18900
+stand = 2026-10-31
+seit = 2026-10-31
+text = "Kanal der Journalistin und Filmemacherin Nayeema Raza (früher New York Times und Vox): Sie stellt klugen Leuten bewusst einfache, „dumme“ Fragen, neue Folgen jeden Dienstag. Die Themen reichen quer durch – zuletzt Gen Z und Arbeit, OpenAI als „too big to fail“, der Streit zwischen Sam Altman und Dario Amodei, Geld, Dating und Politik; dazu eine dreiteilige Reihe mit Geoffrey Hinton."
+  [[eintrag.unterlinks]]
+  name = "Folge mit Geoffrey Hinton auf dieser Seite (Teil 1)"
+  url = "/podcasts/smart-girl-dumb-questions-geoffrey-hinton-teil-1/"
+  [[eintrag.unterlinks]]
+  name = "Folge mit Geoffrey Hinton auf dieser Seite (Teil 2)"
+  url = "/podcasts/smart-girl-dumb-questions-geoffrey-hinton-teil-2/"
+  [[eintrag.unterlinks]]
+  name = "Folge mit Geoffrey Hinton auf dieser Seite (Teil 3)"
+  url = "/podcasts/smart-girl-dumb-questions-geoffrey-hinton/"
+
+[[eintrag]]
 name = "Tom Bilyeu"
 url = "https://www.youtube.com/@TomBilyeu/videos"
 kategorie = "YouTube-Kanäle"

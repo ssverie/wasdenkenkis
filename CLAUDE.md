@@ -124,7 +124,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-10-31: GPT-6-Analyse „Podcastanalyse – Geoffrey Hinton: Wie gefährlich wird KI?“)
+- (leer – zuletzt freigegeben und gepusht am 2026-10-31: Hinton bei Smart Girl Dumb Questions Teil 1 und 2, Kanal „Smart Girl Dumb Questions (Nayeema Raza)“)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
