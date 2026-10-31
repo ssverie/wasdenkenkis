@@ -15,7 +15,7 @@
   {{- if $auf }}
 <div class="kapitel-kopf">
   {{- if not $nur }}
-  <h2 id="kapitel-{{ $k }}">Kapitel {{ $k }}{{ with .titel }}: {{ . }}{{ end }}</h2>
+  <h2 id="{{ .slug | default (printf "kapitel-%d" $k) }}">{{ with .buch }}Kapitel {{ . }}: {{ end }}{{ .titel }}</h2>
   {{- end }}
   <button type="button" class="alle-loesungen" aria-expanded="false" hidden>Alle Lösungen aufklappen</button>
 </div>

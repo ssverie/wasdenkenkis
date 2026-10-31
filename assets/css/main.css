@@ -339,6 +339,7 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .schachbuch-inhalt .nr { font-weight: 600; color: var(--text-leise); font-variant-numeric: tabular-nums; }
 .schachbuch-inhalt a { font-weight: 600; }
 .schachbuch-inhalt .offen { color: var(--text-leise); }
+.schachbuch-inhalt li.test { border-bottom-width: 2px; }
 .schachbuch-inhalt .zahl { font-size: 0.9rem; color: var(--text-leise); white-space: nowrap; }
 .kapitel-kopf { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.25rem; max-width: 52rem; }
 .kapitel-kopf h2 { margin-bottom: 0; }

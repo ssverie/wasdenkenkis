@@ -5,26 +5,75 @@
 # Lösungen (Buchseite 25 ff.): nur Partie, Turnier und Züge, deutsche Figurenbuchstaben (K D T L S); die Erklärtexte
 # des Buchs werden nicht übernommen. loesung = Hauptlinie (fett im Buch), varianten = Nebenlinien und Partieverlauf.
 
-# Inhaltsverzeichnis (Sven: 6 Kapitel). Titel nur, wo belegt (Foto); die übrigen folgen mit einem Foto des Inhaltsverzeichnisses.
-# Je Kapitel mit Aufgaben eine Seite content/schachaufgaben/rizzitano-1001/kapitel-<nr>.md
+# Inhaltsverzeichnis nach dem Buch (Foto vom 31.10.2026), nur die fett gedruckten Zeilen (Sven: „nur die fetten Zeilen,
+# also 10“): sechs Kapitel, die ersten vier mit eigenem Test. nr = laufende Nummer des Abschnitts (darauf verweist
+# aufgabe.kapitel), buch = Kapitelnummer im Buch (Tests ohne), buchseite = Startseite, slug = Adresse der Abschnittsseite
+# content/schachaufgaben/rizzitano-1001/<slug>.md (erst anlegen, wenn Aufgaben da sind).
 [[kapitel]]
 nr = 1
+buch = 1
 titel = "Elementary Puzzles"
+buchseite = 6
+slug = "kapitel-1"
 
 [[kapitel]]
 nr = 2
+titel = "Elementary Test"
+buchseite = 36
+slug = "kapitel-1-test"
 
 [[kapitel]]
 nr = 3
+buch = 2
+titel = "Checkmate Puzzles"
+buchseite = 48
+slug = "kapitel-2"
 
 [[kapitel]]
 nr = 4
+titel = "Checkmate Test"
+buchseite = 93
+slug = "kapitel-2-test"
 
 [[kapitel]]
 nr = 5
+buch = 3
+titel = "Intermediate Puzzles"
+buchseite = 106
+slug = "kapitel-3"
 
 [[kapitel]]
 nr = 6
+titel = "Intermediate Test"
+buchseite = 176
+slug = "kapitel-3-test"
+
+[[kapitel]]
+nr = 7
+buch = 4
+titel = "Forks, Pins and Loose Pieces Puzzles"
+buchseite = 189
+slug = "kapitel-4"
+
+[[kapitel]]
+nr = 8
+titel = "Forks, Pins and Loose Pieces Test"
+buchseite = 232
+slug = "kapitel-4-test"
+
+[[kapitel]]
+nr = 9
+buch = 5
+titel = "Advanced Puzzles"
+buchseite = 244
+slug = "kapitel-5"
+
+[[kapitel]]
+nr = 10
+buch = 6
+titel = "Deadly Puzzles"
+buchseite = 286
+slug = "kapitel-6"
 
 # Kapitel 1, Buchseiten 6–7 (Foto vom 31.10.2026), Lösungen Buchseite 25 (Foto vom 31.10.2026)
 [[aufgabe]]
