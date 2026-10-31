@@ -80,3 +80,19 @@ jahr = "2019"
 sortjahr = 2019
 gebiet = "KI-Grundlagen, Kritik"
 schluessel = "artificial-intelligence-guide-for-thinking-humans-2019"
+
+[[buch]]
+titel = "Spring AI in Action"
+autor = "Craig Walls"
+jahr = "2025"
+sortjahr = 2025
+gebiet = "KI-Anwendungen, Java"
+schluessel = "spring-ai-in-action-2025"
+
+[[buch]]
+titel = "Building Applications with AI Agents"
+autor = "Michael Albada"
+jahr = "2025"
+sortjahr = 2025
+gebiet = "KI-Agenten, Architektur"
+schluessel = "building-applications-with-ai-agents-2025"

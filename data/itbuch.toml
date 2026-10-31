@@ -311,3 +311,27 @@ jahr = "2011"
 sortjahr = 2011
 gebiet = "Berufspraxis, Professionalität"
 schluessel = "the-clean-coder-2011"
+
+[[buch]]
+titel = "Software Engineering at Google"
+autor = "Titus Winters, Tom Manshreck, Hyrum Wright (Hrsg.)"
+jahr = "2020"
+sortjahr = 2020
+gebiet = "Softwaretechnik, Organisation"
+schluessel = "software-engineering-at-google-2020"
+
+[[buch]]
+titel = "Secure by Design"
+autor = "Dan Bergh Johnsson, Daniel Deogun, Daniel Sawano"
+jahr = "2019"
+sortjahr = 2019
+gebiet = "Sicherheit, Softwaredesign"
+schluessel = "secure-by-design-2019"
+
+[[buch]]
+titel = "Implementing Domain-Driven Design"
+autor = "Vaughn Vernon"
+jahr = "2013"
+sortjahr = 2013
+gebiet = "Domain-Driven Design, Architektur"
+schluessel = "implementing-domain-driven-design-2013"
