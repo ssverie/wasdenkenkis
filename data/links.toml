@@ -77,6 +77,9 @@ text = "Englischsprachiger Kanal des KI-Vermittlers Jon Hernández, nach eigener
   [[eintrag.unterlinks]]
   name = "Folge mit Nick Bostrom auf dieser Seite"
   url = "/podcasts/jon-hernandez-nick-bostrom/"
+  [[eintrag.unterlinks]]
+  name = "Folge mit Stuart Russell auf dieser Seite"
+  url = "/podcasts/jon-hernandez-stuart-russell/"
 
 [[eintrag]]
 name = "David Shapiro"
