@@ -12,5 +12,6 @@ darsteller = ["Bryan Cranston", "Aaron Paul", "Anna Gunn"]
 genre = ["Krimi", "Drama", "Thriller"]
 imdb = "https://www.imdb.com/de/title/tt0903747/"
 imdb_wertung = "9.5"
+daten = "breaking-bad"
 abgerufen = 2026-10-25
 +++

@@ -1,0 +1,43 @@
+# IMDb-Wertungen der Episoden von Breaking Bad.
+# Quelle: IMDb-Episodenübersicht, Screenshots von Sven (31.10.2026, vollständig alle 62 Folgen; Staffel 5 auf zwei Bildern, Folgen 4–13 doppelt und gleich).
+# Je Staffel: Anzahl Folgen, IMDb-Durchschnitt der Staffel, Wertungen in Folgen-Reihenfolge.
+# titel: englische Folgentitel aus dem Wikipedia-Artikel „List of Breaking Bad episodes“ (abgerufen 31.10.2026).
+# umbruch: Staffel 5 (16 Folgen) im Raster in zwei Zeilen, Folge 1–8 und 9–16 – wie AMC sie als Teil 1 (2012) und Teil 2 (2013) gesendet hat
+# (Sven, 2026-10-31: „staffel 5 aufteilen“). Zählung und Zähler bleiben eine Staffel.
+abgerufen = 2026-10-31
+
+[[staffel]]
+  nummer = 1
+  folgen = 7
+  titel = ["Pilot", "Cat's in the Bag...", "...And the Bag's in the River", "Cancer Man", "Gray Matter", "Crazy Handful of Nothin'", "A No-Rough-Stuff-Type Deal"]
+  schnitt = 8.7
+  imdb = [9.1, 8.6, 8.7, 8.2, 8.2, 9.3, 8.8]
+
+[[staffel]]
+  nummer = 2
+  folgen = 13
+  titel = ["Seven Thirty-Seven", "Grilled", "Bit by a Dead Bee", "Down", "Breakage", "Peekaboo", "Negro y Azul", "Better Call Saul", "4 Days Out", "Over", "Mandala", "Phoenix", "ABQ"]
+  schnitt = 8.8
+  imdb = [8.6, 9.3, 8.3, 8.2, 8.2, 8.8, 8.6, 9.3, 9.2, 8.4, 8.9, 9.3, 9.2]
+
+[[staffel]]
+  nummer = 3
+  folgen = 13
+  titel = ["No Más", "Caballo sin Nombre", "I.F.T.", "Green Light", "Más", "Sunset", "One Minute", "I See You", "Kafkaesque", "Fly", "Abiquiu", "Half Measures", "Full Measure"]
+  schnitt = 8.7
+  imdb = [8.4, 8.6, 8.3, 8.1, 8.5, 9.3, 9.6, 8.7, 8.3, 7.9, 8.4, 9.5, 9.7]
+
+[[staffel]]
+  nummer = 4
+  folgen = 13
+  titel = ["Box Cutter", "Thirty-Eight Snub", "Open House", "Bullet Points", "Shotgun", "Cornered", "Problem Dog", "Hermanos", "Bug", "Salud", "Crawl Space", "End Times", "Face Off"]
+  schnitt = 9.0
+  imdb = [9.2, 8.2, 7.9, 8.5, 8.6, 8.4, 8.8, 9.3, 8.9, 9.6, 9.7, 9.5, 9.8]
+
+[[staffel]]
+  nummer = 5
+  folgen = 16
+  umbruch = 8
+  titel = ["Live Free or Die", "Madrigal", "Hazard Pay", "Fifty-One", "Dead Freight", "Buyout", "Say My Name", "Gliding Over All", "Blood Money", "Buried", "Confessions", "Rabid Dog", "To'hajiilee", "Ozymandias", "Granite State", "Felina"]
+  schnitt = 9.3
+  imdb = [9.2, 8.8, 8.8, 8.8, 9.6, 9.0, 9.6, 9.5, 9.4, 9.2, 9.6, 9.1, 9.7, 9.5, 9.6, 9.8]
