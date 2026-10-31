@@ -1,0 +1,57 @@
+# IMDb-Wertungen der Episoden von Black Mirror.
+# Quelle: IMDb-Episodenübersicht, Screenshots von Sven (31.10.2026, alle sieben Staffeln, 33 Folgen).
+# IMDb nennt oben 34 Episoden; die vierunddreißigste ist der interaktive Film „Bandersnatch“ (2018) – auf Svens Ansage
+# als Folge 7 von Staffel 4 mit IMDb-Wert 7.1 eingetragen (Sven, 2026-10-31). Der Staffel-Durchschnitt 7.8 bleibt der von IMDb (ohne Bandersnatch).
+# Gliederung wie IMDb: „White Christmas“ (Special 2014) als Folge 4 von Staffel 2.
+# Je Staffel: Anzahl Folgen, IMDb-Durchschnitt der Staffel, Wertungen in Folgen-Reihenfolge.
+# titel: englische Folgentitel aus dem Wikipedia-Artikel „List of Black Mirror episodes“ (abgerufen 31.10.2026).
+abgerufen = 2026-10-31
+
+[[staffel]]
+  nummer = 1
+  folgen = 3
+  titel = ["The National Anthem", "Fifteen Million Merits", "The Entire History of You"]
+  schnitt = 8.0
+  imdb = [7.6, 8.0, 8.5]
+
+[[staffel]]
+  nummer = 2
+  folgen = 4
+  titel = ["Be Right Back", "White Bear", "The Waldo Moment", "White Christmas"]
+  schnitt = 7.8
+  imdb = [7.9, 7.9, 6.5, 9.1]
+
+[[staffel]]
+  nummer = 3
+  folgen = 6
+  titel = ["Nosedive", "Playtest", "Shut Up and Dance", "San Junipero", "Men Against Fire", "Hated in the Nation"]
+  schnitt = 8.2
+  imdb = [8.3, 8.0, 8.4, 8.5, 7.5, 8.4]
+
+[[staffel]]
+  nummer = 4
+  folgen = 7
+  titel = ["USS Callister", "Arkangel", "Crocodile", "Hang the DJ", "Metalhead", "Black Museum", "Bandersnatch"]
+  schnitt = 7.8
+  imdb = [8.3, 7.3, 7.3, 8.7, 6.6, 8.6, 7.1]
+
+[[staffel]]
+  nummer = 5
+  folgen = 3
+  titel = ["Striking Vipers", "Smithereens", "Rachel, Jack and Ashley Too"]
+  schnitt = 6.8
+  imdb = [6.8, 7.5, 6.1]
+
+[[staffel]]
+  nummer = 6
+  folgen = 5
+  titel = ["Joan Is Awful", "Loch Henry", "Beyond the Sea", "Mazey Day", "Demon 79"]
+  schnitt = 6.8
+  imdb = [7.4, 7.3, 7.4, 5.3, 6.7]
+
+[[staffel]]
+  nummer = 7
+  folgen = 6
+  titel = ["Common People", "Bête Noire", "Hotel Reverie", "Plaything", "Eulogy", "USS Callister: Into Infinity"]
+  schnitt = 7.5
+  imdb = [8.1, 7.2, 6.6, 7.1, 8.1, 8.1]

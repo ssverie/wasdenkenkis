@@ -11,5 +11,6 @@ umfang = "7 Staffeln, 33 Folgen und der interaktive Film „Bandersnatch“ (Sta
 genre = ["Krimi", "Drama", "Mystery"]
 imdb = "https://www.imdb.com/de/title/tt2085059/"
 imdb_wertung = "8.7"
+daten = "black-mirror"
 abgerufen = 2026-10-25
 +++
