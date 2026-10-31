@@ -65,6 +65,20 @@ text = "Steven Bartletts englischsprachiger Interview-Podcast, meist lange Gespr
   url = "/podcasts/doac-jeffrey-ladish/"
 
 [[eintrag]]
+name = "Jon Hernández"
+url = "https://www.youtube.com/@JonHernandezAI/videos"
+kategorie = "YouTube-Kanäle"
+thema = "ki"
+sprache = "en"
+abonnenten = 6280
+stand = 2026-10-31
+seit = 2026-10-31
+text = "Englischsprachiger Kanal des KI-Vermittlers Jon Hernández, nach eigener Beschreibung jemand, den die KI vor gut zwei Jahren gepackt hat und der seitdem weitergibt, was sich tut. Vor allem lange Gespräche mit Forschern und Denkern, zuletzt Nick Bostrom, Aubrey de Grey, Stephen Wolfram, Stuart Russell, Daron Acemoglu, Yoshua Bengio, Connor Leahy, Jürgen Schmidhuber und Roman Yampolskiy."
+  [[eintrag.unterlinks]]
+  name = "Folge mit Nick Bostrom auf dieser Seite"
+  url = "/podcasts/jon-hernandez-nick-bostrom/"
+
+[[eintrag]]
 name = "David Shapiro"
 url = "https://www.youtube.com/@DaveShap/videos"
 kategorie = "YouTube-Kanäle"
