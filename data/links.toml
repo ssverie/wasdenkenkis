@@ -94,6 +94,9 @@ text = "Englischsprachiger Kanal des KI-Vermittlers Jon Hernández, nach eigener
   [[eintrag.unterlinks]]
   name = "Folge mit Stuart Russell auf dieser Seite"
   url = "/podcasts/jon-hernandez-stuart-russell/"
+  [[eintrag.unterlinks]]
+  name = "Folge mit Yoshua Bengio auf dieser Seite"
+  url = "/podcasts/jon-hernandez-yoshua-bengio/"
 
 [[eintrag]]
 name = "David Shapiro"
