@@ -3,30 +3,45 @@
        Aufruf: partial "folgen-raster.html" (dict "daten" <hugo.Data.serien.x> "kritiken" <Seiten der Serie>) */ -}}
 {{- $daten := .daten }}
 {{- $kritiken := .kritiken }}
+{{- /* Anzeigezeilen: je Staffel eine, bei „umbruch = N“ zwei (Folgen 1–N und N+1–Ende; Sopranos Staffel 6, Sven 2026-10-31).
+       basis = Folgen vor dieser Staffel, für die laufende Nummer über alle Staffeln (1–92 bei Mad Men, Svens Wunsch) */}}
+{{- $zeilen := slice }}
+{{- $basis := 0 }}
+{{- range $daten.staffel }}
+  {{- $u := .umbruch | default 0 }}
+  {{- if and (gt $u 0) (lt $u .folgen) }}
+    {{- $zeilen = $zeilen | append (dict "s" . "von" 1 "bis" $u "basis" $basis "teil" 1) }}
+    {{- $zeilen = $zeilen | append (dict "s" . "von" (add $u 1) "bis" .folgen "basis" $basis "teil" 2) }}
+  {{- else }}
+    {{- $zeilen = $zeilen | append (dict "s" . "von" 1 "bis" .folgen "basis" $basis "teil" 0) }}
+  {{- end }}
+  {{- $basis = add $basis .folgen }}
+{{- end }}
 {{- $max := 0 }}
-{{- $basis := 0 }}{{- /* laufende Nummer über alle Staffeln (1–92 bei Mad Men), Svens Wunsch */}}
-{{- range $daten.staffel }}{{ if gt .folgen $max }}{{ $max = .folgen }}{{ end }}{{ end }}
+{{- range $zeilen }}{{ $n := add (sub .bis .von) 1 }}{{ if gt $n $max }}{{ $max = $n }}{{ end }}{{ end }}
 <div class="raster-rahmen">
 <table class="folgen-raster">
   <thead>
     <tr><th scope="col">Staffel</th>{{ range seq $max }}<th scope="col">{{ . }}</th>{{ end }}</tr>
   </thead>
   <tbody>
-    {{- range $daten.staffel }}
-    {{- $s := . }}
+    {{- range $zeilen }}
+    {{- $z := . }}
+    {{- $s := .s }}
     <tr>
-      <th scope="row">{{ $s.nummer }}<small>Ø {{ printf "%.1f" $s.schnitt }}</small></th>
+      <th scope="row">{{ $s.nummer }}<small>{{ if ne $z.teil 2 }}Ø {{ printf "%.1f" $s.schnitt }}{{ end }}{{ if $z.teil }}{{ if eq $z.teil 1 }} · {{ end }}Folge {{ $z.von }}–{{ $z.bis }}{{ end }}</small></th>
       {{- range $i, $_ := seq $max }}
-        {{- $f := add $i 1 }}
-        {{- if gt $f $s.folgen }}
+        {{- $f := add $z.von $i }}
+        {{- $k := sub $f 1 }}
+        {{- if gt $f $z.bis }}
       <td class="leer"></td>
         {{- else }}
           {{- $w := 0.0 }}
-          {{- if lt $i (len $s.imdb) }}{{ $w = index $s.imdb $i }}{{ end }}
+          {{- if lt $k (len $s.imdb) }}{{ $w = index $s.imdb $k }}{{ end }}
           {{- $klasse := "w0" }}
           {{- if ge $w 9.0 }}{{ $klasse = "w9" }}{{ else if ge $w 8.5 }}{{ $klasse = "w85" }}{{ else if ge $w 8.0 }}{{ $klasse = "w8" }}{{ else if gt $w 0.0 }}{{ $klasse = "w7" }}{{ end }}
-      {{- $titel := "" }}{{ with $s.titel }}{{ if le $f (len .) }}{{ $titel = index . $i }}{{ end }}{{ end }}
-      <td class="{{ $klasse }}"><span class="folgenkopf"><span class="lfd" title="Folge {{ add $basis $f }} der Serie">{{ add $basis $f }}</span>{{ with $titel }} {{ . }}{{ end }}</span>
+      {{- $titel := "" }}{{ with $s.titel }}{{ if le $f (len .) }}{{ $titel = index . $k }}{{ end }}{{ end }}
+      <td class="{{ $klasse }}"><span class="folgenkopf"><span class="lfd" title="Folge {{ add $z.basis $f }} der Serie">{{ add $z.basis $f }}</span>{{ with $titel }} {{ . }}{{ end }}</span>
         {{- if gt $w 0.0 }}{{ printf "%.1f" $w }}{{ else }}·{{ end }}
         {{- $folge := where (where $kritiken "Params.staffel" $s.nummer) "Params.folge" $f }}
         {{- range where $folge "Params.zweitstimme" "!=" true }}
@@ -39,7 +54,6 @@
         {{- end }}
       {{- end }}
     </tr>
-    {{- $basis = add $basis $s.folgen }}
     {{- end }}
   </tbody>
 </table>

@@ -13,5 +13,6 @@ darsteller = ["James Gandolfini", "Lorraine Bracco", "Edie Falco"]
 genre = ["Krimi", "Drama"]
 imdb = "https://www.imdb.com/de/title/tt0141842/"
 imdb_wertung = "9.2"
+daten = "sopranos"
 abgerufen = 2026-10-25
 +++
