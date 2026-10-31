@@ -124,8 +124,8 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-10-31: Schach-Buch, Aufgaben 11–34 mit Lösungen 10–31)
-- Offen: Kapiteltitel 2–6 von „1001 Deadly Chess Puzzles“ (Foto des Inhaltsverzeichnisses) und Lösungen 32–34 (Buchseite 28).
+- (leer – zuletzt freigegeben und gepusht am 2026-10-31: Schach-Buch, Kapitel 1 komplett mit 113 Aufgaben; Nummernprüfung in `fen-pruefen.pl`)
+- Offen: Kapiteltitel 2–6 von „1001 Deadly Chess Puzzles“ (Foto des Inhaltsverzeichnisses).
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 

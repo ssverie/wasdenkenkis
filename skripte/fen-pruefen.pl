@@ -3,7 +3,10 @@
 # Aufruf: perl skripte/fen-pruefen.pl <datei>   – oder: perl skripte/fen-pruefen.pl data/schach/<buch>.toml
 # Bei TOML-Dateien werden alle Zeilen  fen = "…"  geprüft (mit der Nummer aus  nr = …  davor).
 # Prüft: 8 Reihen à 8 Felder, je ein König, keine Bauern auf Reihe 1/8, höchstens 8 Bauern und 16 Steine
-# je Seite, Seite nicht am Zug steht nicht im Schach, Könige nicht nebeneinander. Gibt die Zahl der Fehler aus.
+# je Seite, Seite nicht am Zug steht nicht im Schach, Könige nicht nebeneinander, Rochaderechte passen.
+# Bei TOML-Dateien außerdem die Nummern der [[aufgabe]]-Blöcke: doppelte Nummer, Aufgabe ohne fen oder ohne
+# bekanntes Kapitel = Fehler; Lücken in der Nummernfolge (z. B. 35 fehlt, 36 ist da) = nur Hinweis, weil eine
+# Lieferung absichtlich eine Seite überspringen kann. Gibt am Ende die Zahl der Fehler aus.
 use strict;
 use warnings;
 
@@ -11,15 +14,28 @@ my $datei = shift or die "Aufruf: perl skripte/fen-pruefen.pl <datei>\n";
 open my $fh, '<:encoding(UTF-8)', $datei or die "Kann $datei nicht lesen: $!\n";
 my @stellungen;
 my $nr = '';
+my $toml = $datei =~ /\.toml$/;
+my ($block, %auf, @aufgaben, %kapitel) = ('');
 while (my $z = <$fh>) {
     chomp $z;
-    if ($z =~ /^\s*nr\s*=\s*(\d+)/) { $nr = $1; next }
-    if ($z =~ /^\s*fen\s*=\s*"([^"]+)"/) { push @stellungen, [$nr, $1]; next }
+    if ($z =~ /^\s*\[\[(\w+)\]\]/) {
+        push @aufgaben, {%auf} if $block eq 'aufgabe';
+        $block = $1; %auf = (); next;
+    }
+    if ($z =~ /^\s*nr\s*=\s*(\d+)/) {
+        $nr = $1;
+        $kapitel{$1} = 1 if $block eq 'kapitel';
+        $auf{nr} = $1 if $block eq 'aufgabe';
+        next;
+    }
+    if ($z =~ /^\s*kapitel\s*=\s*(\d+)/) { $auf{kapitel} = $1 if $block eq 'aufgabe'; next }
+    if ($z =~ /^\s*fen\s*=\s*"([^"]+)"/) { push @stellungen, [$nr, $1]; $auf{fen} = $1 if $block eq 'aufgabe'; next }
     next if $z =~ /^\s*(#|$)/;
-    next if $datei =~ /\.toml$/;
+    next if $toml;
     if ($z =~ /^\s*(\d+)\s+(\S.*)$/) { push @stellungen, [$1, $2] }
     else { push @stellungen, ['?', $z] }
 }
+push @aufgaben, {%auf} if $block eq 'aufgabe';
 close $fh;
 
 my $fehler = 0;
@@ -27,6 +43,22 @@ for my $s (@stellungen) {
     my ($n, $fen) = @$s;
     my @f = pruefe($fen);
     if (@f) { $fehler++; print "Nr. $n: ", join('; ', @f), "\n" }
+}
+
+# Nummern der Aufgaben (nur TOML)
+if (@aufgaben) {
+    my %gesehen;
+    for my $x (@aufgaben) {
+        my $n = $x->{nr} // '?';
+        if ($n eq '?') { $fehler++; print "Aufgabe ohne nr\n"; next }
+        if ($gesehen{$n}++) { $fehler++; print "Nr. $n: doppelt\n" }
+        unless (defined $x->{fen}) { $fehler++; print "Nr. $n: ohne fen\n" }
+        unless (defined $x->{kapitel} && $kapitel{$x->{kapitel}}) { $fehler++; print "Nr. $n: Kapitel fehlt oder unbekannt\n" }
+    }
+    my @nummern = sort { $a <=> $b } keys %gesehen;
+    my @luecken = grep { !$gesehen{$_} } $nummern[0] .. $nummern[-1];
+    print "Hinweis: Lücke bei Nr. ", join(', ', @luecken), "\n" if @luecken;
+    print "Aufgaben: ", scalar(@nummern), " (Nr. $nummern[0]–$nummern[-1])\n";
 }
 print "$fehler\n";
 exit($fehler ? 1 : 0);
