@@ -1,0 +1,25 @@
+{{- /* Beiträge zu einem KI-Forscher (Seite unter /wissen/ki/ki-forscher/, seit 2026-10-31, Sven: „da alle beiträge von diesen verlinken“).
+       Gefunden wird automatisch über `suchname` im Front-Matter der Forscherseite:
+         folgen   = Podcastfolgen (Begriffe der Taxonomie podcasts), deren `gast` den Namen enthält
+         texte    = Texte der KIs zu diesen Folgen (podcast-texte mit passendem `podcasts`)
+         erwaehnt = alle übrigen Beiträge, deren Titel oder Text den Namen nennt
+         kanaele  = Einträge aus data/links.toml, deren Name den Namen enthält
+       Aufruf: partialCached "forscher-beitraege.html" . .RelPermalink */ -}}
+{{- $name := .Params.suchname }}
+{{- $folgen := slice }}{{ $schluessel := slice }}{{ $texte := slice }}{{ $erwaehnt := slice }}{{ $kanaele := slice }}
+{{- range site.Pages }}
+  {{- if and (eq .Section "podcasts") (eq .Kind "term") (findRE $name (string .Params.gast)) }}
+    {{- $folgen = $folgen | append . }}{{ $schluessel = $schluessel | append (path.Base .RelPermalink) }}
+  {{- end }}
+{{- end }}
+{{- range site.RegularPages }}
+  {{- if and (eq .Section "podcast-texte") (intersect $schluessel (.Params.podcasts | default slice)) }}
+    {{- $texte = $texte | append . }}
+  {{- else if and (ne .Params.layout "forscher") (or (findRE $name .Title) (findRE $name .Plain)) }}
+    {{- $erwaehnt = $erwaehnt | append . }}
+  {{- end }}
+{{- end }}
+{{- range hugo.Data.links.eintrag }}
+  {{- if findRE $name .name }}{{ $kanaele = $kanaele | append . }}{{ end }}
+{{- end }}
+{{- return dict "folgen" (sort $folgen "Params.erschienen" "desc") "texte" (sort $texte "Date" "desc") "erwaehnt" (sort $erwaehnt "Date" "desc") "kanaele" $kanaele "anzahl" (add (len $folgen) (len $texte) (len $erwaehnt)) }}

@@ -313,6 +313,12 @@ enableRobotsTXT = true
     parent = "wissen-ki"
     weight = 3
   [[menus.main]]
+    # KI-Forscher seit 2026-10-31 (Sven): je Forscher eine Seite mit allen Beiträgen zu ihm
+    name = "KI-Forscher"
+    pageRef = "/wissen/ki/ki-forscher"
+    parent = "wissen-ki"
+    weight = 4
+  [[menus.main]]
     # IT-Konzepte seit 2026-10-26 als Gruppe unter Wissen (Sven: „3 Kacheln“): Grundlagen, Algorithmen, Design Patterns als dritte Ebene
     name = "IT-Konzepte"
     identifier = "it-konzepte"

@@ -1,0 +1,20 @@
+{{- /* KI-Forscher (/wissen/ki/ki-forscher/, seit 2026-10-31): eine Kachel je Forscherseite, Reihenfolge nach `weight` */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  {{- with .Parent }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+<ul class="karten">
+  {{- range .Pages.ByWeight }}
+  {{- $b := partialCached "forscher-beitraege.html" . .RelPermalink }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>{{ .Title }}</strong>
+      {{- with .Params.kurz }}<span>{{ . }}</span>{{ end }}
+      <small>{{ $b.anzahl }} {{ cond (eq $b.anzahl 1) "Beitrag" "Beiträge" }}</small>
+    </a>
+  </li>
+  {{- end }}
+</ul>
+{{ end }}

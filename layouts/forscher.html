@@ -1,0 +1,52 @@
+{{- /* Seite eines KI-Forschers (seit 2026-10-31): Eckdaten, dann alle Beiträge der Seite zu ihm (Partial forscher-beitraege.html) */ -}}
+{{ define "main" }}
+{{- $b := partialCached "forscher-beitraege.html" . .RelPermalink }}
+<article class="beitrag">
+  <header class="seitenkopf">
+    {{- with .Parent }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
+    <h1>{{ .Title }}</h1>
+    {{- with .Description }}<p class="lead">{{ . }}</p>{{ end }}
+  </header>
+
+  <aside class="herkunft filmdaten" aria-label="Eckdaten">
+    <dl>
+      {{- with .Params.geboren }}<dt>Geboren</dt><dd>{{ . }}</dd>{{ end }}
+      {{- with .Params.wirkt }}<dt>Wirkt</dt><dd>{{ . }}</dd>{{ end }}
+      {{- with .Params.bekannt }}<dt>Bekannt für</dt><dd>{{ . }}</dd>{{ end }}
+      {{- range $b.kanaele }}<dt>Eigener Kanal</dt><dd><a href="{{ .url }}" rel="noopener">{{ .name }} ↗</a></dd>{{ end }}
+      {{- with .Params.wikipedia }}<dt>Wikipedia</dt><dd><a href="{{ . }}" rel="noopener">{{ $.Params.wikipedia_text | default "Zur Person auf Wikipedia" }} ↗</a></dd>{{ end }}
+      {{- with .Params.abgerufen }}<dt>Stand</dt><dd>{{ . | time.Format ":date_long" }}</dd>{{ end }}
+    </dl>
+  </aside>
+
+  <div class="inhalt">{{ .Content }}</div>
+</article>
+
+{{- with $b.folgen }}
+<section>
+  <h2>Gespräche und Vorträge</h2>
+  <ul class="liste">
+    {{- range . }}
+    <li><div>
+      <a class="liste-titel" href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <div class="meta">{{ with .Params.erschienen }}{{ . | time.Format ":date_long" }}{{ end }}{{ with .Params.sendung }} · {{ . }}{{ end }}{{ with .Params.laenge }} · {{ . }}{{ end }}</div>
+    </div></li>
+    {{- end }}
+  </ul>
+</section>
+{{- end }}
+
+{{- with $b.texte }}
+<section>
+  <h2>Was die KIs zu diesen Gesprächen schreiben</h2>
+  {{ partial "liste.html" . }}
+</section>
+{{- end }}
+
+{{- with $b.erwaehnt }}
+<section>
+  <h2>Erwähnt in</h2>
+  {{ partial "liste.html" . }}
+</section>
+{{- end }}
+{{ end }}
