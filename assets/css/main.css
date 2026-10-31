@@ -11,6 +11,8 @@
   --heat-1: #e3f1ef;   /* IMDb 8,0–8,4 */
   --heat-2: #c2e2dd;   /* IMDb 8,5–8,9 */
   --heat-3: #95cfc6;   /* IMDb ab 9,0 */
+  --kalt-1: #f6ead2;   /* IMDb 6,0–6,9 (Sven, 2026-10-31) */
+  --kalt-2: #f3d2cd;   /* IMDb unter 6,0 */
   /* Ganz automatisch (Svens Wahl): keine Obergrenze, die Seite füllt jede Bildschirmbreite.
      Früher begrenzt: --breite: 44rem (Lesetexte), --breite-weit: 72rem (Übersichten). */
   --breite: none;
@@ -34,6 +36,8 @@
     --heat-1: #1d3533;
     --heat-2: #24504b;
     --heat-3: #2f6f68;
+    --kalt-1: #3a3220;
+    --kalt-2: #4a2a2a;
     color-scheme: dark;
   }
 }
@@ -216,6 +220,8 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .folgen-raster td.w8 { background: var(--heat-1); }
 .folgen-raster td.w85 { background: var(--heat-2); }
 .folgen-raster td.w9 { background: var(--heat-3); font-weight: 700; }
+.folgen-raster td.w6 { background: var(--kalt-1); }
+.folgen-raster td.w5 { background: var(--kalt-2); }
 
 .folgen-nav {
   display: grid;

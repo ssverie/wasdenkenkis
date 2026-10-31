@@ -39,7 +39,7 @@
           {{- $w := 0.0 }}
           {{- if lt $k (len $s.imdb) }}{{ $w = index $s.imdb $k }}{{ end }}
           {{- $klasse := "w0" }}
-          {{- if ge $w 9.0 }}{{ $klasse = "w9" }}{{ else if ge $w 8.5 }}{{ $klasse = "w85" }}{{ else if ge $w 8.0 }}{{ $klasse = "w8" }}{{ else if gt $w 0.0 }}{{ $klasse = "w7" }}{{ end }}
+          {{- if ge $w 9.0 }}{{ $klasse = "w9" }}{{ else if ge $w 8.5 }}{{ $klasse = "w85" }}{{ else if ge $w 8.0 }}{{ $klasse = "w8" }}{{ else if ge $w 7.0 }}{{ $klasse = "w7" }}{{ else if ge $w 6.0 }}{{ $klasse = "w6" }}{{ else if gt $w 0.0 }}{{ $klasse = "w5" }}{{ end }}
       {{- $titel := "" }}{{ with $s.titel }}{{ if le $f (len .) }}{{ $titel = index . $k }}{{ end }}{{ end }}
       <td class="{{ $klasse }}"><span class="folgenkopf"><span class="lfd" title="Folge {{ add $z.basis $f }} der Serie">{{ add $z.basis $f }}</span>{{ with $titel }} {{ . }}{{ end }}</span>
         {{- if gt $w 0.0 }}{{ printf "%.1f" $w }}{{ else }}·{{ end }}
