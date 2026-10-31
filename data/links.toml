@@ -65,6 +65,20 @@ text = "Steven Bartletts englischsprachiger Interview-Podcast, meist lange Gespr
   url = "/podcasts/doac-jeffrey-ladish/"
 
 [[eintrag]]
+name = "David Shapiro"
+url = "https://www.youtube.com/@DaveShap/videos"
+kategorie = "YouTube-Kanäle"
+thema = "ki"
+sprache = "en"
+abonnenten = 191000
+stand = 2026-10-31
+seit = 2026-10-31
+text = "Englischsprachiger Solo-Kanal von David Shapiro, täglich ein neues Video. Nach eigener Beschreibung geht es um „Post-Labor Economics“, große KI-Nachrichten und das Leben nach der Erwerbsarbeit, allgemein um die Singularität. Zuletzt etwa: platzt die KI-Blase, wie schnell der Übergang kommt, Kritik an Dario Amodei, rekursive Selbstverbesserung, warum ein Grundeinkommen nicht reicht. Klare, oft zugespitzte Thesen, etwa „Acceleration is 100% inevitable“."
+  [[eintrag.unterlinks]]
+  name = "Folge „Versteht KI wirklich?“ auf dieser Seite"
+  url = "/podcasts/david-shapiro-versteht-ki/"
+
+[[eintrag]]
 name = "Smart Girl Dumb Questions (Nayeema Raza)"
 url = "https://www.youtube.com/@SmartGirlDumbQuestions/videos"
 kategorie = "YouTube-Kanäle"
