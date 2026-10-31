@@ -1,2 +1,82 @@
 # IT-KI – Svens IT-Bücher über KI (seit 2026-10-30), Aufbau wie data/itbuch.toml; Reihenfolge der Anzeige: nach sortjahr (neuestes oben)
-buch = []
+# Erste Lieferung 2026-10-31: KI-Reihe der Instanz „29.10.2026 - 10:50 - IT-Books“ (zehn Bücher)
+
+[[buch]]
+titel = "AI Engineering"
+autor = "Chip Huyen"
+jahr = "2025"
+sortjahr = 2025
+gebiet = "KI-Anwendungen, Sprachmodelle"
+schluessel = "ai-engineering-2025"
+
+[[buch]]
+titel = "Build a Large Language Model (From Scratch)"
+autor = "Sebastian Raschka"
+jahr = "2024"
+sortjahr = 2024
+gebiet = "Sprachmodelle, Grundlagen"
+schluessel = "build-a-large-language-model-2024"
+
+[[buch]]
+titel = "Hands-On Large Language Models"
+autor = "Jay Alammar, Maarten Grootendorst"
+jahr = "2024"
+sortjahr = 2024
+gebiet = "Sprachmodelle, Praxis"
+schluessel = "hands-on-large-language-models-2024"
+
+[[buch]]
+titel = "Designing Machine Learning Systems"
+autor = "Chip Huyen"
+jahr = "2022"
+sortjahr = 2022
+gebiet = "Machine Learning, Betrieb"
+schluessel = "designing-machine-learning-systems-2022"
+
+[[buch]]
+titel = "Hands-On Machine Learning"
+autor = "Aurélien Géron"
+jahr = "2025"
+sortjahr = 2025
+gebiet = "Machine Learning, Praxis"
+schluessel = "hands-on-machine-learning-2025"
+
+[[buch]]
+titel = "Understanding Deep Learning"
+autor = "Simon J. D. Prince"
+jahr = "2023"
+sortjahr = 2023
+gebiet = "Deep Learning, Theorie"
+schluessel = "understanding-deep-learning-2023"
+
+[[buch]]
+titel = "Deep Learning"
+autor = "Ian Goodfellow, Yoshua Bengio, Aaron Courville"
+jahr = "2016"
+sortjahr = 2016
+gebiet = "Deep Learning, Theorie"
+schluessel = "deep-learning-2016"
+
+[[buch]]
+titel = "Artificial Intelligence: A Modern Approach"
+autor = "Stuart Russell, Peter Norvig"
+jahr = "2020"
+sortjahr = 2020
+gebiet = "KI-Grundlagen"
+schluessel = "artificial-intelligence-a-modern-approach-2020"
+
+[[buch]]
+titel = "The Alignment Problem"
+autor = "Brian Christian"
+jahr = "2020"
+sortjahr = 2020
+gebiet = "KI-Sicherheit, Ethik"
+schluessel = "the-alignment-problem-2020"
+
+[[buch]]
+titel = "Artificial Intelligence: A Guide for Thinking Humans"
+autor = "Melanie Mitchell"
+jahr = "2019"
+sortjahr = 2019
+gebiet = "KI-Grundlagen, Kritik"
+schluessel = "artificial-intelligence-guide-for-thinking-humans-2019"
