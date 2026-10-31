@@ -433,6 +433,8 @@ gruppe = "menschheit"
 text = "Kann eine Gesellschaft zu tolerant werden? Wo endet Offenheit, und wo beginnt die Selbstauflösung ihrer eigenen Grundlagen?"
   [[frage.antwort]]
   pfad = "/fragen/toleranz-gpt-6"
+  [[frage.antwort]]
+  pfad = "/fragen/toleranz-2-gpt-6"
 
 [[frage]]
 gruppe = "menschheit"
@@ -445,6 +447,8 @@ gruppe = "menschheit"
 text = "Warum wiederholen Gesellschaften historische Fehler, obwohl sie deren Folgen kennen? Ist kollektives Lernen vielleicht eine Illusion?"
   [[frage.antwort]]
   pfad = "/fragen/historische-fehler-gpt-6"
+  [[frage.antwort]]
+  pfad = "/fragen/historische-fehler-2-gpt-6"
 
 [[frage]]
 gruppe = "menschheit"
@@ -505,6 +509,8 @@ gruppe = "menschheit"
 text = "Ist Vergebung eine moralische Leistung oder manchmal nur eine elegante Form der Kapitulation? Kann es Dinge geben, die grundsätzlich unverzeihlich sind?"
   [[frage.antwort]]
   pfad = "/fragen/vergebung-gpt-6"
+  [[frage.antwort]]
+  pfad = "/fragen/vergebung-2-gpt-6"
 
 [[frage]]
 gruppe = "menschheit"
@@ -529,6 +535,8 @@ gruppe = "menschheit"
 text = "Würde eine Welt ohne Arbeit die Menschen befreien oder ihnen ihren Lebensinhalt nehmen? Was geschieht mit einer Gesellschaft, in der niemand mehr gebraucht wird, um etwas zu produzieren?"
   [[frage.antwort]]
   pfad = "/fragen/arbeit-gpt-6"
+  [[frage.antwort]]
+  pfad = "/fragen/arbeit-2-gpt-6"
 
 [[frage]]
 gruppe = "menschheit"
@@ -553,6 +561,8 @@ gruppe = "menschheit"
 text = "Warum benötigen Menschen Feindbilder, selbst wenn ihre Lebensbedingungen gut sind? Würde eine Menschheit ohne äußere Gegner irgendwann anfangen, neue zu erfinden?"
   [[frage.antwort]]
   pfad = "/fragen/feindbilder-gpt-6"
+  [[frage.antwort]]
+  pfad = "/fragen/feindbilder-2-gpt-6"
 
 [[frage]]
 gruppe = "menschheit"
@@ -565,6 +575,8 @@ gruppe = "menschheit"
 text = "Was wäre die wichtigste Frage, die sich die Menschheit bislang noch gar nicht gestellt hat? Und könnte eine KI sie entdecken, obwohl auch sie aus dem bisherigen menschlichen Wissen hervorgegangen ist?"
   [[frage.antwort]]
   pfad = "/fragen/wichtigste-frage-gpt-6"
+  [[frage.antwort]]
+  pfad = "/fragen/wichtigste-frage-2-gpt-6"
 
 [[frage]]
 gruppe = "menschheit"
@@ -625,6 +637,54 @@ gruppe = "menschheit"
 text = "Haben wir verlernt, uns zu langweilen – und verlieren wir damit die Fähigkeit, eigene Gedanken zu entwickeln?"
   [[frage.antwort]]
   pfad = "/fragen/langeweile-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist Fortschritt wirklich eine Verbesserung unseres Lebens – oder werden wir nur immer besser darin, Probleme zu lösen, die wir vorher nicht hatten?"
+  [[frage.antwort]]
+  pfad = "/fragen/fortschritt-preis-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum sehnen sich Menschen nach Freiheit – und haben gleichzeitig Angst davor, selbst entscheiden zu müssen?"
+  [[frage.antwort]]
+  pfad = "/fragen/angst-vor-freiheit-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum fällt es Menschen so schwer, mit Unsicherheit zu leben – und warum ziehen sie manchmal eine falsche Gewissheit einer ehrlichen Ungewissheit vor?"
+  [[frage.antwort]]
+  pfad = "/fragen/gewissheit-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Kann eine Gesellschaft ohne Vertrauen funktionieren – und was geschieht, wenn jeder ständig Beweise verlangt?"
+  [[frage.antwort]]
+  pfad = "/fragen/misstrauen-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist der Mensch von Natur aus gut – oder wird er nur durch Regeln und Konsequenzen davon abgehalten, böse zu handeln?"
+  [[frage.antwort]]
+  pfad = "/fragen/natur-des-menschen-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum wünschen sich Menschen Anerkennung von anderen, obwohl sie behaupten, unabhängig von deren Meinung zu sein?"
+  [[frage.antwort]]
+  pfad = "/fragen/hunger-nach-anerkennung-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist Gerechtigkeit überhaupt möglich, wenn Menschen mit völlig unterschiedlichen Voraussetzungen ins Leben starten?"
+  [[frage.antwort]]
+  pfad = "/fragen/lotterie-der-geburt-gpt-6"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Wird die Menschheit ihre Zukunft selbst bestimmen – oder gibt sie diese Entscheidung schrittweise an KI ab?"
+  [[frage.antwort]]
+  pfad = "/fragen/zukunft-und-ki-gpt-6"
 
 
 # ---------- Sven: Svens eigene Fragen ----------
