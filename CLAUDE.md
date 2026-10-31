@@ -19,6 +19,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Eingang: `input\` → Seite → `input-arc\`
 - Sven legt neues Material in `C:\Projekte\opus-55\input\`, sortiert nach Modell-Unterordnern (`Claude\`, `GPT\`, `Grok\`, …). Der Ordnername ist die Modellfamilie.
 - Claude baut es in die Seite ein und **verschiebt danach jede verarbeitete Datei** nach `input-arc\<JJJJ-MM-TT>\<Modell>\` (Datum des Einbaus). Die leeren Modell-Unterordner in `input\` bleiben stehen.
+- **Bei jedem Link von Sven (Podcast, Film …) zuerst `input\` ansehen** – Transkript und Analysen liegen oft schon dort (2026-10-31 bei Hinton übersehen).
 - Sonderordner `input\_links\`: Textdateien mit URLs → Einträge in `data/links.toml` (Seite vorher lesen, Kurzbeschreibung sachlich).
 - Texte kommen auch als `.docx` (z. B. aus Claude Docs): Text unverändert übernehmen, nur Überschriften als Markdown setzen; Titel/Untertitel/Byline aus dem Kopf **wortgleich** ins Front-Matter (Untertitel = `description`) – nie durch eigene Formulierungen ersetzen; Wünsche der Instanz dazu gelten.
 - **Kopier-Reste entfernen (Sven, 2026-10-25):** Sven kopiert manche Texte von Hand aus dem Chatfenster; was dabei hineinrutscht und nicht zum Text gehört (z. B. Beschriftungen von Quellen-Schaltflächen wie „PubMed“, „+1“, Leerzeilen-Blöcke), wieder herausnehmen – Wortlaut sonst unverändert, Wortvergleich ohne die Reste, Sven beim Einbau sagen, was entfernt wurde.
@@ -123,7 +124,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-10-31: Folge „Geoffrey Hinton bei Smart Girl Dumb Questions“)
+- (leer – zuletzt freigegeben und gepusht am 2026-10-31: GPT-6-Analyse „Podcastanalyse – Geoffrey Hinton: Wie gefährlich wird KI?“)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
