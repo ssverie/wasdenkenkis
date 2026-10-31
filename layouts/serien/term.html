@@ -28,6 +28,14 @@
   {{- end }}
 </article>
 
+{{- /* Gesamteinschätzungen (gesamt = true, ohne Staffel und Folge) eigener Abschnitt über dem Raster; in „Bisher besprochen“ nur Folgen */}}
+{{- with where .Pages "Params.gesamt" true }}
+<section>
+  <h2>Gesamteinschätzung</h2>
+  {{ partial "liste.html" . }}
+</section>
+{{- end }}
+
 {{- with .Params.daten }}
   {{- with index hugo.Data.serien . }}
 <section>
@@ -39,7 +47,7 @@
 
 <section>
   <h2>Bisher besprochen</h2>
-  {{- with .Pages }}
+  {{- with where .Pages "Params.gesamt" "!=" true }}
   {{- /* Neueste Staffel oben, innerhalb der Staffel in Folgenreihenfolge (Svens Regel) */}}
   {{- $staffeln := slice }}
   {{- range . }}{{ $staffeln = $staffeln | append .Params.staffel }}{{ end }}
