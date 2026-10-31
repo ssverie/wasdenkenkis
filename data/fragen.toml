@@ -686,6 +686,34 @@ text = "Wird die Menschheit ihre Zukunft selbst bestimmen – oder gibt sie dies
   [[frage.antwort]]
   pfad = "/fragen/zukunft-und-ki-gpt-6"
 
+[[frage]]
+gruppe = "menschheit"
+text = "Ist die Fähigkeit zur Selbsttäuschung vielleicht eine Voraussetzung dafür, psychisch gesund zu bleiben? Was würde mit einem Menschen geschehen, der sich selbst vollkommen objektiv betrachten könnte – ohne Beschönigung, Verdrängung oder Illusionen?"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum können Menschen das Leiden anderer verstehen und trotzdem gleichgültig bleiben? Ist Mitgefühl tatsächlich eine moralische Kraft, oder bleibt es häufig ein angenehmes Gefühl ohne Konsequenzen?"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist der Mensch überhaupt dafür geschaffen, dauerhaft glücklich zu sein? Oder ist sein Bewusstsein darauf ausgerichtet, ständig neue Probleme, Mängel und Gefahren zu entdecken – selbst im Paradies?"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Wie viel Wahrheit verträgt eine menschliche Gesellschaft? Könnte eine Gesellschaft überhaupt funktionieren, wenn jeder jederzeit vollkommen ehrlich wäre – in der Politik, in Beziehungen und gegenüber sich selbst?"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Warum zerstören Menschen manchmal gerade das, was sie am meisten lieben? Sind Verlustangst, Eifersucht und das Bedürfnis nach Kontrolle möglicherweise gefährlicher für die Liebe als fehlende Zuneigung?"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Ist ein Mensch noch moralisch verantwortlich, wenn seine Entscheidungen vollständig durch Gene, Erfahrungen und Gehirnprozesse verursacht werden? Wenn der freie Wille eine Illusion wäre: Was würde dann aus Schuld, Strafe, Verdienst und Gerechtigkeit?"
+
+[[frage]]
+gruppe = "menschheit"
+text = "Was geschieht mit einer Zivilisation, die keine gemeinsamen Ziele mehr besitzt? Kann eine Gesellschaft allein durch Wohlstand, Gesetze und individuelle Freiheit zusammengehalten werden – oder braucht sie eine gemeinsame Vorstellung davon, wofür sie existiert?"
+
 
 # ---------- Sven: Svens eigene Fragen ----------
 
