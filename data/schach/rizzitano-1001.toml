@@ -1183,3 +1183,77 @@ partie = "Erenberg – Kochavi"
 turnier = "Israeli Team Ch 2023"
 loesung = "22...a4! 23.Dxc4 dxc4 24.Sxd6 e5 –+"
 varianten = ["Partie: 23.Txc4 axb3 0-1"]
+
+# Abschnitt 2 = Elementary Test, Buchseiten 36–37 (Foto vom 01.11.2026); Lösungen ab Buchseite 44 folgen
+
+[[aufgabe]]
+nr = 114
+kapitel = 2
+seite = 36
+fen = "r1b2rk1/2q2pbp/p1p3p1/3p4/3B4/5P2/PPPQB1PP/2KR3R w - - 0 1"
+
+[[aufgabe]]
+nr = 115
+kapitel = 2
+seite = 36
+fen = "4r1k1/4p2p/p2p2q1/3b2p1/P2B4/1r4RP/4QPP1/3R2K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 116
+kapitel = 2
+seite = 36
+fen = "2rr4/3Pkp2/p4p2/1p3P2/2p2p2/7R/PPP4P/1K1R4 w - - 0 1"
+
+[[aufgabe]]
+nr = 117
+kapitel = 2
+seite = 36
+fen = "r5k1/p3qppp/R7/5Q2/2n4P/4P3/4rPP1/R5K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 118
+kapitel = 2
+seite = 36
+fen = "2rr2k1/pp1bqppp/5nn1/2b5/3N4/P1N1P3/1PQBBPPP/R4RK1 b - - 0 1"
+
+[[aufgabe]]
+nr = 119
+kapitel = 2
+seite = 36
+fen = "5r1k/1p2N1Rp/p3bP2/2p3Rp/6r1/8/PPP4P/2K5 w - - 0 1"
+
+[[aufgabe]]
+nr = 120
+kapitel = 2
+seite = 37
+fen = "r1b1k2r/pp2ppbp/2n3p1/2q5/4QB2/2P2N2/PP2BPPP/R3K2R b - - 0 1"
+
+[[aufgabe]]
+nr = 121
+kapitel = 2
+seite = 37
+fen = "6k1/6b1/3Br1p1/3qP2p/7P/4Q1P1/8/4R1K1 b - - 0 1"
+
+[[aufgabe]]
+nr = 122
+kapitel = 2
+seite = 37
+fen = "2r2kr1/1p1qn2p/pB1pbb2/4pp1B/2P2P2/1P6/P1N3PP/R2Q1RK1 b - - 0 1"
+
+[[aufgabe]]
+nr = 123
+kapitel = 2
+seite = 37
+fen = "r1r3k1/p3p1bp/Q1q1p1p1/8/8/4B2P/PP3PP1/R2R2K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 124
+kapitel = 2
+seite = 37
+fen = "r4rk1/p2npp1p/2pp1np1/7q/1p1PPP2/3BQ3/PPPN2PP/3R1RK1 b - - 0 1"
+
+[[aufgabe]]
+nr = 125
+kapitel = 2
+seite = 37
+fen = "3r1kr1/2Q1bp2/4p3/p3P2p/5P1P/P7/1q2BP1R/3R1K2 b - - 0 1"
