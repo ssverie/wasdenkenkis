@@ -12,5 +12,6 @@ darsteller = ["Dominic West", "Lance Reddick", "Sonja Sohn"]
 genre = ["Krimi", "Drama", "Thriller"]
 imdb = "https://www.imdb.com/de/title/tt0306414/"
 imdb_wertung = "9.3"
+daten = "the-wire"
 abgerufen = 2026-10-25
 +++

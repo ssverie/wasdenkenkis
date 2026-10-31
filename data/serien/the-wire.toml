@@ -1,0 +1,40 @@
+# IMDb-Wertungen der Episoden von The Wire.
+# Quelle: IMDb-Episodenübersicht, Screenshots von Sven (31.10.2026, vollständig alle 60 Folgen).
+# Je Staffel: Anzahl Folgen, IMDb-Durchschnitt der Staffel, Wertungen in Folgen-Reihenfolge.
+# titel: englische Folgentitel aus dem Wikipedia-Artikel „List of The Wire episodes“ (abgerufen 31.10.2026).
+abgerufen = 2026-10-31
+
+[[staffel]]
+  nummer = 1
+  folgen = 13
+  titel = ["The Target", "The Detail", "The Buys", "Old Cases", "The Pager", "The Wire", "One Arrest", "Lessons", "Game Day", "The Cost", "The Hunt", "Cleaning Up", "Sentencing"]
+  schnitt = 8.5
+  imdb = [7.8, 8.1, 8.1, 8.2, 8.2, 8.5, 8.4, 8.4, 8.7, 9.2, 8.8, 9.1, 9.0]
+
+[[staffel]]
+  nummer = 2
+  folgen = 12
+  titel = ["Ebb Tide", "Collateral Damage", "Hot Shots", "Hard Cases", "Undertow", "All Prologue", "Backwash", "Duck and Cover", "Stray Rounds", "Storm Warnings", "Bad Dreams", "Port in a Storm"]
+  schnitt = 8.4
+  imdb = [7.6, 8.0, 8.0, 8.0, 8.1, 8.8, 8.2, 8.3, 8.5, 9.0, 9.2, 9.0]
+
+[[staffel]]
+  nummer = 3
+  folgen = 12
+  titel = ["Time After Time", "All Due Respect", "Dead Soldiers", "Hamsterdam", "Straight and True", "Homecoming", "Back Burners", "Moral Midgetry", "Slapstick", "Reformation", "Middle Ground", "Mission Accomplished"]
+  schnitt = 8.6
+  imdb = [7.9, 8.2, 8.3, 8.3, 8.5, 8.6, 8.5, 8.9, 8.7, 8.7, 9.6, 9.3]
+
+[[staffel]]
+  nummer = 4
+  folgen = 13
+  titel = ["Boys of Summer", "Soft Eyes", "Home Rooms", "Refugees", "Alliances", "Margin of Error", "Unto Others", "Corner Boys", "Know Your Place", "Misgivings", "A New Day", "That's Got His Own", "Final Grades"]
+  schnitt = 8.7
+  imdb = [8.3, 8.4, 8.6, 8.3, 8.4, 8.7, 8.4, 8.5, 8.5, 8.8, 8.9, 9.3, 9.6]
+
+[[staffel]]
+  nummer = 5
+  folgen = 10
+  titel = ["More with Less", "Unconfirmed Reports", "Not for Attribution", "Transitions", "React Quotes", "The Dickensian Aspect", "Took", "Clarifications", "Late Editions", "-30-"]
+  schnitt = 8.7
+  imdb = [8.0, 8.1, 8.5, 8.8, 8.6, 8.3, 8.4, 8.9, 9.4, 9.6]
