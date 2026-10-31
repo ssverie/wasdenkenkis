@@ -4,6 +4,8 @@
     {{- /* Rückweg: Elternbereich, bei Steckbriefen das Modell (der Bereich /steckbriefe/ selbst wird nicht ausgegeben) */}}
     {{- $oben := .Parent }}
     {{- if eq .Section "steckbriefe" }}{{ range first 1 (.GetTerms "modelle") }}{{ $oben = . }}{{ end }}{{ end }}
+    {{- /* Kapitelseiten von Schachaufgaben-Büchern: zurück zur Buchseite (schachbuch = Buchschlüssel) */}}
+    {{- with .Params.schachbuch }}{{ with site.GetPage (printf "/buecher/%s" .) }}{{ $oben = . }}{{ end }}{{ end }}
     {{- with $oben }}
     <a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>
     {{- end }}

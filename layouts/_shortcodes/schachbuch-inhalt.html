@@ -1,0 +1,22 @@
+{{- /* Inhaltsverzeichnis eines Schachaufgaben-Buchs auf der Buchseite (Sven: „toc als Zwischenschicht“):
+       {{< schachbuch-inhalt daten="rizzitano-1001" >}} – je Kapitel aus data/schach/<daten>.toml eine Zeile mit der Zahl der
+       eingebauten Aufgaben; verlinkt, sobald es die Kapitelseite content/schachaufgaben/<daten>/kapitel-<nr>.md gibt. */ -}}
+{{- $daten := .Get "daten" }}
+{{- $d := index site.Data.schach $daten }}
+<ol class="schachbuch-inhalt">
+  {{- range $d.kapitel }}
+    {{- $k := .nr }}
+    {{- $auf := where $d.aufgabe "kapitel" $k }}
+    {{- $seite := site.GetPage (printf "/schachaufgaben/%s/kapitel-%d" $daten $k) }}
+  <li>
+    <span class="nr">{{ $k }}</span>
+    {{- $name := cond (isset . "titel") .titel "Titel folgt" }}
+    {{- if and $seite $auf }}
+    <a href="{{ $seite.RelPermalink }}">{{ $name }}</a>
+    {{- else }}
+    <span class="offen">{{ $name }}</span>
+    {{- end }}
+    <span class="zahl">{{ with $auf }}{{ len . }} {{ cond (eq (len .) 1) "Aufgabe" "Aufgaben" }}{{ else }}noch keine Aufgaben{{ end }}</span>
+  </li>
+  {{- end }}
+</ol>

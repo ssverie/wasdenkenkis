@@ -16,6 +16,7 @@
          seit 2026-10-30 auch zur übergeordneten Liste (IT-Buch), weil die Unterlisten im Aufklappmenü fehlen */}}
   {{- $buch := cond (and (eq $seite.Section "buecher") (eq $seite.Kind "term")) $seite nil }}
   {{- if eq $seite.Section "buchtexte" }}{{ range first 1 ($seite.GetTerms "buecher") }}{{ $buch = . }}{{ end }}{{ end }}
+  {{- with $seite.Params.schachbuch }}{{ with site.GetPage (printf "/buecher/%s" .) }}{{ $buch = . }}{{ end }}{{ end }}
   {{- with $buch }}{{ if and $e.PageRef (hasPrefix (printf "/%s/" (.Params.liste | default "belletristik")) (printf "%s/" $e.PageRef)) }}{{ $aktiv = true }}{{ end }}{{ end }}
   {{- return $aktiv }}
 {{- end }}

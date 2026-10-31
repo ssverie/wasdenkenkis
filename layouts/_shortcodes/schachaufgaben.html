@@ -1,0 +1,51 @@
+{{- /* Schachaufgaben eines Buchs aus data/schach/<daten>.toml: {{< schachaufgaben daten="rizzitano-1001" kapitel="1" >}}
+       Steht auf der Kapitelseite (content/schachaufgaben/<daten>/kapitel-<n>.md); das Inhaltsverzeichnis auf der Buchseite
+       macht der Shortcode schachbuch-inhalt. Ohne kapitel= alle Kapitel untereinander, je mit Überschrift.
+       Je Aufgabe eine Zeile: links das Brett (immer aus Sicht von Weiß – Sven: „alles aus weisser sicht“) mit
+       „1) Weiß am Zug“ und FEN, rechts daneben die Lösung (Sven: „Lösung rechts daneben“), zugeklappt, damit man erst
+       selbst rechnen kann; oben ein Knopf, der alle Lösungen des Kapitels auf- oder zuklappt (assets/js/schachaufgaben.js).
+       Lösung: Partie, Turnier, Hauptlinie fett, darunter Nebenlinien. Auf schmalen Schirmen steht die Lösung unter dem Brett.
+       Prüfen: perl skripte/fen-pruefen.pl data/schach/<daten>.toml */ -}}
+{{- $d := index site.Data.schach (.Get "daten") }}
+{{- $nur := .Get "kapitel" }}
+{{- range $d.kapitel }}
+  {{- $k := .nr }}
+  {{- if or (not $nur) (eq (string $k) $nur) }}
+  {{- $auf := sort (where $d.aufgabe "kapitel" $k) "nr" }}
+  {{- if $auf }}
+<div class="kapitel-kopf">
+  {{- if not $nur }}
+  <h2 id="kapitel-{{ $k }}">Kapitel {{ $k }}{{ with .titel }}: {{ . }}{{ end }}</h2>
+  {{- end }}
+  <button type="button" class="alle-loesungen" aria-expanded="false" hidden>Alle Lösungen aufklappen</button>
+</div>
+<ol class="schachaufgaben">
+  {{- range $auf }}
+    {{- $schwarz := eq (index (split .fen " ") 1) "b" }}
+  <li id="aufgabe-{{ .nr }}">
+    <figure class="schach-diagramm">
+      {{ partial "schach-brett.html" (dict "fen" .fen "immer_weiss" true) }}
+      <figcaption><strong>{{ .nr }}) {{ cond $schwarz "Schwarz" "Weiß" }} am Zug</strong><code class="fen">{{ .fen }}</code></figcaption>
+    </figure>
+    <details class="schachloesung">
+      <summary>Lösung {{ .nr }}</summary>
+      {{- with .partie }}<p class="partie">{{ . }}{{ end }}{{ with .turnier }}<br><em>{{ . }}</em>{{ end }}{{ if .partie }}</p>{{ end }}
+      {{- with .loesung }}
+      <p class="hauptlinie"><strong>{{ . }}</strong></p>
+      {{- else }}
+      <p class="hauptlinie">Züge folgen.</p>
+      {{- end }}
+      {{- with .varianten }}
+      <ul class="varianten">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>
+      {{- end }}
+    </details>
+  </li>
+  {{- end }}
+</ol>
+  {{- end }}
+  {{- end }}
+{{- end }}
+{{- with resources.Get "js/schachaufgaben.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}
+<p class="stellungen-lizenz">Figuren: <a href="https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces" rel="noopener">Cburnett</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/deed.de" rel="noopener">CC BY-SA 3.0</a></p>

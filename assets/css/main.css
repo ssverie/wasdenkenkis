@@ -308,10 +308,11 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
   overflow: hidden;
   box-shadow: 0 2px 10px rgba(0,0,0,.25);
 }
-.brett .feld { position: relative; display: block; }
+.brett .feld { position: relative; display: block; aspect-ratio: 1; min-width: 0; }
 .brett .hell { background: #f0d9b5; }
 .brett .dunkel { background: #b58863; }
-.brett .figur { position: relative; width: 100%; height: 100%; display: block; }
+/* absolut, damit die Bildgröße (45 px) die Reihenhöhe nicht aufbläht – sonst werden die Felder bei kleinen Brettern höher als breit */
+.brett .figur { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 /* Alternative: blaues Brett wie in ChessBase (Auswahl über params.schachbrett = "blau") */
 .brett.brett-blau .hell { background: #eeeeee; }
 .brett.brett-blau .dunkel { background: #7d93c1; }
@@ -326,6 +327,31 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .stellungen .mini .brett { box-shadow: 0 1px 4px rgba(0,0,0,.25); }
 .stellungen .titel { font-weight: 600; }
 .stellungen .zug { margin-left: 0.5rem; color: var(--text-leise); font-variant-numeric: tabular-nums; }
+/* Schachaufgaben aus Büchern (Shortcode schachaufgaben): je Aufgabe eine Zeile, links Brett, rechts daneben die Lösung (Sven);
+   unter 36rem Breite steht die Lösung unter dem Brett */
+.schachaufgaben { list-style: none; padding: 0; margin: 1rem 0 0; max-width: 52rem; }
+.schachaufgaben > li { display: grid; grid-template-columns: minmax(0, 19rem) minmax(0, 1fr); gap: 0 1.75rem; padding: 1rem 0; border-bottom: 1px solid var(--linie); }
+.schachaufgaben .schach-diagramm { margin: 0; }
+.schachaufgaben figcaption strong { color: var(--text); }
+/* Inhaltsverzeichnis eines Schachaufgaben-Buchs (Shortcode schachbuch-inhalt) */
+.schachbuch-inhalt { list-style: none; padding: 0; margin: 0.5rem 0 1rem; max-width: 40rem; }
+.schachbuch-inhalt li { display: grid; grid-template-columns: 2rem 1fr auto; gap: 0.75rem; align-items: baseline; padding: 0.55rem 0; border-bottom: 1px solid var(--linie); }
+.schachbuch-inhalt .nr { font-weight: 600; color: var(--text-leise); font-variant-numeric: tabular-nums; }
+.schachbuch-inhalt a { font-weight: 600; }
+.schachbuch-inhalt .offen { color: var(--text-leise); }
+.schachbuch-inhalt .zahl { font-size: 0.9rem; color: var(--text-leise); white-space: nowrap; }
+.kapitel-kopf { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1.25rem; max-width: 52rem; }
+.kapitel-kopf h2 { margin-bottom: 0; }
+.alle-loesungen { font: inherit; font-size: .95rem; padding: .4rem .9rem; border: 1px solid var(--linie); border-radius: var(--radius); background: var(--fläche); color: var(--text); cursor: pointer; }
+.alle-loesungen[hidden] { display: none; }
+.schachloesung summary { cursor: pointer; font-weight: 600; color: var(--akzent); }
+.schachloesung .partie { margin: 0.75rem 0 0.5rem; }
+.schachloesung .hauptlinie { margin: 0.5rem 0; }
+.schachloesung .varianten { margin: 0.25rem 0 0; padding-left: 1.1rem; color: var(--text-leise); font-size: 0.95rem; }
+@media (max-width: 36rem) {
+  .schachaufgaben > li { grid-template-columns: minmax(0, 1fr); }
+  .schachloesung { margin-top: 0.75rem; }
+}
 .stellungen-lizenz { margin-top: 1rem; font-size: 0.75rem; color: var(--text-leise); }
 
 /* Frage über einer Antwortseite */

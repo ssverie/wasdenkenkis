@@ -1,0 +1,127 @@
+# James Rizzitano: 1001 Deadly Chess Puzzles (Gambit 2024) – Aufgaben als FEN, abgelesen aus Svens Fotos der Buchseiten.
+# Prüfen: perl skripte/fen-pruefen.pl data/schach/rizzitano-1001.toml (muss 0 ergeben).
+# Angezeigt auf der Buchseite /buecher/1001-deadly-chess-puzzles-2024/ per Shortcode {{< schachaufgaben daten="rizzitano-1001" >}}.
+# seite = Buchseite der Aufgabe. Zugnummer in der FEN aus der Lösung (Zug der Partie), Rochaderechte nur, wo die Lösung sie braucht.
+# Lösungen (Buchseite 25 ff.): nur Partie, Turnier und Züge, deutsche Figurenbuchstaben (K D T L S); die Erklärtexte
+# des Buchs werden nicht übernommen. loesung = Hauptlinie (fett im Buch), varianten = Nebenlinien und Partieverlauf.
+
+# Inhaltsverzeichnis (Sven: 6 Kapitel). Titel nur, wo belegt (Foto); die übrigen folgen mit einem Foto des Inhaltsverzeichnisses.
+# Je Kapitel mit Aufgaben eine Seite content/schachaufgaben/rizzitano-1001/kapitel-<nr>.md
+[[kapitel]]
+nr = 1
+titel = "Elementary Puzzles"
+
+[[kapitel]]
+nr = 2
+
+[[kapitel]]
+nr = 3
+
+[[kapitel]]
+nr = 4
+
+[[kapitel]]
+nr = 5
+
+[[kapitel]]
+nr = 6
+
+# Kapitel 1, Buchseiten 6–7 (Foto vom 31.10.2026), Lösungen Buchseite 25 (Foto vom 31.10.2026)
+[[aufgabe]]
+nr = 1
+kapitel = 1
+seite = 6
+fen = "r3k2r/1p4b1/p5p1/1R2p2p/4p3/8/PP3PPP/R1B3K1 w kq - 0 23"
+partie = "Mamedov – Navara"
+turnier = "Braila rapid 2022"
+loesung = "23.Tb6! Td8 24.Le3 Td7 25.Txg6 Kf7 26.Tb6"
+varianten = ["Partie: 23.Txb7?? 0-0-0! 0-1"]
+
+[[aufgabe]]
+nr = 2
+kapitel = 1
+seite = 6
+fen = "r2q1rk1/pb3ppp/1p3n2/2p1N3/1n6/1PN1P1Q1/P2PB1PP/2R2RK1 b - - 0 17"
+partie = "Nakamura – So"
+turnier = "Saint Louis rapid 2023"
+loesung = "17...De7 ="
+varianten = ["Partie: 17...Dxd2?? 18.Tfd1 Db2 19.Sc4 1-0"]
+
+[[aufgabe]]
+nr = 3
+kapitel = 1
+seite = 6
+fen = "8/5Q2/1Pb3pk/2P3r1/3n3K/5P2/8/8 w - - 0 55"
+partie = "Ad. Kozak – C. Horvath"
+turnier = "Hungarian Ch, Budapest 2022"
+loesung = "55.Df8+ Kh7 56.De7+! Kg8 57.Kxg5 1-0"
+varianten = ["Nicht 55.b7? Tf5! 56.Dc7 Lxb7 57.Dxb7 Txc5 =", "Nicht 56.Kxg5?? Se6+ 57.Kf6 Sxf8 –+"]
+
+[[aufgabe]]
+nr = 4
+kapitel = 1
+seite = 6
+fen = "2r1n1k1/1p2qpb1/4p1p1/r2pBb1p/P2P3P/1QN1PP2/4BKP1/R1R5 w - - 0 21"
+partie = "Khmelnitsky – D. Gurevich"
+turnier = "USA Seniors Ch, Saint Louis 2022"
+loesung = "21.g3 ="
+varianten = ["Partie: 21.Sxd5?? exd5 0-1 (22.Txc8 Lxc8 –+)"]
+
+[[aufgabe]]
+nr = 5
+kapitel = 1
+seite = 7
+fen = "8/2r1kp2/5p2/3Q1n2/1P3P2/2p2PP1/5q1P/3R3K w - - 0 40"
+partie = "Iturrizaga – Korobov"
+turnier = "Spanish Team Ch 2022"
+loesung = "40.Dd8+ Ke6 41.Dd5+ Ke7 42.Dd8+ ="
+varianten = ["Partie: 40.g4?? Dg2+ 0-1 (41.Kxg2 Se3+ 42.Kf2 Sxd5 43.Txd5 c2 –+)"]
+
+[[aufgabe]]
+nr = 6
+kapitel = 1
+seite = 7
+fen = "3r2k1/6pp/q7/3rP3/3n1p2/1P1Q4/2P2pPP/BK1R1R2 b - - 0 32"
+partie = "Escalante Ramirez – Khanin"
+turnier = "Richardson (team event) 2022"
+loesung = "32...Sb5! 33.Txf2 Txd3 34.Txd3 Txd3 35.cxd3 Sc7 0-1"
+varianten = ["33.Dxd5+ Txd5 34.Txd5 Sa3+ 35.Ka2 Sxc2+ 36.Kb2 Dxf1 –+"]
+
+[[aufgabe]]
+nr = 7
+kapitel = 1
+seite = 7
+fen = "6k1/2q3p1/3npp1p/1p1P4/p4P2/3QPN1P/1P4PK/8 b - - 0 31"
+partie = "Luch – Cyborowski"
+turnier = "Trzcianka 2022"
+loesung = "31...Dc4! 32.Da3 Dxd5 0-1"
+varianten = ["32.Dxc4 Sxc4 33.dxe6 b4 –+"]
+
+[[aufgabe]]
+nr = 8
+kapitel = 1
+seite = 7
+fen = "2k5/5p2/p5p1/P1N1Pq2/2PQ4/r6P/6PK/8 w - - 0 53"
+partie = "Hakobyan – Ganguly"
+turnier = "Saint Louis 2022"
+loesung = "53.e6! Db1 54.Dd7+ 1-0"
+varianten = ["53...fxe6 54.Dd7+ Kb8 55.Db7#", "54...Kb8 55.exf7 +–"]
+
+[[aufgabe]]
+nr = 9
+kapitel = 1
+seite = 7
+fen = "6k1/p2n1ppp/1p3n2/1B1P4/8/P4P2/1Br2P1P/4R1K1 w - - 0 22"
+partie = "B. Jacobson – Popilski"
+turnier = "Philadelphia 2022"
+loesung = "22.Lxf6! Sxf6 23.d6 Td2 24.d7 1-0"
+varianten = ["24...Sxd7 25.Lxd7"]
+
+[[aufgabe]]
+nr = 10
+kapitel = 1
+seite = 7
+fen = "3r2k1/R2B1pbp/p3p1p1/P7/3P4/1r2P3/6PP/4R1K1 b - - 0 1"
+partie = "Mat. Latorre – M. Lu"
+turnier = "Juan Dolio 2023"
+# Lösungszüge stehen auf Buchseite 26 (noch kein Foto)
