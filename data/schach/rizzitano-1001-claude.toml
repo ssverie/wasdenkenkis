@@ -3683,15 +3683,18 @@ geloest = 2026-11-01
 nr = 594
 sicherheit = "unsicher"
 antwort = "1...La5+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 1
+notiz = "Genau der Partiezug, den das Buch mit „?“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 595
 sicherheit = "unsicher"
 antwort = "1.Txd6"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 1
 geloest = 2026-11-01
 
@@ -3699,7 +3702,8 @@ geloest = 2026-11-01
 nr = 596
 sicherheit = "unsicher"
 antwort = "1.c4"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 1
 max = 1
 geloest = 2026-11-01
 
@@ -3707,15 +3711,18 @@ geloest = 2026-11-01
 nr = 597
 sicherheit = "unsicher"
 antwort = "1...Sxc3 2.bxc3 Dxc3+"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 1
 max = 1
+notiz = "Erster Zug richtig, Fortsetzung anders."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 598
 sicherheit = "nicht gefunden"
 antwort = "1...Dc6"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -3723,7 +3730,8 @@ geloest = 2026-11-01
 nr = 599
 sicherheit = "unsicher"
 antwort = "1.Txf7 Kxf7 2.Dxc4+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -3731,7 +3739,8 @@ geloest = 2026-11-01
 nr = 600
 sicherheit = "unsicher"
 antwort = "1.Th7+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -3739,7 +3748,8 @@ geloest = 2026-11-01
 nr = 601
 sicherheit = "nicht gefunden"
 antwort = "1.Tc8+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -3747,7 +3757,8 @@ geloest = 2026-11-01
 nr = 602
 sicherheit = "unsicher"
 antwort = "1.Sf6+"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 2
 max = 2
 geloest = 2026-11-01
 
@@ -3755,15 +3766,18 @@ geloest = 2026-11-01
 nr = 603
 sicherheit = "unsicher"
 antwort = "1.g3"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
+notiz = "Genau der Zug, den das Buch mit „?“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 604
 sicherheit = "unsicher"
 antwort = "1.Td8+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -3771,15 +3785,18 @@ geloest = 2026-11-01
 nr = 605
 sicherheit = "unsicher"
 antwort = "1...Sg4 (droht Df2#)"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
+notiz = "Genau der Zug, den das Buch mit „??“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 606
 sicherheit = "sicher"
 antwort = "1...Dh5 (droht Dxh2# und Dxh4)"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -3787,7 +3804,8 @@ geloest = 2026-11-01
 nr = 607
 sicherheit = "nicht gefunden"
 antwort = "1...Lf5"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -3795,23 +3813,28 @@ geloest = 2026-11-01
 nr = 608
 sicherheit = "unsicher"
 antwort = "1...h4 (lenkt den Springer ab, dann Df1#)"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
+notiz = "Genau der Zug, den das Buch mit „?“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 609
 sicherheit = "nicht gefunden"
 antwort = "1...Txf2+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
+notiz = "Erster Zug als Vermutung richtig."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 610
 sicherheit = "unsicher"
 antwort = "1...Txg5"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -3819,31 +3842,38 @@ geloest = 2026-11-01
 nr = 611
 sicherheit = "nicht gefunden"
 antwort = "1.Tf8"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
+notiz = "Erster Zug als Vermutung richtig."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 612
 sicherheit = "nicht gefunden"
 antwort = "1...b2"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
+notiz = "Erster Zug als Vermutung richtig."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 613
 sicherheit = "unsicher"
 antwort = "1.Sf6+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
+notiz = "Sf6+ gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 614
 sicherheit = "unsicher"
 antwort = "1...Sh3+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -3851,15 +3881,18 @@ geloest = 2026-11-01
 nr = 615
 sicherheit = "unsicher"
 antwort = "1.Lxh7+ Kxh7 2.Dh5+ Kg8 3.Tf3"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 3
 max = 3
+notiz = "Erster Zug richtig, Fortsetzung anders (Buch: 27.Se4)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 616
 sicherheit = "unsicher"
 antwort = "1...Sf6"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 3
 max = 3
 geloest = 2026-11-01
 
@@ -3867,15 +3900,18 @@ geloest = 2026-11-01
 nr = 617
 sicherheit = "nicht gefunden"
 antwort = "1.Df6"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
+notiz = "Gelöst mit falsch abgelesener Stellung (Springer b6 als b5 gelesen)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 618
 sicherheit = "nicht gefunden"
 antwort = "1...Sxc3"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -3883,15 +3919,18 @@ geloest = 2026-11-01
 nr = 619
 sicherheit = "unsicher"
 antwort = "1.Txf3 exf3"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
+notiz = "Txf3 gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 620
 sicherheit = "nicht gefunden"
 antwort = "1.exd5"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -3899,15 +3938,18 @@ geloest = 2026-11-01
 nr = 621
 sicherheit = "unsicher"
 antwort = "1...Sxc4 2.Dxc4 Lxf3"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 3
 max = 3
+notiz = "Erster Zug richtig, Fortsetzung anders (Buch: 16...La6)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 622
 sicherheit = "unsicher"
 antwort = "1.Lxh7+ Kxh7 2.Dh4+"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 3
 max = 3
 geloest = 2026-11-01
 
@@ -3915,15 +3957,18 @@ geloest = 2026-11-01
 nr = 623
 sicherheit = "unsicher"
 antwort = "1.Se4 gxf3 2.Sd6+ Kf8 3.Dxf3"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 3
 max = 3
+notiz = "Die ersten drei Züge wie im Buch."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 624
 sicherheit = "unsicher"
 antwort = "1.e8D Dxe8 2.Txe8"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -3931,23 +3976,28 @@ geloest = 2026-11-01
 nr = 625
 sicherheit = "unsicher"
 antwort = "1.Tg7+ Kh8 2.f7"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 3
 max = 3
+notiz = "Die ersten drei Züge wie im Buch."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 626
 sicherheit = "unsicher"
 antwort = "1...Te1+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
+notiz = "Gelöst mit falsch abgelesener Stellung (Springer e5 als f5, Turm f5 als g5 gelesen)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 627
 sicherheit = "nicht gefunden"
 antwort = "1.gxf5+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -3955,7 +4005,8 @@ geloest = 2026-11-01
 nr = 628
 sicherheit = "nicht gefunden"
 antwort = "1...Txd1"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -3963,15 +4014,18 @@ geloest = 2026-11-01
 nr = 629
 sicherheit = "unsicher"
 antwort = "1...Txf3+ 2.Kxf3 Dxe4+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
+notiz = "Txf3+ gesehen, aber erst als dritten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 630
 sicherheit = "unsicher"
 antwort = "1...Sxh3 2.Txh3 Txf2+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -3979,7 +4033,8 @@ geloest = 2026-11-01
 nr = 631
 sicherheit = "nicht gefunden"
 antwort = "1.Sxf7"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -3987,15 +4042,18 @@ geloest = 2026-11-01
 nr = 632
 sicherheit = "unsicher"
 antwort = "1.Lh7+ Kxh7 2.Dxh5+ Kg8 3.Dg5"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
+notiz = "Gelöst mit falsch abgelesener Stellung (Bauer h6 als h5, Dame h5 als h4 gelesen)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 633
 sicherheit = "unsicher"
 antwort = "1...Dh5+"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 4
 max = 4
 geloest = 2026-11-01
 
@@ -4003,7 +4061,8 @@ geloest = 2026-11-01
 nr = 634
 sicherheit = "unsicher"
 antwort = "1...Txg3+ 2.fxg3 f2+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 4
 geloest = 2026-11-01
 
@@ -4011,15 +4070,18 @@ geloest = 2026-11-01
 nr = 635
 sicherheit = "nicht gefunden"
 antwort = "1.Sxb6"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 4
+notiz = "Gelöst mit falsch abgelesener Stellung (Wölbung: König, Bauer, Springer, Turm, Läufer und König je eine Reihe zu hoch gelesen)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 636
 sicherheit = "nicht gefunden"
 antwort = "1...Txc4"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 4
 max = 4
 geloest = 2026-11-01
 
@@ -4027,7 +4089,8 @@ geloest = 2026-11-01
 nr = 637
 sicherheit = "nicht gefunden"
 antwort = "1...Txe2"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 4
 geloest = 2026-11-01
 
@@ -4035,7 +4098,8 @@ geloest = 2026-11-01
 nr = 638
 sicherheit = "unsicher"
 antwort = "1...Txe4 2.fxe4 a1D"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 4
 geloest = 2026-11-01
 
@@ -4043,7 +4107,8 @@ geloest = 2026-11-01
 nr = 639
 sicherheit = "unsicher"
 antwort = "1...Lxd5"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 4
 geloest = 2026-11-01
 
@@ -4051,6 +4116,8 @@ geloest = 2026-11-01
 nr = 640
 sicherheit = "unsicher"
 antwort = "1.Txh4"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 4
 max = 4
+notiz = "Erster Zug richtig."
 geloest = 2026-11-01
