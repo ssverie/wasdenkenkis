@@ -1509,3 +1509,47 @@ sicherheit = "unsicher"
 antwort = "1.Sf6+ Sxf6 2.exf6"
 ergebnis = "richtig"
 geloest = 2026-11-01
+
+# --- Checkmate Test (Abschnitt 4), Lösungen des Buchs noch nicht da ---
+
+[[antwort]]
+nr = 310
+sicherheit = "unsicher"
+antwort = "1.g4+ Kh4 (g6 deckt die Dame g8)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 311
+sicherheit = "unsicher"
+antwort = "1...Dg1+ 2.Kc2"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 312
+sicherheit = "sicher"
+antwort = "1.Dxe6+! fxe6 2.Lg6# (1...Le7 2.Dxe7#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 313
+sicherheit = "sicher"
+antwort = "1.Dxh7+! Kxh7 2.Th3+ Lh4 3.Txh4+ Kg8 4.Th8# (Ld4 deckt h8 und g7)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 314
+sicherheit = "unsicher"
+antwort = "1...Sb3+ (axb3 verboten, sonst Schach der Da5) 2.Kb1"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 315
+sicherheit = "unsicher"
+antwort = "1.Tg8+ Ke7 2.Dxf7+"
+ergebnis = "offen"
+geloest = 2026-11-01
