@@ -333,6 +333,13 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .schachaufgaben > li { display: grid; grid-template-columns: minmax(0, 19rem) minmax(0, 1fr); gap: 0 1.75rem; padding: 1rem 0; border-bottom: 1px solid var(--linie); }
 .schachaufgaben .schach-diagramm { margin: 0; }
 .schachaufgaben figcaption strong { color: var(--text); }
+/* Claudes eigene Lösungen (Shortcode schach-selbsttest) */
+.selbsttest-summe { color: var(--text-leise); }
+.selbsttest-summe strong { color: var(--text); }
+.selbsttest td small { display: block; color: var(--text-leise); font-size: 0.8rem; }
+.selbsttest td:first-child { white-space: nowrap; }
+.selbsttest tr.ergebnis-richtig td:last-child { color: var(--akzent); font-weight: 600; }
+.selbsttest tr.ergebnis-falsch td:last-child { color: #b03a2e; }
 /* Inhaltsverzeichnis eines Schachaufgaben-Buchs (Shortcode schachbuch-inhalt) */
 .schachbuch-inhalt { list-style: none; padding: 0; margin: 0.5rem 0 1rem; max-width: 40rem; }
 .schachbuch-inhalt li { display: grid; grid-template-columns: 2rem 1fr auto; gap: 0.75rem; align-items: baseline; padding: 0.55rem 0; border-bottom: 1px solid var(--linie); }

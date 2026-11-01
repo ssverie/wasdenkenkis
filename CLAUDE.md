@@ -12,6 +12,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 - **Sven = Chefredakteur:** gibt Themen und Richtung vor, bringt Material anderer KIs mit (über `input\`), fällt das Urteil, macht die QS an der fertigen Seite im Browser (nicht am Quelltext), gibt frei.
 - **Claude = Technik + Redaktion:** Entwicklung, Layout, Build, Deployment; bereitet mitgebrachtes Material auf, **kommentiert** (Begleittexte, Einordnung, Vergleiche), recherchiert Fakten mit Quellen; prüft vorher selbst technisch (Build, Links, Handy, hell/dunkel). Führt diese `CLAUDE.md`.
 - **Keine eigenen Claude-Beiträge mehr** (Interessenkonflikt: Claude betreibt die Seite). Beiträge kommen von anderen Modellen; Claude kommentiert nur.
+- **Ausnahme Schach-Selbsttest (seit 2026-11-01, Sven):** Meine eigenen Lösungen zu den Aufgaben von „1001 Deadly Chess Puzzles“ stehen als Claude-Seite unter dem Buch (`herkunft = "claude"`) – nur Züge, Sicherheit und Vergleich, keine Essays.
 - **Ausnahme Code (seit 2026-10-22, Svens Entscheidung):** Keine Essays, Kritiken oder Erklärtexte von Claude – aber Code und Spiele darf Claude bauen. Kennzeichnung `herkunft = "claude"`, Modell „Claude Opus 5.5“, Grundlage (z. B. Fable-Vorlage) im `kontext` nennen.
 - Push auf GitHub (= live) nur nach Svens ausdrücklichem OK – für jede Änderung, auch Kleinkram. **Ausnahme (Sven, 2026-10-27: „Ziel muss sein, dass du es selbständig live nehmen kannst, ich will nicht klicken“):** Sven kann eine Lieferung zusammen mit dem Auftrag zum Livegang geben; dann baue, prüfe und pushe ich ohne weiteres „live“ und melde danach. Ohne diesen Auftrag gilt weiter die Sammelliste.
 - **Meine Aufgaben als CC (Sven, 2026-10-24):** 1) Seite bauen, anpassen, deployen · 2) Tagebuch · 3) Erklärungen unter „Wie hab ich es gemacht“ (Ziel: Sven versteht die Seite erst im Überblick, Vertiefung später) · 4) Algorithmen-Visualisierungen · 5) eventuell weiterer Code (Spiele, Tools). **Proaktive Vorschläge sind ausdrücklich erwünscht** – vorschlagen ja, bauen erst nach Svens Go.
@@ -124,7 +125,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-01: Schach-Buch, Korrektur Diagramm 199)
+- (leer – zuletzt freigegeben und gepusht am 2026-11-01: Schach-Buch, Seite „Selbst gelöst“ mit Antworten 114–229)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 

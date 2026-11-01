@@ -1,0 +1,934 @@
+# Claudes eigene Antworten zu „1001 Deadly Chess Puzzles“ – gelöst, bevor die Lösungen des Buchs bekannt waren
+# (Sven, 01.11.2026: „trage deine lösungen unter … ein, unter was die KIs schreiben, … dann immer fortschreiben bis 1001“).
+# Angezeigt auf /buchtexte/rizzitano-1001-selbsttest/ per Shortcode {{< schach-selbsttest daten="rizzitano-1001" >}};
+# die Buchlösung kommt dort automatisch aus data/schach/rizzitano-1001.toml.
+# Antworten nie nachträglich ändern. Ablauf und Herkunft: notizen/spiele-schach-tools.md, Rohliste in
+# input-arc\schach-selbsttest\rizzitano-1001-antworten.txt (nicht im Git).
+# sicherheit = sicher | unsicher | nicht gefunden (dann ist antwort nur eine Vermutung)
+# ergebnis   = richtig | falsch | anderer Weg | offen (Lösungen noch nicht da). Gezählt wird streng: nur der Schlüsselzug des Buchs.
+# punkte / max = nur im Test (Punktwertung des Buchs). gelöst = Datum, an dem die Antwort festgeschrieben wurde.
+
+[[antwort]]
+nr = 114
+sicherheit = "nicht gefunden"
+antwort = "1.Lxg7 Kxg7 2.Dd4+"
+ergebnis = "falsch"
+punkte = 0
+max = 1
+notiz = "Erster Zug richtig, Fortsetzung nicht (Buch: 17.Dc3+)."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 115
+sicherheit = "sicher"
+antwort = "1.Lf6"
+ergebnis = "falsch"
+punkte = 0
+max = 1
+notiz = "Le3 sperrt zusätzlich die 3. Reihe gegen Tb3."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 116
+sicherheit = "sicher"
+antwort = "1.Te3+ Kf8 2.dxc8D"
+ergebnis = "falsch"
+punkte = 0
+max = 1
+notiz = "Übersehen, dass der Bauer f4 das Feld e3 deckt."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 117
+sicherheit = "sicher"
+antwort = "1.Dc8+ Df8 2.Dxc4"
+ergebnis = "falsch"
+punkte = 0
+max = 1
+notiz = "Übersehen, dass der Turm a8 die Dame auf c8 schlägt."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 118
+sicherheit = "sicher"
+antwort = "1...Lxd4 2.exd4 Dxe2! 3.Sxe2 Txc2"
+ergebnis = "richtig"
+punkte = 1
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 119
+sicherheit = "nicht gefunden"
+antwort = "1.Sg6+ hxg6 2.Th7+"
+ergebnis = "falsch"
+punkte = 0
+max = 1
+notiz = "Txh7+ gesehen und verworfen – übersehen, dass der Springer e7 auch g8 deckt."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 120
+sicherheit = "sicher"
+antwort = "1...Lxc3+ 2.bxc3 Dxc3+ nebst Dxa1"
+ergebnis = "richtig"
+punkte = 1
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 121
+sicherheit = "sicher"
+antwort = "1...Txd6! 2.exd6 Ld4"
+ergebnis = "richtig"
+punkte = 1
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 122
+sicherheit = "sicher"
+antwort = "1...Dc6!"
+ergebnis = "richtig"
+punkte = 1
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 123
+sicherheit = "sicher"
+antwort = "1.Td8+! Txd8 2.Dxc6"
+ergebnis = "richtig"
+punkte = 1
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 124
+sicherheit = "unsicher"
+antwort = "1...Sg4 2.Dh3 Dxh3 3.gxh3 Se3"
+ergebnis = "falsch"
+punkte = 0
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 125
+sicherheit = "unsicher"
+antwort = "1...Txd1+ 2.Lxd1 Db1"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+notiz = "Erster Zug richtig, dann Db1 statt Db5+."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 126
+sicherheit = "sicher"
+antwort = "1...Te2+! 2.Kxe2 Dxg3"
+ergebnis = "richtig"
+punkte = 2
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 127
+sicherheit = "unsicher"
+antwort = "1...Te1+ 2.Kh2 De5+ 3.g3 Te2"
+ergebnis = "richtig"
+punkte = 2
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 128
+sicherheit = "sicher"
+antwort = "1...Dxc5! 2.Txc5 Td1+ 3.Kh2 Th1#"
+ergebnis = "richtig"
+punkte = 2
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 129
+sicherheit = "nicht gefunden"
+antwort = "1...Sxd4"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 130
+sicherheit = "sicher"
+antwort = "1...Dxc8! 2.Sxc8 Txd1+ 3.Kg2 Txc8"
+ergebnis = "anderer Weg"
+punkte = 0
+max = 2
+notiz = "Nach meiner Rechnung gleiches Material wie die Buchlösung, aber nicht deren Schlüsselzug."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 131
+sicherheit = "nicht gefunden"
+antwort = "1...Lf5"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 132
+sicherheit = "sicher"
+antwort = "1.Txe4! fxe4 2.Lg5+"
+ergebnis = "richtig"
+punkte = 2
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 133
+sicherheit = "unsicher"
+antwort = "1...Dxd2 2.Sxd2 Th1+ 3.Kg2 T8h2+"
+ergebnis = "richtig"
+punkte = 2
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 134
+sicherheit = "unsicher"
+antwort = "1.Df3+ Kg7 2.Sxe6+"
+ergebnis = "richtig"
+punkte = 2
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 135
+sicherheit = "unsicher"
+antwort = "1.Sd6"
+ergebnis = "richtig"
+punkte = 2
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 136
+sicherheit = "nicht gefunden"
+antwort = "1.Sd3"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 137
+sicherheit = "nicht gefunden"
+antwort = "1...Txc4 2.bxc4 De4"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+notiz = "Erster Zug richtig, aber nicht weiter verfolgt."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 138
+sicherheit = "unsicher"
+antwort = "1.Sd6+ Txd6 2.Lxc6+ Txc6 3.Da4"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 139
+sicherheit = "sicher"
+antwort = "1.Sf7+ Kg8 2.Sh6+ Kh8 3.Dg8+ Txg8 4.Sf7#"
+ergebnis = "richtig"
+punkte = 2
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 140
+sicherheit = "unsicher"
+antwort = "1.Txd7+ Sxd7 2.Dxd7#"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+notiz = "Gelöst mit falsch abgelesener Stellung (König, Turm und Bauern eine Reihe zu hoch)."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 141
+sicherheit = "nicht gefunden"
+antwort = "1.exf6+"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 142
+sicherheit = "sicher"
+antwort = "1.Lxh7+ Kxh7 2.Dh4+ nebst Dxh5"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 143
+sicherheit = "unsicher"
+antwort = "1.Dh5+ Kg8 2.Txf7"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 144
+sicherheit = "nicht gefunden"
+antwort = "1.Lxf7"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 145
+sicherheit = "unsicher"
+antwort = "1.Txh6+ Kxh6 2.Sf5+"
+ergebnis = "richtig"
+punkte = 2
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 146
+sicherheit = "unsicher"
+antwort = "1...Dxg2+ 2.Kxg2 Txd7"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 147
+sicherheit = "unsicher"
+antwort = "1...dxe4"
+ergebnis = "richtig"
+punkte = 2
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 148
+sicherheit = "nicht gefunden"
+antwort = "1...Txd3"
+ergebnis = "falsch"
+punkte = 0
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 149
+sicherheit = "sicher"
+antwort = "1.Dxa8+! Sxa8 2.Te8+ Df8 3.Txf8#"
+ergebnis = "richtig"
+punkte = 2
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 150
+sicherheit = "nicht gefunden"
+antwort = "1.Txe6"
+ergebnis = "falsch"
+punkte = 0
+max = 3
+notiz = "Erster Zug richtig, nach 1...fxe6 die Fortsetzung nicht gefunden."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 151
+sicherheit = "nicht gefunden"
+antwort = "1...Txf3"
+ergebnis = "falsch"
+punkte = 0
+max = 3
+notiz = "Erster Zug richtig, aber nicht weiter verfolgt."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 152
+sicherheit = "nicht gefunden"
+antwort = "1...cxd5 2.Txc7 Ld8"
+ergebnis = "falsch"
+punkte = 0
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 153
+sicherheit = "nicht gefunden"
+antwort = "1.Txe6"
+ergebnis = "falsch"
+punkte = 0
+max = 3
+notiz = "Erster Zug richtig, aber nicht weiter verfolgt."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 154
+sicherheit = "sicher"
+antwort = "1...Sh3+! 2.gxh3 Sf3+ 3.Kh1 Dg1#"
+ergebnis = "anderer Weg"
+punkte = 0
+max = 3
+notiz = "Nach meiner Rechnung Matt nach 2.gxh3 – vom Buch nicht bestätigt."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 155
+sicherheit = "sicher"
+antwort = "1...Sd4!"
+ergebnis = "richtig"
+punkte = 3
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 156
+sicherheit = "nicht gefunden"
+antwort = "1...Tf2+"
+ergebnis = "falsch"
+punkte = 0
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 157
+sicherheit = "nicht gefunden"
+antwort = "1.Lxg5 Dxg5 2.Lxb5+"
+ergebnis = "falsch"
+punkte = 0
+max = 3
+notiz = "Den Schlüsselzug Lxb5+ nur als zweiten Zug gesehen."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 158
+sicherheit = "nicht gefunden"
+antwort = "1.Ta8"
+ergebnis = "falsch"
+punkte = 0
+max = 4
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 159
+sicherheit = "unsicher"
+antwort = "1.Lxe4 Lxe4 2.Sc3"
+ergebnis = "richtig"
+punkte = 4
+max = 4
+notiz = "Die ganze Hauptlinie wie im Buch."
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 160
+sicherheit = "unsicher"
+antwort = "1...Lxe4"
+ergebnis = "richtig"
+punkte = 4
+max = 4
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 161
+sicherheit = "sicher"
+antwort = "1.Dh7+ Kf8 2.Dh8+! Sxh8 3.Txh8#"
+ergebnis = "richtig"
+punkte = 4
+max = 4
+geloest = 2026-11-01
+
+# --- Kapitel 2 (Checkmate Puzzles), Lösungen des Buchs noch nicht da ---
+
+[[antwort]]
+nr = 162
+sicherheit = "unsicher"
+antwort = "1.Le5+ (1...Lxe5 2.Dxe8+ Dg8 3.Dxg8#; 1...Txe5 2.Df6+ Dg7 3.Dxg7#); nach 1...Dg7 kein Matt gefunden"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 163
+sicherheit = "nicht gefunden"
+antwort = "1.Dg8+ Kh6 2.Lf7"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 164
+sicherheit = "unsicher"
+antwort = "1...Dg3 (droht Sf3 nebst Dh2#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 165
+sicherheit = "sicher"
+antwort = "1...De2+ 2.Kg3 Df3+ 3.Kh4 g5+ 4.Kh5 Dh3#"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 166
+sicherheit = "nicht gefunden"
+antwort = "1...Txg3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 167
+sicherheit = "sicher"
+antwort = "1...Dc1+! 2.Kf2 Df1#"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 168
+sicherheit = "nicht gefunden"
+antwort = "1...fxg6 (Schwarz steht im Diagramm im Schach)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 169
+sicherheit = "unsicher"
+antwort = "1.Sg5 (droht Dxh7#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 170
+sicherheit = "unsicher"
+antwort = "1.Sxe6 (droht Dxg7#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 171
+sicherheit = "nicht gefunden"
+antwort = "1...Txc4 2.bxc4 Sb3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 172
+sicherheit = "nicht gefunden"
+antwort = "1...Te2+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 173
+sicherheit = "unsicher"
+antwort = "1.f5+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 174
+sicherheit = "unsicher"
+antwort = "1.Txg6+ fxg6 2.Se7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 175
+sicherheit = "unsicher"
+antwort = "1.Dg7+ Kxh5 2.g4+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 176
+sicherheit = "unsicher"
+antwort = "1...Sxf3+ 2.gxf3 Dg3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 177
+sicherheit = "unsicher"
+antwort = "1.Sf6+ gxf6 2.Tg4+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 178
+sicherheit = "unsicher"
+antwort = "1...Dxf4+ (Figurengewinn, kein Matt gefunden)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 179
+sicherheit = "sicher"
+antwort = "1.Te8+ Df8 2.Dxf8#"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 180
+sicherheit = "nicht gefunden"
+antwort = "1.e7 oder 1.Se7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 181
+sicherheit = "nicht gefunden"
+antwort = "1.Df4+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 182
+sicherheit = "unsicher"
+antwort = "1...Tb1"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 183
+sicherheit = "unsicher"
+antwort = "1.Le6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 184
+sicherheit = "unsicher"
+antwort = "1...Txh3 2.gxh3 Sxh3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 185
+sicherheit = "unsicher"
+antwort = "1.Lxf7+ Txf7 2.c7"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 186
+sicherheit = "unsicher"
+antwort = "1.Dxh5 (droht Dh8#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 187
+sicherheit = "unsicher"
+antwort = "1.Tf8+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 188
+sicherheit = "unsicher"
+antwort = "1...Lh3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 189
+sicherheit = "unsicher"
+antwort = "1.Txe6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 190
+sicherheit = "nicht gefunden"
+antwort = "1.Td8"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 191
+sicherheit = "unsicher"
+antwort = "1.Sg5 (1...h6 2.Dg8+ Txg8 3.Sf7#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 192
+sicherheit = "unsicher"
+antwort = "1.Lxh7+ Kxh7 2.g6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 193
+sicherheit = "unsicher"
+antwort = "1.De8+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 194
+sicherheit = "sicher"
+antwort = "1.Lf5 (fesselt Dd7, Damengewinn)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 195
+sicherheit = "unsicher"
+antwort = "1.Td8+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 196
+sicherheit = "unsicher"
+antwort = "1.Sf6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 197
+sicherheit = "nicht gefunden"
+antwort = "1.Sf5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 198
+sicherheit = "nicht gefunden"
+antwort = "1...Df6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 199
+sicherheit = "unsicher"
+antwort = "1.Sdb5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 200
+sicherheit = "unsicher"
+antwort = "1.Txg6+ Txg6 2.Dxg6+ Dg7 3.Dxg7#"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 201
+sicherheit = "nicht gefunden"
+antwort = "1.Tf6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 202
+sicherheit = "unsicher"
+antwort = "1...Txb3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 203
+sicherheit = "unsicher"
+antwort = "1.Sexf7 Sxf7 2.Dxe6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 204
+sicherheit = "unsicher"
+antwort = "1...Sf3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 205
+sicherheit = "nicht gefunden"
+antwort = "1.Txf8+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 206
+sicherheit = "unsicher"
+antwort = "1.Te8"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 207
+sicherheit = "nicht gefunden"
+antwort = "1.Dxd3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 208
+sicherheit = "unsicher"
+antwort = "1...Txh2 2.Kxh2 Sf3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 209
+sicherheit = "unsicher"
+antwort = "1.Dh6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 210
+sicherheit = "unsicher"
+antwort = "1.Se6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 211
+sicherheit = "unsicher"
+antwort = "1...Txh4+ nebst Dh3 und Dh1#"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 212
+sicherheit = "nicht gefunden"
+antwort = "1...Db5+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 213
+sicherheit = "nicht gefunden"
+antwort = "1...Lxh3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 214
+sicherheit = "unsicher"
+antwort = "1...Dh4 (droht Dh1#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 215
+sicherheit = "unsicher"
+antwort = "1...Lg3+ (Abzugsschach durch Th8)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 216
+sicherheit = "unsicher"
+antwort = "1.Txg7+ Kxg7 2.Dg3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 217
+sicherheit = "unsicher"
+antwort = "1...Se2+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 218
+sicherheit = "unsicher"
+antwort = "1.Db3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 219
+sicherheit = "unsicher"
+antwort = "1...Dd3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 220
+sicherheit = "unsicher"
+antwort = "1...Se3+ (Doppelschach)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 221
+sicherheit = "nicht gefunden"
+antwort = "1.Th8+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 222
+sicherheit = "nicht gefunden"
+antwort = "1...Txe1+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 223
+sicherheit = "unsicher"
+antwort = "1.Lf6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 224
+sicherheit = "unsicher"
+antwort = "1.Txc7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 225
+sicherheit = "nicht gefunden"
+antwort = "1...Txe3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 226
+sicherheit = "unsicher"
+antwort = "1.Df6 (droht Dg7#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 227
+sicherheit = "unsicher"
+antwort = "1...Se2+ 2.Kh1 Dh4#"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 228
+sicherheit = "unsicher"
+antwort = "1...Txc2+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 229
+sicherheit = "unsicher"
+antwort = "1...Sxh3+"
+ergebnis = "offen"
+geloest = 2026-11-01

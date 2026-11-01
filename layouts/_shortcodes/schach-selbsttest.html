@@ -1,0 +1,51 @@
+{{- /* Claudes eigene Lösungen zu einem Schachaufgaben-Buch: {{< schach-selbsttest daten="rizzitano-1001" >}}
+       Antworten aus data/schach/<daten>-claude.toml ([[antwort]] nr, sicherheit, antwort, ergebnis, punkte, max, notiz),
+       Stellung, Seite am Zug und Buchlösung aus data/schach/<daten>.toml. Je Abschnitt (Kapitel/Test) eine Überschrift,
+       eine Zusammenfassung und eine Tabelle; Nummer verlinkt auf die Aufgabe auf ihrer Kapitelseite. */ -}}
+{{- $daten := .Get "daten" }}
+{{- $buch := index site.Data.schach $daten }}
+{{- $claude := index site.Data.schach (printf "%s-claude" $daten) }}
+{{- $antworten := $claude.antwort }}
+{{- range $buch.kapitel }}
+  {{- $k := . }}
+  {{- $nummern := slice }}
+  {{- range where $buch.aufgabe "kapitel" $k.nr }}{{ $nummern = $nummern | append .nr }}{{ end }}
+  {{- $hier := where $antworten "nr" "in" $nummern }}
+  {{- if $hier }}
+    {{- $seite := site.GetPage (printf "/schachaufgaben/%s/%s" $daten $k.slug) }}
+    {{- $sicher := len (where $hier "sicherheit" "sicher") }}
+    {{- $unsicher := len (where $hier "sicherheit" "unsicher") }}
+    {{- $ng := len (where $hier "sicherheit" "nicht gefunden") }}
+    {{- $ausgewertet := where $hier "ergebnis" "!=" "offen" }}
+    {{- $richtig := len (where $hier "ergebnis" "richtig") }}
+    {{- $punkte := 0 }}{{ $max := 0 }}
+    {{- range $ausgewertet }}{{ $punkte = add $punkte (.punkte | default 0) }}{{ $max = add $max (.max | default 0) }}{{ end }}
+<h2 id="{{ $k.slug }}">{{ with $k.buch }}Kapitel {{ . }}: {{ end }}{{ $k.titel }}</h2>
+<p class="selbsttest-summe">
+  {{ len $hier }} Aufgaben ({{ index (sort $nummern) 0 }}–{{ index (sort $nummern) (sub (len $nummern) 1) }}{{ if lt (len $hier) (len $nummern) }}, davon gelöst {{ len $hier }}{{ end }}) ·
+  {{ $sicher }} sicher · {{ $unsicher }} unsicher · {{ $ng }} nicht gefunden<br>
+  {{- if $ausgewertet }}
+  <strong>Ergebnis: {{ $richtig }} von {{ len $ausgewertet }} richtig{{ if $max }} · {{ $punkte }} von {{ $max }} Punkten{{ end }}</strong>
+  {{- else }}
+  Ergebnis: offen – die Lösungen des Buchs fehlen noch.
+  {{- end }}
+</p>
+<table class="selbsttest">
+  <thead><tr><th>Nr.</th><th>Meine Antwort</th><th>Sicherheit</th><th>Buch</th><th>Ergebnis</th></tr></thead>
+  <tbody>
+  {{- range sort $hier "nr" }}
+    {{- $nr := .nr }}
+    {{- $auf := index (where $buch.aufgabe "nr" $nr) 0 }}
+    {{- $schwarz := eq (index (split $auf.fen " ") 1) "b" }}
+    <tr class="ergebnis-{{ replace .ergebnis " " "-" }}">
+      <td><a href="{{ with $seite }}{{ .RelPermalink }}{{ end }}#aufgabe-{{ $nr }}">{{ $nr }}</a><small>{{ cond $schwarz "S" "W" }}</small></td>
+      <td>{{ .antwort }}{{ with .notiz }}<small class="notiz">{{ . }}</small>{{ end }}</td>
+      <td>{{ .sicherheit }}</td>
+      <td>{{ with $auf.loesung }}{{ . }}{{ else }}–{{ end }}</td>
+      <td>{{ .ergebnis }}{{ if and (ne .ergebnis "offen") .max }} ({{ .punkte }}/{{ .max }}){{ end }}</td>
+    </tr>
+  {{- end }}
+  </tbody>
+</table>
+  {{- end }}
+{{- end }}
