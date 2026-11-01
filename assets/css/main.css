@@ -356,6 +356,17 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .schachloesung .partie { margin: 0.75rem 0 0.5rem; }
 .schachloesung .hauptlinie { margin: 0.5rem 0; }
 .schachloesung .varianten { margin: 0.25rem 0 0; padding-left: 1.1rem; color: var(--text-leise); font-size: 0.95rem; }
+/* Nachspielen (assets/js/schach-nachspielen.js): Züge anklickbar, aktueller Zug hervorgehoben, Felder des letzten Zugs gelb getönt */
+.np-knoepfe { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin: 0.6rem 0 0.25rem; }
+.np-knoepfe button { font: inherit; min-width: 2.6rem; padding: 0.3rem 0.6rem; border: 1px solid var(--linie); border-radius: 6px; background: var(--fläche); color: var(--text); cursor: pointer; }
+.np-knoepfe button:hover { border-color: var(--akzent); }
+.np-hinweis { font-size: 0.8rem; color: var(--text-leise); margin-left: 0.25rem; }
+.np-zug { cursor: pointer; border-radius: 3px; padding: 0 0.1em; }
+.np-zug:hover { background: var(--akzent-leise); }
+.np-zug.np-aktiv { background: var(--akzent); color: var(--bg); }
+.varianten .np-zug { color: var(--text); }
+.varianten .np-zug.np-aktiv { color: var(--bg); }
+.brett .feld.np-markiert { background-image: linear-gradient(rgba(255, 214, 10, .45), rgba(255, 214, 10, .45)); }
 @media (max-width: 36rem) {
   .schachaufgaben > li { grid-template-columns: minmax(0, 1fr); }
   .schachloesung { margin-top: 0.75rem; }

@@ -5,9 +5,12 @@
        „1) Weiß am Zug“ und FEN, rechts daneben die Lösung (Sven: „Lösung rechts daneben“), zugeklappt, damit man erst
        selbst rechnen kann; oben ein Knopf, der alle Lösungen des Kapitels auf- oder zuklappt (assets/js/schachaufgaben.js).
        Lösung: Partie, Turnier, Hauptlinie fett, darunter Nebenlinien. Auf schmalen Schirmen steht die Lösung unter dem Brett.
-       Prüfen: perl skripte/fen-pruefen.pl data/schach/<daten>.toml */ -}}
+       Prüfen: perl skripte/fen-pruefen.pl data/schach/<daten>.toml
+       nachspielen="592,…" (oder "alle"): diese Aufgaben lassen sich nachspielen (Züge anklickbar, Knöpfe ⏮ ◀ ▶ ⏭; assets/js/schach-nachspielen.js,
+       Versuch seit 2026-11-01, Sven: „versuche mal 592 spielbar zu machen“). */ -}}
 {{- $d := index site.Data.schach (.Get "daten") }}
 {{- $nur := .Get "kapitel" }}
+{{- $nachspielen := slice }}{{ with .Get "nachspielen" }}{{ $nachspielen = split (replace . " " "") "," }}{{ end }}
 {{- range $d.kapitel }}
   {{- $k := .nr }}
   {{- if or (not $nur) (eq (string $k) $nur) }}
@@ -22,7 +25,7 @@
 <ol class="schachaufgaben">
   {{- range $auf }}
     {{- $schwarz := eq (index (split .fen " ") 1) "b" }}
-  <li id="aufgabe-{{ .nr }}">
+  <li id="aufgabe-{{ .nr }}"{{ if and .loesung (or (in $nachspielen "alle") (in $nachspielen (string .nr))) }} class="nachspielbar"{{ end }}>
     <figure class="schach-diagramm">
       {{ partial "schach-brett.html" (dict "fen" .fen "immer_weiss" true) }}
       <figcaption><strong>{{ .nr }}) {{ cond $schwarz "Schwarz" "Weiß" }} am Zug</strong><code class="fen">{{ .fen }}</code></figcaption>
@@ -48,4 +51,7 @@
 {{- with resources.Get "js/schachaufgaben.js" | minify | fingerprint }}
 <script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
 {{- end }}
+{{- if $nachspielen }}{{ with resources.Get "js/schach-nachspielen.js" | minify | fingerprint }}
+<script src="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" defer></script>
+{{- end }}{{ end }}
 <p class="stellungen-lizenz">Figuren: <a href="https://commons.wikimedia.org/wiki/Category:SVG_chess_pieces" rel="noopener">Cburnett</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/deed.de" rel="noopener">CC BY-SA 3.0</a></p>
