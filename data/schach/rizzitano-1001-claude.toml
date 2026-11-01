@@ -1366,145 +1366,146 @@ geloest = 2026-11-01
 nr = 289
 sicherheit = "unsicher"
 antwort = "1...Txf2+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 290
 sicherheit = "nicht gefunden"
 antwort = "1.De8"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 291
 sicherheit = "unsicher"
 antwort = "1.Tf7+ Kg8 2.Tc8+ Sd8 3.Txd8#"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 292
 sicherheit = "unsicher"
 antwort = "1...Sg3+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 293
 sicherheit = "nicht gefunden"
 antwort = "1...h4"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 294
 sicherheit = "nicht gefunden"
 antwort = "1...Sh3+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 295
 sicherheit = "unsicher"
 antwort = "1...Sxe3 2.fxe3 Lxe3+"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 296
 sicherheit = "unsicher"
 antwort = "1.Txg7"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 297
 sicherheit = "unsicher"
 antwort = "1.Lh5+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 298
 sicherheit = "unsicher"
 antwort = "1...Df4 (fesselt Tg3)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 299
 sicherheit = "nicht gefunden"
 antwort = "1.Df8+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 300
 sicherheit = "unsicher"
 antwort = "1.Th3 (droht Dh7+)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 301
 sicherheit = "sicher"
 antwort = "1...Th1+ 2.Kxh1 Dxh3+ 3.Kg1 Dh2#"
-ergebnis = "offen"
+ergebnis = "richtig"
+notiz = "Meine Linie war die Nebenvariante – nach 39.Kg2 geht es weiter."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 302
 sicherheit = "nicht gefunden"
 antwort = "1...Txd3"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 303
 sicherheit = "unsicher"
 antwort = "1.Txh6"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 304
 sicherheit = "unsicher"
 antwort = "1.fxg6"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 305
 sicherheit = "unsicher"
 antwort = "1.h5 (droht Dg7#)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 306
 sicherheit = "nicht gefunden"
 antwort = "1.f4+ Kg4 2.Ta4"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 307
 sicherheit = "unsicher"
 antwort = "1...Txf2"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 308
 sicherheit = "unsicher"
 antwort = "1.Tg3"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 309
 sicherheit = "unsicher"
 antwort = "1.Sf6+ Sxf6 2.exf6"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01

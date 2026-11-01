@@ -125,8 +125,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-01: Schach-Buch, Kapitel 2 komplett (302–309), Lösungen 162–288 mit Vergleich)
-- Offen: Lösungen 289–309 (Buchseite 90 ff.).
+- (leer – zuletzt freigegeben und gepusht am 2026-11-01: Schach-Buch, Lösungen 289–309, Checkmate Test 310–315)
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 

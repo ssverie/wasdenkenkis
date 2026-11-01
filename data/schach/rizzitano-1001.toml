@@ -2301,7 +2301,7 @@ turnier = "New York 2023"
 loesung = "18...Lxh3! 19.Sh5 Dh6 0-1"
 varianten = ["19.gxh3 Sgf3+ 20.Kh1 Sxd2 21.Dxd2 Df3+ 22.Kg1 Dg2#"]
 
-# Abschnitt 3 = Kapitel 2 Checkmate Puzzles, Buchseiten 60–71 (Fotos vom 01.11.2026); Lösungen bis 288 Buchseiten 73–89, ab 289 folgen
+# Abschnitt 3 = Kapitel 2 Checkmate Puzzles, Buchseiten 60–71 (Fotos vom 01.11.2026); Lösungen Buchseiten 73–92
 
 [[aufgabe]]
 nr = 230
@@ -2855,126 +2855,238 @@ loesung = "19...Sf3+! 20.gxf3 Se5 21.Db6 Dxh3! 22.Lxe5 exf3 23.Sf4 Lxf4 24.Sxf4 
 nr = 289
 kapitel = 3
 seite = 69
-fen = "6k1/pp3p1p/8/2P5/5b2/5B2/PP1r1P1q/3RQK2 b - - 0 1"
+fen = "6k1/pp3p1p/8/2P5/5b2/5B2/PP1r1P1q/3RQK2 b - - 0 27"
+partie = "A. Rizouk – Garcia Ramos"
+turnier = "Catalonian Team Ch, Barcelona 2023"
+loesung = "27...Dh3+! 28.Kg1 Lh2+ 0-1"
+varianten = ["28.Lg2 Dd3+ –+", "29.Kh1 Lg3+ 30.Kg1 Dh2+ 31.Kf1 Txf2+ 32.Dxf2 Dxf2#"]
 
 [[aufgabe]]
 nr = 290
 kapitel = 3
 seite = 70
-fen = "2R5/5pk1/p4qpp/r2P4/4Q2P/5P2/6PK/8 w - - 0 1"
+fen = "2R5/5pk1/p4qpp/r2P4/4Q2P/5P2/6PK/8 w - - 0 38"
+partie = "Jimenez Ruano – Perez Manas"
+turnier = "Catalonian Team Ch, Barcelona 2023"
+loesung = "38.Db4! De5+ 39.f4 Dxd5 40.Dc3+ 1-0"
+varianten = ["39...Da1 40.Df8+ Kf6 41.Te8 +–"]
 
 [[aufgabe]]
 nr = 291
 kapitel = 3
 seite = 70
-fen = "8/6kp/1rnN1R2/1pR3P1/5p2/p1P5/1r5P/6K1 w - - 0 1"
+fen = "8/6kp/1rnN1R2/1pR3P1/5p2/p1P5/1r5P/6K1 w - - 0 35"
+partie = "Garcia Ramos – Gonzalez Perez"
+turnier = "Catalonian Team Ch, Barcelona 2023"
+loesung = "35.Se8+! Kg8 36.Tcf5! h5 37.Tf8+ Kh7 38.T5f7+ Kg6 39.Tg7#"
+varianten = ["Partie: 37...g6 38.Tb1+ Kg2 1-0"]
 
 [[aufgabe]]
 nr = 292
 kapitel = 3
 seite = 70
-fen = "3r2k1/p4pp1/1p5p/8/3Pn1qR/2r1B3/P5PP/4QR1K b - - 0 1"
+fen = "3r2k1/p4pp1/1p5p/8/3Pn1qR/2r1B3/P5PP/4QR1K b - - 0 28"
+partie = "A. Roos – Maatman"
+turnier = "Dutch League 2022/3"
+loesung = "28...Txe3! 29.Txg4 Txe1 30.Txe1 Sf2+ 31.Kg1 Sxg4 –+"
+varianten = ["Partie: 29.Dxe3 Dxh4 30.Tf4 Txd4 31.Txh4 Td1+ 32.Kg1 Sf2# (0-1)"]
 
 [[aufgabe]]
 nr = 293
 kapitel = 3
 seite = 70
-fen = "8/5pk1/8/2bR1r1p/P7/5PPK/5q1P/3Q4 b - - 0 1"
+fen = "8/5pk1/8/2bR1r1p/P7/5PPK/5q1P/3Q4 b - - 0 50"
+partie = "Belezky – Zhao Yuanhe"
+turnier = "Sant Ferran de ses Roques 2023"
+loesung = "50...Txd5 51.Dxd5 Df1+ 52.Kh4 Le7+ 53.Kxh5 Dh3# (0-1)"
 
 [[aufgabe]]
 nr = 294
 kapitel = 3
 seite = 70
-fen = "3r4/p4q2/1p4kp/2p1R1p1/P4n2/2B5/2P2PbP/3RQ1K1 b - - 0 1"
+fen = "3r4/p4q2/1p4kp/2p1R1p1/P4n2/2B5/2P2PbP/3RQ1K1 b - - 0 29"
+partie = "Matinian – Niemann"
+turnier = "Astana 2023"
+loesung = "29...Db7! 30.Te6+ Kh5! 31.h4 Lh1 –+"
+varianten = ["Droht 30...Sh3#"]
 
 [[aufgabe]]
 nr = 295
 kapitel = 3
 seite = 70
-fen = "6k1/b4p2/P3p1pp/3n4/2q2P2/4P3/5P1P/RQ4K1 b - - 0 1"
+fen = "6k1/b4p2/P3p1pp/3n4/2q2P2/4P3/5P1P/RQ4K1 b - - 0 48"
+partie = "Shevchenko – Sarana"
+turnier = "Bucharest rapid 2023"
+loesung = "48...Sxe3! 49.fxe3 Lxe3+ 50.Kg2 De2+ 51.Kg3 Df2+ 52.Kh3 Df3+ 53.Kh4 Lf2#"
+varianten = ["Partie: 49.Db7?"]
 
 [[aufgabe]]
 nr = 296
 kapitel = 3
 seite = 71
-fen = "4qr1k/2p1r1pp/p4n2/1p2BQRP/8/1P1BbP2/P3K3/6R1 w - - 0 1"
+fen = "4qr1k/2p1r1pp/p4n2/1p2BQRP/8/1P1BbP2/P3K3/6R1 w - - 0 33"
+partie = "Korobov – Nigmatov"
+turnier = "Baku 2023"
+loesung = "33.Txg7! Txg7 34.Txg7 1-0"
+varianten = ["34...Kxg7 35.Dxh7#"]
 
 [[aufgabe]]
 nr = 297
 kapitel = 3
 seite = 71
-fen = "4k3/1Q1np1b1/1q3r2/4p3/PB6/5Bp1/2P3K1/7R w - - 0 1"
+fen = "4k3/1Q1np1b1/1q3r2/4p3/PB6/5Bp1/2P3K1/7R w - - 0 37"
+partie = "Salimova – Sivuk"
+turnier = "Baku 2023"
+loesung = "37.Dc8+! Kf7 38.Lh5+ Tg6 39.Dc4+ e6 40.Lxg6+ Kxg6 41.Dd3+ e4 42.Dxg3+ Kf7 43.Th7 1-0"
 
 [[aufgabe]]
 nr = 298
 kapitel = 3
 seite = 71
-fen = "4Qbk1/5p2/4p3/1P1pP1qp/6p1/2P2PRR/6PK/4r3 b - - 0 1"
+fen = "4Qbk1/5p2/4p3/1P1pP1qp/6p1/2P2PRR/6PK/4r3 b - - 0 49"
+partie = "K. Abdulla – Raja Rithvik"
+turnier = "Baku 2023"
+loesung = "49...Kg7! 50.f4 Dxf4 51.Txh5 Te3 52.Th3 Txg3 53.Txg3 Dh6+ 54.Kg1 Lc5+ 55.Kf1 Dc1+ 56.Ke2 Dc2+ 0-1"
 
 [[aufgabe]]
 nr = 299
 kapitel = 3
 seite = 71
-fen = "8/1q3n2/4NQpk/3P4/5P1P/6p1/6P1/6K1 w - - 0 1"
+fen = "8/1q3n2/4NQpk/3P4/5P1P/6p1/6P1/6K1 w - - 0 42"
+partie = "Erdogmus – N. Dixit"
+turnier = "Baku 2023"
+loesung = "42.Dg7+ Kh5 43.Dh7+ Kg4 44.Dxg6+ Kxh4 45.Dh7+ Kg4 46.Dh3# (1-0)"
 
 [[aufgabe]]
 nr = 300
 kapitel = 3
 seite = 71
-fen = "1r2r1k1/5pb1/1pq1p1p1/4P3/1Bbp3Q/1R1B4/P4PP1/4R1K1 w - - 0 1"
+fen = "1r2r1k1/5pb1/1pq1p1p1/4P3/1Bbp3Q/1R1B4/P4PP1/4R1K1 w - - 0 27"
+partie = "Darini – Tahbaz"
+turnier = "Iranian Ch, Kerman 2023"
+loesung = "27.Tc1! b5 28.Le4 1-0"
 
 [[aufgabe]]
 nr = 301
 kapitel = 3
 seite = 71
-fen = "8/1pR5/4rpk1/4Pq2/n2Q1P2/4N1pP/7r/5RK1 b - - 0 1"
+fen = "8/1pR5/4rpk1/4Pq2/n2Q1P2/4N1pP/7r/5RK1 b - - 0 38"
+partie = "Juswanto – Tuan Minh Tran"
+turnier = "Jakarta Zonal 2023"
+loesung = "38...Th1+! 39.Kg2 Dxh3+ 40.Kf3 g2+ 41.Ke4 gxf1D 0-1"
+varianten = ["39.Kxh1 Dxh3+ 40.Kg1 Dh2#"]
 
-# Abschnitt 3 = Kapitel 2 Checkmate Puzzles, Buchseiten 72–73 (Foto vom 01.11.2026) – Ende der Aufgaben von Kapitel 2
+# Abschnitt 3 = Kapitel 2 Checkmate Puzzles, Buchseiten 72–73 (Foto vom 01.11.2026) – Ende der Aufgaben von Kapitel 2; Lösungen Buchseiten 90–92
 
 [[aufgabe]]
 nr = 302
 kapitel = 3
 seite = 72
-fen = "r2r2k1/5pb1/2p3p1/p3p3/Q7/1P1BqP2/bBPR2P1/2K4R b - - 0 1"
+fen = "r2r2k1/5pb1/2p3p1/p3p3/Q7/1P1BqP2/bBPR2P1/2K4R b - - 0 23"
+partie = "Risteski – Stanojoski"
+turnier = "North Macedonian Ch, Skopje 2023"
+loesung = "23...Lxb3! 24.Dxb3 Tab8 25.Dc3 Txb2! 26.Dxb2 e4 27.Db7 0-1"
 
 [[aufgabe]]
 nr = 303
 kapitel = 3
 seite = 72
-fen = "3r1rk1/1p3p2/p1pb3p/P2pRPq1/1P1P2P1/2PQ4/2B3K1/7R w - - 0 1"
+fen = "3r1rk1/1p3p2/p1pb3p/P2pRPq1/1P1P2P1/2PQ4/2B3K1/7R w - - 0 37"
+partie = "Ana. Rakhmangulova – J. Erić"
+turnier = "Belgrade (women) 2023"
+loesung = "37.f6! Dg6 38.Dd2 Dxg4+ 39.Kf2 Lxe5 40.dxe5 1-0"
 
 [[aufgabe]]
 nr = 304
 kapitel = 3
 seite = 72
-fen = "r2qr1k1/3b1p1p/p1npp1pB/1p2nPb1/4P1P1/1NN4Q/PPP2RBP/5R1K w - - 0 1"
+fen = "r2qr1k1/3b1p1p/p1npp1pB/1p2nPb1/4P1P1/1NN4Q/PPP2RBP/5R1K w - - 0 19"
+partie = "J. Lauridsen – Øst-Hansen"
+turnier = "Danish Rapid Ch, Avedore 2023"
+loesung = "19.f6! Sxg4 20.Lxg5! Sxf2+ 21.Txf2 h5 22.Lf3 +–"
 
 [[aufgabe]]
 nr = 305
 kapitel = 3
 seite = 72
-fen = "3r1r2/p4p1k/2qN1Pnp/5R2/1p5P/2p3Q1/PP4PK/3R4 w - - 0 1"
+fen = "3r1r2/p4p1k/2qN1Pnp/5R2/1p5P/2p3Q1/PP4PK/3R4 w - - 0 31"
+partie = "Ipek – Molenda"
+turnier = "Ayvalik 2023"
+loesung = "31.Th5! Txd6 32.Dg5 Kg8 33.Dxh6 Txf6 34.Dh7# (1-0)"
 
 [[aufgabe]]
 nr = 306
 kapitel = 3
 seite = 72
-fen = "8/3N4/R5p1/6kp/4P3/1rn2PP1/p5K1/8 w - - 0 1"
+fen = "8/3N4/R5p1/6kp/4P3/1rn2PP1/p5K1/8 w - - 0 65"
+partie = "Mordechai – M. Katkov"
+turnier = "Israeli Team Ch 2023"
+loesung = "65.Sf8! 1-0"
+varianten = ["Nicht 65.Se5? Kh6! 66.Sxg6 Tb4 –+"]
 
 [[aufgabe]]
 nr = 307
 kapitel = 3
 seite = 72
-fen = "6k1/2p2p2/8/R2p1b2/2qP2p1/4P1P1/1r3PBK/4Q3 b - - 0 1"
+fen = "6k1/2p2p2/8/R2p1b2/2qP2p1/4P1P1/1r3PBK/4Q3 b - - 0 31"
+partie = "Dzagnidze – Kosteniuk"
+turnier = "Nicosia (women) 2023"
+loesung = "31...Tb1! 32.Dd2 Dc6! 33.e4 Dg6! 34.Ta8+ Kg7 0-1"
 
 [[aufgabe]]
 nr = 308
 kapitel = 3
 seite = 73
-fen = "r1b1r1k1/p4pp1/2p4p/2qp1p1Q/5B2/7R/P1P2PPP/5RK1 w - - 0 1"
+fen = "r1b1r1k1/p4pp1/2p4p/2qp1p1Q/5B2/7R/P1P2PPP/5RK1 w - - 0 23"
+partie = "S. Grover – Ajay Krishna"
+turnier = "Dubai 2022"
+loesung = "23.Lxh6! gxh6 24.Dxh6 Dd4 25.Tg3+ Dg4 26.h3 Dxg3 27.fxg3 +–"
+varianten = ["23...Dc4 24.Le3 Kf8 25.Th4 +–"]
 
 [[aufgabe]]
 nr = 309
 kapitel = 3
 seite = 73
-fen = "2r3k1/pb2qp2/1p2p1p1/3nP1Qp/3PN2P/3B4/P4PP1/4R1K1 w - - 0 1"
+fen = "2r3k1/pb2qp2/1p2p1p1/3nP1Qp/3PN2P/3B4/P4PP1/4R1K1 w - - 0 26"
+partie = "Akshat – S. Royal"
+turnier = "Budapest 2023"
+loesung = "26.Sf6+ Sxf6 27.exf6 Dh4 28.Lxg6! Dxe1+ 29.Kh2 Kf8 30.Lxf7 1-0"
+varianten = ["27...De8 28.Tc3 Dc6 29.Kh2 nebst Tg3"]
+
+# Abschnitt 4 = Checkmate Test, Buchseite 93 (Foto vom 01.11.2026); Lösungen folgen
+
+[[aufgabe]]
+nr = 310
+kapitel = 4
+seite = 93
+fen = "6Q1/5P2/p6p/1p4pk/4p3/1P4RP/P4PPK/q1r5 w - - 0 1"
+
+[[aufgabe]]
+nr = 311
+kapitel = 4
+seite = 93
+fen = "2r1k1r1/pp3p2/6q1/1p1RP2p/7Q/3RP2P/PP6/1K6 b - - 0 1"
+
+[[aufgabe]]
+nr = 312
+kapitel = 4
+seite = 93
+fen = "r3kb1r/pp1n1pp1/2p1b2p/6B1/3PQ3/2qBPN2/P4PPP/1R1K3R w - - 0 1"
+
+[[aufgabe]]
+nr = 313
+kapitel = 4
+seite = 93
+fen = "2r2rk1/1q2bp1p/p1bpp1p1/8/1pPBnP2/4R2Q/PPB1N1PP/5R1K w - - 0 1"
+
+[[aufgabe]]
+nr = 314
+kapitel = 4
+seite = 93
+fen = "r4k2/4p1bp/p2n2p1/q1nQ4/1p3P2/4BN2/PP4PP/K2R3R b - - 0 1"
+
+[[aufgabe]]
+nr = 315
+kapitel = 4
+seite = 93
+fen = "2r2k2/1rq2p1Q/4pb1p/pp1p3P/2n3R1/2PB2P1/KP2R3/8 w - - 0 1"
