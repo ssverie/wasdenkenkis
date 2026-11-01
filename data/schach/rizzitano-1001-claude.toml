@@ -1955,3 +1955,313 @@ ergebnis = "falsch"
 punkte = 0
 max = 4
 geloest = 2026-11-01
+
+# --- Kapitel 3 Intermediate Puzzles (Abschnitt 5) ---
+
+[[antwort]]
+nr = 358
+sicherheit = "nicht gefunden"
+antwort = "1...f6 (Schwarz steht im Schach der Dh6)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 359
+sicherheit = "unsicher"
+antwort = "1...Lxc2+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 360
+sicherheit = "unsicher"
+antwort = "1...Dxf3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 361
+sicherheit = "unsicher"
+antwort = "1.Txf5+ exf5 2.e6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 362
+sicherheit = "unsicher"
+antwort = "1.Txe6 Sxe6 2.Tb8"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 363
+sicherheit = "unsicher"
+antwort = "1...Kf3 (droht Te1+)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 364
+sicherheit = "nicht gefunden"
+antwort = "1...Lxf3 2.Dxf3 fxg3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 365
+sicherheit = "unsicher"
+antwort = "1.Sd6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 366
+sicherheit = "unsicher"
+antwort = "1...Te1+ 2.Lf1 Lh3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 367
+sicherheit = "nicht gefunden"
+antwort = "1.Sxe6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 368
+sicherheit = "unsicher"
+antwort = "1...Db6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 369
+sicherheit = "unsicher"
+antwort = "1.Dxe5 Txe5 2.Txe5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 370
+sicherheit = "unsicher"
+antwort = "1.Sxe5 Sxe5 2.Txe5+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 371
+sicherheit = "nicht gefunden"
+antwort = "1.Txf7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 372
+sicherheit = "nicht gefunden"
+antwort = "1...Lxb1"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 373
+sicherheit = "unsicher"
+antwort = "1...Se2+ (Gabel König/Dame g3) 2.Sxe2 Tf1+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 374
+sicherheit = "nicht gefunden"
+antwort = "1.g6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 375
+sicherheit = "unsicher"
+antwort = "1.Txb7+ Kxb7 2.Db1+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 376
+sicherheit = "unsicher"
+antwort = "1.Sxd5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 377
+sicherheit = "unsicher"
+antwort = "1...Lxc5 2.Dxc5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 378
+sicherheit = "unsicher"
+antwort = "1.Sxd7 Sxd7 2.Lxc6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 379
+sicherheit = "nicht gefunden"
+antwort = "1...Txd4"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 380
+sicherheit = "sicher"
+antwort = "1.Th8+! Kxh8 2.Sf7+ (Gabel König/Dame e5) nebst 3.Sxe5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 381
+sicherheit = "nicht gefunden"
+antwort = "1.exf5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 382
+sicherheit = "unsicher"
+antwort = "1...Dd1+ 2.Kg2 Txe4"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 383
+sicherheit = "unsicher"
+antwort = "1.Sxf7 Txf7 2.Txe6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 384
+sicherheit = "nicht gefunden"
+antwort = "1...Lg4"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 385
+sicherheit = "unsicher"
+antwort = "1.Lxg6 fxg6 2.Dxg6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 386
+sicherheit = "unsicher"
+antwort = "1...Sf4 (droht Dxg2#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 387
+sicherheit = "unsicher"
+antwort = "1.Se6+ Lxe6 2.fxe6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 388
+sicherheit = "unsicher"
+antwort = "1...Df1 (droht Dxf2+ und Txg3)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 389
+sicherheit = "unsicher"
+antwort = "1.Lxd6 cxd6 2.Sxe7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 390
+sicherheit = "sicher"
+antwort = "1...Te1+! 2.Txe1 Dxd2 (Turmgewinn)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 391
+sicherheit = "nicht gefunden"
+antwort = "1.gxh5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 392
+sicherheit = "unsicher"
+antwort = "1...Dxf2+ 2.Kh2 Dxe1"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 393
+sicherheit = "unsicher"
+antwort = "1...Lxc4 2.bxc4 Txd3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 394
+sicherheit = "unsicher"
+antwort = "1.Txg4 hxg4 2.Sxe5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 395
+sicherheit = "unsicher"
+antwort = "1.Df6+ Dg7 2.Txd8+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 396
+sicherheit = "unsicher"
+antwort = "1...Dxh5 (droht Dh4#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 397
+sicherheit = "nicht gefunden"
+antwort = "1...Dxf1+ 2.Lxf1 Ld5+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 398
+sicherheit = "unsicher"
+antwort = "1.Lxg7 Kxg7 2.Se4 (greift Dd6 an)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 399
+sicherheit = "unsicher"
+antwort = "1.Sd5 (greift Dc7 an)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 400
+sicherheit = "unsicher"
+antwort = "1.Lxf7+ Kxf7 2.Sg5+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 401
+sicherheit = "unsicher"
+antwort = "1.Dxh7+ Kxh7 2.Sg5+ nebst 3.Th3"
+ergebnis = "offen"
+geloest = 2026-11-01
