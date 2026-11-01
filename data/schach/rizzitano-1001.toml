@@ -3050,7 +3050,7 @@ seite = 73
 fen = "2r3k1/pb2qp2/1p2p1p1/3nP1Qp/3PN2P/3B4/P4PP1/4R1K1 w - - 0 26"
 partie = "Akshat – S. Royal"
 turnier = "Budapest 2023"
-loesung = "26.Sf6+ Sxf6 27.exf6 Dh4 28.Lxg6! Dxe1+ 29.Kh2 Kf8 30.Lxf7 1-0"
+loesung = "26.Sf6+ Sxf6 27.exf6 Db4 28.Lxg6! Dxe1+ 29.Kh2 Kf8 30.Lxf7 1-0"
 varianten = ["27...De8 28.Tc3 Dc6 29.Kh2 nebst Tg3"]
 
 # Abschnitt 4 = Checkmate Test, Buchseite 93 (Foto vom 01.11.2026); Lösungen folgen
