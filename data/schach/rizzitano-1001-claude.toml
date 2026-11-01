@@ -5258,7 +5258,8 @@ geloest = 2026-11-01
 nr = 797
 sicherheit = "unsicher"
 antwort = "1.b4 (Dame weg, dann Se7+)"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 1
 max = 1
 geloest = 2026-11-01
 
@@ -5266,7 +5267,8 @@ geloest = 2026-11-01
 nr = 798
 sicherheit = "unsicher"
 antwort = "1...Txf4"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 1
 max = 1
 geloest = 2026-11-01
 
@@ -5274,7 +5276,8 @@ geloest = 2026-11-01
 nr = 799
 sicherheit = "unsicher"
 antwort = "1...Tc6"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 1
 geloest = 2026-11-01
 
@@ -5282,7 +5285,8 @@ geloest = 2026-11-01
 nr = 800
 sicherheit = "sicher"
 antwort = "1...Sf3+ (Gabel König und Th4)"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 1
 geloest = 2026-11-01
 
@@ -5290,7 +5294,8 @@ geloest = 2026-11-01
 nr = 801
 sicherheit = "unsicher"
 antwort = "1.Txc8+ Txc8 2.Lxb5"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 1
 geloest = 2026-11-01
 
@@ -5298,23 +5303,28 @@ geloest = 2026-11-01
 nr = 802
 sicherheit = "unsicher"
 antwort = "1.Txd8+ Txd8 2.Lc7 (Gabel Td8 und Da5)"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 1
+notiz = "Lc7 gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 803
 sicherheit = "unsicher"
 antwort = "1.Lxd5"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 1
+notiz = "Lxd5+ gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 804
 sicherheit = "unsicher"
 antwort = "1...De5+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 1
 geloest = 2026-11-01
 
@@ -5322,7 +5332,8 @@ geloest = 2026-11-01
 nr = 805
 sicherheit = "unsicher"
 antwort = "1.Dh6+ (dann Dxg5)"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 1
 geloest = 2026-11-01
 
@@ -5330,7 +5341,8 @@ geloest = 2026-11-01
 nr = 806
 sicherheit = "unsicher"
 antwort = "1.Sf7+"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 2
 max = 2
 geloest = 2026-11-01
 
@@ -5338,7 +5350,8 @@ geloest = 2026-11-01
 nr = 807
 sicherheit = "unsicher"
 antwort = "1...Txe2"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -5346,7 +5359,8 @@ geloest = 2026-11-01
 nr = 808
 sicherheit = "unsicher"
 antwort = "1...Dxc7"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -5354,15 +5368,18 @@ geloest = 2026-11-01
 nr = 809
 sicherheit = "unsicher"
 antwort = "1.Sxc6 Lxc6 2.Sxd5"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
+notiz = "Beide Züge gesehen, aber in falscher Reihenfolge."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 810
 sicherheit = "unsicher"
 antwort = "1.Lxf7+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -5370,7 +5387,8 @@ geloest = 2026-11-01
 nr = 811
 sicherheit = "unsicher"
 antwort = "1.Lxe4 dxe4 2.Sxc6"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -5378,7 +5396,8 @@ geloest = 2026-11-01
 nr = 812
 sicherheit = "unsicher"
 antwort = "1...Se2+"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 2
 max = 2
 geloest = 2026-11-01
 
@@ -5386,15 +5405,18 @@ geloest = 2026-11-01
 nr = 813
 sicherheit = "unsicher"
 antwort = "1.Txd7 Dxd7 2.Sd6"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 2
 max = 2
+notiz = "Erste beiden Züge wie im Buch, Fortsetzung anders (Buch: 31.Dxf6!)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 814
 sicherheit = "unsicher"
 antwort = "1.e6"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 2
 max = 2
 geloest = 2026-11-01
 
@@ -5402,7 +5424,8 @@ geloest = 2026-11-01
 nr = 815
 sicherheit = "unsicher"
 antwort = "1.Sxe4 Dxe4 2.Td7"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -5410,7 +5433,8 @@ geloest = 2026-11-01
 nr = 816
 sicherheit = "unsicher"
 antwort = "1.Txd5 cxd5 2.Sd6+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -5418,7 +5442,8 @@ geloest = 2026-11-01
 nr = 817
 sicherheit = "unsicher"
 antwort = "1.Txg7"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 2
 max = 2
 geloest = 2026-11-01
 
@@ -5426,7 +5451,8 @@ geloest = 2026-11-01
 nr = 818
 sicherheit = "unsicher"
 antwort = "1...Lxf3"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -5434,7 +5460,8 @@ geloest = 2026-11-01
 nr = 819
 sicherheit = "unsicher"
 antwort = "1.Ld5"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -5442,7 +5469,8 @@ geloest = 2026-11-01
 nr = 820
 sicherheit = "sicher"
 antwort = "1.Dh5 (fesselt Dg6)"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -5450,7 +5478,8 @@ geloest = 2026-11-01
 nr = 821
 sicherheit = "unsicher"
 antwort = "1...Db1+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 2
 geloest = 2026-11-01
 
@@ -5458,15 +5487,18 @@ geloest = 2026-11-01
 nr = 822
 sicherheit = "sicher"
 antwort = "1.Sd6 (Gabel Dc4 und Te8)"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
+notiz = "Sd6+ gesehen, aber erst als vierten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 823
 sicherheit = "unsicher"
 antwort = "1...Lxd2"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 3
 max = 3
 geloest = 2026-11-01
 
@@ -5474,7 +5506,8 @@ geloest = 2026-11-01
 nr = 824
 sicherheit = "unsicher"
 antwort = "1.Lxe5 Dxe5 2.Dd4"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -5482,15 +5515,18 @@ geloest = 2026-11-01
 nr = 825
 sicherheit = "unsicher"
 antwort = "1...Sc3"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
+notiz = "Sc3 gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 826
 sicherheit = "unsicher"
 antwort = "1.Sg5"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -5498,7 +5534,8 @@ geloest = 2026-11-01
 nr = 827
 sicherheit = "unsicher"
 antwort = "1.De6+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -5506,7 +5543,8 @@ geloest = 2026-11-01
 nr = 828
 sicherheit = "unsicher"
 antwort = "1...Txc3"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 3
 max = 3
 geloest = 2026-11-01
 
@@ -5514,23 +5552,28 @@ geloest = 2026-11-01
 nr = 829
 sicherheit = "unsicher"
 antwort = "1...dxc3"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
+notiz = "dxc3 gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 830
 sicherheit = "unsicher"
 antwort = "1...Txd4 2.Txd4 Lc5"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 3
 max = 3
+notiz = "Erster Zug richtig, Fortsetzung anders (Buch: 30...Dxc1+)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 831
 sicherheit = "unsicher"
 antwort = "1.Sf6+ gxf6 2.Dxd7"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -5538,7 +5581,8 @@ geloest = 2026-11-01
 nr = 832
 sicherheit = "unsicher"
 antwort = "1.Ta8+"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 3
 max = 3
 geloest = 2026-11-01
 
@@ -5546,7 +5590,8 @@ geloest = 2026-11-01
 nr = 833
 sicherheit = "unsicher"
 antwort = "1...Sxh4+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -5554,7 +5599,8 @@ geloest = 2026-11-01
 nr = 834
 sicherheit = "unsicher"
 antwort = "1.Dd8+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -5562,15 +5608,18 @@ geloest = 2026-11-01
 nr = 835
 sicherheit = "unsicher"
 antwort = "1...Dc2+"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 3
 max = 3
+notiz = "Erster Zug richtig."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 836
 sicherheit = "sicher"
 antwort = "1...Se4+ (Gabel Kf2, Td2, Df6)"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
 geloest = 2026-11-01
 
@@ -5578,15 +5627,18 @@ geloest = 2026-11-01
 nr = 837
 sicherheit = "unsicher"
 antwort = "1.hxg6"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 3
+notiz = "hxg6 gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 838
 sicherheit = "unsicher"
 antwort = "1.Tb1"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 3
 max = 3
 geloest = 2026-11-01
 
@@ -5594,7 +5646,8 @@ geloest = 2026-11-01
 nr = 839
 sicherheit = "unsicher"
 antwort = "1.Sc6+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 4
 geloest = 2026-11-01
 
@@ -5602,7 +5655,8 @@ geloest = 2026-11-01
 nr = 840
 sicherheit = "unsicher"
 antwort = "1...Lf5"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 4
 geloest = 2026-11-01
 
@@ -5610,15 +5664,18 @@ geloest = 2026-11-01
 nr = 841
 sicherheit = "unsicher"
 antwort = "1...Txf3+ 2.Kxf3 dxe4+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 4
+notiz = "Txf3+ gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 842
 sicherheit = "unsicher"
 antwort = "1...Sxd3"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 4
 geloest = 2026-11-01
 
@@ -5626,7 +5683,8 @@ geloest = 2026-11-01
 nr = 843
 sicherheit = "unsicher"
 antwort = "1.Sf6+"
-ergebnis = "offen"
+ergebnis = "richtig"
+punkte = 4
 max = 4
 geloest = 2026-11-01
 
@@ -5634,6 +5692,7 @@ geloest = 2026-11-01
 nr = 844
 sicherheit = "unsicher"
 antwort = "1...Sf2+"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 4
 geloest = 2026-11-01
