@@ -6378,3 +6378,149 @@ nr = 642
 kapitel = 7
 seite = 189
 fen = "8/1n3p2/1p2kp1r/p3p3/P4PKN/1P5P/2PR4/8 b - - 0 1"
+
+# Abschnitt 7 = Kapitel 4 Forks, Pins and Loose Pieces Puzzles, Buchseiten 190–193 (Fotos vom 01.11.2026); Lösungen folgen
+
+[[aufgabe]]
+nr = 643
+kapitel = 7
+seite = 190
+fen = "5rk1/p4pp1/1p5p/3pP2Q/3q4/6RP/PPr3PK/5R2 w - - 0 1"
+
+[[aufgabe]]
+nr = 644
+kapitel = 7
+seite = 190
+fen = "r2q1rk1/1p1b1pb1/p1n1p2p/6pP/3PB3/2P2NQ1/P2B1PP1/R3R1K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 645
+kapitel = 7
+seite = 190
+fen = "6R1/3k1r2/p1p1q3/1p2p3/6N1/P7/1PP2bQ1/2K5 w - - 0 1"
+
+[[aufgabe]]
+nr = 646
+kapitel = 7
+seite = 190
+fen = "4rbk1/1p1n1ppp/p5q1/8/2P2Q2/1P3NRP/PB4PK/8 b - - 0 1"
+
+[[aufgabe]]
+nr = 647
+kapitel = 7
+seite = 190
+fen = "q2b2k1/3Q1pp1/p3p1p1/8/4P3/4PKP1/PP2r2P/2R5 b - - 0 1"
+
+[[aufgabe]]
+nr = 648
+kapitel = 7
+seite = 190
+fen = "r1bqk2r/1p1nppbp/p2p1np1/P1p5/2B1P3/2N2N2/1PPP1PPP/R1BQK2R w - - 0 1"
+
+[[aufgabe]]
+nr = 649
+kapitel = 7
+seite = 191
+fen = "r1r3k1/3bppbp/3p1np1/p6q/Bn2PP2/2N1BN1P/1PPQ2P1/R4RK1 w - - 0 1"
+
+[[aufgabe]]
+nr = 650
+kapitel = 7
+seite = 191
+fen = "r4nk1/1ppq2pp/p2p2n1/3Pp3/2P1N1Q1/2N1P2P/PP4P1/5RK1 w - - 0 1"
+
+[[aufgabe]]
+nr = 651
+kapitel = 7
+seite = 191
+fen = "5rk1/1q4pp/1p1npp2/3b4/1P6/3RQNP1/r3PPBP/2R3K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 652
+kapitel = 7
+seite = 191
+fen = "3rk3/p3br2/3p4/2pQ1q2/2p1R1p1/2P3P1/P2B1P2/1R4K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 653
+kapitel = 7
+seite = 191
+fen = "5r2/3bq1pk/p1p1B1np/1p6/1P1Np2P/2P1P1Q1/P5PK/5R2 w - - 0 1"
+
+[[aufgabe]]
+nr = 654
+kapitel = 7
+seite = 191
+fen = "2b2k2/4bppB/1p6/1P6/Pn5R/Q3P1P1/5PKP/3q4 w - - 0 1"
+
+[[aufgabe]]
+nr = 655
+kapitel = 7
+seite = 192
+fen = "2r2rk1/1p3pbp/p5p1/1qnPp3/4P3/R2PBN1P/1P1Q2P1/5RK1 w - - 0 1"
+
+[[aufgabe]]
+nr = 656
+kapitel = 7
+seite = 192
+fen = "1r2r1k1/5q1p/2p3p1/p1Nb1p2/1n1P1QPR/1P6/5P1P/1B1R2K1 b - - 0 1"
+
+[[aufgabe]]
+nr = 657
+kapitel = 7
+seite = 192
+fen = "rn1qr1k1/pp3ppp/5n2/2pP4/PbN1P3/1bN2P2/1P1Q1KPP/R1B2B1R b - - 0 1"
+
+[[aufgabe]]
+nr = 658
+kapitel = 7
+seite = 192
+fen = "2rr2k1/1p3pb1/p1bppnp1/q3n2p/2P1P3/1PNNB1PP/P2Q1PB1/2R1R1K1 b - - 0 1"
+
+[[aufgabe]]
+nr = 659
+kapitel = 7
+seite = 192
+fen = "8/2pkb1Br/3r3p/p1p2p2/P1B1nP2/2P2K2/5P1P/1R1R4 w - - 0 1"
+
+[[aufgabe]]
+nr = 660
+kapitel = 7
+seite = 192
+fen = "r3r1k1/ppp2pp1/7p/3Pqb1Q/2B4n/P1P1B3/1P4PP/R4RK1 w - - 0 1"
+
+[[aufgabe]]
+nr = 661
+kapitel = 7
+seite = 193
+fen = "3q1rk1/pb3p1p/1p2p1n1/3P4/5pN1/P7/BP3PPP/3Q1RK1 b - - 0 1"
+
+[[aufgabe]]
+nr = 662
+kapitel = 7
+seite = 193
+fen = "r2q1rk1/pp3ppp/n1pb4/3p1b2/2PPn3/PQ1B1N2/1P3PPP/RNB1R1K1 b - - 0 1"
+
+[[aufgabe]]
+nr = 663
+kapitel = 7
+seite = 193
+fen = "4r1k1/pB3pp1/7p/4n1q1/8/4N2b/PP1Q1PP1/2R3K1 b - - 0 1"
+
+[[aufgabe]]
+nr = 664
+kapitel = 7
+seite = 193
+fen = "2r2bk1/p1qr1ppp/bp3B2/3PpP2/2p3Q1/2P3P1/P1B2P1P/2RR2K1 b - - 0 1"
+
+[[aufgabe]]
+nr = 665
+kapitel = 7
+seite = 193
+fen = "2rr2k1/p4p1p/1pn3p1/4q3/1P1N3P/2Q5/P4PP1/3R1RK1 w - - 0 1"
+
+[[aufgabe]]
+nr = 666
+kapitel = 7
+seite = 193
+fen = "r2r2k1/4qppp/8/p1nbp3/P1N1n3/1p2P2P/1P2BPP1/RQR1B1K1 b - - 0 1"
