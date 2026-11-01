@@ -1003,6 +1003,7 @@ nr = 238
 sicherheit = "unsicher"
 antwort = "1.Tg5+"
 ergebnis = "falsch"
+notiz = "Gelöst mit falsch abgelesener Stellung (Turm e5 als f5 gelesen)."
 geloest = 2026-11-01
 
 [[antwort]]

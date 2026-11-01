@@ -754,7 +754,7 @@ seite = 17
 fen = "2r3k1/p4ppp/b1B1p3/P1B5/8/6P1/5P1P/R5K1 w - - 0 26"
 partie = "Trichkov – Lhotska"
 turnier = "Czech Team Ch 2022"
-loesung = "26.Td1! f6 27.Td6 Kf7 28.Td7 1-0"
+loesung = "26.Td1! f6 27.Td6 Kf7 28.Ld7 1-0"
 
 [[aufgabe]]
 nr = 70
@@ -900,7 +900,7 @@ seite = 20
 fen = "6r1/7k/4p2p/pqp1Prp1/5nQ1/2R2N1P/5PPK/2R5 b - - 0 38"
 partie = "Alboredo – Sliwicka"
 turnier = "Antwerp (women) 2022"
-loesung = "38...h5! 39.Sxg5+ Txg5 –+"
+loesung = "38...h5! 39.Sxg5+ Tgxg5 –+"
 varianten = ["39.Dg3 Se2 –+"]
 
 [[aufgabe]]
@@ -1027,7 +1027,7 @@ seite = 22
 fen = "2r3k1/p4p1p/6pP/1p1pP3/2qR4/b3B3/P4PP1/1Q4K1 b - - 0 29"
 partie = "Panda – Xu Xiangyu"
 turnier = "Sant Ferran de ses Roques 2023"
-loesung = "29...Dxd4! 30.Lxd4 Tc1+ 31.Dxc1 Lxc1 32.La7 Kf8 33.Lc5+ Ke8 34.Kf1 Lxh6 –+"
+loesung = "29...Dxd4! 30.Lxd4 Tc1+ 31.Dxc1 Lxc1 32.Lxa7 Kf8 33.Lc5+ Ke8 34.Kf1 Lxh6 –+"
 
 [[aufgabe]]
 nr = 98
@@ -2376,14 +2376,14 @@ seite = 61
 fen = "r2r3k/5BpN/p5p1/1p4P1/3q4/P4Q2/1n3P1P/2R3K1 w - - 0 32"
 partie = "Yuffa – F. Svane (Variante)"
 turnier = "Bundesliga 2022/3"
-loesung = "32.Sf8! Dd3 33.Dxg6+ Dxg6 34.Lxg6 +–"
+loesung = "32.Sf8! Dd3 33.Sxg6+ Dxg6 34.Lxg6 +–"
 varianten = ["32...Txf8 33.Dh3+ Dh4 34.Dxh4#"]
 
 [[aufgabe]]
 nr = 238
 kapitel = 3
 seite = 61
-fen = "r2qr1k1/pp3p1p/3bbp2/2pp1R2/5Q2/2PB1N2/PPP2PPP/2KR4 w - - 0 16"
+fen = "r2qr1k1/pp3p1p/3bbp2/2ppR3/5Q2/2PB1N2/PPP2PPP/2KR4 w - - 0 16"
 partie = "Beerdsen – T. Burg"
 turnier = "Bundesliga 2022/3"
 loesung = "16.Dh6! fxe5 17.Lxh7+ Kh8 18.Lg6+ Kg8 19.Sg5 Dxg5+ 20.Dxg5 fxg6 21.Dxg6+ Kf8 22.Txd5 +–"
@@ -2422,7 +2422,8 @@ seite = 62
 fen = "rnbq1rk1/1p1nbpp1/p3P2p/2pp3Q/3P4/P2B1N2/1PP2PPP/R1B1K2R w - - 0 11"
 partie = "Gadimbayli – Fedoseev"
 turnier = "Internet rapid 2023"
-loesung = "11.Lxh6! Sf6 12.Dg5 Se8 13.Df5 Sf6 14.Lxg7! Kxg7 15.Dg6 De8 16.Dh6 Dh5 17.Lh7+ Sxh7 18.Dxh5 Kxg7 19.Dg4+ Kh8 20.Se5 +–"
+loesung = "11.Lxh6! Sf6 12.Dg5 Se8 13.Df5 Sf6 14.Lxg7! fxe6 15.Dg6 De8 16.Dh6 Dh5 17.Lh7+ Sxh7 18.Dxh5 Kxg7 19.Dg4+ Kh8 20.Se5 +–"
+varianten = ["11...gxh6 12.Dxh6 Sf6 13.g4 +–", "14...Kxg7 15.Dg5+ Kh8 16.Dh6+ Kg8 17.g4 +–"]
 
 [[aufgabe]]
 nr = 243
@@ -2849,7 +2850,7 @@ seite = 69
 fen = "r1r5/1p1b1k1p/p2pN1pb/3Pnp2/PP1Qp1nq/1B5P/1BP1NPP1/R4RK1 b - - 0 19"
 partie = "Manhardt – Casagrande"
 turnier = "Austrian Team Ch 2022/3"
-loesung = "19...Sf3+! 20.gxf3 Se5 21.Db6 Dxh3! 22.Lxe5 exf3 23.Sf4 Lxf4 24.Sxf4 Dg4+ 25.Kh2 dxe5 26.Tg1 Dh4+ 27.Sh3 f4 –+"
+loesung = "19...Sf3+! 20.gxf3 Se5 21.Db6 Dxh3! 22.Lxe5 exf3 23.S6f4 Lxf4 24.Sxf4 Dg4+ 25.Kh2 dxe5 26.Tg1 Dh4+ 27.Sh3 f4 –+"
 
 [[aufgabe]]
 nr = 289
@@ -3262,7 +3263,7 @@ seite = 96
 fen = "r5k1/5pp1/4p1b1/1p1p2Pp/1PpP3P/2K1PP2/rP4B1/4R2R b - - 0 27"
 partie = "Zo. Nemeth – Halak"
 turnier = "Budapest 2022"
-loesung = "27...Ta3+! 0-1"
+loesung = "27...T8a3+! 0-1"
 varianten = ["28.Kd2 (28.bxa3 Tc2#) 28...Txb2+ 29.Ke1 c3 30.e4 Ta1#"]
 
 [[aufgabe]]
