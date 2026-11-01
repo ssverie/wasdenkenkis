@@ -1661,773 +1661,1195 @@ turnier = "Webster Groves (team event) 2023"
 loesung = "35.Dh7+ Kf8 36.Dh8+! 1-0"
 varianten = ["36...Sxh8 37.Txh8#"]
 
-# Abschnitt 3 = Kapitel 2 Checkmate Puzzles, Buchseiten 48–49 (Foto vom 01.11.2026); Lösungen folgen
+# Abschnitt 3 = Kapitel 2 Checkmate Puzzles, Buchseiten 48–49 (Foto vom 01.11.2026); Lösungen Buchseiten 73–89
 
 [[aufgabe]]
 nr = 162
 kapitel = 3
 seite = 48
-fen = "4r2k/5p1q/2Q5/2p5/3b1B2/3p2RP/PP2r1PK/5R2 w - - 0 1"
+fen = "4r2k/5p1q/2Q5/2p5/3b1B2/3p2RP/PP2r1PK/5R2 w - - 0 33"
+partie = "Erigaisi – Mamedyarov"
+turnier = "Internet rapid 2022"
+loesung = "33.Le5+! 1-0"
+varianten = ["33...T8xe5 34.Df6+ Dg7 35.Dxg7#", "33...T2xe5 34.Df6+ Dg7 35.Dxg7#", "33...Lxe5 34.Dxe8+ Dg8 35.Dxg8#"]
 
 [[aufgabe]]
 nr = 163
 kapitel = 3
 seite = 48
-fen = "2Q5/6k1/1p1b1q2/8/2Bp3p/1P4P1/1P3P2/6K1 w - - 0 1"
+fen = "2Q5/6k1/1p1b1q2/8/2Bp3p/1P4P1/1P3P2/6K1 w - - 0 52"
+partie = "T. Sosa – Leisch"
+turnier = "Sant Boi 2022"
+loesung = "52.Dg8+ Kh6 53.Ld3! hxg3 54.fxg3 Kh5 55.Dh7+ 1-0"
+varianten = ["53...Dg7 54.De6+ +–"]
 
 [[aufgabe]]
 nr = 164
 kapitel = 3
 seite = 49
-fen = "6k1/5p2/3q2p1/Q2Pn2p/2p5/P6P/1r4P1/2R2B1K b - - 0 1"
+fen = "6k1/5p2/3q2p1/Q2Pn2p/2p5/P6P/1r4P1/2R2B1K b - - 0 44"
+partie = "Dushyant – Karthik"
+turnier = "Commonwealth Ch, Waskaduwa 2022"
+loesung = "44...Sf3! 0-1"
+varianten = ["45.gxf3 Dh2#"]
 
 [[aufgabe]]
 nr = 165
 kapitel = 3
 seite = 49
-fen = "6k1/5pp1/1pB4p/p2Pn3/P2Q2P1/2P5/1P4KP/4q3 b - - 0 1"
+fen = "6k1/5pp1/1pB4p/p2Pn3/P2Q2P1/2P5/1P4KP/4q3 b - - 0 47"
+partie = "Hamitevici – Bulmaga"
+turnier = "Braila rapid 2022"
+loesung = "47...De2+ 48.Kg3 Df3+ 49.Kh4 g5+ 50.Kh5 Dh3# (0-1)"
+varianten = ["49...Sg6+ 50.Kh5 Dh3#"]
 
 [[aufgabe]]
 nr = 166
 kapitel = 3
 seite = 49
-fen = "1R6/5p1k/6p1/2P1Q3/4p2P/4r1PK/8/3q4 b - - 0 1"
+fen = "1R6/5p1k/6p1/2P1Q3/4p2P/4r1PK/8/3q4 b - - 0 52"
+partie = "M. Hess – Šebenik"
+turnier = "Austrian Team Ch 2022/3"
+loesung = "52...Dd7+! 0-1"
+varianten = ["53.Kg2 Dd2+ 54.Kf1 Te1#"]
 
 [[aufgabe]]
 nr = 167
 kapitel = 3
 seite = 49
-fen = "8/4k3/2Q5/5p2/2bB1P1p/q3P2P/8/4K3 b - - 0 1"
+fen = "8/4k3/2Q5/5p2/2bB1P1p/q3P2P/8/4K3 b - - 0 54"
+partie = "M. Lu – Santiago"
+turnier = "Juan Dolio 2023"
+loesung = "54...Dc1+ 55.Kf2 Df1# (0-1)"
 
 [[aufgabe]]
 nr = 168
 kapitel = 3
 seite = 49
-fen = "4r1k1/5p2/6R1/1p2P1Q1/nPr5/pK4Nq/P2R4/8 b - - 0 1"
+fen = "4r1k1/5p2/6R1/1p2P1Q1/nPr5/pK4Nq/P2R4/8 b - - 0 41"
+partie = "S. Brunello – Moroni"
+turnier = "Italian Ch, Cagliari 2022"
+loesung = "41...Kh7! 42.Tg7+ Kh8 43.Td3 Tec8 0-1"
+varianten = ["41...fxg6?? 42.Dxg6+ führt zum Matt"]
 
 [[aufgabe]]
 nr = 169
 kapitel = 3
 seite = 49
-fen = "6k1/3b1p1p/1p2nPpQ/4P3/1p1p2P1/4PN1P/4BK2/q7 w - - 0 1"
+fen = "6k1/3b1p1p/1p2nPpQ/4P3/1p1p2P1/4PN1P/4BK2/q7 w - - 0 39"
+partie = "Aczel – B. Szabo"
+turnier = "Hungarian Team Ch 2022/3"
+loesung = "39.Sxd4 Dh1 40.Sxe6 Dh2+ 41.Ke1 1-0"
 
-# Abschnitt 3 = Kapitel 2 Checkmate Puzzles, Buchseiten 50–59 (Fotos vom 01.11.2026); Lösungen folgen
+# Abschnitt 3 = Kapitel 2 Checkmate Puzzles, Buchseiten 50–59 (Fotos vom 01.11.2026); Lösungen Buchseiten 73–89
 
 [[aufgabe]]
 nr = 170
 kapitel = 3
 seite = 50
-fen = "r2r1bk1/pp1n1pp1/2b1p2p/7N/2BN1PQ1/4q3/PP4PP/2RR3K w - - 0 1"
+fen = "r2r1bk1/pp1n1pp1/2b1p2p/7N/2BN1PQ1/4q3/PP4PP/2RR3K w - - 0 21"
+partie = "Beliavsky – Borhy"
+turnier = "Budapest rapid 2022"
+loesung = "21.Sxe6! fxe6 22.Te1 Dd4 23.Dxe6+ Kh7 24.Dg8+ Kg6 25.Lf7+ Kf5 26.Dh7+ Kg4 27.Dg6+ Kh4 28.Dg3#"
+varianten = ["Partie: 21.Tc3?"]
 
 [[aufgabe]]
 nr = 171
 kapitel = 3
 seite = 50
-fen = "b1r2r1k/p3p1bp/6p1/5pN1/2Bn1P2/1P6/P1PB2PP/2KR3R b - - 0 1"
+fen = "b1r2r1k/p3p1bp/6p1/5pN1/2Bn1P2/1P6/P1PB2PP/2KR3R b - - 0 20"
+partie = "K. Malinovsky – Rašik"
+turnier = "Czech Team Ch 2022/3"
+loesung = "20...Txc4! 0-1"
+varianten = ["21.bxc4 Se2+ 22.Kb1 Tb8+ 23.Lb4 Txb4#"]
 
 [[aufgabe]]
 nr = 172
 kapitel = 3
 seite = 50
-fen = "8/2R3p1/1B6/2P2P2/1r3nPk/1R6/P4K2/4r3 b - - 0 1"
+fen = "8/2R3p1/1B6/2P2P2/1r3nPk/1R6/P4K2/4r3 b - - 0 52"
+partie = "N. Radovanović – Ivanisević"
+turnier = "Serbian Ch, Bajina Bašta 2022"
+loesung = "52...Tbe4! 53.Kf3 Sh3! 54.Tb2 T4e3+ 55.Kg2 Tg3+ 56.Kh2 Sf4 0-1"
 
 [[aufgabe]]
 nr = 173
 kapitel = 3
 seite = 50
-fen = "1R4Q1/p1r3n1/6k1/6pp/1K1BpP2/4P3/P6q/8 w - - 0 1"
+fen = "1R4Q1/p1r3n1/6k1/6pp/1K1BpP2/4P3/P6q/8 w - - 0 46"
+partie = "Mitsis – Skembris"
+turnier = "Greek Ch, Athens 2022"
+loesung = "46.Lxg7 Txg7 47.De6+ Kh7 48.Df5+ Tg6 49.Tb7+ Kh8 50.Df8+ 1-0"
+varianten = ["50...Tg8 51.Dh6#"]
 
 [[aufgabe]]
 nr = 174
 kapitel = 3
 seite = 50
-fen = "r4rk1/3n1p2/p3q1p1/1p2PN1p/3p1Q1P/6R1/5PP1/2R2K2 w - - 0 1"
+fen = "r4rk1/3n1p2/p3q1p1/1p2PN1p/3p1Q1P/6R1/5PP1/2R2K2 w - - 0 29"
+partie = "Gedajlović – Kunka"
+turnier = "San Jose 2022"
+loesung = "29.Tc6! Dxe5 30.Dg5 Kh8 31.Dh6+ Kg8 32.Tcxg6+ 1-0"
+varianten = ["32...fxg6 33.Dxg6+ Kh8 34.Dxh5#"]
 
 [[aufgabe]]
 nr = 175
 kapitel = 3
 seite = 50
-fen = "r3r2b/2qnQ3/p1p3kp/4pppN/1PP5/3P3P/1B3PP1/R2BR1K1 w - - 0 1"
+fen = "r3r2b/2qnQ3/p1p3kp/4pppN/1PP5/3P3P/1B3PP1/R2BR1K1 w - - 0 26"
+partie = "Sankalp – A. Bai"
+turnier = "Sitges 2022"
+loesung = "26.Sf4+! gxf4 27.Lh5+ Kxh5 28.Df7+ Kg5 29.h4+ Kxh4 30.Dxf5 e4 31.g3+ fxg3 32.Kg2 1-0"
 
 [[aufgabe]]
 nr = 176
 kapitel = 3
 seite = 51
-fen = "r2r2k1/1p4pp/3q1p2/2bpn3/B6P/P1P2P2/1P3BP1/1R1Q1RK1 b - - 0 1"
+fen = "r2r2k1/1p4pp/3q1p2/2bpn3/B6P/P1P2P2/1P3BP1/1R1Q1RK1 b - - 0 23"
+partie = "Blohberger – Bartel"
+turnier = "European Rapid Ch, Katowice 2022"
+loesung = "23...Txa4! 24.Dxa4 Sxf3+! 25.gxf3 Dg3+ 26.Kh1 Dxf3+ 27.Kg1 Dg3+ 28.Kh1 Dh3+ 29.Kg1 Ld6 0-1"
 
 [[aufgabe]]
 nr = 177
 kapitel = 3
 seite = 51
-fen = "5rk1/p4ppp/bp1Qp2q/4P2N/3R3P/P4P2/5KP1/8 w - - 0 1"
+fen = "5rk1/p4ppp/bp1Qp2q/4P2N/3R3P/P4P2/5KP1/8 w - - 0 30"
+partie = "Indjić – Djordjević"
+turnier = "Serbian Ch, Bajina Bašta 2022"
+loesung = "30.De7! g6 31.Sf6+ Kg7 32.Dxf8+! Kxf8 33.Td8+ Ke7 34.Te8# (1-0)"
 
 [[aufgabe]]
 nr = 178
 kapitel = 3
 seite = 51
-fen = "2r2rk1/p4b2/1p3qpp/2p1P3/2Nn1NQP/PP1P2K1/5P2/3R1R2 b - - 0 1"
+fen = "2r2rk1/p4b2/1p3qpp/2p1P3/2Nn1NQP/PP1P2K1/5P2/3R1R2 b - - 0 30"
+partie = "Plotkin – E. Grinberg"
+turnier = "Saint Louis 2022"
+loesung = "30...Dxf4+! 31.Kxf4 Le6+ 32.Kg3 Lxg4 33.Kxg4 Tf3! 34.Sd2 h5+ 35.Kg5 Kg7 36.Sxf3 Se6# (0-1)"
 
 [[aufgabe]]
 nr = 179
 kapitel = 3
 seite = 51
-fen = "6k1/p5p1/3qp3/1p2RQP1/1Pr5/7R/6PK/2r5 w - - 0 1"
+fen = "6k1/p5p1/3qp3/1p2RQP1/1Pr5/7R/6PK/2r5 w - - 0 60"
+partie = "Henriquez Villagra – Kaidanov"
+turnier = "Juan Dolio 2023"
+loesung = "60.Dh7+ Kf8 61.Tf3+ Ke8 62.Dg8+ Kd7 63.Tf7+ 1-0"
 
 [[aufgabe]]
 nr = 180
 kapitel = 3
 seite = 51
-fen = "r1N3k1/8/2p1P1pb/p7/3P4/1qP3Q1/6P1/6K1 w - - 0 1"
+fen = "r1N3k1/8/2p1P1pb/p7/3P4/1qP3Q1/6P1/6K1 w - - 0 39"
+partie = "Do. Horvath – Rosner"
+turnier = "Kiel 2022"
+loesung = "39.Dxg6+ Lg7 40.Se7+ Kh8 41.Dh5+ 1-0"
+varianten = ["Nicht 39.Se7+?? Kh8!"]
 
 [[aufgabe]]
 nr = 181
 kapitel = 3
 seite = 51
-fen = "r1q1Nr2/pppn1p1p/6pk/4Q3/8/P3P3/1PP3PP/5RK1 w - - 0 1"
+fen = "r1q1Nr2/pppn1p1p/6pk/4Q3/8/P3P3/1PP3PP/5RK1 w - - 0 21"
+partie = "Tabatabaei – Rustemov"
+turnier = "Internet rapid 2022"
+loesung = "21.Dg7+! Kg5 22.h4+ Kh5 23.Tf5+ 1-0"
+varianten = ["Nicht 21.Df4+? g5"]
 
 [[aufgabe]]
 nr = 182
 kapitel = 3
 seite = 52
-fen = "3r1k2/pq3p1p/4p1p1/1rp1P3/P1QP1P2/2R5/6PP/3R2K1 b - - 0 1"
+fen = "3r1k2/pq3p1p/4p1p1/1rp1P3/P1QP1P2/2R5/6PP/3R2K1 b - - 0 26"
+partie = "Bernadskiy – Salem"
+turnier = "Sharjah 2023"
+loesung = "26...Txd4! 27.Txd4 Tb1+! 28.Kf2 Tb2+ 29.Ke3 Dxg2 0-1"
 
 [[aufgabe]]
 nr = 183
 kapitel = 3
 seite = 52
-fen = "6k1/1pnQn1p1/p4p1p/2q1pB2/4P2P/1PB3P1/5P2/6K1 w - - 0 1"
+fen = "6k1/1pnQn1p1/p4p1p/2q1pB2/4P2P/1PB3P1/5P2/6K1 w - - 0 37"
+partie = "Andreikin – Oparin"
+turnier = "Internet rapid 2022"
+loesung = "37.b4! Dxc3 38.Dxe7 Dc1+ 39.Kg2 Dc4 40.Lg6 1-0"
 
 [[aufgabe]]
 nr = 184
 kapitel = 3
 seite = 52
-fen = "8/1pQ3pk/2p3bp/1p4n1/4p2q/P3Nr1P/1PP1BPP1/5RK1 b - - 0 1"
+fen = "8/1pQ3pk/2p3bp/1p4n1/4p2q/P3Nr1P/1PP1BPP1/5RK1 b - - 0 40"
+partie = "L. Dominguez – Aronian"
+turnier = "Internet rapid 2022"
+loesung = "40...Txh3! 41.gxh3 Sxh3+ 42.Kg2 Sf4+ 43.Kg1 Sxe2+ 44.Kg2 Sf4+ 45.Kg1 Dg5+ 46.Kh2 Lh5 0-1"
 
 [[aufgabe]]
 nr = 185
 kapitel = 3
 seite = 52
-fen = "2b1kb1r/r4pp1/p1P4p/3pN2B/7B/8/5PPP/R5K1 w - - 0 1"
+fen = "2b1kb1r/r4pp1/p1P4p/3pN2B/7B/8/5PPP/R5K1 w - - 0 25"
+partie = "Pulvett Marin – Macias Pino"
+turnier = "Valencia 2022"
+loesung = "25.Sxf7! g5 26.Sxg5+ Ke7 27.Sf7+ Ke6 28.Te1+ Kf5 29.Te5+ Kf4 30.Lg3#"
+varianten = ["Partie: 26...Kd8 27.Se6# (1-0)"]
 
 [[aufgabe]]
 nr = 186
 kapitel = 3
 seite = 52
-fen = "1r4k1/p1qnnpP1/5P2/2p1p2p/4B3/PP2P3/1B3P2/3QK3 w - - 0 1"
+fen = "1r4k1/p1qnnpP1/5P2/2p1p2p/4B3/PP2P3/1B3P2/3QK3 w - - 0 31"
+partie = "Afanasiev – O. Ivanov"
+turnier = "Moscow 2022"
+loesung = "31.Lh7+! 1-0"
+varianten = ["31...Kxh7 32.Dxh5+ Kg8 33.Dh8#"]
 
 [[aufgabe]]
 nr = 187
 kapitel = 3
 seite = 52
-fen = "3R4/2r1Bkpp/5p2/p7/r1b1R3/P1P2PP1/5K1P/8 w - - 0 1"
+fen = "3R4/2r1Bkpp/5p2/p7/r1b1R3/P1P2PP1/5K1P/8 w - - 0 32"
+partie = "Heimann – Bilovil"
+turnier = "Dortmund 2022"
+loesung = "32.Tf8+ Kg6 33.Tg4+ Kh6 34.Lxf6! Txa3 35.Lg5+ Kh5 36.Ld2 h6 37.Th8"
+varianten = ["Partie: 37.Tf5+ g5 38.Tf6 Tc5 39.Th4+ gxh4 40.g4# (1-0)", "37...Tc5 38.Txg7 Tc6 39.Tg5#"]
 
 [[aufgabe]]
 nr = 188
 kapitel = 3
 seite = 53
-fen = "r1b1k2r/1p2bpp1/p5n1/2pqp2p/P1N4P/2PPBNP1/1P3P2/R2Q1RK1 b - - 0 1"
+fen = "r1b1k2r/1p2bpp1/p5n1/2pqp2p/P1N4P/2PPBNP1/1P3P2/R2Q1RK1 b - - 0 14"
+partie = "Buscara – Starostits"
+turnier = "Seville 2022"
+loesung = "14...Lg4 15.Sb6 Dc6 16.Sxa8 Lxf3 17.Db3 Dc8 18.Sc7+ Dxc7 19.Tfe1 Sxh4 20.gxh4 Dd7 0-1"
 
 [[aufgabe]]
 nr = 189
 kapitel = 3
 seite = 53
-fen = "2r5/2r2pk1/Q3bqpp/2ppR3/8/1PP4P/P1B2PP1/4R1K1 w - - 0 1"
+fen = "2r5/2r2pk1/Q3bqpp/2ppR3/8/1PP4P/P1B2PP1/4R1K1 w - - 0 30"
+partie = "Stoyanov – Kushagra"
+turnier = "Belgrade 2022"
+loesung = "30.Txe6! fxe6 31.Txe6 Dxc3 32.Txg6+ Kh8 33.Txh6+ Kg8 34.De6+ Kf8 35.Tf6+ Kg7 36.Tg6+ Kh8 37.Tg8+ 1-0"
 
 [[aufgabe]]
 nr = 190
 kapitel = 3
 seite = 53
-fen = "r3r1k1/pb3pp1/qp2pn1p/4N3/P2R4/B1P1P2P/2Q2PP1/3R2K1 w - - 0 1"
+fen = "r3r1k1/pb3pp1/qp2pn1p/4N3/P2R4/B1P1P2P/2Q2PP1/3R2K1 w - - 0 22"
+partie = "Nisipeanu – Sipilä"
+turnier = "Chennai Olympiad 2022"
+loesung = "22.Sxf7! Kxf7 23.Td7+ Sxd7 24.Txd7+ Kf6 25.Dh7 Tg8 26.Le7+ Kf7 27.Lh4+ Kf8 28.Dg6 Dxa4 29.Le7# (1-0)"
 
 [[aufgabe]]
 nr = 191
 kapitel = 3
 seite = 53
-fen = "3r3k/2p3pp/4Q3/np1p4/8/2P2NN1/1Pb2KPP/q1B5 w - - 0 1"
+fen = "3r3k/2p3pp/4Q3/np1p4/8/2P2NN1/1Pb2KPP/q1B5 w - - 0 23"
+partie = "V. Onishchuk – Kantor"
+turnier = "Chennai Olympiad 2022"
+loesung = "23.Lh6! Tg8 24.Lxg7+! Kxg7 25.De7+ Kh6 26.Df6+ Tg6 27.Df8+ Tg7 28.Df4+ 1-0"
 
 [[aufgabe]]
 nr = 192
 kapitel = 3
 seite = 53
-fen = "r5k1/4qppp/4p3/pbrpP1PP/1p3Q2/3B1P2/PPP5/1K4RR w - - 0 1"
+fen = "r5k1/4qppp/4p3/pbrpP1PP/1p3Q2/3B1P2/PPP5/1K4RR w - - 0 26"
+partie = "Nyzhnyk – Schmakel"
+turnier = "US Open, Rancho Mirage 2022"
+loesung = "26.Lxh7+! Kxh7 27.g6+ Kg8 28.h6 fxg6 29.Txg6 Tf8 30.Dg4 Tf7 31.hxg7 Txg7 32.Dh3 1-0"
 
 [[aufgabe]]
 nr = 193
 kapitel = 3
 seite = 53
-fen = "6kr/p1p2pb1/3p2p1/6P1/2qPQ2N/8/PP3P2/1K2R3 w - - 0 1"
+fen = "6kr/p1p2pb1/3p2p1/6P1/2qPQ2N/8/PP3P2/1K2R3 w - - 0 28"
+partie = "Vlachos – Kalesis"
+turnier = "Greek Team Ch, Thessaloniki 2022"
+loesung = "28.Sxg6! 1-0"
 
 [[aufgabe]]
 nr = 194
 kapitel = 3
 seite = 54
-fen = "r1k4r/pp1q1Qpp/5b2/6N1/7P/P4P2/2B2P2/5RK1 w - - 0 1"
+fen = "r1k4r/pp1q1Qpp/5b2/6N1/7P/P4P2/2B2P2/5RK1 w - - 0 25"
+partie = "Fernandez Guillen – Neef"
+turnier = "Barcelona 2022"
+loesung = "25.Lf5! Dxf5 26.Tc1+ Kd8 27.Se6+ Dxe6 28.Dxe6 Tf8 29.Td1+ 1-0"
 
 [[aufgabe]]
 nr = 195
 kapitel = 3
 seite = 54
-fen = "2r1kb2/1B3p2/p3ppp1/1pn5/8/1QB5/PP3PPq/1K1R4 w - - 0 1"
+fen = "2r1kb2/1B3p2/p3ppp1/1pn5/8/1QB5/PP3PPq/1K1R4 w - - 0 21"
+partie = "Urazayev – S. Volkov"
+turnier = "Cheliabinsk 2022"
+loesung = "21.Lxa6! Sxb3 22.Lxb5+ Ke7 23.Td7+ Ke8 24.Ta7+ Tc6 25.Lxc6+ Kd8 26.axb3 Dh1+ 27.Ka2 Dh5 28.La5+ Dxa5+ 29.Txa5 +–"
 
 [[aufgabe]]
 nr = 196
 kapitel = 3
 seite = 54
-fen = "2bqn1k1/6b1/rp1p4/2pPp1P1/P1P1N3/5Q2/3B1P1P/6RK w - - 0 1"
+fen = "2bqn1k1/6b1/rp1p4/2pPp1P1/P1P1N3/5Q2/3B1P1P/6RK w - - 0 27"
+partie = "Vidit – Shyam"
+turnier = "Internet rapid 2022"
+loesung = "27.Sf6+! Kf7 28.g6+ Ke7 29.Sg8+ Kd7 30.Df7+ 1-0"
 
 [[aufgabe]]
 nr = 197
 kapitel = 3
 seite = 54
-fen = "1Q6/1b2R1pk/5p1p/1r2p3/4P3/2PnNP2/4q1PP/3R2K1 w - - 0 1"
+fen = "1Q6/1b2R1pk/5p1p/1r2p3/4P3/2PnNP2/4q1PP/3R2K1 w - - 0 41"
+partie = "Averin – Zablotsky"
+turnier = "Cheliabinsk 2022"
+loesung = "41.Txg7+! Kxg7 42.Sf5+ 1-0"
 
 [[aufgabe]]
 nr = 198
 kapitel = 3
 seite = 54
-fen = "5rk1/p4p2/4p2K/3pQ1p1/8/Pr3qP1/1P3b1P/R1B2B1R b - - 0 1"
+fen = "5rk1/p4p2/4p2K/3pQ1p1/8/Pr3qP1/1P3b1P/R1B2B1R b - - 0 26"
+partie = "B. Clarke – Bellahcene (Variante)"
+turnier = "Paris 2022"
+loesung = "26...Ld4! 27.Dxd4 e5! 28.Dxa7 Df6+ 29.Kh5 Kg7 –+"
 
 [[aufgabe]]
 nr = 199
 kapitel = 3
 seite = 54
-fen = "2r1k2r/1bqn1pbp/pp1pp1p1/4n1P1/3NPP2/1PN1B3/P1PQB2P/R4RK1 w - - 0 1"
+fen = "2r1k2r/1bqn1pbp/pp1pp1p1/4n1P1/3NPP2/1PN1B3/P1PQB2P/R4RK1 w - - 0 16"
+partie = "Niemann – Aronian"
+turnier = "Internet rapid 2022"
+loesung = "16.Sdb5! axb5 17.Sxb5 Dxc2 18.Sxd6+ Ke7 19.fxe5 Sxe5 20.Db4 Dxe2 21.Sf5++ 1-0"
 
 [[aufgabe]]
 nr = 200
 kapitel = 3
 seite = 55
-fen = "1r4k1/2q5/p3pBpr/4P1R1/1pp4p/7P/PPQ3PK/8 w - - 0 1"
+fen = "1r4k1/2q5/p3pBpr/4P1R1/1pp4p/7P/PPQ3PK/8 w - - 0 34"
+partie = "Ratković – Milenković"
+turnier = "Serbian Team Ch, Vrnjačka Banja 2022"
+loesung = "34.Tg4! c3 35.Dc1 Kh7 36.Dxh6+! 1-0"
+varianten = ["Nicht 34.Txg6+? Txg6 35.Dxg6+ Kf8 36.Dh5 Tc8 37.Dh8+ Kf7 38.Dh5+ Kf8 =", "35...Dh7 36.bxc3 bxc3 37.Dxc3 +–"]
 
 [[aufgabe]]
 nr = 201
 kapitel = 3
 seite = 55
-fen = "r4b1r/p1R3p1/1q1p2nk/7p/4p3/3BP1Q1/PP4PP/5RK1 w - - 0 1"
+fen = "r4b1r/p1R3p1/1q1p2nk/7p/4p3/3BP1Q1/PP4PP/5RK1 w - - 0 25"
+partie = "Yilmazyerli – Risteski"
+turnier = "Serbian Team Ch, Vrnjačka Banja 2022"
+loesung = "25.Tf5! exd3 26.Df3! Sf4 27.Dxf4+ 1-0"
 
 [[aufgabe]]
 nr = 202
 kapitel = 3
 seite = 55
-fen = "1r5k/3n2p1/2pqp1P1/p2Pb1Bp/B6P/1P3r2/P1PQ4/1K4RR b - - 0 1"
+fen = "1r5k/3n2p1/2pqp1P1/p2Pb1Bp/B6P/1P3r2/P1PQ4/1K4RR b - - 0 28"
+partie = "A. Filip – Cosma"
+turnier = "Romanian Team Ch, Oradea 2022"
+loesung = "28...Da3! 29.c4 Dxa4 30.dxe6 Tfxb3+ 31.axb3 Dxb3+ 0-1"
+varianten = ["29.Dc1 Dxa4 –+"]
 
 [[aufgabe]]
 nr = 203
 kapitel = 3
 seite = 55
-fen = "6k1/2q2pp1/3npn2/3pN1NP/3P4/r1P4Q/4RPK1/8 w - - 0 1"
+fen = "6k1/2q2pp1/3npn2/3pN1NP/3P4/r1P4Q/4RPK1/8 w - - 0 41"
+partie = "Keymer – Praggnanandhaa"
+turnier = "Internet rapid 2022"
+loesung = "41.h6! Txc3 42.h7+ Kh8 43.Sgxf7+ 1-0"
+varianten = ["43...Sxf7 44.Sg6#"]
 
 [[aufgabe]]
 nr = 204
 kapitel = 3
 seite = 55
-fen = "6k1/p4r1p/2p3pq/2p2rn1/4p1Q1/2P3P1/P3RPB1/5RK1 b - - 0 1"
+fen = "6k1/p4r1p/2p3pq/2p2rn1/4p1Q1/2P3P1/P3RPB1/5RK1 b - - 0 38"
+partie = "Schmider – Färber"
+turnier = "German Junior Team Ch, Wiesbaden 2022"
+loesung = "38...Sf3+! 39.Lxf3 exf3 40.Te3 Th5 41.Txf3 Th1+ 42.Kg2 Dh2# (0-1)"
 
 [[aufgabe]]
 nr = 205
 kapitel = 3
 seite = 55
-fen = "2r1kb1R/3n1p2/2N2np1/pB2p1B1/1p2qNb1/8/PPPQ4/1K6 w - - 0 1"
+fen = "2r1kb1R/3n1p2/2N2np1/pB2p1B1/1p2qNb1/8/PPPQ4/1K6 w - - 0 26"
+partie = "Vaishali – S.P. Sethuraman"
+turnier = "Fagernes 2022"
+loesung = "26.Lxf6! Txc6 27.Sd5! Txc2 28.Txf8+ 1-0"
 
 [[aufgabe]]
 nr = 206
 kapitel = 3
 seite = 56
-fen = "5rk1/5ppp/8/2p1Rp2/p7/2P2QPP/5P2/1qB3K1 w - - 0 1"
+fen = "5rk1/5ppp/8/2p1Rp2/p7/2P2QPP/5P2/1qB3K1 w - - 0 29"
+partie = "Rapport – Grandelius"
+turnier = "Internet rapid 2022"
+loesung = "29.De3! a3 30.Te8 a2 31.De7 h6 32.Dxf8+ Kh7 33.Dxf7 a1D 34.Dg8+ Kg6 35.Te6+ Kh5 36.Df7+ g6 37.Dxg6# (1-0)"
 
 [[aufgabe]]
 nr = 207
 kapitel = 3
 seite = 56
-fen = "1r1r2k1/2R3bp/p5p1/4pp2/P7/1P1q2P1/2RNQP1P/6K1 w - - 0 1"
+fen = "1r1r2k1/2R3bp/p5p1/4pp2/P7/1P1q2P1/2RNQP1P/6K1 w - - 0 31"
+partie = "Gukesh – Grandelius"
+turnier = "Internet rapid 2022"
+loesung = "31.Txg7+! Kxg7 32.Dxe5+ Kg8 33.Tc7 Dd4 34.De6+ Kh8 35.Df7 1-0"
 
 [[aufgabe]]
 nr = 208
 kapitel = 3
 seite = 56
-fen = "3r3r/pQpk1pp1/5n2/4n1p1/2Pqp1b1/3P2P1/PBP2PBP/1R3RK1 b - - 0 1"
+fen = "3r3r/pQpk1pp1/5n2/4n1p1/2Pqp1b1/3P2P1/PBP2PBP/1R3RK1 b - - 0 16"
+partie = "Rapport – Mamedyarov"
+turnier = "Internet rapid 2022"
+loesung = "16...Txh2! 0-1"
 
 [[aufgabe]]
 nr = 209
 kapitel = 3
 seite = 56
-fen = "r2q1rk1/1pp1n3/p2pbpp1/3Pp2P/P3P1p1/4QP2/1PP1N3/R3K2R w - - 0 1"
+fen = "r2q1rk1/1pp1n3/p2pbpp1/3Pp2P/P3P1p1/4QP2/1PP1N3/R3K2R w - - 0 19"
+partie = "Naroditsky – Gukesh"
+turnier = "Internet rapid 2022"
+loesung = "19.hxg6! Sxg6 20.Dh6 Tf7 21.dxe6 Tg7 22.Sg3 Df8 23.Sf5 Te8 24.Dh8+!"
+varianten = ["Partie: 24.Dh5"]
 
 [[aufgabe]]
 nr = 210
 kapitel = 3
 seite = 56
-fen = "r1b2k2/1p3rn1/p4qBQ/8/2pN2p1/6P1/PP3P1P/3R1K2 w - - 0 1"
+fen = "r1b2k2/1p3rn1/p4qBQ/8/2pN2p1/6P1/PP3P1P/3R1K2 w - - 0 33"
+partie = "Abdusattorov – Mamedyarov"
+turnier = "Internet rapid 2022"
+loesung = "33.Dh8+! Ke7 34.Sc6+! Ke6 35.Sd8+ Ke7 36.Sxf7 Dxg6 37.Se5 Df6 38.Dd8+ 1-0"
 
 [[aufgabe]]
 nr = 211
 kapitel = 3
 seite = 56
-fen = "7k/6Rp/p3q3/7r/3Q1pNP/2P2P2/4BP2/5R1K b - - 0 1"
+fen = "7k/6Rp/p3q3/7r/3Q1pNP/2P2P2/4BP2/5R1K b - - 0 39"
+partie = "Murzin – Peyrer"
+turnier = "World Junior Ch, Cala Gonone 2022"
+loesung = "39...De7! –+"
+varianten = ["Partie: 39...Txh4+?! reicht nur zum Ausgleich"]
 
 [[aufgabe]]
 nr = 212
 kapitel = 3
 seite = 57
-fen = "1n3rk1/5ppp/p7/q7/3PQ3/1b6/PP2KPPP/R4B1R b - - 0 1"
+fen = "1n3rk1/5ppp/p7/q7/3PQ3/1b6/PP2KPPP/R4B1R b - - 0 18"
+partie = "Harshavardhan – Budisavljević"
+turnier = "World Junior Ch, Cala Gonone 2022"
+loesung = "18...La4! 19.Df4 g5! 20.Dd6 Sd7 21.Kf3 Te8 22.Lc4 Df5+ 23.Kg3 Se5 24.f3 Df4+ 25.Kf2 Sg4+ 0-1"
 
 [[aufgabe]]
 nr = 213
 kapitel = 3
 seite = 57
-fen = "r4n1k/4bp1p/2n1pNpQ/3pPbP1/2pP1R2/2P1N2P/6BK/2q5 b - - 0 1"
+fen = "r4n1k/4bp1p/2n1pNpQ/3pPbP1/2pP1R2/2P1N2P/6BK/2q5 b - - 0 33"
+partie = "Kourkoulos-Arditis – Parligras"
+turnier = "Geoagiu Bai 2022"
+loesung = "33...Sxe5! 34.Th4 Sf3+ 35.Lxf3 Ld6+ 0-1"
 
 [[aufgabe]]
 nr = 214
 kapitel = 3
 seite = 57
-fen = "3qr1k1/Q1p2p2/6p1/3p4/1P4b1/1NB5/4PPp1/4R1K1 b - - 0 1"
+fen = "3qr1k1/Q1p2p2/6p1/3p4/1P4b1/1NB5/4PPp1/4R1K1 b - - 0 29"
+partie = "J. Pajeken – Movsesian"
+turnier = "Bundesliga 2022/3"
+loesung = "29...Dh4! 30.f3 Dh1+ 31.Kf2 Dh2 32.Tg1 Dh4+ 33.Kxg2 Lh3+ 34.Kh2 Lf1# (0-1)"
 
 [[aufgabe]]
 nr = 215
 kapitel = 3
 seite = 57
-fen = "rn2k2r/1b1p1pp1/p3p3/7p/N1P1Pqn1/5P2/PPN1B1Pb/R2QBR1K b - - 0 1"
+fen = "rn2k2r/1b1p1pp1/p3p3/7p/N1P1Pqn1/5P2/PPN1B1Pb/R2QBR1K b - - 0 16"
+partie = "E. Park – Antipov"
+turnier = "Los Angeles 2022"
+loesung = "16...Lg3! 17.Dc1 Sf2+ 18.Kg1 Dh4 19.Txf2 Dh2+ 20.Kf1 Dh1# (0-1)"
 
 [[aufgabe]]
 nr = 216
 kapitel = 3
 seite = 57
-fen = "r1b2r2/1pqn1pbk/p2p1n1p/5P2/4Pp1B/2NQ4/PPP1B2P/2KR2R1 w - - 0 1"
+fen = "r1b2r2/1pqn1pbk/p2p1n1p/5P2/4Pp1B/2NQ4/PPP1B2P/2KR2R1 w - - 0 16"
+partie = "Adhiban – Sammed Jaykumar"
+turnier = "Delhi 2022"
+loesung = "16.Sd5! Sxd5 17.f6! Lxf6 18.exd5+ Kh8 19.Df5 Lxb2+ 20.Kxb2 Db6+ 21.Ka1 1-0"
+varianten = ["16.Txg7+ ist nur zweitbeste Wahl"]
 
 [[aufgabe]]
 nr = 217
 kapitel = 3
 seite = 57
-fen = "5rk1/1p6/p3p2p/1P1pP1q1/1Q4p1/1P4n1/2r2PBP/2NRR1K1 b - - 0 1"
+fen = "5rk1/1p6/p3p2p/1P1pP1q1/1Q4p1/1P4n1/2r2PBP/2NRR1K1 b - - 0 26"
+partie = "Giri – Carlsen"
+turnier = "Internet rapid 2022"
+loesung = "26...Tfxf2! 27.Se2 Sxe2+! 28.Kxf2 g3+ 29.hxg3 Dxg3+ 30.Kf1 Sc3 –+"
 
 [[aufgabe]]
 nr = 218
 kapitel = 3
 seite = 58
-fen = "2r3k1/3b1p1p/7B/4p3/3pP3/3P4/1Q3PPP/4qBK1 w - - 0 1"
+fen = "2r3k1/3b1p1p/7B/4p3/3pP3/3P4/1Q3PPP/4qBK1 w - - 0 28"
+partie = "Nunn – Birnboim"
+turnier = "World Over-65 Ch, Assisi 2022"
+loesung = "28.Db6! Le6 29.Db5! 1-0"
 
 [[aufgabe]]
 nr = 219
 kapitel = 3
 seite = 58
-fen = "6rk/3R2pp/6q1/Q2pP3/3P1p1b/1P3P1P/P3NP2/5K2 b - - 0 1"
+fen = "6rk/3R2pp/6q1/Q2pP3/3P1p1b/1P3P1P/P3NP2/5K2 b - - 0 34"
+partie = "T. Fodor – Prraneeth"
+turnier = "Budapest 2022"
+loesung = "34...Df5! 35.Dxd5 Db1+ 36.Kg2 De1 0-1"
 
 [[aufgabe]]
 nr = 220
 kapitel = 3
 seite = 58
-fen = "1rr5/R5pk/7p/5p1P/2n2B2/8/P1K2PP1/7R b - - 0 1"
+fen = "1rr5/R5pk/7p/5p1P/2n2B2/8/P1K2PP1/7R b - - 0 30"
+partie = "Z. Varga – Aveskulov"
+turnier = "Budapest 2022"
+loesung = "30...Se5+! 31.Kd2 Tb2+ 32.Ke3 Sg4+ 0-1"
 
 [[aufgabe]]
 nr = 221
 kapitel = 3
 seite = 58
-fen = "3R4/5p1k/6p1/1N2p1Qp/2q4P/5b2/1PP3PK/r7 w - - 0 1"
+fen = "3R4/5p1k/6p1/1N2p1Qp/2q4P/5b2/1PP3PK/r7 w - - 0 34"
+partie = "Vokhidov – Volokitin"
+turnier = "World Team Ch rapid, Jerusalem 2022"
+loesung = "34.Sd4! Le4 35.Df6 1-0"
+varianten = ["Nicht 34.Df6?? Th1+!"]
 
 [[aufgabe]]
 nr = 222
 kapitel = 3
 seite = 58
-fen = "r3r3/1pQ4p/2bp1ppk/3N4/2P5/1P3qP1/5P1P/3RR1K1 b - - 0 1"
+fen = "r3r3/1pQ4p/2bp1ppk/3N4/2P5/1P3qP1/5P1P/3RR1K1 b - - 0 29"
+partie = "Uruci – Abdilkhair"
+turnier = "World Rapid Ch, Almaty 2022"
+loesung = "29...Ta2! 30.Db6 Td2! 31.Ta1 Txd5! 32.cxd5 Lxd5 –+"
+varianten = ["Partie: 30.Tf1"]
 
 [[aufgabe]]
 nr = 223
 kapitel = 3
 seite = 58
-fen = "r3r1k1/p4ppp/2n1q3/1p2p1BP/2b2P2/P5R1/2B3P1/R2Q2K1 w - - 0 1"
+fen = "r3r1k1/p4ppp/2n1q3/1p2p1BP/2b2P2/P5R1/2B3P1/R2Q2K1 w - - 0 28"
+partie = "Matlakov – Alonso Rosell"
+turnier = "World Rapid Ch, Almaty 2022"
+loesung = "28.f5! Dd5 29.Lf6! g6 30.hxg6 fxg6 31.Dh5 Dd4+ 32.Kh2 Kf7 33.Dxh7+ Kxf6 1-0"
 
 [[aufgabe]]
 nr = 224
 kapitel = 3
 seite = 59
-fen = "2k2rr1/p1p5/1p5R/n2p2pQ/3P3P/q3B3/5PP1/2R3K1 w - - 0 1"
+fen = "2k2rr1/p1p5/1p5R/n2p2pQ/3P3P/q3B3/5PP1/2R3K1 w - - 0 24"
+partie = "Vokhidov – Ponkratov"
+turnier = "World Rapid Ch, Almaty 2022"
+loesung = "24.Dg4+ Kb8 25.Txc7! gxh4 26.Tg7 Txg7 27.Dxg7 Tc8 28.Th7"
 
 [[aufgabe]]
 nr = 225
 kapitel = 3
 seite = 59
-fen = "r3r1k1/ppp2ppp/2nb1q1n/3p4/3P4/3BPPP1/PP1B1KNP/1R1Q1R2 b - - 0 1"
+fen = "r3r1k1/ppp2ppp/2nb1q1n/3p4/3P4/3BPPP1/PP1B1KNP/1R1Q1R2 b - - 0 14"
+partie = "Kilgus – Parkhov"
+turnier = "Stockholm 2022/3"
+loesung = "14...Sg4+ 15.Kg1 Sxh2! 0-1"
 
 [[aufgabe]]
 nr = 226
 kapitel = 3
 seite = 59
-fen = "r3q3/ppn1r2k/2p3p1/2P2p1p/4P2Q/3b1BP1/PB5P/4RR1K w - - 0 1"
+fen = "r3q3/ppn1r2k/2p3p1/2P2p1p/4P2Q/3b1BP1/PB5P/4RR1K w - - 0 27"
+partie = "Gumularz – Seemann"
+turnier = "Bialystok 2022"
+loesung = "27.Lxh5! Lxf1 28.Lxg6++ Kxg6 29.exf5+ Kxf5 30.Df6+ Kg4 31.Txf1 Dh5 32.Tf4+ Kh3 33.Th4+ Dxh4 34.Dxh4#"
 
 [[aufgabe]]
 nr = 227
 kapitel = 3
 seite = 59
-fen = "4rr1k/1p2q2p/p2pB1pP/2BPb3/P3Qn2/8/1P3PP1/R4RK1 b - - 0 1"
+fen = "4rr1k/1p2q2p/p2pB1pP/2BPb3/P3Qn2/8/1P3PP1/R4RK1 b - - 0 27"
+partie = "Bromberger – Stanković"
+turnier = "Augsburg 2023"
+loesung = "27...Dh4! 0-1"
 
 [[aufgabe]]
 nr = 228
 kapitel = 3
 seite = 59
-fen = "1kr5/3rN2p/pq1p1p2/n3p3/1p2P3/6P1/PPPQN2P/2KR1R2 b - - 0 1"
+fen = "1kr5/3rN2p/pq1p1p2/n3p3/1p2P3/6P1/PPPQN2P/2KR1R2 b - - 0 21"
+partie = "Martinez Reyes – Fier"
+turnier = "Roquetas de Mar 2023"
+loesung = "21...b3! 22.Sxc8 bxa2 23.Dc3 Sc4! 0-1"
 
 [[aufgabe]]
 nr = 229
 kapitel = 3
 seite = 59
-fen = "r1b1r1k1/1p3ppp/2p2q2/p2p2n1/1P1P3n/P2BP1NP/2QN1PP1/1R3RK1 b - - 0 1"
+fen = "r1b1r1k1/1p3ppp/2p2q2/p2p2n1/1P1P3n/P2BP1NP/2QN1PP1/1R3RK1 b - - 0 18"
+partie = "Stremavicius – Shlyakhtenko"
+turnier = "New York 2023"
+loesung = "18...Lxh3! 19.Sh5 Dh6 0-1"
+varianten = ["19.gxh3 Sgf3+ 20.Kh1 Sxd2 21.Dxd2 Df3+ 22.Kg1 Dg2#"]
 
-# Abschnitt 3 = Kapitel 2 Checkmate Puzzles, Buchseiten 60–71 (Fotos vom 01.11.2026); Lösungen folgen
+# Abschnitt 3 = Kapitel 2 Checkmate Puzzles, Buchseiten 60–71 (Fotos vom 01.11.2026); Lösungen bis 288 Buchseiten 73–89, ab 289 folgen
 
 [[aufgabe]]
 nr = 230
 kapitel = 3
 seite = 60
-fen = "r4rk1/1b3p2/p1np1Qpp/1p6/2qpB3/5N2/P1P2PPP/R3R1K1 w - - 0 1"
+fen = "r4rk1/1b3p2/p1np1Qpp/1p6/2qpB3/5N2/P1P2PPP/R3R1K1 w - - 0 21"
+partie = "Bortnyk – A. Grabinsky"
+turnier = "Charlotte 2023"
+loesung = "21.Lxg6! Se5 22.Lf5 Lc8 23.Sh4 Sg4 24.Lxg4 Lxg4 25.Te4 h5 26.Txg4+ hxg4 27.Sf5 1-0"
+varianten = ["21...fxg6 22.Dxg6+ Kh8 23.Dxh6+ Kg8 24.Dg6+ Kh8 25.Te4 nebst Matt"]
 
 [[aufgabe]]
 nr = 231
 kapitel = 3
 seite = 60
-fen = "7k/2R3R1/b2r3p/P7/5P2/3p1KP1/4p2P/8 w - - 0 1"
+fen = "7k/2R3R1/b2r3p/P7/5P2/3p1KP1/4p2P/8 w - - 0 36"
+partie = "Makkar – Murphy"
+turnier = "British League (4NCL) 2022/3"
+loesung = "36.Tge7! Td8 37.f5 d2 38.Th7+ Kg8 39.f6 e1S+!? 40.Kf2! Sd3+ 41.Kg2! Se1+ 42.Kh1 1-0"
 
 [[aufgabe]]
 nr = 232
 kapitel = 3
 seite = 60
-fen = "1Q6/5pk1/P6p/5np1/8/6PP/2r2qB1/6RK b - - 0 1"
+fen = "1Q6/5pk1/P6p/5np1/8/6PP/2r2qB1/6RK b - - 0 41"
+partie = "Gukesh – Maghsoodloo"
+turnier = "Wijk aan Zee 2023"
+loesung = "41...Sxg3+! 42.Kh2 Sf5 43.a7 Ta2 44.a8D Txa8 45.Dxa8? Df4+ 46.Kh1 Sg3+ 47.Kh2 Sf1++ 48.Kh1 Dh2#"
+varianten = ["Partie: 41...Ta2? 42.De5+"]
 
 [[aufgabe]]
 nr = 233
 kapitel = 3
 seite = 60
-fen = "r1q1nr1k/1p3p1p/2pR4/p4Pp1/6P1/PBp1PQ2/1PP3P1/5RK1 w - - 0 1"
+fen = "r1q1nr1k/1p3p1p/2pR4/p4Pp1/6P1/PBp1PQ2/1PP3P1/5RK1 w - - 0 26"
+partie = "M. Petrosyan – Predke"
+turnier = "Sharjah 2023"
+loesung = "26.Th6! Dd8 27.f6 cxb2 28.Df5 Sxf6 29.Txf6 a4 30.Th6 1-0"
+varianten = ["26...f6 27.Txh7+! Kxh7 28.Dh3+ Kg7 29.Dh5 Dd7 30.Dg6+ Kh8 31.Dh6+ nebst Matt"]
 
 [[aufgabe]]
 nr = 234
 kapitel = 3
 seite = 60
-fen = "5rk1/pb2bp2/1p2pn1p/q5p1/2PR3B/3N4/P1Q2PPP/4R1K1 w - - 0 1"
+fen = "5rk1/pb2bp2/1p2pn1p/q5p1/2PR3B/3N4/P1Q2PPP/4R1K1 w - - 0 24"
+partie = "Tekeyev – M. Milošević"
+turnier = "Paraćin 2023"
+loesung = "24.Te5! Da3 25.Lxg5 hxg5 26.Txg5+ Kh8 27.Sc5 Se4 28.Th5+ Kg7 29.Sxe4 1-0"
 
 [[aufgabe]]
 nr = 235
 kapitel = 3
 seite = 60
-fen = "5rk1/pp1b3p/3P2p1/2r5/1qP1P3/2n2N2/PQ4P1/K3RB1R b - - 0 1"
+fen = "5rk1/pp1b3p/3P2p1/2r5/1qP1P3/2n2N2/PQ4P1/K3RB1R b - - 0 25"
+partie = "Abdisalimov – Madaminov"
+turnier = "Tashkent 2023"
+loesung = "25...Ta5! 26.Tb1 Da4 27.a3 Sd1 28.Txd1 Dxd1+ 29.Ka2 Tb5! 30.Dxb5 Lxb5 31.cxb5 Dc2+ 32.Ka1 Dc3+ 33.Ka2 Tc8 –+"
 
 [[aufgabe]]
 nr = 236
 kapitel = 3
 seite = 61
-fen = "2r3k1/p4p2/1p2p2p/6p1/3P1n2/P3QNPP/1P1R1P1K/1q6 b - - 0 1"
+fen = "2r3k1/p4p2/1p2p2p/6p1/3P1n2/P3QNPP/1P1R1P1K/1q6 b - - 0 29"
+partie = "Ki. Georgiev – M. Petrov"
+turnier = "Bulgarian Ch, Sofia 2023"
+loesung = "29...Tc1! 30.gxf4 Th1+ 31.Kg3 Df1 32.Sxg5 hxg5 33.Kg4 Tg1+ 34.Kh5 gxf4 35.Df3 Db5+ 36.d5 De8 37.Dxf4 f5+ 38.Kh4 De7+ 0-1"
 
 [[aufgabe]]
 nr = 237
 kapitel = 3
 seite = 61
-fen = "r2r3k/5BpN/p5p1/1p4P1/3q4/P4Q2/1n3P1P/2R3K1 w - - 0 1"
+fen = "r2r3k/5BpN/p5p1/1p4P1/3q4/P4Q2/1n3P1P/2R3K1 w - - 0 32"
+partie = "Yuffa – F. Svane (Variante)"
+turnier = "Bundesliga 2022/3"
+loesung = "32.Sf8! Dd3 33.Dxg6+ Dxg6 34.Lxg6 +–"
+varianten = ["32...Txf8 33.Dh3+ Dh4 34.Dxh4#"]
 
 [[aufgabe]]
 nr = 238
 kapitel = 3
 seite = 61
-fen = "r2qr1k1/pp3p1p/3bbp2/2pp1R2/5Q2/2PB1N2/PPP2PPP/2KR4 w - - 0 1"
+fen = "r2qr1k1/pp3p1p/3bbp2/2pp1R2/5Q2/2PB1N2/PPP2PPP/2KR4 w - - 0 16"
+partie = "Beerdsen – T. Burg"
+turnier = "Bundesliga 2022/3"
+loesung = "16.Dh6! fxe5 17.Lxh7+ Kh8 18.Lg6+ Kg8 19.Sg5 Dxg5+ 20.Dxg5 fxg6 21.Dxg6+ Kf8 22.Txd5 +–"
 
 [[aufgabe]]
 nr = 239
 kapitel = 3
 seite = 61
-fen = "r2q2k1/1b1pb2p/pp2p3/2p1R3/2P2rp1/1P1B3P/PB1P2P1/R2Q2K1 w - - 0 1"
+fen = "r2q2k1/1b1pb2p/pp2p3/2p1R3/2P2rp1/1P1B3P/PB1P2P1/R2Q2K1 w - - 0 20"
+partie = "Chirila – Harsha Bharathakoti"
+turnier = "Internet rapid 2023"
+loesung = "20.Lxh7+! Kxh7 21.Dc2+ Kg7 22.Tg5++ Kf8 23.Tg8+ 1-0"
 
 [[aufgabe]]
 nr = 240
 kapitel = 3
 seite = 61
-fen = "2r4k/2p3p1/7p/3P3q/R2Qpp2/2P4P/1r3PP1/4R1K1 b - - 0 1"
+fen = "2r4k/2p3p1/7p/3P3q/R2Qpp2/2P4P/1r3PP1/4R1K1 b - - 0 39"
+partie = "Oparin – Caruana"
+turnier = "Internet rapid 2023"
+loesung = "39...e3! 40.fxe3 f3! 0-1"
 
 [[aufgabe]]
 nr = 241
 kapitel = 3
 seite = 61
-fen = "r4rk1/3q2pp/p1bbp3/1p3pN1/1P6/P3P3/1B3PPP/2RQ1RK1 w - - 0 1"
+fen = "r4rk1/3q2pp/p1bbp3/1p3pN1/1P6/P3P3/1B3PPP/2RQ1RK1 w - - 0 18"
+partie = "Caruana – Mitrabha"
+turnier = "Internet rapid 2023"
+loesung = "18.Txc6! Dxc6 19.Dh5 h6 20.Dg6 1-0"
 
 [[aufgabe]]
 nr = 242
 kapitel = 3
 seite = 62
-fen = "rnbq1rk1/1p1nbpp1/p3P2p/2pp3Q/3P4/P2B1N2/1PP2PPP/R1B1K2R w - - 0 1"
+fen = "rnbq1rk1/1p1nbpp1/p3P2p/2pp3Q/3P4/P2B1N2/1PP2PPP/R1B1K2R w - - 0 11"
+partie = "Gadimbayli – Fedoseev"
+turnier = "Internet rapid 2023"
+loesung = "11.Lxh6! Sf6 12.Dg5 Se8 13.Df5 Sf6 14.Lxg7! Kxg7 15.Dg6 De8 16.Dh6 Dh5 17.Lh7+ Sxh7 18.Dxh5 Kxg7 19.Dg4+ Kh8 20.Se5 +–"
 
 [[aufgabe]]
 nr = 243
 kapitel = 3
 seite = 62
-fen = "3r1r2/kq2ppb1/p2pb2p/Q6R/2p1P3/NB4P1/PPP2P2/2K4R w - - 0 1"
+fen = "3r1r2/kq2ppb1/p2pb2p/Q6R/2p1P3/NB4P1/PPP2P2/2K4R w - - 0 32"
+partie = "Abdumalik – Di. Wagner"
+turnier = "Munich (women) 2023"
+loesung = "32.Tb5 Dc6 33.La4! Tc8 34.Tb4 Dc5 35.Sb5+ Kb8 36.Sxd6+"
+varianten = ["Partie: 36.Sc7+ Dxb4 37.Sxa6+ 1-0"]
 
 [[aufgabe]]
 nr = 244
 kapitel = 3
 seite = 62
-fen = "3q1rk1/1p4pp/2p1b3/3n1p2/r4B2/PB3Q2/1P4PP/2KR3R b - - 0 1"
+fen = "3q1rk1/1p4pp/2p1b3/3n1p2/r4B2/PB3Q2/1P4PP/2KR3R b - - 0 19"
+partie = "Rabiega – B. Socko"
+turnier = "2nd Bundesliga 2022/3"
+loesung = "19...Txf4! 20.Lxd5 Dg5! 21.Lxe6+ Kh8 22.h4 Dh6 23.De3 Tc4+ 24.Kd2 Td8+ 25.Ke2 Tc2+ 26.Kf3 Dh5+ 0-1"
 
 [[aufgabe]]
 nr = 245
 kapitel = 3
 seite = 62
-fen = "2kr1b1r/pp3p1p/2p2p2/7P/1nqN4/2PpB2P/PP3PB1/R3KQ1R b - - 0 1"
+fen = "2kr1b1r/pp3p1p/2p2p2/7P/1nqN4/2PpB2P/PP3PB1/R3KQ1R b - - 0 16"
+partie = "Ris – Ten Hertog"
+turnier = "Dutch League 2022/3"
+loesung = "16...Txd4! 17.Lxd4 Sc2+ 18.Kd2 Sxd4 19.Le4 Sf3+ 20.Ke3 Se5 21.Lf5+ Kb8 22.f4 Dc5+ 23.Kd2 Sc4+ 24.Kxd3 Dxf5+ 25.Kxc4 Dd5# (0-1)"
 
 [[aufgabe]]
 nr = 246
 kapitel = 3
 seite = 62
-fen = "4r1k1/5p2/2p1rn2/1pp3p1/7p/P3PqPP/1PQ1NP1K/3R1R2 b - - 0 1"
+fen = "4r1k1/5p2/2p1rn2/1pp3p1/7p/P3PqPP/1PQ1NP1K/3R1R2 b - - 0 34"
+partie = "Striković – Cheparinov"
+turnier = "Benalmadena rapid 2023"
+loesung = "34...Sg4+! 35.hxg4 Th6! 0-1"
+varianten = ["35...h3 ist auch spielbar"]
 
 [[aufgabe]]
 nr = 247
 kapitel = 3
 seite = 62
-fen = "2kr4/pb5q/2pBp2r/1p4p1/2PPP1p1/2NQ1p1P/P4PP1/R2R2K1 b - - 0 1"
+fen = "2kr4/pb5q/2pBp2r/1p4p1/2PPP1p1/2NQ1p1P/P4PP1/R2R2K1 b - - 0 23"
+partie = "Urkedal – Ohanyan"
+turnier = "Kragerø 2023"
+loesung = "23...Txh3! 24.gxh3 Dxh3 25.Df1 Dh5 26.Le5 Td7 27.Td3 Th7 28.Dg2 fxg2 29.Kxg2 bxc4 –+"
 
 [[aufgabe]]
 nr = 248
 kapitel = 3
 seite = 63
-fen = "r1r1bk2/5p1R/pp4p1/3p4/3P2P1/P2B1P2/P2K4/4R3 w - - 0 1"
+fen = "r1r1bk2/5p1R/pp4p1/3p4/3P2P1/P2B1P2/P2K4/4R3 w - - 0 27"
+partie = "Mikaelyan – M. Kravtsiv"
+turnier = "Internet rapid 2023"
+loesung = "27.f4! Kg8 28.Teh1 Tc6 29.Th8+ Kg7 30.g5 1-0"
 
 [[aufgabe]]
 nr = 249
 kapitel = 3
 seite = 63
-fen = "4bb1k/4Npp1/p5Q1/3r4/3BP3/7P/5RPK/2q5 w - - 0 1"
+fen = "4bb1k/4Npp1/p5Q1/3r4/3BP3/7P/5RPK/2q5 w - - 0 42"
+partie = "M. Pap – Dudin"
+turnier = "Budapest 2023"
+loesung = "42.Sxd5! fxg6 43.Txf8+ Kh7 44.Txe8 a5 45.Te7 Kg8 46.Lxg7 1-0"
 
 [[aufgabe]]
 nr = 250
 kapitel = 3
 seite = 63
-fen = "4r1k1/3R1ppp/p1p5/1r4qn/4P3/Q2N1P2/P5PP/2R3K1 b - - 0 1"
+fen = "4r1k1/3R1ppp/p1p5/1r4qn/4P3/Q2N1P2/P5PP/2R3K1 b - - 0 30"
+partie = "R. Terry – Dubov"
+turnier = "Internet rapid 2023"
+loesung = "30...De3+ 31.Kh1 Sg3+! 0-1"
+varianten = ["32.hxg3 Th5#"]
 
 [[aufgabe]]
 nr = 251
 kapitel = 3
 seite = 63
-fen = "2N5/2Q5/p2p2pp/1p6/1k2B1P1/2b2P2/Pr5q/K2R4 w - - 0 1"
+fen = "2N5/2Q5/p2p2pp/1p6/1k2B1P1/2b2P2/Pr5q/K2R4 w - - 0 32"
+partie = "Santos Ruiz – Larino Nieto"
+turnier = "Internet rapid 2023"
+loesung = "32.a3+! Kb3 33.Ld5+ Kc2 34.Tc1+! Kxc1 35.Dxc3+ Kd1 36.Dxb2 1-0"
 
 [[aufgabe]]
 nr = 252
 kapitel = 3
 seite = 63
-fen = "b2r2k1/p4p2/4nb2/1Q1p2p1/1P2n3/P3P1B1/6PP/2R3K1 b - - 0 1"
+fen = "b2r2k1/p4p2/4nb2/1Q1p2p1/1P2n3/P3P1B1/6PP/2R3K1 b - - 0 30"
+partie = "Peyrer – Naiditsch"
+turnier = "Austrian Team Ch 2022/3"
+loesung = "30...d4! 31.exd4 Lxd4+ 32.Kh1 Sxg3+ 33.hxg3 Kg7 0-1"
 
 [[aufgabe]]
 nr = 253
 kapitel = 3
 seite = 63
-fen = "2r1r1k1/bp3pp1/4b2p/p2Q4/3P4/5N1P/1q1B1PP1/2R1R1K1 w - - 0 1"
+fen = "2r1r1k1/bp3pp1/4b2p/p2Q4/3P4/5N1P/1q1B1PP1/2R1R1K1 w - - 0 26"
+partie = "M. Andersen – Schandorff"
+turnier = "Danish Team Ch 2022/3"
+loesung = "26.Txc8! Lxd5 27.Texe8+ Kh7 28.Se5 g5 29.Th8+ Kg7 30.Tcg8+ Kf6 31.Txh6+ Ke7 32.Lxg5+ f6 33.Tg7+ Kf8 34.Tc7 Da2 35.Lxf6 +–"
 
 [[aufgabe]]
 nr = 254
 kapitel = 3
 seite = 64
-fen = "8/1p3p1k/p1b1p1p1/4PnQp/2P4P/P1P4K/1P3qP1/RBB5 b - - 0 1"
+fen = "8/1p3p1k/p1b1p1p1/4PnQp/2P4P/P1P4K/1P3qP1/RBB5 b - - 0 31"
+partie = "Pijpers – K. Pham (Variante)"
+turnier = "Belgian Team Ch 2022/3"
+loesung = "31...Lxg2+! 32.Kh2 Lf3+ 33.Kh3 Df1+ 34.Dg2 Dxg2#"
 
 [[aufgabe]]
 nr = 255
 kapitel = 3
 seite = 64
-fen = "5rk1/p3bppp/7q/3P4/3p4/3Q2P1/PB1nPPbP/2R1R1K1 b - - 0 1"
+fen = "5rk1/p3bppp/7q/3P4/3p4/3Q2P1/PB1nPPbP/2R1R1K1 b - - 0 23"
+partie = "Mardov – Pranav"
+turnier = "Reykjavik 2023"
+loesung = "23...Le4! 24.Dxd4 Lf6 25.Db4 Dh3 26.f3 Lxf3! 27.Kf2 Lg5 0-1"
 
 [[aufgabe]]
 nr = 256
 kapitel = 3
 seite = 64
-fen = "7k/pp1b1pp1/2pb1qn1/5P2/2BP2Qp/P1P4P/1P1B2P1/6K1 w - - 0 1"
+fen = "7k/pp1b1pp1/2pb1qn1/5P2/2BP2Qp/P1P4P/1P1B2P1/6K1 w - - 0 25"
+partie = "Dragnev – Hausrath"
+turnier = "Bundesliga 2022/3"
+loesung = "25.Dh5+! Kg8 26.fxg6 Le6 27.Lg5 1-0"
 
 [[aufgabe]]
 nr = 257
 kapitel = 3
 seite = 64
-fen = "3q1rk1/6rp/4R1p1/1b1p4/p5Q1/P5P1/1PB2PK1/7R w - - 0 1"
+fen = "3q1rk1/6rp/4R1p1/1b1p4/p5Q1/P5P1/1PB2PK1/7R w - - 0 30"
+partie = "Ozsakallioglu – Br. Maksimović"
+turnier = "Balikesir 2022"
+loesung = "30.Txh7! Kxh7 31.Txg6! Txf2+ 32.Kxf2 Kh8 33.Txg7 Df6+ 34.Ke3 Dxg7 35.Dh5+ Kg8 36.Dxd5+ +–"
 
 [[aufgabe]]
 nr = 258
 kapitel = 3
 seite = 64
-fen = "2br2k1/2q2p1p/p5p1/2pp1P2/P1p1B1PQ/4n2P/1P2P3/3R1RK1 w - - 0 1"
+fen = "2br2k1/2q2p1p/p5p1/2pp1P2/P1p1B1PQ/4n2P/1P2P3/3R1RK1 w - - 0 31"
+partie = "Strating – Rademakers"
+turnier = "Dutch League 2022/3"
+loesung = "31.f6! h5 32.gxh5! Sxf1 33.Txf1 dxe4 34.hxg6 fxg6 35.f7+ Kg7 36.Df6+ Kh7 37.Tf4 +–"
 
 [[aufgabe]]
 nr = 259
 kapitel = 3
 seite = 64
-fen = "4r2k/6p1/ppq4p/2n1p3/P5Q1/3PP1P1/2B2R1P/6K1 w - - 0 1"
+fen = "4r2k/6p1/ppq4p/2n1p3/P5Q1/3PP1P1/2B2R1P/6K1 w - - 0 38"
+partie = "Fiedorek – Daroczi"
+turnier = "Budapest 2023"
+loesung = "38.d4! exd4 39.Tf7 Se6 40.Dg6 d3 41.Lxd3 Kg8 42.Tf1 1-0"
 
 [[aufgabe]]
 nr = 260
 kapitel = 3
 seite = 65
-fen = "r2qr1k1/1b2bppp/p2p1n2/8/2B5/5N2/PP2QPPP/R1B1R1K1 w - - 0 1"
+fen = "r2qr1k1/1b2bppp/p2p1n2/8/2B5/5N2/PP2QPPP/R1B1R1K1 w - - 0 14"
+partie = "De Vleeschauwer – Dauw"
+turnier = "Wachtebeke 2023"
+loesung = "14.Lxf7+! Kxf7 15.Sg5+ Kg6 16.Dd3+ Se4 17.Txe4 Lxg5 18.Txe8+ Kf7 19.Txd8 Txd8 20.Lxg5 +–"
 
 [[aufgabe]]
 nr = 261
 kapitel = 3
 seite = 65
-fen = "1k1r4/3r1pp1/p3p2p/2qnP2P/Pp1pRP2/3Q1N2/1PP3P1/1K1R4 b - - 0 1"
+fen = "1k1r4/3r1pp1/p3p2p/2qnP2P/Pp1pRP2/3Q1N2/1PP3P1/1K1R4 b - - 0 26"
+partie = "Nyysti – M. Mitrović"
+turnier = "European Ch, Vrnjačka Banja 2023"
+loesung = "26...Sc3+! 27.bxc3 bxc3 28.Ka2 Tb7 29.Tb1 Txb1 30.Kxb1 Da3 0-1"
 
 [[aufgabe]]
 nr = 262
 kapitel = 3
 seite = 65
-fen = "2b2rk1/2p2ppq/1pr5/p2pP3/5P2/4B2P/PRP2QP1/3R2K1 b - - 0 1"
+fen = "2b2rk1/2p2ppq/1pr5/p2pP3/5P2/4B2P/PRP2QP1/3R2K1 b - - 0 21"
+partie = "Fier – Raja Rithvik"
+turnier = "Ciutadella de Menorca 2023"
+loesung = "21...Lxh3! 22.Df3 Lf5 23.Dxd5 Le4 24.Dd7 Th6 25.Tdb1 Th2 0-1"
 
 [[aufgabe]]
 nr = 263
 kapitel = 3
 seite = 65
-fen = "3r2k1/p1n1b1r1/bqp1p3/4ppB1/2P5/P5Q1/1P2BPP1/R2NK2R w - - 0 1"
+fen = "3r2k1/p1n1b1r1/bqp1p3/4ppB1/2P5/P5Q1/1P2BPP1/R2NK2R w - - 0 22"
+partie = "Santos Ruiz – E. Rozen"
+turnier = "Ciutadella de Menorca 2023"
+loesung = "22.Dh4! Lxg5 23.Dh8+ Kf7 24.Lh5+ Tg6 25.Dh7+ Kf8 26.Lxg6"
+varianten = ["22.Dh3! und 22.Dh2! gehen ebenso", "22...Txg5 23.Dh8+ Kf7 24.Th7+ Tg7 25.Dxg7+ Ke8 26.Dxe7#"]
 
 [[aufgabe]]
 nr = 264
 kapitel = 3
 seite = 65
-fen = "4r3/6k1/1p4p1/pP3p1p/2Bq3P/1P3QP1/Rb1r1PK1/5R2 b - - 0 1"
+fen = "4r3/6k1/1p4p1/pP3p1p/2Bq3P/1P3QP1/Rb1r1PK1/5R2 b - - 0 33"
+partie = "Nyysti – Agopov"
+turnier = "Finnish Ch, Helsinki 2023"
+loesung = "33...Te3! 34.Db7+ Kh6"
+varianten = ["Partie: 35.Txb2?! Txb2 36.Kh2 Te1 37.Lg8 Txf2+ 38.Txf2 Dxf2+ 0-1"]
 
 [[aufgabe]]
 nr = 265
 kapitel = 3
 seite = 65
-fen = "7Q/p1p1kp2/3b2r1/6N1/4B1q1/2B1P3/PP3K2/8 b - - 0 1"
+fen = "7Q/p1p1kp2/3b2r1/6N1/4B1q1/2B1P3/PP3K2/8 b - - 0 36"
+partie = "Ilamparthi – S. Grover"
+turnier = "Budapest 2023"
+loesung = "36...Lg3+! 37.Kf1 Dd1+ 38.Kg2 De2+ 39.Kh3 Th6+! 40.Dxh6 Dh2+ 41.Kg4 Dxh6 42.Kxg3 Dxg5+ 43.Kf3 f5 –+"
+varianten = ["39.Kxg3? Txg5+ führt zum Matt"]
 
 [[aufgabe]]
 nr = 266
 kapitel = 3
 seite = 66
-fen = "8/6pk/7p/5R2/1q1PpP2/r6P/2Q3PK/8 b - - 0 1"
+fen = "8/6pk/7p/5R2/1q1PpP2/r6P/2Q3PK/8 b - - 0 41"
+partie = "Ocampos – Slipak"
+turnier = "Mar del Plata 2023"
+loesung = "41...De1! 42.Tb5 Tc3! 43.Db2 Dg3+ 44.Kg1 Te3 0-1"
 
 [[aufgabe]]
 nr = 267
 kapitel = 3
 seite = 66
-fen = "r3k3/1b2bp1p/pp2p1r1/P1q1p3/N1P1P3/1P1B4/1B2QnPP/2R1R1K1 b - - 0 1"
+fen = "r3k3/1b2bp1p/pp2p1r1/P1q1p3/N1P1P3/1P1B4/1B2QnPP/2R1R1K1 b - - 0 22"
+partie = "L. Ernst – Brailly"
+turnier = "Lyons 2023"
+loesung = "22...Sxd3+! 23.Sxc5 Lxc5+ 24.Kh1 Sf2+ 25.Kg1 Sxe4+ 26.Kh1 Sg3+! 27.hxg3 Th6+ 28.Dh5 Txh5#"
 
 [[aufgabe]]
 nr = 268
 kapitel = 3
 seite = 66
-fen = "r1b1k3/1pq1bp2/p3p3/6p1/2nN2P1/2N5/PPP3B1/2KR3Q w - - 0 1"
+fen = "r1b1k3/1pq1bp2/p3p3/6p1/2nN2P1/2N5/PPP3B1/2KR3Q w - - 0 18"
+partie = "Tomeo – I. Schnaider"
+turnier = "Buenos Aires 2022"
+loesung = "18.Dh8+ Lf8 19.Se4! Df4+ 20.Kb1 Ke7 21.Sf5+ 1-0"
+varianten = ["18...Kd7 19.Sdb5+ +–"]
 
 [[aufgabe]]
 nr = 269
 kapitel = 3
 seite = 66
-fen = "6k1/3b3p/Rbp3p1/1p1pq3/1P2Nr2/1BPQ1P2/6PP/7K b - - 0 1"
+fen = "6k1/3b3p/Rbp3p1/1p1pq3/1P2Nr2/1BPQ1P2/6PP/7K b - - 0 30"
+partie = "Falkevall – A. Sahakyan"
+turnier = "European Under-16 Ch, Antalya 2022"
+loesung = "30...Th4! 31.h3 Lc7 32.Kg1 Kg7 33.Kf2 Lf5 34.Ta7 Kf8 –+"
+varianten = ["31.g3? Txh2+! 32.Kxh2 Dh5+ 33.Kg2 Dh3#"]
 
 [[aufgabe]]
 nr = 270
 kapitel = 3
 seite = 66
-fen = "5Q2/1k5p/2q2p2/1p6/p1nP4/P2p2P1/r6P/1K1RR3 b - - 0 1"
+fen = "5Q2/1k5p/2q2p2/1p6/p1nP4/P2p2P1/r6P/1K1RR3 b - - 0 37"
+partie = "Ronka – Luukkonen"
+turnier = "Finnish Team Ch 2022/3"
+loesung = "37...Sxa3+! 38.Kxa2 Dc2+ 39.Ka1 Dc3+ 40.Ka2 Db3+ 0-1"
+varianten = ["39.Kxa3 Db3#"]
 
 [[aufgabe]]
 nr = 271
 kapitel = 3
 seite = 66
-fen = "r4rk1/1pqb2p1/p1nbp2p/3p4/N2P2n1/3B1N1P/PP1B1PP1/2RQR1K1 b - - 0 1"
+fen = "r4rk1/1pqb2p1/p1nbp2p/3p4/N2P2n1/3B1N1P/PP1B1PP1/2RQR1K1 b - - 0 17"
+partie = "Sevdimaliyev – S. Mammadov"
+turnier = "Nakhchivan 2022"
+loesung = "17...Lh2+ 18.Kf1 Sxf2! 19.Kxf2 Dg3+ 20.Kf1 e5 21.dxe5 Lxh3 0-1"
 
 [[aufgabe]]
 nr = 272
 kapitel = 3
 seite = 67
-fen = "2r1r3/pb4k1/1p2p2p/5ppP/3P2N1/P4Pq1/6P1/1Q1RR1K1 w - - 0 1"
+fen = "2r1r3/pb4k1/1p2p2p/5ppP/3P2N1/P4Pq1/6P1/1Q1RR1K1 w - - 0 35"
+partie = "Perez Candelas – Lopez Azambuja"
+turnier = "Montevideo 2022"
+loesung = "35.d5! fxg4 36.Dg6+ Kh8 37.Dxh6+ Kg8 38.Dxg5+ Kh8 39.Df6+ Kg8 40.Te5 Kh7 41.Dg6+ Kh8 42.Dh6+ 1-0"
 
 [[aufgabe]]
 nr = 273
 kapitel = 3
 seite = 67
-fen = "2r3rk/pq4pp/1pb5/1P2BB1Q/3P1P2/4b3/P6P/3R1K2 b - - 0 1"
+fen = "2r3rk/pq4pp/1pb5/1P2BB1Q/3P1P2/4b3/P6P/3R1K2 b - - 0 32"
+partie = "Ibañez Aullana – M. van Foreest"
+turnier = "Benidorm 2022"
+loesung = "32...Lxb5+! 33.Ld3 Dh1+ 34.Ke2 De4 35.Ke1 Tc2"
+varianten = ["Nicht 32...Lg2+?? 33.Ke1"]
 
 [[aufgabe]]
 nr = 274
 kapitel = 3
 seite = 67
-fen = "3R4/5r2/p1p4r/3p1p1P/k1q2P2/6BK/1Q5P/8 w - - 0 1"
+fen = "3R4/5r2/p1p4r/3p1p1P/k1q2P2/6BK/1Q5P/8 w - - 0 55"
+partie = "Issa – Straubinger"
+turnier = "Hungarian Team Ch 2022/3"
+loesung = "55.Da1+! Kb4 56.Tb8+ Kc5 57.Da3+ Kd4 58.Lf2+ Ke4 59.De3# (1-0)"
+varianten = ["Nicht 55.Tb8? Df1+ mit Remis"]
 
 [[aufgabe]]
 nr = 275
 kapitel = 3
 seite = 67
-fen = "4bnk1/ppb2p2/2pq1p2/5PpN/3P3p/2PB3P/PP1B2P1/3Q2K1 w - - 0 1"
+fen = "4bnk1/ppb2p2/2pq1p2/5PpN/3P3p/2PB3P/PP1B2P1/3Q2K1 w - - 0 21"
+partie = "Manon – Subrota"
+turnier = "Bangladeshi Ch, Dhaka 2022"
+loesung = "21.Lf4! gxf4 22.Dg4+ Sg6 23.fxg6 fxg6 24.Lxg6 Kf8 25.Lxe8 Kxe8 26.Dg6+ +–"
 
 [[aufgabe]]
 nr = 276
 kapitel = 3
 seite = 67
-fen = "3r1k2/2r3b1/3p2Q1/p6R/4pP2/P1Pq4/1P1B4/2KR4 b - - 0 1"
+fen = "3r1k2/2r3b1/3p2Q1/p6R/4pP2/P1Pq4/1P1B4/2KR4 b - - 0 33"
+partie = "Tarhan – Akbas"
+turnier = "Ankara 2022"
+loesung = "33...Lxc3! 34.Tf5+ Lf6+ 35.Lc3 Txc3+ 36.bxc3 Dxc3+ 37.Kb1 Db2# (0-1)"
 
 [[aufgabe]]
 nr = 277
 kapitel = 3
 seite = 67
-fen = "r4rk1/pb2qpp1/4pn1p/2b5/7Q/5N2/PB2BPPP/1R3RK1 w - - 0 1"
+fen = "r4rk1/pb2qpp1/4pn1p/2b5/7Q/5N2/PB2BPPP/1R3RK1 w - - 0 20"
+partie = "W. Olsson – A. Soderström"
+turnier = "Swedish Junior Ch, Uppsala 2022"
+loesung = "20.Lxf6! gxf6 21.Dxh6 Le4 22.Tb3 Ld5 23.Sg5! fxg5 24.Th3 f5 25.Dh8+ Kf7 26.Lh5# (1-0)"
 
 [[aufgabe]]
 nr = 278
 kapitel = 3
 seite = 68
-fen = "r1r3k1/5ppp/1b1N4/2nP4/1B2P3/1P3P1q/4QP2/1R2R1K1 b - - 0 1"
+fen = "r1r3k1/5ppp/1b1N4/2nP4/1B2P3/1P3P1q/4QP2/1R2R1K1 b - - 0 29"
+partie = "Defromont – K. Le Quang"
+turnier = "Paris 2022"
+loesung = "29...Sd3! 30.Dxd3 Dg3+ 31.Kh1 Lxf2 32.Df1 Dh4+ 33.Kg2 Tc2 –+"
 
 [[aufgabe]]
 nr = 279
 kapitel = 3
 seite = 68
-fen = "2rqr1k1/1B3p2/6pp/p7/P1bP2n1/6P1/1P1R1P1P/R1BQ2K1 b - - 0 1"
+fen = "2rqr1k1/1B3p2/6pp/p7/P1bP2n1/6P1/1P1R1P1P/R1BQ2K1 b - - 0 23"
+partie = "Martin del Campo – J. Levine"
+turnier = "Charlotte 2022"
+loesung = "23...De7! 24.Lxc8 De1+ 25.Dxe1 Txe1+ 26.Kg2 Lf1+ 27.Kf3 f5 28.Te2 Lxe2+ 29.Kf4 Ld3 –+"
 
 [[aufgabe]]
 nr = 280
 kapitel = 3
 seite = 68
-fen = "8/4ppk1/6p1/p7/P4PK1/3P2Pp/2Qb1B1P/7q b - - 0 1"
+fen = "8/4ppk1/6p1/p7/P4PK1/3P2Pp/2Qb1B1P/7q b - - 0 42"
+partie = "Forgas Moreno – Nakhbayeva"
+turnier = "Women's Olympiad, Chennai 2022"
+loesung = "42...f5+! 43.Kh4 Df3 44.Ld4+ Kh6 45.Kxh3 Df1+ 0-1"
 
 [[aufgabe]]
 nr = 281
 kapitel = 3
 seite = 68
-fen = "1rbq1rk1/pp2bppp/2np1n2/2pNp1N1/2B1P2P/3P4/PPP2PP1/R1BQK2R w - - 0 1"
+fen = "1rbq1rk1/pp2bppp/2np1n2/2pNp1N1/2B1P2P/3P4/PPP2PP1/R1BQK2R w - - 0 9"
+partie = "Hilwerda – Vesterli"
+turnier = "Copenhagen 2022"
+loesung = "9.Sxf6+! Lxf6 10.Dh5 h6 11.Lxf7+ Kh8 12.Dg6 +–"
 
 [[aufgabe]]
 nr = 282
 kapitel = 3
 seite = 68
-fen = "r3k2r/1pp2p2/p1n1b3/2QpP1n1/6p1/BB2R1N1/P4PPq/R4K2 w - - 0 1"
+fen = "r3k2r/1pp2p2/p1n1b3/2QpP1n1/6p1/BB2R1N1/P4PPq/R4K2 w - - 0 25"
+partie = "G. Wall – H. Olson"
+turnier = "Newcastle 2022"
+loesung = "25.La4! 0-0-0 26.Lxc6 bxc6 27.Dxc6 Se4 28.Txe4 1-0"
 
 [[aufgabe]]
 nr = 283
 kapitel = 3
 seite = 68
-fen = "2r3k1/3nB2p/p2P2p1/8/1p5P/6P1/PP1r2B1/5RK1 w - - 0 1"
+fen = "2r3k1/3nB2p/p2P2p1/8/1p5P/6P1/PP1r2B1/5RK1 w - - 0 31"
+partie = "Poliannikov – Sa. Sethuraman"
+turnier = "New York 2022"
+loesung = "31.Lh3! Tcc2 32.Le6+ Kh8 33.Tf8+! Kg7 34.Tg8+ Kh6 35.Lg5+ Kh5 36.g4#"
 
 [[aufgabe]]
 nr = 284
 kapitel = 3
 seite = 69
-fen = "4r1k1/1pb1rpp1/p6p/3R1Q2/1PP4q/P3Bn1P/5PB1/3R3K b - - 0 1"
+fen = "4r1k1/1pb1rpp1/p6p/3R1Q2/1PP4q/P3Bn1P/5PB1/3R3K b - - 0 38"
+partie = "M. Zachary – Boyer"
+turnier = "French Junior Ch, Agen 2023"
+loesung = "38...Txe3! 39.Lxf3 Dxf2 0-1"
+varianten = ["39.fxe3 Dg3 führt zum Matt"]
 
 [[aufgabe]]
 nr = 285
 kapitel = 3
 seite = 69
-fen = "b1r1rb1k/5Q1p/p5pP/4q3/1n1Np3/2N1B3/1PP5/3R1RK1 w - - 0 1"
+fen = "b1r1rb1k/5Q1p/p5pP/4q3/1n1Np3/2N1B3/1PP5/3R1RK1 w - - 0 28"
+partie = "F. Oro – Almiron"
+turnier = "Villa Martelli 2023"
+loesung = "28.Sde2! Sxc2 29.Td7! Le7 30.Lf4 Df6 31.Ld6 1-0"
 
 [[aufgabe]]
 nr = 286
 kapitel = 3
 seite = 69
-fen = "rr4k1/5pb1/6p1/q1P4p/4P3/1P1R4/1BQ3PP/1K1R4 b - - 0 1"
+fen = "rr4k1/5pb1/6p1/q1P4p/4P3/1P1R4/1BQ3PP/1K1R4 b - - 0 32"
+partie = "E. Roebers – Pijpers"
+turnier = "Belgian Team Ch 2022/3"
+loesung = "32...Da1+! 0-1"
+varianten = ["33.Lxa1 Txa1#"]
 
 [[aufgabe]]
 nr = 287
 kapitel = 3
 seite = 69
-fen = "4rn1k/2q2ppp/rpp5/p4PP1/3PN2Q/P6P/1P6/R3R1K1 w - - 0 1"
+fen = "4rn1k/2q2ppp/rpp5/p4PP1/3PN2Q/P6P/1P6/R3R1K1 w - - 0 28"
+partie = "Krebs – Gelbenegger"
+turnier = "Austrian Team Ch 2022/3"
+loesung = "28.Sf6! Txe1+ 29.Txe1 Ta8 30.Sxh7! Kg8 31.Sxf8 Txf8 32.g6 1-0"
 
 [[aufgabe]]
 nr = 288
 kapitel = 3
 seite = 69
-fen = "r1r5/1p1b1k1p/p2pN1pb/3Pnp2/PP1Qp1nq/1B5P/1BP1NPP1/R4RK1 b - - 0 1"
+fen = "r1r5/1p1b1k1p/p2pN1pb/3Pnp2/PP1Qp1nq/1B5P/1BP1NPP1/R4RK1 b - - 0 19"
+partie = "Manhardt – Casagrande"
+turnier = "Austrian Team Ch 2022/3"
+loesung = "19...Sf3+! 20.gxf3 Se5 21.Db6 Dxh3! 22.Lxe5 exf3 23.Sf4 Lxf4 24.Sxf4 Dg4+ 25.Kh2 dxe5 26.Tg1 Dh4+ 27.Sh3 f4 –+"
 
 [[aufgabe]]
 nr = 289
@@ -2506,3 +2928,53 @@ nr = 301
 kapitel = 3
 seite = 71
 fen = "8/1pR5/4rpk1/4Pq2/n2Q1P2/4N1pP/7r/5RK1 b - - 0 1"
+
+# Abschnitt 3 = Kapitel 2 Checkmate Puzzles, Buchseiten 72–73 (Foto vom 01.11.2026) – Ende der Aufgaben von Kapitel 2
+
+[[aufgabe]]
+nr = 302
+kapitel = 3
+seite = 72
+fen = "r2r2k1/5pb1/2p3p1/p3p3/Q7/1P1BqP2/bBPR2P1/2K4R b - - 0 1"
+
+[[aufgabe]]
+nr = 303
+kapitel = 3
+seite = 72
+fen = "3r1rk1/1p3p2/p1pb3p/P2pRPq1/1P1P2P1/2PQ4/2B3K1/7R w - - 0 1"
+
+[[aufgabe]]
+nr = 304
+kapitel = 3
+seite = 72
+fen = "r2qr1k1/3b1p1p/p1npp1pB/1p2nPb1/4P1P1/1NN4Q/PPP2RBP/5R1K w - - 0 1"
+
+[[aufgabe]]
+nr = 305
+kapitel = 3
+seite = 72
+fen = "3r1r2/p4p1k/2qN1Pnp/5R2/1p5P/2p3Q1/PP4PK/3R4 w - - 0 1"
+
+[[aufgabe]]
+nr = 306
+kapitel = 3
+seite = 72
+fen = "8/3N4/R5p1/6kp/4P3/1rn2PP1/p5K1/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 307
+kapitel = 3
+seite = 72
+fen = "6k1/2p2p2/8/R2p1b2/2qP2p1/4P1P1/1r3PBK/4Q3 b - - 0 1"
+
+[[aufgabe]]
+nr = 308
+kapitel = 3
+seite = 73
+fen = "r1b1r1k1/p4pp1/2p4p/2qp1p1Q/5B2/7R/P1P2PPP/5RK1 w - - 0 1"
+
+[[aufgabe]]
+nr = 309
+kapitel = 3
+seite = 73
+fen = "2r3k1/pb2qp2/1p2p1p1/3nP1Qp/3PN2P/3B4/P4PP1/4R1K1 w - - 0 1"
