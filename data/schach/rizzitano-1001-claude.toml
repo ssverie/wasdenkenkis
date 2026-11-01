@@ -2613,1013 +2613,1058 @@ geloest = 2026-11-01
 nr = 448
 sicherheit = "nicht gefunden"
 antwort = "1.Sxe5 Lxe5 2.Lc5"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 449
 sicherheit = "unsicher"
 antwort = "1.Dd7 (droht Dxf7)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 450
 sicherheit = "nicht gefunden"
 antwort = "1...Lxg3+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Lxg3+ gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 451
 sicherheit = "unsicher"
 antwort = "1.Dg5+ Kg7 2.Dxf5"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 452
 sicherheit = "nicht gefunden"
 antwort = "1.Txd5"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Erster Zug als Vermutung richtig."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 453
 sicherheit = "unsicher"
 antwort = "1.Sf6+ gxf6 2.Dg4+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 454
 sicherheit = "unsicher"
 antwort = "1.Sxg5 hxg5 2.Dxg5"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 455
 sicherheit = "nicht gefunden"
 antwort = "1...Sxf2"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 456
 sicherheit = "unsicher"
 antwort = "1.Dxf7+ Kxf7 2.d7 (Umwandlung)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 457
 sicherheit = "nicht gefunden"
 antwort = "1.e6"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 458
 sicherheit = "unsicher"
 antwort = "1.Sxe7 Kxe7 2.Dxf7+"
-ergebnis = "offen"
+ergebnis = "richtig"
+notiz = "Erster Zug richtig, Fortsetzung anders (30.Sxe5 statt Dxf7+)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 459
 sicherheit = "nicht gefunden"
 antwort = "1.Sf6+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 460
 sicherheit = "unsicher"
 antwort = "1.Lxh7+ Kxh7 2.Sg5+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 461
 sicherheit = "unsicher"
 antwort = "1...Sxd4 2.Lxd4 g5"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Sxd4 gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 462
 sicherheit = "unsicher"
 antwort = "1...f4"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 463
 sicherheit = "unsicher"
 antwort = "1...De4"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 464
 sicherheit = "unsicher"
 antwort = "1.dxe6"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 465
 sicherheit = "unsicher"
 antwort = "1.Lxg6 hxg6 2.Dh8#"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 466
 sicherheit = "nicht gefunden"
 antwort = "1.Lf5+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 467
 sicherheit = "unsicher"
 antwort = "1.Lxa8 Kxa8 2.Dxc8+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau den Zug gewählt, vor dem das Buch warnt."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 468
 sicherheit = "unsicher"
 antwort = "1.Lxf5+ exf5 2.Dxf5+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Lxf5+ gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 469
 sicherheit = "unsicher"
 antwort = "1...Txf3 2.gxf3 Dh4"
-ergebnis = "offen"
+ergebnis = "richtig"
+notiz = "Die ersten drei Züge wie im Buch."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 470
 sicherheit = "nicht gefunden"
 antwort = "1...Tc2"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 471
 sicherheit = "sicher"
 antwort = "1...Dxe4 2.Txe4 Se2+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 472
 sicherheit = "unsicher"
 antwort = "1...Ta8"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Ta8 gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 473
 sicherheit = "unsicher"
 antwort = "1...Lxf3+ 2.Dxf3 Td2+"
-ergebnis = "offen"
+ergebnis = "richtig"
+notiz = "Erster Zug richtig, Fortsetzung anders (Buch: 35.Kxf3 e4+)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 474
 sicherheit = "unsicher"
 antwort = "1...Txf6 2.exf6 De5+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 475
 sicherheit = "unsicher"
 antwort = "1...De6"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 476
 sicherheit = "nicht gefunden"
 antwort = "1.Txd5+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Gelöst mit falsch abgelesener Stellung (Läufer f5 als g5 gelesen)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 477
 sicherheit = "unsicher"
 antwort = "1...Lxe3"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 478
 sicherheit = "unsicher"
 antwort = "1.Txe5"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Txe5 gesehen, aber erst als dritten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 479
 sicherheit = "nicht gefunden"
 antwort = "1...De3+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Erster Zug als Vermutung richtig."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 480
 sicherheit = "unsicher"
 antwort = "1.Sf6+"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 481
 sicherheit = "unsicher"
 antwort = "1.Sf6"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 482
 sicherheit = "unsicher"
 antwort = "1...Sac3+"
-ergebnis = "offen"
+ergebnis = "anderer Weg"
+notiz = "Laut Buch führt 38...Sac3+ per Zugumstellung zum selben Remis."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 483
 sicherheit = "unsicher"
 antwort = "1...Lxd6"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 484
 sicherheit = "unsicher"
 antwort = "1...Dc3"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 485
 sicherheit = "unsicher"
 antwort = "1.De5+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau der Partiezug, den das Buch mit „?“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 486
 sicherheit = "unsicher"
 antwort = "1...Txd4 2.exd4 Dxd4+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Den Schlag auf d4 gesehen, aber mit dem Turm statt dem Springer."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 487
 sicherheit = "nicht gefunden"
 antwort = "1.Dg4"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 488
 sicherheit = "unsicher"
 antwort = "1.Sf6+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 489
 sicherheit = "unsicher"
 antwort = "1...Dh3"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 490
 sicherheit = "nicht gefunden"
 antwort = "1.Sf5+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 491
 sicherheit = "unsicher"
 antwort = "1...Df4+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 492
 sicherheit = "unsicher"
 antwort = "1...Dxh2+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 493
 sicherheit = "unsicher"
 antwort = "1...Sc2"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 494
 sicherheit = "nicht gefunden"
 antwort = "1...dxe3"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 495
 sicherheit = "unsicher"
 antwort = "1...Sxe3"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 496
 sicherheit = "sicher"
 antwort = "1.Txc4"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 497
 sicherheit = "nicht gefunden"
 antwort = "1...Sxe5"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau der Partiezug, den das Buch mit „?“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 498
 sicherheit = "unsicher"
 antwort = "1.Sf6+"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 499
 sicherheit = "unsicher"
 antwort = "1.Dd5"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 500
 sicherheit = "unsicher"
 antwort = "1...Lxc3 2.bxc3 Dxd5"
-ergebnis = "offen"
+ergebnis = "richtig"
+notiz = "Erster Zug richtig, Fortsetzung anders (Buch: 25.Lxf7+)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 501
 sicherheit = "nicht gefunden"
 antwort = "1.De5"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 502
 sicherheit = "unsicher"
 antwort = "1.Tc8+"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 503
 sicherheit = "unsicher"
 antwort = "1...Txe3 2.Dxe3 Tc2+"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 504
 sicherheit = "unsicher"
 antwort = "1...Te2+"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 505
 sicherheit = "nicht gefunden"
 antwort = "1...Sxf2"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 506
 sicherheit = "nicht gefunden"
 antwort = "1...Lxd3"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 507
 sicherheit = "nicht gefunden"
 antwort = "1.Txg7+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Erster Zug als Vermutung richtig."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 508
 sicherheit = "unsicher"
 antwort = "1.Dxe6+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 509
 sicherheit = "nicht gefunden"
 antwort = "1.Txe8+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 510
 sicherheit = "unsicher"
 antwort = "1.Tf3"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 511
 sicherheit = "unsicher"
 antwort = "1.Sh4"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 512
 sicherheit = "nicht gefunden"
 antwort = "1.a5"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 513
 sicherheit = "unsicher"
 antwort = "1...Txh2+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau der Partiezug, den das Buch mit „??“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 514
 sicherheit = "sicher"
 antwort = "1...Sxc3 2.Lxc3 Lxc3+ 3.bxc3 Tb1+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 515
 sicherheit = "unsicher"
 antwort = "1...S3f4+ 2.Lxf4 Sxf4+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau der Partiezug, den das Buch mit „??“ versieht (der andere Springer hätte gehalten)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 516
 sicherheit = "sicher"
 antwort = "1...Sg4+ 2.Dxg4 Dxg4"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 517
 sicherheit = "unsicher"
 antwort = "1...Tg5"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 518
 sicherheit = "sicher"
 antwort = "1.Dxc2"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau der Partiezug, den das Buch mit „?“ versieht – der Verdacht „zu einfach“ war berechtigt, nur nicht als Lesefehler."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 519
 sicherheit = "nicht gefunden"
 antwort = "1.Sg6+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 520
 sicherheit = "unsicher"
 antwort = "1.Dxh6"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 521
 sicherheit = "unsicher"
 antwort = "1.Lxh7"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 522
 sicherheit = "unsicher"
 antwort = "1.Lxh7+ Kxh7 2.Sfg5+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 523
 sicherheit = "unsicher"
 antwort = "1...Txe3"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 524
 sicherheit = "unsicher"
 antwort = "1.Lc3"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 525
 sicherheit = "unsicher"
 antwort = "1...Kxh7"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 526
 sicherheit = "nicht gefunden"
 antwort = "1...Lxf3"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Lxf3 steht im Buch nur als Partie-Nebenlinie."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 527
 sicherheit = "unsicher"
 antwort = "1.Txg6+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Txg6+ gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 528
 sicherheit = "unsicher"
 antwort = "1...Txf2+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Txf2+ gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 529
 sicherheit = "unsicher"
 antwort = "1...Sb3"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 530
 sicherheit = "unsicher"
 antwort = "1...Txf1+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 531
 sicherheit = "unsicher"
 antwort = "1.Sxh6+"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 532
 sicherheit = "unsicher"
 antwort = "1...Tc2+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Tc2+ kommt im Buch erst im dritten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 533
 sicherheit = "unsicher"
 antwort = "1.Dh6+"
-ergebnis = "offen"
+ergebnis = "richtig"
+notiz = "Erster Zug wie im Buch; der Rest der Lösung steht auf Buchseite 168."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 534
 sicherheit = "unsicher"
 antwort = "1...Txh2+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 535
 sicherheit = "unsicher"
 antwort = "1.Lxh4"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau der Partiezug, den das Buch mit „??“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 536
 sicherheit = "unsicher"
 antwort = "1.Txd7"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 537
 sicherheit = "unsicher"
 antwort = "1...Lxc3"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Lxc3 gesehen, aber erst als dritten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 538
 sicherheit = "unsicher"
 antwort = "1...Dxe3+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau der Partiezug, den das Buch mit „??“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 539
 sicherheit = "unsicher"
 antwort = "1...Lxd4"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Lxd4 gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 540
 sicherheit = "nicht gefunden"
 antwort = "1.Sxe5"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Erster Zug als Vermutung richtig."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 541
 sicherheit = "sicher"
 antwort = "1.Dxg7#"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Gelöst mit falsch abgelesener Stellung (Turm a7 als weiß gelesen) – mit schwarzem Turm a7 ist 1.Dxg7 kein Matt."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 542
 sicherheit = "unsicher"
 antwort = "1.Sh6+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 543
 sicherheit = "unsicher"
 antwort = "1...Lxg2 2.Kxg2 Db7+"
-ergebnis = "offen"
+ergebnis = "richtig"
+notiz = "Erster Zug richtig, Fortsetzung anders (Buch: 18...Se5!)."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 544
 sicherheit = "unsicher"
 antwort = "1.Df6"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 545
 sicherheit = "unsicher"
 antwort = "1...Df3+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 546
 sicherheit = "nicht gefunden"
 antwort = "1...Sxf2"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 547
 sicherheit = "nicht gefunden"
 antwort = "1...Lxf4"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 548
 sicherheit = "unsicher"
 antwort = "1.Lxe4"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 549
 sicherheit = "unsicher"
 antwort = "1.Dh6+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau der Zug, den das Buch mit „?“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 550
 sicherheit = "unsicher"
 antwort = "1.Sxf6"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau der Partiezug, den das Buch mit „??“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 551
 sicherheit = "unsicher"
 antwort = "1...Th2+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau der Partiezug, den das Buch mit „?“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 552
 sicherheit = "nicht gefunden"
 antwort = "1...Txe4"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 553
 sicherheit = "unsicher"
 antwort = "1...Lc4"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 554
 sicherheit = "unsicher"
 antwort = "1...Txf3"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 555
 sicherheit = "unsicher"
 antwort = "1...Dh4+"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 556
 sicherheit = "sicher"
 antwort = "1...Dxa5+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 557
 sicherheit = "nicht gefunden"
 antwort = "1.Lxe6"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 558
 sicherheit = "unsicher"
 antwort = "1.Dxg7+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 559
 sicherheit = "nicht gefunden"
 antwort = "1...Td8+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 560
 sicherheit = "unsicher"
 antwort = "1...Se3+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 561
 sicherheit = "unsicher"
 antwort = "1...Dd4+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 562
 sicherheit = "unsicher"
 antwort = "1.Lxe5"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 563
 sicherheit = "nicht gefunden"
 antwort = "1.Tc8"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 564
 sicherheit = "unsicher"
 antwort = "1.Lxg7+"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 565
 sicherheit = "unsicher"
 antwort = "1...c2"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 566
 sicherheit = "unsicher"
 antwort = "1.Lb4"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 567
 sicherheit = "unsicher"
 antwort = "1.Tf7+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Tf7+ kommt im Buch nur in der Nebenlinie vor."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 568
 sicherheit = "unsicher"
 antwort = "1...Sxg3+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 569
 sicherheit = "unsicher"
 antwort = "1...Sxf4"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 570
 sicherheit = "unsicher"
 antwort = "1...Lxh2+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Lxh2+ gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 571
 sicherheit = "unsicher"
 antwort = "1...Dc4+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 572
 sicherheit = "unsicher"
 antwort = "1...Sxg3+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 573
 sicherheit = "unsicher"
 antwort = "1...exd4"
-ergebnis = "offen"
+ergebnis = "richtig"
+notiz = "Der Verdacht „zu einfach“ war unbegründet: Die Stellung stimmt, 14...exd4 ist richtig."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 574
 sicherheit = "nicht gefunden"
 antwort = "1.c4"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Erster Zug als Vermutung richtig. Weiß steht im Diagramm tatsächlich im Schach – 16.c4 deckt ab, die Stellung ist richtig abgelesen."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 575
 sicherheit = "unsicher"
 antwort = "1...Txf2"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau der Partiezug, den das Buch mit „??“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 576
 sicherheit = "unsicher"
 antwort = "1.Lxh6"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 577
 sicherheit = "unsicher"
 antwort = "1...gxf4"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Genau der Partiezug, den das Buch mit „?“ versieht."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 578
 sicherheit = "nicht gefunden"
 antwort = "1.Tg8"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 579
 sicherheit = "unsicher"
 antwort = "1...Td1+"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 580
 sicherheit = "unsicher"
 antwort = "1.Sfg6+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Sfg6+ steht im Buch nur als spätere Alternative."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 581
 sicherheit = "unsicher"
 antwort = "1.Sd6+"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Sd6+ steht im Buch nur in der Nebenlinie."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 582
 sicherheit = "unsicher"
 antwort = "1.Dxf7+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 583
 sicherheit = "unsicher"
 antwort = "1.De6+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 584
 sicherheit = "unsicher"
 antwort = "1...Sd3+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 585
 sicherheit = "unsicher"
 antwort = "1...Te1+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 586
 sicherheit = "unsicher"
 antwort = "1...Txf2 2.Txf2 Te1+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 587
 sicherheit = "nicht gefunden"
 antwort = "1.Txf7"
-ergebnis = "offen"
+ergebnis = "falsch"
+notiz = "Txf7 kommt im Buch erst im vierten Zug."
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 588
 sicherheit = "nicht gefunden"
 antwort = "1.Lxe4"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 589
 sicherheit = "unsicher"
 antwort = "1...Lxf2+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 590
 sicherheit = "unsicher"
 antwort = "1.Sd5"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 591
 sicherheit = "unsicher"
 antwort = "1...Sf3+"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
 
 [[antwort]]
 nr = 592
 sicherheit = "unsicher"
 antwort = "1.gxf7"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-01
