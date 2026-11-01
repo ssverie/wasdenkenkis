@@ -4807,3 +4807,409 @@ sicherheit = "unsicher"
 antwort = "1.Txf6"
 ergebnis = "offen"
 geloest = 2026-11-01
+
+[[antwort]]
+nr = 739
+sicherheit = "unsicher"
+antwort = "1.Se7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 740
+sicherheit = "unsicher"
+antwort = "1.Sxd6+ Dxd6 2.Lb4"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 741
+sicherheit = "unsicher"
+antwort = "1.Sd5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 742
+sicherheit = "unsicher"
+antwort = "1.Txe7 Dxe7 2.Lxf6 gxf6 3.Sxd5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 743
+sicherheit = "unsicher"
+antwort = "1.Sxc6 Lxc6 2.Lg5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 744
+sicherheit = "unsicher"
+antwort = "1.Lg3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 745
+sicherheit = "unsicher"
+antwort = "1...Sxe3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 746
+sicherheit = "unsicher"
+antwort = "1.Sf5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 747
+sicherheit = "unsicher"
+antwort = "1...Lb5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 748
+sicherheit = "unsicher"
+antwort = "1...Tb2+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 749
+sicherheit = "unsicher"
+antwort = "1.Lxf6 Dxf6 2.Lxc6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 750
+sicherheit = "unsicher"
+antwort = "1.Lxc4"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 751
+sicherheit = "unsicher"
+antwort = "1...Sb3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 752
+sicherheit = "unsicher"
+antwort = "1...Lxg5 2.Dxg5 Dxa2"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 753
+sicherheit = "unsicher"
+antwort = "1...Lxc2+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 754
+sicherheit = "unsicher"
+antwort = "1...dxc4"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 755
+sicherheit = "unsicher"
+antwort = "1.Lg5 (fesselt Df6)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 756
+sicherheit = "unsicher"
+antwort = "1.Sxh6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 757
+sicherheit = "unsicher"
+antwort = "1...Sd3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 758
+sicherheit = "unsicher"
+antwort = "1...Lc7 (fesselt f4)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 759
+sicherheit = "unsicher"
+antwort = "1...Dh1+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 760
+sicherheit = "unsicher"
+antwort = "1...Sxf3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 761
+sicherheit = "unsicher"
+antwort = "1.Lxd3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 762
+sicherheit = "unsicher"
+antwort = "1.Se7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 763
+sicherheit = "unsicher"
+antwort = "1...Sf7"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 764
+sicherheit = "unsicher"
+antwort = "1...Dxb7"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 765
+sicherheit = "unsicher"
+antwort = "1.Se7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 766
+sicherheit = "unsicher"
+antwort = "1.Sxe6 Sxe6 2.Lxd5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 767
+sicherheit = "unsicher"
+antwort = "1...Lxc3 (Tf3 gefesselt)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 768
+sicherheit = "unsicher"
+antwort = "1.Txf6 Lxf6 2.e5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 769
+sicherheit = "unsicher"
+antwort = "1...Lxd6 2.Sxd6 Dxd6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 770
+sicherheit = "sicher"
+antwort = "1...Lb5 (fesselt Lc4)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 771
+sicherheit = "unsicher"
+antwort = "1...Lxc6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 772
+sicherheit = "unsicher"
+antwort = "1...Lxc4+ 2.Dxc4"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 773
+sicherheit = "unsicher"
+antwort = "1.Sf6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 774
+sicherheit = "unsicher"
+antwort = "1.Dxf7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 775
+sicherheit = "unsicher"
+antwort = "1...Se3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 776
+sicherheit = "unsicher"
+antwort = "1...Txb2 2.Txb2 Lxc3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 777
+sicherheit = "unsicher"
+antwort = "1.Sg6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 778
+sicherheit = "unsicher"
+antwort = "1...Dxf2+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 779
+sicherheit = "unsicher"
+antwort = "1.Sxd5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 780
+sicherheit = "unsicher"
+antwort = "1...Txe3 2.Txe3 Dxb2"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 781
+sicherheit = "unsicher"
+antwort = "1...Sg5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 782
+sicherheit = "unsicher"
+antwort = "1.Lc3 (fesselt Se5)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 783
+sicherheit = "unsicher"
+antwort = "1...Lxe4+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 784
+sicherheit = "unsicher"
+antwort = "1.Lh7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 785
+sicherheit = "unsicher"
+antwort = "1.Lxe4"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 786
+sicherheit = "sicher"
+antwort = "1.Sf7+ (Abzug auf Db8)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 787
+sicherheit = "unsicher"
+antwort = "1...Sd3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 788
+sicherheit = "unsicher"
+antwort = "1.Sxg4"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 789
+sicherheit = "unsicher"
+antwort = "1...Txf3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 790
+sicherheit = "unsicher"
+antwort = "1...Sd3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 791
+sicherheit = "unsicher"
+antwort = "1...Sxe5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 792
+sicherheit = "unsicher"
+antwort = "1.Sxg6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 793
+sicherheit = "unsicher"
+antwort = "1...Lf6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 794
+sicherheit = "unsicher"
+antwort = "1.Dxe5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 795
+sicherheit = "unsicher"
+antwort = "1.Txg6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 796
+sicherheit = "unsicher"
+antwort = "1...Sxe5"
+ergebnis = "offen"
+geloest = 2026-11-01
