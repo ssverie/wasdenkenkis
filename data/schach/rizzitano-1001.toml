@@ -3157,7 +3157,7 @@ fen = "7k/p4ppp/1p3R1N/2qP2Q1/4r3/4n3/6PP/B5K1 w - - 0 1"
 nr = 326
 kapitel = 4
 seite = 95
-fen = "r4rk1/pp3ppp/7q/3p1P2/1nP5/8/PB2q2P/6RK w - - 0 1"
+fen = "r4rk1/pp3ppp/7q/3p1P2/1nP5/8/PB2Q2P/6RK w - - 0 1"
 
 [[aufgabe]]
 nr = 327

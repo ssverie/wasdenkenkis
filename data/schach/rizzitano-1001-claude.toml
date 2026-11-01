@@ -1553,3 +1553,297 @@ sicherheit = "unsicher"
 antwort = "1.Tg8+ Ke7 2.Dxf7+"
 ergebnis = "offen"
 geloest = 2026-11-01
+
+[[antwort]]
+nr = 316
+sicherheit = "sicher"
+antwort = "1...Th2+ 2.Kxh2 Dg2# (2.Kg1 Dg2#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 317
+sicherheit = "nicht gefunden"
+antwort = "1.Dh8+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 318
+sicherheit = "unsicher"
+antwort = "1...Db6+ 2.Kh2 Sxf1+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 319
+sicherheit = "sicher"
+antwort = "1...Dxg2+! 2.Sxg2 Tf1+ 3.Txf1 Txf1#"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 320
+sicherheit = "unsicher"
+antwort = "1...Dh1+ 2.Kf2 Dh2+ 3.Ke1 Txe3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 321
+sicherheit = "unsicher"
+antwort = "1...Txg3+ 2.hxg3 Dh1+ 3.Kf2 Dg2+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 322
+sicherheit = "unsicher"
+antwort = "1.f7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 323
+sicherheit = "sicher"
+antwort = "1.Lxa5+ Kc8 2.Dc7#"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 324
+sicherheit = "unsicher"
+antwort = "1.Sc7"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 325
+sicherheit = "unsicher"
+antwort = "1.Txf7 (Abzug: La1 gegen g7)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 326
+sicherheit = "unsicher"
+antwort = "1.Txg7+ Dxg7 2.Lxg7 Kxg7 3.Dg4+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 327
+sicherheit = "sicher"
+antwort = "1.Dg7# (Sf5 deckt g7)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 328
+sicherheit = "unsicher"
+antwort = "1...Dh3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 329
+sicherheit = "unsicher"
+antwort = "1.Sf5 (droht Dxg7#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 330
+sicherheit = "nicht gefunden"
+antwort = "1...Ta3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 331
+sicherheit = "unsicher"
+antwort = "1...Dxh5+ 2.g4 Dh3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 332
+sicherheit = "nicht gefunden"
+antwort = "1...Sb3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 333
+sicherheit = "unsicher"
+antwort = "1...Sf3+ 2.Sxf3 Dxf3 (droht Dg2#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 334
+sicherheit = "unsicher"
+antwort = "1.Dc8+ Lxc8 2.Txc8+ Kh7 3.Sg5+ Kh6 4.Sxf7+ Kh7 5.Th8#"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 335
+sicherheit = "nicht gefunden"
+antwort = "1...Le2"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 336
+sicherheit = "unsicher"
+antwort = "1...Tg1+ 2.Kxg1 Dc1+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 337
+sicherheit = "unsicher"
+antwort = "1.Txa8+ Dxa8 2.Dxa8+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 338
+sicherheit = "unsicher"
+antwort = "1...f3 (droht Dg2#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 339
+sicherheit = "unsicher"
+antwort = "1.Lxg4"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 340
+sicherheit = "unsicher"
+antwort = "1...Lxg3"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 341
+sicherheit = "unsicher"
+antwort = "1...Th1+ 2.Kxh1 gxf2 nebst Th8+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 342
+sicherheit = "unsicher"
+antwort = "1.Lxf7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 343
+sicherheit = "unsicher"
+antwort = "1.Df8+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 344
+sicherheit = "unsicher"
+antwort = "1.Td7+ Dxd7 2.Dxf6+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 345
+sicherheit = "unsicher"
+antwort = "1...Sd3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 346
+sicherheit = "unsicher"
+antwort = "1.Lxh7+ Kxh7 2.Sg5+ Lxg5 3.hxg5+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 347
+sicherheit = "nicht gefunden"
+antwort = "1...Th1+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 348
+sicherheit = "unsicher"
+antwort = "1...Txh3+ 2.Lxh3 Dxh3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 349
+sicherheit = "unsicher"
+antwort = "1.Dg5+ Kg7 2.Txe6"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 350
+sicherheit = "unsicher"
+antwort = "1.Txg7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 351
+sicherheit = "unsicher"
+antwort = "1.Sf6 (droht Dg8+ Txg8 Th7#)"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 352
+sicherheit = "unsicher"
+antwort = "1...Lc5+ 2.Lxc5"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 353
+sicherheit = "unsicher"
+antwort = "1...Lf5+ 2.Ka1 Dc2"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 354
+sicherheit = "unsicher"
+antwort = "1...Txf3+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 355
+sicherheit = "unsicher"
+antwort = "1.Lxg7+ Kxg7 2.Te7+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 356
+sicherheit = "unsicher"
+antwort = "1...Tg4+ 2.fxg4 Td1+"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 357
+sicherheit = "unsicher"
+antwort = "1...Dh2+ 2.Kf1 Sh4"
+ergebnis = "offen"
+geloest = 2026-11-01
