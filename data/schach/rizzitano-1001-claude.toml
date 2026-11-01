@@ -4121,3 +4121,17 @@ punkte = 4
 max = 4
 notiz = "Erster Zug richtig."
 geloest = 2026-11-01
+
+[[antwort]]
+nr = 641
+sicherheit = "unsicher"
+antwort = "1...dxc4"
+ergebnis = "offen"
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 642
+sicherheit = "unsicher"
+antwort = "1...f5+ 2.Kg3 exf4+ 3.Kxf4 Txh4+"
+ergebnis = "offen"
+geloest = 2026-11-01
