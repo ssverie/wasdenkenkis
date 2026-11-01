@@ -1331,3 +1331,77 @@ nr = 137
 kapitel = 2
 seite = 39
 fen = "2r1r1k1/p4pb1/5Pp1/4q3/2B5/1P1Q4/P7/1K1R1R2 b - - 0 1"
+
+# Abschnitt 2 = Elementary Test, Buchseiten 40–41 (Foto vom 01.11.2026); Lösungen folgen
+
+[[aufgabe]]
+nr = 138
+kapitel = 2
+seite = 40
+fen = "3rk2r/p1q2ppp/2b1pn2/2p5/2N1B2Q/8/PPP2PPP/2R1R1K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 139
+kapitel = 2
+seite = 40
+fen = "r1b2r1k/ppqn2bp/2pN4/5p2/3PN3/1QPB3P/PP3P2/R3K2R w - - 0 1"
+
+[[aufgabe]]
+nr = 140
+kapitel = 2
+seite = 40
+fen = "3k1r2/3nR3/1n6/pQ1pNqpP/1p1P4/5PP1/2r2RK1/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 141
+kapitel = 2
+seite = 40
+fen = "3r4/1q2bpk1/p3pp1p/1p2P2P/5Q2/1P3NP1/P4PK1/2R5 w - - 0 1"
+
+[[aufgabe]]
+nr = 142
+kapitel = 2
+seite = 40
+fen = "2r1r1k1/5ppp/p1b1q3/1p1p3n/1BpP4/P3PP2/1P2R1PP/1B2QR1K w - - 0 1"
+
+[[aufgabe]]
+nr = 143
+kapitel = 2
+seite = 40
+fen = "r3r2k/p3qpp1/1p6/2pP1R2/4B3/2P1P3/Pn2Q1PP/6K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 144
+kapitel = 2
+seite = 41
+fen = "4qr1k/1p2brpp/p7/7Q/3B4/1B6/P4PPP/3R2K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 145
+kapitel = 2
+seite = 41
+fen = "3q1r2/1bp2p1k/p1np1Qpb/P3p3/1p2P1P1/1B1PN3/1PP2PK1/7R w - - 0 1"
+
+[[aufgabe]]
+nr = 146
+kapitel = 2
+seite = 41
+fen = "3r4/3P2k1/p5p1/2pq2Nn/P2b4/8/6QP/3R1R1K b - - 0 1"
+
+[[aufgabe]]
+nr = 147
+kapitel = 2
+seite = 41
+fen = "2rr2k1/2q3pp/2b1pR2/1p1p4/1P1QP2P/2N5/2PRB1P1/1K6 b - - 0 1"
+
+[[aufgabe]]
+nr = 148
+kapitel = 2
+seite = 41
+fen = "1r4k1/5pp1/R3p3/3n1b2/8/2rN4/P1PB1P1P/K1R5 b - - 0 1"
+
+[[aufgabe]]
+nr = 149
+kapitel = 2
+seite = 41
+fen = "r6k/pQp3pp/1n1q4/3p4/5b2/2P3P1/PP4BP/4R2K w - - 0 1"
