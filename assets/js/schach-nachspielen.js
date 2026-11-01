@@ -5,6 +5,8 @@
 // Klammern darin zweigen von der Variante ab. Was sich nicht als Zug lesen lässt (Text, Bewertungen), bleibt Text;
 // passt ein Zug nicht zur Stellung, bleibt der Rest der Zeile Text. Zuglogik wie skripte/loesung-nachspielen.pl
 // (deutsche Buchstaben K D T L S, Umwandlung „f8D“, Rochade „0-0“). Ohne Skript bleibt alles wie bisher.
+// Seit 2026-11-01 außerdem wie im Buch (Sven: „genau so wie im Image“ – „probier mal 1+2“): Figurinen statt Buchstaben,
+// und jede Variante steht eingerückt direkt unter dem Zug der Hauptlinie, von dem sie abzweigt.
 (function () {
   'use strict';
   var TYP = { K: 'K', D: 'Q', T: 'R', L: 'B', S: 'N' };
@@ -137,6 +139,27 @@
     var aktuell = null, aktivEl = null;
 
     function plyVon(nr, schwarz) { return (nr - startNr) * 2 + (schwarz ? 1 : 0) - (startWeiss ? 0 : 1); }
+    function schwarzBeiPly(ply) { return (ply + (startWeiss ? 0 : 1)) % 2 === 1; }
+    function nummerBeiPly(ply) { return startNr + Math.floor((ply + (startWeiss ? 0 : 1)) / 2); }
+
+    // Figurinen wie im Buch (Sven, „genau so wie im Image“): Figurenbuchstabe → kleines Figurenbild (immer der weiße Satz,
+    // wie im Buch); alt = Buchstabe, damit Kopieren weiter „Sf5“ ergibt.
+    function figurine(t) {
+      var frag = document.createDocumentFragment();
+      var m = /^(\d+\.(?:\.\.)?)?([KDTLS])?(.*?)(=?)([DTLS])?([+#]*[!?]*)$/.exec(t);
+      function bild(b) {
+        var img = document.createElement('img');
+        img.className = 'np-fig'; img.alt = b; img.src = basis + 'w' + TYP[b] + '.svg';
+        return img;
+      }
+      if (!m) { frag.appendChild(document.createTextNode(t)); return frag; }
+      if (m[1]) frag.appendChild(document.createTextNode(m[1]));
+      if (m[2]) frag.appendChild(bild(m[2]));
+      frag.appendChild(document.createTextNode(m[3] + m[4]));
+      if (m[5]) frag.appendChild(bild(m[5]));
+      if (m[6]) frag.appendChild(document.createTextNode(m[6]));
+      return frag;
+    }
 
     function zeigen(b, von, nach) {
       for (var i = 0; i < 64; i++) {
@@ -166,43 +189,45 @@
       var text = el.textContent, teile = text.match(/\(|\)|\s+|[^\s()]+/g) || [];
       var frag = document.createDocumentFragment();
       function neueLinie(eltern) { return { pos: null, w: null, ply: null, vorher: null, ep: '', kaputt: false, plys: {}, eltern: eltern, erster: true }; }
-      var linie = neueLinie(null), stapel = [], eigene = [];
+      var linie = neueLinie(null), stapel = [], eigene = [], abzweig;
       if (hauptlinie) { linie.pos = startBrett; linie.w = startWeiss; linie.ply = 0; linie.ep = startEp; linie.plys = hauptPlys; }
       teile.forEach(function (t) {
         if (t === '(') { stapel.push(linie); linie = neueLinie(linie); frag.appendChild(document.createTextNode(t)); return; }
         if (t === ')') { if (stapel.length) linie = stapel.pop(); frag.appendChild(document.createTextNode(t)); return; }
         var m = ZUG.exec(t);
-        if (!m || linie.kaputt || /^\s+$/.test(t)) { frag.appendChild(document.createTextNode(t)); return; }
+        if (m && (linie.kaputt || (!m[1] && linie.pos === null))) { frag.appendChild(figurine(t)); return; }
+        if (!m || /^\s+$/.test(t)) { frag.appendChild(document.createTextNode(t)); return; }
         var w, ply;
         if (m[1]) {
           var schwarz = m[2] === '...';
           w = !schwarz; ply = plyVon(Number(m[1]), schwarz);
           if (linie.pos === null || linie.ply !== ply) {
-            if (linie.pos !== null) { linie.kaputt = true; frag.appendChild(document.createTextNode(t)); return; }
+            if (linie.pos !== null) { linie.kaputt = true; frag.appendChild(figurine(t)); return; }
+            if (!hauptlinie && !stapel.length && abzweig === undefined) abzweig = ply;
             // Abzweig: Stellung vor diesem Halbzug in der übergeordneten Linie (sonst in der Hauptlinie)
             var quelle = linie.eltern ? linie.eltern.plys : hauptPlys, k = quelle[ply] || hauptPlys[ply];
             var davor = quelle[ply - 1] || hauptPlys[ply - 1];
             if (k) { linie.pos = k.vor; linie.ep = k.epVor; linie.vorher = k.vorher; }
             else if (ply === 0) { linie.pos = startBrett; linie.ep = startEp; linie.vorher = null; }
             else if (davor) { linie.pos = davor.nach; linie.ep = davor.ep; linie.vorher = davor; }
-            else { linie.kaputt = true; frag.appendChild(document.createTextNode(t)); return; }
+            else { linie.kaputt = true; frag.appendChild(figurine(t)); return; }
             linie.w = w; linie.ply = ply;
           }
         } else {
-          if (linie.pos === null) { frag.appendChild(document.createTextNode(t)); return; }
           w = linie.w; ply = linie.ply;
         }
         var erg = zug(linie.pos, w, m[3], linie.ep);
         if (typeof erg === 'string') {
           linie.kaputt = true;
-          frag.appendChild(document.createTextNode(t));
+          frag.appendChild(figurine(t));
           if (window.console) console.warn('Nachspielen ' + li.id + ': ' + t + ' – ' + erg);
           return;
         }
         var span = document.createElement('span');
-        span.className = 'np-zug'; span.textContent = t; span.tabIndex = 0; span.setAttribute('role', 'button');
+        span.className = 'np-zug'; span.appendChild(figurine(t)); span.tabIndex = 0; span.setAttribute('role', 'button');
         var knoten = { vor: linie.pos, nach: erg.b, von: erg.von, ziel: erg.nach, epVor: linie.ep, ep: erg.ep,
-                       vorher: linie.vorher, weiter: null, el: span };
+                       vorher: linie.vorher, weiter: null, el: span, ply: ply, nummeriert: !!m[1] };
+        span.knoten = knoten;
         if (!linie.erster && linie.vorher) linie.vorher.weiter = knoten;
         linie.erster = false;
         linie.plys[ply] = knoten;
@@ -214,13 +239,17 @@
       });
       el.textContent = '';
       el.appendChild(frag);
+      eigene.abzweig = abzweig;
       return eigene;
     }
 
     var hauptPlys = {};
     var hauptKnoten = verarbeite(haupt, true, hauptPlys);
     if (!hauptKnoten.length) return;
-    loesung.querySelectorAll('.varianten li').forEach(function (v) { verarbeite(v, false, hauptPlys); });
+    var varianten = [];
+    loesung.querySelectorAll('.varianten li').forEach(function (v) {
+      varianten.push({ el: v, abzweig: verarbeite(v, false, hauptPlys).abzweig });
+    });
 
     var knoepfe = document.createElement('div');
     knoepfe.className = 'np-knoepfe';
@@ -239,6 +268,49 @@
     hinweis.textContent = 'Züge anklicken oder mit den Pfeiltasten nachspielen';
     knoepfe.appendChild(hinweis);
     haupt.parentNode.parentNode.insertBefore(knoepfe, haupt.parentNode);
+    buchansicht();
+
+    // Wie im Buch: Hauptlinie (fett) nach dem Zug teilen, von dem eine Variante abzweigt, und die Variante darunter
+    // einrücken; der nächste Absatz der Hauptlinie beginnt bei einem schwarzen Zug mit „27...“. Varianten ohne
+    // erkennbaren Abzweig bleiben am Ende.
+    function buchansicht() {
+      var hauptP = haupt.parentNode, liste = loesung.querySelector('ul.varianten');
+      var beiPly = {}, rest = [], gefunden = false;
+      varianten.forEach(function (v) {
+        if (v.abzweig !== undefined && hauptPlys[v.abzweig]) { (beiPly[v.abzweig] = beiPly[v.abzweig] || []).push(v.el); gefunden = true; }
+        else rest.push(v.el);
+      });
+      if (!gefunden) return;
+      var aus = document.createDocumentFragment(), strong = null, neuerAbsatz = true;
+      function block(lis) {
+        var div = document.createElement('div');
+        div.className = 'varianten np-varianten';
+        lis.forEach(function (li) {
+          var p = document.createElement('p');
+          while (li.firstChild) p.appendChild(li.firstChild);
+          div.appendChild(p);
+        });
+        aus.appendChild(div);
+      }
+      Array.prototype.slice.call(haupt.childNodes).forEach(function (n) {
+        if (neuerAbsatz) {
+          if (n.nodeType === 3 && !n.textContent.trim()) return;
+          var p = document.createElement('p');
+          p.className = 'hauptlinie';
+          strong = document.createElement('strong');
+          p.appendChild(strong);
+          aus.appendChild(p);
+          var k = n.knoten;
+          if (k && !k.nummeriert && schwarzBeiPly(k.ply)) strong.appendChild(document.createTextNode(nummerBeiPly(k.ply) + '...'));
+          neuerAbsatz = false;
+        }
+        strong.appendChild(n);
+        if (n.knoten && beiPly[n.knoten.ply]) { block(beiPly[n.knoten.ply]); neuerAbsatz = true; }
+      });
+      if (rest.length) block(rest);
+      hauptP.parentNode.replaceChild(aus, hauptP);
+      if (liste) liste.remove();
+    }
 
     loesung.addEventListener('keydown', function (e) {
       if (e.target.closest('summary')) return;

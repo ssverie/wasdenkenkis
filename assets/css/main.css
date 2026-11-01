@@ -366,6 +366,9 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .np-zug.np-aktiv { background: var(--akzent); color: var(--bg); }
 .varianten .np-zug { color: var(--text); }
 .varianten .np-zug.np-aktiv { color: var(--bg); }
+.np-fig { height: 1.05em; width: auto; vertical-align: -0.17em; margin-right: 0.02em; }
+.np-varianten { padding-left: 1.1rem; }
+.np-varianten p { margin: 0.15rem 0; }
 .brett .feld.np-markiert { background-image: linear-gradient(rgba(255, 214, 10, .45), rgba(255, 214, 10, .45)); }
 @media (max-width: 36rem) {
   .schachaufgaben > li { grid-template-columns: minmax(0, 1fr); }

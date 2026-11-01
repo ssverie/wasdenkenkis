@@ -3673,8 +3673,10 @@ geloest = 2026-11-01
 nr = 593
 sicherheit = "unsicher"
 antwort = "1.Sxf6+ Sxf6 2.Dxf6"
-ergebnis = "offen"
+ergebnis = "falsch"
+punkte = 0
 max = 1
+notiz = "Gelöst mit falsch abgelesener Stellung (Springer h4 als g4 gelesen) – von g4 kann er f6 gar nicht erreichen."
 geloest = 2026-11-01
 
 [[antwort]]
