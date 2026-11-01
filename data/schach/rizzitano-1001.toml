@@ -1257,3 +1257,77 @@ nr = 125
 kapitel = 2
 seite = 37
 fen = "3r1kr1/2Q1bp2/4p3/p3P2p/5P1P/P7/1q2BP1R/3R1K2 b - - 0 1"
+
+# Abschnitt 2 = Elementary Test, Buchseiten 38–39 (Foto vom 01.11.2026); Lösungen folgen
+
+[[aufgabe]]
+nr = 126
+kapitel = 2
+seite = 38
+fen = "6k1/pb5p/1p1q4/1P1pr1p1/3R4/6QB/P2B1K2/8 b - - 0 1"
+
+[[aufgabe]]
+nr = 127
+kapitel = 2
+seite = 38
+fen = "4r1k1/1R4p1/3p4/2pP4/P1P5/2q4P/5QP1/6K1 b - - 0 1"
+
+[[aufgabe]]
+nr = 128
+kapitel = 2
+seite = 38
+fen = "3r2k1/q4pp1/4p2p/p1N5/1p2b3/1P4PP/PQ2PP2/2R3K1 b - - 0 1"
+
+[[aufgabe]]
+nr = 129
+kapitel = 2
+seite = 38
+fen = "2r1r1k1/p2q2bp/bpn1p1p1/1N1p1p2/2PPnN2/1P4P1/PB2QPBP/2RR2K1 b - - 0 1"
+
+[[aufgabe]]
+nr = 130
+kapitel = 2
+seite = 38
+fen = "1qRr2k1/p2rbppp/1p1N4/5Q2/1P3P1P/6P1/P4P2/3R2K1 b - - 0 1"
+
+[[aufgabe]]
+nr = 131
+kapitel = 2
+seite = 38
+fen = "2b4R/1k3p2/p1qB4/1p2P3/8/3r4/PP6/1KQ5 b - - 0 1"
+
+[[aufgabe]]
+nr = 132
+kapitel = 2
+seite = 39
+fen = "r2q1b1r/1b2k2p/p2p2p1/4pp2/4n3/R4N2/1P3PPP/1NBQR1K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 133
+kapitel = 2
+seite = 39
+fen = "2k4r/pp1nb1p1/2p1Q3/q2pP2r/2PP4/1P3N2/P2B1P2/R4RK1 b - - 0 1"
+
+[[aufgabe]]
+nr = 134
+kapitel = 2
+seite = 39
+fen = "5b2/2q2k2/4p2p/p2p2p1/3N2P1/1P2P3/5PP1/3Q2K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 135
+kapitel = 2
+seite = 39
+fen = "1qr2k2/r2Rbppp/p3p3/2p5/2N5/1P2PQ2/P4PP1/5R1K w - - 0 1"
+
+[[aufgabe]]
+nr = 136
+kapitel = 2
+seite = 39
+fen = "r1b2rk1/ppp2pp1/4pn1p/4N3/1b1q3B/2P2Q2/PP3PPP/R3KB1R w KQ - 0 1"
+
+[[aufgabe]]
+nr = 137
+kapitel = 2
+seite = 39
+fen = "2r1r1k1/p4pb1/5Pp1/4q3/2B5/1P1Q4/P7/1K1R1R2 b - - 0 1"
