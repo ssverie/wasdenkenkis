@@ -124,8 +124,8 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-01: Schach-Buch, Elementary Test 138–149 als Diagramme)
-- Offen: Elementary Test bis 161 vervollständigen, je Runde selbst lösen; Auflösung (Lösungsseiten ab Buchseite 44) erst nach 161 – dann meine festgeschriebenen Antworten vergleichen (`notizen/spiele-schach-tools.md`).
+- (leer – zuletzt freigegeben und gepusht am 2026-11-01: Schach-Buch, Elementary Test 150–161 – Test vollständig, 48 Aufgaben)
+- Offen: Auflösung des Elementary Test (Lösungsseiten ab Buchseite 44) – meine festgeschriebenen Antworten 114–161 vergleichen (`notizen/spiele-schach-tools.md`).
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 
