@@ -5253,3 +5253,387 @@ sicherheit = "unsicher"
 antwort = "1...Sxe5"
 ergebnis = "falsch"
 geloest = 2026-11-01
+
+[[antwort]]
+nr = 797
+sicherheit = "unsicher"
+antwort = "1.b4 (Dame weg, dann Se7+)"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 798
+sicherheit = "unsicher"
+antwort = "1...Txf4"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 799
+sicherheit = "unsicher"
+antwort = "1...Tc6"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 800
+sicherheit = "sicher"
+antwort = "1...Sf3+ (Gabel König und Th4)"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 801
+sicherheit = "unsicher"
+antwort = "1.Txc8+ Txc8 2.Lxb5"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 802
+sicherheit = "unsicher"
+antwort = "1.Txd8+ Txd8 2.Lc7 (Gabel Td8 und Da5)"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 803
+sicherheit = "unsicher"
+antwort = "1.Lxd5"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 804
+sicherheit = "unsicher"
+antwort = "1...De5+"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 805
+sicherheit = "unsicher"
+antwort = "1.Dh6+ (dann Dxg5)"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 806
+sicherheit = "unsicher"
+antwort = "1.Sf7+"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 807
+sicherheit = "unsicher"
+antwort = "1...Txe2"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 808
+sicherheit = "unsicher"
+antwort = "1...Dxc7"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 809
+sicherheit = "unsicher"
+antwort = "1.Sxc6 Lxc6 2.Sxd5"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 810
+sicherheit = "unsicher"
+antwort = "1.Lxf7+"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 811
+sicherheit = "unsicher"
+antwort = "1.Lxe4 dxe4 2.Sxc6"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 812
+sicherheit = "unsicher"
+antwort = "1...Se2+"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 813
+sicherheit = "unsicher"
+antwort = "1.Txd7 Dxd7 2.Sd6"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 814
+sicherheit = "unsicher"
+antwort = "1.e6"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 815
+sicherheit = "unsicher"
+antwort = "1.Sxe4 Dxe4 2.Td7"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 816
+sicherheit = "unsicher"
+antwort = "1.Txd5 cxd5 2.Sd6+"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 817
+sicherheit = "unsicher"
+antwort = "1.Txg7"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 818
+sicherheit = "unsicher"
+antwort = "1...Lxf3"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 819
+sicherheit = "unsicher"
+antwort = "1.Ld5"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 820
+sicherheit = "sicher"
+antwort = "1.Dh5 (fesselt Dg6)"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 821
+sicherheit = "unsicher"
+antwort = "1...Db1+"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 822
+sicherheit = "sicher"
+antwort = "1.Sd6 (Gabel Dc4 und Te8)"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 823
+sicherheit = "unsicher"
+antwort = "1...Lxd2"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 824
+sicherheit = "unsicher"
+antwort = "1.Lxe5 Dxe5 2.Dd4"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 825
+sicherheit = "unsicher"
+antwort = "1...Sc3"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 826
+sicherheit = "unsicher"
+antwort = "1.Sg5"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 827
+sicherheit = "unsicher"
+antwort = "1.De6+"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 828
+sicherheit = "unsicher"
+antwort = "1...Txc3"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 829
+sicherheit = "unsicher"
+antwort = "1...dxc3"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 830
+sicherheit = "unsicher"
+antwort = "1...Txd4 2.Txd4 Lc5"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 831
+sicherheit = "unsicher"
+antwort = "1.Sf6+ gxf6 2.Dxd7"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 832
+sicherheit = "unsicher"
+antwort = "1.Ta8+"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 833
+sicherheit = "unsicher"
+antwort = "1...Sxh4+"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 834
+sicherheit = "unsicher"
+antwort = "1.Dd8+"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 835
+sicherheit = "unsicher"
+antwort = "1...Dc2+"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 836
+sicherheit = "sicher"
+antwort = "1...Se4+ (Gabel Kf2, Td2, Df6)"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 837
+sicherheit = "unsicher"
+antwort = "1.hxg6"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 838
+sicherheit = "unsicher"
+antwort = "1.Tb1"
+ergebnis = "offen"
+max = 3
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 839
+sicherheit = "unsicher"
+antwort = "1.Sc6+"
+ergebnis = "offen"
+max = 4
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 840
+sicherheit = "unsicher"
+antwort = "1...Lf5"
+ergebnis = "offen"
+max = 4
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 841
+sicherheit = "unsicher"
+antwort = "1...Txf3+ 2.Kxf3 dxe4+"
+ergebnis = "offen"
+max = 4
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 842
+sicherheit = "unsicher"
+antwort = "1...Sxd3"
+ergebnis = "offen"
+max = 4
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 843
+sicherheit = "unsicher"
+antwort = "1.Sf6+"
+ergebnis = "offen"
+max = 4
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 844
+sicherheit = "unsicher"
+antwort = "1...Sf2+"
+ergebnis = "offen"
+max = 4
+geloest = 2026-11-01
