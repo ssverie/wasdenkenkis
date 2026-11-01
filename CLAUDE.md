@@ -125,7 +125,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-01: Schach-Buch, Intermediate Test 605–640)
+- (leer – zuletzt freigegeben und gepusht am 2026-11-01: Schach-Buch, meine Antworten 605–640)
 - Offen (Schach-Buch, zum Schluss): Aufgaben 1–592 auf Buchansicht/Nachspielen umstellen (Sven, 2026-11-01); danach Subagent für 1–113.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
