@@ -5886,3 +5886,77 @@ partie = "Giaccio – Sos Andreu"
 turnier = "Montserrat 2022"
 loesung = "28.Txe5 Lxe5 29.Sc6+! bxc6 30.Txd8+ Dxd8 31.Lxe5+ Kb7 32.gxf7 Dg5 33.Ld6 +–"
 varianten = ["30.Lxe5+ Kb7 31.Txd8 Dxd8 (dasselbe)", "32...Dh4 33.Ld6 Dxc4 34.f8D Txf8 35.Lxf8 +–"]
+
+# Abschnitt 6 = Kapitel 3 Intermediate Test, Buchseiten 176–177 (Foto vom 01.11.2026); Punkte: 593–597 je 1, 598–604 je 2; Lösungen folgen
+
+[[aufgabe]]
+nr = 593
+kapitel = 6
+seite = 176
+fen = "4r1k1/3n3p/1q2pppQ/1b1p4/p2P2N1/1P2R3/Pr3PPP/3R2K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 594
+kapitel = 6
+seite = 176
+fen = "r2n1rk1/pp2qbp1/1bp4p/1B1pPp1P/3PnN1N/P3B1P1/1P3P2/R2QK2R b - - 0 1"
+
+[[aufgabe]]
+nr = 595
+kapitel = 6
+seite = 176
+fen = "r1br4/1pb1k2p/p2p4/4p3/P3P3/BP6/2P1B1P1/3R1R1K w - - 0 1"
+
+[[aufgabe]]
+nr = 596
+kapitel = 6
+seite = 176
+fen = "3r3r/1k2pp2/1pp3pb/p1pqP1Np/P2nR3/3P3P/1PPB1PP1/3QR1K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 597
+kapitel = 6
+seite = 176
+fen = "rnb2rk1/pp2ppb1/6p1/q1PQN2p/4nB1P/2N1P3/PPP1BPP1/R3K2R b - - 0 1"
+
+[[aufgabe]]
+nr = 598
+kapitel = 6
+seite = 176
+fen = "4r1k1/5p2/4b1p1/K6p/P2Q1B1P/5qP1/1PPR4/8 b - - 0 1"
+
+[[aufgabe]]
+nr = 599
+kapitel = 6
+seite = 177
+fen = "3r1bk1/1R3ppp/8/2p5/p1n1P3/4BPPq/P1N1Q2P/6K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 600
+kapitel = 6
+seite = 177
+fen = "3r3k/5R2/4pP1p/4B2p/1p1P4/8/P4q2/K5R1 w - - 0 1"
+
+[[aufgabe]]
+nr = 601
+kapitel = 6
+seite = 177
+fen = "5k2/3b4/pp1r1p2/P2Pp1n1/1N4p1/1B4P1/1P3PK1/2R5 w - - 0 1"
+
+[[aufgabe]]
+nr = 602
+kapitel = 6
+seite = 177
+fen = "5rk1/p2p1pp1/2p1p2p/4P3/4NP2/3Q4/qr1RBKPP/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 603
+kapitel = 6
+seite = 177
+fen = "6k1/p4ppp/2Bb4/3p4/6bq/P2Q4/1PP3PP/R1B1rRK1 w - - 0 1"
+
+[[aufgabe]]
+nr = 604
+kapitel = 6
+seite = 177
+fen = "6k1/2q2r1p/3R2p1/p1p4n/P1P4Q/7P/1PB1r1P1/3R3K w - - 0 1"
