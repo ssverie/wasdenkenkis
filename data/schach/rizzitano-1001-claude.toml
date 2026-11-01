@@ -3668,3 +3668,99 @@ sicherheit = "unsicher"
 antwort = "1.gxf7"
 ergebnis = "falsch"
 geloest = 2026-11-01
+
+[[antwort]]
+nr = 593
+sicherheit = "unsicher"
+antwort = "1.Sxf6+ Sxf6 2.Dxf6"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 594
+sicherheit = "unsicher"
+antwort = "1...La5+"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 595
+sicherheit = "unsicher"
+antwort = "1.Txd6"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 596
+sicherheit = "unsicher"
+antwort = "1.c4"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 597
+sicherheit = "unsicher"
+antwort = "1...Sxc3 2.bxc3 Dxc3+"
+ergebnis = "offen"
+max = 1
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 598
+sicherheit = "nicht gefunden"
+antwort = "1...Dc6"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 599
+sicherheit = "unsicher"
+antwort = "1.Txf7 Kxf7 2.Dxc4+"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 600
+sicherheit = "unsicher"
+antwort = "1.Th7+"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 601
+sicherheit = "nicht gefunden"
+antwort = "1.Tc8+"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 602
+sicherheit = "unsicher"
+antwort = "1.Sf6+"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 603
+sicherheit = "unsicher"
+antwort = "1.g3"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
+
+[[antwort]]
+nr = 604
+sicherheit = "unsicher"
+antwort = "1.Td8+"
+ergebnis = "offen"
+max = 2
+geloest = 2026-11-01
