@@ -768,3 +768,303 @@ fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 partie = "Ivanchuk – Carlsen"
 turnier = "Kallithea 2008"
 loesung = "1.d4 d5 2.c4 c6 3.Sc3 Sf6 4.e3 g6 5.Sf3 Lg7 6.Ld3 0-0 7.0-0 Lg4 8.h3 Lxf3 9.Dxf3 e6 10.Td1 Sbd7 11.Ld2 Te8 12.Tac1 Tc8 13.Le1 De7 14.De2 a6 15.b3 Tcd8 16.Dc2 Tc8 17.Lf1 Lf8 18.Db1 Tcd8 19.g3 Lg7 20.Lg2 h5 21.Se2 h4 22.g4 e5 23.La5 Tc8 24.dxe5 Sxe5 25.Lc3 dxc4 26.bxc4 Dc7 27.c5 Tcd8 28.Txd8 Txd8 29.Lxe5 Dxe5 30.Dxb7 Td2 31.Sd4 Se4 32.Sxc6 Db2 33.Se7+ Kf8 34.Da8+ Kxe7 35.Dxe4+ De5 36.c6 Td8 37.c7 Tc8 38.Db7 De6 39.Dxc8 1-0"
+
+# Quelle: chessgames.com, Partie 1511653 (PGN-Download, abgerufen 02.11.2026): Europapokal der Vereine, 23.10.2008.
+[[aufgabe]]
+nr = 74
+kapitel = 4
+seite = 214
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Karjakin – Ivanchuk"
+turnier = "Kallithea 2008"
+loesung = "1.e4 c5 2.Sf3 d6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 a6 6.Le3 e6 7.f3 b5 8.Dd2 Sbd7 9.g4 h6 10.0-0-0 b4 11.Sce2 Dc7 12.h4 d5 13.Lh3 dxe4 14.g5 hxg5 15.hxg5 exf3 16.Sg3 Sd5 17.g6 S7f6 18.gxf7+ Kxf7 19.Sf1 Txh3 20.Txh3 e5 21.Sxf3 Lxh3 22.Sg5+ Kg8 23.Sxh3 Da5 24.Dd3 Dxa2 25.Db3 Dxb3 26.cxb3 Le7 27.Ld2 Se4 28.Te1 Sc5 29.Kc2 e4 30.Se3 Sxe3+ 31.Lxe3 Sd3 32.Ta1 Tf8 33.Kd2 Tf3 34.Sg1 Tf6 35.Se2 Tg6 36.Ta5 Lf6 37.Ld4 Lg5+ 38.Le3 Lf6 39.Ld4 Ld8 40.Td5 Lg5+ 41.Le3 Lf6 42.Ld4 Tg2 43.Lxf6 Txe2+ 44.Kxe2 Sf4+ 45.Kf2 Sxd5 46.Ld4 Kf7 47.Kg3 g5 0-1"
+
+# Quelle: chessgames.com, Partie 1519494 (PGN-Download, abgerufen 02.11.2026): Olympiade Dresden, 14.11.2008.
+[[aufgabe]]
+nr = 75
+kapitel = 4
+seite = 217
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Ivanisevic"
+turnier = "Dresden 2008"
+loesung = "1.e4 c5 2.Sf3 e6 3.d4 cxd4 4.Sxd4 Sc6 5.Sc3 Dc7 6.Le2 Sf6 7.f4 Sxd4 8.Dxd4 Lc5 9.Dd3 d5 10.exd5 exd5 11.Le3 0-0 12.Lxc5 Dxc5 13.0-0-0 Se4 14.Sxe4 dxe4 15.Dd4 Df5 16.Thf1 Le6 17.a3 Tac8 18.g4 Dc5 19.Dxe4 Tfe8 20.Ld3 g6 21.Dg2 Ld5 22.Dd2 Te3 23.Tfe1 Th3 24.Te5 f6 25.Lf5 fxe5 26.Lxc8 Lf7 27.Dd8+ 1-0"
+
+# Quelle: chessgames.com, Partie 1529355 (PGN-Download, abgerufen 02.11.2026): Pearl Spring, 21.12.2008.
+[[aufgabe]]
+nr = 76
+kapitel = 4
+seite = 220
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Bu Xiangzhi"
+turnier = "Nanjing 2008"
+loesung = "1.e4 e5 2.Sc3 Sf6 3.Lc4 Lb4 4.Sf3 0-0 5.0-0 d6 6.Sd5 Le6 7.d4 Lxd5 8.exd5 e4 9.Sh4 c6 10.c3 La5 11.Lg5 Sbd7 12.Sf5 Sb6 13.f3 h6 14.Lh4 e3 15.Dd3 Sxc4 16.Dxc4 Dd7 17.Sxe3 Sh5 18.Tae1 Ld8 19.Lxd8 Tfxd8 20.Dd3 Tab8 21.b3 Sf6 22.dxc6 bxc6 23.Te2 a5 24.Tfe1 g6 25.d5 Sxd5 26.Sxd5 cxd5 27.Dxd5 Da7+ 28.Kh1 Dc5 29.Dd2 d5 30.Te5 a4 31.bxa4 h5 32.f4 Tbc8 33.f5 Dxc3 34.Dh6 1-0"
+
+# Quelle: chessgames.com, Partie 1531110 (PGN-Download, abgerufen 02.11.2026): Corus-Turnier Gruppe A, 18.01.2009.
+[[aufgabe]]
+nr = 77
+kapitel = 4
+seite = 224
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Wang Yue – Ivanchuk"
+turnier = "Wijk aan Zee 2009"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sf3 d5 4.Lg5 dxc4 5.Da4+ Sbd7 6.Sc3 a6 7.g3 b5 8.Sxb5 Tb8 9.Sa7 Tb4 10.Lxf6 gxf6 11.Da5 Lb7 12.Lh3 Db8 13.Dh5 Ke7 14.d5 Dxa7 15.dxe6 fxe6 16.Lxe6 Kxe6 17.De8+ Le7 18.Dxh8 Sf8 19.Dg8+ Kd7 20.0-0-0+ Ke8 21.Dg4 Dc5 22.a3 Txb2 23.Kxb2 Dxa3+ 24.Kb1 Db3+ 25.Ka1 c3 0-1"
+
+# Quelle: chessgames.com, Partie 1531883 (PGN-Download, abgerufen 02.11.2026): Corus-Turnier Gruppe A, 25.01.2009.
+[[aufgabe]]
+nr = 78
+kapitel = 4
+seite = 226
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Karjakin"
+turnier = "Wijk aan Zee 2009"
+loesung = "1.e4 c5 2.Sf3 d6 3.Sc3 Sf6 4.d4 cxd4 5.Sxd4 a6 6.Le2 e5 7.Sb3 Le7 8.0-0 0-0 9.Le3 Le6 10.Dd2 Sbd7 11.a4 Dc7 12.Tfd1 Tac8 13.a5 Sc5 14.Sxc5 dxc5 15.De1 Tfd8 16.Txd8+ Txd8 17.f3 c4 18.Sa4 Sd7 19.Dc3 f6 20.b3 Tc8 21.b4 Dc6 22.Da3 f5 23.b5 axb5 24.Dxe7 bxa4 25.Td1 Sf8 26.Td6 Te8 27.Txc6 Txe7 28.Lc5 Td7 29.Tb6 fxe4 30.fxe4 c3 31.Kf2 La2 32.a6 bxa6 33.Tb8 Tf7+ 34.Ke3 g6 35.Ld6 Tf6 36.Td8 a3 37.Lxa3 Kg7 38.Ld6 Tf7 39.Lxe5+ Kh6 40.Lxa6 Se6 41.Tc8 1-0"
+
+# Quelle: chessgames.com, Partie 1536063 (PGN-Download, abgerufen 02.11.2026): Linares, 26.02.2009.
+[[aufgabe]]
+nr = 79
+kapitel = 4
+seite = 229
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Aronian – Ivanchuk"
+turnier = "Linares 2009"
+loesung = "1.d4 Sf6 2.c4 g6 3.Sc3 Lg7 4.e4 d6 5.Sf3 0-0 6.Le2 e5 7.Le3 c6 8.d5 Sg4 9.Lg5 f6 10.Lh4 c5 11.0-0 h5 12.Se1 Sh6 13.f3 Sf7 14.Tb1 Lh6 15.Lf2 Sa6 16.a3 b6 17.b4 f5 18.exf5 gxf5 19.f4 Lxf4 20.Lxh5 Ld7 21.Tb3 Dg5 22.b5 Sc7 23.Lxf7+ Txf7 24.Se2 Tg7 25.Sxf4 Dxf4 26.Lxc5 Dh6 27.Le3 f4 28.Lc1 Lg4 29.Dd2 Tf8 30.Sd3 Se8 31.Sxf4 Txf4 32.Txf4 Dxf4 33.Dxf4 exf4 34.Lxf4 Tf7 35.g3 Te7 36.h3 Lxh3 37.Kf2 Sf6 38.g4 Lxg4 39.Te3 Se4+ 40.Ke1 Kf7 41.a4 Sc5 42.Kd2 Txe3 43.Kxe3 Ke7 44.Kd4 0-1"
+
+# Quelle: chessgames.com, Partie 1544155 (PGN-Download, abgerufen 02.11.2026): 4. FIDE Grand Prix, 27.04.2009.
+[[aufgabe]]
+nr = 80
+kapitel = 4
+seite = 232
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Grischuk"
+turnier = "Nalchik 2009"
+loesung = "1.d4 Sf6 2.c4 g6 3.Sc3 Lg7 4.e4 d6 5.Sf3 0-0 6.Le2 e5 7.0-0 Sc6 8.d5 Se7 9.b4 Sh5 10.c5 Sf4 11.Lxf4 exf4 12.Tc1 h6 13.Sd4 a6 14.h3 Kh8 15.Dd2 Sg8 16.Tfd1 h5 17.Dxf4 Lh6 18.Dg3 h4 19.Dd3 Lxc1 20.Txc1 Dg5 21.Te1 Ld7 22.c6 bxc6 23.dxc6 Le6 24.Lg4 Lxg4 25.hxg4 Se7 26.Dd1 Tab8 27.a3 Kg7 28.Te3 Df6 29.Sf3 Sxc6 30.Sd5 De6 31.Sxc7 Dxg4 32.Dxd6 Tbd8 33.Dxc6 Td1+ 34.Se1 h3 35.Dc3+ f6 36.Txh3 Tc8 37.e5 1-0"
+
+# Quelle: chessgames.com, Partie 1546602 (PGN-Download, abgerufen 02.11.2026): Bazna-Turnier, 18.06.2009; Datenbank B90, Buch B85.
+[[aufgabe]]
+nr = 81
+kapitel = 4
+seite = 235
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Kamsky – Ivanchuk"
+turnier = "Bazna 2009"
+loesung = "1.e4 c5 2.Sf3 d6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 a6 6.Le3 e6 7.a4 Sc6 8.Le2 Le7 9.0-0 0-0 10.f4 Dc7 11.Kh1 Te8 12.Dd2 Ld7 13.Tad1 Sxd4 14.Dxd4 Lc6 15.Lc4 Lxe4 16.Sxe4 d5 17.Lxd5 Sxd5 18.c3 Tad8 19.Sg3 Dc6 20.Sh5 Lf8 21.Lg1 g6 22.Td3 f6 23.c4 gxh5 24.Tg3+ Lg7 25.cxd5 exd5 26.Dd1 h4 27.Th3 d4 28.Tff3 De4 29.f5 Te5 30.Lf2 De2 31.Db3+ Kh8 32.Txh4 De1+ 0-1"
+
+# Quelle: chessgames.com, Partie 1554268 (PGN-Download, abgerufen 02.11.2026): FIDE Grand Prix Jermuk, 12.08.2009; in der Datenbank „Alekseev“.
+[[aufgabe]]
+nr = 82
+kapitel = 4
+seite = 238
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Alexeev"
+turnier = "Jermuk 2009"
+loesung = "1.c4 Sf6 2.Sf3 e6 3.g3 d5 4.Lg2 d4 5.0-0 c5 6.e3 Sc6 7.exd4 cxd4 8.d3 Le7 9.Te1 0-0 10.Sa3 Se8 11.Sc2 f6 12.Ld2 a5 13.a3 a4 14.Sb4 Sc7 15.Tb1 Ld7 16.Sh4 Sa5 17.f4 g6 18.f5 gxf5 19.g4 f4 20.Lxf4 Sa6 21.Sd5 exd5 22.Lxd5+ Kg7 23.Kh1 Te8 24.g5 Kh8 25.Dh5 Tg8 26.Lxg8 Kxg8 27.g6 Lc6+ 28.Te4 Lxe4+ 29.dxe4 hxg6 30.Dxg6+ Kh8 31.Dh5+ 1-0"
+
+# Quelle: chessgames.com, Partie 1554926 (PGN-Download, abgerufen 02.11.2026): FIDE Grand Prix Jermuk, 23.08.2009.
+[[aufgabe]]
+nr = 83
+kapitel = 4
+seite = 242
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Akopian – Ivanchuk"
+turnier = "Jermuk 2009"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.d3 d6 6.c3 g6 7.0-0 Lg7 8.Te1 0-0 9.Sbd2 Te8 10.Sf1 h6 11.Sg3 b5 12.Lc2 d5 13.De2 Le6 14.h3 Sd7 15.Le3 d4 16.Ld2 Sc5 17.Tec1 Dd6 18.cxd4 Sxd4 19.Sxd4 Dxd4 20.Lc3 Dd6 21.Lb4 Db6 22.De3 Lf8 23.Lc3 Tad8 24.Df3 Lg7 25.b4 Sa4 26.Ld2 Td7 27.a3 Ted8 28.Le3 Db7 29.Tab1 La2 30.Ta1 Le6 31.Tab1 Sc3 32.Ta1 f5 33.exf5 Dxf3 34.gxf3 gxf5 35.Lb3 Lxb3 36.Txc3 Le6 37.La7 Txd3 38.Txc7 Txf3 39.Te7 Lf7 40.Tc1 Lf6 41.Tec7 Lg5 42.Te1 e4 43.Tc5 Td7 44.Lb6 Le6 45.Tc8+ Kf7 46.Lc5 Txa3 47.Tf8+ Kg6 48.Te8 Kf7 49.Tf8+ Kg6 50.Te8 Lc4 51.Tb8 e3 52.h4 exf2+ 53.Lxf2 Lxh4 54.Tb6+ Kg5 55.Le3+ f4 56.Se4+ Kf5 57.Lf2 Tg7+ 58.Kh2 Lxf2 59.Sxf2 Ta2 60.Kh1 Ld5+ 61.Se4 Tc7 62.Tf6+ Ke5 0-1"
+
+# Quelle: chessgames.com, Partie 1551134 (PGN-Download, abgerufen 02.11.2026): Bieler Schachfestival, 28.07.2009.
+[[aufgabe]]
+nr = 84
+kapitel = 4
+seite = 245
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Caruana – Ivanchuk"
+turnier = "Biel 2009"
+loesung = "1.d4 d6 2.e4 Sf6 3.Sc3 g6 4.Le3 Lg7 5.Dd2 c6 6.Lh6 Lxh6 7.Dxh6 Da5 8.Ld3 c5 9.Sge2 Sc6 10.d5 Se5 11.Lb5+ Kd8 12.Sg3 c4 13.h3 a6 14.f4 Sf3+ 15.gxf3 axb5 16.0-0 b4 17.Sce2 Dc5+ 18.Kg2 Ld7 19.c3 bxc3 20.Sxc3 b5 21.a3 Kc7 22.Tad1 Thg8 23.e5 Sh5 24.Tfe1 g5 25.exd6+ exd6 26.Sxh5 Tg6 27.Se4 Txh6 28.Sxc5 dxc5 29.Sg3 gxf4 30.Se2 Kd6 31.Sxf4 Tg8+ 32.Kf2 Th4 33.Sg2 Txh3 34.Th1 Tgg3 35.Txh3 Txh3 36.Te1 h5 37.Te4 Th1 38.a4 Tb1 39.axb5 Txb2+ 40.Kg3 c3 41.Se3 Lxb5 0-1"
+
+# Quelle: chessgames.com, Partie 1563876 (PGN-Download, abgerufen 02.11.2026): Tal-Memorial, 12.11.2009; Datenbank D12, Buch D11.
+[[aufgabe]]
+nr = 85
+kapitel = 4
+seite = 248
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Gelfand"
+turnier = "Moscow 2009"
+loesung = "1.d4 d5 2.c4 c6 3.Sf3 Sf6 4.e3 Lg4 5.h3 Lxf3 6.Dxf3 e6 7.Sc3 Sbd7 8.Ld3 dxc4 9.Lxc4 Ld6 10.0-0 0-0 11.e4 e5 12.d5 Sb6 13.Ld3 cxd5 14.exd5 h6 15.Le3 Tc8 16.Tac1 Sc4 17.Lxc4 Txc4 18.De2 Tc8 19.Lxa7 b6 20.Sb5 Tc5 21.Tfd1 Dd7 22.Sxd6 Dxd6 23.Txc5 Dxc5 24.De3 Dc2 25.Db3 Dxb3 26.axb3 Td8 27.d6 b5 28.f3 Ta8 29.Le3 Sd7 30.Td5 Tb8 31.f4 exf4 32.Lxf4 f6 33.Td2 Kf7 34.Kf2 Ke6 35.Ke3 Tc8 36.Kd4 g5 37.Te2+ Se5 38.Lxe5 fxe5+ 39.Txe5+ Kxd6 40.Txb5 Tc2 41.g4 Txb2 42.Tb6+ Kc7 43.Kc3 1-0"
+
+# Quelle: chessgames.com, Partie 1569856 (PGN-Download, abgerufen 02.11.2026): Corus-Turnier Gruppe A, 18.01.2010.
+[[aufgabe]]
+nr = 86
+kapitel = 4
+seite = 251
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Smeets – Ivanchuk"
+turnier = "Wijk aan Zee 2010"
+loesung = "1.e4 c5 2.Sf3 d6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 a6 6.Lg5 e6 7.f4 Dc7 8.Df3 b5 9.Lxf6 gxf6 10.a3 Lb7 11.Le2 h5 12.0-0-0 Sd7 13.f5 e5 14.Sb3 Tc8 15.Kb1 Sb6 16.Td3 Lh6 17.Dxh5 Ke7 18.Df3 Sc4 19.Thd1 Lg5 20.h3 Th4 21.Df2 Db8 22.Lg4 a5 23.De2 Thh8 24.De1 Thd8 25.Sd5+ Lxd5 26.Txd5 Dc7 27.De2 a4 28.Sa1 b4 29.axb4 a3 30.Sb3 Sxb2 31.Ta5 Ta8 32.Ka2 Sxd1 33.Dxd1 Dc3 34.Da1 Dxc2+ 35.Kxa3 Txa5+ 36.bxa5 Tb8 0-1"
+
+# Quelle: chessgames.com, Partie 1579326 (PGN-Download, abgerufen 02.11.2026): Russische Mannschaftsmeisterschaft (Dagomys), 08.04.2010.
+[[aufgabe]]
+nr = 87
+kapitel = 4
+seite = 254
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Grischuk"
+turnier = "Sochi 2010"
+loesung = "1.e4 c5 2.Sf3 d6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 a6 6.Lg5 e6 7.f4 Db6 8.Dd2 Dxb2 9.Tb1 Da3 10.f5 Sc6 11.fxe6 fxe6 12.Sxc6 bxc6 13.Le2 Le7 14.0-0 0-0 15.Tb3 Dc5+ 16.Kh1 d5 17.e5 Sd7 18.Txf8+ Kxf8 19.Le3 Da5 20.Lg4 Ke8 21.Lxe6 Sc5 22.Lxc5 Dxc5 23.Lxc8 Txc8 24.Dd3 Dc4 25.Df3 Kd8 26.Df7 Dh4 27.Tb1 Dh6 28.Sxd5 cxd5 29.Dxd5+ Ke8 30.Td1 Tc7 31.Da8+ Kf7 32.Tf1+ Ke6 33.Dxa6+ Kd7 34.Td1+ Ke8 35.e6 Ld8 36.Db5+ Ke7 37.Db4+ 1-0"
+
+# Quelle: chessgames.com, Partie 1585006 (PGN-Download, abgerufen 02.11.2026): Capablanca-Memorial (Elite), 14.06.2010.
+[[aufgabe]]
+nr = 88
+kapitel = 4
+seite = 257
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Nepomniachtchi – Ivanchuk"
+turnier = "Havana 2010"
+loesung = "1.e4 c6 2.d4 d5 3.f3 Db6 4.a4 e6 5.c3 c5 6.exd5 exd5 7.Lb5+ Ld7 8.De2+ Le7 9.dxc5 Dxc5 10.b3 a6 11.Lxd7+ Sxd7 12.Sh3 0-0-0 13.Le3 Dc7 14.0-0 Sgf6 15.Kh1 The8 16.Dd1 Ld6 17.Lg1 Lc5 18.Ta2 Kb8 19.Td2 h6 20.Ld4 Tc8 21.Sf2 Lxd4 22.Txd4 Se5 23.Td2 Te6 24.Te1 Tce8 25.Tde2 g5 26.Sd3 g4 27.Sxe5 Txe5 28.Txe5 Txe5 29.Txe5 Dxe5 30.a5 h5 31.g3 gxf3 32.Dxf3 De1+ 33.Kg2 Sg4 34.Df4+ Ka8 35.Sd2 De2+ 36.Kg1 Dxh2+ 37.Kf1 f5 38.Ke1 h4 39.Sf1 Db2 40.gxh4 Dxc3+ 41.Sd2 d4 42.h5 d3 43.Kf1 Da1+ 44.Kg2 Dxa5 45.h6 Dd5+ 46.Kg3 Dg8 47.Kf3 De6 48.Sf1 Sxh6 49.Dd4 De2+ 50.Kg3 De1+ 51.Df2 f4+ 52.Kf3 De5 53.Sd2 Sf5 54.Kg4 De2+ 0-1"
+
+# Quelle: chessgames.com, Partie 1593280 (PGN-Download, abgerufen 02.11.2026): Olympiade Khanty-Mansiysk, 24.09.2010.
+[[aufgabe]]
+nr = 89
+kapitel = 4
+seite = 260
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Beliavsky"
+turnier = "Khanty-Mansiysk 2010"
+loesung = "1.c4 c6 2.e4 d5 3.exd5 cxd5 4.d4 Sf6 5.Sc3 Sc6 6.Lg5 dxc4 7.Lxc4 Sxd4 8.Sf3 Sxf3+ 9.Dxf3 Dc7 10.Lb5+ Ld7 11.0-0 Lc6 12.Lxf6 gxf6 13.Tad1 e6 14.Sd5 0-0-0 15.Lxc6 exd5 16.Lxd5 Kb8 17.Tc1 Dd7 18.Tcd1 Le7 19.g3 Dc7 20.Tc1 Dd7 21.Tfd1 Tc8 22.Lxb7 Txc1 23.Txc1 Dxb7 24.Df4+ Ka8 25.Tc7 1-0"
+
+# Quelle: chessgames.com, Partie 1593784 (PGN-Download, abgerufen 02.11.2026): Olympiade Khanty-Mansiysk, 25.09.2010.
+[[aufgabe]]
+nr = 90
+kapitel = 4
+seite = 261
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Sokolov – Ivanchuk"
+turnier = "Khanty-Mansiysk 2010"
+loesung = "1.d4 Sf6 2.c4 c5 3.d5 b5 4.Dc2 bxc4 5.e4 d6 6.Lxc4 g6 7.b3 Sxe4 8.Lb2 Da5+ 9.Kf1 Sf6 10.Sc3 Lg7 11.Te1 Dd8 12.De2 Sbd7 13.h4 Se5 14.Lb5+ Ld7 15.f4 Sh5 16.Lxd7+ Dxd7 17.De3 Df5 18.Sh3 Dd3+ 19.Kg1 Dxe3+ 20.Txe3 Sg4 21.Tf3 Ld4+ 22.Kf1 Se3+ 23.Ke2 Sxg2 24.Sg5 h6 25.Sge4 Sgxf4+ 0-1"
+
+# Quelle: chessgames.com, Partie 1594382 (PGN-Download, abgerufen 02.11.2026): Olympiade Khanty-Mansiysk, 27.09.2010.
+[[aufgabe]]
+nr = 91
+kapitel = 4
+seite = 263
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Leko"
+turnier = "Khanty-Mansiysk 2010"
+loesung = "1.Sf3 Sf6 2.c4 e6 3.Sc3 d5 4.d4 c6 5.e3 Sbd7 6.Dc2 Ld6 7.Ld3 0-0 8.0-0 dxc4 9.Lxc4 a6 10.Td1 b5 11.Ld3 Dc7 12.Ld2 c5 13.dxc5 Dxc5 14.a4 bxa4 15.Txa4 Lb7 16.Tc4 Da7 17.Se4 Sxe4 18.Lxe4 Lxe4 19.Dxe4 Tac8 20.Dd4 Lc5 21.Dc3 Tcd8 22.Dc2 Tfe8 23.Sg5 g6 24.La5 Lb6 25.Lc3 e5 26.Se4 Te6 27.Lb4 Kg7 28.Tc6 Sf6 29.Txe6 fxe6 30.Sxf6 Kxf6 31.Ta1 Db7 32.Lc3 a5 33.Da4 g5 34.h4 h6 35.Dg4 Dh7 36.Dh5 Dg6 37.Lxe5+ Kf7 38.Df3+ Kg8 39.Dc6 1-0"
+
+# Quelle: chessgames.com, Partie 1594902 (PGN-Download, abgerufen 02.11.2026): Olympiade Khanty-Mansiysk, 28.09.2010.
+[[aufgabe]]
+nr = 92
+kapitel = 4
+seite = 266
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Jobava"
+turnier = "Khanty-Mansiysk 2010"
+loesung = "1.e4 c6 2.d4 d5 3.f3 Db6 4.a3 e5 5.exd5 Sf6 6.dxe5 Lc5 7.exf6 Lf2+ 8.Ke2 0-0 9.Dd2 Te8+ 10.Kd1 Te1+ 11.Dxe1 Lxe1 12.Kxe1 Lf5 13.Le2 Sd7 14.dxc6 bxc6 15.Ld1 Te8+ 16.Se2 Sxf6 17.Sc3 Lc8 18.a4 a5 19.Tf1 La6 20.Tf2 h5 21.Ta3 h4 22.g3 h3 23.g4 Td8 24.Sf4 Sd7 25.Tb3 Dd4 26.Sfe2 Te8 27.Se4 Dxa4 28.Ld2 Da1 29.Lc3 Se5 30.Ta3 Db1 31.Sd2 Dc1 32.Txa5 Sg6 33.Txa6 Sf4 34.Ta8 1-0"
+
+# Quelle: chessgames.com, Partie 1596541 (PGN-Download, abgerufen 02.11.2026): Olympiade Khanty-Mansiysk, 01.10.2010; Datenbank D85, Buch D90.
+[[aufgabe]]
+nr = 93
+kapitel = 4
+seite = 269
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Vachier-Lagrave"
+turnier = "Khanty-Mansiysk 2010"
+loesung = "1.Sf3 Sf6 2.c4 g6 3.Sc3 d5 4.cxd5 Sxd5 5.Db3 Sb6 6.d4 Lg7 7.Lf4 Le6 8.Da3 0-0 9.e3 S8d7 10.Td1 a5 11.Sg5 Ld5 12.e4 Lc4 13.h4 Lxf1 14.Kxf1 Sf6 15.Dc5 c6 16.Sf3 e6 17.Dd6 Sc4 18.Dxd8 Tfxd8 19.b3 Sa3 20.Le5 Sg4 21.Lxg7 Kxg7 22.Ke2 h5 23.Td2 Sf6 24.Tc1 Se8 25.Sa4 Sd6 26.Ke3 Sab5 27.Se5 Sc7 28.f3 Sce8 29.Sb6 Ta6 30.Sbd7 Taa8 31.Sc5 Sc7 32.Tcd1 Ta7 33.Tc1 Taa8 34.Sed3 Tab8 35.Sf4 Th8 36.Tcc2 Sde8 37.Kf2 Sf6 38.Sfd3 Sfe8 39.Se5 Sd6 40.Sed7 Tbd8 41.Sb6 The8 42.Ke3 Scb5 43.a4 Sc7 44.Tb2 Te7 45.b4 axb4 46.Txb4 Sa6 47.Tbb2 Sc7 48.Tdc2 Kh6 49.Kf2 Sa8 50.Sc4 Sxc4 51.Txc4 b6 52.Sd3 c5 53.a5 Txd4 54.Txd4 cxd4 55.axb6 Tb7 56.Se5 Txb6 57.Ta2 Sc7 58.Ta7 Tb2+ 59.Kg3 Tc2 60.Sxf7+ Kg7 61.Se5 Kf6 62.Kf4 Ke7 63.g3 Tc5 64.Tb7 Kd6 65.Tb6+ Ke7 66.g4 hxg4 67.fxg4 g5+ 68.hxg5 Tb5 69.Tc6 Tb7 70.Tc4 Sb5 71.Tc8 Sc3 72.Th8 Se2+ 73.Kf3 Tb5 74.g6 Sg1+ 75.Kg2 Txe5 76.g7 Tg5 77.g8D Txg8 78.Txg8 d3 79.Ta8 d2 80.Ta1 Se2 81.Td1 Sc3 82.Txd2 Sxe4 83.Te2 Sg5 84.Kg3 Kf6 85.Kh4 Kg6 86.Te3 Kh6 87.Ta3 Kg6 88.Ta8 Sf3+ 89.Kg3 Se5 90.Ta6 Kg5 91.Ta5 1-0"
+
+# Quelle: chessgames.com, Partie 1604955 (PGN-Download, abgerufen 02.11.2026): Gibraltar Masters, 28.01.2011; Datenbank C03, Buch C06.
+[[aufgabe]]
+nr = 94
+kapitel = 4
+seite = 273
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Erdös"
+turnier = "Gibraltar 2011"
+loesung = "1.e4 e6 2.d4 d5 3.Sd2 a6 4.Sgf3 Sf6 5.Ld3 c5 6.e5 Sfd7 7.c3 Sc6 8.0-0 g5 9.Lb1 g4 10.Se1 h5 11.Sc2 Tg8 12.Te1 cxd4 13.cxd4 f5 14.Sf1 Le7 15.Ld2 Sf8 16.f4 b5 17.a3 a5 18.Lc3 Sd7 19.Dd2 Sb6 20.b3 Kf7 21.Sfe3 Kf8 22.Lb2 Kg7 23.Tc1 Ld7 24.Se1 a4 25.b4 Sc4 26.De2 Db8 27.Sd3 Da7 28.Sc5 Tgf8 29.Kh1 Tac8 30.Sxc4 bxc4 31.Lc2 Lxc5 32.dxc5 Se7 33.Td1 Lb5 34.Lc3 Sg6 35.Td4 Lc6 36.Tb1 Tb8 37.Kg1 Lb5 38.Tbd1 De7 39.De3 Da7 40.Txd5 exd5 41.e6+ Kh6 42.Txd5 Tbd8 43.Txd8 Txd8 44.Lxf5 Dc7 45.g3 Td1+ 46.Kf2 Dd8 47.Lc2 Td3 48.Lxd3 Dxd3 49.f5+ Dxe3+ 50.Kxe3 Se7 51.Ke4 Lc6+ 52.Ke5 Sd5 53.b5 Sxc3 54.bxc6 Sb5 55.e7 Sc7 56.Kd6 Se8+ 57.Kd7 Sf6+ 58.Ke6 Se8 59.Kf7 Sc7 60.e8D 1-0"
+
+# Quelle: chessgames.com, Partie 1605067 (PGN-Download, abgerufen 02.11.2026): Gibraltar Masters, 29.01.2011.
+[[aufgabe]]
+nr = 95
+kapitel = 4
+seite = 276
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Kotronias – Ivanchuk"
+turnier = "Gibraltar 2011"
+loesung = "1.e4 c5 2.Sf3 g6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 d6 6.Le3 Lg7 7.f3 Sc6 8.Dd2 0-0 9.Lc4 Ld7 10.0-0-0 Tb8 11.Lb3 Sa5 12.Lh6 Lxh6 13.Dxh6 b5 14.g4 b4 15.Sd5 Sxb3+ 16.Sxb3 e5 17.Se3 Le6 18.h4 Kh8 19.Dg5 Tb6 20.Sa5 Kg7 21.Sf5+ Lxf5 22.gxf5 Dc7 23.fxg6 fxg6 24.h5 Tc8 25.Td2 Ta6 26.hxg6 h5 27.Sb3 Txa2 28.Kb1 Ta6 29.Df5 Dc4 30.Te1 Tc5 31.Tf2 Tca5 32.Te3 Dd4 33.Sxa5 Dd1+ 34.Ka2 Txa5+ 35.Kb3 Da1 36.c3 Da4+ 37.Kc4 bxc3+ 0-1"
+
+# Quelle: chessgames.com, Partie 1605208 (PGN-Download, abgerufen 02.11.2026): Gibraltar Masters, 30.01.2011; Datenbank E00, Buch E11.
+[[aufgabe]]
+nr = 96
+kapitel = 4
+seite = 279
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Short"
+turnier = "Gibraltar 2011"
+loesung = "1.d4 e6 2.c4 Lb4+ 3.Sd2 d5 4.Sf3 Sf6 5.Da4+ Sc6 6.a3 Lxd2+ 7.Lxd2 Se4 8.Lf4 g5 9.Le3 f5 10.g3 0-0 11.Td1 Kh8 12.Lg2 f4 13.Lc1 g4 14.cxd5 exd5 15.Se5 f3 16.exf3 gxf3 17.Lxf3 Sxe5 18.dxe5 Sc5 19.Dd4 Txf3 20.Dxc5 c6 21.0-0 Le6 22.Dd6 De8 23.Lg5 Df7 24.Lf6+ Kg8 25.Kg2 Tb3 26.Td2 Te8 27.f3 Dg6 28.Tff2 Dh6 29.g4 Te3 30.h4 Df4 31.Db4 Dxb4 32.axb4 Tb3 33.Td4 a5 34.bxa5 c5 35.Ta4 Ta8 36.Le7 Tb5 37.Tf4 d4 38.Tf6 Ld5 39.Td6 c4 40.Ld8 c3 41.bxc3 dxc3 42.e6 Lxe6 43.Lf6 Ta6 44.Td8+ Kf7 45.Lxc3 h5 46.Td4 Tc6 47.Tf4+ Kg8 48.Ld2 Kg7 49.Te2 Kg6 50.Kg3 Td5 51.Tfe4 Kf7 52.Tb4 Lc8 53.Le1 Tc1 54.Tbe4 Tcc5 55.T2e3 Kg6 56.Lc3 Tc6 57.Te7 hxg4 58.fxg4 Tc4 59.Tg7+ Kh6 60.g5+ Kh5 61.Th7+ Kg6 62.Th6+ Kf5 63.Tf6# 1-0"
+
+# Quelle: chessgames.com, Partie 1605647 (PGN-Download, abgerufen 02.11.2026): Gibraltar Masters, 03.02.2011.
+[[aufgabe]]
+nr = 97
+kapitel = 4
+seite = 282
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Fridman"
+turnier = "Gibraltar 2011"
+loesung = "1.c4 e6 2.Sf3 d5 3.d4 Sf6 4.Lg5 Le7 5.e3 h6 6.Lh4 Se4 7.Lxe7 Dxe7 8.Ld3 c5 9.0-0 Sc6 10.Se5 Sf6 11.cxd5 Sxe5 12.dxe5 Sxd5 13.Sd2 0-0 14.Se4 Dc7 15.Sd6 f6 16.Dg4 fxe5 17.Sxc8 Dxc8 18.De4 Tf5 19.Lc4 Kh8 20.Lxd5 exd5 21.Dxd5 Dc7 22.Tfd1 Tc8 23.Td2 c4 24.Tad1 Tff8 25.h3 Tfe8 26.De4 Dc6 27.Dc2 c3 28.Td6 Dc4 29.bxc3 Dxc3 30.De4 Dc4 31.Dxb7 Dxa2 32.Tg6 Tg8 33.Txg7 Dc2 34.Txg8+ Txg8 35.Td6 Dh7 36.Dc6 Db1+ 37.Kh2 Df5 38.Tf6 Dg5 39.Txh6+ Kg7 40.Td6 1-0"
+
+# Quelle: chessgames.com, Partie 1622859 (PGN-Download, abgerufen 02.11.2026): Capablanca-Memorial (Elite), 20.05.2011.
+[[aufgabe]]
+nr = 98
+kapitel = 4
+seite = 284
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Bruzon Batista – Ivanchuk"
+turnier = "Havana 2011"
+loesung = "1.e4 c6 2.d4 d5 3.Sc3 dxe4 4.Sxe4 Lf5 5.Sg3 Lg6 6.h4 h6 7.Sf3 e6 8.h5 Lh7 9.Ld3 Lxd3 10.Dxd3 Sf6 11.Se4 Sbd7 12.Ld2 a5 13.0-0-0 Lb4 14.Lxb4 axb4 15.Sd6+ Ke7 16.Se5 Tf8 17.Sec4 Dc7 18.The1 b5 19.Se3 Txa2 20.Db3 Ta4 21.Te2 Da7 22.Sef5+ Kd8 23.Sxf7+ Txf7 24.Dxe6 Sb6 25.b3 0-1"
+
+# Quelle: chessgames.com, Partie 1624919 (PGN-Download, abgerufen 02.11.2026): Bazna King's Tournament, 11.06.2011.
+[[aufgabe]]
+nr = 99
+kapitel = 4
+seite = 286
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Radjabov"
+turnier = "Medias 2011"
+loesung = "1.d4 Sf6 2.c4 g6 3.Sc3 Lg7 4.e4 d6 5.Le2 0-0 6.Lg5 Sa6 7.f4 c6 8.Dd2 Sc7 9.Lf3 Se6 10.Lh4 c5 11.dxc5 Sxc5 12.Td1 Le6 13.b3 a5 14.Sge2 Dc7 15.0-0 a4 16.f5 gxf5 17.exf5 Lxf5 18.Lxf6 exf6 19.b4 Se6 20.Sb5 Db6+ 21.Kh1 Sg5 22.Lxb7 Dxb7 23.Txf5 Se4 24.Dd3 Tfe8 25.Sed4 Tac8 26.Tf4 Lf8 27.Tdf1 Te5 28.a3 Kh8 29.Sf5 Td8 30.Sc3 Sxc3 31.Dxc3 Tde8 32.Tg4 Dc8 33.Dg3 h5 34.Tg8+ Kh7 35.Txf8 1-0"
+
+# Quelle: chessgames.com, Partie 1625483 (PGN-Download, abgerufen 02.11.2026): Bazna King's Tournament, 21.06.2011.
+[[aufgabe]]
+nr = 100
+kapitel = 4
+seite = 289
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Nakamura"
+turnier = "Medias 2011"
+loesung = "1.d4 d5 2.c4 c6 3.cxd5 cxd5 4.Sc3 Sf6 5.Sf3 Sc6 6.Lf4 Lf5 7.Db3 Db6 8.Dxb6 axb6 9.e3 e6 10.a3 Le7 11.Le2 0-0 12.0-0 Tfc8 13.Tfc1 Sh5 14.Lg5 Lxg5 15.Sxg5 Sf6 16.Sf3 Lg4 17.Sb5 Lxf3 18.Lxf3 Td8 19.Kf1 Kf8 20.Tc3 Ke7 21.Tac1 Tdc8 22.Ke1 Kd7 23.h3 h5 24.h4 g6 25.g3 Ta5 26.Le2 Se8 27.Tb3 Td8 28.f3 Sf6 29.Sc3 Kc7 30.Sa2 Sg8 31.Sb4 Se7 32.Sd3 Taa8 33.Se5 Tf8 34.Ld3 f5 35.Lb5 Tac8 36.Kf2 Tg8 37.La4 Tgf8 38.Tc2 Tfd8 39.Tbc3 Td6 40.b4 Kb8 41.Lxc6 bxc6 42.b5 Kb7 43.bxc6+ Kc7 44.a4 Tdd8 45.Tb2 Ta8 46.Tcb3 Sc8 47.Ta2 Tg8 48.a5 b5 49.Txb5 Sd6 50.Tb4 Ta6 51.Kg2 g5 52.hxg5 Txg5 53.Kh3 Tg8 54.Kh4 Th8 55.Tab2 Ta7 56.Tb6 Tha8 57.Kxh5 Tg8 58.a6 Tga8 59.Tb7+ Sxb7 60.axb7 1-0"
+
+# Quelle: chessgames.com, Partie 1640733 (PGN-Download, abgerufen 02.11.2026): Grand Slam Final, 30.09.2011; Datenbank D37, Buch D35.
+[[aufgabe]]
+nr = 101
+kapitel = 4
+seite = 293
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Aronian – Ivanchuk"
+turnier = "Sao Paulo 2011"
+loesung = "1.Sf3 d5 2.c4 e6 3.d4 Sf6 4.Sc3 Sbd7 5.Lg5 Lb4 6.cxd5 exd5 7.Sd2 c6 8.e3 Sf8 9.Ld3 Le7 10.Dc2 Se6 11.Lh4 g6 12.h3 0-0 13.Sf3 a5 14.g4 b5 15.Se5 Lb7 16.f4 c5 17.f5 cxd4 18.fxe6 dxc3 19.0-0 d4 20.Sxf7 Dd5 21.Lxf6 Dh1+ 22.Kf2 Dxh3 23.Ke1 cxb2 24.Dxb2 Lb4+ 25.Kd1 Lf3+ 26.Txf3 Dxf3+ 27.Le2 Dxf6 28.g5 Dg7 29.Dxd4 Txf7 30.exf7+ Dxf7 31.Tc1 Tb8 32.a4 Db3+ 33.Tc2 Db1+ 34.Tc1 Db3+ 35.Tc2 Tc8 36.Lc4+ bxc4 37.Dd5+ Kf8 38.Dd7 Te8 0-1"
+
+# Quelle: chessgames.com, Partie 1672172 (PGN-Download, abgerufen 02.11.2026): ACP Golden Classic, 15.07.2012.
+[[aufgabe]]
+nr = 102
+kapitel = 4
+seite = 296
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Le Quang Liem – Ivanchuk"
+turnier = "Amsterdam 2012"
+loesung = "1.d4 d5 2.Sf3 Sf6 3.c4 c6 4.Sc3 dxc4 5.a4 Lf5 6.e3 e6 7.Lxc4 Lb4 8.0-0 Sbd7 9.Sh4 Lg6 10.h3 Lh5 11.g4 g5 12.Sg2 Lg6 13.f3 h5 14.e4 hxg4 15.hxg4 Da5 16.De2 0-0-0 17.e5 Sd5 18.Lxd5 exd5 19.Lxg5 Tde8 20.Dd2 Sxe5 21.Lf6 Sc4 22.Df2 Sxb2 23.Lxh8 Txh8 24.Se2 Sd3 25.Dg3 Dd8 26.f4 Ld6 27.Tf3 Sb4 28.Sc3 Th7 29.Td1 Dh8 30.Kf2 Sc2 31.Se2 Le4 32.g5 Kc7 33.Dg4 Sxd4 34.Sxd4 Lc5 35.Kg3 Lxd4 36.Sh4 Lc5 37.Tdf1 Db2 38.a5 a6 39.Dh3 Ld6 40.Te3 Dd4 41.Txe4 dxe4 42.Kg4 Dd2 43.Kg3 e3 44.Df5 e2 0-1"
+
+# Quelle: chessgames.com, Partie 1690287 (PGN-Download, abgerufen 02.11.2026): Olympiade Istanbul, 09.09.2012.
+[[aufgabe]]
+nr = 103
+kapitel = 4
+seite = 300
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Wang Hao"
+turnier = "Istanbul 2012"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sc3 Lb4 4.e3 0-0 5.Ld3 d5 6.Sf3 b6 7.a3 Lxc3+ 8.bxc3 c6 9.cxd5 cxd5 10.De2 Sc6 11.0-0 Sa5 12.a4 Te8 13.Se5 Se4 14.f3 Sd6 15.La3 Lb7 16.Lxd6 Dxd6 17.f4 g6 18.Dg4 Sc4 19.Dg3 Dc7 20.Lxc4 dxc4 21.f5 f6 22.fxg6 fxe5 23.Tf7 Dc6 24.gxh7+ Kxf7 25.Tf1+ Ke7 26.h8D Txh8 27.Dg7+ Kd6 28.dxe5+ Kd5 1-0"
