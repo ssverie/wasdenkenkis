@@ -11,6 +11,10 @@
   'use strict';
   var TYP = { K: 'K', D: 'Q', T: 'R', L: 'B', S: 'N' };
   var NAME = { K: 'König', Q: 'Dame', R: 'Turm', B: 'Läufer', N: 'Springer', P: 'Bauer' };
+  // Abspielen: Millisekunden je Halbzug; gemerkte Wahl aus localStorage (fehlt sie, „mittel“). Es spielt immer nur ein Brett.
+  var TEMPI = [['langsam', 2500], ['mittel', 1500], ['schnell', 700]];
+  var tempo = 1500, laufend = null;
+  try { var gemerkt = Number(localStorage.getItem('np-tempo')); if (TEMPI.some(function (t) { return t[1] === gemerkt; })) tempo = gemerkt; } catch (e) { /* ohne Speicher: mittel */ }
 
   function index(f) { return (8 - Number(f[1])) * 8 + (f.charCodeAt(0) - 97); }
   function feld(c, r) { return (c < 0 || c > 7 || r < 1 || r > 8) ? null : String.fromCharCode(97 + c) + r; }
@@ -137,6 +141,7 @@
     var bild = brett.querySelector('img.figur');
     var basis = bild ? bild.getAttribute('src').replace(/[wb][KQRBNP]\.svg$/, '') : '';
     var aktuell = null, aktivEl = null;
+    var uhr = null, automatisch = false, abspielKnopf = null;
 
     function plyVon(nr, schwarz) { return (nr - startNr) * 2 + (schwarz ? 1 : 0) - (startWeiss ? 0 : 1); }
     function schwarzBeiPly(ply) { return (ply + (startWeiss ? 0 : 1)) % 2 === 1; }
@@ -177,6 +182,7 @@
     }
 
     function gehe(knoten) {
+      if (!automatisch) stoppe();   // jeder Eingriff von Hand hält das Abspielen an
       aktuell = knoten;
       if (aktivEl) aktivEl.classList.remove('np-aktiv');
       aktivEl = knoten ? knoten.el : null;
@@ -306,10 +312,58 @@
       b.addEventListener('click', a[2]);
       knoepfe.appendChild(b);
     });
+    // Abspielen (Sven, 2026-11-02: „ein Button reicht, mach es abhängig vom State“): ⏩ startet, während des Laufens
+    // zeigt derselbe Knopf ⏸ (Pause – die Stellung bleibt stehen, ⏩ spielt dort weiter) und hält an. Läuft ab der Stellung auf dem Brett die aktuelle Linie entlang; steht das Brett
+    // am Ende, beginnt es von vorn. Tempo wählbar, die Wahl gilt für alle Bretter und wird gemerkt.
+    abspielKnopf = document.createElement('button');
+    abspielKnopf.type = 'button'; abspielKnopf.className = 'np-abspielen';
+    abspielKnopf.addEventListener('click', function () { if (uhr) stoppe(); else starte(); });
+    knoepfe.appendChild(abspielKnopf);
+    zeigeKnopf();
+    var tempoWahl = document.createElement('select');
+    tempoWahl.className = 'np-tempo'; tempoWahl.title = 'Tempo beim Abspielen'; tempoWahl.setAttribute('aria-label', 'Tempo beim Abspielen');
+    TEMPI.forEach(function (t) {
+      var o = document.createElement('option');
+      o.value = t[1]; o.textContent = t[0]; if (t[1] === tempo) o.selected = true;
+      tempoWahl.appendChild(o);
+    });
+    tempoWahl.addEventListener('change', function () {
+      tempo = Number(tempoWahl.value);
+      try { localStorage.setItem('np-tempo', String(tempo)); } catch (e) { /* ohne Speicher gilt die Wahl nur hier */ }
+      document.querySelectorAll('select.np-tempo').forEach(function (s) { s.value = String(tempo); });
+    });
+    knoepfe.appendChild(tempoWahl);
     var hinweis = document.createElement('span');
     hinweis.className = 'np-hinweis';
     hinweis.textContent = 'Züge anklicken oder mit den Pfeiltasten nachspielen';
     knoepfe.appendChild(hinweis);
+
+    function zeigeKnopf() {
+      var t = uhr ? 'Abspielen anhalten' : 'Partie abspielen';
+      abspielKnopf.textContent = uhr ? '⏸︎' : '⏩︎';
+      abspielKnopf.title = t; abspielKnopf.setAttribute('aria-label', t);
+      abspielKnopf.classList.toggle('np-laeuft', !!uhr);
+    }
+    function schritt() {
+      var naechster = aktuell ? aktuell.weiter : hauptKnoten[0];
+      if (!naechster) { stoppe(); return; }
+      automatisch = true; gehe(naechster); automatisch = false;
+      if (!aktuell.weiter) stoppe();
+    }
+    function starte() {
+      if (laufend && laufend !== stoppe) laufend();
+      if (aktuell && !aktuell.weiter) { automatisch = true; gehe(null); automatisch = false; }
+      uhr = setInterval(schritt, tempo);
+      laufend = stoppe;
+      zeigeKnopf();
+      schritt();
+    }
+    function stoppe() {
+      if (!uhr) return;
+      clearInterval(uhr); uhr = null;
+      if (laufend === stoppe) laufend = null;
+      zeigeKnopf();
+    }
     haupt.parentNode.parentNode.insertBefore(knoepfe, haupt.parentNode);
     buchansicht();
 

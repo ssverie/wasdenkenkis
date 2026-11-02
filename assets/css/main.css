@@ -362,6 +362,9 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .np-knoepfe button { font: inherit; min-width: 2.6rem; padding: 0.3rem 0.6rem; border: 1px solid var(--linie); border-radius: 6px; background: var(--fläche); color: var(--text); cursor: pointer; }
 .np-knoepfe button:hover { border-color: var(--akzent); }
 .np-hinweis { font-size: 0.8rem; color: var(--text-leise); margin-left: 0.25rem; }
+.np-knoepfe .np-abspielen { margin-left: 0.4rem; border-radius: 999px; }
+.np-knoepfe .np-abspielen.np-laeuft { border-color: var(--akzent); color: var(--akzent); }
+.np-tempo { font: inherit; font-size: 0.85rem; padding: 0.25rem 0.3rem; border: 1px solid var(--linie); border-radius: 6px; background: var(--fläche); color: var(--text); }
 .np-zug { cursor: pointer; border-radius: 3px; padding: 0 0.1em; }
 .np-zug:hover { background: var(--akzent-leise); }
 .np-zug.np-aktiv { background: var(--akzent); color: var(--bg); }
