@@ -1,0 +1,19 @@
+# KI-Partien: Partien von Sven gegen KIs, Seite /schach/ki-partien/ (seit 2026-11-02, Sven: „neuer Menüunterpunkt
+# Spiele/Schach/KI-Partien – darunter die Partie gegen Fable 5.1, zusätzlich abspielbar machen“).
+# Format wie die Bücher (Shortcode schachaufgaben mit partien="ja"); prüfen mit skripte/fen-pruefen.pl und loesung-nachspielen.pl.
+
+[[kapitel]]
+nr = 1
+titel = "Partien"
+slug = "partien"
+
+# Quelle: input\partie-sven-claude.html (Fable 5.1, Notation am Ende der Seite), eingebaut 02.11.2026.
+# Variante = die zurückgenommene Fortsetzung der Partie (23…Sbxc4?? 24.Dxf6 Dd8?? 25.Dxg7#).
+[[aufgabe]]
+nr = 1
+kapitel = 1
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Sven – Claude (Fable 5.1)"
+turnier = "Freundschaftspartie, 2. November 2026"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 d6 8.c3 0-0 9.h3 Sa5 10.Lc2 c5 11.d4 Dc7 12.d5 Ld7 13.b3 Sb7 14.Sbd2 Tfc8 15.c4 bxc4 16.Sxc4 Lb5 17.Sfd2 Lxc4 18.bxc4 Tab8 19.a4 Sa5 20.Ta3 Sd7 21.Tg3 Lf6 22.De2 Sb6 23.Df3 Dd8 24.De2 g6 25.Ta3 Sd7 26.Sf1 Tb4 27.Ld2 Tb7 28.Lc3 Tcb8 29.Sd2 Lg7 30.g3 f5 31.exf5 gxf5 32.Lxf5 Sf6 33.Se4 Kh8 34.Sxd6 Dxd6 35.Lxa5 Dd8 36.Lxd8 Txd8 1-0"
+varianten = ["23...Sbxc4 24.Dxf6 Dd8 25.Dxg7# (zurückgenommen)"]
