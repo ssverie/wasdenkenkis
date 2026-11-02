@@ -11,6 +11,11 @@
 # Level 2 (65–128): Lösungen aus der OCR-Schicht, Zweifelsfälle (81, 82, 83, 84, 85, 86) auf der Lösungsseite im PDF
 # nachgelesen. Prüfung fing drei Lesefehler (68: Te1/Df1, 70: Td7 weiß, 83: 1.Dc6) und zwei OCR-Deutungen in Varianten
 # (69: 4.Dxg7#, 109: 1…Kf8+ mit Abzugsschach). Unbeteiligte Bauern können bei einzelnen Diagrammen eine Linie danebenstehen.
+# Level 3 (129–192): Zweifelsfälle auf den Lösungsseiten nachgelesen (133, 134, 139, 144, 164, 167, 169, 172). Damenfarbe
+# nach der Lösung bestimmt bei 133 (Dg7 weiß), 134 (De8 weiß), 139 (De7 weiß), 151, 152, 167 (Da6 weiß), 169 (Dg4 schwarz).
+# 188: Das Buch schreibt „Black to play“, die Lösung beginnt mit 1.Da3+ – als Weiß am Zug eingetragen.
+# Zwei Buch-Nebenlinien weggelassen, weil sie in der abgelesenen Stellung nicht spielbar sind: 151 (4…Kh8 5.Dxh6+ Dh7
+# 6.Df6+ – der weiße König auf h1 stünde im Schach) und 176 (6…Lf6 7.exf6 – kein weißer Bauer auf e5).
 
 # Inhaltsverzeichnis nach dem Buch: fünf Stufen, dann Tests. nr = laufende Nummer, buch = Stufe, buchseite = Startseite.
 [[kapitel]]
@@ -1278,3 +1283,636 @@ partie = "Michelakis – Kotronias"
 turnier = "Erevan OL 1996"
 loesung = "1...Sg3+! 2.Kg1 Dxh2+!! 3.Kxh2 Th6+ 4.Kg1 Th1# 0-1"
 varianten = ["2.Dxg3"]
+
+[[aufgabe]]
+nr = 129
+kapitel = 3
+seite = 52
+fen = "8/p4r2/1pR2Np1/1n2k1Pp/3pP3/1P1K1P2/P7/8 w - - 0 1"
+partie = "Chatalbashev – Biolek"
+turnier = "Imperia 2001"
+loesung = "1.Sd7+!! Txd7 2.Tf6! 1-0"
+varianten = ["1...Kf4 2.Tf6+ Txf6 3.gxf6 Sc7 4.f7 Se6 5.f8D+ Sxf8 6.Sxf8"]
+
+[[aufgabe]]
+nr = 130
+kapitel = 3
+seite = 52
+fen = "5k1r/5p2/5P1P/p3p1K1/8/P3Q3/8/5r2 w - - 0 1"
+partie = "Radulov – Inkiov"
+turnier = "Warsaw Z 1979"
+loesung = "1.Dc5+ Kg8 2.Dc8+ Kh7 3.Dc2+ Kg8 4.h7+! Txh7 5.Dc8# 1-0"
+varianten = ["4...Kf8 5.Dc8#"]
+
+[[aufgabe]]
+nr = 131
+kapitel = 3
+seite = 53
+fen = "8/3nB2p/3P2k1/6p1/R4p2/2P1p3/1r4PP/5K2 b - - 0 1"
+partie = "Hamann – Gligorić"
+turnier = "Skopje OL 1972"
+loesung = "1...f3! 2.gxf3 Se5! 3.Te4 Tf2+ 4.Ke1 Sd3+ 5.Kd1 Td2# 0-1"
+varianten = ["3.Ke1 Sd3+ 4.Kd1 Td2#", "4.Kg1 Sxf3+ 5.Kh1 Txh2#"]
+
+[[aufgabe]]
+nr = 132
+kapitel = 3
+seite = 53
+fen = "1q2rr2/1b3pQ1/n3kPpP/p2p4/Pp3P2/1P2P1N1/6B1/2RR2K1 w - - 0 1"
+partie = "Gallagher – Forster (variation)"
+turnier = "Biel 1994"
+loesung = "1.Lh3+ Kd6 2.Dxf8+!! Txf8 3.Se4# 1-0"
+
+[[aufgabe]]
+nr = 133
+kapitel = 3
+seite = 53
+fen = "r1b1k2r/pp3pQp/4p3/2P2pN1/3p1q2/2b5/2P2PPP/1R3RK1 b k - 0 1"
+partie = "Gallagher – Atanu"
+turnier = "Sangli 2000"
+loesung = "1...d3 2.Dxf7+ Kd8 3.Txb7! Dxg5 4.c6!! 1-0"
+varianten = ["3...Lxb7 4.Sxe6+ Kc8 5.Sxf4", "4...Le5 5.Td7+ Lxd7 6.Dxd7#", "4...Lxb7 5.Dd7#"]
+
+[[aufgabe]]
+nr = 134
+kapitel = 3
+seite = 54
+fen = "4Q3/2q2p1k/4pPpp/p3p1P1/8/P1P5/KP5P/8 w - - 0 1"
+partie = "Korneev – Becerra Rivero"
+turnier = "Malaga 1999"
+loesung = "1.Ka1! Db7 2.c4! 1-0"
+varianten = ["1.Df8 Dc4+"]
+
+[[aufgabe]]
+nr = 135
+kapitel = 3
+seite = 54
+fen = "5r1k/3R3p/2p2r2/2P3Q1/4P1p1/1P2p1Pq/P4P1P/5RK1 b - - 0 1"
+partie = "Urban – Krasenkow"
+turnier = "Polish Ch (Warsaw) 2001"
+loesung = "1...exf2+ 2.Txf2 Dxh2+!! 3.Kxh2 Txf2+ 4.Kg1 Tf1+ 5.Kg2 T8f2# 0-1"
+varianten = ["3.Txh2 Tf1+ 4.Kg2 T8f2#"]
+
+[[aufgabe]]
+nr = 136
+kapitel = 3
+seite = 54
+fen = "5B1Q/5qNp/6p1/5r2/3p1Pk1/4P3/6KP/8 w - - 0 1"
+partie = "Hulak – Sashikiran"
+turnier = "Jakarta 2001"
+loesung = "1.h3+! Kh4 2.Dxh7+ Th5 3.Dxh5+!! gxh5 4.Le7+! Dxe7 5.Sf5# 1-0"
+varianten = ["2.Le7+!! Dxe7 3.Dxh7+ Th5 4.Dxh5+ gxh5 5.Sf5#"]
+
+[[aufgabe]]
+nr = 137
+kapitel = 3
+seite = 55
+fen = "8/3P1ppp/1Bn5/3kp3/8/r1p3P1/2K1PP1P/7R b - - 0 1"
+partie = "Hillarp Persson – Goloshchapov"
+turnier = "Ohrid Ech 2001"
+loesung = "1...Sb4+! 2.Kb1 Tb3+ 3.Kc1 Kc4! 4.d8D Sa2+! 5.Kc2 Tb2+ 6.Kd1 c2+ 7.Ke1 c1D+ 8.Dd1 Dxd1+ 9.Kxd1 Tb1+ 10.Kc2 Txh1"
+varianten = ["3.Ka1 Sc2+ 4.Ka2 Tb2#", "7.Kd2 c1D#"]
+
+[[aufgabe]]
+nr = 138
+kapitel = 3
+seite = 55
+fen = "r3k2r/1b3p1p/p4P1b/q2NPP2/1nQ5/4p3/P1P4P/1K1R3R w - - 0 1"
+partie = "Gallagher – Shneider (variation)"
+turnier = "Bern 1995"
+loesung = "1.Sc7+ Kf8 2.Dxf7+!! Kxf7 3.Td7+ Kf8 4.Se6+ Kg8 5.Tg1+ 1-0"
+varianten = ["1...Dxc7 2.Dxc7"]
+
+[[aufgabe]]
+nr = 139
+kapitel = 3
+seite = 55
+fen = "3r3k/4Q2p/8/1P6/3b4/6PP/5q2/4R2K b - - 0 1"
+partie = "Contin – Firman"
+turnier = "Biel 2001"
+loesung = "1...Df3+ 2.Kh2 Lg1+! 3.Kxg1 Dxg3+ 4.Kf1 Df3+ 5.Kg1 Tg8+ 0-1"
+varianten = ["3.Txg1 Td2+ 4.Tg2 Dxg2#"]
+
+[[aufgabe]]
+nr = 140
+kapitel = 3
+seite = 56
+fen = "5q2/3QR1bk/4Nr1p/2p3p1/P7/5rPP/1P3P2/2B3K1 b - - 0 1"
+partie = "Olcayoz – Gershon"
+turnier = "Istanbul Ech 2003"
+loesung = "1...Txg3+! 2.Kh1 Txh3+ 3.Kg1 Tg3+ 4.Kh1 Txe6 5.Txg7+ Dxg7 0-1"
+varianten = ["2.fxg3 Tf1+ 3.Kh2 Df2#", "2.Kf1 Txf2+ 3.Ke1 Tg1#", "5.Dxe6 Df3+ 6.Kh2 Dg2#"]
+
+[[aufgabe]]
+nr = 141
+kapitel = 3
+seite = 56
+fen = "2r2rk1/3q2pp/3Pp3/1pp5/1nb1P3/2Q3P1/1BR2PBP/R5K1 w - - 0 1"
+partie = "Bacrot – Lautier"
+turnier = "Paris 2002"
+loesung = "1.Ta7!! 1-0"
+varianten = ["1...Dxa7 2.d7"]
+
+[[aufgabe]]
+nr = 142
+kapitel = 3
+seite = 56
+fen = "r5k1/4Bppp/4p3/1B2P3/2pqnP2/8/2Q3PP/5R1K b - - 0 1"
+partie = "Kharlov – Semeniuk"
+turnier = "Russian Cht (Ekaterinburg) 2002"
+loesung = "1...Sf2+! 2.Kg1 Sh3+ 3.Kh1 Ta1! 0-1"
+varianten = ["2.Txf2 Ta1+", "4.Txa1 Dxa1+", "4.gxh3 Txf1+ 5.Kg2 Dg1#", "4.De2 Dg1+! 5.Txg1 Txg1#"]
+
+[[aufgabe]]
+nr = 143
+kapitel = 3
+seite = 57
+fen = "3r1q1k/6p1/pp3pQp/3b3N/P3p3/1P1B1P1P/1B4P1/7K w - - 0 1"
+partie = "Vaïsser – Skripchenko"
+turnier = "Paris 2003"
+loesung = "1.Sxf6! Lg8 2.Dxh6+! gxh6 3.Sh5+ 1-0"
+varianten = ["3...Kh7 4.Lxe4+ Df5 5.Lxf5#"]
+
+[[aufgabe]]
+nr = 144
+kapitel = 3
+seite = 57
+fen = "8/1q1b2kp/4p1p1/3pPp2/1r1Pn3/6PP/1B4K1/1RQ2B2 w - - 0 1"
+partie = "Ahues – Schoris"
+turnier = "Dresden 1907"
+loesung = "1.La3!! Txb1 2.Dh6+!! Kxh6 3.Lf8+ 1-0"
+varianten = ["3...Kg5 4.h4+ Kh5 5.Le2#", "3...Kh5 4.Le2+ Kg5 5.h4#"]
+
+[[aufgabe]]
+nr = 145
+kapitel = 3
+seite = 57
+fen = "Q2R4/5ppk/1p2r1q1/p3P2p/P4B1P/1P4P1/2r2PK1/8 b - - 0 1"
+partie = "Bogdanovski – Mitkov"
+turnier = "Macedonian Ch (Gevgelija) 2002"
+loesung = "1...Df5? 2.Th8+ Kg6 3.Th6+!! 1-0"
+varianten = ["3...gxh6 4.Dg8#", "1...Dg4 2.Th8+ Kg6 3.Dg8 Kf5 4.Dxf7+ Ke4"]
+
+[[aufgabe]]
+nr = 146
+kapitel = 3
+seite = 58
+fen = "2r2rk1/1pbb1ppp/p3p2q/2R5/1P1N4/P2P4/1B1QBPPn/R5K1 b - - 0 1"
+partie = "Kosashvili – Gershon"
+turnier = "Israeli Cht 1999"
+loesung = "1...Sf1! 2.Txc7 Dh2+ 0-1"
+varianten = ["2.Kxf1 Dh1#", "3.Kxf1 Dh1#"]
+
+[[aufgabe]]
+nr = 147
+kapitel = 3
+seite = 58
+fen = "1r2r1k1/1q3pbp/pp1ppBp1/5P1Q/P1P1P3/1nN3R1/6PP/5R1K w - - 0 1"
+partie = "Van den Doel – Janssen"
+turnier = "Dutch Ch (Rotterdam) 1999"
+loesung = "1.Lxg7! gxh5 2.Le5+! Kf8 3.Lxd6+ Te7 4.fxe6! 1-0"
+varianten = ["1...Kxg7 2.f6+ Kh8 3.Dh6 Tg8 4.Dxh7+ Kxh7 5.Th3#", "4...Ke8 5.Tg8#", "4...f5 5.Txf5+ Ke8 6.Tg8#"]
+
+[[aufgabe]]
+nr = 148
+kapitel = 3
+seite = 58
+fen = "3r2k1/4qpp1/p4n1p/4Q3/Np2P3/5R1P/PPr3PK/2R5 b - - 0 1"
+partie = "Antić – Kosić"
+turnier = "Yugoslav Cht (Vrnjačka Banja) 1998"
+loesung = "1...Sg4+! 2.hxg4 Dh4+ 3.Kg1 Txg2+! 4.Kxg2 Td2+ 5.Kg1 Dh2+ 0-1"
+varianten = ["2.Kg1 Sxe5", "6.Kf1 Dh1#"]
+
+[[aufgabe]]
+nr = 149
+kapitel = 3
+seite = 59
+fen = "5rk1/p4pp1/bp1qp1p1/4N1P1/3P1Q2/P2R4/1P1r1PP1/R5K1 w - - 0 1"
+partie = "Novikov – Podgaets"
+turnier = "Koszalin 1998"
+loesung = "1.Sxg6! Dxf4 2.Se7+! 1-0"
+varianten = ["2...Kh7 3.Th3+ Dh4 4.Txh4#"]
+
+[[aufgabe]]
+nr = 150
+kapitel = 3
+seite = 59
+fen = "3r1r1k/2q2p1p/p2bbPp1/8/1Pp4Q/P1B4P/2B3P1/R4R1K w - - 0 1"
+partie = "Oltra Caurin – S. Kovačević"
+turnier = "Valencia 1998"
+loesung = "1.Lxg6! fxg6 2.f7+ Le5 3.Df6+!! 1-0"
+varianten = ["3...Lxf6 4.Lxf6#"]
+
+[[aufgabe]]
+nr = 151
+kapitel = 3
+seite = 59
+fen = "3r1r1k/1q4b1/p2P1pQp/4p2R/1p2N3/2p5/PP4R1/7K w - - 0 1"
+partie = "Kožul – Meštrović"
+turnier = "Pula tt 1997"
+loesung = "1.Sxf6! Txf6? 2.Txh6+! Lxh6 3.Dxf6+ Kh7 4.Dg6+ 1-0"
+varianten = ["1...Dxg2+ 2.Kxg2 Txf6 3.Txh6+ Kg8 4.Dh7+ Kf8 5.Txf6+ Lxf6 6.bxc3 bxc3", "2...Kg8 3.Dh7+ Kf8 4.Txf6+ Lxf6 5.Dg8#"]
+
+[[aufgabe]]
+nr = 152
+kapitel = 3
+seite = 60
+fen = "6rk/p1p4p/5nq1/P2Pp3/1p2P2Q/5P2/4N1rP/1R1R3K b - - 0 1"
+partie = "Illescas – Short"
+turnier = "Dos Hermanas 1997"
+loesung = "1...Sxe4! 2.fxe4 Tg1+! 0-1"
+varianten = ["3.Txg1 Dxe4+ 4.Tg2 Dxg2#", "2.Tg1 Sf2+ 3.Dxf2 Txf2 4.Txg6 Txg6"]
+
+[[aufgabe]]
+nr = 153
+kapitel = 3
+seite = 60
+fen = "1R2n1k1/5p2/4rPp1/1pN3P1/4PK2/8/p7/8 w - - 0 1"
+partie = "Hector – Ernst"
+turnier = "Reykjavik Z 1995"
+loesung = "1.Sxe6! a1D 2.Txe8+ Kh7 3.Sf8+ Kg8 4.Sxg6+! Kh7 5.Th8+! 1-0"
+varianten = ["1...fxe6 2.Txe8+ Kf7 3.Ta8", "5...Kxg6 6.Th6#"]
+
+[[aufgabe]]
+nr = 154
+kapitel = 3
+seite = 60
+fen = "5rk1/pp1q1p1p/2nN1Qp1/3B1b2/8/8/PP3PPP/4R1K1 w - - 0 1"
+partie = "Nenashev – Vaulin"
+turnier = "St Petersburg 1995"
+loesung = "1.Te8!! Dxd6 2.Lxf7# 1-0"
+varianten = ["1...Le6 2.Lxe6", "1...Txe8 2.Lxf7+ Kf8 3.Le6+ Df7 4.Dxf7#", "1...Sd8 2.Txd8! Dxd8 3.Lxf7+ Txf7 4.Dxd8+"]
+
+[[aufgabe]]
+nr = 155
+kapitel = 3
+seite = 61
+fen = "2k1r3/ppq5/8/3B1p2/2P3b1/1P2R1p1/P7/2B1RK2 b - - 0 1"
+partie = "Babula – Mozny"
+turnier = "Czech Ch 1994"
+loesung = "1...Df4+ 2.Lf3 Dxf3+!! 3.Txf3 Lh3+ 0-1"
+varianten = ["2.Tf3 Lh3+ 3.Kg1 Txe1+ 4.Tf1 Txf1#", "4.Kg1 Txe1+ 5.Tf1 Txf1#"]
+
+[[aufgabe]]
+nr = 156
+kapitel = 3
+seite = 61
+fen = "1r2r1k1/p4p1p/6pB/q7/8/3Q2P1/PbP2PKP/1R3R2 w - - 0 1"
+partie = "Rada – Kostal"
+turnier = "Prague 1942"
+loesung = "1.Txb2! Txb2 2.Dd4 De5 3.Te1!! 1-0"
+varianten = ["3...Dxe1 4.Dg7#", "3...Dxd4 4.Txe8#"]
+
+[[aufgabe]]
+nr = 157
+kapitel = 3
+seite = 61
+fen = "3q2k1/1b4p1/1p2p2p/6r1/2P5/PP5P/1B3Rn1/1B3Q1K w - - 0 1"
+partie = "Renet – Hamdouchi"
+turnier = "Montpellier 1993"
+loesung = "1.Tf8+ Dxf8 2.Lh7+ Kxh7 3.Dxf8 Sf4+ 4.Kh2 Tg2+ 5.Kh1 Tf2+ 6.Kg1 Sxh3# 0-1"
+
+[[aufgabe]]
+nr = 158
+kapitel = 3
+seite = 62
+fen = "5r1k/4q1p1/2Bp3p/p1p2p1P/1pP5/1P1n3P/P4Q2/B1R4K w - - 0 1"
+partie = "Szekely – Arkhipov"
+turnier = "Hungarian Cht 1992"
+loesung = "1.Dd2! Sxc1? 2.Dxh6+! Kg8 3.Ld5+ Tf7 4.Dxg7# 1-0"
+
+[[aufgabe]]
+nr = 159
+kapitel = 3
+seite = 62
+fen = "1k1n1r2/pp2b3/4p3/3pP3/2pP1PQ1/2P2BN1/PP1qN3/K2bR3 b - - 0 1"
+partie = "Nijboer – Kuijf"
+turnier = "Wijk aan Zee 1991"
+loesung = "1...La3! 2.bxa3 Lb3! 3.axb3 cxb3 4.Sc1 Dxc3+ 5.Kb1 Dc2+ 0-1"
+varianten = ["6.Ka1 b2+ 7.Ka2 b1D#"]
+
+[[aufgabe]]
+nr = 160
+kapitel = 3
+seite = 62
+fen = "r2q1b1k/1b1nrQ1p/p3p1pB/2ppP3/8/2NB3R/PPP3PP/5R1K w - - 0 1"
+partie = "Gross – Borgo"
+turnier = "Budapest 1999"
+loesung = "1.Lg7+! Lxg7 2.Txh7+ 1-0"
+varianten = ["2...Kxh7 3.Dxg6+ Kg8 4.Dh7#"]
+
+[[aufgabe]]
+nr = 161
+kapitel = 3
+seite = 63
+fen = "2kr3r/pp1bb2p/4pnp1/2p5/2Qq1B2/2N2B2/PP3PPP/R3R1K1 w - - 0 1"
+partie = "Romanishin – Ivanchuk"
+turnier = "Irkutsk 1986"
+loesung = "1.Sb5!! Lxb5 2.Lxb7+! 1-0"
+varianten = ["1...Dxc4 2.Sxa7#", "2...Kxb7 3.Dxb5+ Kc8 4.Dc6#", "2...Kd7 3.Dxb5#"]
+
+[[aufgabe]]
+nr = 162
+kapitel = 3
+seite = 63
+fen = "4r1k1/p1p4p/3p4/3P2B1/2p2QP1/q1R4P/3K4/8 b - - 0 1"
+partie = "Sotnikov – Gallagher"
+turnier = "Arosa 1996"
+loesung = "1...Da2+! 2.Tc2 Da5+ 3.Tc3 Dxd5+! 4.Kc1 Te1+ 5.Kb2 Db5+ 6.Ka2 Da4+ 7.Kb2 Da1+ 8.Kc2 Da2# 0-1"
+varianten = ["6...Te2+ 7.Dd2"]
+
+[[aufgabe]]
+nr = 163
+kapitel = 3
+seite = 63
+fen = "1r6/1bkr4/ppqp1B1p/5Qp1/2P5/5P2/PP4PP/3RR1K1 w - - 0 1"
+partie = "Plaskett – Lechtynsky"
+turnier = "Banja Luka 1985"
+loesung = "1.Txd6!! Txd6 2.Te7+ Td7 3.Le5+ 1-0"
+varianten = ["1...Kxd6 2.De5#", "1...Dxd6 2.Le5", "3...Kc8 4.Te8#"]
+
+[[aufgabe]]
+nr = 164
+kapitel = 3
+seite = 64
+fen = "6rk/5R2/R2p3p/5p2/2rb1P1B/7P/6PK/8 b - - 0 1"
+partie = "Van Mil – Van der Sterren"
+turnier = "Dutch Ch (Hilversum) 1984"
+loesung = "1...Tc2! 2.Lg3 Tc1 3.h4 Lg1+ 4.Kh3 Txg3+! 0-1"
+varianten = ["3.Ta3 Lg1+ 4.Kh1 Lc5+ 5.Kh2 Lxa3", "5.Kxg3 Tc3#"]
+
+[[aufgabe]]
+nr = 165
+kapitel = 3
+seite = 64
+fen = "2k2r2/2q2p2/p2r2pp/8/B5PP/2P2Q2/PP3P2/2K1R3 w - - 0 1"
+partie = "Karpov – Sax"
+turnier = "Linares 1983"
+loesung = "1.Te7! Td1+ 2.Kxd1 Dxe7 3.Da8+ Kc7 4.Da7+ Kd6 5.Db6+! 1-0"
+varianten = ["1...Dxe7 2.Da8+ Kc7 3.Da7+ Kc8 4.Dxe7", "1...Db6 2.Da8+ Db8 3.Ld7+!! Txd7 4.Dxb8+ Kxb8 5.Txd7", "5...Ke5 6.Dd4+ Ke6 7.Lb3#"]
+
+[[aufgabe]]
+nr = 166
+kapitel = 3
+seite = 64
+fen = "1rq1r1k1/5RBp/p2p1p2/2p1p3/2P1P2Q/1P6/P5PP/3b2K1 w - - 0 1"
+partie = "Tal – Rantanen"
+turnier = "Tallinn 1979"
+loesung = "1.Lh8!! Kxf7 2.Dxf6+ Kg8 3.Dg7# 1-0"
+varianten = ["1...Kxh8 2.Dxh7#"]
+
+[[aufgabe]]
+nr = 167
+kapitel = 3
+seite = 65
+fen = "r1q1r1k1/pR3p2/Qn1p4/2p1P1p1/3P1p2/P1P5/2P1N1P1/4K2R w - - 0 1"
+partie = "Hall – de Firmian"
+turnier = "Malmö 1999"
+loesung = "1.Dd3! Dxb7 2.Dh7+ Kf8 3.Dh6+! Ke7 4.Dxd6# 1-0"
+varianten = ["3...Kg8 4.Dh8#"]
+
+[[aufgabe]]
+nr = 168
+kapitel = 3
+seite = 65
+fen = "5b2/kbq2B1p/p3Np2/1p2n3/6r1/6N1/PPP2qPP/6RK b - - 0 1"
+partie = "Plaskett – Gallagher"
+turnier = "London 1982"
+loesung = "1...Sf3! 2.Tf1 Th4!! 0-1"
+varianten = ["2.Td1 Se1", "3.h3 Txh3+ 4.gxh3 Dh2#", "3.Txf2 Txh2#"]
+
+[[aufgabe]]
+nr = 169
+kapitel = 3
+seite = 65
+fen = "r4rk1/p4nBp/2p3p1/3b4/N5q1/1P3pP1/PQ3P1P/2R2R1K b - - 0 1"
+partie = "Shibut – Gufeld"
+turnier = "USA 2000"
+loesung = "1...Dh3 2.Tg1 Sg5! 3.Lxf8 Dg2+! 4.Txg2 fxg2+ 5.Kg1 Sh3# 0-1"
+
+[[aufgabe]]
+nr = 170
+kapitel = 3
+seite = 66
+fen = "rnbqr1k1/pp2pp1p/6pB/2pPb3/4N3/5Q1P/PPP2PP1/R3KB1R b - - 0 1"
+partie = "Variation of the Pirc Defence"
+loesung = "1...Dxd5! 2.Sf6+?? exf6! 3.Dxd5 Lc3++! 4.Kd1 Te1# 0-1"
+
+[[aufgabe]]
+nr = 171
+kapitel = 3
+seite = 66
+fen = "5rk1/pp3ppp/2p2q2/8/3r2Q1/4R3/PPP2PPP/4R1K1 w - - 0 1"
+partie = "Gallagher – Korneev"
+turnier = "Cannes 1998"
+loesung = "1.Dc8! g6! 2.Dxb7 Td2 3.T3e2 Txe2 4.Txe2 Dd6! 5.De7 Dd1+ 6.Te1 Dxc2 7.De2 Dc5 8.Dd2 a5 9.g3 ½-½"
+varianten = ["2.Te8 Txe8 3.Txe8+ Kg7 4.Tg8+ Kh6 5.Dh3+ Dh4"]
+
+[[aufgabe]]
+nr = 172
+kapitel = 3
+seite = 66
+fen = "r3k2r/p4ppp/2p1p3/2P5/Ppp1P2q/3nQ3/1P2K1PP/R1B2B1R b kq - 0 1"
+partie = "Izoria – Kupreichik"
+turnier = "Istanbul Ech 2003"
+loesung = "1...De1+ 2.Kf3 Se5+ 3.Kf4 Dh4+! 4.Kxe5 Df6+ 5.Kd6 e5+ 6.Kc7 Dd8+ 7.Kxc6 Dd7# 0-1"
+varianten = ["4.g4 Dxg4+ 5.Kxe5"]
+
+[[aufgabe]]
+nr = 173
+kapitel = 3
+seite = 67
+fen = "7r/1p2kp2/p1rN2p1/4n1qp/3QP3/7b/PPPRB3/1K1R4 w - - 0 1"
+partie = "Rogić – Maksimenko"
+turnier = "Croatian Cht 1999"
+loesung = "1.Sf5+! Kf6 2.Dd6+! 1-0"
+varianten = ["2...Txd6 3.Txd6#", "1...Kf8 2.Dd8+ Dxd8 3.Txd8#", "1...Lxf5 2.Dxe5+ Te6 3.Td7+ Kf8 4.Dxh8#", "1...gxf5 2.Dxe5+ Te6 3.Td7+ Kf8 4.Td8+ Dxd8 5.Dxh8+ Ke7 6.Dxd8#"]
+
+[[aufgabe]]
+nr = 174
+kapitel = 3
+seite = 67
+fen = "4rbk1/5p1p/3p1P2/1q1Pn1p1/2pB4/1p3Q1P/1P4P1/1B3R1K w - - 0 1"
+partie = "Nenashev – Kovaliov"
+turnier = "Cappelle la Grande 1996"
+loesung = "1.Lxe5! Txe5 2.Dh5! h6 3.Lh7+! Kh8 4.Dxf7 Dxd5 5.Dxf8+ 1-0"
+varianten = ["1.Lxh7+? Kxh7 2.Dh5+ Lh6 3.Lxe5 Dxd5", "3...Kxh7 4.Dxf7+ Kh8 5.Dxf8+ Kh7 6.Dg7#", "5...Kxh7 6.Dg7#"]
+
+[[aufgabe]]
+nr = 175
+kapitel = 3
+seite = 67
+fen = "r1b2r1k/p1p3pp/2pp1q2/8/N1Q2n2/1P1N4/P1P2PPP/3RR2K b - - 0 1"
+partie = "Lau – Smagin"
+turnier = "Berlin 1990"
+loesung = "1...Sxg2! 2.Kxg2 Lh3+! 3.Kxh3 Df3+ 4.Kh4 g5+ 0-1"
+varianten = ["3.Kg1 Dg6+ 4.Kh1 Dg2#", "3.Kg3 Dg5+ 4.Kxh3 Tf3#", "3.Kh1 Df3+ 4.Kg1 Dg2#", "5.Kxg5 Tf5+ 6.Kh4 Th5#"]
+
+[[aufgabe]]
+nr = 176
+kapitel = 3
+seite = 68
+fen = "2rr2k1/2q1bp2/2bp1np1/4p1B1/1p2P3/2NB3Q/1PP3PP/3R1R1K w - - 0 1"
+partie = "Abramović – Ilić"
+turnier = "Niš 1983"
+loesung = "1.Txf6! bxc3 2.Txf7!! Kxf7 3.Dh7+ Ke8 4.Dxg6+ Kd7 5.Df5+ Ke8 6.Le2! Lxg5 7.Lh5+ Ke7 8.Df7# 1-0"
+varianten = ["1...Dd7 2.Dh4"]
+
+[[aufgabe]]
+nr = 177
+kapitel = 3
+seite = 68
+fen = "3qr2k/1p2pB2/5bpB/4pb2/1p6/6QP/P1P3P1/5RK1 w - - 0 1"
+partie = "Szabo – Zawadzki"
+turnier = "Los Llanos 2004"
+loesung = "1.Txf5! gxf5 2.Lg7+! 1-0"
+varianten = ["2...Lxg7 3.Dh4+ Lh6 4.Dxh6#", "2...Kh7 3.Dg6#"]
+
+[[aufgabe]]
+nr = 178
+kapitel = 3
+seite = 68
+fen = "2rq3k/3b1Qpp/pn6/1p1B4/2pP4/2P5/3B1PP1/4R1K1 w - - 0 1"
+partie = "Kotronias – Kalesis"
+turnier = "Karditsa 1994"
+loesung = "1.Lh6!! gxh6 2.Te8+! 1-0"
+varianten = ["2...Lxe8 3.Df8#", "2...Dxe8 3.Df6#"]
+
+[[aufgabe]]
+nr = 179
+kapitel = 3
+seite = 69
+fen = "2b3r1/k2n1p2/p2q4/5R1B/2p4P/P1b5/1PQ1R3/1K6 b - - 0 1"
+partie = "Sagalchik – Nakamura"
+turnier = "Buenos Aires 2003"
+loesung = "1...Tg1+ 2.Ka2 Dxa3+!! 0-1"
+varianten = ["3.Kxa3 Ta1#", "3.bxa3 Ta1#"]
+
+[[aufgabe]]
+nr = 180
+kapitel = 3
+seite = 69
+fen = "r4r1k/7p/1QpR1bpq/p3p3/2B1P3/2B2P1n/P5PK/1R6 w - - 0 1"
+partie = "Kasimdzhanov – Golubev"
+turnier = "Bundesliga 2001/2"
+loesung = "1.Txf6! Txf6 2.Db8+! Txb8 3.Txb8+ Kg7 4.Tg8# 1-0"
+varianten = ["1...Sf4+ 2.Kg1 Txf6 3.Db8+ Df8 4.Lxe5 Sh5 5.Dxf8+ Taxf8 6.g4", "1...Sf2+ 2.Kg1 Dh1+ 3.Kxf2 Dh4+ 4.Kg1 Dxf6 5.Dc7 Tae8 6.Tb7", "2...Df8 3.Lxe5", "3...Tf8 4.Lxe5+ Dg7 5.Txf8#", "3...Df8 4.Txf8+ Txf8 5.Lxe5+ Tf6 6.Lxf6#"]
+
+[[aufgabe]]
+nr = 181
+kapitel = 3
+seite = 69
+fen = "3r3k/pb1r3p/1p2pR1Q/6R1/2P1n3/8/P4PPP/1q3BK1 b - - 0 1"
+partie = "Nadanian – Kharitonov"
+turnier = "Novgorod 1999"
+loesung = "1...Dxf1+! 2.Kxf1 Td1+ 3.Ke2 Sc3+ 4.Ke3 T1d3+! 5.Kf4 T8d4+ 6.Ke5 Te4# 0-1"
+varianten = ["4...T8d3+ 5.Kf4 Td4+ 6.Kg3 Se2+ 7.Kh3 Sg1+ 8.Kg3 Se2+"]
+
+[[aufgabe]]
+nr = 182
+kapitel = 3
+seite = 70
+fen = "r5k1/2r2pp1/4p2p/q1npP1PP/1p1Q1P2/1P3B2/P1R5/1KR5 b - - 0 1"
+partie = "Ernst – Ornstein"
+turnier = "Swedish Ch (Sundsvall) 1989"
+loesung = "1...Sxb3! 2.axb3 Tc3! 3.Dxb4 Da1# 0-1"
+varianten = ["3.Txc3 Da2#"]
+
+[[aufgabe]]
+nr = 183
+kapitel = 3
+seite = 70
+fen = "4r1k1/1pQ3pp/2p2p2/P3n3/6b1/6P1/1P2PP1P/1R1NqBK1 b - - 0 1"
+partie = "Torre – Timman"
+turnier = "Hamburg TV 1982"
+loesung = "1...Sf3+!! 2.Kg2 Dxf1+! 0-1"
+varianten = ["2.exf3 Dxf1+ 3.Kxf1 Lh3+ 4.Kg1 Te1#", "3.Kxf1 Lh3#"]
+
+[[aufgabe]]
+nr = 184
+kapitel = 3
+seite = 70
+fen = "2r2r2/1p1b2kp/3N1bp1/p3q3/Pn1NPp2/1B3P2/1PP4Q/1K1R1R2 w - - 0 1"
+partie = "Anand – Vallejo Pons"
+turnier = "Monte Carlo (blindfold) 2004"
+loesung = "1.S6f5+! Kh8 2.Dxh7+!! Kxh7 3.Th1+ 1-0"
+varianten = ["1...Lxf5 2.Sxf5+ Dxf5 3.exf5", "3...Lh4 4.Txh4#"]
+
+[[aufgabe]]
+nr = 185
+kapitel = 3
+seite = 71
+fen = "R4R2/4rppk/8/7p/5P2/1B3KPP/P3r3/8 w - - 0 1"
+partie = "Cvitan – Vaulin"
+turnier = "Oberwart 1997"
+loesung = "1.Th8+! Kg6 2.Lxf7+!! Kxf7 3.Taf8+ Kg6 4.f5+ Kg5 5.h4# 1-0"
+varianten = ["2...Txf7 3.Kxe2"]
+
+[[aufgabe]]
+nr = 186
+kapitel = 3
+seite = 71
+fen = "2kr1b1r/ppp3pp/2np1q2/5b2/2B2P2/2P1BQ2/PP1N1P1P/2KR3R b - - 0 1"
+partie = "Schulder – Boden"
+turnier = "London 1853"
+loesung = "1...d5! 2.Lxd5 Dxc3+!! 3.bxc3 La3# 0-1"
+varianten = ["2.Dxd5 Dxc3+ 3.bxc3 La3#"]
+
+[[aufgabe]]
+nr = 187
+kapitel = 3
+seite = 71
+fen = "r1b2r1k/1q1nbppp/pp2p3/4Q1B1/3N4/2N3R1/PPP2PPP/3R2K1 w - - 0 1"
+partie = "Bronstein – Kotov"
+turnier = "Moscow Ch 1946"
+loesung = "1.Lh6!! 1-0"
+varianten = ["1...Sxe5 2.Lxg7+ Kg8 3.Lxe5+ Lg5 4.Txg5#", "1...f6 2.Lxg7+ Kg8 3.Lxf6+ Kf7 4.Dxe6+ Ke8 5.Dxe7#"]
+
+[[aufgabe]]
+nr = 188
+kapitel = 3
+seite = 72
+fen = "4bk1r/Q4ppp/1p2q3/8/4B3/8/P4PPP/4R1K1 w - - 0 1"
+partie = "Bisguier – Evans"
+turnier = "New York 1959"
+loesung = "1.Da3+ De7 2.Lc6!! 1-0"
+varianten = ["2...Dxa3 3.Txe8#"]
+
+[[aufgabe]]
+nr = 189
+kapitel = 3
+seite = 72
+fen = "2k3r1/ppP2p1p/4r2b/1NP5/4BP1q/8/PP5P/3Q1R1K b - - 0 1"
+partie = "D. Howell – J. Turner"
+turnier = "Kidlington 2002"
+loesung = "1...Dxh2+! 2.Kxh2 Lxf4+! 3.Txf4 Th6+ 4.Dh5 Txh5+ 5.Th4 Txh4# 0-1"
+
+[[aufgabe]]
+nr = 190
+kapitel = 3
+seite = 72
+fen = "RQ6/2r2pkp/4p1p1/3nN3/1p1q4/6PP/5P2/6K1 b - - 0 1"
+partie = "Kozlov – Nikolaev"
+turnier = "St Petersburg 2001"
+loesung = "1...Tc1+ 2.Kg2 De4+ 3.Sf3 Se3+! 4.Kh2 Th1+! 0-1"
+varianten = ["3.f3 De2#", "4.fxe3 Tc2+ 5.Kg1 Dxe3+ 6.Kh1 Dxf3+ 7.Kg1 Dg2#", "5.Kxh1 Dxf3+ 6.Kg1 Dg2#"]
+
+[[aufgabe]]
+nr = 191
+kapitel = 3
+seite = 73
+fen = "r1b4k/1p2br1p/pq2p2B/2n1p3/2n3Q1/2N5/PPP3PP/2KR1R2 w - - 0 1"
+partie = "Petrov – Erdogdu"
+turnier = "Batumi Ech 2002"
+loesung = "1.Td8+!! Lxd8 2.Lg7+!! Kg8 3.Lxe5+ 1-0"
+varianten = ["1...Dxd8 2.Txf7 Lf6 3.Lg7+ Kg8 4.Lxf6+ Kxf7 5.Lxd8", "2...Txg7 3.Tf8+ Tg8 4.Txg8#", "3...Lg5+ 4.Dxg5+ Kf8 5.Dg7+ Ke8 6.Dxf7+ Kd8 7.Lf6#"]
+
+[[aufgabe]]
+nr = 192
+kapitel = 3
+seite = 73
+fen = "2r1kb1r/p1qb1ppp/4pn2/1pn5/3B4/P4NP1/1PQNPP1P/R3KB1R b - - 0 1"
+partie = "Andonov – Lputian"
+turnier = "Sochi 1987"
+loesung = "1...Sd3+!! 0-1"
+varianten = ["2.Dxd3 Dc1+! 3.Txc1 Txc1#", "2.exd3 Dxc2"]
