@@ -423,7 +423,7 @@ fen = "4r3/5knp/2bq2p1/p3r3/Pp1p2P1/1P5P/1BPQRP2/1K2R3 w - - 0 29"
 partie = "T. Wang – Ippolito"
 turnier = "Charlotte 2022"
 loesung = "29.Df4+ Df6 30.Dxf6+! Kxf6 31.Txe5 1-0"
-varianten = ["31...Txe5 32.Lxd4 +–", "30.Dxd4 Te6 31.Dxf6+ Txf6 32.Txe8 Sxe8 33.Lxf6 Kxf6 34.f4 +–"]
+varianten = ["31...Txe5 32.Lxd4 +–", "30.Dxd4 T5e6 31.Dxf6+ Txf6 32.Txe8 Sxe8 33.Lxf6 Kxf6 34.f4 +–"]
 
 [[aufgabe]]
 nr = 36
@@ -907,7 +907,7 @@ varianten = ["39.Dg3 Se2 –+"]
 nr = 85
 kapitel = 1
 seite = 20
-fen = "2r3k1/4b1p1/3n1pQ1/4pN2/6K1/4p1P1/1B1r3q/R1R5 b - - 0 33"
+fen = "2r3k1/4b1p1/2n2pQ1/4pN2/6K1/4p1P1/1B1r3q/R1R5 b - - 0 33"
 partie = "Radusinović – D. Rajković"
 turnier = "Serbian Team Ch, Vrnjačka Banja 2022"
 loesung = "33...Lf8! 34.Lc3 Dh7 35.Dxh7+ Kxh7 36.Lxd2 exd2 37.Tc2 g6 38.Th1+ Kg8 39.Se3 f5+ 40.Kh3 Lh6 –+"
@@ -2880,7 +2880,7 @@ fen = "8/6kp/1rnN1R2/1pR3P1/5p2/p1P5/1r5P/6K1 w - - 0 35"
 partie = "Garcia Ramos – Gonzalez Perez"
 turnier = "Catalonian Team Ch, Barcelona 2023"
 loesung = "35.Se8+! Kg8 36.Tcf5! h5 37.Tf8+ Kh7 38.T5f7+ Kg6 39.Tg7#"
-varianten = ["37...g6 38.Tb1+ Kg2 1-0"]
+varianten = ["37.g6 Tb1+ 38.Kg2 1-0"]
 
 [[aufgabe]]
 nr = 292
@@ -2890,7 +2890,7 @@ fen = "3r2k1/p4pp1/1p5p/8/3Pn1qR/2r1B3/P5PP/4QR1K b - - 0 28"
 partie = "A. Roos – Maatman"
 turnier = "Dutch League 2022/3"
 loesung = "28...Txe3! 29.Txg4 Txe1 30.Txe1 Sf2+ 31.Kg1 Sxg4 –+"
-varianten = ["29.Dxe3 Dxh4 30.Tf4 Txd4 31.Txh4 Td1+ 32.Kg1 Sf2# (0-1)"]
+varianten = ["29.Dxe3 Dxh4 30.Tf4 Txd4 31.Txh4 Td1+ 32.Dg1 Sf2# (0-1)"]
 
 [[aufgabe]]
 nr = 293
@@ -2909,7 +2909,6 @@ fen = "3r4/p4q2/1p4kp/2p1R1p1/P4n2/2B5/2P2PbP/3RQ1K1 b - - 0 29"
 partie = "Matinian – Niemann"
 turnier = "Astana 2023"
 loesung = "29...Db7! 30.Te6+ Kh5! 31.h4 Lh1 –+"
-varianten = ["30...Sh3#"]
 
 [[aufgabe]]
 nr = 295
@@ -3052,7 +3051,7 @@ fen = "2r3k1/pb2qp2/1p2p1p1/3nP1Qp/3PN2P/3B4/P4PP1/4R1K1 w - - 0 26"
 partie = "Akshat – S. Royal"
 turnier = "Budapest 2023"
 loesung = "26.Sf6+ Sxf6 27.exf6 Db4 28.Lxg6! Dxe1+ 29.Kh2 Kf8 30.Lxf7 1-0"
-varianten = ["27...De8 28.Tc3 Dc6 29.Kh2 Tg3"]
+varianten = ["27...De8 28.Te3 Dc6 29.Kh2 Kf8 30.Dh6+ Ke8 31.Tg3 Kd8 32.Dg7 Dd7 33.Lxg6 +–"]
 
 # Abschnitt 4 = Checkmate Test, Buchseite 93 (Foto vom 01.11.2026); Lösungen Buchseiten 101–105
 
@@ -3264,7 +3263,7 @@ fen = "r5k1/5pp1/4p1b1/1p1p2Pp/1PpP3P/2K1PP2/rP4B1/4R2R b - - 0 27"
 partie = "Zo. Nemeth – Halak"
 turnier = "Budapest 2022"
 loesung = "27...T8a3+! 0-1"
-varianten = ["28.Kd2 (28.bxa3 Tc2#) 28...Txb2+ 29.Ke1 c3 30.e4 Ta1#"]
+varianten = ["28.Kd2 (28.bxa3 Tc2#) 28...Txb2+ 29.Kc1 c3 30.e4 Ta1#"]
 
 [[aufgabe]]
 nr = 331
