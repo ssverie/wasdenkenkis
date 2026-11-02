@@ -99,7 +99,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 - Eigenes, schlankes Layout; kein Fremd-Theme. Hell/dunkel, mobiltauglich.
 - **Menü in Gruppen** (`hugo.toml`, `parent = "media"` / `"buecher"` / `"wissen"` …; „Werke“ heißt seit 2026-10-24 **„Media“**, Adresse `/media/`, `/werke/` leitet um): Untermenü beim Darüberfahren/Tastatur; auf dem Handy führt die Gruppe zur Übersichtsseite (`content/media/`, `content/wissen/`, Vorlage `layouts/gruppe.html`; bei Bücher die Taxonomie-Seite `layouts/buecher/taxonomy.html` – beide nutzen das Partial `gruppe-kacheln.html`, je Unterpunkt eine Kachel). Neue Rubrik = Menüeintrag mit passendem `parent`. **Jeder Unterpunkt braucht eine eindeutige `identifier`, sobald sein Name anderswo im Menü vorkommt** (z. B. „Claude“ unter Modelle und unter Kolumnen: `modelle-claude`, `kolumnen-claude`) – sonst nimmt Hugo den Namen als Kennung und lässt die doppelten Einträge stillschweigend fallen. Seit 2026-10-24 klappen auch Modelle (Claude, GPT, Gemini, Grok), Spiele (Tetris, Breakout, Minesweeper, Reversi), Schach und Kolumnen auf. Menü-Markierung für Unterseiten in `layouts/_partials/header.html` (Zuordnung Textordner → Rubrik).
 - **Breite ganz automatisch** (Svens Wahl): keine Maximalbreite, Seite füllt jeden Bildschirm, Rand `clamp(1rem, 4vw, 3rem)`; Kacheln so viele Spalten wie passen (min. 18rem). Lesetexte bewusst ebenfalls ohne Begrenzung. Bei Wunsch nach lesbareren Zeilen: Lesetexte auf ca. 70 Zeichen begrenzen, freien Rand für ein Inhaltsverzeichnis nutzen.
-- Lokale Vorschau: `hugo server` auf `http://localhost:1313`, Anzeige im Browserfenster der App.
+- Lokale Vorschau: `hugo server` auf `http://localhost:1313`, Anzeige im Browserfenster der App. Beim Neustart (z. B. nach neuer Buchseite) erst prüfen, dass 1313 frei ist (`netstat -ano | grep ":1313 "`) – sonst weicht der Start still auf 1314 aus (2026-11-02, Sven: „warum 1314 statt 1313?“).
 - Hosting: GitHub Pages, Repo `ssverie/wasdenkenkis` (öffentlich), Domain `wasdenkenkis.de` (IONOS, DNS zeigt bereits auf GitHub Pages).
 - Deployment: `.github/workflows/hugo.yml` baut bei jedem Push auf `main` mit Hugo 0.168.0 und veröffentlicht auf GitHub Pages (Quelle „GitHub Actions“, stellt Sven einmalig ein). Hugo-Version im Workflow und in `tools\` gleich halten.
 - `CNAME` liegt in `static/` und landet so in jedem Build; nie löschen.
@@ -125,7 +125,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-02: Schach-Buch, Ivanchuk-Buch mit Partie 1)
+- (leer – zuletzt freigegeben und gepusht am 2026-11-02: Schach-Buch, Ivanchuk-Partien 2–4)
 - Offen (Schach-Buch): Subagent für 1–113.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?

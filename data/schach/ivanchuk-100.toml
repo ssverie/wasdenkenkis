@@ -42,3 +42,33 @@ fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 partie = "Ivanchuk – Mishra, Neeraj Kumar"
 turnier = "Sharjah 1985"
 loesung = "1.e4 c5 2.Sf3 d6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 e6 6.Lc4 a6 7.Lb3 Sc6 8.Le3 Le7 9.f4 0-0 10.Df3 Dc7 11.0-0-0 Sa5 12.g4 Sxb3+ 13.axb3 Sd7 14.Sf5 exf5 15.Sd5 Dd8 16.gxf5 Sf6 17.Sb6 Tb8 18.Thg1 Kh8 19.Ld4 Tg8 20.Tg3 Ld7 21.Th3 g6 22.Sd5 Tg7 23.Sxe7 Dxe7 24.e5 Sh5 25.f6 Dd8 26.fxg7+ Kg8 27.Txh5 gxh5 28.Dxh5 Dc8 29.Dg5 Lf5 30.c3 d5 31.La7 Ta8 32.Txd5 Dc6 33.c4 Le6 34.Td6 De4 35.Lc5 Te8 36.Td4 De3+ 37.Kb1 Dxb3 38.Td8 Lf5+ 39.Ka1 Da4+ 40.La3 Le6 41.f5 Lxc4 42.De7 1-0"
+
+# Quelle: chessgames.com, Partie 1060026 (PGN-Download, abgerufen 02.11.2026): 55. UdSSR-Meisterschaft Moskau, 11. Runde.
+[[aufgabe]]
+nr = 2
+kapitel = 1
+seite = 21
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Malaniuk – Ivanchuk"
+turnier = "Moscow 1988"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sc3 Lb4 4.f3 d5 5.a3 Le7 6.e4 dxe4 7.fxe4 e5 8.d5 Sg4 9.Sf3 Lc5 10.b4 Lf2+ 11.Ke2 c5 12.Sb5 a6 13.Da4 axb5 14.Dxa8 Ld4 15.Sxd4 cxd4 16.Dxb8 0-0 17.Ke1 Dh4+ 18.g3 Df6 19.Lf4 g5 20.c5 exf4 21.Dd6 Dg7 22.Ld3 Se5 23.Kd2 f3 24.Lxb5 g4 25.De7 Sg6 26.Dg5 h6 27.Dh5 d3 28.Lxd3 Te8 29.h3 Te5 30.hxg4 Txh5 31.gxh5 Se5 32.Tae1 Dg5+ 33.Kc2 f2 34.Td1 De3 0-1"
+
+# Quelle: chessgames.com, Partie 1060072 (PGN-Download, abgerufen 02.11.2026): Linares, 5. Runde, 24.02.1989.
+[[aufgabe]]
+nr = 3
+kapitel = 1
+seite = 23
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Beliavsky – Ivanchuk"
+turnier = "Linares 1989"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 Lc5 4.c3 Sf6 5.d4 Lb6 6.Sxe5 Sxe5 7.dxe5 Sxe4 8.Dg4 Lxf2+ 9.Ke2 Dh4 10.Dxg7 Tf8 11.Sd2 Lc5 12.Sf3 Df2+ 13.Kd1 Le7 14.Te1 Db6 15.Txe4 Dxb5 16.c4 Dc6 17.Dxh7 d5 18.exd6 Dxd6+ 19.Td4 Db6 20.De4 Tg8 21.Le3 Dxb2 22.Tb1 Dxg2 23.Tb5 Lg4 24.Tf5 Df1+ 25.Kc2 De2+ 0-1"
+
+# Quelle: chessgames.com, Partie 1060109 (PGN-Download, abgerufen 02.11.2026): Jerewan, Juni 1989.
+[[aufgabe]]
+nr = 4
+kapitel = 1
+seite = 27
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Csom"
+turnier = "Yerevan 1989"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sc3 Lb4 4.f3 c5 5.d5 Lxc3+ 6.bxc3 Sh5 7.g3 f5 8.e4 f4 9.dxe6 fxg3 10.Dd5 g2 11.Dxh5+ g6 12.De5 Dh4+ 13.Ke2 gxh1D 14.Dxh8+ Ke7 15.Dg7+ Kxe6 16.Lh3+ Kd6 17.Df8+ Kc7 18.Lf4+ Dxf4 19.Dxf4+ d6 20.Td1 Sc6 21.Dxd6+ Kb6 22.Dg3 h5 23.Lxc8 Txc8 24.Sh3 h4 25.Df2 1-0"
