@@ -50,6 +50,7 @@ for my $n (sort { $a <=> $b } keys %loes) {
     my $ep = '';
     my $erg = 'ok';
     (my $linie = $loes{$n}) =~ s/\([^)]*\)//g;
+    unless ($linie =~ /[a-h][1-8]|[0O]-[0O]/) { print "$n: keine Züge\n"; $fehler++; next }    # leere Lösung nie „in Ordnung“
     for my $t (split /\s+/, $linie) {
         $t =~ s/^\d+\.(\.\.)?//;
         next if $t eq '';

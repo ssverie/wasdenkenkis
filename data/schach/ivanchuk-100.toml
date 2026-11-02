@@ -122,3 +122,227 @@ fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 partie = "Kamsky – Ivanchuk"
 turnier = "Linares 1991"
 loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 0-0 8.c3 d5 9.exd5 Sxd5 10.Sxe5 Sxe5 11.Txe5 c6 12.d4 Ld6 13.Te2 Lg4 14.f3 Lh5 15.Lxd5 cxd5 16.Sd2 f5 17.Db3 Lf7 18.Sf1 f4 19.Ld2 Dd7 20.Tae1 a5 21.a3 a4 22.Dd1 Lg6 23.Lc1 Tf7 24.h3 Lf5 25.Sh2 h5 26.Tf2 Taf8 27.Sf1 Tf6 28.Sh2 Kh8 29.b3 Tc8 30.Lb2 Kh7 31.Sf1 Tff8 32.Tfe2 Tc7 33.Sh2 Tfc8 34.Sf1 b4 35.axb4 a3 36.Lxa3 Txc3 37.Kh2 Ta8 38.Lb2 Td3 39.Dc1 Tc8 40.Tc2 Txc2 41.Dxc2 Lg6 42.Df2 Lxb4 43.Te5 Td1 44.De2 Tb1 45.Tg5 Dc6 46.Te5 Dc2 47.Txh5+ Kg8 48.De6+ Lf7 49.Th8+ Kxh8 50.Dxf7 Dc6 51.Lc3 Lxc3 52.Df8+ Kh7 53.Df5+ Dg6 0-1"
+
+# Quelle: chessgames.com, Partie 1060196 (PGN-Download, abgerufen 02.11.2026): Weltcup Reykjavik, 05.10.1991.
+[[aufgabe]]
+nr = 10
+kapitel = 1
+seite = 44
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Khalifman – Ivanchuk"
+turnier = "Reykjavik 1991"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sf3 b6 4.Sc3 Lb7 5.a3 d5 6.Da4+ Dd7 7.Dc2 dxc4 8.e3 c5 9.Lxc4 Dc8 10.De2 Sbd7 11.0-0 a6 12.Td1 b5 13.La2 Le7 14.e4 b4 15.Sa4 Dc6 16.Sxc5 Sxc5 17.dxc5 bxa3 18.e5 Se4 19.Sd4 Dxc5 20.f3 Td8 21.Le3 axb2 22.Dxb2 Dc3 23.De2 Sc5 24.Tac1 Da5 25.f4 g6 26.f5 gxf5 27.Sxf5 Txd1+ 28.Txd1 Tg8 29.Sg3 h5 30.Lxc5 Dxc5+ 31.Kh1 h4 32.Lxe6 hxg3 33.Lxf7+ Kxf7 34.Dh5+ Kg7 35.Dg4+ Kh6 36.Dh3+ Kg6 37.Dxg3+ Lg5 38.Dd3+ Kg7 39.Dd7+ De7 40.Dxe7+ Lxe7 41.Td7 Td8 0-1"
+
+# Quelle: chessgames.com, Partie 1054166 (PGN-Download, abgerufen 02.11.2026): Weltcup Reykjavik, 06.10.1991.
+[[aufgabe]]
+nr = 11
+kapitel = 1
+seite = 46
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Gulko"
+turnier = "Reykjavik 1991"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.d4 exd4 4.Sxd4 Lc5 5.Le3 Df6 6.c3 Sge7 7.Lc4 Dg6 8.Sxc6 Dxc6 9.Lxf7+ Kxf7 10.Dh5+ Sg6 11.Df5+ Ke8 12.Dxc5 Dxe4 13.Sd2 Dc6 14.Dh5 d6 15.0-0 Le6 16.Ld4 Kd7 17.f4 Se7 18.f5 Lxf5 19.Tae1 g6 20.Txe7+ Kxe7 21.Dg5+ Kd7 22.Lxh8 Db6+ 23.Ld4 Dxb2 24.g4 Le6 25.Tb1 Dxa2 26.Db5+ Ke7 27.Dxb7 Td8 28.Tf1 Dxd2 29.Dxc7+ Ld7 30.Lf6+ Ke6 31.Dc4+ 1-0"
+
+# Quelle: chessgames.com, Partie 1060291 (PGN-Download, abgerufen 02.11.2026): Wettkampf Anand – Ivanchuk, Linares, 7. Partie, September 1992; Schachzeichen bei 46.exf6+ ergänzt (fehlt in der Quelle).
+[[aufgabe]]
+nr = 12
+kapitel = 1
+seite = 48
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Anand"
+turnier = "Linares, 7th m game 1992"
+loesung = "1.e4 c5 2.Sf3 d6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 Sc6 6.Lg5 e6 7.Dd2 Le7 8.0-0-0 0-0 9.f4 Sxd4 10.Dxd4 Da5 11.Lc4 Ld7 12.e5 dxe5 13.fxe5 Lc6 14.Ld2 Sd7 15.Sd5 Dc5 16.Sxe7+ Dxe7 17.The1 Tfd8 18.Dg4 Sf8 19.Ld3 Txd3 20.cxd3 Dd7 21.Kb1 Dxd3+ 22.Ka1 Df5 23.Dg3 Sg6 24.Lc3 h6 25.Tf1 De4 26.Td2 Ld5 27.b3 Tc8 28.Kb2 a6 29.Tdf2 Tc7 30.Te1 Dh4 31.Dxh4 Sxh4 32.Td1 Sg6 33.g3 Se7 34.Td4 Sc6 35.Tdf4 Td7 36.h4 h5 37.g4 hxg4 38.Txg4 Se7 39.h5 Lc6 40.h6 Sg6 41.hxg7 Kxg7 42.Lb4 Ld5 43.Ld6 b6 44.a4 b5 45.a5 f5 46.exf6+ Kf7 47.Le7 e5 48.Th2 Sxe7 49.fxe7 Kxe7 50.Tg6 e4 51.Txa6 1-0"
+
+# Quelle: chessgames.com, Partie 1060374 (PGN-Download, abgerufen 02.11.2026): Linares, 06.03.1993.
+[[aufgabe]]
+nr = 13
+kapitel = 1
+seite = 50
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Bareev"
+turnier = "Linares 1993"
+loesung = "1.e4 e5 2.Sf3 Sf6 3.Sxe5 d6 4.Sf3 Sxe4 5.d4 d5 6.Ld3 Ld6 7.0-0 0-0 8.c4 c6 9.cxd5 cxd5 10.Sc3 Sxc3 11.bxc3 Lg4 12.Tb1 b6 13.Tb5 Lc7 14.h3 a6 15.hxg4 axb5 16.Dc2 g6 17.Lxb5 Dd6 18.g3 Ta7 19.Te1 Sd7 20.g5 Td8 21.a4 Sb8 22.Sh2 Df8 23.Sg4 Ld6 24.Kg2 Kh8 25.Th1 Dg7 26.Sf6 h5 27.Dd1 1-0"
+
+# Kapitel 3 (1994–2001)
+
+# Quelle: chessgames.com, Partie 1017843 (PGN-Download, abgerufen 02.11.2026): Euwe-Memorial Amsterdam, 16.05.1994.
+[[aufgabe]]
+nr = 14
+kapitel = 2
+seite = 53
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Kasparov"
+turnier = "Amsterdam 1994"
+loesung = "1.e4 c5 2.Sf3 d6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 a6 6.f4 Dc7 7.Df3 g6 8.Le3 Lg7 9.h3 e5 10.fxe5 dxe5 11.Lh6 Lxh6 12.Dxf6 0-0 13.Sd5 Da5+ 14.b4 Dd8 15.Se7+ Dxe7 16.Dxe7 exd4 17.Lc4 Sc6 18.Dc5 Le3 19.Tf1 Sd8 20.Tf3 Le6 21.Txe3 dxe3 22.Lxe6 Sxe6 23.Dxe3 a5 24.b5 Tac8 25.0-0-0 Tc5 26.Td5 b6 27.Dg3 Tc7 28.Dd6 Tfc8 29.Td2 Tb7 30.g4 Sc5 31.Df6 h6 32.e5 Te8 33.h4 Kh7 34.h5 g5 35.Td6 Te6 36.Dd8 Kg7 37.a3 a4 38.Kb2 Tbe7 39.Txb6 1-0"
+
+# Quelle: chessgames.com, Partie 1060539 (PGN-Download, abgerufen 02.11.2026): Novgorod, August 1994; Datenbank B45, Buch B33 (Sweschnikow über Zugumstellung); Schachzeichen bei 21...exf2+ ergänzt (fehlt in der Quelle).
+[[aufgabe]]
+nr = 15
+kapitel = 2
+seite = 55
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Kramnik"
+turnier = "Novgorod 1994"
+loesung = "1.e4 c5 2.Sf3 Sc6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 e6 6.Sdb5 d6 7.Lf4 e5 8.Lg5 a6 9.Sa3 b5 10.Lxf6 gxf6 11.Sd5 f5 12.exf5 Lxf5 13.c3 Lg7 14.Sc2 Se7 15.Ld3 Sxd5 16.Lxf5 Se7 17.Dg4 0-0 18.Td1 d5 19.Se3 d4 20.Le4 dxe3 21.Txd8 exf2+ 22.Kxf2 Taxd8 23.De2 f5 24.Lb7 Td7 25.Lxa6 Tfd8 26.Dxb5 Td2+ 27.Kg3 e4 28.Te1 Sg6 29.Te2 Le5+ 30.Kf2 Td1 31.Te1 T8d2+ 32.Kf1 Txe1+ 33.Kxe1 Txg2 34.Lc8 f4 35.Lf5 Lf6 36.Lxe4 Txh2 37.a4 Se5 38.a5 f3 39.a6 Th1+ 40.Kd2 1-0"
+
+# Quelle: chessgames.com, Partie 1060542 (PGN-Download, abgerufen 02.11.2026): Novgorod, August 1994.
+[[aufgabe]]
+nr = 16
+kapitel = 2
+seite = 57
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Bareev – Ivanchuk"
+turnier = "Novgorod 1994"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sc3 Lb4 4.Dc2 d5 5.a3 Lxc3+ 6.Dxc3 Se4 7.Dc2 c5 8.dxc5 Sc6 9.Sf3 Da5+ 10.Sd2 Sd4 11.Dd3 e5 12.b4 Da4 13.Ta2 Sxd2 14.Txd2 Lf5 15.De3 0-0-0 16.g4 Dc2 17.Txd4 exd4 18.Dd2 Dxd2+ 19.Lxd2 Le4 20.f3 Lg6 21.cxd5 Txd5 22.Lg2 f6 23.Kf2 h5 24.Lf4 Lc2 25.h4 Te8 26.Tc1 La4 27.gxh5 Txh5 28.Lg3 Te3 29.Tc4 Td5 30.Ld6 Tc3 31.f4 Txd6 0-1"
+
+# Quelle: chessgames.com, Partie 1060439 (PGN-Download, abgerufen 02.11.2026): Sizilianisch-Thementurnier Buenos Aires, Oktober 1994.
+[[aufgabe]]
+nr = 17
+kapitel = 2
+seite = 59
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Ljubojevic"
+turnier = "Buenos Aires 1994"
+loesung = "1.e4 c5 2.Sf3 Sc6 3.d4 cxd4 4.Sxd4 e6 5.Sc3 Dc7 6.Le3 a6 7.Ld3 Sf6 8.0-0 Sxd4 9.Lxd4 Lc5 10.Lxc5 Dxc5 11.Kh1 b5 12.Dd2 Lb7 13.Tae1 Dd4 14.f3 h6 15.e5 Sd5 16.Sxd5 Lxd5 17.c3 Dc5 18.Le4 Lxe4 19.Txe4 Ta7 20.Tfe1 Ke7 21.Tg4 Tg8 22.Df4 Dc7 23.Td1 Tb7 24.h3 a5 25.a3 Tb6 26.Dg3 Kf8 27.Tgd4 Tb7 28.f4 g5 29.Tf1 Tg6 30.Dd3 Dc6 31.f5 exf5 32.Txf5 Te6 33.Td5 Dc4 34.Dd1 Ke8 35.Df3 Td6 36.exd6 Tb8 37.Txg5 hxg5 38.Df6 1-0"
+
+# Quelle: chessgames.com, Partie 1060660 (PGN-Download, abgerufen 02.11.2026): Tal-Memorial Riga, 15.04.1995.
+[[aufgabe]]
+nr = 18
+kapitel = 2
+seite = 62
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Short"
+turnier = "Riga 1995"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 0-0 8.c3 d5 9.exd5 Sxd5 10.Sxe5 Sxe5 11.Txe5 c6 12.d4 Ld6 13.Te1 Dh4 14.g3 Dh3 15.Le3 Lg4 16.Dd3 Tae8 17.Sd2 Te6 18.a4 bxa4 19.Txa4 f5 20.Df1 Dh5 21.Txa6 f4 22.Lxf4 Lh3 23.Txe6 Lxf1 24.Sxf1 Lxf4 25.Taxc6 Df3 26.Lxd5 Dxd5 27.gxf4 Df3 28.d5 h5 29.Tc4 h4 30.Tg6 Dd3 31.Tgc6 Dxd5 32.Tc8 h3 33.Se3 Dd2 34.Kf1 Dxb2 35.Txf8+ Kxf8 36.Tc8+ Kf7 37.Th8 Dxc3 38.Txh3 Dd3+ 39.Ke1 De4 40.Ke2 Kg8 41.f5 Kf7 42.Tg3 Dh1 43.h3 De4 44.Tg4 Dh1 45.h4 Dh2 46.Sf1 De5+ 47.Kf3 Dd5+ 48.Te4 Dd1+ 49.Kg2 Dd5 50.Sg3 Dc6 51.Kh3 Dc2 52.f3 Dd1 53.Kg4 Dg1 54.Te6 Dd4+ 55.Se4 Dd7 56.Sg5+ Kg8 57.Kh5 Dd8 58.Kg6 Dd7 59.h5 Db5 60.Se4 1-0"
+
+# Quelle: chessgames.com, Partie 1060586 (PGN-Download, abgerufen 02.11.2026): Credit Suisse Masters Horgen, 26.10.1995; PlyCount der Quelle 61, die Partie hat 62 Halbzüge (endet mit 31...0-0).
+[[aufgabe]]
+nr = 19
+kapitel = 2
+seite = 65
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Kasparov – Ivanchuk"
+turnier = "Horgen 1995"
+loesung = "1.e4 e6 2.d4 d5 3.Sc3 Lb4 4.e5 b6 5.a3 Lf8 6.Sf3 Se7 7.h4 h6 8.h5 a5 9.Lb5+ c6 10.La4 Sd7 11.Se2 b5 12.Lb3 c5 13.c3 Sc6 14.0-0 Dc7 15.Te1 c4 16.Lc2 Sb6 17.Lf4 Le7 18.Lg3 Tb8 19.Sh2 Dd8 20.Sg4 b4 21.axb4 axb4 22.cxb4 Sxb4 23.Lb1 Ld7 24.b3 Ta8 25.Txa8 Dxa8 26.bxc4 Sxc4 27.Sc1 La4 28.De2 Da7 29.Se3 Dxd4 30.Sxc4 dxc4 31.Df1 0-0 0-1"
+
+# Quelle: chessgames.com, Partie 1060750 (PGN-Download, abgerufen 02.11.2026): Hoogovens Wijk aan Zee, 16.01.1996.
+[[aufgabe]]
+nr = 20
+kapitel = 2
+seite = 67
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Shirov"
+turnier = "Wijk aan Zee 1996"
+loesung = "1.d4 d5 2.c4 c6 3.Sc3 Sf6 4.Sf3 e6 5.Lg5 dxc4 6.e4 b5 7.e5 h6 8.Lh4 g5 9.Sxg5 hxg5 10.Lxg5 Sbd7 11.exf6 Lb7 12.g3 c5 13.d5 Db6 14.Lg2 0-0-0 15.0-0 b4 16.Sa4 Db5 17.a3 exd5 18.axb4 cxb4 19.Le3 Sc5 20.Dg4+ Td7 21.Dg7 Lxg7 22.fxg7 Tg8 23.Sxc5 d4 24.Lxb7+ Txb7 25.Sxb7 Db6 26.Lxd4 Dxd4 27.Tfd1 Dxb2 28.Sd6+ Kb8 29.Tdb1 Dxg7 30.Txb4+ Kc7 31.Ta6 Tb8 32.Txa7+ Kxd6 33.Txb8 Dg4 34.Td8+ Kc6 35.Ta1 1-0"
+
+# Quelle: chessgames.com, Partie 1060697 (PGN-Download, abgerufen 02.11.2026): Novgorod, 29.07.1996; Datenbank B84, Buch B92 (Najdorf mit 6.Le2); Schachzeichen bei 25.gxf7+ ergänzt (fehlt in der Quelle).
+[[aufgabe]]
+nr = 21
+kapitel = 2
+seite = 70
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Topalov"
+turnier = "Novgorod 1996"
+loesung = "1.e4 c5 2.Sf3 d6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 a6 6.Le2 e6 7.0-0 Le7 8.f4 0-0 9.Kh1 Dc7 10.a4 Sc6 11.Le3 Te8 12.Lf3 Tb8 13.g4 Lf8 14.g5 Sd7 15.Lg2 Sxd4 16.Lxd4 b5 17.axb5 axb5 18.Ta7 Dd8 19.b4 e5 20.Le3 exf4 21.Lxf4 Se5 22.Sd5 Lg4 23.Dd2 Sc6 24.g6 Sxa7 25.gxf7+ Kh8 26.Lg5 Dd7 27.fxe8S Txe8 28.Df2 Kg8 29.e5 h6 30.Sb6 Dc7 31.Ld5+ Kh7 32.Le4+ Kg8 33.Sd5 Dd7 34.Se7+ 1-0"
+
+# Quelle: chessgames.com, Partie 1060718 (PGN-Download, abgerufen 02.11.2026): Donner-Memorial Amsterdam, 28.08.1996.
+[[aufgabe]]
+nr = 22
+kapitel = 2
+seite = 73
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Morozevich"
+turnier = "Amsterdam 1996"
+loesung = "1.e4 e6 2.d4 d5 3.Sc3 Sf6 4.e5 Sfd7 5.f4 c5 6.Sf3 Sc6 7.Le3 Le7 8.dxc5 Sxc5 9.Le2 0-0 10.0-0 Ld7 11.a3 Le8 12.De1 Tc8 13.Td1 Dc7 14.b4 Sd7 15.Sb5 Db8 16.Ld3 f6 17.Dh4 f5 18.Dh3 Sb6 19.Lxb6 axb6 20.g4 g6 21.gxf5 exf5 22.Tf2 Sd8 23.Sbd4 Kh8 24.Tg2 Tc3 25.Sh4 Sc6 26.Se6 Tg8 27.Sxf5 Dc8 28.Tg3 h5 29.Sh6 Tg7 30.Lf5 Txg3+ 31.Dxg3 Db8 32.Txd5 Th7 33.Lxg6 Txh6 34.Lf7 1-0"
+
+# Quelle: chessgames.com, Partie 1060711 (PGN-Download, abgerufen 02.11.2026): Las Palmas, 15.12.1996.
+[[aufgabe]]
+nr = 23
+kapitel = 2
+seite = 75
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Kramnik"
+turnier = "Las Palmas 1996"
+loesung = "1.d4 Sf6 2.c4 g6 3.Sc3 Lg7 4.e4 d6 5.Sge2 0-0 6.f3 c5 7.d5 e6 8.Sg3 exd5 9.cxd5 Sbd7 10.Le2 a6 11.a4 h5 12.Lg5 De8 13.Dd2 Sh7 14.Lh6 De5 15.Lxg7 Dxg7 16.Sf1 f5 17.exf5 gxf5 18.Se3 Kh8 19.Sc4 Df6 20.0-0 Tb8 21.Tfe1 b5 22.axb5 axb5 23.Sa5 b4 24.Sb5 La6 25.Sc7 Lxe2 26.Txe2 Tg8 27.Sc6 Tbc8 28.Se6 Ta8 29.Tae1 Ta2 30.Sf4 Dg5 31.h4 Dg3 32.Te6 Sdf6 33.Se7 Tga8 34.Sfg6+ 1-0"
+
+# Quelle: chessgames.com, Partie 1406152 (PGN-Download, abgerufen 02.11.2026): Linares, 09.03.1999; Datenbank A04, Buch A30 (Englisch über 1.Sf3 c5 2.c4).
+[[aufgabe]]
+nr = 24
+kapitel = 2
+seite = 77
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Topalov – Ivanchuk"
+turnier = "Linares 1999"
+loesung = "1.Sf3 c5 2.c4 Sc6 3.d4 cxd4 4.Sxd4 e6 5.g3 Lb4+ 6.Sc3 Da5 7.Sdb5 d5 8.a3 Lxc3+ 9.bxc3 Sf6 10.Lg2 0-0 11.Db3 dxc4 12.Dxc4 e5 13.Sd6 Le6 14.Dd3 e4 15.Sxe4 Sxe4 16.Lxe4 Tad8 17.Dc2 Sd4 18.Db2 Sxe2 19.Kxe2 Tfe8 20.Db4 Dh5+ 21.f3 f5 22.g4 Dh3 23.gxf5 Lxf5 24.Dc4+ Kh8 25.Te1 Txe4+ 0-1"
+
+# Quelle: chessgames.com, Partie 1010080 (PGN-Download, abgerufen 02.11.2026): FIDE-WM (K.-o.) Las Vegas, 07.08.1999.
+[[aufgabe]]
+nr = 25
+kapitel = 2
+seite = 80
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Shipov – Ivanchuk"
+turnier = "Las Vegas 1999"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sc3 Lb4 4.Dc2 c5 5.dxc5 0-0 6.a3 Lxc5 7.Sf3 b6 8.Lg5 Lb7 9.e3 h6 10.Lh4 Le7 11.Td1 d6 12.Le2 a6 13.0-0 Dc7 14.Td2 Sbd7 15.Tfd1 Tfd8 16.Db1 Sc5 17.Tc2 Tac8 18.Sd4 Sce4 19.Lf3 Sxc3 20.Txc3 Lxf3 21.gxf3 Db7 22.Kg2 g5 23.Lg3 g4 24.h3 gxf3+ 25.Kh2 Kh8 26.Tcc1 Tc5 27.b4 Th5 28.Th1 Tg8 29.Dd3 Txg3 30.Kxg3 Tg5+ 31.Kh4 Se4 0-1"
+
+# Quelle: chessgames.com, Partie 1231076 (PGN-Download, abgerufen 02.11.2026): Montecatini Terme, 29.07.2000; Datenbank A07, Buch A11 (Réti mit c4/c6).
+[[aufgabe]]
+nr = 26
+kapitel = 2
+seite = 82
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Lputian – Ivanchuk"
+turnier = "Montecatini Terme 2000"
+loesung = "1.Sf3 d5 2.g3 g6 3.c4 c6 4.Da4 d4 5.b4 Sd7 6.Lb2 e5 7.e3 Lg7 8.Lg2 Sh6 9.0-0 0-0 10.Sa3 a5 11.exd4 e4 12.Se1 Sb6 13.Db3 axb4 14.Dxb4 Sa4 15.Lc3 e3 16.fxe3 c5 17.dxc5 Sxc3 18.dxc3 Dd2 19.Sb5 Sg4 20.Sf3 Dxe3+ 21.Kh1 Sf2+ 22.Txf2 Dxf2 23.a4 Ld7 24.Sc7 Txa4 0-1"
+
+# Quelle: chessgames.com, Partie 1403940 (PGN-Download, abgerufen 02.11.2026): Europapokal der Vereine Neum, 26.09.2000.
+[[aufgabe]]
+nr = 27
+kapitel = 2
+seite = 84
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Morovic Fernandez"
+turnier = "Neum 2000"
+loesung = "1.e4 c5 2.Sf3 d6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 a6 6.Le2 e5 7.Sb3 Le7 8.0-0 Le6 9.f4 Dc7 10.Kh1 Sbd7 11.a4 0-0 12.g4 Lxb3 13.cxb3 Sc5 14.g5 Sfxe4 15.Sd5 Dd8 16.b4 Sd7 17.Dc2 f5 18.Sc7 Tc8 19.Db3+ Kh8 20.Se6 De8 21.Sxf8 Lxf8 22.fxe5 Sxe5 23.Txf5 g6 24.Tf4 Dc6 25.Lf3 Sxf3 26.Dxf3 Dxc1+ 27.Txc1 Txc1+ 28.Kg2 Tc2+ 29.Kg1 Tc1+ 30.Df1 Txf1+ 31.Kxf1 Sd2+ 32.Ke1 Le7 33.h4 1-0"
+
+# Quelle: chessgames.com, Partie 1201117 (PGN-Download, abgerufen 02.11.2026): Mannschafts-WM Jerewan, 14.10.2001; Datenbank E00, Buch A32 (Englisch-symmetrisch über Zugumstellung).
+[[aufgabe]]
+nr = 28
+kapitel = 2
+seite = 86
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Kasimdzhanov – Ivanchuk"
+turnier = "Yerevan 2001"
+loesung = "1.d4 Sf6 2.c4 e6 3.g3 c5 4.Sf3 cxd4 5.Sxd4 Dc7 6.Sd2 Lc5 7.S2b3 Le7 8.Lf4 e5 9.Sb5 Dc6 10.Lxe5 Dxh1 11.Sc7+ Kd8 12.Sxa8 Lb4+ 13.Sd2 Se4 14.Lc3 Lxc3 15.bxc3 Te8 16.Sxe4 Dxe4 17.Db3 Sa6 18.0-0-0 b6 19.Sxb6 axb6 20.Dxb6+ Sc7 21.e3 Df3 22.Db2 Te6 23.Ld3 Sa6 24.c5 Sxc5 25.Lc4 Tf6 26.Db4 d6 27.Td2 Dh1+ 28.Td1 Dc6 29.Ld5 Da6 30.Lc4 Da7 31.f4 Kc7 32.Td4 Lb7 33.g4 Th6 34.Db2 Th3 0-1"
+
+# Quelle: chessgames.com, Partie 1207419 (PGN-Download, abgerufen 02.11.2026): Mannschafts-EM León, 08.11.2001; Datenbank C53, Buch C54.
+[[aufgabe]]
+nr = 29
+kapitel = 2
+seite = 89
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Fedorov – Ivanchuk"
+turnier = "Leon 2001"
+loesung = "1.e4 e5 2.Lc4 Sc6 3.Sf3 Sf6 4.d3 Lc5 5.c3 d6 6.Lb3 a6 7.0-0 La7 8.Te1 0-0 9.h3 Le6 10.Lc2 d5 11.Sg5 dxe4 12.Sxe6 fxe6 13.Le3 exd3 14.Dxd3 Dxd3 15.Lxd3 Tad8 16.Lc2 Lxe3 17.Txe3 Sd5 18.Te1 Sf4 19.Sa3 Sd3 20.Te2 Sf4 21.Te3 Td2 22.Td1 Tfd8 23.Txd2 Txd2 24.Kf1 Sa7 25.Txe5 Sb5 26.Lb3 Txb2 27.g3 Sd3 28.Txe6 Kf8 29.Sxb5 axb5 30.Te3 Txf2+ 31.Kg1 Td2 32.Tf3+ Ke8 33.Tf7 c5 34.Txg7 c4 35.Txb7 Sc1 36.Txb5 Se2+ 37.Kf2 Sxc3+ 38.Ke1 Te2+ 39.Kf1 Sxb5 40.Kxe2 Sd4+ 41.Ke3 cxb3 42.axb3 Sxb3 43.g4 Kf7 44.h4 h6 45.Ke4 Ke6 46.Kf4 Sc5 0-1"
+
+# Quelle: chessgames.com, Partie 1209931 (PGN-Download, abgerufen 02.11.2026): FIDE-WM (K.-o.) Moskau, 30.11.2001.
+[[aufgabe]]
+nr = 30
+kapitel = 2
+seite = 92
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Macieja – Ivanchuk"
+turnier = "Moscow 2001"
+loesung = "1.e4 e6 2.d4 d5 3.Sc3 Sf6 4.e5 Sfd7 5.Sce2 c5 6.f4 Sc6 7.c3 Le7 8.Sf3 0-0 9.a3 a5 10.h4 f6 11.Seg1 cxd4 12.cxd4 Db6 13.Ld3 fxe5 14.fxe5 Sdxe5 15.dxe5 Sxe5 16.Lc2 Ld7 17.De2 Tac8 18.Lxh7+ Kxh7 19.Dxe5 Ld6 20.Le3 Db3 21.Sd2 Tf1+ 22.Kxf1 Dd3+ 23.Kf2 Lxe5 24.Sgf3 Lxb2 25.Tab1 Tc2 26.Thd1 e5 27.g3 Lg4 0-1"
+
+# Kapitel 4 (2002–2007)
+
+# Quelle: chessgames.com, Partie 1250133 (PGN-Download, abgerufen 02.11.2026): Linares, 02.03.2002; Datenbank C84, Buch C88 (Anti-Marshall 8.a4).
+[[aufgabe]]
+nr = 31
+kapitel = 3
+seite = 95
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Adams"
+turnier = "Linares 2002"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 0-0 8.a4 Lb7 9.d3 Te8 10.Sa3 Lxa3 11.bxa3 d5 12.exd5 Sxd5 13.Lb2 Sf4 14.Lc1 Sxg2 15.Sg5 Sxe1 16.Dh5 Dd7 17.Lxf7+ Kf8 18.Le3 Sd4 19.Txe1 Sf3+ 20.Kf1 Sxg5 21.Lc5+ Te7 22.Txe5 Sxf7 23.Txe7 Dxe7 24.Lxe7+ Kxe7 25.Dc5+ Kd7 26.Dd4+ Ke7 27.Dxg7 bxa4 28.Dc3 Kd7 29.Dd4+ Sd6 30.Dxa4+ Ke6 31.Dg4+ Sf5 32.Dc4+ Ld5 33.Dxc7 h5 34.c4 Lh1 35.f4 Tf8 36.Db6+ Kf7 37.Da7+ Se7 38.Dxa6 Tb8 39.d4 Tb1+ 40.Ke2 Tb2+ 41.Kd3 Tb3+ 42.Kd2 Th3 43.d5 Txh2+ 44.Kd3 Sxd5 45.cxd5 Lxd5 46.f5 Ta2 47.Da7+ Kf6 48.Dd4+ Kg5 49.Dxd5 Txa3+ 50.Ke4 1-0"
