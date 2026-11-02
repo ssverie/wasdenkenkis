@@ -333,6 +333,21 @@
       document.querySelectorAll('select.np-tempo').forEach(function (s) { s.value = String(tempo); });
     });
     knoepfe.appendChild(tempoWahl);
+    // PGN-Download (Sven, 2026-11-02: „rechts neben dem Geschwindigkeitsbutton … pgn“): der Text kommt fertig aus dem
+    // Shortcode (data-pgn, Partial schach-pgn.html), hier wird er nur als Datei angeboten.
+    if (li.dataset.pgn) {
+      var pgnKnopf = document.createElement('button');
+      pgnKnopf.type = 'button'; pgnKnopf.className = 'np-pgn'; pgnKnopf.textContent = 'PGN ⬇';
+      pgnKnopf.title = 'Als PGN-Datei speichern'; pgnKnopf.setAttribute('aria-label', 'Als PGN-Datei speichern');
+      pgnKnopf.addEventListener('click', function () {
+        var url = URL.createObjectURL(new Blob([li.dataset.pgn], { type: 'application/x-chess-pgn;charset=utf-8' }));
+        var a = document.createElement('a');
+        a.href = url; a.download = li.dataset.pgnName || 'partie.pgn';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+      });
+      knoepfe.appendChild(pgnKnopf);
+    }
     var hinweis = document.createElement('span');
     hinweis.className = 'np-hinweis';
     hinweis.textContent = 'Züge anklicken oder mit den Pfeiltasten nachspielen';

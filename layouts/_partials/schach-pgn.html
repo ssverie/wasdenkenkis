@@ -1,0 +1,43 @@
+{{- /* PGN einer Aufgabe oder Partie aus data/schach/<buch>.toml (Sven, 2026-11-02: PGN-Download je Brett und für das ganze
+       Buch auf der Inhaltsseite). Aufruf: partial "schach-pgn.html" <aufgabe> – gibt den PGN-Text zurück.
+       Kopf: Event = turnier, Weiß/Schwarz aus partie („A – B“), Jahr aus turnier, FEN/SetUp nur, wenn nicht Grundstellung.
+       Züge: nur die Hauptlinie (loesung), deutsch → englisch (D T L S → Q R B N, Umwandlung „d8S“ → „d8=N“, 0-0 → O-O),
+       Bewertungszeichen (+– –+ ± ∓ = ∞) entfallen, Ergebnis in PGN-Form, sonst „*“. Varianten werden nicht exportiert. */ -}}
+{{- $a := . }}
+{{- $z := printf " %s " $a.loesung }}
+{{- $z = replace $z "½-½" "1/2-1/2" }}
+{{- $z = replaceRE `\((1-0|0-1|1/2-1/2)\)` "$1" $z }}
+{{- $z = replaceRE `\([^)]*\)` "" $z }}
+{{- $z = replaceRE `\s(\+–|–\+|±|∓|=|∞|\+-|-\+)(\s)` " " $z }}
+{{- $z = replaceRE `\s(\+–|–\+|±|∓|=|∞|\+-|-\+)(\s)` " " $z }}
+{{- $z = replace $z "0-0-0" "O-O-O" }}
+{{- $z = replace $z "0-0" "O-O" }}
+{{- $z = replace $z "++" "+" }}
+{{- $z = replaceRE `([a-h][18])=?D` "${1}=Q" $z }}
+{{- $z = replaceRE `([a-h][18])=?T` "${1}=R" $z }}
+{{- $z = replaceRE `([a-h][18])=?L` "${1}=B" $z }}
+{{- $z = replaceRE `([a-h][18])=?S` "${1}=N" $z }}
+{{- $z = replaceRE `([\s.])D` "${1}Q" $z }}
+{{- $z = replaceRE `([\s.])T` "${1}R" $z }}
+{{- $z = replaceRE `([\s.])L` "${1}B" $z }}
+{{- $z = replaceRE `([\s.])S` "${1}N" $z }}
+{{- $z = replaceRE `\s+` " " $z | strings.TrimSpace }}
+{{- $ergebnis := "*" }}
+{{- with findRE `(1-0|0-1|1/2-1/2)$` $z 1 }}{{ $ergebnis = index . 0 }}{{ else }}{{ $z = printf "%s *" $z }}{{ end }}
+{{- $teile := split ($a.partie | default "") " – " }}
+{{- $weiss := "?" }}{{ $schwarz := "?" }}
+{{- if eq (len $teile) 2 }}{{ $weiss = index $teile 0 }}{{ $schwarz = index $teile 1 }}{{ end }}
+{{- $jahr := "????" }}{{ with findRE `\d{4}` ($a.turnier | default "") }}{{ $jahr = index . 0 }}{{ end }}
+{{- $q := `"` }}
+{{- $kopf := slice
+      (printf "[Event \"%s\"]" (replace ($a.turnier | default "?") $q "'"))
+      `[Site "?"]`
+      (printf "[Date \"%s.??.??\"]" $jahr)
+      `[Round "?"]`
+      (printf "[White \"%s\"]" (replace $weiss $q "'"))
+      (printf "[Black \"%s\"]" (replace $schwarz $q "'"))
+      (printf "[Result \"%s\"]" $ergebnis) }}
+{{- if ne $a.fen "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" }}
+  {{- $kopf = $kopf | append `[SetUp "1"]` (printf "[FEN \"%s\"]" $a.fen) }}
+{{- end }}
+{{- return printf "%s\n\n%s\n" (delimit $kopf "\n") $z }}

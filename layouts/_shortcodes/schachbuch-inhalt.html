@@ -2,7 +2,9 @@
        Zeilen“): {{< schachbuch-inhalt daten="rizzitano-1001" >}} – je Abschnitt aus data/schach/<daten>.toml eine Zeile wie im
        Buch (Kapitelnummer, Titel, Startseite; Tests ohne Nummer) und die Zahl der eingebauten Aufgaben. Verlinkt, sobald es
        die Abschnittsseite content/schachaufgaben/<daten>/<slug>.md gibt und Aufgaben eingetragen sind.
-       partien="ja": zählt „Partien“ statt „Aufgaben“ (Ivanchuk-Buch). */ -}}
+       partien="ja": zählt „Partien“ statt „Aufgaben“ (Ivanchuk-Buch).
+       Darunter ein Download aller Aufgaben/Partien mit Lösung als eine PGN-Datei (Sven, 2026-11-02: „den Button ‚alle
+       download‘ auf die TOC-Seite“), erzeugt beim Bauen aus dem Partial schach-pgn.html, Adresse /schach/<daten>.pgn. */ -}}
 {{- $daten := .Get "daten" }}
 {{- $eins := "Aufgabe" }}{{ $viele := "Aufgaben" }}
 {{- if eq (.Get "partien") "ja" }}{{ $eins = "Partie" }}{{ $viele = "Partien" }}{{ end }}
@@ -23,3 +25,9 @@
   </li>
   {{- end }}
 </ol>
+{{- $mit := slice }}{{ range sort $d.aufgabe "nr" }}{{ if .loesung }}{{ $mit = $mit | append . }}{{ end }}{{ end }}
+{{- with $mit }}
+  {{- $pgn := slice }}{{ range . }}{{ $pgn = $pgn | append (partial "schach-pgn.html" .) }}{{ end }}
+  {{- $datei := resources.FromString (printf "schach/%s.pgn" $daten) (delimit $pgn "\n") }}
+<p class="schach-pgn-alle"><a href="{{ $datei.RelPermalink }}" download="{{ $daten }}.pgn">Alle {{ len . }} {{ cond (eq (len .) 1) $eins $viele }} als PGN ⬇</a></p>
+{{- end }}

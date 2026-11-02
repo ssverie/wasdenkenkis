@@ -9,7 +9,9 @@
        nachspielen="592,…" (oder "alle"): diese Aufgaben lassen sich nachspielen (Züge anklickbar, Knöpfe ⏮ ◀ ▶ ⏭; assets/js/schach-nachspielen.js,
        Versuch seit 2026-11-01, Sven: „versuche mal 592 spielbar zu machen“).
        partien="ja": ganze Partien statt Aufgaben (Ivanchuk-Buch, seit 2026-11-02) – Beschriftung „Partie 1“ mit den Spielern,
-       die FEN der Grundstellung bleibt unsichtbar (das Nachspiel-Skript liest sie), die Partie ist aufgeklappt. */ -}}
+       die FEN der Grundstellung bleibt unsichtbar (das Nachspiel-Skript liest sie), die Partie ist aufgeklappt.
+       Nachspielbare Bretter tragen data-pgn (PGN aus dem Partial schach-pgn.html) und data-pgn-name – daraus macht das
+       Nachspiel-Skript den Knopf „PGN ⬇“ (Sven, 2026-11-02). */ -}}
 {{- $d := index site.Data.schach (.Get "daten") }}
 {{- $nur := .Get "kapitel" }}
 {{- $partien := eq (.Get "partien") "ja" }}
@@ -30,7 +32,14 @@
 <ol class="schachaufgaben">
   {{- range $auf }}
     {{- $schwarz := eq (index (split .fen " ") 1) "b" }}
-  <li id="aufgabe-{{ .nr }}"{{ if and .loesung (or (in $nachspielen "alle") (in $nachspielen (string .nr))) }} class="nachspielbar"{{ end }}>
+  {{- $spielbar := and .loesung (or (in $nachspielen "alle") (in $nachspielen (string .nr))) }}
+  {{- $name := printf "%s-%d" ($.Get "daten") .nr }}
+  {{- if and $partien .partie }}
+    {{- $name = .partie | anchorize }}
+    {{- with findRE `\d{4}` (.turnier | default "") }}{{ $name = printf "%s-%s" $name (index . 0) }}{{ end }}
+    {{- $name = replaceRE `-+` "-" $name }}
+  {{- end }}
+  <li id="aufgabe-{{ .nr }}"{{ if $spielbar }} class="nachspielbar" data-pgn="{{ partial "schach-pgn.html" . }}" data-pgn-name="{{ $name }}.pgn"{{ end }}>
     <figure class="schach-diagramm">
       {{ partial "schach-brett.html" (dict "fen" .fen "immer_weiss" true) }}
       {{- if $partien }}
