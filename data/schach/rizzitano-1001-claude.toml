@@ -6623,3 +6623,159 @@ antwort = "1.Sf6+"
 ergebnis = "falsch"
 notiz = "Sf6+ gesehen, aber erst als zweiten Zug."
 geloest = 2026-11-02
+
+# --- Kapitel 6 Deadly Puzzles (Abschnitt 10), LÃ¶sungen des Buchs noch nicht da ---
+
+[[antwort]]
+nr = 976
+sicherheit = "unsicher"
+antwort = "1...Te2+ 2.Kxe2 Te8+ (Patt-Idee)"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 977
+sicherheit = "unsicher"
+antwort = "1...Lxg3+"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 978
+sicherheit = "unsicher"
+antwort = "1...Txf3"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 979
+sicherheit = "unsicher"
+antwort = "1...Tb2"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 980
+sicherheit = "unsicher"
+antwort = "1...Sxf2"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 981
+sicherheit = "unsicher"
+antwort = "1.Lg5"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 982
+sicherheit = "unsicher"
+antwort = "1.Sxg7"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 983
+sicherheit = "unsicher"
+antwort = "1...Sd4"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 984
+sicherheit = "unsicher"
+antwort = "1.Lxe4"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 985
+sicherheit = "unsicher"
+antwort = "1.Txd6"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 986
+sicherheit = "unsicher"
+antwort = "1.Sxf6"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 987
+sicherheit = "unsicher"
+antwort = "1.f6"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 988
+sicherheit = "unsicher"
+antwort = "1.Sxf7"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 989
+sicherheit = "unsicher"
+antwort = "1.Kh2"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 990
+sicherheit = "unsicher"
+antwort = "1.Sd6+"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 991
+sicherheit = "unsicher"
+antwort = "1.d5"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 992
+sicherheit = "unsicher"
+antwort = "1.Df4+"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 993
+sicherheit = "unsicher"
+antwort = "1.Dh7+"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 994
+sicherheit = "unsicher"
+antwort = "1.Txh7"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 995
+sicherheit = "unsicher"
+antwort = "1.Se7+ Kh8 2.Dxg5"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 996
+sicherheit = "unsicher"
+antwort = "1.Lxf7+"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 997
+sicherheit = "unsicher"
+antwort = "1.Lxf6"
+ergebnis = "offen"
+geloest = 2026-11-02
