@@ -3462,6 +3462,7 @@ nr = 564
 sicherheit = "unsicher"
 antwort = "1.Lxg7+"
 ergebnis = "richtig"
+notiz = "Gelöst mit falsch abgelesener Stellung (Turm b7 weiß statt schwarz)."
 geloest = 2026-11-01
 
 [[antwort]]
