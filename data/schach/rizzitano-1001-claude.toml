@@ -6779,3 +6779,31 @@ sicherheit = "unsicher"
 antwort = "1.Lxf6"
 ergebnis = "offen"
 geloest = 2026-11-02
+
+[[antwort]]
+nr = 998
+sicherheit = "unsicher"
+antwort = "1...Sf3+"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 999
+sicherheit = "unsicher"
+antwort = "1.Tg8+"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 1000
+sicherheit = "unsicher"
+antwort = "1...Sb3+"
+ergebnis = "offen"
+geloest = 2026-11-02
+
+[[antwort]]
+nr = 1001
+sicherheit = "nicht gefunden"
+antwort = "1...c5+"
+ergebnis = "offen"
+geloest = 2026-11-02
