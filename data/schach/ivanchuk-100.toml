@@ -346,3 +346,425 @@ fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 partie = "Ivanchuk – Adams"
 turnier = "Linares 2002"
 loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 0-0 8.a4 Lb7 9.d3 Te8 10.Sa3 Lxa3 11.bxa3 d5 12.exd5 Sxd5 13.Lb2 Sf4 14.Lc1 Sxg2 15.Sg5 Sxe1 16.Dh5 Dd7 17.Lxf7+ Kf8 18.Le3 Sd4 19.Txe1 Sf3+ 20.Kf1 Sxg5 21.Lc5+ Te7 22.Txe5 Sxf7 23.Txe7 Dxe7 24.Lxe7+ Kxe7 25.Dc5+ Kd7 26.Dd4+ Ke7 27.Dxg7 bxa4 28.Dc3 Kd7 29.Dd4+ Sd6 30.Dxa4+ Ke6 31.Dg4+ Sf5 32.Dc4+ Ld5 33.Dxc7 h5 34.c4 Lh1 35.f4 Tf8 36.Db6+ Kf7 37.Da7+ Se7 38.Dxa6 Tb8 39.d4 Tb1+ 40.Ke2 Tb2+ 41.Kd3 Tb3+ 42.Kd2 Th3 43.d5 Txh2+ 44.Kd3 Sxd5 45.cxd5 Lxd5 46.f5 Ta2 47.Da7+ Kf6 48.Dd4+ Kg5 49.Dxd5 Txa3+ 50.Ke4 1-0"
+
+# Quelle: chessgames.com, Partie 1250145 (PGN-Download, abgerufen 02.11.2026): Linares, 06.03.2002.
+[[aufgabe]]
+nr = 32
+kapitel = 3
+seite = 98
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Vallejo Pons"
+turnier = "Linares 2002"
+loesung = "1.e4 c5 2.Sf3 e6 3.d4 cxd4 4.Sxd4 a6 5.Ld3 Sf6 6.0-0 d6 7.c4 Le7 8.Sc3 0-0 9.f4 Te8 10.Kh1 Sbd7 11.De2 g6 12.Ld2 Lf8 13.Tad1 Sh5 14.Sf3 b6 15.e5 Lb7 16.Sg5 Sg7 17.Le4 Dc7 18.Df3 Lxe4 19.Scxe4 h6 20.exd6 Dd8 21.Dh3 hxg5 22.fxg5 e5 23.Dxd7 1-0"
+
+# Quelle: chessgames.com, Partie 1995266 (PGN-Download, abgerufen 02.11.2026): Weltpokal, 13.10.2002; in der Datenbank „Iuldachev“.
+[[aufgabe]]
+nr = 33
+kapitel = 3
+seite = 100
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Yuldashev"
+turnier = "Hyderabad 2002"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 d6 8.c3 0-0 9.h3 Sa5 10.Lc2 c5 11.d4 Sd7 12.b3 cxd4 13.cxd4 Sc6 14.Sc3 exd4 15.Sd5 Sde5 16.Sxd4 Sxd4 17.Dxd4 Lxh3 18.f4 Sc6 19.Dc3 Ld7 20.Lb2 f6 21.Tad1 Tc8 22.Dd3 Lg4 23.Td2 Te8 24.b4 Lf8 25.e5 f5 26.e6 Dh4 27.g3 Dh5 28.e7 Lxe7 29.Sxe7+ Sxe7 30.Dxd6 Sg6 31.Lb3+ Kh8 32.Te6 Dh3 33.Dd7 1-0"
+
+# Quelle: chessgames.com, Partie 1260026 (PGN-Download, abgerufen 02.11.2026): Corus-Turnier Gruppe A, 26.01.2003; Datenbank D27, Buch D28.
+[[aufgabe]]
+nr = 34
+kapitel = 3
+seite = 102
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Ponomariov"
+turnier = "Wijk aan Zee 2003"
+loesung = "1.Sf3 d5 2.d4 Sf6 3.c4 dxc4 4.e3 e6 5.Lxc4 a6 6.0-0 c5 7.dxc5 Lxc5 8.De2 b5 9.Ld3 Sc6 10.Td1 Dc7 11.a4 b4 12.Sbd2 Lb7 13.Sb3 Sa5 14.Sxc5 Dxc5 15.e4 Sb3 16.Tb1 0-0 17.Le3 Dh5 18.Dc2 Sa5 19.Tbc1 Tad8 20.Lb6 Td6 21.Dc5 Dxc5 22.Lxc5 Td7 23.Se5 Tdd8 24.Lxb4 Sb3 25.Tc3 Tfe8 26.Txb3 Lxe4 27.f3 Lf5 28.Td2 Tb8 29.Lxa6 1-0"
+
+# Quelle: chessgames.com, Partie 1261863 (PGN-Download, abgerufen 02.11.2026): Sigeman & Co, 03.05.2003.
+[[aufgabe]]
+nr = 35
+kapitel = 3
+seite = 104
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Hector"
+turnier = "Malmö 2003"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 b5 6.Lb3 Lb7 7.d3 Lc5 8.Le3 d6 9.Lxc5 dxc5 10.c3 0-0 11.De2 Dd6 12.Sbd2 Tad8 13.Lc2 Lc8 14.Tfe1 Se7 15.a4 Sg6 16.g3 Sh5 17.De3 Lg4 18.Dg5 De6 19.h3 Lxf3 20.Sxf3 Sf6 21.Kh2 Sd7 22.De3 Se7 23.Sd2 Kh8 24.De2 Tb8 25.h4 Sc8 26.Sf3 Sd6 27.axb5 axb5 28.Ta6 h6 29.Kg1 Ta8 30.Tea1 Txa6 31.Txa6 Tb8 32.Dd1 De8 33.Ta7 Tb7 34.Txb7 Sxb7 35.Da1 Sd6 36.Da6 Sb6 37.Kg2 g6 38.Da3 Sd7 39.Lb3 c4 40.dxc4 Sxc4 41.Lxc4 bxc4 42.Da5 c5 43.Sd2 De6 44.Da4 f5 45.Sxc4 f4 46.Da8+ Kg7 47.Dd5 De7 48.g4 Kf8 49.Kh3 Kg7 50.f3 Kf6 51.Kg2 Kg7 52.Kf1 Kf8 53.Ke2 Ke8 54.Sd6+ Kd8 55.Da8+ Kc7 56.Sb5+ Kb6 57.c4 Sf6 58.Db8+ Ka5 59.Sd4 1-0"
+
+# Quelle: chessgames.com, Partie 1758257 (PGN-Download, abgerufen 02.11.2026): Europameisterschaft, 13.06.2003; Datenbank C65, Buch C66.
+[[aufgabe]]
+nr = 36
+kapitel = 3
+seite = 106
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Alexeev"
+turnier = "Istanbul 2003"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 Sf6 4.d3 d6 5.0-0 Le7 6.Te1 0-0 7.c3 Ld7 8.Sbd2 Te8 9.Sf1 Lf8 10.Lg5 h6 11.Lh4 Le7 12.a4 Sh7 13.Lg3 Lg4 14.h3 Lh5 15.S1h2 a6 16.Lc4 Dc8 17.Dc2 Kh8 18.Sh4 Lg5 19.f3 Dd8 20.Df2 Lf4 21.Sf5 Lg6 22.Se3 Lxg3 23.Dxg3 Sf6 24.Df2 Sh5 25.g3 Tf8 26.Kh1 Dd7 27.h4 Se7 28.Sg2 Lh7 29.Lb3 Dc6 30.g4 Sf6 31.a5 Dd7 32.d4 Sc6 33.Sf1 h5 34.g5 Sg8 35.La4 Dh3+ 36.Sh2 f6 37.f4 Dc8 38.Dg3 Sge7 39.Lxc6 bxc6 40.f5 Lxf5 41.exf5 Sxf5 42.Df3 g6 43.gxf6 exd4 44.Sf4 Txf6 45.Tg1 Kh7 46.Sxg6 Txg6 47.Txg6 Kxg6 48.Tg1+ Kf6 49.Dxh5 c5 50.Tg5 dxc3 51.Sg4+ Ke6 52.Txf5 De8 53.Tf6+ Kd7 54.Df5+ Kc6 55.Se5+ Kb5 56.Te6 Dh8 57.Dd3+ Kxa5 58.Dxc3+ Ka4 59.Da3+ 1-0"
+
+# Quelle: chessgames.com, Partie 1268483 (PGN-Download, abgerufen 02.11.2026): Europapokal der Vereine, 30.09.2003.
+[[aufgabe]]
+nr = 37
+kapitel = 3
+seite = 109
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Van Wely"
+turnier = "Rethymnon 2003"
+loesung = "1.e4 c5 2.Sf3 Sc6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 e5 6.Sdb5 d6 7.Lg5 a6 8.Sa3 b5 9.Lxf6 gxf6 10.Sd5 f5 11.g3 fxe4 12.Lg2 Lg7 13.Lxe4 Tb8 14.Dh5 Se7 15.Sxe7 Dxe7 16.c3 Le6 17.Td1 Dd7 18.0-0 h6 19.Sc2 0-0 20.Se3 f5 21.Ld5 Kh8 22.Lxe6 Dxe6 23.Sd5 f4 24.Td2 Tf5 25.De2 fxg3 26.hxg3 e4 27.Tfd1 Tbf8 28.f4 Dg6 29.Dxe4 Dxg3+ 30.Tg2 Dh3 31.Se7 Th5 32.Sg6+ Kg8 33.Sxf8 Dh1+ 34.Kf2 Dxd1 35.Dh7+ Kxf8 36.Dxg7+ Ke8 37.Dg8+ Kd7 38.Tg7+ Kc6 39.Da8+ Kb6 40.Db7+ 1-0"
+
+# Quelle: chessgames.com, Partie 1268718 (PGN-Download, abgerufen 02.11.2026): Europapokal der Vereine, 03.10.2003.
+[[aufgabe]]
+nr = 38
+kapitel = 3
+seite = 112
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Bareev – Ivanchuk"
+turnier = "Rethymnon 2003"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sc3 Lb4 4.Dc2 c5 5.dxc5 0-0 6.a3 Lxc5 7.Sf3 b6 8.Lf4 Lb7 9.Td1 Sc6 10.e4 Se7 11.h3 Sg6 12.Lh2 Sh5 13.Dd2 Sf6 14.Dc2 Sh5 15.Dd2 Sf6 16.b4 Le7 17.Ld3 a5 18.Db2 Sh5 19.0-0 Shf4 20.Tfe1 axb4 21.axb4 f5 22.Sd4 Sxd3 23.Txd3 Dc8 24.Sdb5 fxe4 25.Sd6 exd3 26.Sxc8 Taxc8 27.Dd2 Lxb4 28.Dxd3 Sh4 29.Tb1 Lxc3 30.Dxc3 Lxg2 31.Lg3 Le4 32.Txb6 Txc4 33.Da3 Sf3+ 34.Kf1 Sd2+ 35.Kg1 Tcc8 36.Tb4 h5 37.h4 Tf3 38.Db2 Tc2 39.Tb8+ Kh7 40.Db5 Tc1+ 41.Kh2 Tf5 0-1"
+
+# Quelle: chessgames.com, Partie 1758258 (PGN-Download, abgerufen 02.11.2026): 1. Samba Cup, 14.10.2003.
+[[aufgabe]]
+nr = 39
+kapitel = 3
+seite = 115
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Nielsen"
+turnier = "Skanderborg 2003"
+loesung = "1.c4 Sf6 2.Sc3 e6 3.e4 d5 4.e5 d4 5.exf6 dxc3 6.bxc3 Dxf6 7.Sf3 e5 8.d4 exd4 9.Lg5 De6+ 10.Le2 Le7 11.cxd4 Lxg5 12.Sxg5 De7 13.Dd2 Sc6 14.d5 Se5 15.0-0 0-0 16.Tfe1 Lf5 17.Df4 Df6 18.Sf3 Tfe8 19.Sh4 Sg6 20.Dxf5 Dxh4 21.Lf1 Dd4 22.Dd7 Txe1 23.Txe1 Dc5 24.h4 Kf8 25.Df5 Kg8 26.h5 Sf8 27.Dg5 Dd6 28.g3 h6 29.De7 Sd7 30.Lh3 Sc5 31.Lf5 Tb8 32.De8+ Df8 33.De7 Dxe7 34.Txe7 Kf8 35.Txc7 Sa6 36.d6 Td8 37.c5 b6 38.c6 Sb8 39.Le4 Txd6 40.Tc8+ 1-0"
+
+# Quelle: chessgames.com, Partie 1313589 (PGN-Download, abgerufen 02.11.2026): Olympiade Calvia, 18.10.2004.
+[[aufgabe]]
+nr = 40
+kapitel = 3
+seite = 118
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Morozevich – Ivanchuk"
+turnier = "Calvia 2004"
+loesung = "1.e4 c6 2.d4 d5 3.e5 Lf5 4.f4 e6 5.Sf3 c5 6.Le3 cxd4 7.Sxd4 Se7 8.Lb5+ Sd7 9.0-0 a6 10.Le2 g5 11.g4 gxf4 12.gxf5 Sxf5 13.Sxf5 fxe3 14.Sc3 Tg8+ 15.Kh1 Dg5 16.Lf3 Sxe5 17.De2 Dxf5 18.Lxd5 Dh3 19.Lxb7 Ta7 20.Lf3 Lh6 21.Se4 Ke7 22.De1 f5 23.Db4+ Kf7 24.Dd4 Sxf3 25.Df6+ Ke8 26.Dxe6+ Kf8 27.Df6+ Tf7 28.Dd6+ Kg7 29.Tg1+ Kh8 30.Sf6 0-1"
+
+# Quelle: chessgames.com, Partie 1313971 (PGN-Download, abgerufen 02.11.2026): Olympiade Calvia, 20.10.2004; die Game List nennt „Radjabov – Ivanchuk“, laut Datenbank hatte Ivanchuk Weiß (Sizilianisch B32).
+[[aufgabe]]
+nr = 41
+kapitel = 3
+seite = 123
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Radjabov"
+turnier = "Calvia 2004"
+loesung = "1.e4 c5 2.Sf3 Sc6 3.d4 cxd4 4.Sxd4 e5 5.Sb5 d6 6.S1c3 a6 7.Sa3 b5 8.Sd5 Sce7 9.Sb4 Ld7 10.c4 a5 11.Sbc2 Sf6 12.Sxb5 Lxb5 13.cxb5 Sxe4 14.Le3 d5 15.b6 f5 16.De2 Kf7 17.0-0-0 Dd7 18.Kb1 De6 19.f3 Sd6 20.f4 Sc4 21.fxe5 Tb8 22.g4 f4 23.Df3 g5 24.Lxc4 dxc4 25.h4 Dc6 26.e6+ Kg6 27.Df2 Dxe6 28.Ld4 Lg7 29.hxg5 Tbd8 30.Tde1 Dd6 31.Lc5 Dd2 32.Te6+ 1-0"
+
+# Quelle: chessgames.com, Partie 1338739 (PGN-Download, abgerufen 02.11.2026): Capablanca-Memorial (Elite), 14.05.2005.
+[[aufgabe]]
+nr = 42
+kapitel = 3
+seite = 126
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Jobava – Ivanchuk"
+turnier = "Havana 2005"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sf3 b6 4.Lg5 h6 5.Lh4 Le7 6.Sc3 c5 7.e4 cxd4 8.Sxd4 d6 9.Sdb5 a6 10.Lxf6 Lxf6 11.Sxd6+ Ke7 12.Sxc8+ Dxc8 13.Sa4 Td8 14.Db3 Sd7 15.Da3+ Sc5 16.Le2 Dc6 17.Sxc5 Dxc5 18.b4 Dg5 19.Td1 Dxg2 20.b5+ Ke8 21.Txd8+ Txd8 22.Lf3 Dg5 23.bxa6 Dd2+ 24.Kf1 Ld4 25.Le2 Lc5 26.Dg3 Dxa2 27.Dxg7 Td1+ 28.Kg2 Txh1 29.Dh8+ Kd7 30.a7 Dxe2 0-1"
+
+# Quelle: chessgames.com, Partie 1343647 (PGN-Download, abgerufen 02.11.2026): Europameisterschaft, 26.06.2005.
+[[aufgabe]]
+nr = 43
+kapitel = 3
+seite = 129
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Movsesian"
+turnier = "Warsaw 2005"
+loesung = "1.e4 c5 2.Sf3 Sc6 3.d4 cxd4 4.Sxd4 Dc7 5.c4 Sf6 6.Sc3 Sxe4 7.Sxe4 De5 8.Le3 Dxe4 9.Sb5 De5 10.Dd2 a6 11.f4 Db8 12.Sc3 e6 13.0-0-0 b5 14.cxb5 axb5 15.Lxb5 Dc7 16.f5 Le7 17.fxe6 fxe6 18.Thf1 Lf6 19.Lc5 De5 20.Txf6 Dxc5 21.Txe6+ dxe6 22.Dd8+ Kf7 23.Dxh8 Dg5+ 24.Kb1 Lb7 25.Dxh7 Dxg2 26.Tf1+ Ke7 27.Dh4+ Kd6 28.Df4+ e5 29.Td1+ Kc7 30.Df7+ Kb8 31.Df8+ Kc7 32.Sd5+ Dxd5 33.Dxg7+ 1-0"
+
+# Quelle: chessgames.com, Partie 1363497 (PGN-Download, abgerufen 02.11.2026): Europapokal der Vereine, 18.09.2005.
+[[aufgabe]]
+nr = 44
+kapitel = 3
+seite = 131
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Johannessen"
+turnier = "Saint Vincent 2005"
+loesung = "1.e4 c5 2.Sf3 Sc6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 e5 6.Sdb5 d6 7.Lg5 a6 8.Sa3 b5 9.Sd5 Le7 10.Lxf6 Lxf6 11.c3 Lg5 12.Sc2 0-0 13.a4 bxa4 14.Txa4 a5 15.Lc4 Tb8 16.b3 Kh8 17.0-0 f5 18.Te1 fxe4 19.Txe4 Lf5 20.Te2 Dd7 21.Sce3 Lg6 22.Tea2 e4 23.Lf1 Ld8 24.b4 axb4 25.cxb4 Se5 26.Dd4 De6 27.b5 Lf6 28.Sxf6 Dxf6 29.h3 De6 30.Ta7 Df6 31.Dd2 Sd3 32.b6 Dd4 33.b7 Db6 34.Lxd3 exd3 35.Db2 Dc5 36.Ta8 Le4 37.Txb8 Txb8 38.Ta8 Dc7 39.Db6 1-0"
+
+# Quelle: chessgames.com, Partie 1361556 (PGN-Download, abgerufen 02.11.2026): Europapokal der Vereine, 23.09.2005; Datenbank C11, Buch C13.
+[[aufgabe]]
+nr = 45
+kapitel = 3
+seite = 133
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Volkov"
+turnier = "Saint Vincent 2005"
+loesung = "1.e4 e6 2.Sc3 d5 3.d4 Sf6 4.Lg5 dxe4 5.Sxe4 Le7 6.Lxf6 gxf6 7.Sf3 f5 8.Sc3 a6 9.g3 b5 10.Lg2 Lb7 11.0-0 c5 12.d5 b4 13.dxe6 bxc3 14.exf7+ Kf8 15.De2 cxb2 16.Tad1 Db6 17.Tfe1 Df6 18.c3 Le4 19.Sh4 Sc6 20.Lxe4 fxe4 21.Dxe4 Td8 22.Tb1 Td2 23.Sf3 Td6 24.Txb2 Kxf7 25.Tb6 Ke8 26.Te3 Tf8 27.Dxh7 Tf7 28.Dg8+ Tf8 29.Dc4 a5 30.Kg2 Tf7 31.Dxc5 Kf8 32.Dh5 Kg8 33.Dg4+ Tg7 34.Dc4+ Tf7 35.Dg4+ Tg7 36.Dc8+ Lf8 37.Te8 Tg6 38.h4 Df7 39.Tb7 Df6 40.Sg5 Se5 41.Tf7 1-0"
+
+# Quelle: chessgames.com, Partie 1395907 (PGN-Download, abgerufen 02.11.2026): Morelia-Linares, 19.02.2006; Datenbank A15, Buch A30.
+[[aufgabe]]
+nr = 46
+kapitel = 3
+seite = 136
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Aronian"
+turnier = "Morelia/Linares 2006"
+loesung = "1.Sf3 Sf6 2.c4 b6 3.g3 Lb7 4.Lg2 c5 5.0-0 g6 6.Sc3 Lg7 7.d4 cxd4 8.Dxd4 d6 9.Le3 Sbd7 10.Tac1 Tc8 11.b3 a6 12.Tfd1 0-0 13.Dd2 Se4 14.Sxe4 Lxe4 15.Se1 Sf6 16.Lh3 Tb8 17.Sd3 La8 18.f3 e6 19.Lf2 Te8 20.Sb4 a5 21.Sa6 Tc8 22.Dxd6 Dxd6 23.Txd6 Sd5 24.Td1 Sc3 25.T1d2 b5 26.Td7 Le5 27.cxb5 Sxb5 28.Lf1 Lc6 29.T7d3 Sa3 30.f4 Lf6 31.Sc5 Le7 32.Td1 Sb5 33.Sa4 Le4 34.Td7 Lb4 35.Lg2 Lxg2 36.Kxg2 Tc2 37.Tb7 Sa3 38.Tdd7 Tf8 39.Kf3 Sb1 40.Le3 Txa2 41.Lc5 Sd2+ 42.Kg2 Lxc5 43.Sxc5 e5 44.Se6 exf4 45.Txf7 1-0"
+
+# Quelle: chessgames.com, Partie 1397874 (PGN-Download, abgerufen 02.11.2026): Morelia-Linares, 25.02.2006.
+[[aufgabe]]
+nr = 47
+kapitel = 3
+seite = 139
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Svidler"
+turnier = "Morelia/Linares 2006"
+loesung = "1.d4 Sf6 2.c4 g6 3.Sc3 d5 4.Lg5 Se4 5.Lh4 Sxc3 6.bxc3 dxc4 7.e3 Le6 8.Db1 c5 9.Dxb7 Ld5 10.Db5+ Sd7 11.Sf3 Tb8 12.Da4 cxd4 13.cxd4 Dc8 14.Tc1 e6 15.Lxc4 Tb4 16.Da6 Lb7 17.Da5 f6 18.Sd2 Lxg2 19.Tg1 Dc6 20.Txg2 Dxg2 21.Lxe6 Ld6 22.Tc8+ Ke7 23.Txh8 Kxe6 24.Dd8 Dg1+ 25.Ke2 1-0"
+
+# Quelle: chessgames.com, Partie 1398980 (PGN-Download, abgerufen 02.11.2026): Morelia-Linares, 10.03.2006; Datenbank D39, Buch D44.
+[[aufgabe]]
+nr = 48
+kapitel = 3
+seite = 142
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Vallejo Pons"
+turnier = "Morelia/Linares 2006"
+loesung = "1.d4 Sf6 2.Sf3 d5 3.c4 e6 4.Sc3 Lb4 5.Lg5 dxc4 6.e4 b5 7.a4 c6 8.e5 h6 9.exf6 hxg5 10.fxg7 Tg8 11.g3 Lb7 12.Lg2 c5 13.0-0 g4 14.Sh4 Lxg2 15.Sxg2 Txg7 16.axb5 cxd4 17.Se4 f5 18.Sf4 Kf7 19.Tc1 fxe4 20.Txc4 Lc5 21.Txc5 Sd7 22.Th5 Sf6 23.Te5 Dd6 24.Txe6 1-0"
+
+# Quelle: chessgames.com, Partie 1431562 (PGN-Download, abgerufen 02.11.2026): Europapokal der Vereine, 11.10.2006; in der Datenbank „Eljanov“; Datenbank A04, Buch A30.
+[[aufgabe]]
+nr = 49
+kapitel = 3
+seite = 144
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Elianov"
+turnier = "Fügen 2006"
+loesung = "1.Sf3 c5 2.c4 Sc6 3.d4 cxd4 4.Sxd4 e6 5.g3 Lb4+ 6.Sc3 Da5 7.Sdb5 Sf6 8.a3 Lxc3+ 9.Sxc3 Se4 10.Ld2 Df5 11.f4 Sxc3 12.Lxc3 De4 13.Tg1 De3 14.Tg2 0-0 15.Dd6 b6 16.g4 La6 17.Tg3 Dc5 18.Dxc5 bxc5 19.e4 f6 20.0-0-0 e5 21.Td6 exf4 22.Tf3 Tad8 23.Txf4 Kf7 24.b4 Ke7 25.Td5 cxb4 26.axb4 Lb7 27.c5 a6 28.Td6 Tb8 29.Tf2 Se5 30.Tfd2 Lc6 31.Lxa6 Sf7 32.T6d5 Lxd5 33.exd5 Se5 34.b5 Ta8 35.g5 h6 36.gxf6+ gxf6 37.Lb4 Kf7 38.c6 Tg8 39.c7 Tg1+ 40.Kc2 Tg4 41.Kb3 1-0"
+
+# Quelle: chessgames.com, Partie 1432661 (PGN-Download, abgerufen 02.11.2026): Europapokal der Vereine, 14.10.2006.
+[[aufgabe]]
+nr = 50
+kapitel = 3
+seite = 147
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Ruck"
+turnier = "Fügen 2006"
+loesung = "1.e4 c6 2.d4 d5 3.e5 Lf5 4.Sc3 e6 5.g4 Lg6 6.Sge2 c5 7.h4 h5 8.Sf4 Lh7 9.g5 Sc6 10.Dxh5 Sxd4 11.Le3 Se7 12.Lxd4 cxd4 13.Sxe6 Db8 14.Lb5+ Sc6 15.Sxd4 Dxe5+ 16.Sce2 0-0-0 17.Lxc6 bxc6 18.Sxc6 De4 19.f3 De3 20.Sxd8 Lb4+ 21.c3 Te8 22.Th2 Dg1+ 23.Kd2 Dxh2 24.Te1 Ld6 25.Dxh7 Lg3 26.Df5+ Kxd8 27.Dxd5+ Kc7 28.Dxf7+ Kd8 29.Dd5+ Kc7 30.Dc4+ Kb6 31.Dd4+ Kc7 32.Dxa7+ Kc8 33.Dc5+ Kd8 34.Td1 Txe2+ 35.Kc1+ Ke8 36.Dc8+ Kf7 37.Df5+ Ke8 38.Dg6+ Ke7 39.Dxg7+ Ke8 40.Dg6+ Ke7 41.Df6+ 1-0"
+
+# Quelle: chessgames.com, Partie 1451573 (PGN-Download, abgerufen 02.11.2026): Morelia-Linares, 18.02.2007.
+[[aufgabe]]
+nr = 51
+kapitel = 3
+seite = 150
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Topalov"
+turnier = "Morelia/Linares 2007"
+loesung = "1.e4 c5 2.Sf3 d6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 a6 6.Le3 e5 7.Sf3 Le7 8.Lc4 0-0 9.0-0 Le6 10.Lxe6 fxe6 11.Sa4 Sg4 12.Dd3 Sxe3 13.Dxe3 b5 14.Sb6 Ta7 15.Sd5 Tb7 16.Dd2 Sc6 17.Tad1 Td7 18.Dc3 Sb8 19.Sxe7+ Dxe7 20.Td3 h6 21.Tfd1 Tfd8 22.h4 Kh7 23.T1d2 Df8 24.Db3 De8 25.a4 Dg6 26.axb5 axb5 27.Te3 Sa6 28.Dxb5 Sc5 29.Dc4 Ta7 30.Te1 De8 31.b4 Sa4 32.Db3 Sb6 33.Ted1 Tad7 34.Dd3 Tc8 35.c3 Ta7 36.De3 Ta6 37.De2 Sc4 38.Ta2 Tac6 39.Ta7 T6c7 40.Tda1 Df7 41.Dxc4 1-0"
+
+# Quelle: chessgames.com, Partie 1452120 (PGN-Download, abgerufen 02.11.2026): Morelia-Linares, 25.02.2007.
+[[aufgabe]]
+nr = 52
+kapitel = 3
+seite = 152
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Aronian"
+turnier = "Morelia/Linares 2007"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sf3 d5 4.Sc3 Lb4 5.Lg5 Sbd7 6.cxd5 exd5 7.Dc2 c5 8.a3 Lxc3+ 9.Dxc3 h6 10.Lxf6 Dxf6 11.e3 0-0 12.Le2 b6 13.0-0 Lb7 14.Tfc1 Tac8 15.dxc5 Dxc3 16.Txc3 Txc5 17.Tcc1 Tfc8 18.Td1 Tc2 19.Lb5 Sf8 20.Tab1 T2c7 21.La4 Se6 22.Lb3 Kf8 23.h3 Tc5 24.Kh2 Ke7 25.Td2 Tb5 26.La2 Tbc5 27.Se1 a5 28.Tbd1 Td8 29.Kg3 Tb5 30.f3 Tc8 31.Sd3 d4 32.Lxe6 Kxe6 33.Sf4+ Ke7 34.Txd4 Tc7 35.T1d2 Tbc5 36.e4 Tc4 37.Td6 T4c6 38.e5 Tc2 39.Txc2 Txc2 40.Txb6 Lc6 41.b4 g5 42.Sh5 axb4 43.axb4 Ld5 44.Sg7 Te2 45.Sf5+ Ke8 46.Sxh6 Le6 47.Tb5 Tb2 48.Tb8+ Kd7 49.Tg8 1-0"
+
+# Quelle: chessgames.com, Partie 1463085 (PGN-Download, abgerufen 02.11.2026): Aerosvit, 19.06.2007.
+[[aufgabe]]
+nr = 53
+kapitel = 3
+seite = 154
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Nisipeanu"
+turnier = "Foros 2007"
+loesung = "1.d4 d5 2.Sf3 Sf6 3.c4 dxc4 4.Sc3 e6 5.e4 Lb4 6.Lg5 c5 7.e5 cxd4 8.Da4+ Sc6 9.0-0-0 Ld7 10.Se4 Sxe4 11.Lxd8 Txd8 12.Sxd4 Ld2+ 13.Txd2 Sxd2 14.Sxc6 Lxc6 15.Da3 Sxf1 16.Txf1 Td3 17.Db4 a5 18.Dxc4 Td5 19.Td1 0-0 20.Txd5 Lxd5 21.Da4 Lxg2 22.Dxa5 Ld5 23.f4 f6 24.f5 fxe5 25.fxe6 Lxe6 26.b3 e4 27.Db5 Lf7 28.Dxb7 e3 29.Db5 h6 30.Kd1 g5 31.De2 Td8+ 32.Ke1 Td2 33.Dxe3 Txa2 34.b4 Txh2 35.b5 Tb2 36.b6 g4 37.Dxh6 Tb1+ 38.Kf2 Tb3 39.Dc6 1-0"
+
+# Quelle: chessgames.com, Partie 1464697 (PGN-Download, abgerufen 02.11.2026): Aerosvit, 28.06.2007.
+[[aufgabe]]
+nr = 54
+kapitel = 3
+seite = 157
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Shirov – Ivanchuk"
+turnier = "Foros 2007"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 b5 6.Lb3 Le7 7.d4 d6 8.c3 0-0 9.Te1 Lg4 10.Le3 exd4 11.cxd4 d5 12.e5 Se4 13.Sc3 Sxc3 14.bxc3 Dd7 15.h3 Lh5 16.g4 Lg6 17.Sd2 a5 18.f4 a4 19.Lc2 Lxc2 20.Dxc2 f5 21.exf6 Lxf6 22.Sf3 Tae8 23.Lf2 h5 24.Dg6 Te4 25.Txe4 dxe4 26.Sh2 Sxd4 27.cxd4 Lxd4 28.Tb1 e3 29.Lg3 h4 30.Lxh4 Txf4 31.Dd3 Dd5 32.Sf1 Tf2 33.Sxe3 Tg2+ 34.Kh1 Df3 0-1"
+
+# Quelle: chessgames.com, Partie 1467768 (PGN-Download, abgerufen 02.11.2026): Montreal International, 27.07.2007.
+[[aufgabe]]
+nr = 55
+kapitel = 3
+seite = 159
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Miton – Ivanchuk"
+turnier = "Montreal 2007"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sf3 b6 4.a3 La6 5.e3 Le7 6.Ld3 d5 7.cxd5 Lxd3 8.Dxd3 exd5 9.0-0 0-0 10.Sbd2 Sbd7 11.b3 Ld6 12.Lb2 De7 13.Tfc1 Tfe8 14.Tc2 Se4 15.Tac1 De6 16.Tc6 Sb8 17.T6c2 Sd7 18.Tc6 Df5 19.Df1 Tad8 20.Sxe4 dxe4 21.Sd2 Te6 22.a4 Sf6 23.Sb1 Sd5 24.La3 Se7 25.T6c3 Lxh2+ 26.Kxh2 Dh5+ 27.Kg1 Th6 28.f3 Sf5 29.Sd2 Dh2+ 30.Kf2 Dh4+ 31.Kg1 Sg3 32.Dd1 exf3 33.Dxf3 Dh2+ 34.Kf2 Tf6 35.Dxf6 gxf6 36.e4 Sh1+ 37.Txh1 Dxh1 38.Le7 Dh6 39.Tg3+ Kh8 40.Sf3 Te8 0-1"
+
+# Quelle: chessgames.com, Partie 1468062 (PGN-Download, abgerufen 02.11.2026): Montreal International, 28.07.2007.
+[[aufgabe]]
+nr = 56
+kapitel = 3
+seite = 161
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Harikrishna"
+turnier = "Montreal 2007"
+loesung = "1.e4 e5 2.Sf3 Sf6 3.Sxe5 d6 4.Sf3 Sxe4 5.d4 d5 6.Ld3 Ld6 7.0-0 0-0 8.c4 c6 9.Te1 Lf5 10.Db3 Sa6 11.Sc3 dxc4 12.Lxc4 Sxc3 13.bxc3 b5 14.Lf1 Sc7 15.Lg5 Dd7 16.Se5 De6 17.c4 Lxe5 18.Txe5 Dg6 19.Df3 f6 20.Txf5 fxg5 21.Txf8+ Txf8 22.De3 Df6 23.Tc1 bxc4 24.Lxc4+ Kh8 25.g3 h6 26.Lb3 Sd5 27.Dd2 Te8 28.Dd3 Tf8 29.Dd2 Te8 30.Dd3 Tf8 31.Tf1 Dd6 32.Te1 Dd7 33.Lc2 Sf6 34.Da3 Td8 35.Dc5 Df7 36.Lb3 Df8 37.Dxa7 Te8 38.Te5 Sg4 39.Txe8 Dxe8 40.Df7 Dd8 41.a4 1-0"
+
+# Kapitel 5 (2008–2012)
+
+# Quelle: chessgames.com, Partie 1485779 (PGN-Download, abgerufen 02.11.2026): Morelia-Linares, 16.02.2008; Datenbank C84, Buch C88.
+[[aufgabe]]
+nr = 57
+kapitel = 4
+seite = 166
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Leko"
+turnier = "Morelia/Linares 2008"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 0-0 8.d4 Sxd4 9.Lxf7+ Txf7 10.Sxe5 Tf8 11.Dxd4 c5 12.Dd1 Dc7 13.Sg4 Sxg4 14.Dxg4 d5 15.Dh5 dxe4 16.Dd5+ Kh8 17.Dxa8 Lb7 18.Da7 Ta8 19.Lf4 Dc6 20.Dxa8+ Lxa8 21.Le3 Df6 22.c3 Ld6 23.Sd2 De5 24.g3 h6 25.a4 Lc6 26.axb5 axb5 27.Sb3 Lf8 28.Ted1 Ld5 29.h4 Kg8 30.Sc1 g5 31.hxg5 hxg5 32.Ta5 Dc7 33.Ta6 Df7 34.Tb6 Le7 35.Txb5 Le6 36.Tb8+ Kg7 37.Tb7 Kh6 38.Te1 Df6 39.Tb6 Df5 40.Sb3 Kh5 41.Sd2 Ld7 42.Ta1 Ld8 43.Tb8 1-0"
+
+# Quelle: chessgames.com, Partie 1486193 (PGN-Download, abgerufen 02.11.2026): Morelia-Linares, 29.02.2008; Datenbank B18, Buch B19.
+[[aufgabe]]
+nr = 58
+kapitel = 4
+seite = 169
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Leko – Ivanchuk"
+turnier = "Morelia/Linares 2008"
+loesung = "1.e4 c6 2.d4 d5 3.Sc3 dxe4 4.Sxe4 Lf5 5.Sg3 Lg6 6.h4 h6 7.Sf3 Sd7 8.h5 Lh7 9.Ld3 Lxd3 10.Dxd3 e6 11.Lf4 Da5+ 12.Ld2 Lb4 13.c3 Le7 14.c4 Dc7 15.0-0-0 Sgf6 16.Kb1 0-0 17.The1 a5 18.Lc1 Tfd8 19.Dc2 a4 20.Se5 Sxe5 21.dxe5 Txd1 22.Dxd1 Sd7 23.f4 Sc5 24.Se4 Td8 25.Dc2 Sxe4 26.Txe4 Db6 27.Dxa4 Dg1 28.Dc2 Td1 29.Te2 Tf1 30.a3 Lc5 31.Dd2 Td1 32.Dc2 Ld4 33.c5 Tf1 34.Td2 Txf4 35.Ka2 Tf2 36.Txf2 Lxf2 37.g4 Lxc5 38.Lf4 Dd4 39.Dd2 De4 40.Ka1 Ld4 41.Dh2 c5 42.Ka2 b5 43.Dd2 Dd5+ 44.Kb1 b4 45.a4 b3 46.Dd3 c4 47.De2 Dh1+ 48.Lc1 Da8 0-1"
+
+# Quelle: chessgames.com, Partie 1487929 (PGN-Download, abgerufen 02.11.2026): Amber-Turnier (Schnellschach), 18.03.2008.
+[[aufgabe]]
+nr = 59
+kapitel = 4
+seite = 171
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Karjakin"
+turnier = "Nice 2008"
+loesung = "1.e4 c5 2.Sf3 d6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 a6 6.Lc4 e6 7.Lb3 b5 8.Lg5 Le7 9.Df3 Dc7 10.e5 Lb7 11.exd6 Lxd6 12.De3 Lc5 13.0-0-0 Sc6 14.Dxe6+ fxe6 15.Sxe6 De5 16.Sxg7+ Kf8 17.Se6+ Kf7 18.The1 Dxe1 19.Sxc5+ Kg6 20.Txe1 Kxg5 21.Sxb7 Sd4 22.Sd6 Thf8 23.f3 b4 24.Sce4+ Sxe4 25.Txe4 Sxb3+ 26.axb3 a5 27.Tg4+ Kf6 28.Se4+ Ke5 29.Th4 a4 30.bxa4 Txa4 31.Sc5 Ta1+ 32.Kd2 Tg8 33.g3 Tf1 34.Ke2 Tb1 35.Txb4 Kd5 36.Se4 Kc6 37.h4 Th1 38.Tc4+ Kb6 39.b4 Td8 40.Tc5 Ta8 41.c3 Ta2+ 42.Ke3 Te1+ 43.Kf4 Tf1 44.Th5 Ta8 45.Th6+ Kb5 46.Sd6+ Ka4 47.Txh7 Kb3 48.Tc7 Td8 49.Sf5 1-0"
+
+# Quelle: chessgames.com, Partie 1489239 (PGN-Download, abgerufen 02.11.2026): Russische Mannschaftsmeisterschaft, 09.04.2008; Datenbank B32, Buch B70.
+[[aufgabe]]
+nr = 60
+kapitel = 4
+seite = 174
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Morozevich – Ivanchuk"
+turnier = "Sochi 2008"
+loesung = "1.e4 c5 2.Sf3 Sc6 3.d4 cxd4 4.Sxd4 g6 5.Le2 Lg7 6.Sb3 d6 7.0-0 Sf6 8.Sc3 0-0 9.Lg5 Le6 10.f4 b5 11.a3 a5 12.Lf3 a4 13.Sc1 Sd7 14.Sd3 Sc5 15.Kh1 Sxd3 16.cxd3 Tb8 17.f5 Lb3 18.Dd2 b4 19.axb4 Txb4 20.Lh6 Db6 21.Lxg7 Kxg7 22.Ld1 Lxd1 23.Dxd1 Dd4 24.Sd5 Tb3 25.Dc1 Se5 26.Dc7 Sxd3 27.Dxe7 Sf2+ 28.Txf2 Dxf2 29.Dxd6 Tc8 30.f6+ Kh6 31.Dd7 Txb2 32.Dg4 Tcc2 33.Sf4 a3 34.h4 Tb5 35.Txa3 Dd4 36.Sd5 Tb1+ 37.Kh2 Dg1+ 0-1"
+
+# Quelle: chessgames.com, Partie 1492876 (PGN-Download, abgerufen 02.11.2026): M-Tel Masters, 08.05.2008.
+[[aufgabe]]
+nr = 61
+kapitel = 4
+seite = 177
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Radjabov – Ivanchuk"
+turnier = "Sofia 2008"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sf3 b6 4.g3 La6 5.b3 Lb7 6.Lg2 Lb4+ 7.Ld2 a5 8.0-0 0-0 9.Dc2 d6 10.Sc3 Sbd7 11.Tfe1 Lxc3 12.Lxc3 Le4 13.Db2 Te8 14.Lh3 Lb7 15.Sd2 e5 16.Tad1 h6 17.f3 exd4 18.Lxd4 Se5 19.Sf1 Sh5 20.Lxe5 Txe5 21.e4 Df6 22.Se3 Dxf3 23.Lg2 Df6 24.Sg4 De7 25.Sxe5 dxe5 26.Df2 Lc6 27.a4 Dc5 28.Dxc5 bxc5 29.Te3 Kf8 30.Ted3 Ke7 31.Td5 Lxd5 32.Txd5 Sf6 33.Txc5 Kd6 34.Tb5 Ta7 35.h4 Sd7 36.Td5+ Ke7 37.Lh3 c6 38.Txd7+ Txd7 39.Lxd7 Kxd7 40.c5 h5 41.Kf2 g6 42.Ke2 f5 43.exf5 gxf5 44.Kd3 Ke6 45.Kc4 f4 46.gxf4 exf4 47.Kd4 Kf5 48.Kd3 f3 0-1"
+
+# Quelle: chessgames.com, Partie 1492879 (PGN-Download, abgerufen 02.11.2026): M-Tel Masters, 09.05.2008.
+[[aufgabe]]
+nr = 62
+kapitel = 4
+seite = 181
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Topalov – Ivanchuk"
+turnier = "Sofia 2008"
+loesung = "1.e4 e6 2.d4 d5 3.Sc3 Sf6 4.e5 Sfd7 5.f4 c5 6.Sf3 Sc6 7.Le3 a6 8.a3 cxd4 9.Sxd4 Lc5 10.Le2 0-0 11.Dd2 Dc7 12.Lf3 Sxd4 13.Lxd4 Sb6 14.Se2 Lxd4 15.Dxd4 Ld7 16.b3 Lb5 17.Sc3 Tfc8 18.Sxb5 axb5 19.Le2 Sd7 20.Ta2 Sb8 21.0-0 Sc6 22.Dd2 Db6+ 23.Kh1 Da5 24.Dxa5 Txa5 25.Taa1 Tca8 26.Tad1 Txa3 27.Lxb5 Sb4 28.c4 T8a5 29.f5 exf5 30.g4 Txb3 31.gxf5 Te3 32.Tb1 Sd3 33.e6 d4 34.Le8 Sc5 35.Lxf7+ Kf8 36.f6 gxf6 37.Txf6 Ke7 38.Th6 d3 39.Txh7 d2 40.Tg1 Te1 41.Lh5+ Kxe6 42.Thg7 Se4 43.T7g6+ Ke5 0-1"
+
+# Quelle: chessgames.com, Partie 1492882 (PGN-Download, abgerufen 02.11.2026): M-Tel Masters, 10.05.2008; Datenbank A15, Buch A11.
+[[aufgabe]]
+nr = 63
+kapitel = 4
+seite = 184
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Bu Xiangzhi"
+turnier = "Sofia 2008"
+loesung = "1.Sf3 Sf6 2.c4 c6 3.Sc3 d5 4.e3 a6 5.Dc2 b5 6.b3 Lg4 7.Se5 Lh5 8.cxb5 cxb5 9.Lxb5+ axb5 10.Sxb5 e6 11.Sc7+ Ke7 12.Sxa8 Sfd7 13.La3+ Kf6 14.Lb2 Sxe5 15.f4 Sbd7 16.Sc7 Lg6 17.Lxe5+ Sxe5 18.fxe5+ Kxe5 19.Dc3+ Kf5 20.0-0+ Kg5 21.a4 Kh6 22.Tf3 Lf5 23.Taf1 Ld6 24.Sb5 Lb8 25.Sd4 Le4 26.Th3+ Kg6 27.d3 Lf5 28.Thf3 Le5 29.De1 Lxd4 30.Tg3+ Kh6 31.exd4 g6 32.Tgf3 1-0"
+
+# Quelle: chessgames.com, Partie 1492885 (PGN-Download, abgerufen 02.11.2026): M-Tel Masters, 11.05.2008; Datenbank E98, Buch E99.
+[[aufgabe]]
+nr = 64
+kapitel = 4
+seite = 186
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Cheparinov"
+turnier = "Sofia 2008"
+loesung = "1.d4 Sf6 2.c4 g6 3.Sc3 Lg7 4.e4 d6 5.Sf3 0-0 6.Le2 e5 7.0-0 Sc6 8.d5 Se7 9.Se1 Sd7 10.Sd3 f5 11.Ld2 Sf6 12.f3 f4 13.c5 g5 14.Tc1 Sg6 15.cxd6 cxd6 16.Sb5 Tf7 17.Dc2 Se8 18.Sf2 h5 19.a4 Lf8 20.h3 Tg7 21.Db3 Sh4 22.Tc2 g4 23.fxg4 Sf6 24.Le1 hxg4 25.hxg4 Sh5 26.Sh1 f3 27.Lxf3 Sf4 28.Sg3 Lxg4 29.Lxg4 Txg4 30.Sc7 Tc8 31.Se6 Txc2 32.Dxc2 Db6+ 33.Kh1 Shxg2 34.Sf5 Da6 35.Tg1 Dd3 36.Dxd3 Sxd3 37.Lh4 Txe4 38.Txg2+ Kf7 39.Sxd6+ Lxd6 40.Sg5+ 1-0"
+
+# Quelle: chessgames.com, Partie 1492907 (PGN-Download, abgerufen 02.11.2026): M-Tel Masters, 12.05.2008.
+[[aufgabe]]
+nr = 65
+kapitel = 4
+seite = 190
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Aronian – Ivanchuk"
+turnier = "Sofia 2008"
+loesung = "1.d4 d5 2.c4 c6 3.Sf3 Sf6 4.e3 Lf5 5.Sc3 e6 6.Sh4 Lg6 7.Sxg6 hxg6 8.a3 Sbd7 9.g3 Le7 10.b3 e5 11.cxd5 Sxd5 12.Sxd5 Da5+ 13.Sc3 Dxc3+ 14.Ld2 Db2 15.d5 cxd5 16.Lb5 a6 17.Lxd7+ Kxd7 18.0-0 e4 19.Lc3 Dxc3 20.Dxd5+ Ke8 21.Tac1 Dd3 22.Dxb7 Td8 23.Tfd1 Dxd1+ 24.Txd1 Txd1+ 25.Kg2 a5 26.g4 Kf8 27.Dxe4 g5 28.Df5 Ld8 29.Dc5+ Kg8 30.De5 g6 31.b4 axb4 32.axb4 Kh7 33.b5 Tf8 34.Dc5 Kg8 35.b6 Tb1 36.f4 Tb2+ 37.Kg3 gxf4+ 38.exf4 Lxb6 39.Dc3 Tb1 40.f5 Tg1+ 41.Kh3 Te8 42.Df6 Lf2 43.Dg7+ Kxg7 44.f6+ Kf8 0-1"
+
+# Quelle: chessgames.com, Partie 1493231 (PGN-Download, abgerufen 02.11.2026): M-Tel Masters, 18.05.2008.
+[[aufgabe]]
+nr = 66
+kapitel = 4
+seite = 192
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Cheparinov – Ivanchuk"
+turnier = "Sofia 2008"
+loesung = "1.e4 c5 2.Sf3 Sc6 3.d4 cxd4 4.Sxd4 e6 5.Sc3 Dc7 6.Le3 a6 7.Dd2 Sf6 8.0-0-0 Lb4 9.f3 Se5 10.Sb3 b5 11.Ld4 Le7 12.Df2 d6 13.g4 0-0 14.g5 Sfd7 15.Tg1 Lb7 16.Kb1 Tfc8 17.Tg3 b4 18.Sa4 Ld8 19.Sc1 Lc6 20.b3 Lxa4 21.bxa4 Sc6 22.Le3 Db8 23.Th3 Sb6 24.Dh4 h6 25.Dg3 Sxa4 26.Txd6 hxg5 27.Ld3 Lf6 28.e5 Lxe5 29.Th8+ Kxh8 30.Dh3+ Kg8 31.Dh7+ Kf8 32.Td7 Sc3+ 33.Ka1 Sb5+ 0-1"
+
+# Quelle: chessgames.com, Partie 1494258 (PGN-Download, abgerufen 02.11.2026): Aerosvit, 16.06.2008.
+[[aufgabe]]
+nr = 67
+kapitel = 4
+seite = 194
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Shirov – Ivanchuk"
+turnier = "Foros 2008"
+loesung = "1.d4 Sf6 2.c4 g6 3.Sc3 d5 4.cxd5 Sxd5 5.Ld2 Lg7 6.e4 Sb6 7.Le3 0-0 8.Lb5 Dd6 9.Sge2 c6 10.Ld3 e5 11.dxe5 Dxe5 12.Ld4 De7 13.Lxg7 Kxg7 14.Lc2 Td8 15.Dc1 Sa6 16.0-0 Le6 17.Sf4 Lc4 18.Te1 Sb4 19.a3 Sxc2 20.Dxc2 Df6 21.Sce2 Td7 22.b3 La6 23.Tad1 Tad8 24.g3 De5 25.f3 Kg8 26.a4 h5 27.Kf2 Td6 28.Dc3 Sd7 29.Txd6 Dxd6 30.Tc1 Se5 31.h4 Df6 32.b4 Td3 33.Sxd3 Dxf3+ 34.Kg1 Lxd3 35.Dxe5 De3+ 36.Kh2 Dxe2+ 0-1"
+
+# Quelle: chessgames.com, Partie 1494270 (PGN-Download, abgerufen 02.11.2026): Aerosvit, 18.06.2008; Datenbank A04, Buch A10.
+[[aufgabe]]
+nr = 68
+kapitel = 4
+seite = 197
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Van Wely – Ivanchuk"
+turnier = "Foros 2008"
+loesung = "1.Sf3 g6 2.c4 Lg7 3.e4 e5 4.d4 exd4 5.Sxd4 Sc6 6.Le3 Df6 7.Sxc6 dxc6 8.Sc3 De7 9.Ld3 Sf6 10.h3 Sd7 11.0-0 0-0 12.Dc2 Se5 13.Le2 g5 14.Tad1 Le6 15.b3 Tfe8 16.Lh5 g4 17.Lxg4 Lxg4 18.hxg4 Sxg4 19.Lf4 Le5 20.De2 Dh4 21.Df3 Sh2 0-1"
+
+# Quelle: chessgames.com, Partie 1496609 (PGN-Download, abgerufen 02.11.2026): Dortmunder Schachtage, 06.07.2008.
+[[aufgabe]]
+nr = 69
+kapitel = 4
+seite = 199
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Kramnik"
+turnier = "Dortmund 2008"
+loesung = "1.e4 e5 2.Sf3 Sf6 3.Sxe5 d6 4.Sf3 Sxe4 5.d4 d5 6.Ld3 Sc6 7.0-0 Le7 8.Te1 Lg4 9.c4 Sf6 10.Sc3 Lxf3 11.Dxf3 Sxd4 12.Dd1 Se6 13.cxd5 Sxd5 14.Lb5+ c6 15.Sxd5 cxb5 16.Dh5 0-0 17.Sxe7+ Dxe7 18.Dxb5 Tfd8 19.Le3 a6 20.Db3 Tac8 21.h3 h6 22.Tad1 Txd1 23.Txd1 b5 24.Td3 Tc6 25.Dd5 De8 26.Td2 Dc8 27.b3 Tc3 28.h4 a5 29.Td1 Tc2 30.Dxb5 Txa2 31.h5 Sf8 32.Td4 Dc7 33.Td1 Tb2 34.Tc1 Dd7 35.Db8 Tc2 36.Ta1 Df5 37.Dd8 Dxh5 38.Txa5 Dg4 39.Ta4 Dd7 40.Td4 Db7 41.b4 Tb2 42.Ld2 Tb1+ 43.Kh2 Db5 44.Dd5 De2 45.Le3 Sg6 46.Df5 Df1 47.Kg3 Tb3 48.Te4 Sf8 49.Tf4 1-0"
+
+# Quelle: chessgames.com, Partie 1501955 (PGN-Download, abgerufen 02.11.2026): Tal-Memorial, 18.08.2008.
+[[aufgabe]]
+nr = 70
+kapitel = 4
+seite = 203
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Kamsky"
+turnier = "Moscow 2008"
+loesung = "1.d4 Sf6 2.c4 g6 3.Sc3 d5 4.Lf4 Lg7 5.Sf3 0-0 6.Tc1 dxc4 7.e4 Lg4 8.Lxc4 Sfd7 9.Le2 Sc6 10.Le3 Sb6 11.d5 Lxf3 12.gxf3 Se5 13.Db3 c6 14.f4 Sed7 15.0-0 De8 16.a4 cxd5 17.Sb5 Tc8 18.Txc8 Dxc8 19.e5 a6 20.Sa7 Dc7 21.Tc1 Dd8 22.a5 Sc4 23.Lxc4 dxc4 24.Dxb7 g5 25.Sc6 De8 26.Txc4 gxf4 27.Lxf4 Kh8 28.Lg3 Tg8 29.Kf1 e6 30.Td4 Sc5 31.Db6 Sd7 32.Dc7 Sb8 33.Sd8 Db5+ 34.Kg1 h6 35.Sxf7+ Kh7 36.Dc2+ 1-0"
+
+# Quelle: chessgames.com, Partie 1503133 (PGN-Download, abgerufen 02.11.2026): Tal-Memorial, 24.08.2008.
+[[aufgabe]]
+nr = 71
+kapitel = 4
+seite = 205
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Leko – Ivanchuk"
+turnier = "Moscow 2008"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 d6 8.c3 0-0 9.h3 Lb7 10.d4 Te8 11.Sbd2 Lf8 12.d5 Sb8 13.Sf1 Sbd7 14.S3h2 Tc8 15.Sg4 Sxg4 16.Dxg4 Sc5 17.Lc2 c6 18.dxc6 Lxc6 19.Se3 g6 20.Td1 Lh6 21.b4 Se6 22.Lb3 Kh8 23.Sd5 Lxc1 24.Taxc1 Tf8 25.Tc2 f5 26.exf5 gxf5 27.Dh5 Dd7 28.Dh6 Lxd5 29.Txd5 De7 30.Tcd2 Tc6 31.g3 f4 32.Kh2 Tf6 33.Dh5 Df8 34.T5d3 e4 35.Dd5 exd3 36.Dxc6 fxg3+ 37.fxg3 Sg5 38.Ld5 Dh6 39.h4 Sf3+ 40.Lxf3 Dxd2+ 41.Kh3 Dxa2 42.Db6 De6+ 43.Kg2 Df5 0-1"
+
+# Quelle: chessgames.com, Partie 1504427 (PGN-Download, abgerufen 02.11.2026): Grand Slam Final, 09.09.2008.
+[[aufgabe]]
+nr = 72
+kapitel = 4
+seite = 208
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Carlsen – Ivanchuk"
+turnier = "Bilbao 2008"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sf3 d5 4.Sc3 Le7 5.Lf4 0-0 6.e3 c5 7.dxc5 Lxc5 8.Dc2 Sc6 9.a3 Da5 10.0-0-0 Le7 11.h4 Td8 12.Sd2 a6 13.Le2 b5 14.cxd5 exd5 15.g4 Le6 16.Sb3 Db6 17.g5 Se4 18.Sxe4 dxe4 19.Txd8+ Sxd8 20.Kb1 Tc8 21.Dd1 Sc6 22.h5 a5 23.g6 a4 24.Sd2 b4 25.gxf7+ Lxf7 26.Sc4 Db7 27.Dxa4 bxa3 28.Sxa3 Lxa3 29.Dxa3 Sb4 30.b3 Sd3 31.Lxd3 exd3 32.Tc1 d2 0-1"
+
+# Quelle: chessgames.com, Partie 1511433 (PGN-Download, abgerufen 02.11.2026): Europapokal der Vereine, 22.10.2008.
+[[aufgabe]]
+nr = 73
+kapitel = 4
+seite = 211
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Carlsen"
+turnier = "Kallithea 2008"
+loesung = "1.d4 d5 2.c4 c6 3.Sc3 Sf6 4.e3 g6 5.Sf3 Lg7 6.Ld3 0-0 7.0-0 Lg4 8.h3 Lxf3 9.Dxf3 e6 10.Td1 Sbd7 11.Ld2 Te8 12.Tac1 Tc8 13.Le1 De7 14.De2 a6 15.b3 Tcd8 16.Dc2 Tc8 17.Lf1 Lf8 18.Db1 Tcd8 19.g3 Lg7 20.Lg2 h5 21.Se2 h4 22.g4 e5 23.La5 Tc8 24.dxe5 Sxe5 25.Lc3 dxc4 26.bxc4 Dc7 27.c5 Tcd8 28.Txd8 Txd8 29.Lxe5 Dxe5 30.Dxb7 Td2 31.Sd4 Se4 32.Sxc6 Db2 33.Se7+ Kf8 34.Da8+ Kxe7 35.Dxe4+ De5 36.c6 Td8 37.c7 Tc8 38.Db7 De6 39.Dxc8 1-0"
