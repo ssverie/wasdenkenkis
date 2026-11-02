@@ -72,3 +72,53 @@ fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 partie = "Ivanchuk – Csom"
 turnier = "Yerevan 1989"
 loesung = "1.d4 Sf6 2.c4 e6 3.Sc3 Lb4 4.f3 c5 5.d5 Lxc3+ 6.bxc3 Sh5 7.g3 f5 8.e4 f4 9.dxe6 fxg3 10.Dd5 g2 11.Dxh5+ g6 12.De5 Dh4+ 13.Ke2 gxh1D 14.Dxh8+ Ke7 15.Dg7+ Kxe6 16.Lh3+ Kd6 17.Df8+ Kc7 18.Lf4+ Dxf4 19.Dxf4+ d6 20.Td1 Sc6 21.Dxd6+ Kb6 22.Dg3 h5 23.Lxc8 Txc8 24.Sh3 h4 25.Df2 1-0"
+
+# Quelle: chessgames.com, Partie 1060088 (PGN-Download, abgerufen 02.11.2026): Reggio Emilia 1989/90, 6. Runde, 03.01.1990; Schachzeichen bei 63...b3+ ergänzt (fehlt in der Quelle).
+[[aufgabe]]
+nr = 5
+kapitel = 1
+seite = 29
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Georgiev – Ivanchuk"
+turnier = "Reggio Emilia 1989"
+loesung = "1.d4 Sf6 2.c4 g6 3.Sc3 d5 4.cxd5 Sxd5 5.e4 Sxc3 6.bxc3 Lg7 7.Lc4 c5 8.Se2 0-0 9.Le3 Sc6 10.0-0 Lg4 11.f3 Sa5 12.Lxf7+ Txf7 13.fxg4 Txf1+ 14.Kxf1 cxd4 15.cxd4 e5 16.d5 Sc4 17.Lf2 Df6 18.Kg1 Tf8 19.De1 Lh6 20.Sg3 Da6 21.Kh1 Da4 22.De2 b6 23.h4 Lf4 24.Sf1 Sd6 25.Te1 Tc8 26.g3 Tc2 27.Df3 Dxa2 28.Kg1 Lh6 29.g5 Lg7 30.Se3 Tc7 31.Sg4 Tf7 32.De3 Dc2 33.h5 Sc4 34.Dc1 Dxc1 35.Txc1 gxh5 36.Txc4 hxg4 37.Tc8+ Lf8 38.Le1 Kg7 39.Lc3 Ld6 40.Tc6 Lc5+ 41.Kg2 Tf2+ 42.Kh1 Ld4 43.Lb4 Tf7 44.Te6 Tb7 45.Tc6 a5 46.d6 axb4 47.Tc7+ Kf8 48.Txb7 b3 49.Tb8+ Kf7 50.d7 b2 51.Tf8+ Ke6 52.d8S+ Ke7 53.Tf1 Kxd8 54.Tb1 Kc7 55.Kg2 Kc6 56.Kf1 Kc5 57.Ke2 Kc4 58.Kd2 Kb3 59.Tf1 b5 60.Kd3 Ka2 61.Kc2 b4 62.g6 hxg6 63.Th1 b3+ 64.Kd3 b1D+ 65.Txb1 Kxb1 66.Kd2 b2 67.Kd3 Ka2 68.Kc4 b1D 69.Kd5 Dg1 70.Ke6 Dxg3 71.Kf6 Df4+ 72.Kg7 Dxe4 0-1"
+
+# Quelle: chessgames.com, Partie 1038406 (PGN-Download, abgerufen 02.11.2026): Interzonenturnier Manila, 4. Runde, 02.07.1990.
+[[aufgabe]]
+nr = 6
+kapitel = 1
+seite = 32
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – De Firmian"
+turnier = "Manila 1990"
+loesung = "1.d4 Sf6 2.c4 e6 3.Sc3 Lb4 4.Dc2 c5 5.dxc5 Sa6 6.a3 Lxc3+ 7.Dxc3 Sxc5 8.b4 Sce4 9.Dd4 d5 10.c5 b6 11.f3 bxc5 12.bxc5 Da5+ 13.Db4 Dc7 14.fxe4 Tb8 15.Da4+ Ld7 16.c6 0-0 17.Ld2 Lxc6 18.Da5 Tb6 19.e3 Tfb8 20.Tc1 Sxe4 21.Sf3 De7 22.Lb4 Db7 23.Ld3 Lb5 24.Lxe4 dxe4 25.Sd4 Ld3 26.Kf2 f6 27.The1 h6 28.Kg1 Df7 29.Sc6 Ta8 30.Se7+ Kh7 31.Sc8 Tb5 32.Dc7 Dh5 33.Tc5 Txc5 34.Lxc5 a5 35.Lf8 Dg5 36.Db7 Ta6 37.Sd6 Dg6 38.Se8 Kg8 39.Sc7 1-0"
+
+# Quelle: chessgames.com, Partie 1060172 (PGN-Download, abgerufen 02.11.2026): Tilburg Interpolis, 13. Runde, September 1990; Schachzeichen bei 32...h2+ und 44.g4+ ergänzt (fehlen in der Quelle).
+[[aufgabe]]
+nr = 7
+kapitel = 1
+seite = 36
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Timman"
+turnier = "Tilburg 1990"
+loesung = "1.c4 e5 2.g3 Sf6 3.Lg2 d5 4.cxd5 Sxd5 5.Sf3 Sc6 6.0-0 Sb6 7.Sc3 Le7 8.a3 0-0 9.b4 Le6 10.Tb1 f6 11.d3 De8 12.Sd2 Df7 13.Sb3 Tab8 14.Dc2 Tfd8 15.Lxc6 bxc6 16.Sa5 De8 17.Ld2 f5 18.Tfc1 Td6 19.b5 Dh5 20.Sxc6 Te8 21.Sxe7+ Txe7 22.f3 g5 23.Tf1 g4 24.f4 e4 25.dxe4 Sc4 26.Lc1 fxe4 27.f5 Lxf5 28.Da4 Sb6 29.Dxa7 e3 30.Tb4 Th6 31.h4 gxh3 32.Tbf4 h2+ 33.Kh1 Lh3 34.Db8+ Te8 35.Tf8+ Kg7 36.Dxc7+ Sd7 37.T1f7+ Dxf7 38.Txf7+ Kxf7 39.Df4+ Kg6 40.Kxh2 Th5 41.Dd6+ Sf6 42.Kg1 Tf5 43.Dd3 Kh5 44.g4+ Kxg4 45.Lxe3 Tg8 46.Kh2 Kh4 47.Lg5+ Kxg5 48.Kxh3 Sh5 49.Sd5 Tg6 50.De3+ Sf4+ 51.Sxf4 Txf4 52.b6 Kf5 53.Dc5+ Ke4 54.De7+ Kf5 55.Dxh7 Te4 56.b7 Te3+ 57.Kh4 1-0"
+
+# Quelle: chessgames.com, Partie 1060207 (PGN-Download, abgerufen 02.11.2026): Linares, 1. Runde, 23.02.1991.
+[[aufgabe]]
+nr = 8
+kapitel = 1
+seite = 39
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Kasparov"
+turnier = "Linares 1991"
+loesung = "1.e4 c5 2.Sf3 d6 3.Lb5+ Sd7 4.d4 Sf6 5.0-0 cxd4 6.Dxd4 a6 7.Lxd7+ Lxd7 8.Lg5 h6 9.Lxf6 gxf6 10.c4 e6 11.Sc3 Tc8 12.Kh1 h5 13.a4 h4 14.h3 Le7 15.b4 a5 16.b5 Dc7 17.Sd2 Dc5 18.Dd3 Tg8 19.Tae1 Dg5 20.Tg1 Df4 21.Tef1 b6 22.Se2 Dh6 23.c5 Txc5 24.Sc4 Kf8 25.Sxb6 Le8 26.f4 f5 27.exf5 Txf5 28.Tc1 Kg7 29.g4 Tc5 30.Txc5 dxc5 31.Sc8 Lf8 32.Dd8 Dg6 33.f5 Dh6 34.g5 Dh5 35.Tg4 exf5 36.Sf4 Dh8 37.Df6+ Kh7 38.Txh4+ 1-0"
+
+# Quelle: chessgames.com, Partie 1060208 (PGN-Download, abgerufen 02.11.2026): Linares, 4. Runde, Februar 1991.
+[[aufgabe]]
+nr = 9
+kapitel = 1
+seite = 41
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Kamsky – Ivanchuk"
+turnier = "Linares 1991"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 0-0 8.c3 d5 9.exd5 Sxd5 10.Sxe5 Sxe5 11.Txe5 c6 12.d4 Ld6 13.Te2 Lg4 14.f3 Lh5 15.Lxd5 cxd5 16.Sd2 f5 17.Db3 Lf7 18.Sf1 f4 19.Ld2 Dd7 20.Tae1 a5 21.a3 a4 22.Dd1 Lg6 23.Lc1 Tf7 24.h3 Lf5 25.Sh2 h5 26.Tf2 Taf8 27.Sf1 Tf6 28.Sh2 Kh8 29.b3 Tc8 30.Lb2 Kh7 31.Sf1 Tff8 32.Tfe2 Tc7 33.Sh2 Tfc8 34.Sf1 b4 35.axb4 a3 36.Lxa3 Txc3 37.Kh2 Ta8 38.Lb2 Td3 39.Dc1 Tc8 40.Tc2 Txc2 41.Dxc2 Lg6 42.Df2 Lxb4 43.Te5 Td1 44.De2 Tb1 45.Tg5 Dc6 46.Te5 Dc2 47.Txh5+ Kg8 48.De6+ Lf7 49.Th8+ Kxh8 50.Dxf7 Dc6 51.Lc3 Lxc3 52.Df8+ Kh7 53.Df5+ Dg6 0-1"
