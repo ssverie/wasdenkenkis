@@ -1,0 +1,44 @@
+# Nikolay Kalinichenko: Vassily Ivanchuk – 100 Selected Games (New in Chess 2013) – Partien zum Nachspielen.
+# Prüfen: perl skripte/fen-pruefen.pl data/schach/ivanchuk-100.toml und perl skripte/loesung-nachspielen.pl data/schach/ivanchuk-100.toml
+# (beide müssen 0 ergeben). Angezeigt per Shortcode {{< schachaufgaben daten="ivanchuk-100" kapitel="1" partien="ja" >}}.
+# Welche Partien: Game List des Buchs (Seite 307, Foto vom 02.11.2026). Die Züge stammen nicht aus dem Buch, sondern aus
+# öffentlichen Partiedatenbanken (Sven, 2026-11-02: „besorg die Notation“) – Quelle je Partie im Kommentar; nur die
+# Zugfolge in deutscher Notation, die Kommentare des Buchs werden nicht übernommen. Je Partie: nr = laufende Nummer,
+# seite = Buchseite laut Game List, fen = Grundstellung, partie/turnier wie in der Game List, loesung = ganze Partie.
+
+# Kapitel nach dem Inhaltsverzeichnis (Foto vom 02.11.2026), „Selected Games“: Kapitel 2–5 (Sven: „chapter 2-5“).
+[[kapitel]]
+nr = 1
+buch = 2
+titel = "1985–1993"
+slug = "kapitel-2"
+
+[[kapitel]]
+nr = 2
+buch = 3
+titel = "1994–2001"
+slug = "kapitel-3"
+
+[[kapitel]]
+nr = 3
+buch = 4
+titel = "2002–2007"
+slug = "kapitel-4"
+
+[[kapitel]]
+nr = 4
+buch = 5
+titel = "2008–2012"
+slug = "kapitel-5"
+
+# Kapitel 2 (1985–1993)
+
+# Quelle: chessgames.com, Partie 1590394 (PGN-Download, abgerufen 02.11.2026): Juniorenweltmeisterschaft Sharjah, 4. Runde.
+[[aufgabe]]
+nr = 1
+kapitel = 1
+seite = 19
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Ivanchuk – Mishra, Neeraj Kumar"
+turnier = "Sharjah 1985"
+loesung = "1.e4 c5 2.Sf3 d6 3.d4 cxd4 4.Sxd4 Sf6 5.Sc3 e6 6.Lc4 a6 7.Lb3 Sc6 8.Le3 Le7 9.f4 0-0 10.Df3 Dc7 11.0-0-0 Sa5 12.g4 Sxb3+ 13.axb3 Sd7 14.Sf5 exf5 15.Sd5 Dd8 16.gxf5 Sf6 17.Sb6 Tb8 18.Thg1 Kh8 19.Ld4 Tg8 20.Tg3 Ld7 21.Th3 g6 22.Sd5 Tg7 23.Sxe7 Dxe7 24.e5 Sh5 25.f6 Dd8 26.fxg7+ Kg8 27.Txh5 gxh5 28.Dxh5 Dc8 29.Dg5 Lf5 30.c3 d5 31.La7 Ta8 32.Txd5 Dc6 33.c4 Le6 34.Td6 De4 35.Lc5 Te8 36.Td4 De3+ 37.Kb1 Dxb3 38.Td8 Lf5+ 39.Ka1 Da4+ 40.La3 Le6 41.f5 Lxc4 42.De7 1-0"

@@ -9,6 +9,14 @@ gebiet = "Taktik, Aufgaben"
 schluessel = "1001-deadly-chess-puzzles-2024"
 
 [[buch]]
+titel = "Vassily Ivanchuk – 100 Selected Games"
+autor = "Nikolay Kalinichenko"
+jahr = "2013"
+sortjahr = 2013
+gebiet = "Partiensammlung"
+schluessel = "vassily-ivanchuk-100-selected-games-2013"
+
+[[buch]]
 titel = "The Essential Sosonko"
 autor = "Genna Sosonko"
 jahr = "2023"

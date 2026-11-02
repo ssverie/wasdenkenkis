@@ -1,8 +1,11 @@
 {{- /* Inhaltsverzeichnis eines Schachaufgaben-Buchs auf der Buchseite (Sven: „toc als Zwischenschicht“, „nur die fetten
        Zeilen“): {{< schachbuch-inhalt daten="rizzitano-1001" >}} – je Abschnitt aus data/schach/<daten>.toml eine Zeile wie im
        Buch (Kapitelnummer, Titel, Startseite; Tests ohne Nummer) und die Zahl der eingebauten Aufgaben. Verlinkt, sobald es
-       die Abschnittsseite content/schachaufgaben/<daten>/<slug>.md gibt und Aufgaben eingetragen sind. */ -}}
+       die Abschnittsseite content/schachaufgaben/<daten>/<slug>.md gibt und Aufgaben eingetragen sind.
+       partien="ja": zählt „Partien“ statt „Aufgaben“ (Ivanchuk-Buch). */ -}}
 {{- $daten := .Get "daten" }}
+{{- $eins := "Aufgabe" }}{{ $viele := "Aufgaben" }}
+{{- if eq (.Get "partien") "ja" }}{{ $eins = "Partie" }}{{ $viele = "Partien" }}{{ end }}
 {{- $d := index site.Data.schach $daten }}
 <ol class="schachbuch-inhalt">
   {{- range $d.kapitel }}
@@ -16,7 +19,7 @@
     {{- else }}
     <span class="offen">{{ .titel }}</span>
     {{- end }}
-    <span class="zahl">{{ with $auf }}{{ len . }} {{ cond (eq (len .) 1) "Aufgabe" "Aufgaben" }}{{ else }}noch keine Aufgaben{{ end }}{{ with .buchseite }} · S. {{ . }}{{ end }}</span>
+    <span class="zahl">{{ with $auf }}{{ len . }} {{ cond (eq (len .) 1) $eins $viele }}{{ else }}noch keine {{ $viele }}{{ end }}{{ with .buchseite }} · S. {{ . }}{{ end }}</span>
   </li>
   {{- end }}
 </ol>

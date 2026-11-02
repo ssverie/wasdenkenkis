@@ -7,9 +7,12 @@
        Lösung: Partie, Turnier, Hauptlinie fett, darunter Nebenlinien. Auf schmalen Schirmen steht die Lösung unter dem Brett.
        Prüfen: perl skripte/fen-pruefen.pl data/schach/<daten>.toml
        nachspielen="592,…" (oder "alle"): diese Aufgaben lassen sich nachspielen (Züge anklickbar, Knöpfe ⏮ ◀ ▶ ⏭; assets/js/schach-nachspielen.js,
-       Versuch seit 2026-11-01, Sven: „versuche mal 592 spielbar zu machen“). */ -}}
+       Versuch seit 2026-11-01, Sven: „versuche mal 592 spielbar zu machen“).
+       partien="ja": ganze Partien statt Aufgaben (Ivanchuk-Buch, seit 2026-11-02) – Beschriftung „Partie 1“ mit den Spielern,
+       die FEN der Grundstellung bleibt unsichtbar (das Nachspiel-Skript liest sie), die Partie ist aufgeklappt. */ -}}
 {{- $d := index site.Data.schach (.Get "daten") }}
 {{- $nur := .Get "kapitel" }}
+{{- $partien := eq (.Get "partien") "ja" }}
 {{- $nachspielen := slice }}{{ with .Get "nachspielen" }}{{ $nachspielen = split (replace . " " "") "," }}{{ end }}
 {{- range $d.kapitel }}
   {{- $k := .nr }}
@@ -20,7 +23,9 @@
   {{- if not $nur }}
   <h2 id="{{ .slug | default (printf "kapitel-%d" $k) }}">{{ with .buch }}Kapitel {{ . }}: {{ end }}{{ .titel }}</h2>
   {{- end }}
+  {{- if not $partien }}
   <button type="button" class="alle-loesungen" aria-expanded="false" hidden>Alle Lösungen aufklappen</button>
+  {{- end }}
 </div>
 <ol class="schachaufgaben">
   {{- range $auf }}
@@ -28,10 +33,14 @@
   <li id="aufgabe-{{ .nr }}"{{ if and .loesung (or (in $nachspielen "alle") (in $nachspielen (string .nr))) }} class="nachspielbar"{{ end }}>
     <figure class="schach-diagramm">
       {{ partial "schach-brett.html" (dict "fen" .fen "immer_weiss" true) }}
+      {{- if $partien }}
+      <figcaption><strong>Partie {{ .nr }}</strong>{{ with .seite }} · S. {{ . }}{{ end }}<code class="fen" hidden>{{ .fen }}</code></figcaption>
+      {{- else }}
       <figcaption><strong>{{ .nr }}) {{ cond $schwarz "Schwarz" "Weiß" }} am Zug</strong><code class="fen">{{ .fen }}</code></figcaption>
+      {{- end }}
     </figure>
-    <details class="schachloesung">
-      <summary>Lösung {{ .nr }}</summary>
+    <details class="schachloesung"{{ if $partien }} open{{ end }}>
+      <summary>{{ if $partien }}Partie {{ .nr }} nachspielen{{ else }}Lösung {{ .nr }}{{ end }}</summary>
       {{- with .partie }}<p class="partie">{{ . }}{{ end }}{{ with .turnier }}<br><em>{{ . }}</em>{{ end }}{{ if .partie }}</p>{{ end }}
       {{- with .loesung }}
       <p class="hauptlinie"><strong>{{ . }}</strong></p>
