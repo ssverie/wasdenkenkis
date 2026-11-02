@@ -23,3 +23,11 @@ jahr = "2023"
 sortjahr = 2023
 gebiet = "Porträts, Schachgeschichte"
 schluessel = "the-essential-sosonko-2023"
+
+[[buch]]
+titel = "365 Ways to Checkmate"
+autor = "Joe Gallagher"
+jahr = "2004"
+sortjahr = 2004
+gebiet = "Taktik, Mattaufgaben"
+schluessel = "365-ways-to-checkmate-2004"
