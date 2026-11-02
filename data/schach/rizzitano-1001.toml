@@ -3733,7 +3733,7 @@ fen = "r3k2r/pbq1bppp/2p1p3/1pN5/8/6P1/PPQ1PPBP/R2R2K1 b kq - 0 17"
 partie = "P. Cramling – L. Carlsson"
 turnier = "Swedish Ch, Uppsala 2022"
 loesung = "17...Lxc5! 18.Dxc5 Db6 19.De5 0-0 ="
-varianten = ["17...Lc8?? 18.Se6! (18.Sa6! +–) 1-0 18...Lxe6 19.Dxc6+ Dxc6 20.Lxc6+ Kf8 21.Lxa8 +–", "19.Dd6 Td8 ="]
+varianten = ["17...Lc8?? 18.Sxe6! (18.Sa6! +–) 1-0 18...Lxe6 19.Dxc6+ Dxc6 20.Lxc6+ Kf8 21.Lxa8 +–", "19.Dd6 Td8 ="]
 
 [[aufgabe]]
 nr = 378
@@ -4312,7 +4312,7 @@ fen = "3rk2r/p3p2p/2p2ppb/5b2/2Bn1PP1/PP5P/2PN1B2/2R1K2R b - - 0 22"
 partie = "Abasov – Durarbayli"
 turnier = "Baku 2023"
 loesung = "22...Sxc2+ 23.Ke2 Txd2+! 24.Kxd2 Lxf4+ 25.Ke2 Le4 26.Le6? h5 27.Txc2 Lxc2 –+"
-varianten = ["23...Lxf4?! 24.Thd1 ±", "26.a4 h5 27.g5! ∓ Lxa7"]
+varianten = ["23...Lxf4?! 24.Thd1 ±", "26.a4 h5 27.g5! ∓"]
 
 [[aufgabe]]
 nr = 436
@@ -4531,7 +4531,7 @@ fen = "r2q1rk1/pb3pbp/1p6/2ppP2p/2B1QB2/5N2/P4PP1/1R3RK1 w - - 0 19"
 partie = "L. Johansson – J. Kramer"
 turnier = "Bundesliga 2022/3"
 loesung = "19.Dc2! dxc4 20.Tfd1 De7 21.Sg5 f5 22.Dxc4+ Kh8 23.Td6 Tae8 24.Tb3 +–"
-varianten = ["19.Df5? dxc4 20.Tbd1 (20.Sg5 Dd3! h7) 20...Dc8 21.Dxh5; 21...f6 –+"]
+varianten = ["19.Df5? dxc4 20.Tbd1 (20.Sg5 Dd3!) 20...Dc8 21.Dxh5; 21...f6 –+"]
 
 [[aufgabe]]
 nr = 458
@@ -4723,7 +4723,7 @@ fen = "8/p4p2/8/2kprb1p/5Rr1/1B4P1/PP1R1K1P/8 w - - 0 31"
 partie = "Rooze – De Waele"
 turnier = "Belgian Team Ch 2022/3"
 loesung = "31.h3! Tg5 32.Lxd5 Lxh3 33.Lxf7 a5 34.Td8 ±"
-varianten = ["32.Txd5+ Txd5 33.Lxd5 Lxh3 34.Lxf7 a5 35.Lc4 ±", "32...Txd5? 33.Txd5+ Kxd5 34.h4 Tg4 35.Txf5+ Ke6 36.Txh5 +–", "33...Tef5?! 34.Td4?! Txf7?? (34...a5 ±) 35.b4+! 1-0", "34...Kc6 35.Td4 ±"]
+varianten = ["32.Txd5+ Txd5 33.Lxd5 Lxh3 34.Lxf7 a5 35.Lc4 ±", "32...Txd5? 33.Txd5+ Kxd5 34.h4 Tg4 35.Txf5+ Ke6 36.Txh5 +–", "33...Tef5?! 34.b4+! (34.Td4?! Txf7?? (34...a5 ±) 35.b4+! 1-0) 34...Kc6 35.Td4 ±"]
 
 [[aufgabe]]
 nr = 477
@@ -4863,7 +4863,7 @@ fen = "3r1r2/p2b2k1/1p3bq1/1PpB2P1/P3pp2/1QP1N1PR/2R5/2B2K2 w - - 0 33"
 partie = "Beukes – Rorrer"
 turnier = "Charlotte 2022"
 loesung = "33.Th6! Dxg5 34.Tch2 Th8 35.gxf4 Dxf4+ 36.Tf2 Dxf2+ 37.Kxf2 Txh6 38.Lxe4 +–"
-varianten = ["33.gxf6+? Txf6! (33...Dxf6? 34.Sf5+! g4)", "34...Dxh6 35.Txh6 fxe3 (35...Kxh6 36.gxf4 +–) 36.Txf6 Txf6+ 37.Ke1 Lg4 38.Lxe3 +–"]
+varianten = ["33.gxf6+? Txf6! (33...Dxf6? 34.Sf5+!)", "34...Dxh6 35.Txh6 fxe3 (35...Kxh6 36.gxf4 +–) 36.Txf6 Txf6+ 37.Ke1 Lg4 38.Lxe3 +–"]
 
 [[aufgabe]]
 nr = 491
@@ -4903,7 +4903,7 @@ fen = "r1bq3k/1pp3rp/p1nb2P1/3Q4/2Bp4/P3P3/1P1B1PP1/R3K2R b - - 0 19"
 partie = "Desnica – Kopasz"
 turnier = "Serbian Team Ch, Vrnjačka Banja 2022"
 loesung = "19...Le5! 20.Dxd8+ Sxd8 21.exd4 Lf6 –+"
-varianten = ["19...Ld7? 20.gxh7 (21.Dg8+) 20...Txh7 21.Txh7+ Kxh7 22.Df7+ Kh8 (22...Kh6 23.Ld3) 23.0-0-0 Dh4 24.Dxd7 Se5 25.De6 1-0", "20.Txh7+ Txh7 21.gxh7 Dxd5 22.Lxd5 dxe3 23.Lxe3 Lf5 –+"]
+varianten = ["19...Ld7? 20.gxh7 Txh7 21.Txh7+ Kxh7 22.Df7+ Kh8 (22...Kh6 23.Ld3) 23.0-0-0 Dh4 24.Dxd7 Se5 25.De6 1-0", "20.Txh7+ Txh7 21.gxh7 Dxd5 22.Lxd5 dxe3 23.Lxe3 Lf5 –+"]
 
 [[aufgabe]]
 nr = 495
@@ -5073,7 +5073,7 @@ fen = "r1b2rk1/1pp2ppp/1nnb2q1/p3p3/P7/1B1PBNNP/1PP2PP1/R2QR1K1 w - - 0 15"
 partie = "Fitzsimons – T. Wall"
 turnier = "London 2022"
 loesung = "15.Sh4! Df6 16.Se4! Dd8 17.Dh5 Le7 18.Sf3 Sd5 19.Sxe5 Sxe5 20.Dxe5 +–"
-varianten = ["16...Dxh4? 17.Lg5 +–", "17.Dh5 Sg5"]
+varianten = ["16...Dxh4? 17.Lg5 +–"]
 
 [[aufgabe]]
 nr = 512
@@ -6534,7 +6534,7 @@ fen = "rn1qr1k1/pp3ppp/5n2/2pP4/PbN1P3/1bN2P2/1P1Q1KPP/R1B2B1R b - - 0 14"
 partie = "S. Royal – Pacher"
 turnier = "Budapest 2022"
 loesung = "14...Txe4! 15.fxe4 Sxe4+ 16.Sxe4 Lxd2 17.Scxd2?! Lxd5 ∓"
-varianten = ["15.Le3? Td4 16.De2 Sbd7 –+", "17.Sexd2 Dh4+ 18.g3 Dd4+ 19.Kg2 Dxd5+ 20.Kg1"]
+varianten = ["15.De3? Td4 16.De2 Sbd7 –+", "17.Sexd2 Dh4+ 18.g3 Dd4+ 19.Kg2 Dxd5+ 20.Kg1"]
 
 [[aufgabe]]
 nr = 658
@@ -6644,7 +6644,7 @@ fen = "1rbq1rnk/6pp/p1pb1p2/3p3P/5B2/2N1Q1R1/PPP1BPP1/2KR4 w - - 0 18"
 partie = "Grieve – Gormally"
 turnier = "British Ch, Torquay 2022"
 loesung = "18.Txg7! Te8 19.Dg3 Lxf4+ 20.Dxf4 Db6 21.h6 Dxb2+ 22.Kd2 Tb4 23.Ld3 1-0"
-varianten = ["18...Lxf4 19.Dxf4 Kxg7 20.Dxb8 +–", "18...Kxg7 19.Dg3+ Kh8 20.Lxd6 La8 21.Lxf8 Dxf8 22.Dc7 +–", "23...Tb7 24.Tb1 +–"]
+varianten = ["18...Lxf4 19.Dxf4 Kxg7 20.Dxb8 +–", "18...Kxg7 19.Dg3+ Kh8 20.Lxd6 Ta8 21.Lxf8 Dxf8 22.Dc7 +–", "23...Tb7 24.Tb1 +–"]
 
 [[aufgabe]]
 nr = 669
@@ -6783,7 +6783,7 @@ fen = "r1b1r1k1/1p1n1pbp/2pp2p1/2n5/1qPNPP2/1PN1BB2/3Q2PP/1R1R3K w - - 0 22"
 partie = "Lenderman – Mikaelyan"
 turnier = "Saint Louis 2022"
 loesung = "22.e5! dxe5 23.Sc2 Db6 24.b4 exf4 25.Lxc5 Sxc5 26.bxc5 Dxc5 27.Se4 Df8 28.Sd6 +–"
-varianten = ["23...Dxb3 24.Dxd7 Df8 25.Dc7 Lf5 26.Se4 ±"]
+varianten = ["23...Sxb3 24.Dxd7 Df8 25.Dc7 Lf5 26.Se4 ±"]
 
 [[aufgabe]]
 nr = 683
@@ -7077,7 +7077,7 @@ fen = "r3k2r/1p2qppp/p4n2/3P4/2P3n1/1Q2b2P/PP1N2P1/RNB1RK2 b k - 0 17"
 partie = "Magem Badals – Solodovnichenko"
 turnier = "Catalonian Team Ch, Barcelona 2023"
 loesung = "17...Sh5! 18.Se4 Sh2+ 19.Ke2 Lxc1 20.d6 De6 21.Sc3 0-0 22.Taxc1 f5 ∓"
-varianten = ["18.hxg4?? Sg3#", "20.Kd1 0-0 21.Kxc1 (21.Ked2? Dh4 –+) 21...f5 22.d6 De6 ∓"]
+varianten = ["18.hxg4?? Sg3#", "20.Kd1 0-0 21.Kxc1 (21.Sed2? Dh4 –+) 21...f5 22.d6 De6 ∓"]
 
 [[aufgabe]]
 nr = 713
@@ -7173,7 +7173,7 @@ fen = "r3r1k1/p4pbp/4b1p1/QNB1p3/2Pnq3/3R4/P4PPP/1R3BK1 w - - 0 23"
 partie = "Aleksandrov – Nitin"
 turnier = "New Delhi 2023"
 loesung = "23.Sc7! Lxc4 24.Te1! Se2+ 25.Lxe2 Lxd3 26.Lf3! 1-0"
-varianten = ["24...Dc6 25.Tc3 Lxf1 26.Dxf1 +–"]
+varianten = ["24...Dc6 25.Tc3 Lxf1 26.Kxf1 +–"]
 
 [[aufgabe]]
 nr = 723
@@ -7189,7 +7189,7 @@ varianten = ["20.Tg4 Dxc2! 21.Ld3 Sd4 22.De3 (22.Txd4 Db2 –+) 22...Db2 23.Tb1 
 nr = 724
 kapitel = 7
 seite = 203
-fen = "1r4k1/4n2p/4qpp1/1PP1p3/3Nn2P/5N2/1Q3PP1/R5K1 w - - 0 30"
+fen = "1r4k1/4n2p/6p1/2Pqpp2/1P1Nn2P/5N2/1Q3PP1/R5K1 w - - 0 30"
 partie = "Pechač – Ftáčnik"
 turnier = "Slovakian Team Ch 2022/3"
 loesung = "30.Ta7! Kf8 31.Txe7! Kxe7 32.Sc6+ Dxc6 33.Dxe5+ Kd7 34.Dxb8 Dd5 35.c6+! 1-0"
@@ -7203,7 +7203,7 @@ fen = "2r5/4bp1k/pp5p/2nr2p1/3Bn3/1P4P1/P4PBP/2RR2K1 w - - 0 29"
 partie = "C. Horvath – Navara"
 turnier = "Slovakian Team Ch 2022/3"
 loesung = "29.Lxe4+! Sxe4 30.Txc8 Lc5 31.Kg2! Sc3 32.Lxc3 Txd1 33.b4 Ld6 34.g4! ±"
-varianten = ["29.Txc5? Txc5 30.Lxe4+ f5 31.Lf3 (31.Lxd5 Txd5 32.Te1 (32.Td2 Lb4 –+) 32...Lb4 –+) 31...Ta5 –+"]
+varianten = ["29.Txc5? Tcxc5 30.Lxe4+ f5 31.Lf3 (31.Lxd5 Txd5 32.Te1 (32.Td2 Lb4 –+) 32...Lb4 –+) 31...Ta5 –+"]
 
 [[aufgabe]]
 nr = 726
@@ -7321,7 +7321,7 @@ fen = "2r3k1/q3Bpp1/p2P3p/1p6/2b4P/P3RP2/2r3P1/1Q2R1K1 b - - 0 38"
 partie = "Zhakshylykov – Vokhidov"
 turnier = "Tashkent 2023"
 loesung = "38...Le2! 39.Kf2 T2c3 0-1"
-varianten = ["39.d7 Dxe3+ 40.Kh1 De7 41.dxc8D+ Txc8 –+"]
+varianten = ["39.d7 Dxe3+ 40.Kh1 Dxe7 41.dxc8D+ Txc8 –+"]
 
 [[aufgabe]]
 nr = 738
@@ -7353,7 +7353,7 @@ fen = "r1bqk1nr/pp4pp/3bpn2/1N1p1p2/3P4/5N2/PPQBPPPP/R3KB1R w - - 0 10"
 partie = "Laurent-Paoli – Hasenohr"
 turnier = "Basle 2023"
 loesung = "10.Da4! 1-0"
-varianten = ["10...Df7 (10...Ke7 11.Sxd6 Kxd6 12.Se5 +–) 11.Sxd6+ Dxd6 12.Se5+ Kf8 (12...Ke7 13.Lb4 +–) 13.Lb4 +–"]
+varianten = ["10...Kf7 (10...Ke7 11.Sxd6 Kxd6 12.Se5 +–) 11.Sxd6+ Dxd6 12.Se5+ Kf8 (12...Ke7 13.Lb4 +–) 13.Lb4 +–"]
 
 [[aufgabe]]
 nr = 741
@@ -7511,7 +7511,7 @@ fen = "r1bq1bk1/p4p2/1p3npp/3p1N2/3B4/2P3QP/PP1N1PP1/4R1K1 w - - 0 19"
 partie = "Fitzsimons – Urh"
 turnier = "London 2022"
 loesung = "19.Lxf6! Dxf6 20.Te8 Lb7 21.Sxh6+ Kg7 22.Txa8 Lxa8 23.Sg4 De6 24.Df4 +–"
-varianten = ["19.Dh4? Lxf5 20.Lxf6 Dd7 (20...Dd6 21.Sf1!?) 21.Ld4 ±", "20...Dxf5? 21.Td6 Kg7 22.Dxf8+ Kf6 23.Dh8+ Kg5 24.Te5"]
+varianten = ["19.Dh4? Lxf5 20.Lxf6 Dd7 (20...Dd6 21.Sf1!?) 21.Ld4 ±", "20...Dxf5? 21.Dd6 Kg7 22.Dxf8+ Kf6 23.Dh8+ Kg5 24.Te5"]
 
 [[aufgabe]]
 nr = 757
@@ -7551,7 +7551,7 @@ fen = "r1b2Bk1/pp4pp/2p1pn2/3pn2q/2P2b2/1PNP1N2/P1Q1PPBP/R3R1K1 b - - 0 14"
 partie = "Pozin – Ponfilenok"
 turnier = "St Petersburg Over-65 Ch 2022"
 loesung = "14...Sxf3+ 15.Lxf3 Dxh2+ 16.Kf1 Le3 17.fxe3 e5 18.Lg2 Lh3 19.Ted1 Dg3 20.Lxh3 Txf8"
-varianten = ["15.exf3 Dxh2+ 16.Kf1 Lxf3 17.Se2 Ld6 18.Dd2 h6 –+", "17.Sd1 e5 18.Sxe3 Lh3+ 19.Sg2 (19.Lg2 Dh1#) 19...Dh1#"]
+varianten = ["15.exf3 Dxh2+ 16.Kf1 Kxf8 17.Se2 Ld6 18.Dd2 h6 –+", "17.Sd1 e5 18.Sxe3 Lh3+ 19.Sg2 (19.Lg2 Dh1#) 19...Dh1#"]
 
 [[aufgabe]]
 nr = 761
@@ -7561,7 +7561,7 @@ fen = "2r3k1/1r2b1pp/R2p4/3Pp3/2B2p2/1PNb1P2/4R1PP/6K1 w - - 0 33"
 partie = "O. Nytra – Ana. Rakhmangulova"
 turnier = "Bratislava rapid 2022"
 loesung = "33.Tc6! Lf5 34.La6! Txc6 35.dxc6 Ta7 36.Lc4+ Kf8 37.Kf2 Ld8 38.g4 +–"
-varianten = ["33...La8 34.Lxd3 Txb3 35.Lc2 +–"]
+varianten = ["33...Ta8 34.Lxd3 Txb3 35.Lc2 +–"]
 
 [[aufgabe]]
 nr = 762
@@ -7610,7 +7610,7 @@ fen = "3nrrk1/2pq2pp/4b3/1pbp4/8/1BP2NN1/1P3PPP/R2QR1K1 w - - 0 20"
 partie = "Falkevall – A. Sahakyan"
 turnier = "European Under-16 Ch, Antalya 2022"
 loesung = "20.Se4! Sb7 21.Ta6 Lf7 22.Seg5 Txe1+ 23.Dxe1 c6 24.Lc2 ±"
-varianten = ["20.Dd3? c6 21.Sd4 Df7 =", "20...Dc6 21.Seg5 Kh8 22.Sxe6 Txe6 23.Dxd5 Te1+ 24.Txe1 Dxd5 25.Lxd5 ±"]
+varianten = ["20.Dd3? c6 21.Sd4 Df7 =", "20...Dc6 21.Seg5 Kh8 22.Sxe6 Txe6 23.Dxd5 Txe1+ 24.Txe1 Dxd5 25.Lxd5 ±"]
 
 [[aufgabe]]
 nr = 767
@@ -8106,7 +8106,7 @@ fen = "6rk/4RRpp/8/4p2P/3r2q1/5QP1/5P1K/8 w - - 0 39"
 partie = "Stalmach – Gähwiler"
 turnier = "Marianske Lazne 2023"
 loesung = "39.Txg7! Txg7 40.Df8+ Tg8 41.Df6+ 1-0"
-varianten = ["39...Dxg7 40.Txg7 Kxg7 (40...Txg7 41.Df8+ Tg8 42.Df6+ Tg7 43.h6 +–) 41.Df5 Tdd8 42.De5+ Kf7 43.Df5+ +–", "41...Dg7 (41...Tg7 42.Te8#) 42.Txg7 Txg7 43.h6 +–"]
+varianten = ["39...Dxg7 40.Txg7 Kxg7 (40...Txg7 41.Df8+ Tg8 42.Df6+ Tg7 43.h6 +–) 41.Df5 Tdd8 42.Dxe5+ Kf7 43.Df5+ +–", "41...Dg7 (41...Tg7 42.Te8#) 42.Txg7 Txg7 43.h6 +–"]
 
 [[aufgabe]]
 nr = 818
@@ -8383,7 +8383,7 @@ seite = 244
 fen = "qr4k1/2p3pp/3bpn2/1P1pP3/2n2B2/1Q3P2/1PP3PP/1K1RR3 b - - 0 23"
 partie = "J. Williams – G. Nagy"
 turnier = "New York 2022"
-loesung = "23...La3! 24.Lc1 Sd7 25.bxa3 Da5 26.Da2 Txb5+ 0-1"
+loesung = "23...La3! 24.Lc1 Sd7 25.bxa3 Da5 26.Ka2 Txb5 0-1"
 varianten = ["24.bxa3 Txb5 –+", "27.Dd3 Sc5 28.De2 Dc3 –+"]
 
 [[aufgabe]]
@@ -8479,10 +8479,10 @@ loesung = "24...Kh8! 25.Txc6 Tfd7! 26.Txc7 Td1+ 27.Txd1 Txd1#"
 nr = 855
 kapitel = 9
 seite = 246
-fen = "5rk1/1p3ppp/3Q2n1/p2P3r/P1P1P2q/R2B1P1b/4P2P/2B3RK b - - 0 23"
+fen = "5rk1/1p3ppp/3Q2n1/p2P3r/P1P1P2q/R2B1P1b/5P1P/2B3RK b - - 0 23"
 partie = "N.S. Mohammad – S.L. Narayanan"
 turnier = "Bangladeshi Team Ch, Dhaka 2022"
-loesung = "23...Se5 24.Lb2 Df2 25.Lc2 Tg5 26.Txg5 Df1+ 0-1"
+loesung = "23...Se5 24.Lb2 Dxf2 25.Lc2 Tg5 26.Txg5 Df1+ 0-1"
 varianten = ["25.Le2 f6 26.Lxe5 fxe5 27.Taa1 Lf1 –+", "27.Tg1 Lg2#"]
 
 [[aufgabe]]
@@ -8493,7 +8493,7 @@ fen = "4nrk1/7p/2Np2p1/3P4/2PQ4/4ppPP/P2q4/1R3BK1 b - - 0 35"
 partie = "Sumets – K. Grigoryan"
 turnier = "Sitges 2022"
 loesung = "35...De1! 36.Se7+ Kf7 37.Da7 f2+ 38.Kg2 e2 39.Sf5+ Kg8 40.Sh6+ Kh8 41.Lxe2 Dxb1 42.Lf1 De4+ 43.Kh2 Df3 –+"
-varianten = ["35...Df2+? 36.Kh1 Lf6 37.Se7+ Kf7 38.Da7 =", "36.Txe1 f2+ 37.Kh2 fxe1D –+", "39...Kf6?? 40.Dd4+ Kf7 41.Tb7+"]
+varianten = ["35...Df2+? 36.Kh1 Sf6 37.Se7+ Kf7 38.Da7 =", "36.Txe1 f2+ 37.Kh2 fxe1D –+", "39...Kf6?? 40.Dd4+ Kf7 41.Tb7+"]
 
 [[aufgabe]]
 nr = 857
@@ -8732,7 +8732,7 @@ fen = "7Q/p7/1p6/2p1p3/1kP1Pq2/3P4/R3K3/8 b - - 0 51"
 partie = "J.-M. Degraeve – Decuignière"
 turnier = "Saint-Affrique 2022"
 loesung = "51...Kb3! 52.Ta1 Dg4+ 53.Kf2 Df4+ 54.Ke2 Dg4+ 55.Kd2 Dg2+ 56.Ke3 Dg3+ ="
-varianten = ["51...Dg4+? 52.Kf1 Df3+ 53.Kg1 Dg3+ 54.Tg2 Dc3+ 55.Kh1 +–", "52.Td2 Kc3 53.Td1 Dg4+ 54.Ke1 Dg1+ 55.Ke2 Dg4+ =", "53.Ta2 Kb3", "53.Kf1 Df3+ 54.Kg1 Dg3+ 55.Kh1 Df3+ 56.Kh2 Df2+ 57.Kh3 Df3+ 58.Kh4 Df4+ 59.Kh5?? Dh2+ –+"]
+varianten = ["51...Dg4+? 52.Kf1 Df3+ 53.Kg1 Dg3+ 54.Tg2 De3+ 55.Kh1 +–", "52.Td2 Kc3 53.Td1 Dg4+ 54.Ke1 Dg1+ 55.Ke2 Dg4+ =", "53.Ta2 Kb3", "53.Kf1 Df3+ 54.Kg1 Dg3+ 55.Kh1 Df3+ 56.Kh2 Df2+ 57.Kh3 Df3+ 58.Kh4 Df4+ 59.Kh5?? Dh2+ –+"]
 
 [[aufgabe]]
 nr = 881
@@ -8822,7 +8822,7 @@ fen = "r2q4/3k1p2/p1p1b2p/3pPn1P/Pp2nB2/1P2PN1B/2Q2P2/6RK w - - 0 30"
 partie = "L. van Foreest – Kriebel"
 turnier = "Polish Team Ch 2022"
 loesung = "30.Lxf5 Lxf5 31.e6+! Ke7 32.Dxc6 Lxe6 33.Db7+ Kf6 34.Le5+ Kf5 35.Sd4+ Kxe5 36.Sc6+ Kf6 37.Sxd8 Txd8 38.f3 1-0"
-varianten = ["31...Kxe6 32.Sd4+ +–", "32...Sxf2+ 33.Kg2 Sh3 34.Db7+ Kxe6 35.Sd4+ Kf6 36.Tf1 +–", "33...Ld7 34.Dxb4+ Kf6 35.Dd4+ Ke7 36.Le5+ Le6 37.Sd4 +–"]
+varianten = ["31...Kxe6 32.Sd4+ +–", "32...Sxf2+ 33.Kg2 Sh3 34.Db7+ Kxe6 35.Sd4+ Kf6 36.Tf1 +–", "33...Ld7 34.Dxb4+ Kf6 35.Dd4+ Ke7 36.De5+ Le6 37.Sd4 +–"]
 
 [[aufgabe]]
 nr = 890
@@ -9090,7 +9090,7 @@ varianten = ["24.Sh2? Shxg2! 25.Kh1 (25.Sxg2 Sxh3+ 26.Kh1 Sxf2+ 27.Kg1 Sxd1 28.S
 nr = 916
 kapitel = 9
 seite = 256
-fen = "r1q2rk1/3bbpp1/p4n1B/2p2P2/1p4P1/1B2P3/PPPQ3P/2KRR3 b - - 0 20"
+fen = "r1q2rk1/3bbpp1/p4n1B/2p2P2/1p4P1/1B3P2/PPPQ3P/2KRR3 b - - 0 20"
 partie = "Azarov – Moussard"
 turnier = "European Ch, Vrnjačka Banja 2023"
 loesung = "20...Ld8! 21.g5 c4 22.gxf6 Lxf6 23.Lxg7 Lxg7 24.f6 Lxf6 25.Tg1+ Kh7 26.Tg5 Lf5 –+"
@@ -9380,7 +9380,7 @@ varianten = ["21.Dxh7?? Th8 –+", "24...Lxf5 25.gxf5 gxf5 26.f4 Lf6 27.Te6 Tf8 
 nr = 945
 kapitel = 9
 seite = 261
-fen = "8/1q4bk/3p2p1/1Q1P3p/3pPR2/3B2P1/3r3P/6K1 b - - 0 35"
+fen = "8/1q4bk/3p2p1/1Q1P3p/3pP3/3B1RP1/3r3P/6K1 b - - 0 35"
 partie = "Järvenpää – Nevanlinna"
 turnier = "Finnish Team Ch 2022/3"
 loesung = "35...Dc8! 36.Lf1 d3! 37.Lxd3 Dc1+ 38.Lf1 Ld4+ 39.Kh1 Dc2 –+"
@@ -9490,7 +9490,7 @@ varianten = ["33...Lxf6?? 34.Dxg4 +–", "34.Txg3? Dxh2+! 35.Txh2 Txh2#", "35.Tx
 nr = 956
 kapitel = 9
 seite = 262
-fen = "r1q1r1kb/ppPb1p1p/6pB/8/2PnB2Q/2N3PP/PP2PP2/R3K2R b K - 0 16"
+fen = "r1q1r1kb/pppb1p1p/6pB/8/2PnB2Q/2N3PP/PP2PP2/R3K2R b K - 0 16"
 partie = "Yarashov – Olcum"
 turnier = "Mersin 2022"
 loesung = "16...Lc6! 17.Lxc6 bxc6 18.0-0 Txe2! 19.Dg4 Dxg4 20.hxg4 Txb2 21.Tac1 Sf3+ 22.Kg2 Se5 –+"
@@ -9670,7 +9670,7 @@ varianten = ["41.fxg5? Sxg5+ 42.Kg2 (42.Kh4 Sf3+ 43.Kh5 f4 –+) 42...De4+ 43.Kf
 nr = 974
 kapitel = 9
 seite = 265
-fen = "3r2k1/3q1pb1/6p1/2R1Pbqp/4N2P/1p3P2/1B4PK/8 w - - 0 49"
+fen = "3r2k1/3q1pb1/6p1/2R1PbQp/4N2P/1p3P2/1B4PK/8 w - - 0 49"
 partie = "Bodnaruk – Pogonina"
 turnier = "Sochi (women's team event) 2023"
 loesung = "49.e6! fxe6 1-0"

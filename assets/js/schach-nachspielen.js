@@ -185,13 +185,38 @@
     }
 
     // Wandelt den Text einer Zeile in Text + anklickbare Züge um. hauptlinie = true: Start in der Ausgangsstellung.
-    function verarbeite(el, hauptlinie, hauptPlys) {
+    // frueher = schon verarbeitete Varianten: eine Untervariante des Buchs, die als eigene Zeile steht,
+    // hängt sich an die letzte frühere Variante, in der ihr erster Zug passt.
+    function verarbeite(el, hauptlinie, hauptPlys, frueher) {
       var text = el.textContent, teile = text.match(/\(|\)|\s+|[^\s()]+/g) || [];
       var frag = document.createDocumentFragment();
       function neueLinie(eltern) { return { pos: null, w: null, ply: null, vorher: null, ep: '', kaputt: false, plys: {}, eltern: eltern, erster: true }; }
-      var linie = neueLinie(null), stapel = [], eigene = [], abzweig;
+      function anker(plys, ply) {
+        var k = plys[ply], davor = plys[ply - 1];
+        if (k) return { pos: k.vor, ep: k.epVor, vorher: k.vorher };
+        if (davor) return { pos: davor.nach, ep: davor.ep, vorher: davor };
+        return null;
+      }
+      // Wie viele Züge dieser Linie (ab teile[i], Klammern übersprungen) lassen sich von Stellung a aus spielen?
+      function reichweite(a, w, ply, i) {
+        var pos = a.pos, ep = a.ep, tiefe = 0, n = 0;
+        for (var j = i; j < teile.length; j++) {
+          var t = teile[j];
+          if (t === '(') { tiefe++; continue; }
+          if (t === ')') { if (!tiefe) break; tiefe--; continue; }
+          if (tiefe) continue;
+          var m = ZUG.exec(t);
+          if (!m) continue;
+          if (m[1] && plyVon(Number(m[1]), m[2] === '...') !== ply) break;
+          var erg = zug(pos, w, m[3], ep);
+          if (typeof erg === 'string') break;
+          pos = erg.b; ep = erg.ep; w = !w; ply++; n++;
+        }
+        return n;
+      }
+      var linie = neueLinie(null), wurzel = linie, stapel = [], eigene = [], abzweig;
       if (hauptlinie) { linie.pos = startBrett; linie.w = startWeiss; linie.ply = 0; linie.ep = startEp; linie.plys = hauptPlys; }
-      teile.forEach(function (t) {
+      teile.forEach(function (t, ti) {
         if (t === '(') { stapel.push(linie); linie = neueLinie(linie); frag.appendChild(document.createTextNode(t)); return; }
         if (t === ')') { if (stapel.length) linie = stapel.pop(); frag.appendChild(document.createTextNode(t)); return; }
         var m = ZUG.exec(t);
@@ -203,14 +228,30 @@
           w = !schwarz; ply = plyVon(Number(m[1]), schwarz);
           if (linie.pos === null || linie.ply !== ply) {
             if (linie.pos !== null) { linie.kaputt = true; frag.appendChild(figurine(t)); return; }
-            if (!hauptlinie && !stapel.length && abzweig === undefined) abzweig = ply;
-            // Abzweig: Stellung vor diesem Halbzug in der übergeordneten Linie (sonst in der Hauptlinie)
-            var quelle = linie.eltern ? linie.eltern.plys : hauptPlys, k = quelle[ply] || hauptPlys[ply];
-            var davor = quelle[ply - 1] || hauptPlys[ply - 1];
-            if (k) { linie.pos = k.vor; linie.ep = k.epVor; linie.vorher = k.vorher; }
-            else if (ply === 0) { linie.pos = startBrett; linie.ep = startEp; linie.vorher = null; }
-            else if (davor) { linie.pos = davor.nach; linie.ep = davor.ep; linie.vorher = davor; }
-            else { linie.kaputt = true; frag.appendChild(figurine(t)); return; }
+            // Abzweig: Stellung vor diesem Halbzug in der übergeordneten Linie (endet sie davor: nach ihrem
+            // letzten Zug), in der Hauptlinie oder in einer früheren Variante. Gewählt wird die Quelle, von der
+            // aus sich die Linie am weitesten nachspielen lässt (bei Gleichstand die erste in dieser Reihenfolge);
+            // passt schon der erste Zug nirgends, die erste vorhandene (dann meldet zug() den Fehler).
+            var quellen = [];
+            if (linie.eltern) quellen.push({ plys: linie.eltern.plys });
+            quellen.push({ plys: hauptPlys, abzweig: ply });
+            if (!hauptlinie && !linie.eltern && frueher) {
+              for (var i = frueher.length - 1; i >= 0; i--) quellen.push({ plys: frueher[i].plys, abzweig: frueher[i].abzweig });
+            }
+            var gewaehlt = null, erste = null, beste = 0;
+            quellen.forEach(function (q) {
+              var a = anker(q.plys, ply);
+              if (!a && ply === 0 && q.plys === hauptPlys) a = { pos: startBrett, ep: startEp, vorher: null };
+              if (!a) return;
+              a.abzweig = q.abzweig;
+              if (!erste) erste = a;
+              var n = reichweite(a, w, ply, ti);
+              if (n > beste) { beste = n; gewaehlt = a; }
+            });
+            gewaehlt = gewaehlt || erste;
+            if (!gewaehlt) { linie.kaputt = true; frag.appendChild(figurine(t)); return; }
+            if (!hauptlinie && !stapel.length && abzweig === undefined) abzweig = gewaehlt.abzweig !== undefined ? gewaehlt.abzweig : ply;
+            linie.pos = gewaehlt.pos; linie.ep = gewaehlt.ep; linie.vorher = gewaehlt.vorher;
             linie.w = w; linie.ply = ply;
           }
         } else {
@@ -240,6 +281,7 @@
       el.textContent = '';
       el.appendChild(frag);
       eigene.abzweig = abzweig;
+      eigene.plys = wurzel.plys;
       return eigene;
     }
 
@@ -248,7 +290,8 @@
     if (!hauptKnoten.length) return;
     var varianten = [];
     loesung.querySelectorAll('.varianten li').forEach(function (v) {
-      varianten.push({ el: v, abzweig: verarbeite(v, false, hauptPlys).abzweig });
+      var e = verarbeite(v, false, hauptPlys, varianten);
+      varianten.push({ el: v, abzweig: e.abzweig, plys: e.plys });
     });
 
     var knoepfe = document.createElement('div');

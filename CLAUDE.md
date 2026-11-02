@@ -125,8 +125,8 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-02: Schach-Buch, Kapitel 1–3 auf Buchansicht/Nachspielen umgestellt)
-- Offen (Schach-Buch): Subagent für 1–113; 48 Varianten mit unpassendem Zug (Browser-Konsole „Nachspielen aufgabe-…“, Liste in `notizen/spiele-schach-tools.md`) an den Lösungsfotos prüfen.
+- (leer – zuletzt freigegeben und gepusht am 2026-11-02: Schach-Buch, Varianten bereinigt)
+- Offen (Schach-Buch): Subagent für 1–113; 8 Varianten-Meldungen in Kapitel 1/2 (35, 85, 291, 292, 294, 309, 330; 564 = Buchfehler) – Lösungsfotos dazu bei Sven erfragen.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
 

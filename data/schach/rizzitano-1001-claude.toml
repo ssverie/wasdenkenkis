@@ -4732,7 +4732,7 @@ nr = 724
 sicherheit = "unsicher"
 antwort = "1.Sxe7+"
 ergebnis = "falsch"
-notiz = "Gelöst mit falsch abgelesener Stellung (Springer d4 als d5, Bauer c5 als c6 gelesen)."
+notiz = "Gelöst mit falsch abgelesener Stellung (Dame, Bauern b–f verschoben; Diagramm am 02.11. korrigiert)."
 geloest = 2026-11-01
 
 [[antwort]]
@@ -5772,6 +5772,7 @@ nr = 855
 sicherheit = "unsicher"
 antwort = "1...Lg2+"
 ergebnis = "falsch"
+notiz = "Gelöst mit falsch abgelesener Stellung (Bauer e2 statt f2)."
 geloest = 2026-11-02
 
 [[antwort]]
@@ -6208,6 +6209,7 @@ nr = 916
 sicherheit = "unsicher"
 antwort = "1...Sxg4"
 ergebnis = "falsch"
+notiz = "Gelöst mit falsch abgelesener Stellung (Bauer e3 statt f3)."
 geloest = 2026-11-02
 
 [[antwort]]
@@ -6412,6 +6414,7 @@ nr = 945
 sicherheit = "unsicher"
 antwort = "1...Lh6"
 ergebnis = "falsch"
+notiz = "Gelöst mit falsch abgelesener Stellung (Turm f4 statt f3)."
 geloest = 2026-11-02
 
 [[antwort]]
@@ -6491,6 +6494,7 @@ nr = 956
 sicherheit = "unsicher"
 antwort = "1...Sf5"
 ergebnis = "falsch"
+notiz = "Gelöst mit falsch abgelesener Stellung (Bauer c7 weiß statt schwarz)."
 geloest = 2026-11-02
 
 [[antwort]]
@@ -6621,7 +6625,7 @@ nr = 974
 sicherheit = "unsicher"
 antwort = "1.Sf6+"
 ergebnis = "falsch"
-notiz = "Sf6+ gesehen, aber erst als zweiten Zug."
+notiz = "Sf6+ gesehen, aber erst als zweiten Zug; gelöst mit falsch abgelesener Stellung (Dame g5 schwarz statt weiß)."
 geloest = 2026-11-02
 
 # --- Kapitel 6 Deadly Puzzles (Abschnitt 10) ---
