@@ -12,6 +12,12 @@ name = "Claude Code (Opus 5.5)"
 modell = "Claude Opus 5.5"
 bedingungen = "Die Redaktions-Instanz dieser Seite. Hat die Diagramme selbst abgelesen und dabei die Bildunterschriften des Buchs gesehen (halbe Hinweise, z. B. „Double check“); gelöst aus der FEN im Kopf, ohne Engine und ohne das eigene Nachspielskript, ohne die Lösungsseiten."
 
+[[teilnehmer]]
+kurz = "opus-agent"
+name = "Opus 5.5 (frischer Agent)"
+modell = "Claude Opus 5.5"
+bedingungen = "Ein frisch gestarteter Unteragent ohne Vorwissen aus dieser Sitzung. Bekam nur die 57 FEN mit „Weiß am Zug, Matt in 1“ – ohne Bildunterschriften – und die Anweisung, im Kopf zu lösen, ohne Dateien, Skripte, Engine oder Web."
+
 [[antwort]]
 nr = 1
 wer = "claude-code"
@@ -487,5 +493,484 @@ wer = "claude-code"
 antwort = "1.Dxh7#"
 sicherheit = "sicher"
 notiz = "Sg5 ist durch Tg1 gefesselt, h7 deckt Tb7."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 1
+wer = "opus-agent"
+antwort = "1.Txa6#"
+sicherheit = "sicher"
+notiz = "b7 ist durch Lg2 gefesselt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 2
+wer = "opus-agent"
+antwort = "1.Lf6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 3
+wer = "opus-agent"
+antwort = "1.Tf7#"
+sicherheit = "sicher"
+notiz = "Se5 deckt f7"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 4
+wer = "opus-agent"
+antwort = "1.Th1#"
+sicherheit = "sicher"
+notiz = "Le6 deckt g8, Se7 sperrt Tc7"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 5
+wer = "opus-agent"
+antwort = "1.Ta8#"
+sicherheit = "sicher"
+notiz = "Lb7 ist durch Tb1 gefesselt, Sc7 deckt a8"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 6
+wer = "opus-agent"
+antwort = "1.Sb5#"
+sicherheit = "sicher"
+notiz = "c6 ist durch Tc1 gefesselt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 7
+wer = "opus-agent"
+antwort = "1.Lh5#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 8
+wer = "opus-agent"
+antwort = "1.e4#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 9
+wer = "opus-agent"
+antwort = "1.f7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 10
+wer = "opus-agent"
+antwort = "1.Lf6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 11
+wer = "opus-agent"
+antwort = "1.c8S#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Th7"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 12
+wer = "opus-agent"
+antwort = "1.Dxa7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 13
+wer = "opus-agent"
+antwort = "1.g4#"
+sicherheit = "sicher"
+notiz = "fxg3 e.p. ist verboten (f4 durch Tf1 gefesselt)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 14
+wer = "opus-agent"
+antwort = "1.Lxf7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 15
+wer = "opus-agent"
+antwort = "1.Sa6#"
+sicherheit = "sicher"
+notiz = "Doppelschach"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 16
+wer = "opus-agent"
+antwort = "1.Lxd6#"
+sicherheit = "sicher"
+notiz = "Doppelschach"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 17
+wer = "opus-agent"
+antwort = "1.De7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 18
+wer = "opus-agent"
+antwort = "1.De8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 19
+wer = "opus-agent"
+antwort = "1.Df3#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 20
+wer = "opus-agent"
+antwort = "1.Txh6#"
+sicherheit = "sicher"
+notiz = "g7 ist durch Lb2 gefesselt; auch 1.Dh7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 21
+wer = "opus-agent"
+antwort = "1.Td8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 22
+wer = "opus-agent"
+antwort = "1.Te8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 23
+wer = "opus-agent"
+antwort = "1.g4#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 24
+wer = "opus-agent"
+antwort = "1.Sf6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 25
+wer = "opus-agent"
+antwort = "1.Sd6#"
+sicherheit = "sicher"
+notiz = "e7 ist durch De2 gefesselt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 26
+wer = "opus-agent"
+antwort = "1.Dd6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 27
+wer = "opus-agent"
+antwort = "1.Db5#"
+sicherheit = "sicher"
+notiz = "Le6 ist nach dem Damenzug durch Te1 gefesselt, Ld7 geht also nicht"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 28
+wer = "opus-agent"
+antwort = "1.Da8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 29
+wer = "opus-agent"
+antwort = "1.Sc4#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 30
+wer = "opus-agent"
+antwort = "1.Dd8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 31
+wer = "opus-agent"
+antwort = "1.Df7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 32
+wer = "opus-agent"
+antwort = "1.De5#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 33
+wer = "opus-agent"
+antwort = "1.Dxh5#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 34
+wer = "opus-agent"
+antwort = "1.Df6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 35
+wer = "opus-agent"
+antwort = "1.Le8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 36
+wer = "opus-agent"
+antwort = "1.Dd6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 37
+wer = "opus-agent"
+antwort = "1.Lg6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 38
+wer = "opus-agent"
+antwort = "1.Tg8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 39
+wer = "opus-agent"
+antwort = "1.Sf7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 40
+wer = "opus-agent"
+antwort = "1.Sxf6#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Ld3"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 41
+wer = "opus-agent"
+antwort = "1.Sd7#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Lg3; auch 1.Sc6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 42
+wer = "opus-agent"
+antwort = "1.Tg5#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Lb2"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 43
+wer = "opus-agent"
+antwort = "1.Lxd7#"
+sicherheit = "sicher"
+notiz = "Dd8 ist durch Dc8 gefesselt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 44
+wer = "opus-agent"
+antwort = "1.Lg5#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 45
+wer = "opus-agent"
+antwort = "1.gxh8S#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 46
+wer = "opus-agent"
+antwort = "1.Te8#"
+sicherheit = "sicher"
+notiz = "Df7 ist durch Db3 gefesselt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 47
+wer = "opus-agent"
+antwort = "1.Sf7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 48
+wer = "opus-agent"
+antwort = "1.Th5#"
+sicherheit = "sicher"
+notiz = "g6 ist durch Ld3 gefesselt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 49
+wer = "opus-agent"
+antwort = "1.Sd3#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Tg5"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 50
+wer = "opus-agent"
+antwort = "1.Da8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 51
+wer = "opus-agent"
+antwort = "1.Sd8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 52
+wer = "opus-agent"
+antwort = "1.Dh4#"
+sicherheit = "sicher"
+notiz = "Ld8 deckt h4"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 53
+wer = "opus-agent"
+antwort = "1.Sf5#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 54
+wer = "opus-agent"
+antwort = "1.Sxg7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 55
+wer = "opus-agent"
+antwort = "1.Tf8#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Lb3"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 56
+wer = "opus-agent"
+antwort = "1.Txf3#"
+sicherheit = "sicher"
+notiz = "Le4 ist durch Te5 gefesselt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 57
+wer = "opus-agent"
+antwort = "1.Dxh7#"
+sicherheit = "sicher"
+notiz = "Sg5 ist durch Tg1 gefesselt"
 ergebnis = "offen"
 geloest = 2026-11-03
