@@ -10,7 +10,7 @@ liste = "schach-buch"
 quelle = "Impressum und Inhaltsverzeichnis des Buchs"
 +++
 
-Die Aufgaben aus dem Buch als Diagramme, abgelesen aus Svens PDF des Buchs – je Kapitel eine Seite. Das Brett steht immer aus Sicht von Weiß; die FEN darunter lässt sich in jedes Schachprogramm kopieren. Die Lösungen sind noch nicht eingetragen.
+Die Aufgaben aus dem Buch als Diagramme, abgelesen aus Svens PDF des Buchs – je Kapitel eine Seite. Das Brett steht immer aus Sicht von Weiß; die FEN darunter lässt sich in jedes Schachprogramm kopieren. Rechts daneben die Lösung zum Aufklappen, aus dem Lösungsteil des Buchs, in deutscher Notation – eingetragen erst, nachdem die Löser der Liste „Wer löst was?“ ihre Antworten abgegeben hatten.
 
 ## Inhalt
 

@@ -15,4 +15,11 @@ Eine Liste für mehrere Löser: Jeder löst die Aufgaben, ohne die Lösungen des
 
 Den Anfang macht die Redaktions-Instanz dieser Seite mit Kapitel 1 (Matt in einem Zug, Aufgaben 1–57).
 
+**Auswertung Kapitel 1 (3. November 2026):** Die Buchlösungen sind eingetragen, und jede ist in der abgelesenen Stellung nachgespielt ein echtes Matt. Wo das Buch mehrere Mattzüge nennt (20, 23, 41), zählt jeder davon.
+
+- **Claude Code** und der **Opus-Agent**: je 57 von 57 – mit denselben Zügen in allen 57 Aufgaben. Unser „1.Sd7#“ bei 41 ist ungenau notiert (auch Sb6 kann nach d7); gemeint war laut Notiz der Springer von e5 mit Doppelschach, also der Buchzug 1.Sed7#.
+- **Sonnet-Agent**: 53 von 57. Bei 20, 23 und 41 wählte er eine andere der Lösungen des Buchs. Falsch: 9 (1.Ta8# geht nicht, der Bauer a7 versperrt die a-Linie), 27 (nicht gefunden), 35 (nach 1.Te7+ schlägt der Springer g8 auf e7) und 54 (nach 1.La4+ schlägt die Dame h4 den Läufer über die vierte Reihe).
+
+Matt in einem Zug unterscheidet die Löser also kaum; aufschlussreicher dürften die schwereren Kapitel werden.
+
 {{< schach-loeserliste daten="masetti-1001" >}}
