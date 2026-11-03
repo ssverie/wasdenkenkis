@@ -1,0 +1,491 @@
+# Lösungsliste zu „1001 Chess Exercises for Beginners“: Antworten verschiedener Löser, festgeschrieben, bevor die
+# Lösungen des Buchs eingetragen sind (Sven, 2026-11-03: „mach eine Liste, da kommen dann die anderen noch dazu,
+# erstmal nur du, 57“). Angezeigt auf /buchtexte/masetti-1001-loeser/ per Shortcode {{< schach-loeserliste daten="masetti-1001" >}};
+# Stellung und (später) Buchlösung aus data/schach/masetti-1001.toml. Antworten nie nachträglich ändern.
+# [[teilnehmer]]: kurz (Schlüssel), name (Anzeige), modell, bedingungen (wie gelöst).
+# [[antwort]]: nr, wer (= kurz), antwort, sicherheit (sicher | unsicher | nicht gefunden), geloest, notiz,
+#              ergebnis (richtig | falsch | anderer Weg | offen). Gezählt wird streng: nur der Zug des Buchs.
+
+[[teilnehmer]]
+kurz = "claude-code"
+name = "Claude Code (Opus 5.5)"
+modell = "Claude Opus 5.5"
+bedingungen = "Die Redaktions-Instanz dieser Seite. Hat die Diagramme selbst abgelesen und dabei die Bildunterschriften des Buchs gesehen (halbe Hinweise, z. B. „Double check“); gelöst aus der FEN im Kopf, ohne Engine und ohne das eigene Nachspielskript, ohne die Lösungsseiten."
+
+[[antwort]]
+nr = 1
+wer = "claude-code"
+antwort = "1.Txa6#"
+sicherheit = "sicher"
+notiz = "b7 ist durch Lg2 gefesselt."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 2
+wer = "claude-code"
+antwort = "1.Lf6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 3
+wer = "claude-code"
+antwort = "1.Tf7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 4
+wer = "claude-code"
+antwort = "1.Th1#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 5
+wer = "claude-code"
+antwort = "1.Ta8#"
+sicherheit = "sicher"
+notiz = "Lb7 ist durch Tb1 gefesselt, a8 deckt Sc7."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 6
+wer = "claude-code"
+antwort = "1.Sb5#"
+sicherheit = "sicher"
+notiz = "c6 ist durch Tc1 gefesselt."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 7
+wer = "claude-code"
+antwort = "1.Lh5#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 8
+wer = "claude-code"
+antwort = "1.e4#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 9
+wer = "claude-code"
+antwort = "1.f7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 10
+wer = "claude-code"
+antwort = "1.Lf6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 11
+wer = "claude-code"
+antwort = "1.c8S#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Th7; nach 1.c8D+ könnte Te7 dazwischenziehen."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 12
+wer = "claude-code"
+antwort = "1.Dxa7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 13
+wer = "claude-code"
+antwort = "1.g4#"
+sicherheit = "sicher"
+notiz = "fxg3 e. p. geht nicht, f4 ist durch Tf1 gefesselt."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 14
+wer = "claude-code"
+antwort = "1.Lxf7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 15
+wer = "claude-code"
+antwort = "1.Sa6#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Tb1."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 16
+wer = "claude-code"
+antwort = "1.Lxd6#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Tf1."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 17
+wer = "claude-code"
+antwort = "1.De7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 18
+wer = "claude-code"
+antwort = "1.De8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 19
+wer = "claude-code"
+antwort = "1.Df3#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 20
+wer = "claude-code"
+antwort = "1.Txh6#"
+sicherheit = "sicher"
+notiz = "g7 ist durch Lb2 gefesselt. Ebenso matt: 1.Dh7# und 1.Sf7#."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 21
+wer = "claude-code"
+antwort = "1.Td8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 22
+wer = "claude-code"
+antwort = "1.Te8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 23
+wer = "claude-code"
+antwort = "1.g4#"
+sicherheit = "sicher"
+notiz = "Ebenso matt: 1.De4#."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 24
+wer = "claude-code"
+antwort = "1.Sf6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 25
+wer = "claude-code"
+antwort = "1.Sd6#"
+sicherheit = "sicher"
+notiz = "e7 ist durch De2 gefesselt."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 26
+wer = "claude-code"
+antwort = "1.Dd6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 27
+wer = "claude-code"
+antwort = "1.Db5#"
+sicherheit = "sicher"
+notiz = "Le6 bleibt durch Te1 gefesselt und kann nicht nach d7."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 28
+wer = "claude-code"
+antwort = "1.Da8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 29
+wer = "claude-code"
+antwort = "1.Sc4#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 30
+wer = "claude-code"
+antwort = "1.Dd8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 31
+wer = "claude-code"
+antwort = "1.Df7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 32
+wer = "claude-code"
+antwort = "1.De5#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 33
+wer = "claude-code"
+antwort = "1.Dxh5#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 34
+wer = "claude-code"
+antwort = "1.Df6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 35
+wer = "claude-code"
+antwort = "1.Le8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 36
+wer = "claude-code"
+antwort = "1.Dd6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 37
+wer = "claude-code"
+antwort = "1.Lg6#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 38
+wer = "claude-code"
+antwort = "1.Tg8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 39
+wer = "claude-code"
+antwort = "1.Sf7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 40
+wer = "claude-code"
+antwort = "1.Sxf6#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Ld3."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 41
+wer = "claude-code"
+antwort = "1.Sd7#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Lg3. Ebenso matt: 1.Sc6#."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 42
+wer = "claude-code"
+antwort = "1.Tg5#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Lb2."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 43
+wer = "claude-code"
+antwort = "1.Lxd7#"
+sicherheit = "sicher"
+notiz = "Dd8 ist durch Dc8 gefesselt."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 44
+wer = "claude-code"
+antwort = "1.Lg5#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 45
+wer = "claude-code"
+antwort = "1.gxh8S#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 46
+wer = "claude-code"
+antwort = "1.Te8#"
+sicherheit = "sicher"
+notiz = "Df7 ist durch Db3 gefesselt und kann nicht dazwischenziehen."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 47
+wer = "claude-code"
+antwort = "1.Sf7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 48
+wer = "claude-code"
+antwort = "1.Th5#"
+sicherheit = "sicher"
+notiz = "g6 ist durch Ld3 gefesselt."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 49
+wer = "claude-code"
+antwort = "1.Sd3#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Tg5."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 50
+wer = "claude-code"
+antwort = "1.Da8#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 51
+wer = "claude-code"
+antwort = "1.Sd8#"
+sicherheit = "sicher"
+notiz = "Der Springer gibt die Diagonale b7–d5 frei."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 52
+wer = "claude-code"
+antwort = "1.Dh4#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 53
+wer = "claude-code"
+antwort = "1.Sf5#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 54
+wer = "claude-code"
+antwort = "1.Sxg7#"
+sicherheit = "sicher"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 55
+wer = "claude-code"
+antwort = "1.Tf8#"
+sicherheit = "sicher"
+notiz = "Doppelschach mit Lb3."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 56
+wer = "claude-code"
+antwort = "1.Txf3#"
+sicherheit = "sicher"
+notiz = "Le4 ist durch Te5 gefesselt. Beim Lösen fiel auf, dass ich e5 zuerst falsch abgelesen hatte (Bauer statt weißer Turm) – am Diagramm geprüft und berichtigt."
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 57
+wer = "claude-code"
+antwort = "1.Dxh7#"
+sicherheit = "sicher"
+notiz = "Sg5 ist durch Tg1 gefesselt, h7 deckt Tb7."
+ergebnis = "offen"
+geloest = 2026-11-03

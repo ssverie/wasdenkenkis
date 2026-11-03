@@ -469,7 +469,7 @@ fen = "4r1k1/1p3Rpp/8/pP3Q2/P2p1P2/1B6/2P2PKP/4q3 w - - 0 1"
 nr = 56
 kapitel = 1
 seite = 11
-fen = "8/1p6/p3pR2/4p3/4b3/2B1kp1P/PP2r1P1/6K1 w - - 0 1"
+fen = "8/1p6/p3pR2/4R3/4b3/2B1kp1P/PP2r1P1/6K1 w - - 0 1"
 
 [[aufgabe]]
 nr = 57

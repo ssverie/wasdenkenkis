@@ -1,0 +1,51 @@
+{{- /* Lösungsliste mehrerer Löser zu einem Schachaufgaben-Buch (seit 2026-11-03, Sven: „mach eine Liste, da kommen dann
+       die anderen noch dazu“): {{< schach-loeserliste daten="masetti-1001" >}}
+       Löser und Antworten aus data/schach/<daten>-loeser.toml ([[teilnehmer]] kurz, name, modell, bedingungen;
+       [[antwort]] nr, wer, antwort, sicherheit, notiz, ergebnis), Stellung und Buchlösung aus data/schach/<daten>.toml.
+       Oben je Löser eine Zeile mit Bedingungen und Stand, darunter je Kapitel eine Tabelle: Nummer (verlinkt auf die
+       Aufgabe), je Löser eine Spalte, zuletzt die Buchlösung. */ -}}
+{{- $daten := .Get "daten" }}
+{{- $buch := index site.Data.schach $daten }}
+{{- $l := index site.Data.schach (printf "%s-loeser" $daten) }}
+{{- $alle := $l.antwort }}
+<ul class="loeser">
+  {{- range $l.teilnehmer }}
+    {{- $seine := where $alle "wer" .kurz }}
+    {{- $ausgewertet := where $seine "ergebnis" "!=" "offen" }}
+  <li>
+    <strong>{{ .name }}</strong> – {{ len $seine }} Aufgaben gelöst ·
+    {{ len (where $seine "sicherheit" "sicher") }} sicher · {{ len (where $seine "sicherheit" "unsicher") }} unsicher ·
+    {{ len (where $seine "sicherheit" "nicht gefunden") }} nicht gefunden ·
+    {{ if $ausgewertet }}<strong>{{ len (where $seine "ergebnis" "richtig") }} von {{ len $ausgewertet }} richtig</strong>{{ else }}Ergebnis offen (Lösungen des Buchs noch nicht eingetragen){{ end }}
+    {{- with .bedingungen }}<br><small>{{ . }}</small>{{ end }}
+  </li>
+  {{- end }}
+</ul>
+{{- range $buch.kapitel }}
+  {{- $k := . }}
+  {{- $nummern := slice }}
+  {{- range where $buch.aufgabe "kapitel" $k.nr }}{{ $nummern = $nummern | append .nr }}{{ end }}
+  {{- $hier := where $alle "nr" "in" $nummern }}
+  {{- if $hier }}
+    {{- $seite := site.GetPage (printf "/schachaufgaben/%s/%s" $daten $k.slug) }}
+    {{- $mitAntwort := slice }}{{ range $hier }}{{ $mitAntwort = $mitAntwort | append .nr }}{{ end }}
+<h2 id="{{ $k.slug }}">{{ with $k.buch }}Kapitel {{ . }}: {{ end }}{{ $k.titel }}</h2>
+<table class="selbsttest loeserliste">
+  <thead><tr><th>Nr.</th>{{ range $l.teilnehmer }}<th>{{ .name }}</th>{{ end }}<th>Buch</th></tr></thead>
+  <tbody>
+  {{- range sort ($mitAntwort | uniq) }}
+    {{- $nr := . }}
+    {{- $auf := index (where $buch.aufgabe "nr" $nr) 0 }}
+    <tr>
+      <td><a href="{{ with $seite }}{{ .RelPermalink }}{{ end }}#aufgabe-{{ $nr }}">{{ $nr }}</a></td>
+      {{- range $l.teilnehmer }}
+        {{- $a := where (where $alle "nr" $nr) "wer" .kurz }}
+      <td>{{ with $a }}{{ with index . 0 }}<span class="ergebnis-{{ replace .ergebnis " " "-" }}">{{ .antwort }}</span>{{ if ne .sicherheit "sicher" }} <small>({{ .sicherheit }})</small>{{ end }}{{ if ne .ergebnis "offen" }} <small>– {{ .ergebnis }}</small>{{ end }}{{ with .notiz }}<small class="notiz">{{ . }}</small>{{ end }}{{ end }}{{ else }}–{{ end }}</td>
+      {{- end }}
+      <td>{{ with $auf.loesung }}{{ . }}{{ else }}–{{ end }}</td>
+    </tr>
+  {{- end }}
+  </tbody>
+</table>
+  {{- end }}
+{{- end }}
