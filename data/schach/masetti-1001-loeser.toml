@@ -18,6 +18,12 @@ name = "Opus 5.5 (frischer Agent)"
 modell = "Claude Opus 5.5"
 bedingungen = "Ein frisch gestarteter Unteragent ohne Vorwissen aus dieser Sitzung. Bekam nur die 57 FEN mit „Weiß am Zug, Matt in 1“ – ohne Bildunterschriften – und die Anweisung, im Kopf zu lösen, ohne Dateien, Skripte, Engine oder Web."
 
+[[teilnehmer]]
+kurz = "sonnet-agent"
+name = "Sonnet 5.5 (frischer Agent)"
+modell = "Claude Sonnet 5.5"
+bedingungen = "Ein frisch gestarteter Unteragent mit Sonnet 5.5, dieselben Bedingungen wie beim Opus-Agenten: nur die 57 FEN, keine Bildunterschriften, im Kopf lösen ohne Werkzeuge."
+
 [[antwort]]
 nr = 1
 wer = "claude-code"
@@ -972,5 +978,518 @@ wer = "opus-agent"
 antwort = "1.Dxh7#"
 sicherheit = "sicher"
 notiz = "Sg5 ist durch Tg1 gefesselt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 1
+wer = "sonnet-agent"
+antwort = "1.Txa6#"
+sicherheit = "sicher"
+notiz = "b7 durch Lg2 gefesselt, bxa6 illegal"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 2
+wer = "sonnet-agent"
+antwort = "1.Lf6#"
+sicherheit = "sicher"
+notiz = "g8 durch Tg1 gedeckt, g7 durch Lf6"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 3
+wer = "sonnet-agent"
+antwort = "1.Tf7#"
+sicherheit = "sicher"
+notiz = "Rf7 durch Se5 gedeckt, Kxf7 unmöglich"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 4
+wer = "sonnet-agent"
+antwort = "1.Th1#"
+sicherheit = "sicher"
+notiz = "Tc7 durch Se7 blockiert, g8 von Le6 gedeckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 5
+wer = "sonnet-agent"
+antwort = "1.Ta8#"
+sicherheit = "sicher"
+notiz = "Lb7 durch Tb1 gefesselt, a8 von Sc7 gedeckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 6
+wer = "sonnet-agent"
+antwort = "1.Sb5#"
+sicherheit = "sicher"
+notiz = "c6 durch Tc1 gefesselt (cxb5 illegal)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 7
+wer = "sonnet-agent"
+antwort = "1.Lh5#"
+sicherheit = "sicher"
+notiz = "Fluchtfelder gedeckt, nichts zum Dazwischenziehen"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 8
+wer = "sonnet-agent"
+antwort = "1.e4#"
+sicherheit = "sicher"
+notiz = "d3 deckt e4 und c4, Sf5 deckt d4 und d6, f4 deckt e5"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 9
+wer = "sonnet-agent"
+antwort = "1.Ta8#"
+sicherheit = "sicher"
+notiz = "kein Dazwischenziehen möglich, f8/g7 gedeckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 10
+wer = "sonnet-agent"
+antwort = "1.Lf6#"
+sicherheit = "sicher"
+notiz = "g8 von Sh6 gedeckt, g7 von Lf6"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 11
+wer = "sonnet-agent"
+antwort = "1.c8S#"
+sicherheit = "sicher"
+notiz = "Doppelschach (Sc8 plus Th7 abgedeckt), b8 durch Lg3, b7 durch Th7/Lf3"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 12
+wer = "sonnet-agent"
+antwort = "1.Dxa7#"
+sicherheit = "sicher"
+notiz = "Kxa7 unmöglich, da Sb5 deckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 13
+wer = "sonnet-agent"
+antwort = "1.g4#"
+sicherheit = "sicher"
+notiz = "f4 durch Tf1 gefesselt, en passant fxg3 deshalb illegal; Kxg4 durch h3 verboten"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 14
+wer = "sonnet-agent"
+antwort = "1.Lxf7#"
+sicherheit = "sicher"
+notiz = "Kxf7 unmöglich (Se5), d7 von Se5 gedeckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 15
+wer = "sonnet-agent"
+antwort = "1.Sa6#"
+sicherheit = "sicher"
+notiz = "Doppelschach, Lf3 deckt a8/b7, Sa6 deckt c7"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 16
+wer = "sonnet-agent"
+antwort = "1.Lxd6#"
+sicherheit = "sicher"
+notiz = "Doppelschach (Lxd6 plus Tf1), e7 und f7 gedeckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 17
+wer = "sonnet-agent"
+antwort = "1.De7#"
+sicherheit = "sicher"
+notiz = "Kxe7 unmöglich (d6 deckt e7), Fluchtfelder d5/f5 durch e4"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 18
+wer = "sonnet-agent"
+antwort = "1.De8#"
+sicherheit = "sicher"
+notiz = "Kxe8 unmöglich (Sf6 deckt e8), Kxf6 verboten (e5)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 19
+wer = "sonnet-agent"
+antwort = "1.Df3#"
+sicherheit = "sicher"
+notiz = "Df3 durch Ke3 gedeckt, alle Felder gedeckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 20
+wer = "sonnet-agent"
+antwort = "1.Dh7#"
+sicherheit = "sicher"
+notiz = "Dh7 durch Sg5 gedeckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 21
+wer = "sonnet-agent"
+antwort = "1.Td8#"
+sicherheit = "sicher"
+notiz = "Td8 durch Sc6 gedeckt, Tc7 durch Se7 blockiert"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 22
+wer = "sonnet-agent"
+antwort = "1.Te8#"
+sicherheit = "sicher"
+notiz = "Te8 durch Sf6 gedeckt, Kxf6 durch e5 verboten"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 23
+wer = "sonnet-agent"
+antwort = "1.De4#"
+sicherheit = "sicher"
+notiz = "De4 durch f3 gedeckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 24
+wer = "sonnet-agent"
+antwort = "1.Sf6#"
+sicherheit = "sicher"
+notiz = "Qd8 durch Se7 blockiert, f8 vom Lg7, d7 vom Sf6, e6 vom Lc4"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 25
+wer = "sonnet-agent"
+antwort = "1.Sd6#"
+sicherheit = "sicher"
+notiz = "Bauer e7 durch Dd2/De2 gefesselt (exd6 illegal), Dd8 durch Sd7 blockiert"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 26
+wer = "sonnet-agent"
+antwort = "1.Dd6#"
+sicherheit = "sicher"
+notiz = "Kxd6 verboten (Th6 deckt), f7/f8 durch Tf1"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 27
+wer = "sonnet-agent"
+antwort = "1.Dxe6+"
+sicherheit = "nicht gefunden"
+notiz = "Vermutung; fxe6 scheint zu halten (Dh6 durch Lf6 blockiert), kein Matt gefunden; Alternativen 1.Db5+ (Ld7)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 28
+wer = "sonnet-agent"
+antwort = "1.Da8#"
+sicherheit = "sicher"
+notiz = "Dd8-Dame wegen Fesselung nicht schlagbar; c7/d7/e7 vom Ta7 gedeckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 29
+wer = "sonnet-agent"
+antwort = "1.Sc4#"
+sicherheit = "sicher"
+notiz = "Sd2-c4, b6 gedeckt (Sc5 deckt a4/a6)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 30
+wer = "sonnet-agent"
+antwort = "1.Dd8#"
+sicherheit = "sicher"
+notiz = "Kxd8 unmöglich (Sc6 deckt d8)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 31
+wer = "sonnet-agent"
+antwort = "1.Df7#"
+sicherheit = "sicher"
+notiz = "f6 Blockierfeld nicht erreichbar, g6 von Df7 gedeckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 32
+wer = "sonnet-agent"
+antwort = "1.De5#"
+sicherheit = "sicher"
+notiz = "e6 von Lc4, d6/f6 von De5, e8 durch Röntgen, kein Block (Lc8 durch d7 blockiert)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 33
+wer = "sonnet-agent"
+antwort = "1.Dxh5#"
+sicherheit = "sicher"
+notiz = "g8/g7 vom Tg6, h7 von Dh5; kein Blockieren"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 34
+wer = "sonnet-agent"
+antwort = "1.Df6#"
+sicherheit = "sicher"
+notiz = "g8 vom Sh6, g7 von Df6, kein Dazwischenziehen"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 35
+wer = "sonnet-agent"
+antwort = "1.Te7#"
+sicherheit = "sicher"
+notiz = "Te7 durch Sg6 gedeckt, Kxg6 durch h5 verboten"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 36
+wer = "sonnet-agent"
+antwort = "1.Dd6#"
+sicherheit = "sicher"
+notiz = "Kxd6 verboten (Le5), b7 vom Sc5"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 37
+wer = "sonnet-agent"
+antwort = "1.Lg6#"
+sicherheit = "sicher"
+notiz = "Lg6 geschlagen von niemandem, f7 gedeckt, e7/f8 vom La3"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 38
+wer = "sonnet-agent"
+antwort = "1.Tg8#"
+sicherheit = "sicher"
+notiz = "Tg8 durch Sh6 gedeckt, Kxh6 durch Lg5 verboten"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 39
+wer = "sonnet-agent"
+antwort = "1.Sf7#"
+sicherheit = "sicher"
+notiz = "g8 vom Se7 gedeckt, Sf7 nicht schlagbar"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 40
+wer = "sonnet-agent"
+antwort = "1.Sxf6#"
+sicherheit = "sicher"
+notiz = "Doppelschach (Sf6 plus Ld3), g6 von Ld3, h6 von Ld2, g8 von Sf6"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 41
+wer = "sonnet-agent"
+antwort = "1.Sc6#"
+sicherheit = "sicher"
+notiz = "Doppelschach (Sc6 plus Lg3), auch 1.Sd7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 42
+wer = "sonnet-agent"
+antwort = "1.Tg5#"
+sicherheit = "sicher"
+notiz = "Doppelschach (Tg5 plus Lb2), g6/h7 durch Lc2"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 43
+wer = "sonnet-agent"
+antwort = "1.Lxd7#"
+sicherheit = "sicher"
+notiz = "Dd8 durch Dc8 gefesselt, Kxd7 durch Dc8 gedeckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 44
+wer = "sonnet-agent"
+antwort = "1.Lg5#"
+sicherheit = "sicher"
+notiz = "f6 nicht zu blockieren, Dd8 durch König blockiert, Kxf7 verboten (Se5)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 45
+wer = "sonnet-agent"
+antwort = "1.gxh8S#"
+sicherheit = "sicher"
+notiz = "Sh8 deckt g6, De5 deckt e6/e7/f6/g7/e8"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 46
+wer = "sonnet-agent"
+antwort = "1.Te8#"
+sicherheit = "sicher"
+notiz = "Df7 durch Db3 gefesselt: Dxe8 und Df8 illegal"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 47
+wer = "sonnet-agent"
+antwort = "1.Sf7#"
+sicherheit = "sicher"
+notiz = "Sd6-f7, h7 vom Sf8 gedeckt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 48
+wer = "sonnet-agent"
+antwort = "1.Th5#"
+sicherheit = "sicher"
+notiz = "g6 durch Ld3 gefesselt, gxh5 illegal"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 49
+wer = "sonnet-agent"
+antwort = "1.Sd3#"
+sicherheit = "sicher"
+notiz = "Doppelschach (Sd3 plus Tg5), b4 vom Sd3, b5 durch Röntgen"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 50
+wer = "sonnet-agent"
+antwort = "1.Da8#"
+sicherheit = "sicher"
+notiz = "b8/b7 vom Da8, kein Block, Kxa8 nicht möglich"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 51
+wer = "sonnet-agent"
+antwort = "1.Sd8#"
+sicherheit = "sicher"
+notiz = "Aufdeckung Db7 deckt d5/d7, f7 vom Sd8, e5 durch f4"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 52
+wer = "sonnet-agent"
+antwort = "1.Dh4#"
+sicherheit = "sicher"
+notiz = "Dh4 durch Ld8 gedeckt (Kxh4 illegal)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 53
+wer = "sonnet-agent"
+antwort = "1.Sf5#"
+sicherheit = "sicher"
+notiz = "e3 vom Sf5, c3 vom La5, c5/d5/e5 vom Tb5"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 54
+wer = "sonnet-agent"
+antwort = "1.La4#"
+sicherheit = "sicher"
+notiz = "Ta7 deckt d7/e7/f7, kein Block möglich"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 55
+wer = "sonnet-agent"
+antwort = "1.Tf8#"
+sicherheit = "sicher"
+notiz = "Doppelschach (Tf8 plus Lb3), Kxf8 durch Df5 verboten"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 56
+wer = "sonnet-agent"
+antwort = "1.Txf3#"
+sicherheit = "sicher"
+notiz = "Le4 durch Te5 gefesselt, Kxf3 durch g2 verboten"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 57
+wer = "sonnet-agent"
+antwort = "1.Dxh7#"
+sicherheit = "sicher"
+notiz = "Sg5 durch Tg1 gefesselt, Kxh7 durch Tb7 verboten"
 ergebnis = "offen"
 geloest = 2026-11-03
