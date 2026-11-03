@@ -1,6 +1,14 @@
 # Schach-Buch – Svens Schachbücher, Reihenfolge der Anzeige: nach sortjahr (neuestes oben)
 
 [[buch]]
+titel = "1001 Chess Exercises for Beginners"
+autor = "Franco Masetti, Roberto Messa"
+jahr = "2012"
+sortjahr = 2012
+gebiet = "Taktik, Übungen für Einsteiger"
+schluessel = "1001-chess-exercises-for-beginners-2012"
+
+[[buch]]
 titel = "1001 Deadly Chess Puzzles"
 autor = "James Rizzitano"
 jahr = "2024"

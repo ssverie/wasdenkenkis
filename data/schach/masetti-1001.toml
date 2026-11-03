@@ -1,0 +1,478 @@
+# Franco Masetti, Roberto Messa: 1001 Chess Exercises for Beginners (New in Chess 2012) – Aufgaben als FEN, abgelesen aus
+# Svens PDF des Buchs (input\, Scan; die Textschicht ist verschlüsselt, die Diagramme sind JBIG2-Bilder – gelesen über eine
+# eigene pdf.js-Ansicht in einem Wegwerf-Ordner, je Seite zwei Ausschnitte in 1,2-facher Größe).
+# Prüfen: perl skripte/fen-pruefen.pl data/schach/masetti-1001.toml
+# seite = Buchseite der Aufgabe. Die Bildunterschriften des Buchs (halbe Lösungshinweise) bewusst nicht übernommen
+# (Sven, 2026-11-03: „nein, keine Hinweise“).
+# Lösungen bewusst noch nicht eingetragen (Sven, 2026-11-03: „nicht in die Lösungen gucken, lass es noch offen“) –
+# der Lösungsteil (Buchseite 125 ff.) wurde nicht geöffnet. Alle Aufgaben in Kapitel 1: Weiß am Zug, Matt in einem Zug.
+# Rochaderechte, wo König und Türme auf den Ausgangsfeldern stehen (14, 24, 25, 27, 32, 37, 44, 45) – das Buch gibt sie nicht an.
+
+# Inhaltsverzeichnis nach dem Buch (Contents). nr = laufende Nummer, buchseite = Startseite.
+[[kapitel]]
+nr = 1
+buch = 1
+titel = "Mate in one"
+buchseite = 7
+slug = "kapitel-1"
+
+[[kapitel]]
+nr = 2
+buch = 2
+titel = "Mate in two"
+buchseite = 13
+slug = "kapitel-2"
+
+[[kapitel]]
+nr = 3
+buch = 3
+titel = "The missing piece"
+buchseite = 25
+slug = "kapitel-3"
+
+[[kapitel]]
+nr = 4
+buch = 4
+titel = "Double attack"
+buchseite = 29
+slug = "kapitel-4"
+
+[[kapitel]]
+nr = 5
+buch = 5
+titel = "Discovered attack"
+buchseite = 35
+slug = "kapitel-5"
+
+[[kapitel]]
+nr = 6
+buch = 6
+titel = "Discovered check"
+buchseite = 39
+slug = "kapitel-6"
+
+[[kapitel]]
+nr = 7
+buch = 7
+titel = "Double check"
+buchseite = 43
+slug = "kapitel-7"
+
+[[kapitel]]
+nr = 8
+buch = 8
+titel = "Pin"
+buchseite = 47
+slug = "kapitel-8"
+
+[[kapitel]]
+nr = 9
+buch = 9
+titel = "Skewer"
+buchseite = 53
+slug = "kapitel-9"
+
+[[kapitel]]
+nr = 10
+buch = 10
+titel = "Deflection"
+buchseite = 57
+slug = "kapitel-10"
+
+[[kapitel]]
+nr = 11
+buch = 11
+titel = "Decoy sacrifice"
+buchseite = 61
+slug = "kapitel-11"
+
+[[kapitel]]
+nr = 12
+buch = 12
+titel = "Pawn promotion"
+buchseite = 65
+slug = "kapitel-12"
+
+[[kapitel]]
+nr = 13
+buch = 13
+titel = "Drawing tactics"
+buchseite = 71
+slug = "kapitel-13"
+
+[[kapitel]]
+nr = 14
+buch = 14
+titel = "Mixed motifs: White"
+buchseite = 75
+slug = "kapitel-14"
+
+[[kapitel]]
+nr = 15
+buch = 15
+titel = "Mixed motifs: Black"
+buchseite = 93
+slug = "kapitel-15"
+
+[[kapitel]]
+nr = 16
+buch = 16
+titel = "Mate in three"
+buchseite = 109
+slug = "kapitel-16"
+
+[[kapitel]]
+nr = 17
+buch = 17
+titel = "Mate in four"
+buchseite = 117
+slug = "kapitel-17"
+
+[[kapitel]]
+nr = 18
+buch = 18
+titel = "Curiosities"
+buchseite = 121
+slug = "kapitel-18"
+
+[[aufgabe]]
+nr = 1
+kapitel = 1
+seite = 7
+fen = "kr6/1p6/p7/4b3/8/8/1P4BP/R6K w - - 0 1"
+
+[[aufgabe]]
+nr = 2
+kapitel = 1
+seite = 7
+fen = "r2B3k/5p1p/8/8/8/b7/7P/K5R1 w - - 0 1"
+
+[[aufgabe]]
+nr = 3
+kapitel = 1
+seite = 7
+fen = "8/R6p/4pkp1/3rN3/3P3P/6P1/2n3K1/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 4
+kapitel = 1
+seite = 7
+fen = "7k/2r1n1p1/4Bp2/3P4/5Kp1/6P1/2p2PP1/R7 w - - 0 1"
+
+[[aufgabe]]
+nr = 5
+kapitel = 1
+seite = 7
+fen = "1k1r4/1bNr4/3P1p2/6p1/7p/8/6PP/RR5K w - - 0 1"
+
+[[aufgabe]]
+nr = 6
+kapitel = 1
+seite = 7
+fen = "r6R/ppk1b3/2p1P3/P7/3N4/4q3/6PP/2R4K w - - 0 1"
+
+[[aufgabe]]
+nr = 7
+kapitel = 1
+seite = 7
+fen = "2rrk1n1/1nQ1p2N/pB5p/6p1/qP3p2/2P4P/P3BPP1/3R2K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 8
+kapitel = 1
+seite = 7
+fen = "8/P7/2b1n3/2bk1N2/5P2/3P2Pp/4P2P/7K w - - 0 1"
+
+[[aufgabe]]
+nr = 9
+kapitel = 1
+seite = 7
+fen = "6kb/p3p2p/5P1B/4Nn2/8/8/7P/R6K w - - 0 1"
+
+[[aufgabe]]
+nr = 10
+kapitel = 1
+seite = 8
+fen = "r2B3k/5p1p/7N/8/8/b7/7P/K7 w - - 0 1"
+
+[[aufgabe]]
+nr = 11
+kapitel = 1
+seite = 8
+fen = "n3r2r/k1P4R/pp6/8/8/5BB1/6P1/7K w - - 0 1"
+
+[[aufgabe]]
+nr = 12
+kapitel = 1
+seite = 8
+fen = "1kb2q2/ppp5/3pn3/1N6/P7/1P6/2P2QPP/7K w - - 0 1"
+
+[[aufgabe]]
+nr = 13
+kapitel = 1
+seite = 8
+fen = "r7/8/rR6/5kn1/3P1p2/3P3P/6P1/5R1K w - - 0 1"
+
+[[aufgabe]]
+nr = 14
+kapitel = 1
+seite = 8
+fen = "r2qkb1r/pp2nppp/2p5/4N3/2BP4/2N5/PP3PPP/R2bK2R w KQkq - 0 1"
+
+[[aufgabe]]
+nr = 15
+kapitel = 1
+seite = 8
+fen = "1kr5/p7/6p1/5b2/1N6/5B2/6PP/1R5K w - - 0 1"
+
+[[aufgabe]]
+nr = 16
+kapitel = 1
+seite = 8
+fen = "4nkq1/2p3pp/1r1p4/8/5B2/1q4P1/P6P/5R1K w - - 0 1"
+
+[[aufgabe]]
+nr = 17
+kapitel = 1
+seite = 8
+fen = "8/3b2Q1/3Pkr2/1p6/4P2p/7P/P5PK/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 18
+kapitel = 1
+seite = 8
+fen = "8/p1p1bkp1/2Q1nNq1/3pP1rp/1P1P1p2/P4PrP/1B4PK/2R3R1 w - - 0 1"
+
+[[aufgabe]]
+nr = 19
+kapitel = 1
+seite = 8
+fen = "8/5Q2/8/6p1/6kr/4K3/8/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 20
+kapitel = 1
+seite = 8
+fen = "4r1rk/pppp2p1/4p2p/2nq2N1/8/3QP1P1/PBPP1P2/1K5R w - - 0 1"
+
+[[aufgabe]]
+nr = 21
+kapitel = 1
+seite = 8
+fen = "4kr2/2r2p2/2N1p3/4R2B/5P2/1Pq5/P1P3PP/2KR4 w - - 0 1"
+
+[[aufgabe]]
+nr = 22
+kapitel = 1
+seite = 9
+fen = "r1b2R2/ppp1k2p/2np1N2/4P3/2B5/8/PPP1K1PP/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 23
+kapitel = 1
+seite = 9
+fen = "4Q3/8/q4p1p/5kb1/1Pb5/2P1BP2/1K4P1/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 24
+kapitel = 1
+seite = 9
+fen = "r2qk2r/ppp1npBp/2nb4/3N4/2B3b1/P4N2/5PPP/R2QR1K1 w kq - 0 1"
+
+[[aufgabe]]
+nr = 25
+kapitel = 1
+seite = 9
+fen = "r1bqkb1r/pp1npppp/2p2n2/8/3PN3/8/PPP1QPPP/R1B1KBNR w KQkq - 0 1"
+
+[[aufgabe]]
+nr = 26
+kapitel = 1
+seite = 9
+fen = "r3q1n1/4k3/7R/1pp3P1/1P2P3/r1N5/P1P4Q/1K3R2 w - - 0 1"
+
+[[aufgabe]]
+nr = 27
+kapitel = 1
+seite = 9
+fen = "r3kb1r/pp3p1p/4bB1q/4Q3/5p2/3P4/PPP3PP/4R2K w kq - 0 1"
+
+[[aufgabe]]
+nr = 28
+kapitel = 1
+seite = 9
+fen = "3kq3/R6r/8/8/3KQ3/8/8/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 29
+kapitel = 1
+seite = 9
+fen = "8/8/8/knN5/1n6/8/3N4/4K3 w - - 0 1"
+
+[[aufgabe]]
+nr = 30
+kapitel = 1
+seite = 9
+fen = "4k3/5p2/2N2Qp1/2p4p/1p2q3/7P/5PPK/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 31
+kapitel = 1
+seite = 9
+fen = "r1b4r/p1Q5/1p2p3/1q3k2/5B2/2p2P2/P5PP/3R2K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 32
+kapitel = 1
+seite = 9
+fen = "rnbq1bnr/ppppk2p/8/7Q/2B1Pp2/8/PPPP2PP/RNB1K2R w KQ - 0 1"
+
+[[aufgabe]]
+nr = 33
+kapitel = 1
+seite = 9
+fen = "2r2r1k/3R1p2/p1P3R1/1p2q1Pp/7P/5Q2/P4PK1/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 34
+kapitel = 1
+seite = 10
+fen = "4r2k/7p/p1pQ3N/8/4q3/7R/P1P3PK/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 35
+kapitel = 1
+seite = 10
+fen = "6n1/5kp1/6Np/6PP/B7/2q5/p7/4R2K w - - 0 1"
+
+[[aufgabe]]
+nr = 36
+kapitel = 1
+seite = 10
+fen = "1Q2r3/8/p1k4p/qpNbB3/8/1P6/2P5/1K6 w - - 0 1"
+
+[[aufgabe]]
+nr = 37
+kapitel = 1
+seite = 10
+fen = "r1bqk2r/p1bn2p1/1p2pn1p/8/3P4/BPP5/P1B2PPP/R3K1NR w KQkq - 0 1"
+
+[[aufgabe]]
+nr = 38
+kapitel = 1
+seite = 10
+fen = "R7/3b2kr/1p1p3N/2pPn1B1/2P5/5P2/4PK2/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 39
+kapitel = 1
+seite = 10
+fen = "2q4k/4N1bp/8/4N3/8/p7/5PPP/7K w - - 0 1"
+
+[[aufgabe]]
+nr = 40
+kapitel = 1
+seite = 10
+fen = "7r/4p1nk/1pp2p2/2np4/4N2P/P2B2P1/1PPB4/1K6 w - - 0 1"
+
+[[aufgabe]]
+nr = 41
+kapitel = 1
+seite = 10
+fen = "1k1r4/pr6/1N3p2/4N1p1/3P3p/6BP/5PP1/7K w - - 0 1"
+
+[[aufgabe]]
+nr = 42
+kapitel = 1
+seite = 10
+fen = "5n2/p1pp1pk1/1p5p/4R3/7q/P7/1BB2PPP/6K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 43
+kapitel = 1
+seite = 10
+fen = "2Qqkb2/p2npppp/1p6/8/BP6/2P3N1/3P1PPP/4K3 w - - 0 1"
+
+[[aufgabe]]
+nr = 44
+kapitel = 1
+seite = 10
+fen = "r2q1b1r/ppp1kBpp/3p4/4N3/3P4/8/PPP2PPP/R1BbK2R w KQ - 0 1"
+
+[[aufgabe]]
+nr = 45
+kapitel = 1
+seite = 10
+fen = "rnbq1bnr/pppp1kP1/7p/4Q3/5P2/8/PPPP2PP/RNB1KBNR w KQ - 0 1"
+
+[[aufgabe]]
+nr = 46
+kapitel = 1
+seite = 11
+fen = "6k1/p4qpp/1p6/8/8/1Q5P/r4PP1/4R1K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 47
+kapitel = 1
+seite = 11
+fen = "5Nnk/6p1/3N3p/8/1p5P/1n4P1/5P1K/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 48
+kapitel = 1
+seite = 11
+fen = "3r2r1/7k/5Pp1/3R4/8/3B2P1/6K1/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 49
+kapitel = 1
+seite = 11
+fen = "8/8/5R2/2k1N1R1/3n1n2/2r1N1K1/5r2/8 w - - 0 1"
+
+[[aufgabe]]
+nr = 50
+kapitel = 1
+seite = 11
+fen = "2k5/2r3pp/1pQ1Pq2/1ppp4/8/1P6/P4PPP/3R2K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 51
+kapitel = 1
+seite = 11
+fen = "8/1Q2p2p/2Npkbp1/5p2/5P2/6P1/7r/3K4 w - - 0 1"
+
+[[aufgabe]]
+nr = 52
+kapitel = 1
+seite = 11
+fen = "3B4/1p6/2p5/6Qp/p7/5q1k/P4P2/3R1K2 w - - 0 1"
+
+[[aufgabe]]
+nr = 53
+kapitel = 1
+seite = 11
+fen = "8/4r3/2nN3p/BR6/2pkp3/P2n2P1/6BP/6K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 54
+kapitel = 1
+seite = 11
+fen = "3bkr2/R5p1/4N1Pp/8/7q/7P/7K/3B4 w - - 0 1"
+
+[[aufgabe]]
+nr = 55
+kapitel = 1
+seite = 11
+fen = "4r1k1/1p3Rpp/8/pP3Q2/P2p1P2/1B6/2P2PKP/4q3 w - - 0 1"
+
+[[aufgabe]]
+nr = 56
+kapitel = 1
+seite = 11
+fen = "8/1p6/p3pR2/4p3/4b3/2B1kp1P/PP2r1P1/6K1 w - - 0 1"
+
+[[aufgabe]]
+nr = 57
+kapitel = 1
+seite = 11
+fen = "3r1rk1/pR5p/5p2/1p3Pn1/4B2Q/4q3/7P/6RK w - - 0 1"
