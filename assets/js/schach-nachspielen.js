@@ -294,6 +294,27 @@
     var hauptPlys = {};
     var hauptKnoten = verarbeite(haupt, true, hauptPlys);
     if (!hauptKnoten.length) return;
+    // Bewertungen (KI-Partien, seit 2026-11-03): je Halbzug der Hauptlinie ein Wert, klein hinter dem Zug.
+    var bewEl = loesung.querySelector('.np-bewertungen');
+    if (bewEl) {
+      bewEl.textContent.trim().split(/\s+/).forEach(function (wert, i) {
+        var k = hauptKnoten[i];
+        if (!k) return;
+        var ev = document.createElement('span');
+        ev.className = 'np-ev'; ev.textContent = wert;
+        ev.zuKnoten = k; k.evEl = ev;
+        k.el.parentNode.insertBefore(ev, k.el.nextSibling);
+        k.el.parentNode.insertBefore(document.createTextNode(' '), k.el.nextSibling);
+      });
+    }
+    // Kommentare an Zügen: data-nach = „12.d5“ oder „18...Tab8“ (auch „18…Tab8“) → Halbzug der Hauptlinie.
+    var kommBeiPly = {};
+    loesung.querySelectorAll('.np-kommentare p').forEach(function (p) {
+      var m = /^(\d+)(\.\.\.|…|\.)/.exec(p.dataset.nach || '');
+      if (!m) return;
+      var ply = plyVon(Number(m[1]), m[2] !== '.');
+      if (hauptPlys[ply]) (kommBeiPly[ply] = kommBeiPly[ply] || []).push(p);
+    });
     var varianten = [];
     loesung.querySelectorAll('.varianten li').forEach(function (v) {
       var e = verarbeite(v, false, hauptPlys, varianten);
@@ -392,8 +413,15 @@
         if (v.abzweig !== undefined && hauptPlys[v.abzweig]) { (beiPly[v.abzweig] = beiPly[v.abzweig] || []).push(v.el); gefunden = true; }
         else rest.push(v.el);
       });
+      if (Object.keys(kommBeiPly).length) gefunden = true;
       if (!gefunden) return;
       var aus = document.createDocumentFragment(), strong = null, neuerAbsatz = true;
+      function kommentare(ps) {
+        var div = document.createElement('div');
+        div.className = 'np-kommentar-block';
+        ps.forEach(function (p) { p.className = 'np-kommentar' + (p.className ? ' ' + p.className : ''); div.appendChild(p); });
+        aus.appendChild(div);
+      }
       function block(lis) {
         var div = document.createElement('div');
         div.className = 'varianten np-varianten';
@@ -417,11 +445,19 @@
           neuerAbsatz = false;
         }
         strong.appendChild(n);
-        if (n.knoten && beiPly[n.knoten.ply]) { block(beiPly[n.knoten.ply]); neuerAbsatz = true; }
+        // Nach dem Zug – oder, wenn er eine Bewertung hat, erst nach der Bewertung – Kommentare, dann Varianten
+        var k2 = n.zuKnoten || (n.knoten && !n.knoten.evEl ? n.knoten : null);
+        if (k2 && (kommBeiPly[k2.ply] || beiPly[k2.ply])) {
+          if (kommBeiPly[k2.ply]) kommentare(kommBeiPly[k2.ply]);
+          if (beiPly[k2.ply]) block(beiPly[k2.ply]);
+          neuerAbsatz = true;
+        }
       });
       if (rest.length) block(rest);
       hauptP.parentNode.replaceChild(aus, hauptP);
       if (liste) liste.remove();
+      var kommEl = loesung.querySelector('.np-kommentare');
+      if (kommEl) kommEl.remove();
     }
 
     loesung.addEventListener('keydown', function (e) {

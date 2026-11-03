@@ -1,0 +1,17 @@
+/* Fables Partie-Kommentar mit Stockfish-Prüfung (input\partie-sven-claude(1).html), auf .ki-partie begrenzt; Farben aus der gelieferten Seite. */
+.ki-partie { --kp-muted:#6b6b66; --kp-line:#dcd9d2; --kp-accent:#8a3b2f; margin-top:2rem; }
+@media (prefers-color-scheme: dark) { .ki-partie { --kp-muted:#a3a19a; --kp-line:#3a3936; --kp-accent:#e0866f; } }
+.ki-partie .sub { color:var(--kp-muted); margin:0 0 1.5rem; }
+.ki-partie h2 { font-size:1.15rem; margin:2.2rem 0 .6rem; border-bottom:1px solid var(--kp-line); padding-bottom:.3rem; }
+.ki-partie .mv { font-weight:bold; }
+.ki-partie .diag { margin:1.4rem auto; max-width:360px; }
+.ki-partie .diag svg { width:100%; height:auto; display:block; }
+.ki-partie .cap { font-size:.9rem; color:var(--kp-muted); text-align:center; margin:.4rem 0 0; }
+.ki-partie .pgn { font:14px/1.5 ui-monospace, Menlo, Consolas, monospace; background:rgba(127,127,127,.08); padding:1rem; border-radius:6px; white-space:pre-wrap; word-break:break-word; }
+.ki-partie .note { border-left:3px solid var(--kp-accent); padding:.2rem 0 .2rem 1rem; margin:1.2rem 0; color:var(--kp-muted); }
+/* Zusätzlich in der Stockfish-Fassung (input\partie-sven-claude(1).html, 03.11.): Bewertungen, Korrekturen, Verlaufsgrafik. */
+.ki-partie { --kp-evbg:rgba(127,127,127,.12); }
+.ki-partie .ev { font:12.5px/1 ui-monospace, Menlo, Consolas, monospace; background:var(--kp-evbg); padding:2px 4px; border-radius:3px; vertical-align:1px; white-space:nowrap; font-weight:normal; }
+.ki-partie .korr { border-left:3px solid var(--kp-accent); padding:.2rem 0 .2rem 1rem; margin:1rem 0; }
+.ki-partie .korr b { color:var(--kp-accent); }
+.ki-partie .chart { margin:1.2rem 0; }

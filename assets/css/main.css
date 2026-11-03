@@ -328,6 +328,12 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .stellungen .mini .brett { box-shadow: 0 1px 4px rgba(0,0,0,.25); }
 .stellungen .titel { font-weight: 600; }
 .stellungen .zug { margin-left: 0.5rem; color: var(--text-leise); font-variant-numeric: tabular-nums; }
+/* KI-Partien (layouts/ki-partien.html): je Partie ein Block, darin die Beiträge */
+.ki-beitraege { list-style: none; padding: 0; margin: 0.5rem 0 0; }
+.ki-beitraege li { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.8rem 0; border-bottom: 1px solid var(--linie); }
+.ki-beitraege li:last-child { border-bottom: 0; }
+.ki-beitraege span { color: var(--text-leise); }
+.ki-beitraege small { color: var(--text-leise); }
 /* Schachaufgaben aus Büchern (Shortcode schachaufgaben): je Aufgabe eine Zeile, links Brett, rechts daneben die Lösung (Sven);
    unter 36rem Breite steht die Lösung unter dem Brett */
 .schachaufgaben { list-style: none; padding: 0; margin: 1rem 0 0; max-width: 52rem; }
@@ -376,6 +382,13 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .np-fig { height: 1.05em; width: auto; vertical-align: -0.17em; margin-right: 0.02em; }
 .np-varianten { padding-left: 1.1rem; }
 .np-varianten p { margin: 0.15rem 0; }
+/* Bewertungen und Kommentare in der Zugliste (KI-Partien, seit 2026-11-03) */
+.np-ev { font: 0.72rem/1 ui-monospace, Menlo, Consolas, monospace; font-weight: normal; color: var(--text-leise); background: rgba(127,127,127,.12); padding: 1px 3px; border-radius: 3px; vertical-align: 1px; white-space: nowrap; }
+.np-kommentar-block { margin: 0.4rem 0 0.8rem; }
+.np-kommentar { margin: 0.4rem 0; font-size: 0.95rem; line-height: 1.55; }
+.np-kommentar.np-engine { border-left: 3px solid var(--akzent); padding-left: 0.8rem; }
+.np-kommentar .mv { font-weight: 600; }
+.np-kommentar .ev { font: 0.72rem/1 ui-monospace, Menlo, Consolas, monospace; background: rgba(127,127,127,.12); padding: 1px 3px; border-radius: 3px; white-space: nowrap; }
 .brett .feld.np-markiert { background-image: linear-gradient(rgba(255, 214, 10, .45), rgba(255, 214, 10, .45)); }
 @media (max-width: 36rem) {
   .schachaufgaben > li { grid-template-columns: minmax(0, 1fr); }

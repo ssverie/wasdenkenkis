@@ -1,0 +1,30 @@
+{{- /* KI-Partien (/schach/ki-partien/, seit 2026-11-03 Sven: „eine Unterebene, wo alle Partien erstmal gelistet reinkommen,
+       dann Fables Stockfish-Analysen als 2. Beitrag“): je Partie (Front-Matter partie_datum) ein Block, neueste Partie oben;
+       darin die Beiträge in Reihenfolge des Felds beitrag (1 = Kommentar der KI, 2 = Engine-Prüfung …). */ -}}
+{{ define "main" }}
+<header class="seitenkopf">
+  {{- with site.GetPage "/schach" }}<a class="rubrik" href="{{ .RelPermalink }}">{{ .Title }}</a>{{ end }}
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+</header>
+{{- $partien := slice }}
+{{- range .RegularPages }}{{ $partien = $partien | append (time.Format "2006-01-02" .Params.partie_datum) }}{{ end }}
+{{- range sort ($partien | uniq) "value" "desc" }}
+  {{- $tag := . }}
+  {{- $beitraege := slice }}
+  {{- range $.RegularPages }}{{ if eq (time.Format "2006-01-02" .Params.partie_datum) $tag }}{{ $beitraege = $beitraege | append . }}{{ end }}{{ end }}
+  {{- $erste := index (sort $beitraege "Params.beitrag") 0 }}
+<section class="ki-partie-block">
+  <h2>{{ $erste.Title }}</h2>
+  <ol class="ki-beitraege">
+    {{- range sort $beitraege "Params.beitrag" }}
+    <li>
+      <a href="{{ .RelPermalink }}"><strong>Beitrag {{ .Params.beitrag }}: {{ .Params.beitrag_art }}</strong></a>
+      <span>{{ .Description }}</span>
+      <small>{{ .Params.modell }} · eingebracht am {{ .Date | time.Format ":date_long" }}</small>
+    </li>
+    {{- end }}
+  </ol>
+</section>
+{{- end }}
+{{ end }}

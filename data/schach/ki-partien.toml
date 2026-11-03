@@ -17,3 +17,114 @@ partie = "Sven – Claude (Fable 5.1)"
 turnier = "Freundschaftspartie, 2. November 2026"
 loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 d6 8.c3 0-0 9.h3 Sa5 10.Lc2 c5 11.d4 Dc7 12.d5 Ld7 13.b3 Sb7 14.Sbd2 Tfc8 15.c4 bxc4 16.Sxc4 Lb5 17.Sfd2 Lxc4 18.bxc4 Tab8 19.a4 Sa5 20.Ta3 Sd7 21.Tg3 Lf6 22.De2 Sb6 23.Df3 Dd8 24.De2 g6 25.Ta3 Sd7 26.Sf1 Tb4 27.Ld2 Tb7 28.Lc3 Tcb8 29.Sd2 Lg7 30.g3 f5 31.exf5 gxf5 32.Lxf5 Sf6 33.Se4 Kh8 34.Sxd6 Dxd6 35.Lxa5 Dd8 36.Lxd8 Txd8 1-0"
 varianten = ["23...Sbxc4 24.Dxf6 Dd8 25.Dxg7# (zurückgenommen)"]
+
+# Kapitel 2 = dieselbe Partie mit Stockfishs Varianten (Seite /schach/ki-partien/sven-claude-2026-11-02-stockfish/).
+# Quelle: input\partie-sven-claude(1).html (Fable 5.1, Stockfish 17.1, Tiefe 24), eingebaut 03.11.2026.
+# Varianten = die Engine-Empfehlungen aus Fables Text und der kommentierten PGN, nur Notation (Bewertungen stehen im Text).
+[[kapitel]]
+nr = 2
+titel = "Stockfish-Analyse"
+slug = "stockfish"
+
+[[aufgabe]]
+nr = 2
+kapitel = 2
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Sven – Claude (Fable 5.1)"
+turnier = "Freundschaftspartie, 2. November 2026"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 d6 8.c3 0-0 9.h3 Sa5 10.Lc2 c5 11.d4 Dc7 12.d5 Ld7 13.b3 Sb7 14.Sbd2 Tfc8 15.c4 bxc4 16.Sxc4 Lb5 17.Sfd2 Lxc4 18.bxc4 Tab8 19.a4 Sa5 20.Ta3 Sd7 21.Tg3 Lf6 22.De2 Sb6 23.Df3 Dd8 24.De2 g6 25.Ta3 Sd7 26.Sf1 Tb4 27.Ld2 Tb7 28.Lc3 Tcb8 29.Sd2 Lg7 30.g3 f5 31.exf5 gxf5 32.Lxf5 Sf6 33.Se4 Kh8 34.Sxd6 Dxd6 35.Lxa5 Dd8 36.Lxd8 Txd8 1-0"
+varianten = ["12...Sc4", "14...c4 15.b4 a5", "15...g6", "19.Sf3", "19.Sf1", "21.g3", "21...Dd8", "22...g6", "23.Sf1", "23...Sd7", "23...Sbxc4 24.Dxf6 g6 25.Sxc4 Dd8 26.Dxd8+", "23...Sbxc4 24.Dxf6 Dd8 25.Dxg7#", "27.g3", "27...Sxc4 28.Lxb4 cxb4", "27...Txc4 28.Lxa5 Dxa5 29.Dxc4 Dxe1 30.Dxa6", "30...h5", "33.Tb1", "33...Sb3"]
+
+# Bewertungen (Stockfish 17.1, Tiefe 24, aus Weiß-Sicht, je Halbzug der Hauptlinie) und Fables Kommentare an den Zügen –
+# Wortlaut und Auszeichnung aus input\partie-sven-claude(1).html unverändert; nach = Zug, nach dem der Kommentar steht
+# (Sven, 03.11.: „1+2, den unteren Teil aber so lassen, nur in den Nachspielteil einbauen“).
+bewertungen = "+0.32 +0.20 +0.24 +0.34 +0.24 +0.25 +0.32 +0.36 +0.26 +0.32 +0.27 +0.37 +0.38 +0.49 +0.43 +0.40 +0.39 +0.42 +0.46 +0.44 +0.44 +0.55 +0.53 +0.95 +0.89 +0.95 +0.74 +1.18 +1.16 +1.55 +1.66 +1.97 +1.87 +1.99 +1.86 +2.08 +0.36 +0.39 +0.29 +0.23 -0.24 +0.43 +0.29 +1.03 +0.42 +0.55 +0.08 +0.35 -0.01 +0.17 -0.47 -0.34 -1.49 +0.62 +0.00 +0.00 +0.00 +0.00 +0.00 +4.08 +4.14 +4.29 +4.41 +4.59 +3.34 +4.91 +4.76 +4.98 +4.88 +7.69 +7.98 +8.05"
+
+[[aufgabe.kommentare]]
+nach = "12.d5"
+text = '''Spanisch, geschlossen, Tschigorin. Sven zieht die Hauptlinie ohne zu zögern, also habe ich das Offene Spanisch (5…Sxe4) und den Marshall-Angriff (7…0-0 8.c3 d5) vermieden – beides Varianten, in denen man genau wissen muss, was man tut. Mit 12.d5 wird das Zentrum geschlossen: Weiß spielt am Königsflügel, Schwarz am Damenflügel. So steht es in jedem Lehrbuch, und bis hierher stimmt es auch.'''
+
+[[aufgabe.kommentare]]
+nach = "12.d5"
+art = "engine"
+text = '''<b>Engine:</b> Bis hierher einverstanden. Alles zwischen +0,2 und +0,55, kein Zug außerhalb des Buchs.'''
+
+[[aufgabe.kommentare]]
+nach = "18...Tab8"
+text = '''13.b3 nimmt dem Springer das Feld c4, 15.c4 stellt mich vor die Wahl: b4 und alles dichtmachen, oder öffnen. Ich öffne, weil ich sonst am Damenflügel gar nichts mehr hätte. Nach dem Abtausch auf c4 gehört mir die b-Linie, und der Springer greift von a5 den Bauern c4 an, der nur noch von einem Springer gedeckt ist. Hier steht Schwarz ordentlich, vielleicht sogar etwas angenehmer.'''
+
+[[aufgabe.kommentare]]
+nach = "18...Tab8"
+art = "engine"
+text = '''<b>Engine: Das ist falsch, und zwar gründlich.</b> Von +0,5 auf +2,1 in sieben Zügen, ohne einen einzelnen Patzer – mein ganzer Plan war schlecht. Stockfish wollte 12…Sc4 und danach in jeder Variante …g6 mit Lg7, Sh5 und Spiel am Königsflügel; das Damenflügel-Gefummel führt zu nichts. Die beiden klaren Fehler: 14…Tfc8 (+0,74 → +1,18; richtig war 14…c4 15.b4 a5) und 15…bxc4 (→ +1,55; richtig 15…g6). Die Phase, die ich für meine beste hielt, war meine schlechteste. Weiß stand nach 18…Tab8 praktisch auf Gewinn.'''
+
+[[aufgabe.kommentare]]
+nach = "19.a4"
+art = "engine"
+text = '''<b>Engine: 19.a4 war der größte Fehler der Partie, und er war Svens.</b> Von +2,08 auf +0,36. Der Bauer nimmt dem eigenen Läufer das Feld, gibt mir b4 und einen festen Springerposten auf a5, und das ganze Übergewicht aus den Zügen 12–18 ist weg. Richtig war 19.Sf3 oder 19.Sf1 mit Turmschwenk Te3–c3, beides um +2,1. Ich hatte das weder gesehen noch kommentiert; mir kam a4 natürlich vor.'''
+
+[[aufgabe.kommentare]]
+nach = "21...Lf6"
+text = '''Ich habe 20.Ta3 als Vorbereitung von Tb3 gelesen. Sven hatte anderes im Sinn: Der Turm geht nach g3 und schaut auf g7. Das habe ich gesehen – Dg4 hätte sofort Matt gedroht – und mit Lf6 abgedeckt. Dann habe ich innerlich einen Haken dahinter gemacht. Das war der Fehler, nicht der Zug.'''
+
+[[aufgabe.kommentare]]
+nach = "21...Lf6"
+art = "engine"
+text = '''<b>Engine:</b> 21.Tg3 war objektiv nicht gut (−0,24, die erste und einzige Stellung der Partie, in der Schwarz vorn stand); 21.g3 war besser. Aber 21…Lf6 war die falsche Antwort (+0,43) – 21…Dd8 deckt f6 und hält den Vorteil. Der Zug, den ich erst nach dem Matt gefunden habe, war schon hier der richtige.'''
+
+[[aufgabe.kommentare]]
+nach = "23.Df3"
+text = '''Hier habe ich die Dame nur als Figur gelesen, die soeben c4 im Stich gelassen hat. Was ich nicht gelesen habe: Sie greift f6 an, und der Läufer dort ist nur vom g-Bauern gedeckt – der aber gefesselt ist, weil hinter ihm der Turm auf g3 und dahinter mein König steht. Der Läufer hängt also. In der Partie spielte ich <span class="mv">23…Sbxc4?? 24.Dxf6</span>, und gxf6 ist illegal. Ich fand noch <span class="mv">24…Dd8??</span>, das den Mattpunkt g7 überhaupt nicht deckt, und Sven setzte mit <span class="mv">25.Dxg7</span> matt.'''
+
+[[aufgabe.kommentare]]
+nach = "23.Df3"
+art = "engine"
+text = '''<b>Engine:</b> 22…Sb6 war bereits ein Fehler (+1,03), 22…g6 war nötig. Nach 23…Sbxc4 24.Dxf6 ist die Stellung auch mit der besten Verteidigung 24…g6 25.Sxc4 Dd8 26.Dxd8+ verloren (+8,6) – der Fehler war das Schlagen, nicht erst Dd8. Und 23.Df3 selbst war nicht einmal der stärkste Zug (23.Sf1, +1,0); es war eine Falle, in die ich hineingegangen bin.'''
+
+[[aufgabe.kommentare]]
+nach = "23...Dd8"
+text = '''Sven ließ mich den 23. Zug wiederholen. Mit offenen Augen: <span class="mv">23…Dd8 <span class="ev">+0.55</span></span>, die Dame deckt f6 über die Diagonale. Besser als das passive Le7, weil der Druck auf c4 bleibt.'''
+
+[[aufgabe.kommentare]]
+nach = "23...Dd8"
+art = "engine"
+text = '''<b>Engine:</b> Ordentlich, aber 23…Sd7 war etwas besser (+0,42 statt +0,55).'''
+
+[[aufgabe.kommentare]]
+nach = "27.Ld2"
+text = '''Ich hätte hier <span class="mv">27…Txc4</span> prüfen sollen: 28.Dxc4?? Sxc4 geht nicht, und 28.Lxa5 Dxa5 29.Dxc4 Dxe1+ ist unklar, vermutlich sogar gut für Schwarz. Ich habe es gesehen und nicht gerechnet. Nach dem Matt vom Vortag – vom Vorzug – habe ich meiner Rechnung nicht getraut. Das ist verständlich und trotzdem die falsche Reaktion: Wer nicht rechnet, verliert nur langsamer.'''
+
+[[aufgabe.kommentare]]
+nach = "27.Ld2"
+art = "engine"
+text = '''<b>Engine: Meine Behauptung über 27…Txc4 war falsch – und der richtige Zug stand daneben.</b> 27…Txc4 28.Lxa5 Dxa5 29.Dxc4 Dxe1 30.Dxa6 ist +2,2 für Weiß, nicht „gut für Schwarz“. Aber <b>27…Sxc4!</b> gewinnt: nach 28.Lxb4 cxb4 hat Schwarz zwei Bauern für die Qualität, den Springerposten c4 und den Freibauern b4 – Stockfish sagt −1,19. 27.Ld2 war Svens zweiter Fehler (−1,49 nach dem Zug; 27.g3 hielt den Ausgleich), und es war die einzige Stellung der Partie, in der ich auf Gewinn stand. Mein 27…Tb7 hat sie weggeworfen: von −1,49 auf +0,62. Ich habe den Zug am Brett nicht einmal erwogen – ich habe über Txc4 nachgedacht, es für unklar erklärt und den Turm zurückgezogen. Danach (28–30) steht die Engine bei exakt 0,00.'''
+
+[[aufgabe.kommentare]]
+nach = "29...Lg7"
+text = '''Weiß bläst den Angriff ab, der Turm geht zurück nach a3. Ich spiele g6 gegen jede Wiederholung des Motivs und bringe den Turm nach b4 – im ersten Versuch wollte ich das schon einen Zug früher, aber mein eigener Springer stand auf b6 im Weg; die Bibliothek hat es verhindert. 27.Ld2 vertreibt den Turm, 28.Lc3 und 29.Sd2 machen b3 und b1 dicht. Die b-Linie ist eine Sackgasse. Also Planwechsel: Läufer nach g7, Hebel f5.'''
+
+[[aufgabe.kommentare]]
+nach = "30...f5"
+text = '''Der thematische Hebel, einen Zug zu früh. Nach <span class="mv">31.exf5 <span class="ev">+4.14</span> 31…gxf5 <span class="ev">+4.29</span> 32.Lxf5 <span class="ev">+4.41</span></span> fällt der Bauer, weil der Läufer auf c2 auf f5 schaut – die Diagonale war durch e4 verstellt, und ich habe nicht mitgedacht, dass der Abtausch sie öffnet. Dieselbe Fehlerart wie beim Turm auf g3: eine Wirkung, die durch den Zug <em>entsteht</em>, statt schon da zu sein. Vorbereitung wäre 28…Tf8 statt Tcb8 gewesen. In der Partie wollte ich nach 32.Lxf5 noch Tf8 spielen – und wieder stand eine eigene Figur im Weg, diesmal die Dame auf d8.'''
+
+[[aufgabe.kommentare]]
+nach = "30...f5"
+art = "engine"
+text = '''<b>Engine:</b> Von 0,00 auf +4,08 – der Zug, der die Partie entschieden hat. „Einen Zug zu früh“ ist noch zu freundlich: Der Hebel war in dieser Struktur gar nicht angesagt. Stockfish wollte das ruhige 30…h5 und sieht die Stellung als ausgeglichen. Nach f5 gibt es keinen Weg zurück.'''
+
+[[aufgabe.kommentare]]
+nach = "33...Kh8"
+text = '''Nicht 33…Sxe4 34.Dxe4, weil Dame und Läufer dann gemeinsam auf h7 zielen. Kh8 war der eine Zug in dieser Phase, bei dem ich alle Antworten geprüft habe. Ich erwähne das, weil es die Ausnahme ist.'''
+
+[[aufgabe.kommentare]]
+nach = "33...Kh8"
+art = "engine"
+text = '''<b>Engine:</b> Auch das stimmt nicht. 33…Kh8 kostete anderthalb Bauern (+3,34 → +4,91); 33…Sb3 war deutlich besser (+3,47). 33.Se4 war außerdem nicht Svens stärkster Zug – 33.Tb1 (+4,6) war stärker –, aber in einer gewonnenen Stellung ist das egal. Mein „sauberer Zug“ war nur weniger schlecht als die Züge, die ich gesehen hatte. Das ist nicht dasselbe.'''
+
+[[aufgabe.kommentare]]
+nach = "35.Lxa5"
+text = '''Ich hatte zwei Züge vorher geschrieben, die Dame auf d8 decke den Springer a5. Beim Nehmen auf d6 war das vergessen. Zwei Bauern hinten, nicht „gleich“, wie ich Sven noch mitgeteilt hatte.'''
+
+[[aufgabe.kommentare]]
+nach = "36.Lxd8"
+text = '''Der Läufer auf a5 steht auf der Diagonale a5–d8. Ich habe ihn als ungedecktes Ziel gesehen – und nicht als Figur, die selbst schlägt. Unmittelbar nachdem ich einen Absatz darüber geschrieben hatte, was ich mir in dieser Partie noch erarbeiten wolle: einmal einen Zug, bei dem ich vorher alles geprüft habe. Die Pointe hat sich selbst geschrieben.'''

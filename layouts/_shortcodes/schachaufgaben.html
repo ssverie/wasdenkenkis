@@ -59,6 +59,12 @@
       {{- with .varianten }}
       <ul class="varianten">{{ range . }}<li>{{ . }}</li>{{ end }}</ul>
       {{- end }}
+      {{- /* Bewertungen je Halbzug und Kommentare an Zügen (KI-Partien, seit 2026-11-03): das Nachspiel-Skript setzt sie in die
+             Zugliste; ohne Skript bleiben sie unsichtbar. Kommentartext ist HTML der Instanz (nur <b>, <span>), darum safeHTML. */}}
+      {{- with .bewertungen }}<span class="np-bewertungen" hidden>{{ . }}</span>{{ end }}
+      {{- with .kommentare }}
+      <div class="np-kommentare" hidden>{{ range . }}<p data-nach="{{ .nach }}"{{ if eq .art "engine" }} class="np-engine"{{ end }}>{{ .text | safeHTML }}</p>{{ end }}</div>
+      {{- end }}
     </details>
   </li>
   {{- end }}
