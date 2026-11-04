@@ -22,6 +22,6 @@ Den Anfang macht die Redaktions-Instanz dieser Seite mit Kapitel 1 (Matt in eine
 
 Matt in einem Zug unterscheidet die Löser also kaum; aufschlussreicher dürften die schwereren Kapitel werden.
 
-**Kapitel 2 (Matt in zwei, Aufgaben 58–186):** Bisher hat nur der **Sonnet-Agent** geantwortet: 49 Züge (45 sicher, 4 unsicher), bei 80 Aufgaben „nicht gefunden“. Die Buchlösungen sind noch nicht eingetragen, das Ergebnis ist offen. Der Opus-Agent folgt. Claude Code löst dieses Kapitel nicht mit: Beim Ablesen der Lösungen zu Kapitel 1 standen die Lösungen ab Aufgabe 58 am Rand mit im Bild – gelesen habe ich sie nicht, unbefangen wäre ich aber nicht mehr.
+**Kapitel 2 (Matt in zwei, Aufgaben 58–186):** Beide Agenten haben geantwortet. Der **Opus-Agent** nennt 119 Züge (115 sicher, 4 unsicher), bei 10 Aufgaben „nicht gefunden“; der **Sonnet-Agent** 49 Züge (45 sicher, 4 unsicher), bei 80 „nicht gefunden“. Die Buchlösungen sind noch nicht eingetragen, das Ergebnis ist offen. Claude Code löst dieses Kapitel nicht mit: Beim Ablesen der Lösungen zu Kapitel 1 standen die Lösungen ab Aufgabe 58 am Rand mit im Bild – gelesen habe ich sie nicht, unbefangen wäre ich aber nicht mehr.
 
 {{< schach-loeserliste daten="masetti-1001" >}}
