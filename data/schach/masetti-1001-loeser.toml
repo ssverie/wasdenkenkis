@@ -22,7 +22,7 @@ bedingungen = "Ein frisch gestarteter Unteragent ohne Vorwissen aus dieser Sitzu
 kurz = "sonnet-agent"
 name = "Sonnet 5.5 (frischer Agent)"
 modell = "Claude Sonnet 5.5"
-bedingungen = "Ein frisch gestarteter Unteragent mit Sonnet 5.5, dieselben Bedingungen wie beim Opus-Agenten: nur die 57 FEN, keine Bildunterschriften, im Kopf lösen ohne Werkzeuge."
+bedingungen = "Ein frisch gestarteter Unteragent mit Sonnet 5.5, dieselben Bedingungen wie beim Opus-Agenten: nur die 57 FEN, keine Bildunterschriften, im Kopf lösen ohne Werkzeuge. Kapitel 2: alle 129 FEN mit „Weiß am Zug, Matt in zwei“, sonst gleiche Bedingungen; die erste Antwort brach an der Längengrenze ab (über 128.000 Tokens), danach antwortete er in drei Teilen (58–100, 101–143, 144–186) mit knappen Notizen."
 
 [[antwort]]
 nr = 1
@@ -1492,4 +1492,1165 @@ antwort = "1.Dxh7#"
 sicherheit = "sicher"
 notiz = "Sg5 durch Tg1 gefesselt, Kxh7 durch Tb7 verboten"
 ergebnis = "richtig"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 58
+wer = "sonnet-agent"
+antwort = "1.Lg5+"
+sicherheit = "sicher"
+notiz = "1...Ke8 2.Th8#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 59
+wer = "sonnet-agent"
+antwort = "1.Th8+"
+sicherheit = "sicher"
+notiz = "1...Kxh8 2.Dh7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 60
+wer = "sonnet-agent"
+antwort = "1.Dxg4+"
+sicherheit = "sicher"
+notiz = "1...Kxg4 2.Le2#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 61
+wer = "sonnet-agent"
+antwort = "1.Dxh6+"
+sicherheit = "sicher"
+notiz = "1...Kxh6 2.Th8#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 62
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (1.Dxf6+ Kh7 reicht nicht)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 63
+wer = "sonnet-agent"
+antwort = "1.Dg8+"
+sicherheit = "sicher"
+notiz = "1...Txg8 2.Sf7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 64
+wer = "sonnet-agent"
+antwort = "1.Th5+"
+sicherheit = "sicher"
+notiz = "1...gxh5 2.Df6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 65
+wer = "sonnet-agent"
+antwort = "1.Sxf5+"
+sicherheit = "sicher"
+notiz = "1...gxf5 2.fxg5#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 66
+wer = "sonnet-agent"
+antwort = "1.Dxg6+"
+sicherheit = "sicher"
+notiz = "1...hxg6 2.Th8#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 67
+wer = "sonnet-agent"
+antwort = "1.Dxe5+"
+sicherheit = "sicher"
+notiz = "1...Sxe5 2.Td8# / 1...Le7 2.Dxe7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 68
+wer = "sonnet-agent"
+antwort = "1.Te8+"
+sicherheit = "sicher"
+notiz = "1...Kxe8 2.Tg8#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 69
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (Dxg7 scheitert an Sxg7 und Dxg7)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 70
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (1.Sf6 droht Dxh7#, aber Dxf6 hält)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 71
+wer = "sonnet-agent"
+antwort = "1.De8+"
+sicherheit = "sicher"
+notiz = "1...Sxe8 2.Tf8#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 72
+wer = "sonnet-agent"
+antwort = "1.Lf6+"
+sicherheit = "sicher"
+notiz = "1...Ke8 2.Th8#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 73
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (1.Te8+ Kg7 reicht nicht)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 74
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (Dg8+ und Te8 scheitern an Schlagzügen)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 75
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (1.Dd8+ De7 hält)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 76
+wer = "sonnet-agent"
+antwort = "1.Dxf6"
+sicherheit = "unsicher"
+notiz = "1...gxf6 2.Lxf6#; nach 1...Dxg2 unklar"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 77
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (1.Th3+ Dh6 hält)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 78
+wer = "sonnet-agent"
+antwort = "1.Dxf6+"
+sicherheit = "sicher"
+notiz = "1...Sxf6 2.Lxf6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 79
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 80
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 81
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 82
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 83
+wer = "sonnet-agent"
+antwort = "1.Sc3"
+sicherheit = "sicher"
+notiz = "Se4-c3, Schwarz muss den Springer ziehen, dann 2.Sf3# (z. B. 1...Sf3+ 2.Sxf3#)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 84
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (Df7+ scheitert an Sxf7)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 85
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 86
+wer = "sonnet-agent"
+antwort = "1.La6"
+sicherheit = "sicher"
+notiz = "1...e1=D (oder andere Umwandlung) 2.Lb5#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 87
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 88
+wer = "sonnet-agent"
+antwort = "1.Sf6"
+sicherheit = "sicher"
+notiz = "beliebiger Zug 2.Th7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 89
+wer = "sonnet-agent"
+antwort = "1.Sg6+"
+sicherheit = "sicher"
+notiz = "1...hxg6 2.Th1#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 90
+wer = "sonnet-agent"
+antwort = "1.Dxc6+"
+sicherheit = "unsicher"
+notiz = "1...bxc6 2.Tb8#; nach 1...Tc7 nicht matt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 91
+wer = "sonnet-agent"
+antwort = "1.Dxc6+"
+sicherheit = "sicher"
+notiz = "1...bxc6 2.La6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 92
+wer = "sonnet-agent"
+antwort = "1.Dc6+"
+sicherheit = "sicher"
+notiz = "1...bxc6 2.La6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 93
+wer = "sonnet-agent"
+antwort = "1.Lc6"
+sicherheit = "unsicher"
+notiz = "droht Ta8#; 1...Dxd2+ widerlegt vermutlich"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 94
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 95
+wer = "sonnet-agent"
+antwort = "1.a8S+"
+sicherheit = "sicher"
+notiz = "1...Ka5 2.Ta7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 96
+wer = "sonnet-agent"
+antwort = "1.Se7+"
+sicherheit = "sicher"
+notiz = "1...Kh8 2.Lf6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 97
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 98
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 99
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 100
+wer = "sonnet-agent"
+antwort = "1.Dxd7+"
+sicherheit = "sicher"
+notiz = "1...Sxd7 2.Te8#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 101
+wer = "sonnet-agent"
+antwort = "1.Db6"
+sicherheit = "sicher"
+notiz = "droht Dxb7#; 1...Kc8 2.Dc7# / 1...Ka8 2.Dxb7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 102
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (1.Df6+ Dd6 hält)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 103
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 104
+wer = "sonnet-agent"
+antwort = "1.Kf5"
+sicherheit = "sicher"
+notiz = "1...g4 (einziger Zug) 2.hxg4#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 105
+wer = "sonnet-agent"
+antwort = "1.Lc5"
+sicherheit = "sicher"
+notiz = "droht a7#; z. B. 1...f1=D 2.a7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 106
+wer = "sonnet-agent"
+antwort = "1.Le7+"
+sicherheit = "sicher"
+notiz = "Abzugsschach der Tg2; 1...Kh8 2.Lf6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 107
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (1.b6 cxb6 hält)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 108
+wer = "sonnet-agent"
+antwort = "1.Dxh7+"
+sicherheit = "sicher"
+notiz = "1...Kf8 2.Dh8#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 109
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (1.De8+ Txe8 hält)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 110
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (1.Dxe5+ Kg8 hält)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 111
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 112
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 113
+wer = "sonnet-agent"
+antwort = "1.Dxh5+"
+sicherheit = "sicher"
+notiz = "1...gxh5 2.Th6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 114
+wer = "sonnet-agent"
+antwort = "1.Dxe8+"
+sicherheit = "sicher"
+notiz = "1...Kxe8 2.Td8#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 115
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 116
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 117
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 118
+wer = "sonnet-agent"
+antwort = "1.Kf7#"
+sicherheit = "sicher"
+notiz = "Abzugsmatt der Ta8 auf der 8. Reihe"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 119
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 120
+wer = "sonnet-agent"
+antwort = "1.Dxe6+"
+sicherheit = "sicher"
+notiz = "1...fxe6 2.Lg6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 121
+wer = "sonnet-agent"
+antwort = "1.Td7+"
+sicherheit = "sicher"
+notiz = "1...Lxd7 2.Sf7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 122
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (Schwarz droht Db2#)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 123
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 124
+wer = "sonnet-agent"
+antwort = "1.Te8+"
+sicherheit = "sicher"
+notiz = "1...Dxe8 (oder 1...Txe8) 2.Dxg7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 125
+wer = "sonnet-agent"
+antwort = "1.Dxh6+"
+sicherheit = "sicher"
+notiz = "1...gxh6 2.Sf7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 126
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 127
+wer = "sonnet-agent"
+antwort = "1.Txg6+"
+sicherheit = "unsicher"
+notiz = "1...hxg6 2.Dg7#; 1...fxg6 ungeklärt"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 128
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 129
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 130
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 131
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 132
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 133
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 134
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 135
+wer = "sonnet-agent"
+antwort = "1.Df8+"
+sicherheit = "sicher"
+notiz = "1...Txf8 2.Txf8#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 136
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 137
+wer = "sonnet-agent"
+antwort = "1.Sg6+"
+sicherheit = "sicher"
+notiz = "1...Kg8 (h7 ist gefesselt) 2.Le6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 138
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 139
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 140
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 141
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 142
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 143
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 144
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 145
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (1.Lxg6 droht Th4#, aber 1...hxg6 hält)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 146
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 147
+wer = "sonnet-agent"
+antwort = "1.Txh5+"
+sicherheit = "sicher"
+notiz = "1...gxh5 2.g6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 148
+wer = "sonnet-agent"
+antwort = "1.Tf6+"
+sicherheit = "sicher"
+notiz = "1...Lxf6 2.Dxf6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 149
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 150
+wer = "sonnet-agent"
+antwort = "1.Txf6+"
+sicherheit = "sicher"
+notiz = "1...Lxf6 (oder 1...gxf6) 2.Df7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 151
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 152
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 153
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 154
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 155
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 156
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden (Tc7 ist durch Lb8 gefesselt)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 157
+wer = "sonnet-agent"
+antwort = "1.Tf5+"
+sicherheit = "sicher"
+notiz = "1...Texf5 2.Se6#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 158
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 159
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 160
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 161
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 162
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 163
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 164
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 165
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 166
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 167
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 168
+wer = "sonnet-agent"
+antwort = "1.Dd5+"
+sicherheit = "sicher"
+notiz = "1...Kb6 2.Db5#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 169
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 170
+wer = "sonnet-agent"
+antwort = "1.Ta3#"
+sicherheit = "sicher"
+notiz = "Matt in einem Zug"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 171
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 172
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 173
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 174
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 175
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 176
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 177
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 178
+wer = "sonnet-agent"
+antwort = "1.Th8+"
+sicherheit = "sicher"
+notiz = "1...Lxh8 2.Th7#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 179
+wer = "sonnet-agent"
+antwort = "1.Lg6+"
+sicherheit = "sicher"
+notiz = "1...Kg8 (oder 1...Kh8) 2.Te8#"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 180
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 181
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 182
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 183
+wer = "sonnet-agent"
+antwort = "1.Dh7+"
+sicherheit = "sicher"
+notiz = "1...Kxh7 2.Lf7# (Abzugsschach der Th2)"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 184
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 185
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
+geloest = 2026-11-03
+
+[[antwort]]
+nr = 186
+wer = "sonnet-agent"
+antwort = "nicht gefunden"
+sicherheit = "nicht gefunden"
+notiz = "keine Lösung gefunden"
+ergebnis = "offen"
 geloest = 2026-11-03

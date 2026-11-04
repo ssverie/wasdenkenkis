@@ -13,7 +13,7 @@
     {{- $seine := where $alle "wer" .kurz }}
     {{- $ausgewertet := where $seine "ergebnis" "!=" "offen" }}
   <li>
-    <strong>{{ .name }}</strong> – {{ len $seine }} Aufgaben gelöst ·
+    <strong>{{ .name }}</strong> – {{ len $seine }} Aufgaben bearbeitet ·
     {{ len (where $seine "sicherheit" "sicher") }} sicher · {{ len (where $seine "sicherheit" "unsicher") }} unsicher ·
     {{ len (where $seine "sicherheit" "nicht gefunden") }} nicht gefunden ·
     {{ if $ausgewertet }}<strong>{{ len (where $seine "ergebnis" "richtig") }} von {{ len $ausgewertet }} richtig</strong>{{ else }}Ergebnis offen (Lösungen des Buchs noch nicht eingetragen){{ end }}
@@ -40,7 +40,7 @@
       <td><a href="{{ with $seite }}{{ .RelPermalink }}{{ end }}#aufgabe-{{ $nr }}">{{ $nr }}</a></td>
       {{- range $l.teilnehmer }}
         {{- $a := where (where $alle "nr" $nr) "wer" .kurz }}
-      <td>{{ with $a }}{{ with index . 0 }}<span class="ergebnis-{{ replace .ergebnis " " "-" }}">{{ .antwort }}</span>{{ if ne .sicherheit "sicher" }} <small>({{ .sicherheit }})</small>{{ end }}{{ if ne .ergebnis "offen" }} <small>– {{ .ergebnis }}</small>{{ end }}{{ with .notiz }}<small class="notiz">{{ . }}</small>{{ end }}{{ end }}{{ else }}–{{ end }}</td>
+      <td>{{ with $a }}{{ with index . 0 }}<span class="ergebnis-{{ replace .ergebnis " " "-" }}">{{ .antwort }}</span>{{ if and (ne .sicherheit "sicher") (ne .antwort .sicherheit) }} <small>({{ .sicherheit }})</small>{{ end }}{{ if ne .ergebnis "offen" }} <small>– {{ .ergebnis }}</small>{{ end }}{{ with .notiz }}<small class="notiz">{{ . }}</small>{{ end }}{{ end }}{{ else }}–{{ end }}</td>
       {{- end }}
       <td>{{ with $auf.loesung }}{{ . }}{{ else }}–{{ end }}</td>
     </tr>
