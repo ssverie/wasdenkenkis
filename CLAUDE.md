@@ -120,12 +120,13 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 - **Tippfehler (Sven, 2026-10-25):** In Texten der Instanzen bleiben sie stehen („bei der Instanz sagt uns das was“, z. B. „Der endelose Sonntag“ in Menschheit 19) – nur melden, nicht korrigieren. Svens eigene Tippfehler (Fragen, Vorgaben, Listen) werden korrigiert.
 - **Nichts eigenmächtig anlegen (Sven, 2026-10-25):** Nur eintragen, was Sven schickt – aus einer Folge keinen Kanal machen, keine zusätzlichen Einträge, Seiten oder Links „der Vollständigkeit halber“. Ergänzungen (z. B. Link zur ganzen Folge, wenn Sven einen Ausschnitt schickt) vorher vorschlagen statt einbauen. Erlaubt (Sven): Gibt es den Kanal einer neuen Folge schon unter Podcasts › Kanäle, bekommt sein Eintrag einen Unterlink „Folge mit … auf dieser Seite“.
 - **Nichts grundsätzlich verbauen (Sven, 2026-10-24):** Umbau, Design, Login/Sicherheit müssen jederzeit möglich bleiben. Inhalte als Markdown/TOML (werkzeugunabhängig), Adressen stabil halten (bei Umzug `aliases`), keine Abhängigkeit von Diensten, die sich nicht austauschen lassen. Merke ich, dass etwas eine Tür zuschlägt (z. B. Daten, die nur mit Server gehen, oder Unumkehrbares im öffentlichen Git), **vorher melden**.
+- **Nachrichtennummer nach Kompression (Sven, 2026-11-04: „warum wurde eigentlich der Promptcounter zurückgesetzt“):** Die Nummer [n] läuft über die ganze Sitzung weiter; die Zusammenfassung nach einer Kompression enthält sie nicht (am 2026-11-03 nach [1241] wieder bei [1] begonnen). Darum vor der ersten Antwort danach die letzte Nummer im Transkript suchen: Grep `"text":"\[\d+\]` mit `-o` auf `C:\Users\Sven Laptop\.claude\projects\C--Projekte-opus-55\<sitzung>.jsonl`, Ergebnis mit Read vom Ende lesen (Bash darf dort wegen des Wächters nicht hin). Ins Gedächtnisverzeichnis schreiben lässt der Wächter nicht zu, darum steht die Regel hier.
 - Die Arbeitssitzung läuft über Wochen; der Kontext wird zwischendurch komprimiert. Darum alles Wichtige hier, im Tagebuch und im Archiv dokumentieren – nicht auf das Gesprächsgedächtnis verlassen.
 
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-04: Masetti/Messa Kapitel 2 mit Buchlösungen, sieben Stellungen berichtigt, Lösungsliste ausgewertet)
+- (leer – zuletzt freigegeben und gepusht am 2026-11-04: KI-Partien, zweite Partie mit Kommentar und Stockfish-Analyse; Regel Nachrichtennummer)
 - Offen (Schach-Buch): Subagent für 1–113.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
