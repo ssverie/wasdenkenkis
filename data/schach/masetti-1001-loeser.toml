@@ -1500,7 +1500,7 @@ wer = "sonnet-agent"
 antwort = "1.Lg5+"
 sicherheit = "sicher"
 notiz = "1...Ke8 2.Th8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1509,7 +1509,7 @@ wer = "sonnet-agent"
 antwort = "1.Th8+"
 sicherheit = "sicher"
 notiz = "1...Kxh8 2.Dh7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1518,7 +1518,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxg4+"
 sicherheit = "sicher"
 notiz = "1...Kxg4 2.Le2#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1527,7 +1527,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxh6+"
 sicherheit = "sicher"
 notiz = "1...Kxh6 2.Th8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1536,7 +1536,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (1.Dxf6+ Kh7 reicht nicht)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1545,7 +1545,7 @@ wer = "sonnet-agent"
 antwort = "1.Dg8+"
 sicherheit = "sicher"
 notiz = "1...Txg8 2.Sf7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1554,7 +1554,7 @@ wer = "sonnet-agent"
 antwort = "1.Th5+"
 sicherheit = "sicher"
 notiz = "1...gxh5 2.Df6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1563,7 +1563,7 @@ wer = "sonnet-agent"
 antwort = "1.Sxf5+"
 sicherheit = "sicher"
 notiz = "1...gxf5 2.fxg5#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1572,7 +1572,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxg6+"
 sicherheit = "sicher"
 notiz = "1...hxg6 2.Th8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1581,7 +1581,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxe5+"
 sicherheit = "sicher"
 notiz = "1...Sxe5 2.Td8# / 1...Le7 2.Dxe7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1590,7 +1590,7 @@ wer = "sonnet-agent"
 antwort = "1.Te8+"
 sicherheit = "sicher"
 notiz = "1...Kxe8 2.Tg8#"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1599,7 +1599,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (Dxg7 scheitert an Sxg7 und Dxg7)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1608,7 +1608,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (1.Sf6 droht Dxh7#, aber Dxf6 hält)"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1617,7 +1617,7 @@ wer = "sonnet-agent"
 antwort = "1.De8+"
 sicherheit = "sicher"
 notiz = "1...Sxe8 2.Tf8#"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1626,7 +1626,7 @@ wer = "sonnet-agent"
 antwort = "1.Lf6+"
 sicherheit = "sicher"
 notiz = "1...Ke8 2.Th8#"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1635,7 +1635,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (1.Te8+ Kg7 reicht nicht)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1644,7 +1644,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (Dg8+ und Te8 scheitern an Schlagzügen)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1653,7 +1653,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (1.Dd8+ De7 hält)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1662,7 +1662,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxf6"
 sicherheit = "unsicher"
 notiz = "1...gxf6 2.Lxf6#; nach 1...Dxg2 unklar"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1671,7 +1671,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (1.Th3+ Dh6 hält)"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1680,7 +1680,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxf6+"
 sicherheit = "sicher"
 notiz = "1...Sxf6 2.Lxf6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1689,7 +1689,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1698,7 +1698,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1707,7 +1707,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1716,7 +1716,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1725,7 +1725,7 @@ wer = "sonnet-agent"
 antwort = "1.Sc3"
 sicherheit = "sicher"
 notiz = "Se4-c3, Schwarz muss den Springer ziehen, dann 2.Sf3# (z. B. 1...Sf3+ 2.Sxf3#)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1734,7 +1734,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (Df7+ scheitert an Sxf7)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1743,7 +1743,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1752,7 +1752,7 @@ wer = "sonnet-agent"
 antwort = "1.La6"
 sicherheit = "sicher"
 notiz = "1...e1=D (oder andere Umwandlung) 2.Lb5#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1761,7 +1761,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1770,7 +1770,7 @@ wer = "sonnet-agent"
 antwort = "1.Sf6"
 sicherheit = "sicher"
 notiz = "beliebiger Zug 2.Th7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1779,7 +1779,7 @@ wer = "sonnet-agent"
 antwort = "1.Sg6+"
 sicherheit = "sicher"
 notiz = "1...hxg6 2.Th1#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1788,7 +1788,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxc6+"
 sicherheit = "unsicher"
 notiz = "1...bxc6 2.Tb8#; nach 1...Tc7 nicht matt"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1797,7 +1797,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxc6+"
 sicherheit = "sicher"
 notiz = "1...bxc6 2.La6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1806,7 +1806,7 @@ wer = "sonnet-agent"
 antwort = "1.Dc6+"
 sicherheit = "sicher"
 notiz = "1...bxc6 2.La6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1815,7 +1815,7 @@ wer = "sonnet-agent"
 antwort = "1.Lc6"
 sicherheit = "unsicher"
 notiz = "droht Ta8#; 1...Dxd2+ widerlegt vermutlich"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1824,7 +1824,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1833,7 +1833,7 @@ wer = "sonnet-agent"
 antwort = "1.a8S+"
 sicherheit = "sicher"
 notiz = "1...Ka5 2.Ta7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1842,7 +1842,7 @@ wer = "sonnet-agent"
 antwort = "1.Se7+"
 sicherheit = "sicher"
 notiz = "1...Kh8 2.Lf6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1851,7 +1851,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1860,7 +1860,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1869,7 +1869,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1878,7 +1878,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxd7+"
 sicherheit = "sicher"
 notiz = "1...Sxd7 2.Te8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1887,7 +1887,7 @@ wer = "sonnet-agent"
 antwort = "1.Db6"
 sicherheit = "sicher"
 notiz = "droht Dxb7#; 1...Kc8 2.Dc7# / 1...Ka8 2.Dxb7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1896,7 +1896,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (1.Df6+ Dd6 hält)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1905,7 +1905,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1914,7 +1914,7 @@ wer = "sonnet-agent"
 antwort = "1.Kf5"
 sicherheit = "sicher"
 notiz = "1...g4 (einziger Zug) 2.hxg4#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1923,7 +1923,7 @@ wer = "sonnet-agent"
 antwort = "1.Lc5"
 sicherheit = "sicher"
 notiz = "droht a7#; z. B. 1...f1=D 2.a7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1932,7 +1932,7 @@ wer = "sonnet-agent"
 antwort = "1.Le7+"
 sicherheit = "sicher"
 notiz = "Abzugsschach der Tg2; 1...Kh8 2.Lf6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1941,7 +1941,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (1.b6 cxb6 hält)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1950,7 +1950,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxh7+"
 sicherheit = "sicher"
 notiz = "1...Kf8 2.Dh8#"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1959,7 +1959,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (1.De8+ Txe8 hält)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1968,7 +1968,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (1.Dxe5+ Kg8 hält)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1977,7 +1977,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1986,7 +1986,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -1995,7 +1995,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxh5+"
 sicherheit = "sicher"
 notiz = "1...gxh5 2.Th6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2004,7 +2004,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxe8+"
 sicherheit = "sicher"
 notiz = "1...Kxe8 2.Td8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2013,7 +2013,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2022,7 +2022,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2031,7 +2031,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2040,7 +2040,7 @@ wer = "sonnet-agent"
 antwort = "1.Kf7#"
 sicherheit = "sicher"
 notiz = "Abzugsmatt der Ta8 auf der 8. Reihe"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2049,7 +2049,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2058,7 +2058,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxe6+"
 sicherheit = "sicher"
 notiz = "1...fxe6 2.Lg6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2067,7 +2067,7 @@ wer = "sonnet-agent"
 antwort = "1.Td7+"
 sicherheit = "sicher"
 notiz = "1...Lxd7 2.Sf7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2076,7 +2076,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (Schwarz droht Db2#)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2085,7 +2085,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2094,7 +2094,7 @@ wer = "sonnet-agent"
 antwort = "1.Te8+"
 sicherheit = "sicher"
 notiz = "1...Dxe8 (oder 1...Txe8) 2.Dxg7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2103,7 +2103,7 @@ wer = "sonnet-agent"
 antwort = "1.Dxh6+"
 sicherheit = "sicher"
 notiz = "1...gxh6 2.Sf7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2112,7 +2112,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2121,7 +2121,7 @@ wer = "sonnet-agent"
 antwort = "1.Txg6+"
 sicherheit = "unsicher"
 notiz = "1...hxg6 2.Dg7#; 1...fxg6 ungeklärt"
-ergebnis = "offen"
+ergebnis = "anderer Weg"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2130,7 +2130,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2139,7 +2139,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2148,7 +2148,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2157,7 +2157,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2166,7 +2166,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2175,7 +2175,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2184,7 +2184,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2193,7 +2193,7 @@ wer = "sonnet-agent"
 antwort = "1.Df8+"
 sicherheit = "sicher"
 notiz = "1...Txf8 2.Txf8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2202,7 +2202,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2211,7 +2211,7 @@ wer = "sonnet-agent"
 antwort = "1.Sg6+"
 sicherheit = "sicher"
 notiz = "1...Kg8 (h7 ist gefesselt) 2.Le6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2220,7 +2220,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2229,7 +2229,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2238,7 +2238,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2247,7 +2247,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2256,7 +2256,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2265,7 +2265,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2274,7 +2274,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2283,7 +2283,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (1.Lxg6 droht Th4#, aber 1...hxg6 hält)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2292,7 +2292,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2301,7 +2301,7 @@ wer = "sonnet-agent"
 antwort = "1.Txh5+"
 sicherheit = "sicher"
 notiz = "1...gxh5 2.g6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2310,7 +2310,7 @@ wer = "sonnet-agent"
 antwort = "1.Tf6+"
 sicherheit = "sicher"
 notiz = "1...Lxf6 2.Dxf6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2319,7 +2319,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2328,7 +2328,7 @@ wer = "sonnet-agent"
 antwort = "1.Txf6+"
 sicherheit = "sicher"
 notiz = "1...Lxf6 (oder 1...gxf6) 2.Df7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2337,7 +2337,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2346,7 +2346,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2355,7 +2355,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2364,7 +2364,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2373,7 +2373,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2382,7 +2382,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden (Tc7 ist durch Lb8 gefesselt)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2391,7 +2391,7 @@ wer = "sonnet-agent"
 antwort = "1.Tf5+"
 sicherheit = "sicher"
 notiz = "1...Texf5 2.Se6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2400,7 +2400,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2409,7 +2409,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2418,7 +2418,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2427,7 +2427,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2436,7 +2436,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2445,7 +2445,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2454,7 +2454,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2463,7 +2463,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2472,7 +2472,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2481,7 +2481,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2490,7 +2490,7 @@ wer = "sonnet-agent"
 antwort = "1.Dd5+"
 sicherheit = "sicher"
 notiz = "1...Kb6 2.Db5#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2499,7 +2499,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2508,7 +2508,7 @@ wer = "sonnet-agent"
 antwort = "1.Ta3#"
 sicherheit = "sicher"
 notiz = "Matt in einem Zug"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2517,7 +2517,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2526,7 +2526,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2535,7 +2535,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2544,7 +2544,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2553,7 +2553,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2562,7 +2562,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2571,7 +2571,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2580,7 +2580,7 @@ wer = "sonnet-agent"
 antwort = "1.Th8+"
 sicherheit = "sicher"
 notiz = "1...Lxh8 2.Th7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2589,7 +2589,7 @@ wer = "sonnet-agent"
 antwort = "1.Lg6+"
 sicherheit = "sicher"
 notiz = "1...Kg8 (oder 1...Kh8) 2.Te8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2598,7 +2598,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2607,7 +2607,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2616,7 +2616,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2625,7 +2625,7 @@ wer = "sonnet-agent"
 antwort = "1.Dh7+"
 sicherheit = "sicher"
 notiz = "1...Kxh7 2.Lf7# (Abzugsschach der Th2)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2634,7 +2634,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2643,7 +2643,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2652,7 +2652,7 @@ wer = "sonnet-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
 notiz = "keine Lösung gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-03
 
 [[antwort]]
@@ -2661,7 +2661,7 @@ wer = "opus-agent"
 antwort = "1.Lg5+"
 sicherheit = "sicher"
 notiz = "1...Ke8 2.Th8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2670,7 +2670,7 @@ wer = "opus-agent"
 antwort = "1.Th8+"
 sicherheit = "sicher"
 notiz = "1...Kxh8 2.Dh7# (1...Kf8 ist nicht möglich, weil der Turm auch durch g8 auf f8 wirkt)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2679,7 +2679,7 @@ wer = "opus-agent"
 antwort = "1.Dxg4+"
 sicherheit = "sicher"
 notiz = "1...Kxg4 2.Le2#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2688,7 +2688,7 @@ wer = "opus-agent"
 antwort = "1.Dxh6+"
 sicherheit = "sicher"
 notiz = "1...Kxh6 2.Th8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2697,7 +2697,7 @@ wer = "opus-agent"
 antwort = "1.Dxf6+"
 sicherheit = "sicher"
 notiz = "1...Kxf6 2.Ld4#; 1...Kh7 2.Df7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2706,7 +2706,7 @@ wer = "opus-agent"
 antwort = "1.Dg8+"
 sicherheit = "sicher"
 notiz = "1...Txg8 2.Sf7# (ersticktes Matt)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2715,7 +2715,7 @@ wer = "opus-agent"
 antwort = "1.Th5+"
 sicherheit = "sicher"
 notiz = "1...gxh5 2.Df6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2724,7 +2724,7 @@ wer = "opus-agent"
 antwort = "1.Sxf5+"
 sicherheit = "sicher"
 notiz = "1...gxf5 2.fxg5#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2733,7 +2733,7 @@ wer = "opus-agent"
 antwort = "1.Dxg6+"
 sicherheit = "sicher"
 notiz = "1...hxg6 2.Th8# (Lb2 deckt h8); 1...Kh8 2.Dxh7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2742,7 +2742,7 @@ wer = "opus-agent"
 antwort = "1.Dxe5+"
 sicherheit = "sicher"
 notiz = "1...Sxe5 2.Td8#; 1...Le7 2.Dxe7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2751,7 +2751,7 @@ wer = "opus-agent"
 antwort = "1.Te8+"
 sicherheit = "sicher"
 notiz = "1...Kxe8 2.Tg8#"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2760,7 +2760,7 @@ wer = "opus-agent"
 antwort = "1.Tf8+"
 sicherheit = "sicher"
 notiz = "1...Kxf8 2.Df7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2769,7 +2769,7 @@ wer = "opus-agent"
 antwort = "1.Sg5"
 sicherheit = "unsicher"
 notiz = "Drohung 2.Dxh7#; 1...Dxg5 2.Dxf8#"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2778,7 +2778,7 @@ wer = "opus-agent"
 antwort = "1.De8+"
 sicherheit = "sicher"
 notiz = "1...Sxe8 2.Tf8#"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2787,7 +2787,7 @@ wer = "opus-agent"
 antwort = "1.Lf6+"
 sicherheit = "sicher"
 notiz = "1...Ke8 2.Th8#"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2796,7 +2796,7 @@ wer = "opus-agent"
 antwort = "1.Te8+"
 sicherheit = "sicher"
 notiz = "Doppelschach, 1...Kg7 2.h6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2805,7 +2805,7 @@ wer = "opus-agent"
 antwort = "1.Te8+"
 sicherheit = "sicher"
 notiz = "1...Lxe8 2.Dg8#; 1...Dxe8 2.Dxf6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2814,7 +2814,7 @@ wer = "opus-agent"
 antwort = "1.De1+"
 sicherheit = "sicher"
 notiz = "1...Txe1 2.g3#; 1...Tf2 2.Dxf2#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2823,7 +2823,7 @@ wer = "opus-agent"
 antwort = "1.Dxf6"
 sicherheit = "sicher"
 notiz = "Drohung 2.Dxg7#; 1...gxf6 2.Lxf6#; 1...Sf5 2.Df8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2832,7 +2832,7 @@ wer = "opus-agent"
 antwort = "1.Th3+"
 sicherheit = "unsicher"
 notiz = "kein sicheres Matt gefunden; 1...Kg8 bzw. 1...Kg6 entkommen in meiner Rechnung"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2841,7 +2841,7 @@ wer = "opus-agent"
 antwort = "1.Dxf6+"
 sicherheit = "sicher"
 notiz = "1...Sxf6 2.Lxf6#; 1...Sg7 2.Dxg7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2850,7 +2850,7 @@ wer = "opus-agent"
 antwort = "1.Txh7+"
 sicherheit = "sicher"
 notiz = "1...Kxh7 2.Dh5#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2859,7 +2859,7 @@ wer = "opus-agent"
 antwort = "1.Tg4+"
 sicherheit = "sicher"
 notiz = "1...Txg4/Lxg4/Tg6/Kh8 2.Dxf8#; 1...Dg7 2.Df8# (die Dame auf g7 ist gefesselt)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2868,7 +2868,7 @@ wer = "opus-agent"
 antwort = "1.Ta6"
 sicherheit = "sicher"
 notiz = "1...bxa6 2.b7#; Läuferzug 2.Txa7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2877,7 +2877,7 @@ wer = "opus-agent"
 antwort = "1.Dd6+"
 sicherheit = "sicher"
 notiz = "Le7 ist gefesselt (Lg5), 1...Dd7 2.Dxd7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2886,7 +2886,7 @@ wer = "opus-agent"
 antwort = "1.Sc3"
 sicherheit = "sicher"
 notiz = "Zugzwang, jeder Springerzug 2.Sf3#; 1...Sf3+ 2.Sxf3#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2895,7 +2895,7 @@ wer = "opus-agent"
 antwort = "1.Df7+"
 sicherheit = "sicher"
 notiz = "1...Sxf7 2.Se6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2904,7 +2904,7 @@ wer = "opus-agent"
 antwort = "1.Dg7#"
 sicherheit = "sicher"
 notiz = "Matt in einem Zug"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2913,7 +2913,7 @@ wer = "opus-agent"
 antwort = "1.La6"
 sicherheit = "sicher"
 notiz = "Schwarz hat nur e1=X, darauf 2.Lb5#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2922,7 +2922,7 @@ wer = "opus-agent"
 antwort = "1.De7+"
 sicherheit = "sicher"
 notiz = "1...Sxe7 2.Sf6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2931,7 +2931,7 @@ wer = "opus-agent"
 antwort = "1.Sf6"
 sicherheit = "sicher"
 notiz = "Drohung 2.Th7#, Schwarz kann sie nicht abwehren"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2940,7 +2940,7 @@ wer = "opus-agent"
 antwort = "1.Sg6+"
 sicherheit = "sicher"
 notiz = "1...hxg6 2.Th1#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2949,7 +2949,7 @@ wer = "opus-agent"
 antwort = "1.Dxc6+"
 sicherheit = "sicher"
 notiz = "1...bxc6 2.Tb8#; 1...Tc7 2.Dxc7# (Lg3 deckt c7)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2958,7 +2958,7 @@ wer = "opus-agent"
 antwort = "1.Dxc6+"
 sicherheit = "sicher"
 notiz = "1...bxc6 2.La6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2967,7 +2967,7 @@ wer = "opus-agent"
 antwort = "1.Dc6+"
 sicherheit = "sicher"
 notiz = "1...bxc6 2.La6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2976,7 +2976,7 @@ wer = "opus-agent"
 antwort = "1.Lc6"
 sicherheit = "sicher"
 notiz = "Drohung 2.Ta8#, Schwarz hat keine Abwehr"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2985,7 +2985,7 @@ wer = "opus-agent"
 antwort = "1.Lf8"
 sicherheit = "sicher"
 notiz = "Drohung 2.Dg7#; 1...Kg8 2.Dg7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -2994,7 +2994,7 @@ wer = "opus-agent"
 antwort = "1.a8=S+"
 sicherheit = "sicher"
 notiz = "1...Ka5 2.Ta7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3003,7 +3003,7 @@ wer = "opus-agent"
 antwort = "1.Se7+"
 sicherheit = "sicher"
 notiz = "Doppelschach, 1...Kh8 2.Lf6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3012,7 +3012,7 @@ wer = "opus-agent"
 antwort = "1.Txf7"
 sicherheit = "sicher"
 notiz = "1...Txf7 2.Tg8#; sonst 2.Txh7# oder 2.Tg8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3021,7 +3021,7 @@ wer = "opus-agent"
 antwort = "1.Dg6+"
 sicherheit = "sicher"
 notiz = "1...hxg6 2.Sg7#; 1...Tf7 2.Dxf7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3030,7 +3030,7 @@ wer = "opus-agent"
 antwort = "1.Dxh7+"
 sicherheit = "unsicher"
 notiz = "1...Sxh7 2.Sh6#; gegen 1...Kxh7 habe ich kein Matt gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3039,7 +3039,7 @@ wer = "opus-agent"
 antwort = "1.Dxd7+"
 sicherheit = "sicher"
 notiz = "1...Sxd7 2.Te8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3048,7 +3048,7 @@ wer = "opus-agent"
 antwort = "1.Db6"
 sicherheit = "sicher"
 notiz = "Drohung 2.Dxb7#; 1...Kc8 2.Dc7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3057,7 +3057,7 @@ wer = "opus-agent"
 antwort = "1.Dxa7+"
 sicherheit = "sicher"
 notiz = "1...Txa7 2.b5# (1...Kxa7 geht nicht, Lg1 deckt a7)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3066,7 +3066,7 @@ wer = "opus-agent"
 antwort = "1.T1d6+"
 sicherheit = "sicher"
 notiz = "1...Lc6 2.Tb7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3075,7 +3075,7 @@ wer = "opus-agent"
 antwort = "1.Kf5"
 sicherheit = "sicher"
 notiz = "Zugzwang, 1...g4 2.hxg4#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3084,7 +3084,7 @@ wer = "opus-agent"
 antwort = "1.Lc5"
 sicherheit = "sicher"
 notiz = "Schwarz kann nur umwandeln oder mit den Springern ziehen, dann 2.a7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3093,7 +3093,7 @@ wer = "opus-agent"
 antwort = "1.Le7+"
 sicherheit = "sicher"
 notiz = "Abzugsschach, 1...Kh8 2.Lf6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3102,7 +3102,7 @@ wer = "opus-agent"
 antwort = "1.La7"
 sicherheit = "sicher"
 notiz = "Drohung 2.Lc5#; 1...c5 bzw. 1...c6 2.Lb8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3111,7 +3111,7 @@ wer = "opus-agent"
 antwort = "1.Dxh7#"
 sicherheit = "sicher"
 notiz = "Matt in einem Zug (Sg5 und Tf1 decken)"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3120,7 +3120,7 @@ wer = "opus-agent"
 antwort = "1.De8+"
 sicherheit = "sicher"
 notiz = "1...Dxe8 2.Sxf6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3129,7 +3129,7 @@ wer = "opus-agent"
 antwort = "1.Dxe5+"
 sicherheit = "sicher"
 notiz = "1...Txe5 2.Txd8#; 1...Kg8 2.Dg7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3138,7 +3138,7 @@ wer = "opus-agent"
 antwort = "1.Sg6+"
 sicherheit = "sicher"
 notiz = "1...fxg6 2.De8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3147,7 +3147,7 @@ wer = "opus-agent"
 antwort = "1.Dh5+"
 sicherheit = "sicher"
 notiz = "1...gxh5 2.Sf5#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3156,7 +3156,7 @@ wer = "opus-agent"
 antwort = "1.Dxh5+"
 sicherheit = "sicher"
 notiz = "1...gxh5 2.Th6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3165,7 +3165,7 @@ wer = "opus-agent"
 antwort = "1.Dxe8+"
 sicherheit = "sicher"
 notiz = "1...Kxe8 2.Td8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3173,7 +3173,7 @@ nr = 115
 wer = "opus-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3182,7 +3182,7 @@ wer = "opus-agent"
 antwort = "1.Dxb8+"
 sicherheit = "sicher"
 notiz = "1...Dxb8 2.Sb6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3191,7 +3191,7 @@ wer = "opus-agent"
 antwort = "1.Txg7+"
 sicherheit = "sicher"
 notiz = "1...Kxf6 2.Dd4#; 1...Ke8 2.Te7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3200,7 +3200,7 @@ wer = "opus-agent"
 antwort = "1.Kf7+"
 sicherheit = "sicher"
 notiz = "Abzugsschach, 1...Dxa8 2.g7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3209,7 +3209,7 @@ wer = "opus-agent"
 antwort = "1.Te7"
 sicherheit = "unsicher"
 notiz = "1...Dxf7 2.Txf7#; 1...Txd8 2.Dxg7#; gegen 1...Df8 kein Matt gefunden"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3218,7 +3218,7 @@ wer = "opus-agent"
 antwort = "1.Dxe6+"
 sicherheit = "sicher"
 notiz = "1...fxe6 2.Lg6#; 1...Le7 2.Dxe7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3227,7 +3227,7 @@ wer = "opus-agent"
 antwort = "1.Td7+"
 sicherheit = "sicher"
 notiz = "1...Lxd7 2.Sf7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3236,7 +3236,7 @@ wer = "opus-agent"
 antwort = "1.Th8+"
 sicherheit = "sicher"
 notiz = "1...Kxh8 2.f7# (Abzugsschach durch Ld4)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3245,7 +3245,7 @@ wer = "opus-agent"
 antwort = "1.Dg8+"
 sicherheit = "sicher"
 notiz = "1...Kxg8 2.Le6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3254,7 +3254,7 @@ wer = "opus-agent"
 antwort = "1.Te8+"
 sicherheit = "sicher"
 notiz = "1...Dxe8 2.Dxg7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3263,7 +3263,7 @@ wer = "opus-agent"
 antwort = "1.Dxh6+"
 sicherheit = "sicher"
 notiz = "1...gxh6 2.Sf7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3272,7 +3272,7 @@ wer = "opus-agent"
 antwort = "1.Dxf6+"
 sicherheit = "sicher"
 notiz = "1...Kxf6 2.Ld4#; 1...Kh7 2.Dxh8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3281,7 +3281,7 @@ wer = "opus-agent"
 antwort = "1.Txg6+"
 sicherheit = "sicher"
 notiz = "1...hxg6 2.Dh8#; 1...fxg6 2.Dg7#"
-ergebnis = "offen"
+ergebnis = "anderer Weg"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3290,7 +3290,7 @@ wer = "opus-agent"
 antwort = "1.Sb4"
 sicherheit = "sicher"
 notiz = "Drohung 2.Sxa6#, Schwarz hat keine Abwehr"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3299,7 +3299,7 @@ wer = "opus-agent"
 antwort = "1.Th4"
 sicherheit = "sicher"
 notiz = "Drohung 2.Th8#; 1...Kg8 2.Th8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3308,7 +3308,7 @@ wer = "opus-agent"
 antwort = "1.Td7"
 sicherheit = "sicher"
 notiz = "Drohung 2.Txa7#; 1...a6 bzw. 1...a5 2.Ta7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3317,7 +3317,7 @@ wer = "opus-agent"
 antwort = "1.d6"
 sicherheit = "sicher"
 notiz = "Drohung 2.Te7#, Schwarz hat keine Abwehr"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3326,7 +3326,7 @@ wer = "opus-agent"
 antwort = "1.g5+"
 sicherheit = "sicher"
 notiz = "1...Kxg5 2.Df4#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3335,7 +3335,7 @@ wer = "opus-agent"
 antwort = "1.Da3+"
 sicherheit = "sicher"
 notiz = "1...Kxa3 2.Sc2#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3344,7 +3344,7 @@ wer = "opus-agent"
 antwort = "1.Td4+"
 sicherheit = "sicher"
 notiz = "1...exd4 2.Tf4#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3353,7 +3353,7 @@ wer = "opus-agent"
 antwort = "1.Df8+"
 sicherheit = "sicher"
 notiz = "1...Txf8 2.Txf8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3362,7 +3362,7 @@ wer = "opus-agent"
 antwort = "1.d4"
 sicherheit = "sicher"
 notiz = "Drohung 2.Sd2# und 2.Se5#; 1...Td5 2.Sd2#; 1...Txd4 2.Se5#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3371,7 +3371,7 @@ wer = "opus-agent"
 antwort = "1.Sg6+"
 sicherheit = "sicher"
 notiz = "1...Kg8 2.Le6# (1...hxg6 geht nicht, weil der Bauer h7 gefesselt ist)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3379,7 +3379,7 @@ nr = 138
 wer = "opus-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3388,7 +3388,7 @@ wer = "opus-agent"
 antwort = "1.Td8+"
 sicherheit = "sicher"
 notiz = "1...Dxd8 2.Dxe6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3397,7 +3397,7 @@ wer = "opus-agent"
 antwort = "1.Dxg7+"
 sicherheit = "sicher"
 notiz = "1...Sxg7 2.Sh6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3406,7 +3406,7 @@ wer = "opus-agent"
 antwort = "1.Dh6+"
 sicherheit = "sicher"
 notiz = "1...Kg8 2.Dg7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3415,7 +3415,7 @@ wer = "opus-agent"
 antwort = "1.Kc2"
 sicherheit = "sicher"
 notiz = "Drohung 2.Tf4#, Schwarz hat keine Abwehr"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3424,7 +3424,7 @@ wer = "opus-agent"
 antwort = "1.e8=D+"
 sicherheit = "sicher"
 notiz = "1...Txe8 2.Dc7#; 1...Dxe8 2.Dd6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3433,7 +3433,7 @@ wer = "opus-agent"
 antwort = "1.Th6+"
 sicherheit = "sicher"
 notiz = "1...Kxh6 2.Dh2#; 1...Lxh6 2.Dg8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3441,7 +3441,7 @@ nr = 145
 wer = "opus-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3450,7 +3450,7 @@ wer = "opus-agent"
 antwort = "1.Sb3+"
 sicherheit = "sicher"
 notiz = "1...axb3 2.Ta1#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3459,7 +3459,7 @@ wer = "opus-agent"
 antwort = "1.Txh5+"
 sicherheit = "sicher"
 notiz = "1...gxh5 2.g6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3468,7 +3468,7 @@ wer = "opus-agent"
 antwort = "1.Tf6+"
 sicherheit = "sicher"
 notiz = "1...Lxf6 2.Dxf6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3477,7 +3477,7 @@ wer = "opus-agent"
 antwort = "1.Dh8+"
 sicherheit = "sicher"
 notiz = "1...Kxh8 2.Txf8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3486,7 +3486,7 @@ wer = "opus-agent"
 antwort = "1.Txf6+"
 sicherheit = "sicher"
 notiz = "1...Lxf6/Sxf6/gxf6 2.Df7#; 1...Ke8 2.Df7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3495,7 +3495,7 @@ wer = "opus-agent"
 antwort = "1.Te4+"
 sicherheit = "sicher"
 notiz = "1...Kxd5 2.Sf6# (1...Kb3 geht nicht, c2 deckt b3)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3504,7 +3504,7 @@ wer = "opus-agent"
 antwort = "1.Dh8+"
 sicherheit = "sicher"
 notiz = "1...Dxh8 2.Tf7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3512,7 +3512,7 @@ nr = 153
 wer = "opus-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3521,7 +3521,7 @@ wer = "opus-agent"
 antwort = "1.Dxh6+"
 sicherheit = "sicher"
 notiz = "1...Kxh6 2.Sf5#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3529,7 +3529,7 @@ nr = 155
 wer = "opus-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3538,7 +3538,7 @@ wer = "opus-agent"
 antwort = "1.Dxd8+"
 sicherheit = "sicher"
 notiz = "1...Txd8 2.Tf7#; 1...Se8 2.Dxe8#"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3547,7 +3547,7 @@ wer = "opus-agent"
 antwort = "1.Tf5+"
 sicherheit = "sicher"
 notiz = "1...Texf5 2.Se6# (Sg7 deckt f5)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3555,7 +3555,7 @@ nr = 158
 wer = "opus-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3564,7 +3564,7 @@ wer = "opus-agent"
 antwort = "1.Lg7+"
 sicherheit = "sicher"
 notiz = "1...Kxg7 bzw. 1...Kg8 2.Dh7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3573,7 +3573,7 @@ wer = "opus-agent"
 antwort = "1.Tf5+"
 sicherheit = "sicher"
 notiz = "1...Lxf5 bzw. 1...Tg5 2.Sf4#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3582,7 +3582,7 @@ wer = "opus-agent"
 antwort = "1.Lf8+"
 sicherheit = "sicher"
 notiz = "Abzugsschach durch Dh5, 1...gxh5 2.Th6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3591,7 +3591,7 @@ wer = "opus-agent"
 antwort = "1.Tf5+"
 sicherheit = "sicher"
 notiz = "Doppelschach, 1...Kxf5 2.Lh3#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3600,7 +3600,7 @@ wer = "opus-agent"
 antwort = "1.Dxf8+"
 sicherheit = "sicher"
 notiz = "1...Kxf8 2.Td8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3609,7 +3609,7 @@ wer = "opus-agent"
 antwort = "1.Th4+"
 sicherheit = "sicher"
 notiz = "1...gxh4 2.Dxh4#"
-ergebnis = "offen"
+ergebnis = "anderer Weg"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3618,7 +3618,7 @@ wer = "opus-agent"
 antwort = "1.Lxg6+"
 sicherheit = "sicher"
 notiz = "1...Txg6 2.Dh8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3627,7 +3627,7 @@ wer = "opus-agent"
 antwort = "1.Dxc6+"
 sicherheit = "sicher"
 notiz = "1...Lxc6 2.Sxe6# (Kxc6 geht nicht, Sd8 deckt c6)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3636,7 +3636,7 @@ wer = "opus-agent"
 antwort = "1.b8=D+"
 sicherheit = "sicher"
 notiz = "1...Sxb8 2.Td8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3645,7 +3645,7 @@ wer = "opus-agent"
 antwort = "1.Dd5+"
 sicherheit = "sicher"
 notiz = "1...Kb6 2.Db5#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3654,7 +3654,7 @@ wer = "opus-agent"
 antwort = "1.Lh6+"
 sicherheit = "sicher"
 notiz = "1...Kg8 2.Te8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3663,7 +3663,7 @@ wer = "opus-agent"
 antwort = "1.Ta3+"
 sicherheit = "sicher"
 notiz = "1...bxa3 2.b3#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3671,7 +3671,7 @@ nr = 171
 wer = "opus-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3679,7 +3679,7 @@ nr = 172
 wer = "opus-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3688,7 +3688,7 @@ wer = "opus-agent"
 antwort = "1.Se7+"
 sicherheit = "sicher"
 notiz = "Doppelschach, 1...Kh8 bzw. 1...Kf8 2.Sg6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3696,7 +3696,7 @@ nr = 174
 wer = "opus-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3705,7 +3705,7 @@ wer = "opus-agent"
 antwort = "1.Tc8+"
 sicherheit = "sicher"
 notiz = "1...Dxc8 2.Dxd6#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3714,7 +3714,7 @@ wer = "opus-agent"
 antwort = "1.Txa7+"
 sicherheit = "sicher"
 notiz = "1...Kxa7 2.Dxb6# (Le3 deckt b6)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3723,7 +3723,7 @@ wer = "opus-agent"
 antwort = "1.Dg7+"
 sicherheit = "sicher"
 notiz = "1...Kxg7 2.h8=D#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3732,7 +3732,7 @@ wer = "opus-agent"
 antwort = "1.Th8+"
 sicherheit = "sicher"
 notiz = "1...Lxh8 2.Th7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3741,7 +3741,7 @@ wer = "opus-agent"
 antwort = "1.Lg6+"
 sicherheit = "sicher"
 notiz = "1...Kg8 bzw. 1...Kh8 2.Te8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3750,7 +3750,7 @@ wer = "opus-agent"
 antwort = "1.e8=S+"
 sicherheit = "sicher"
 notiz = "1...Ke6 2.d5#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3759,7 +3759,7 @@ wer = "opus-agent"
 antwort = "1.Sf7+"
 sicherheit = "sicher"
 notiz = "1...Lxf7 2.Txh7#"
-ergebnis = "offen"
+ergebnis = "falsch"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3767,7 +3767,7 @@ nr = 182
 wer = "opus-agent"
 antwort = "nicht gefunden"
 sicherheit = "nicht gefunden"
-ergebnis = "offen"
+ergebnis = "nicht gewertet"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3776,7 +3776,7 @@ wer = "opus-agent"
 antwort = "1.Dh7+"
 sicherheit = "sicher"
 notiz = "1...Kxh7 2.Lf7# (Abzugsschach durch Th2; 1...Kf7 geht nicht, Lh5 deckt f7)"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3785,7 +3785,7 @@ wer = "opus-agent"
 antwort = "1.Db8+"
 sicherheit = "sicher"
 notiz = "1...Kxb8 2.Td8#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3794,7 +3794,7 @@ wer = "opus-agent"
 antwort = "1.Df7+"
 sicherheit = "sicher"
 notiz = "1...Lxf7 2.Sd7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04
 
 [[antwort]]
@@ -3803,5 +3803,5 @@ wer = "opus-agent"
 antwort = "1.Dg6"
 sicherheit = "sicher"
 notiz = "f7 ist durch Lc4 gefesselt; Drohung 2.Dxg7# oder 2.Dh7#; 1...Dxf6 bzw. 1...gxf6 2.Dh7#"
-ergebnis = "offen"
+ergebnis = "richtig"
 geloest = 2026-11-04

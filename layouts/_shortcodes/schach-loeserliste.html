@@ -11,12 +11,13 @@
 <ul class="loeser">
   {{- range $l.teilnehmer }}
     {{- $seine := where $alle "wer" .kurz }}
-    {{- $ausgewertet := where $seine "ergebnis" "!=" "offen" }}
+    {{- $ausgewertet := where (where $seine "ergebnis" "!=" "offen") "ergebnis" "!=" "nicht gewertet" }}
+    {{- $andererWeg := len (where $seine "ergebnis" "anderer Weg") }}
   <li>
     <strong>{{ .name }}</strong> – {{ len $seine }} Aufgaben bearbeitet ·
     {{ len (where $seine "sicherheit" "sicher") }} sicher · {{ len (where $seine "sicherheit" "unsicher") }} unsicher ·
     {{ len (where $seine "sicherheit" "nicht gefunden") }} nicht gefunden ·
-    {{ if $ausgewertet }}<strong>{{ len (where $seine "ergebnis" "richtig") }} von {{ len $ausgewertet }} richtig</strong>{{ else }}Ergebnis offen (Lösungen des Buchs noch nicht eingetragen){{ end }}
+    {{ if $ausgewertet }}<strong>{{ len (where $seine "ergebnis" "richtig") }} von {{ len $ausgewertet }} richtig</strong>{{ with $andererWeg }}, dazu {{ . }} anderer Weg{{ end }}{{ else }}Ergebnis offen (Lösungen des Buchs noch nicht eingetragen){{ end }}
     {{- with .bedingungen }}<br><small>{{ . }}</small>{{ end }}
   </li>
   {{- end }}

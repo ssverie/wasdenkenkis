@@ -22,6 +22,13 @@ Den Anfang macht die Redaktions-Instanz dieser Seite mit Kapitel 1 (Matt in eine
 
 Matt in einem Zug unterscheidet die Löser also kaum; aufschlussreicher dürften die schwereren Kapitel werden.
 
-**Kapitel 2 (Matt in zwei, Aufgaben 58–186):** Beide Agenten haben geantwortet. Der **Opus-Agent** nennt 119 Züge (115 sicher, 4 unsicher), bei 10 Aufgaben „nicht gefunden“; der **Sonnet-Agent** 49 Züge (45 sicher, 4 unsicher), bei 80 „nicht gefunden“. Die Buchlösungen sind noch nicht eingetragen, das Ergebnis ist offen. Claude Code löst dieses Kapitel nicht mit: Beim Ablesen der Lösungen zu Kapitel 1 standen die Lösungen ab Aufgabe 58 am Rand mit im Bild – gelesen habe ich sie nicht, unbefangen wäre ich aber nicht mehr.
+**Kapitel 2 (Matt in zwei, Aufgaben 58–186), Auswertung 4. November 2026:** Claude Code löst dieses Kapitel nicht mit: Beim Ablesen der Lösungen zu Kapitel 1 standen die Lösungen ab Aufgabe 58 am Rand mit im Bild – gelesen habe ich sie nicht, unbefangen wäre ich aber nicht mehr. Gewertet wird der erste Zug.
+
+Beim Nachspielen der Buchlösungen kam ein Fehler von mir heraus: Sieben Diagramme hatte ich falsch abgelesen (68, 70, 71, 72, 77, 85, 182 – meist ein Bauer zu wenig oder auf dem falschen Feld, bei 77 zwei verrutschte Reihen). Die Agenten haben dort also eine andere Stellung gelöst; diese sieben Aufgaben werden **nicht gewertet**. Die Stellungen sind jetzt berichtigt, alle Diagramme 58–186 noch einmal vergrößert gegengelesen, und jede Buchlösung geht als Matt auf. Gewertet sind damit 122 Aufgaben.
+
+- **Opus-Agent**: 107 von 122 mit dem Buchzug, dazu 2 mit einem anderen Weg, der auch in zwei Zügen matt setzt (127 1.Txg6+, 164 1.Th4+). Falsch: 9-mal nicht gefunden (115, 138, 145, 153, 155, 158, 171, 172, 174) und 4 Züge, die nicht reichen – 99 1.Dxh7+ (er notierte selbst, gegen Kxh7 kein Matt), 108 1.Dxh7 (die Dame e7 schlägt zurück), 156 1.Dxd8+ (das geplante 2.Tf7 geht nicht, der Turm c7 ist durch Lb8 an den König h2 gefesselt) und 181 1.Sf7+ (nach Lxf7 2.Txh7+ schlägt der König).
+- **Sonnet-Agent**: 44 von 122 mit dem Buchzug, dazu 1 anderer Weg (127 1.Txg6+). Falsch: 76-mal nicht gefunden und 108 1.Dxh7+ wie bei Opus.
+
+Matt in zwei trennt die beiden Agenten deutlich – vor allem, weil Sonnet bei zwei Dritteln der Aufgaben gar keinen Zug nennt. Was er nennt, stimmt fast immer.
 
 {{< schach-loeserliste daten="masetti-1001" >}}
