@@ -211,11 +211,6 @@ enableRobotsTXT = true
     parent = "it-buch"
     weight = 2
   [[menus.main]]
-    name = "Schach-Buch"
-    pageRef = "/schach-buch"
-    parent = "buecher"
-    weight = 29
-  [[menus.main]]
     # Galerie seit 2026-10-25 unter Media nach Musik (Sven)
     name = "Galerie"
     pageRef = "/galerie"
@@ -296,6 +291,12 @@ enableRobotsTXT = true
     pageRef = "/schach/ki-partien"
     parent = "schach"
     weight = 5
+  [[menus.main]]
+    # Schach-Buch seit 2026-11-04 unter Schach nach KI-Partien (Sven: „verschieb die Schachbücher, besser nach KI-Partien im Menü“), vorher unter Bücher
+    name = "Schach-Buch"
+    pageRef = "/schach-buch"
+    parent = "schach"
+    weight = 6
   [[menus.main]]
     name = "Wissen"
     identifier = "wissen"
