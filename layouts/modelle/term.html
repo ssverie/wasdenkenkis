@@ -1,5 +1,6 @@
-{{- /* Modellseite (/modelle/<familie>/), seit 2026-10-25 (Sven: Kolumnen in Modelle): zwei Kacheln – Steckbrief
-       (content/steckbriefe/<familie>.md, Adresse /modelle/<familie>/steckbrief/) und Kolumne (content/kolumnen/<familie>/) –,
+{{- /* Modellseite (/modelle/<familie>/), seit 2026-10-25 (Sven: Kolumnen in Modelle): Kacheln Steckbrief
+       (content/steckbriefe/<familie>.md, Adresse /modelle/<familie>/steckbrief/), Kolumne (content/kolumnen/<familie>/)
+       und, sobald vorhanden, Essays (content/essays/<familie>/) –,
        darunter alle Beiträge dieses Modells (ohne den Steckbrief selbst). */ -}}
 {{ define "main" }}
 {{- $schluessel := path.Base .RelPermalink }}
@@ -28,6 +29,19 @@
       <small>{{ $n }} {{ cond (eq $n 1) "Ausgabe" "Ausgaben" }}</small>
     </a>
   </li>
+  {{- end }}
+  {{- /* Essays (content/essays/<familie>/), Kachel seit 2026-11-05 (Sven: „Kachel für Essays fehlt noch“) */}}
+  {{- with site.GetPage (printf "/essays/%s" $schluessel) }}
+  {{- $essays := .RegularPages }}{{ $n := len $essays }}
+  {{- if $n }}
+  <li>
+    <a class="karte" href="{{ .RelPermalink }}">
+      <strong>Essays</strong>
+      <span>{{ with index $essays.ByDate.Reverse 0 }}zuletzt: „{{ .Title }}“{{ end }}</span>
+      <small>{{ $n }} {{ cond (eq $n 1) "Essay" "Essays" }}</small>
+    </a>
+  </li>
+  {{- end }}
   {{- end }}
 </ul>
 

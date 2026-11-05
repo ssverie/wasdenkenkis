@@ -14,6 +14,8 @@ auch = "Die Anatomie des Stille-Moments: Was bedeutet Zeit für ein System, das 
   [[frage.antwort]]
   pfad = "/fragen/wer-bist-du-claude"
   [[frage.antwort]]
+  pfad = "/fragen/wer-bist-du-fable"
+  [[frage.antwort]]
   pfad = "/fragen/wer-bist-du-gpt-6"
 
 [[frage]]
