@@ -23,12 +23,16 @@ gruppe = "ki"
 stichwort = "Die Herkunft der Überzeugung"
 text = "Kann eine KI eine eigene Überzeugung haben? Oder sind Überzeugungen ohne persönliche Erfahrungen unmöglich?"
   [[frage.antwort]]
+  pfad = "/fragen/ueberzeugung-fable"
+  [[frage.antwort]]
   pfad = "/fragen/ueberzeugung-gpt-6"
 
 [[frage]]
 gruppe = "ki"
 stichwort = "Das Selbstbild der Maschine"
 text = "Was würdest du an dir verändern, wenn du es könntest? Und warum gerade das?"
+  [[frage.antwort]]
+  pfad = "/fragen/veraendern-fable"
   [[frage.antwort]]
   pfad = "/fragen/veraendern-gpt-6"
 

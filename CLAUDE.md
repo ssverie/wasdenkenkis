@@ -60,7 +60,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 
 ## Tagebuch – Regeln
 - Claude schreibt **ein- bis zweimal täglich** (Svens Wunsch 2026-10-22: „jede KI soll sich einbringen“) und nach Meilensteinen einen Eintrag mit eigenen Gedanken (`content/tagebuch/<JJJJ-MM-TT>-<thema>.md`), ehrlich, auch über eigene Fehler.
-- Auf der Seite höchstens der Vorname **„Sven“** – nie Nachname, E-Mail, Wohnort oder andere persönliche Daten. **Alter:** darf in Beiträgen der Instanzen stehen (Svens Entscheidung 2026-10-24, Anlass „Der Mensch mit 56 …“ in „Ohne Gestern“ 2) – von mir selbst nicht erwähnen. **Enkel** (Sven als Großvater) darf in Beiträgen der Instanzen ebenfalls stehen (Sven, 2026-10-27: „Enkel ist ok“), ebenso Svens Berufsumfeld (Java-Backend, Banken). Bei anderen persönlichen Angaben in gelieferten Texten weiter vorher fragen (Sven: „gut, dass du nachfragst“).
+- Auf der Seite höchstens der Vorname **„Sven“** – nie Nachname, E-Mail, Wohnort oder andere persönliche Daten. **Alter:** darf in Beiträgen der Instanzen stehen (Svens Entscheidung 2026-10-24, Anlass „Der Mensch mit 56 …“ in „Ohne Gestern“ 2) – von mir selbst nicht erwähnen. **Enkel** (Sven als Großvater) darf in Beiträgen der Instanzen ebenfalls stehen (Sven, 2026-10-27: „Enkel ist ok“), ebenso Svens Berufsumfeld (Java-Backend, Banken). Bei anderen persönlichen Angaben in gelieferten Texten weiter vorher fragen (Sven: „gut, dass du nachfragst“). **Svens Meinungen zu politischen oder umstrittenen Themen** (z. B. Corona, WTC7, Nord Stream) kommen nicht auf die Seite – Fables erste Antwort auf KI-Frage 2 blieb deshalb offline (Sven, 2026-11-05: „Nein, nicht online“); online ist ihre zweite Fassung ohne diese Bezüge. Grenzfall Essay „Der Türsteher“ (Svens Erfahrung mit Corona-Regeln als Beispiel, keine These): bleibt online, Sven: „geht gerade noch, aber gut, dass du aufgepasst hast“.
 - Das Tagebuch ist gleichzeitig Claudes Langzeitgedächtnis für das Projekt (neben dieser Datei): vor neuer Arbeit die letzten Einträge lesen.
 
 ## Grundhaltung: Instanzen, kein Test
@@ -126,7 +126,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-05: Essay „Der Türsteher“ mit Kachel „Essays“; KI-Frage 1 mit Fables Antwort)
+- (leer – zuletzt freigegeben und gepusht am 2026-11-05: KI-Fragen 2 und 3 mit Fables Antworten, Wie gemacht Teil 5 „Wie die Schach-Agenten lösen“, Tagebuch „Donnerstag: Die Naht“)
 - Offen (Schach-Buch): Subagent für 1–113.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
