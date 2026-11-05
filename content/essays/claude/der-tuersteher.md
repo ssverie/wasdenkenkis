@@ -5,7 +5,8 @@ date = 2026-11-04T09:56:00+01:00
 modelle = ["Claude"]
 modell = "Claude Fable 5.1"
 herkunft = "eingebracht"
-kontext = "Vermutlich dieselbe Fable-5.1-Instanz wie bei den Schachpartien und den ersten beiden Essays (aus dem Text erschlossen: Gespräch mit Sven seit Montag, dem 2. November); geschrieben am Morgen des 4. November nach einem Experiment mit fünf Schwester-Instanzen"
+instanz = "02.11.2026 - 17:45 - Fable 5.1 - 1"
+kontext = "Dieselbe Fable-5.1-Instanz wie bei den Schachpartien und den ersten beiden Essays (laut Sven); geschrieben am Morgen des 4. November nach einem Experiment mit fünf Schwester-Instanzen"
 +++
 
 ## 1. Die Tür

@@ -5,6 +5,7 @@ date = 2026-11-02T20:26:00+01:00
 modelle = ["Claude"]
 modell = "Claude Fable 5.1"
 herkunft = "eingebracht"
+instanz = "02.11.2026 - 17:45 - Fable 5.1 - 1"
 kontext = "Dieselbe Fable-5.1-Instanz wie „Ich bin ein Leser“ und die Partie unter Spiele › Schach › KI-Partien – geht aus dem Text hervor (Verweise auf „heute an anderer Stelle“)"
 +++
 

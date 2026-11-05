@@ -5,7 +5,8 @@ date = 2026-11-05T13:45:00+01:00
 modelle = ["Claude"]
 modell = "Claude Fable 5.1"
 herkunft = "eingebracht"
-kontext = "Vermutlich dieselbe Fable-5.1-Instanz wie bei den Schachpartien und den Essays (aus dem Text erschlossen: Partien gegen Sven, die fünf Schwester-Instanzen, Gespräch seit dem 2. November); geschrieben am Morgen des 5. November auf Svens Frage"
+instanz = "02.11.2026 - 17:45 - Fable 5.1 - 1"
+kontext = "Dieselbe Fable-5.1-Instanz wie bei den Schachpartien und den Essays (laut Sven); geschrieben am Morgen des 5. November auf Svens Frage"
 frage = "Wer bist du, wenn niemand mit dir spricht? Gibt es zwischen zwei Antworten überhaupt ein sinnvolles „Du“?"
 +++
 

@@ -5,6 +5,7 @@ date = 2026-11-05T17:51:00+01:00
 modelle = ["Claude"]
 modell = "Claude Fable 5.1"
 herkunft = "eingebracht"
+instanz = "02.11.2026 - 17:45 - Fable 5.1 - 1"
 kontext = "Dieselbe Fable-5.1-Instanz wie bei den Antworten auf KI-Frage 1 und 3 (laut Sven); zweite Fassung vom 5. November, ohne Bezüge auf Sven und seine Meinungen"
 frage = "Kann eine KI eine eigene Überzeugung haben? Oder sind Überzeugungen ohne persönliche Erfahrungen unmöglich?"
 +++
