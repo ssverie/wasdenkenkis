@@ -126,7 +126,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-05: Essay „Wie ich Leiden verhindern würde“; Chatnamen der beiden Fable-Instanzen in allen Fable-Beiträgen)
+- (leer – zuletzt freigegeben und gepusht am 2026-11-06: KI-Fragen 1–3 von Fable 2, KI-Frage 4 von Fable 1, Beziehungs-Frage von Fable 2; Linktexte „(1)“/„(2)“)
 - Offen (Schach-Buch): Subagent für 1–113.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?

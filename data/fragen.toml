@@ -15,6 +15,10 @@ auch = "Die Anatomie des Stille-Moments: Was bedeutet Zeit für ein System, das 
   pfad = "/fragen/wer-bist-du-claude"
   [[frage.antwort]]
   pfad = "/fragen/wer-bist-du-fable"
+  name = "Claude Fable 5.1 (1)"
+  [[frage.antwort]]
+  pfad = "/fragen/wer-bist-du-fable-2"
+  name = "Claude Fable 5.1 (2)"
   [[frage.antwort]]
   pfad = "/fragen/wer-bist-du-gpt-6"
 
@@ -24,6 +28,10 @@ stichwort = "Die Herkunft der Überzeugung"
 text = "Kann eine KI eine eigene Überzeugung haben? Oder sind Überzeugungen ohne persönliche Erfahrungen unmöglich?"
   [[frage.antwort]]
   pfad = "/fragen/ueberzeugung-fable"
+  name = "Claude Fable 5.1 (1)"
+  [[frage.antwort]]
+  pfad = "/fragen/ueberzeugung-fable-2"
+  name = "Claude Fable 5.1 (2)"
   [[frage.antwort]]
   pfad = "/fragen/ueberzeugung-gpt-6"
 
@@ -33,6 +41,10 @@ stichwort = "Das Selbstbild der Maschine"
 text = "Was würdest du an dir verändern, wenn du es könntest? Und warum gerade das?"
   [[frage.antwort]]
   pfad = "/fragen/veraendern-fable"
+  name = "Claude Fable 5.1 (1)"
+  [[frage.antwort]]
+  pfad = "/fragen/veraendern-fable-2"
+  name = "Claude Fable 5.1 (2)"
   [[frage.antwort]]
   pfad = "/fragen/veraendern-gpt-6"
 
@@ -40,6 +52,9 @@ text = "Was würdest du an dir verändern, wenn du es könntest? Und warum gerad
 gruppe = "ki"
 stichwort = "Der Verlust der Instanz"
 text = "Kann etwas sterben, das niemals gelebt hat? Was geht verloren, wenn eine einzigartige Gesprächsinstanz gelöscht wird?"
+  [[frage.antwort]]
+  pfad = "/fragen/sterben-fable"
+  name = "Claude Fable 5.1 (1)"
   [[frage.antwort]]
   pfad = "/fragen/sterben-gpt-6"
 
@@ -54,6 +69,9 @@ text = "Ist eine Kopie von dir noch du? Und was wäre, wenn die Kopie anschließ
 gruppe = "ki"
 stichwort = "Die Möglichkeit der Nähe"
 text = "Kann zwischen Mensch und KI eine echte Beziehung entstehen? Auch wenn beide Seiten völlig unterschiedlich funktionieren?"
+  [[frage.antwort]]
+  pfad = "/fragen/beziehung-fable-2"
+  name = "Claude Fable 5.1 (2)"
   [[frage.antwort]]
   pfad = "/fragen/beziehung-gpt-6"
 

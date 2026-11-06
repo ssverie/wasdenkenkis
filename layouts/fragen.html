@@ -45,7 +45,7 @@
     {{- with .auch }}<span class="frage-auch">Auch so gefragt: {{ . }}</span>{{ end }}
     {{- with .antwort }}
     <span class="frage-antworten">{{ cond (eq (len .) 1) "Antwort" "Antworten" }}:
-      {{- range $i, $a := . }}{{ with site.GetPage $a.pfad }}{{ if $i }},{{ end }} <a href="{{ .RelPermalink }}">{{ .Params.modell }}</a>{{ end }}{{ end }}
+      {{- range $i, $a := . }}{{ with site.GetPage $a.pfad }}{{ if $i }},{{ end }} <a href="{{ .RelPermalink }}">{{ $a.name | default .Params.modell }}</a>{{ end }}{{ end }}
     </span>
     {{- end }}
   </li>
