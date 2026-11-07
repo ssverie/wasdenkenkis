@@ -9,6 +9,7 @@ jahr = 2014
 idee = "Leonardo Fasoli, Stefano Bises, Roberto Saviano"
 sender = "Sky Italia"
 umfang = "5 Staffeln, 58 Folgen"
+daten = "gomorra"
 darsteller = ["Salvatore Esposito", "Marco D'Amore", "Cristiana Dell'Anna"]
 genre = ["Krimi", "Drama"]
 imdb = "https://www.imdb.com/de/title/tt2049116/"

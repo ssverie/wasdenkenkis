@@ -1,0 +1,42 @@
+# IMDb-Wertungen der Episoden von Gomorra.
+# Quelle: IMDb-Folgenlisten (tt2049116, Staffel 1–5), im Browserfenster ausgelesen am 07.11.2026, alle 58 Folgen.
+# schnitt: hier selbst als Mittel der Folgenwerte gerechnet (die IMDb-Folgenliste zeigt keinen Staffel-Durchschnitt).
+# titel: Staffel 1–3 italienische Originaltitel aus der deutschen Wikipedia „Gomorrha (Fernsehserie)/Episodenliste“
+#        (abgerufen 07.11.2026); Staffel 4 und 5 haben im Original keine Titel („Episodio 1“ …),
+#        dort stehen die deutschen Titel aus derselben Liste.
+abgerufen = 2026-11-07
+
+[[staffel]]
+  nummer = 1
+  folgen = 12
+  titel = ["Il clan dei Savastano", "Ti fidi di me?", "L’omm ’e casa", "Sangue africano", "Il ruggito della leonessa", "Roulette spagnola", "Imma contro tutti", "La scheda bianca", "Gelsomina Verde", "Ora facciamo i Conte", "100 modi per uccidere", "Gli Immortali"]
+  schnitt = 8.3
+  imdb = [7.9, 8.2, 7.9, 8.1, 7.9, 8.3, 8.1, 8.0, 8.5, 8.4, 8.8, 9.0]
+
+[[staffel]]
+  nummer = 2
+  folgen = 12
+  titel = ["Vita mia", "Lacrime e Sangue", "Mea Culpa", "Profumo di iena", "Occhi negli occhi", "O’Track", "Il Principe e il Nano", "Divide et Impera", "Sette Anni", "Fantasmi", "Nella gioia e nel dolore", "La fine del giorno"]
+  schnitt = 8.2
+  imdb = [7.9, 7.8, 8.5, 7.8, 8.0, 8.2, 8.3, 8.2, 8.1, 8.4, 7.9, 9.0]
+
+[[staffel]]
+  nummer = 3
+  folgen = 12
+  titel = ["Viva il Re!", "Hasta la muerte", "Inferno", "Il filo e la Moira", "Sangue Blu", "Come nascere", "Sangue del mio sangue", "Guerra aperta", "Giuda!", "Insieme", "Fede", "Per sempre"]
+  schnitt = 8.2
+  imdb = [8.0, 7.6, 8.8, 8.7, 8.0, 8.0, 7.7, 8.0, 8.1, 8.0, 8.8, 8.8]
+
+[[staffel]]
+  nummer = 4
+  folgen = 12
+  titel = ["Blutregen", "Giftiges Land", "Die Kinder von Secondigliano", "Die Farbe des Goldes", "Überall Schlangen", "Die schlechteste Mutter der Welt", "Verlorene Brüder", "Das Hochzeitsgeschenk", "Tote reden nicht", "Sand und Zement", "Zelle 6", "Träume sind nichts für uns"]
+  schnitt = 8.1
+  imdb = [7.8, 8.1, 7.8, 8.3, 7.7, 8.0, 7.9, 8.0, 8.6, 8.2, 8.1, 9.0]
+
+[[staffel]]
+  nummer = 5
+  folgen = 10
+  titel = ["Die Wut im Bauch", "Sie nennen es den Gulag", "Die Rückkehr", "Ein Platz in der Hölle", "Spiel mit dem Feuer", "Gefängnis aus Gold", "Blutschwur", "Der glückliche Tod", "Nur ein Name", "Schmerz und Einsamkeit"]
+  schnitt = 8.2
+  imdb = [8.1, 8.2, 7.9, 8.4, 8.0, 7.9, 8.4, 8.2, 8.3, 8.1]
