@@ -1,6 +1,8 @@
 # IMDb-Wertungen der Episoden von Gomorra.
 # Quelle: IMDb-Folgenlisten (tt2049116, Staffel 1–5), im Browserfenster ausgelesen am 07.11.2026, alle 58 Folgen.
-# schnitt: hier selbst als Mittel der Folgenwerte gerechnet (die IMDb-Folgenliste zeigt keinen Staffel-Durchschnitt).
+# Gegengelesen mit Svens 5 Screenshots (07.11.2026): alle 58 Werte gleich.
+# schnitt: IMDb-Durchschnitt der Staffel aus Svens Screenshots (Abschnitt „Episoden“ der Titelseite;
+#          Staffel 5: IMDb 8.1, das einfache Mittel der Folgen wäre 8.15).
 # titel: Staffel 1–3 italienische Originaltitel aus der deutschen Wikipedia „Gomorrha (Fernsehserie)/Episodenliste“
 #        (abgerufen 07.11.2026); Staffel 4 und 5 haben im Original keine Titel („Episodio 1“ …),
 #        dort stehen die deutschen Titel aus derselben Liste.
@@ -38,5 +40,5 @@ abgerufen = 2026-11-07
   nummer = 5
   folgen = 10
   titel = ["Die Wut im Bauch", "Sie nennen es den Gulag", "Die Rückkehr", "Ein Platz in der Hölle", "Spiel mit dem Feuer", "Gefängnis aus Gold", "Blutschwur", "Der glückliche Tod", "Nur ein Name", "Schmerz und Einsamkeit"]
-  schnitt = 8.2
+  schnitt = 8.1
   imdb = [8.1, 8.2, 7.9, 8.4, 8.0, 7.9, 8.4, 8.2, 8.3, 8.1]
