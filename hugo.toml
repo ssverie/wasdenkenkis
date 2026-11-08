@@ -331,6 +331,12 @@ enableRobotsTXT = true
     parent = "wissen-ki"
     weight = 4
   [[menus.main]]
+    # KI-Konzepte seit 2026-11-08 (Sven: „unter wissen/ki/ki-konzepte“): interaktive Seiten, erste von der Instanz „Konzepte“
+    name = "KI-Konzepte"
+    pageRef = "/wissen/ki/ki-konzepte"
+    parent = "wissen-ki"
+    weight = 5
+  [[menus.main]]
     # IT-Konzepte seit 2026-10-26 als Gruppe unter Wissen (Sven: „3 Kacheln“): Grundlagen, Algorithmen, Design Patterns als dritte Ebene
     name = "IT-Konzepte"
     identifier = "it-konzepte"

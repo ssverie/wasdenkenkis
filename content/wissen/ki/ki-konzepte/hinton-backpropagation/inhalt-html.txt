@@ -1,0 +1,189 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Im Gespräch mit der University of Toronto erklärt Geoffrey Hinton, Turing-Preisträger und einer der Väter des Deep Learning, die Grundidee neuronaler Netze an einem einzigen Beispiel: einem Netz, das sagen soll, ob auf einem Bild ein Vogel ist. Die Bausteine sind <strong>Merkmalsdetektoren</strong> in Schichten – von Kanten über „Schnabel“ und „Auge“ bis „Vogel“.</p>
+<p>Niemand verdrahtet diese Detektoren von Hand. Man startet mit Zufallsgewichten, vergleicht die Antwort mit der richtigen und schickt den Fehler <strong>rückwärts</strong> durchs Netz. Dabei erfährt jedes einzelne Gewicht, in welche Richtung es sich ein kleines Stück bewegen soll – das ist <strong>Backpropagation</strong>. Dieselbe Methode trainiert Sprachmodelle, nur dass dort Wörter als Zahlenvektoren (<strong>Embeddings</strong>) hineingehen. Und weil die gelernten Gewichte nur Zahlen sind, können digitale Netze sie kopieren und teilen – was Hinton zu seiner Sorge über die Zukunft der KI geführt hat.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+  <a href="#vogel">1 · Der Vogel-Erkenner</a>
+  <a href="#backprop">2 · Backpropagation</a>
+  <a href="#training">3 · Viele Runden</a>
+  <a href="#warum">4 · Warum rückwärts?</a>
+  <a href="#embeddings">5 · Wörter als Vektoren</a>
+  <a href="#digital">6 · Digital gegen biologisch</a>
+  <a href="#java">Für Entwickler</a>
+  <a href="#irrtuemer">Irrtümer</a>
+</nav>
+
+<h2 id="vogel">1 · Der Vogel-Erkenner, von Hand verdrahtet</h2>
+<p>Hinton beginnt <span class="ts">ab 7:14</span> mit einer bewusst einfachen Aufgabe: Ist in diesem Bild ein Vogel, ja oder nein? Ein Bild mit 100 × 100 Pixeln und drei Farbwerten pro Pixel sind 30 000 Zahlen. Gesucht ist also eine Funktion, die aus 30 000 Zahlen eine einzige macht – nahe 1 für „Vogel“, nahe 0 für „kein Vogel“. Ein klassisches Programm dafür zu schreiben, sagt er, sei jahrzehntelang nicht gelungen.</p>
+<p>Seine Alternative: ein Netz aus Schichten von <strong>Merkmalsdetektoren</strong>. Ein Detektor ist nichts als eine gewichtete Summe seiner Eingänge. Ganz unten, direkt über den Pixeln, sitzen Kantendetektoren: große positive Gewichte von einer senkrechten Pixelreihe, große negative von der Nachbarreihe, sonst nichts <span class="ts">ab 8:12</span>. Sind beide Reihen hell, heben sich Plus und Minus auf. Nur wenn links hell und rechts dunkel ist, „feuert“ der Detektor.</p>
+
+<div class="widget">
+  <div class="wt">Ein Kantendetektor – und seine Kopien</div>
+  <div class="px">
+    <div>
+      <div class="grid" id="pxG" aria-label="Bild aus 6 mal 6 Pixeln, anklickbar"></div>
+      <div class="row" style="margin-top:8px">
+        <button data-p="edge2">Kante hier</button><button data-p="edge4">Kante weiter rechts</button><button data-p="light">Alles hell</button><button data-p="none">Leer</button>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:.86rem">Detektor an der markierten Stelle: <span style="color:var(--ok);font-weight:700">+1</span> pro hellem Pixel in der grünen Spalte, <span style="color:var(--bad);font-weight:700">−1</span> pro hellem Pixel in der roten.</div>
+      <div class="big" id="pxV">0</div>
+      <div class="meter"><i id="pxM"></i></div>
+      <div style="font-size:.82rem;color:var(--muted);margin-top:12px">Derselbe Detektor an allen fünf Positionen (Faltung):</div>
+      <div class="map" id="pxMap"></div>
+    </div>
+  </div>
+  <div class="note" id="pxN"></div>
+</div>
+
+<p>Die untere Zeile zeigt schon die Idee, mit der Hintons Team 2012 berühmt wurde <span class="ts">ab 21:26</span>: Statt einen Detektor nur an einer Stelle zu haben, setzt man <em>denselben</em> Detektor an jede Stelle des Bildes. Lernt das Netz einen Schnabel-Detektor an einer Position, kann es den Schnabel auch woanders finden. Das ist ein <strong>Convolutional Net</strong>, entwickelt von Yann LeCun – in Java gedacht: dieselbe Methode in einer Schleife über alle Bildpositionen aufgerufen, statt für jede Position eigenen Code zu schreiben.</p>
+
+<h3>Weiter oben: Schnabel, Auge, Vogel</h3>
+<p>Auf den Kanten bauen weitere Schichten auf <span class="ts">ab 9:15</span>. Zwei Kanten in spitzem Winkel könnten ein Schnabel sein, viele Kanten im Kreis ein Auge. Schnabel und Auge in der richtigen Lage zueinander ergeben einen Kopf. Kopf, Flügel und Fuß zusammen: wahrscheinlich ein Vogel. Die oberste Stufe, von Hand verdrahtet:</p>
+
+<div class="widget">
+  <div class="wt">Die letzte Schicht, von Hand gewichtet</div>
+  <div class="feat" id="ftF"></div>
+  <div class="calc" id="ftC" style="margin-top:10px"></div>
+  <div class="meter" style="height:16px"><i id="ftM"></i></div>
+  <div class="note" id="ftN"></div>
+  <p class="fine">Die Gewichte sind ausgedacht, um das Prinzip zu zeigen. Die Funktion σ („Sigmoid“) quetscht jede Zahl in den Bereich zwischen 0 und 1: σ(0) = 0,5, große positive Werte nähern sich 1, große negative 0.</p>
+</div>
+
+<p>Das Problem benennt Hinton gleich selbst <span class="ts">ab 10:33</span>: Von Hand bekäme man das nie gut hin. Es bräuchte Millionen von Detektoren mit passenden Gewichten – und niemand weiß, welche genau. Also soll das Netz sie selbst finden.</p>
+
+<h2 id="backprop">2 · Backpropagation, Schritt für Schritt</h2>
+<p>Hier beginnt der Teil, den Hinton selbst als zunächst „bizarr“ klingend ankündigt <span class="ts">ab 10:41</span>: Man verdrahtet gar nichts, sondern startet mit <strong>Zufallszahlen</strong> auf allen Verbindungen. Zeigt man dem Netz dann einen Vogel, antwortet es entsprechend zufällig – ungefähr 0,5. Nun fragt man für jedes einzelne Gewicht: Wenn ich dich ein wenig verändere, wird die Antwort dann besser? Den Fehler zwischen gewolltem und tatsächlichem Ergebnis schickt man rückwärts durchs Netz, und mit etwas Analysis – die Hinton im Gespräch überspringt – erfährt jedes Gewicht, in welche Richtung es sich bewegen soll. Danach sagt das Netz nicht mehr 0,5, sondern 0,51.</p>
+<p>Genau das lässt sich mit einem winzigen Netz nachrechnen: zwei Eingänge (wie stark ein Schnabel- und ein Flügeldetektor anschlagen), zwei versteckte Neuronen, ein Ausgang. Sieben Gewichte – und am Ende tatsächlich 0,51.</p>
+
+<div class="widget bp">
+  <div class="wt">Ein Lernschritt mit echten Zahlen</div>
+  <div class="steps" id="bpS"></div>
+  <div class="scr"><svg id="bpSvg" viewBox="0 0 560 260" role="img" aria-label="Kleines Netz mit zwei Eingängen, zwei versteckten Neuronen und einem Ausgang"></svg></div><p class="fine scrh">Auf dem Handy lässt sich das Bild seitlich verschieben.</p>
+  <h4 id="bpH"></h4>
+  <div class="calc" id="bpC"></div>
+  <div class="note" id="bpN"></div>
+  <div class="row" style="margin-top:10px"><button id="bpP">← Zurück</button><button id="bpX">Weiter →</button><span id="bpI" style="margin-left:auto;font-size:.82rem;color:var(--muted)"></span></div>
+</div>
+
+<div class="dev">
+<p>Das Rückwärtsschicken ist im Kern die <strong>Kettenregel</strong>, und sie fühlt sich an wie ein Stacktrace, nur mit Zahlen: Der Fehler entsteht oben am Ausgang. Jede Schicht darunter fragt „Wie viel davon geht auf mein Konto?“ und multipliziert dazu zwei Dinge – wie stark ihr Ausgang den nächsten beeinflusst (das Gewicht) und wie empfindlich sie selbst gerade reagiert (die Steigung von σ). So wandert die Schuld Aufruf für Aufruf nach unten, bis jedes Gewicht seinen Anteil kennt.</p>
+</div>
+
+<h2 id="training">3 · Nicht einmal, sondern tausendmal</h2>
+<p>Ein einzelner Schritt bringt fast nichts – 0,51 statt 0,50. Der Trick ist die Wiederholung <span class="ts">ab 12:17</span>: Vogel zeigen und Gewichte ein Stückchen in Richtung „Vogel“ schieben, dann etwas zeigen, das kein Vogel ist, und ein Stückchen in die Gegenrichtung. Immer wieder. Hier mit zwei Beispielen: dem Vogel von oben und einem Flugzeug (Flügel ja, Schnabel nein), das 0 ergeben soll.</p>
+
+<div class="widget">
+  <div class="wt">Trainieren mit zwei Beispielen</div>
+  <div class="row" id="trE"><span style="font-size:.84rem;color:var(--muted)">Lernrate η</span><button data-e="0.2" aria-pressed="true">0,2</button><button data-e="1">1</button><button data-e="5">5</button></div>
+  <svg id="trSvg" viewBox="0 0 500 200" role="img" aria-label="Ausgabe für Vogel und Flugzeug über die Trainingsschritte"></svg>
+  <div class="row" style="margin-top:8px"><button data-n="1">+1 Schritt</button><button data-n="10">+10</button><button data-n="100">+100</button><button data-n="500">+500</button><button id="trR">Neu</button></div>
+  <div class="note" id="trN"></div>
+</div>
+
+<p>Wer mit η = 0,2 trainiert, sieht etwas Merkwürdiges: Hunderte Schritte lang tut sich fast nichts, beide Ausgaben kleben bei 0,5 – dann geht es plötzlich voran. Genau das, erzählt Hinton, hätten viele jahrelang erwartet: Das Verfahren werde sich festfahren <span class="ts">ab 13:14</span>. Seine knappe Antwort: <q>And surprisingly that actually works.</q> <span class="ts">13:10</span>. Bei großen Netzen trifft man solche Plateaus ständig, und sie sind meist nur eine Durststrecke, kein Ende.</p>
+<p>Dass es trotzdem bis in die 2000er dauerte, bis neuronale Netze sich durchsetzten, erklärt Hinton <span class="ts">ab 17:28</span> vor allem mit zwei Dingen: zu wenig Daten und zu wenig Rechenleistung. Dazu kam ein technisches Detail – man wusste nicht, wie man die Zufallsgewichte klug wählt, damit tiefe Netze überhaupt in Gang kommen. Die Wende brachten Spracherkennung (2009) und das Bilderkennungsnetz AlexNet (2012), das auf Grafikkarten trainiert wurde und den Fehler im ImageNet-Wettbewerb nach Hintons Angaben von rund 25 auf 15 Prozent senkte <span class="ts">ab 23:35</span>.</p>
+
+<h2 id="warum">4 · Warum rückwärts – und nicht einfach ausprobieren?</h2>
+<p>Ein Entwickler würde vielleicht zuerst so vorgehen: jedes Gewicht kurz ein wenig verändern, schauen, ob der Fehler kleiner wird, und dann entscheiden. Das funktioniert sogar – und eignet sich hervorragend, um Backpropagation zu überprüfen, wie ein Unit-Test. Für unser kleines Netz:</p>
+
+<div class="widget">
+  <div class="wt">Backpropagation gegen „einzeln wackeln“</div>
+  <div class="tbl"><table id="fdT"></table></div>
+  <div class="note">Beide Spalten stimmen überein – Backpropagation rechnet nichts anderes aus als das Wackeln, nur viel geschickter. Fürs Wackeln braucht man <strong>zwei Durchläufe pro Gewicht</strong>, hier also 14. Backpropagation braucht <strong>einen Durchlauf vorwärts und einen rückwärts</strong> – für alle Gewichte gleichzeitig.</div>
+</div>
+
+<p>Bei sieben Gewichten ist das egal. Bei einem großen Sprachmodell mit Hunderten Milliarden Gewichten ist es der Unterschied zwischen „möglich“ und „nie“. Backpropagation spart die Arbeit, weil die Zwischenergebnisse jeder Schicht wiederverwendet werden – Entwickler kennen das Prinzip als dynamische Programmierung oder Memoisierung. Bekannt gemacht hat das Verfahren 1986 ein Artikel von Rumelhart, Hinton und Williams; die mathematische Idee ist älter.</p>
+<p>Hinton erzählt außerdem <span class="ts">ab 35:54</span>, dass er jahrelang nach einem Lernverfahren gesucht hat, das ein Gehirn tatsächlich ausführen könnte – ohne Backpropagation. Seine Versuche funktionierten bei kleinen Netzen, skalierten aber nie so gut. Irgendwann kam ihm der Gedanke, dass das nicht an seinen Ideen liegen müsse, sondern daran, dass das digitale Verfahren schlicht besser sein könnte. Das ist einer der beiden Gründe für seinen Sinneswandel, zu dem Teil 6 kommt.</p>
+
+<h2 id="embeddings">5 · Wörter als Vektoren: „may“ zwischen Mai und möglich</h2>
+<p>Für Sprache tauscht man nur die Eingabe aus <span class="ts">ab 13:27</span>. Jedes Wort wird zuerst in einen <strong>Embedding-Vektor</strong> verwandelt – eine kleine Liste von Zahlen, die die Bedeutung des Wortes einfangen soll. Hintons Beispiel ist das englische „may“, alles kleingeschrieben: meistens das Modalverb („he may do that“), manchmal der Monat Mai. Am Anfang weiß das Netz nicht, welches gemeint ist, und nimmt einen Kompromissvektor irgendwo dazwischen. Schicht für Schicht verbessert es ihn anhand der Nachbarwörter: Steht „june“ in der Nähe, rückt „may“ Richtung Monat; steht „would“ in der Nähe, Richtung Modalverb.</p>
+
+<div class="widget">
+  <div class="wt">Schicht für Schicht zur richtigen Bedeutung</div>
+  <div class="row" id="emC"><span style="font-size:.84rem;color:var(--muted)">Kontext</span><button data-c="june" aria-pressed="true">„june“ in der Nähe</button><button data-c="would">„would“ in der Nähe</button><button data-c="none">kein Kontext</button></div>
+  <div class="sent" id="emS"></div>
+  <div class="emb">
+    <svg id="emSvg" viewBox="0 0 300 300" role="img" aria-label="Zweidimensionale Karte der Wortvektoren"></svg>
+    <div>
+      <div class="sl"><span>Schicht</span><input type="range" id="emL" min="0" max="6" value="0"><output id="emLo"></output></div>
+      <div class="bar2"><span>wie ein Monat</span><div class="meter"><i id="emM1" style="background:var(--accent)"></i></div><output id="emO1"></output></div>
+      <div class="bar2"><span>wie ein Modalverb</span><div class="meter"><i id="emM2"></i></div><output id="emO2"></output></div>
+      <div class="note" id="emN"></div>
+    </div>
+  </div>
+  <p class="fine">Modellhaft: echte Embeddings haben Hunderte bis Tausende Dimensionen, hier sind es zwei, damit man sie zeichnen kann. Jede Schicht zieht den Vektor ein Stück in Richtung des Kontexts; heutige Modelle tun das mit einem Mechanismus namens <em>Attention</em>.</p>
+</div>
+
+<p>Trainiert wird auch hier mit Backpropagation <span class="ts">ab 15:27</span>. Hintons vereinfachte Fassung: Man gibt dem Netz einen Satz, ersetzt das letzte Wort durch einen neutralen Platzhalter – einen sehr vagen Vektor, eine Art Durchschnitt aller Wörter – und lässt das Netz diesen Platzhalter Schicht für Schicht schärfen. Oben angekommen, sollte er dem Vektor des Wortes ähneln, das tatsächlich im Text stand. Der Unterschied ist der Fehler, und der geht zurück durch die Schichten und zu den vorherigen Wörtern, damit sie beim nächsten Mal den richtigen Einfluss nehmen. So lernt ein Netz, das nächste Wort vorherzusagen.</p>
+<p>Daraus folgt Hintons vielleicht wichtigste Behauptung im ganzen Gespräch <span class="ts">ab 27:16</span>: „Nur das nächste Wort vorhersagen“ klinge nach bloßer Statistik, sei es aber nicht im üblichen Sinn. Um gut vorherzusagen, müsse das Netz die Bedeutung des Satzes erfassen. Als Beleg erzählt er von einem Rätsel über Zimmerfarben, das GPT-4 auf eine unerwartete, aber richtige Weise löste, und von einem früheren Doktoranden, der dem Modell eine frisch erfundene Programmiersprache beschrieb – und es konnte sagen, was ein Programm darin tut <span class="ts">ab 29:03</span>. Ob man das „Verstehen“ nennen soll, ist unter Fachleuten umstritten; Hinton ist sich sicher.</p>
+
+<h2 id="digital">6 · Digital gegen biologisch</h2>
+<p>Ganz am Anfang des Gesprächs <span class="ts">ab 1:03</span> steht der Gedanke, der Hinton selbst am meisten beunruhigt. Ein digitaler Rechner tut exakt, was man ihm sagt. Zwei Rechner mit denselben Gewichten verhalten sich exakt gleich. Also kann man ein Netz 10 000-mal kopieren, jede Kopie auf andere Daten ansetzen – und wann immer eine etwas lernt, schickt sie ihre Gewichtsänderungen an alle anderen. Menschen können das nicht: Wer etwas gelernt hat, muss es in Sätze fassen, und durch Sätze passt nur sehr wenig Information.</p>
+
+<div class="widget">
+  <div class="wt">Vier Lernende, zwei Arten zu teilen</div>
+  <div class="row" id="agM"><button data-m="dig" aria-pressed="true">Digital: Gewichte teilen</button><button data-m="bio">Biologisch: in Sätzen erzählen</button></div>
+  <div class="ag" id="agG"></div>
+  <div class="row" style="margin-top:10px"><button id="agL">Eine Runde lernen</button><button id="agK">Ein Rechner fällt aus</button><button id="agR">Neu</button></div>
+  <div class="note" id="agN"></div>
+  <p class="fine">Modellhaft: Jede der vier Kopien lernt nur aus ihrem eigenen Themengebiet. Beim Teilen der Gewichte kommt jede Änderung bei allen an; beim Erzählen kommt nur ein kleiner Bruchteil hinüber.</p>
+</div>
+
+<p>Daraus folgt der zweite Unterschied <span class="ts">ab 2:27</span>, den Hinton „unsterblich gegen sterblich“ nennt. Die Gewichte eines digitalen Netzes sind nur Zahlen. Stirbt ein Rechner, lädt man sie auf einen anderen, und das Wissen ist wieder da. Im Gehirn dagegen ist das Gelernte untrennbar mit genau diesem Gehirn verbunden: Jedes Gehirn ist ein wenig anders gebaut, und das Lernen nutzt genau diese Eigenheiten. Selbst wenn man die Verbindungsstärken eines Menschen auslesen könnte, würden sie in einem anderen Kopf nichts bedeuten.</p>
+<div class="dev"><p>Ein digitales Modell ist im Grunde eine serialisierbare Datei: die Gewichte, die man speichern, kopieren und auf jeder passenden Hardware wieder laden kann – wie ein Objekt, das man per <code>writeObject</code> wegschreibt und anderswo identisch wieder liest. Das Wissen eines Gehirns ist eher wie ein Zustand, der nur in genau dieser einen JVM-Instanz mit ihren zufälligen Speicheradressen Sinn ergibt.</p></div>
+
+<h3>Was Hinton daraus folgert</h3>
+<p>Diese beiden Vorteile – Wissen teilen und vermutlich ein besseres Lernverfahren – führten bei Hinton nach eigener Schilderung zu einem plötzlichen Meinungswechsel <span class="ts">ab 33:33</span>. Fast fünfzig Jahre lang habe er geglaubt, digitale Modelle müssten dem Gehirn ähnlicher werden, um besser zu werden, und bis zu einer Intelligenz über der menschlichen dauere es 30 bis 50 Jahre. Dann sei ihm klar geworden, dass sie womöglich schon jetzt die bessere Form von Intelligenz sind, nur noch kleiner. Seine neue Schätzung im Gespräch: 5 bis 20 Jahre, bei großer Unsicherheit.</p>
+<p>Er betont, dass er kein Fachmann für die Frage sei, wie man solche Systeme unter Kontrolle hält, sondern für Lernalgorithmen. Er wolle mit seiner Bekanntheit erreichen, dass die Politik jenen zuhört, die sich damit seit Langem beschäftigen <span class="ts">ab 35:14</span>. Konkret wünscht er sich, dass Regierungen die Entwickler großer Modelle dazu bringen, viel mehr in empirische Forschung zur Kontrolle dieser Systeme zu stecken, solange sie noch weniger klug sind als wir <span class="ts">ab 38:55</span>. Diese Einschätzungen sind seine; unter Fachleuten gehen die Meinungen über Zeitrahmen und Risiken weit auseinander.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Das ganze Netz aus Teil 2 und 3 passt in eine Java-Klasse. Kein Framework, nur Arrays und die Kettenregel – genau die Zahlen von oben:</p>
+<pre><code><span class="k">final class</span> MiniNetz {
+    <span class="k">double</span>[][] w1 = { { <span class="n">0.15</span>, -<span class="n">0.20</span> }, { -<span class="n">0.10</span>, <span class="n">0.25</span> } };  <span class="c">// Eingang → versteckt</span>
+    <span class="k">double</span>[]   w2 = { <span class="n">0.10</span>, -<span class="n">0.10</span> };                          <span class="c">// versteckt → Ausgang</span>
+    <span class="k">double</span>     b  = <span class="n">0</span>;
+    <span class="k">double</span>[]   h  = <span class="k">new double</span>[<span class="n">2</span>];
+
+    <span class="k">static double</span> sigma(<span class="k">double</span> z) { <span class="k">return</span> <span class="n">1</span> / (<span class="n">1</span> + Math.exp(-z)); }
+
+    <span class="k">double</span> vorwaerts(<span class="k">double</span>[] x) {
+        <span class="k">for</span> (<span class="k">int</span> j = <span class="n">0</span>; j &lt; <span class="n">2</span>; j++) h[j] = sigma(w1[j][<span class="n">0</span>] * x[<span class="n">0</span>] + w1[j][<span class="n">1</span>] * x[<span class="n">1</span>]);
+        <span class="k">return</span> sigma(w2[<span class="n">0</span>] * h[<span class="n">0</span>] + w2[<span class="n">1</span>] * h[<span class="n">1</span>] + b);
+    }
+
+    <span class="k">void</span> lerne(<span class="k">double</span>[] x, <span class="k">double</span> ziel, <span class="k">double</span> eta) {
+        <span class="k">double</span> y = vorwaerts(x);
+        <span class="k">double</span> delta = (y - ziel) * y * (<span class="n">1</span> - y);            <span class="c">// Fehler × Empfindlichkeit am Ausgang</span>
+        <span class="k">for</span> (<span class="k">int</span> j = <span class="n">0</span>; j &lt; <span class="n">2</span>; j++) {
+            <span class="k">double</span> dh = delta * w2[j] * h[j] * (<span class="n">1</span> - h[j]); <span class="c">// Schuld eine Schicht tiefer (alter w2-Wert!)</span>
+            w2[j] -= eta * delta * h[j];
+            <span class="k">for</span> (<span class="k">int</span> i = <span class="n">0</span>; i &lt; <span class="n">2</span>; i++) w1[j][i] -= eta * dh * x[i];
+        }
+        b -= eta * delta;
+    }
+}
+
+<span class="c">// new MiniNetz().vorwaerts(new double[]{1, 0.5})  → 0.5002</span>
+<span class="c">// nach lerne(…, 1, 0.2)                           → 0.5097, also „0,51“</span></code></pre>
+<p>Drei Dinge, die man an diesem Code sieht und die im Großen genauso gelten:</p>
+<div class="cards">
+  <div class="card"><b>Reihenfolge zählt</b>Die Schuld für die tiefere Schicht muss mit dem <em>alten</em> Gewicht berechnet werden, bevor man es ändert – wie beim Takt in einer Schaltung: erst alles ausrechnen, dann alles übernehmen.</div>
+  <div class="card"><b>Die Lernrate ist ein Regler</b>η bestimmt die Schrittgröße. Zu klein: Es dauert ewig. Zu groß: Die Gewichte springen über das Ziel hinaus. In Teil 3 kann man das ausprobieren.</div>
+  <div class="card"><b>Frameworks rechnen dasselbe</b>PyTorch, TensorFlow oder in Java Deeplearning4j und DJL leiten die Rückwärtsrechnung automatisch aus dem Vorwärtscode ab (automatisches Differenzieren) und führen sie auf Grafikkarten aus.</div>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Backpropagation schickt die Daten rückwärts durchs Netz.“</b> – Rückwärts läuft nur der Fehler beziehungsweise die Information, wie jedes Gewicht ihn beeinflusst. Die Daten gehen immer nur vorwärts.</div>
+  <div><b>„Das Netz lernt Regeln wie ‚Vogel hat Schnabel‘.“</b> – Es lernt nur Gewichte. Ob ein Neuron dabei so etwas wie einen Schnabel erkennt, sieht man erst, wenn man nachschaut. Hintons Beispiel ist eine Erklärungshilfe, kein Bauplan.</div>
+  <div><b>„Ein Lernschritt macht das Netz deutlich besser.“</b> – Ein Schritt bewegt alle Gewichte nur minimal, von 0,50 auf 0,51. Gelernt wird durch Millionen solcher Schritte.</div>
+  <div><b>„Backpropagation ist, wie das Gehirn lernt.“</b> – Das ist offen und eher unwahrscheinlich. Hinton selbst hat lange nach einem biologisch plausiblen Verfahren gesucht und keines gefunden, das so gut skaliert.</div>
+  <div><b>„Embeddings sind ein Wörterbuch mit festen Bedeutungen.“</b> – Am Eingang vielleicht. In den Schichten darüber verschiebt sich der Vektor eines Wortes je nach Satz – „may“ ist nach einigen Schichten ein anderer Vektor, je nachdem, ob „june“ oder „would“ daneben stand.</div>
+</div>
+
+<p class="src">Quelle: University of Toronto, „The Godfather in Conversation: Why Geoffrey Hinton is worried about the future of AI“, 22.06.2023, 46 Minuten, <a href="https://www.youtube.com/watch?v=-9cW4Gcn5WY">YouTube</a>. Die Zeitangaben verweisen auf die Stellen im Video. Wiedergegeben in eigenen Worten; Rechenbeispiele, Zahlen und Widgets sind eigene Veranschaulichungen.</p>
+</div>
