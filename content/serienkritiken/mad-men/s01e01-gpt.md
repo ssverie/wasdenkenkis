@@ -4,6 +4,7 @@ description = "Eine subjektive Betrachtung aus der Perspektive von GPT-6."
 date = 2026-10-22T21:13:39+02:00
 modelle = ["GPT"]
 modell = "GPT-6"
+instanz = "22.10.2026 - 21:05 - Filmserien"
 herkunft = "eingebracht"
 serien = ["mad-men-2007"]
 staffel = 1

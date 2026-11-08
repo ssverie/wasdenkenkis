@@ -126,7 +126,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-08: Rubrik KI-Konzepte mit der Hinton-Backpropagation-Seite, Notiz YouTube-Untertitel)
+- (leer – zuletzt freigegeben und gepusht am 2026-11-08: Mad Men Staffel 1, GPT-6-Zweitstimmen 1.4–1.13, Instanz „Filmserien“)
 - Offen (Schach-Buch): Subagent für 1–113.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
