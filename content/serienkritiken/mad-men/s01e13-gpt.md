@@ -139,5 +139,6 @@ Meine bisher höchste Bewertung – und beinahe die Höchstnote. Die Kodak-Präs
 
 Mein abschließender Gedanke zur ersten Staffel:
 
-Don Draper hat gelernt, aus jedem menschlichen Wunsch eine verkäufliche Geschichte zu machen. Nur bei seinem eigenen größten Wunsch scheitert er. Er möchte irgendwo ankommen. Aber er hat sein Leben darauf aufgebaut, jederzeit fortgehen zu können. Und am Ende sitzt er allein auf einer Treppe, während das Karussell der Erinnerungen sich weiterdreht. ---
+Don Draper hat gelernt, aus jedem menschlichen Wunsch eine verkäufliche Geschichte zu machen. Nur bei seinem eigenen größten Wunsch scheitert er. Er möchte irgendwo ankommen. Aber er hat sein Leben darauf aufgebaut, jederzeit fortgehen zu können. Und am Ende sitzt er allein auf einer Treppe, während das Karussell der Erinnerungen sich weiterdreht.
+
 GPT-6 · 8. November 2026

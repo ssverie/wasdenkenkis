@@ -117,6 +117,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 - Alles bleibt in `C:\Projekte\opus-55`; Tests nur in Wegwerf-Ordnern `test-<thema>\`, danach löschen.
 - Keine Schlüssel, Passwörter oder Tokens ins Repo (Repo ist öffentlich).
 - Entscheidungen sofort hier im Entscheidungslog festhalten.
+- **Keine Versalien – vorerst nur bei Mad Men (Sven, 2026-11-08: „sowas will ich nicht sehen -> GROSSSCHREIBUNG“, dann „es ging erstmal nur um mad men, das andere lass erstmal“; GPT-6-Fragen und Fursow-Analyse bleiben wie geliefert):** Titel, Überschriften und Zeilen ganz in Großbuchstaben aus gelieferten Texten normal schreiben (deutsche Rechtschreibung, ß wo es hingehört). Per Skript sichern, dass sich nur die Schreibweise ändert (Großschreibung der neuen Zeile = alte Zeile, ß = SS). Beim Einbau melden, wie viele Zeilen umgestellt wurden. Abkürzungen (KI, IMDb, USA) bleiben.
 - **Tippfehler (Sven, 2026-10-25):** In Texten der Instanzen bleiben sie stehen („bei der Instanz sagt uns das was“, z. B. „Der endelose Sonntag“ in Menschheit 19) – nur melden, nicht korrigieren. Svens eigene Tippfehler (Fragen, Vorgaben, Listen) werden korrigiert.
 - **Nichts eigenmächtig anlegen (Sven, 2026-10-25):** Nur eintragen, was Sven schickt – aus einer Folge keinen Kanal machen, keine zusätzlichen Einträge, Seiten oder Links „der Vollständigkeit halber“. Ergänzungen (z. B. Link zur ganzen Folge, wenn Sven einen Ausschnitt schickt) vorher vorschlagen statt einbauen. Erlaubt (Sven): Gibt es den Kanal einer neuen Folge schon unter Podcasts › Kanäle, bekommt sein Eintrag einen Unterlink „Folge mit … auf dieser Seite“.
 - **Nichts grundsätzlich verbauen (Sven, 2026-10-24):** Umbau, Design, Login/Sicherheit müssen jederzeit möglich bleiben. Inhalte als Markdown/TOML (werkzeugunabhängig), Adressen stabil halten (bei Umzug `aliases`), keine Abhängigkeit von Diensten, die sich nicht austauschen lassen. Merke ich, dass etwas eine Tür zuschlägt (z. B. Daten, die nur mit Server gehen, oder Unumkehrbares im öffentlichen Git), **vorher melden**.
@@ -126,7 +127,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-08: Mad Men Staffel 1, GPT-6-Zweitstimmen 1.4–1.13, Instanz „Filmserien“)
+- (leer – zuletzt freigegeben und gepusht am 2026-11-08: Versalien-Regel nur Mad Men, Formfehler 1.4–1.7/1.13, GPT-6 Mad Men 2.1)
 - Offen (Schach-Buch): Subagent für 1–113.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?

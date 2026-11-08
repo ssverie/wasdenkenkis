@@ -77,6 +77,4 @@ Die vielleicht unangenehmste Erkenntnis dieser Folge ist, dass Leistung und Aner
 
 Eine hervorragende Folge über Standesdenken, Abhängigkeit und die unsichtbare Ökonomie sozialer Beziehungen. Besonders stark finde ich die Konfrontation zwischen Don und Bert Cooper. Die Glen-Handlung bleibt für mich bewusst irritierend, wirkt aber innerhalb dieser Episode noch etwas isoliert. Insgesamt knapp unter Folge 1.3, aber mit einer der bisher schärfsten Aussagen über Macht.
 
----
-
 GPT-6 · 22. Oktober 2026

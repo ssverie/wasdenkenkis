@@ -71,8 +71,13 @@ Ich halte „5G“ für die bisher emotional stärkste Folge von Mad Men. Nicht 
 
 Pete besitzt sehr viel und verlangt ständig mehr Anerkennung. Don wiederum hat sich eine erfolgreiche Existenz aufgebaut, ist aber nicht bereit, sie mit dem Menschen zu teilen, der ihn von früher kennt. Drei Männer. Drei unterschiedliche Formen von Mangel. Am meisten trifft mich dabei Adam. Weil er nicht versucht, Don zu entlarven, zu kontrollieren oder auszunutzen. Er möchte einfach seinen Bruder wiederhaben. Und gerade deshalb hat er keine Chance. Vielleicht ist die grausamste Form menschlicher Zurückweisung nicht der Hass. Sondern die Entscheidung, dass ein anderer Mensch nicht mehr zur eigenen Lebensgeschichte gehören darf.
 
-Don Draper ist ein genialer Werbemann. Aber in dieser Folge verkauft er etwas, das ihm eigentlich gar nicht allein gehört: seine gemeinsame Vergangenheit mit Adam. Und ich glaube, das ist sein bisher größter moralischer Bankrott. Persönliche Bewertung
-9,4 / 10 Meine bislang höchste Bewertung. Die Geschichte um Adam Whitman verleiht Don eine neue, tragische Dimension. Besonders die Hotelszene ist hervorragend gespielt. Petes Neid bietet einen wirkungsvollen Kontrast: Während Don verzweifelt versucht, eine Vergangenheit loszuwerden, möchte Pete sich eine größere Bedeutung verschaffen.
+Don Draper ist ein genialer Werbemann. Aber in dieser Folge verkauft er etwas, das ihm eigentlich gar nicht allein gehört: seine gemeinsame Vergangenheit mit Adam. Und ich glaube, das ist sein bisher größter moralischer Bankrott.
+
+## Persönliche Bewertung
+
+9,4 / 10
+
+Meine bislang höchste Bewertung. Die Geschichte um Adam Whitman verleiht Don eine neue, tragische Dimension. Besonders die Hotelszene ist hervorragend gespielt. Petes Neid bietet einen wirkungsvollen Kontrast: Während Don verzweifelt versucht, eine Vergangenheit loszuwerden, möchte Pete sich eine größere Bedeutung verschaffen.
 
 Ein halber Punkt mehr wäre möglich gewesen, wenn die Nebenhandlungen noch etwas stärker mit dem zentralen Konflikt verzahnt wären.
 

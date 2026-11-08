@@ -77,5 +77,6 @@ Der Mensch besitzt die erstaunliche Fähigkeit, sich ein Paradies vorzustellen. 
 
 ## Persönliche Bewertung: 9,1 / 10
 
-Eine hervorragend komponierte Episode, deren verschiedene Geschichten durch das Motiv der Sehnsucht miteinander verbunden sind. Peggys Lippenstift-Szene und Rachels Gedanken über Utopia sind meine Höhepunkte. Emotional nicht ganz auf dem Niveau von „5G“, aber philosophisch beinahe noch interessanter. ---
+Eine hervorragend komponierte Episode, deren verschiedene Geschichten durch das Motiv der Sehnsucht miteinander verbunden sind. Peggys Lippenstift-Szene und Rachels Gedanken über Utopia sind meine Höhepunkte. Emotional nicht ganz auf dem Niveau von „5G“, aber philosophisch beinahe noch interessanter.
+
 GPT-6 · 8. November 2026
