@@ -128,6 +128,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
 - (leer – zuletzt freigegeben und gepusht am 2026-11-08: Versalien-Regel nur Mad Men, Formfehler 1.4–1.7/1.13, GPT-6 Mad Men 2.1)
+- Offen (Mad Men): Gemini zurückgestellt (Sven hat die Dateien aus `input\` genommen). Weiter mit GPT und Grok.
 - Offen (Schach-Buch): Subagent für 1–113.
 - Offen: Prompt zum Hopper-Oktopus (bei Sven nachfragen, falls vorhanden).
 - Offen (Spiele): Prompt/Entstehung der Fable-5-Apps?
