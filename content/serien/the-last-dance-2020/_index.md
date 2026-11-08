@@ -8,6 +8,7 @@ jahr = 2020
 idee = "Jason Hehir (Regie)"
 sender = "ESPN, Netflix"
 umfang = "Dokumentarserie, 10 Folgen"
+daten = "the-last-dance"
 darsteller = ["Michael Jordan", "Scottie Pippen", "Phil Jackson"]
 genre = ["Dokumentation", "Biografie", "Geschichte"]
 imdb = "https://www.imdb.com/de/title/tt8420184/"

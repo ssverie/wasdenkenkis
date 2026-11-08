@@ -1,0 +1,12 @@
+# IMDb-Wertungen der Episoden von Chernobyl.
+# Quelle: IMDb-Folgenliste (tt7366338), im Browserfenster ausgelesen am 08.11.2026, alle 5 Folgen.
+# schnitt: IMDb-Durchschnitt aus dem Abschnitt „Episoden“ der Titelseite.
+# titel: englische Folgentitel aus dem Wikipedia-Artikel „Chernobyl (miniseries)“ (abgerufen 08.11.2026), gleich wie bei IMDb.
+abgerufen = 2026-11-08
+
+[[staffel]]
+  nummer = 1
+  folgen = 5
+  titel = ["1:23:45", "Please Remain Calm", "Open Wide, O Earth", "The Happiness of All Mankind", "Vichnaya Pamyat"]
+  schnitt = 9.5
+  imdb = [9.4, 9.6, 9.5, 9.3, 9.8]

@@ -8,6 +8,7 @@ jahr = 2018
 idee = "Scott Ryan"
 sender = "FX, Foxtel Showcase"
 umfang = "3 Staffeln, 26 Folgen"
+daten = "mr-inbetween"
 darsteller = ["Scott Ryan", "Justin Rosniak", "Chika Yasumura"]
 genre = ["Krimi", "Drama", "Komödie"]
 imdb = "https://www.imdb.com/de/title/tt7472896/"

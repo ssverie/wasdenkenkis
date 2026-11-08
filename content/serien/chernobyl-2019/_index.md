@@ -8,6 +8,7 @@ jahr = 2019
 idee = "Craig Mazin"
 sender = "HBO, Sky"
 umfang = "Miniserie, 5 Folgen"
+daten = "chernobyl"
 darsteller = ["Jared Harris", "Jessie Buckley", "Stellan Skarsgård"]
 genre = ["Drama", "Geschichte", "Thriller"]
 imdb = "https://www.imdb.com/de/title/tt7366338/"

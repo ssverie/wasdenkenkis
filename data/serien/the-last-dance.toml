@@ -1,0 +1,11 @@
+# IMDb-Wertungen der Episoden von The Last Dance.
+# Quelle: IMDb-Folgenliste (tt8420184), im Browserfenster ausgelesen am 08.11.2026, alle 10 Folgen.
+# schnitt: IMDb-Durchschnitt aus dem Abschnitt „Episoden“ der Titelseite.
+# Ohne titel: Die Folgen heißen bei IMDb und in der englischen Wikipedia nur „Episode I“ bis „Episode X“.
+abgerufen = 2026-11-08
+
+[[staffel]]
+  nummer = 1
+  folgen = 10
+  schnitt = 9.1
+  imdb = [9.0, 8.9, 9.0, 9.1, 9.0, 8.8, 9.1, 9.2, 9.2, 9.5]

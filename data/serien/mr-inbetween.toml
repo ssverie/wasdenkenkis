@@ -1,0 +1,28 @@
+# IMDb-Wertungen der Episoden von Mr Inbetween.
+# Quelle: IMDb-Folgenlisten (tt7472896, Staffel 1–3), im Browserfenster ausgelesen am 08.11.2026, alle 26 Folgen.
+# schnitt: Staffel 1 IMDb-Durchschnitt von der Titelseite (8.1). Staffel 2 und 3 einfaches Mittel der Folgenwerte
+#          (8.44 und 8.21) – IMDb zeigt diese Durchschnitte weder im Browserfenster noch bei Sven;
+#          Sven, 08.11.2026: „nimm einfach den Durchschnitt der Folgen der Staffel“.
+# titel: englische Folgentitel aus dem Wikipedia-Artikel „Mr Inbetween“ (abgerufen 08.11.2026).
+abgerufen = 2026-11-08
+
+[[staffel]]
+  nummer = 1
+  folgen = 6
+  titel = ["The Pee Pee Guy", "Unicorns Know Everybody's Name", "Captain Obvious", "On Behalf of Society", "Hard Worker", "Your Mum's Got a Strongbox"]
+  schnitt = 8.1
+  imdb = [7.6, 7.7, 8.1, 8.3, 8.1, 8.9]
+
+[[staffel]]
+  nummer = 2
+  folgen = 11
+  titel = ["Shoulda Tapped", "Don't Be a Dickhead", "I Came from Your Balls?", "Monsters", "Can't Save You", "Let Me Stop You There", "Watch Out for Snakes", "See You In Your Dreams", "Socks Are Important", "Nice Face", "There Rust, and Let Me Die"]
+  schnitt = 8.4
+  imdb = [8.0, 8.3, 8.1, 8.8, 8.3, 7.8, 7.7, 8.6, 9.5, 8.5, 9.2]
+
+[[staffel]]
+  nummer = 3
+  folgen = 9
+  titel = ["Coulda Shoulda", "Champ", "All I Ever Wanted", "Cut the Crap Princess", "Before I Went to War", "Ray Who?", "I'm Your Girl", "I'll See You Soon", "I'm Not Leaving"]
+  schnitt = 8.2
+  imdb = [8.6, 8.0, 7.6, 7.8, 8.5, 8.2, 7.3, 8.7, 9.2]
