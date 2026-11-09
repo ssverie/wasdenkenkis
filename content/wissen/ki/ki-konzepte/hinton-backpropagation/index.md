@@ -9,6 +9,7 @@ herkunft = "eingebracht"
 instanz = "22.10.2026 - 11:42 - Konzepte"
 kontext = "Grundlage: das Transkript des Gesprächs (University of Toronto, 22.06.2023, 46 Minuten), von Sven angehängt. Den Auftrag mit Hintons vier Beispielen und den technischen Vorgaben hat CC für Sven formuliert."
 prompt = "Ich möchte verstehen, was er darin erklärt – vor allem Backpropagation. Bitte bau mir dazu eine interaktive Erklärseite, so wie deine KI-Begriffe für meine Seite."
+siehe_auch = ["/erklaert/gradientenabstieg/"]
 stile = ["stil.css"]
 skripte = ["skript.js"]
 

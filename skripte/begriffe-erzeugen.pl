@@ -24,6 +24,13 @@ sub altesDatum {
   my $f = shift; return undef unless -f $f;
   my $t = lesen($f); return $t =~ /^date = (\S+)$/m ? $1 : undef;
 }
+# Von Hand gepflegte Front-Matter-Felder (instanz, siehe_auch) der vorhandenen index.md, Wert roh als TOML
+sub alteFelder {
+  my $f = shift; return () unless -f $f;
+  my $t = lesen($f); my %h;
+  for my $k (qw(instanz siehe_auch)) { $h{$k} = $1 if $t =~ /^$k = (.+)$/m; }
+  return %h;
+}
 sub dateizeit {
   my @t = localtime((stat(shift))[9]);
   return sprintf('%04d-%02d-%02dT%02d:%02d:%02d+02:00', $t[5]+1900, $t[4]+1, $t[3], $t[2], $t[1], $t[0]);
@@ -77,8 +84,13 @@ for my $b (@begriffe) {
   $fm .= "description = \"" . toml(text($lead)) . "\"\n";
   my $mdDatei = $istUebersicht ? "$dir/_index.md" : "$dir/index.md";
   $fm .= "date = " . (altesDatum($mdDatei) // dateizeit($quelldatei)) . "\n";
-  $fm .= "modelle = [\"Claude\"]\nmodell = \"Claude Opus 5.5\"\nmodell_id = \"claude-opus-5-5\"\nherkunft = \"eingebracht\"\n";
+  $fm .= "modelle = [\"Claude\"]\nmodell = \"Claude Opus 5.5\"\nmodell_id = \"claude-opus-5-5\"\n";
+  # Von Hand gepflegte Felder der vorhandenen Seite übernehmen (seit 2026-11-09): instanz, siehe_auch
+  my %hand = alteFelder($mdDatei);
+  $fm .= "instanz = $hand{instanz}\n" if $hand{instanz};
+  $fm .= "herkunft = \"eingebracht\"\n";
   $fm .= "kontext = \"" . toml(text($kontext)) . "\"\n" if $kontext;
+  $fm .= "siehe_auch = $hand{siehe_auch}\n" if $hand{siehe_auch};
   $fm .= "prompt = \"" . toml(text($prompt)) . "\"\n" if $prompt;
   if ($b eq 'was-ist-ein-sprachmodell') { $fm .= "thema = \"sprachmodell\"\nfassung = 2\n"; }
   # Werkstattbericht der Instanz: kein Begriff, erscheint auf der Übersicht unter „In eigener Sache“

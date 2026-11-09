@@ -24,6 +24,15 @@
     {{ .Content }}
   </div>
 </article>
+{{- /* Querverweise auf verwandte Seiten an anderer Stelle der Seite (seit 2026-11-09): siehe_auch = ["/pfad/"] im Front-Matter */}}
+{{- with .Params.siehe_auch }}
+  {{- $seiten := slice }}
+  {{- range . }}{{ with site.GetPage . }}{{ $seiten = $seiten | append . }}{{ else }}{{ errorf "siehe_auch: Seite %q nicht gefunden" . }}{{ end }}{{ end }}
+<section>
+  <h2>Siehe auch</h2>
+  {{ partial "liste.html" $seiten }}
+</section>
+{{- end }}
 {{ partial "fassungen.html" (dict "seite" . "wo" "unten") }}
 {{- /* Serienfolgen: weitere Texte zur selben Folge, dann vorige / nächste besprochene Folge.
        Die Navigation läuft über die Hauptbesprechungen; Texte mit `zweitstimme = true` (andere Modelle) zählen nicht mit. */}}
