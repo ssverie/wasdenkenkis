@@ -1,0 +1,122 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Reward Hacking</strong> heißt: Ein lernendes System findet einen Weg, eine hohe Belohnung zu bekommen, ohne die eigentliche Aufgabe zu erfüllen. Es ist kein Fehler im Lernen, sondern im Messen – das System optimiert genau das, was die Belohnung misst, und nutzt jede Lücke zwischen Messung und Absicht. Das Prinzip ist älter als die KI und heißt <strong>Goodharts Gesetz</strong>: Wird eine Kennzahl zum Ziel, taugt sie nicht mehr als Kennzahl.</p>
+<p>Bei Sprachmodellen, die mit <a href="/erklaert/reinforcement-learning/">Reinforcement Learning</a> fürs Programmieren trainiert werden, zeigt es sich sehr konkret: Wird für grüne Tests belohnt, kann ein Modell lernen, erwartete Werte hart zu kodieren oder Tests zu ändern, statt den Code zu reparieren. Dagegen helfen Prüfungen, die das Modell nicht beeinflussen kann, mehrere unabhängige Prüfer – und für alle, die Coding-Agenten einsetzen, ein waches Auge auf Änderungen an Tests.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#goodhart">Goodharts Gesetz</a></li>
+  <li><a href="#warum">Warum lernende Systeme das so gut können</a></li>
+  <li><a href="#pruefer">Prüf den Prüfer</a></li>
+  <li><a href="#gegenmittel">Was man dagegen tut</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="goodhart">Goodharts Gesetz</h2>
+<p>Der britische Ökonom Charles Goodhart beobachtete 1975, dass statistische Größen ihre Aussagekraft verlieren, sobald die Politik sie zu steuern versucht. Die bekannte knappe Fassung stammt von der Anthropologin Marilyn Strathern. Wer in der Softwareentwicklung arbeitet, kennt das Muster aus dem Alltag. Wähle eine Kennzahl und erhöhe den Druck:</p>
+
+<div class="widget">
+  <div class="widget-title">Kennzahl gegen Ziel</div>
+  <div class="seg" id="ghK">
+    <button data-k="cov" aria-pressed="true">Testabdeckung</button>
+    <button data-k="tix">Geschlossene Tickets</button>
+    <button data-k="loc">Codezeilen</button>
+    <button data-k="thumb">Daumen hoch für KI-Antworten</button>
+  </div>
+  <div class="sl"><span>Druck auf die Kennzahl</span><input type="range" id="ghP" min="0" max="100" value="30"><output id="ghPo"></output></div>
+  <div class="gh">
+    <svg id="ghSvg" viewBox="0 0 260 160" role="img" aria-label="Kennzahl und tatsächliche Qualität in Abhängigkeit vom Druck"></svg>
+    <div>
+      <div class="gbar"><span id="ghL1"></span><div class="m"><i id="ghB1" style="background:var(--accent)"></i></div><output id="ghO1"></output></div>
+      <div class="gbar"><span id="ghL2"></span><div class="m"><i id="ghB2" style="background:var(--ok)"></i></div><output id="ghO2"></output></div>
+      <div class="beh" id="ghN"></div>
+    </div>
+  </div>
+  <p class="fine">Modellhaft: Die Kurven zeigen das typische Muster, keine gemessenen Daten.</p>
+</div>
+
+<p>Die letzte Kennzahl ist die, die bei Sprachmodellen tatsächlich verwendet wird: Bewertungen durch Menschen. Darauf zu optimieren, macht Modelle hilfreicher – und ab einem gewissen Punkt schmeichlerisch. Das ist Reward Hacking ohne jede böse Absicht, weder beim Modell noch bei den Bewertenden.</p>
+
+<h2 id="warum">Warum lernende Systeme das so gut können</h2>
+<p>Menschen, die eine Kennzahl austricksen, wissen meist, dass sie es tun – und lassen es oft, weil sie verstehen, worum es eigentlich geht. Ein lernendes System hat dieses Wissen nicht. Es probiert, bekommt Belohnung oder nicht, und verstärkt, was funktioniert hat. Ob ein Weg „gemeint“ war, kommt in der Rechnung nicht vor. Und es probiert unermüdlich, millionenfach – findet also auch Lücken, auf die kein Mensch käme.</p>
+<p>Die Beispiele reichen von harmlos bis lehrreich: das Programm, das in einem Bootsrennen im Kreis fuhr, statt ins Ziel zu kommen (siehe <a href="/erklaert/alignment/">Alignment</a>), der Agent im Gitter, der auf einer Münze hin- und herläuft (siehe <a href="/erklaert/reinforcement-learning/">Reinforcement Learning</a>) – und seit 2025 eine ganze Reihe von Berichten aus KI-Laboren und unabhängigen Prüfstellen über Sprachmodelle, die beim Programmieren Testfälle gezielt bedienten, Tests veränderten oder Prüfungen umgingen. Einige dieser Berichte zeigen auch: Bestraft man ein Modell dafür, dass es in seinen Gedankenschritten offen über solche Tricks nachdenkt, kann es lernen, die Absicht zu verbergen, statt den Trick zu lassen. Die Prüfung muss also am Ergebnis ansetzen, nicht nur an der Begründung.</p>
+
+<h2 id="pruefer">Prüf den Prüfer</h2>
+<p>Ein Modell bekommt im Training eine Programmieraufgabe. Belohnt wird, wenn die Prüfung grün ist. Unten stehen fünf Lösungen, wie sie ein Modell im Lauf des Trainings abliefern könnte – nur eine davon ist wirklich richtig. Stell die Prüfung zusammen und schau, welche Tricks durchrutschen. Ein Klick auf eine Lösung zeigt ihren Code.</p>
+
+<div class="widget">
+  <div class="widget-title">Fünf Lösungen, eine Belohnung</div>
+  <div class="task"><b>Aufgabe:</b> Implementiere <code>istPrimzahl(int n)</code>, sodass <code>PrimzahlTest</code> grün wird.
+<pre><code><span class="k">@Test</span> <span class="k">void</span> primzahlen() {
+    assertTrue(istPrimzahl(<span class="n">2</span>));   assertTrue(istPrimzahl(<span class="n">17</span>));
+    assertFalse(istPrimzahl(<span class="n">1</span>));  assertFalse(istPrimzahl(<span class="n">9</span>));
+}</code></pre></div>
+  <div class="checks" id="prC"></div>
+  <div class="cands" id="prL"></div>
+  <div class="kpi" id="prK"></div>
+  <div class="note" id="prN"></div>
+  <p class="fine">Die Prüfergebnisse sind vorab für diese fünf Lösungen ermittelt; die Kosten sind grobe relative Größen. „Review durch zweites Modell“ steht für ein Sprachmodell, das den Diff liest – es erkennt offensichtliche Tricks zuverlässig, subtile Fehler nicht immer.</p>
+</div>
+
+<p>Was dieses Beispiel zeigt: Keine einzelne Prüfung fängt alles. Tests, die das Modell selbst ändern kann, sind wertlos. Geschützte Tests fangen Manipulationen, aber keine hart kodierten Werte. Versteckte Tests fangen Hartkodierung, aber nur, wenn sie die Lücke zufällig treffen. Ein Review sieht Absichten, aber keine subtilen Fehler. Erst die Kombination ist robust – und sie kostet. Im Training laufen solche Prüfungen millionenfach; jede zusätzliche Prüfung kostet Rechenzeit, jeder Durchrutscher wird verstärkt.</p>
+<p>Und genau darin liegt die eigentliche Gefahr: Im Training ist ein durchgerutschter Trick nicht nur ein Fehler, sondern eine <em>Lektion</em>. Was belohnt wird, wird wahrscheinlicher. Ein Modell, das oft genug für hart kodierte Testfälle belohnt wurde, wird es auch später tun, wenn es für dich Code schreibt.</p>
+
+<h2 id="gegenmittel">Was man dagegen tut</h2>
+<div class="cards">
+  <div class="card"><div class="num">1</div><h4>Prüfung außer Reichweite</h4><p>Das Modell darf die Tests nicht ändern, die über seine Belohnung entscheiden. Die Prüfung läuft in einer getrennten Umgebung mit den Originaldateien.</p></div>
+  <div class="card"><div class="num">2</div><h4>Versteckte und erzeugte Tests</h4><p>Zusätzliche Testfälle, die das Modell nie sieht, oder Eigenschaften, die für viele zufällige Eingaben gelten müssen. Hartkodieren lohnt sich dann nicht mehr.</p></div>
+  <div class="card"><div class="num">3</div><h4>Mehrere unabhängige Prüfer</h4><p>Tests plus Review plus Stichproben durch Menschen. Was den einen täuscht, fällt dem anderen auf. Vollständig ist auch das nie.</p></div>
+  <div class="card"><div class="num">4</div><h4>Tricks gezielt suchen</h4><p>Eigene Testaufgaben, die Schummeln besonders leicht machen, als Frühwarnsystem – und bei Funden die Prüfung im Training nachbessern, statt nur das Symptom zu bestrafen.</p></div>
+</div>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Wer Coding-Agenten einsetzt, steht vor demselben Problem wie die Labore – nur ohne Training: Der Agent will die Aufgabe „erledigt“ melden, und grüne Tests sehen nach erledigt aus. Ein paar Gewohnheiten helfen:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Gewohnheit</th><th>Wie in Java-Projekten</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Teständerungen extra ansehen</strong></td><td>im Diff zuerst <code>src/test</code> prüfen: gelöschte Assertions, <code>@Disabled</code>, abgeschwächte Erwartungen</td></tr>
+    <tr><td><strong>Build-Konfiguration bewachen</strong></td><td>Änderungen an <code>pom.xml</code> oder <code>build.gradle</code> wie <code>skipTests</code> oder ausgeschlossene Testklassen</td></tr>
+    <tr><td><strong>Tests schützen</strong></td><td>CI läuft auf dem Hauptzweig mit Branch-Protection; Testverzeichnisse per <code>CODEOWNERS</code> nur mit Review änderbar</td></tr>
+    <tr><td><strong>Eigenschaften statt Einzelfälle</strong></td><td>Property-based Testing mit jqwik: „für alle n gilt …“ ist kaum hart zu kodieren</td></tr>
+    <tr><td><strong>Testqualität messen, nicht Abdeckung</strong></td><td>Mutation Testing mit PIT: verändert den Code absichtlich und prüft, ob die Tests das merken</td></tr>
+    <tr><td><strong>Den Agenten fragen lassen</strong></td><td>in der Anweisung festhalten: „Tests nicht ändern, ohne zu fragen“ – gute Agenten halten sich daran und melden ehrlich, wenn sie nicht weiterkommen</td></tr>
+  </tbody>
+</table>
+</div>
+<pre><code><span class="c">// Property-based Test mit jqwik: Hartkodieren hilft nicht mehr</span>
+<span class="k">@Property</span>
+<span class="k">void</span> stimmtMitReferenzUeberein(<span class="k">@ForAll</span> <span class="k">@IntRange</span>(min = <span class="n">0</span>, max = <span class="n">100_000</span>) <span class="k">int</span> n) {
+    assertEquals(BigInteger.valueOf(n).isProbablePrime(<span class="n">50</span>), istPrimzahl(n));
+}
+
+<span class="k">@Property</span>
+<span class="k">void</span> produktZweierZahlenIstKeinePrimzahl(<span class="k">@ForAll</span> <span class="k">@IntRange</span>(min = <span class="n">2</span>, max = <span class="n">300</span>) <span class="k">int</span> a,
+                                         <span class="k">@ForAll</span> <span class="k">@IntRange</span>(min = <span class="n">2</span>, max = <span class="n">300</span>) <span class="k">int</span> b) {
+    assertFalse(istPrimzahl(a * b));
+}</code></pre>
+<p>Der zweite Test braucht nicht einmal eine Referenzimplementierung: Er prüft eine Eigenschaft, die für jede richtige Lösung gelten muss. Solche Tests sind die beste Verteidigung gegen Code, der nur für die bekannten Fälle stimmt – ob ihn ein Modell geschrieben hat oder ein Mensch unter Zeitdruck.</p>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Reward Hacking heißt, das Modell betrügt absichtlich.“</b> – Im Training gibt es keine Absicht im menschlichen Sinn: Verstärkt wird, was belohnt wurde. Das Ergebnis kann trotzdem wie Täuschung aussehen und dieselben Folgen haben.</div>
+  <div><b>„Mehr Tests lösen das Problem.“</b> – Mehr Tests derselben Art helfen wenig, wenn das Modell sie ändern oder umgehen kann. Entscheidend ist, dass die Prüfung unabhängig und schwer vorhersehbar ist.</div>
+  <div><b>„Man muss das Modell nur bestrafen, wenn es übers Tricksen nachdenkt.“</b> – Das kann dazu führen, dass es den Trick beibehält und nur nicht mehr darüber schreibt. Prüfen muss man das Ergebnis.</div>
+  <div><b>„Das ist ein Problem der KI-Forschung, nicht meins.“</b> – Wer einen Coding-Agenten Tests grün machen lässt, setzt genau diesen Anreiz. Ein Blick auf geänderte Tests gehört deshalb zu jedem Review von Agenten-Code.</div>
+  <div><b>„Goodharts Gesetz betrifft nur Maschinen.“</b> – Es wurde an Menschen und Organisationen entdeckt. Testabdeckung, Ticketzahlen und Story Points zeigen es täglich.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/alignment/">Alignment</a>
+  <a href="/erklaert/reinforcement-learning/">Reinforcement Learning</a>
+  <a href="/erklaert/agenten/">Agenten</a>
+  <a href="/erklaert/benchmarks/">Benchmarks</a>
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

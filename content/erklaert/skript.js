@@ -28,6 +28,7 @@
     "mixture-of-experts": ["Mixture of Experts", "Riesige Modelle, von denen pro Token nur ein kleiner Teil rechnet.", 5, 1],
     "destillation": ["Destillation", "Wie ein großes Modell ein kleines unterrichtet – mit mehr als nur richtigen Antworten.", 6, 1],
     "interpretierbarkeit": ["Interpretierbarkeit", "In ein Modell hineinschauen: Merkmale, Schaltkreise und das Golden-Gate-Experiment.", 8, 2],
+    "reward-hacking": ["Reward Hacking", "Wenn ein System tut, was belohnt wird, statt was gemeint ist – am Beispiel eines Coding-Modells, das Tests austrickst.", 9, 2],
     "alignment": ["Alignment", "Wie ein System tut, was wir wollen – nicht nur, was wir gemessen haben. Die Brücke zur Philosophie.", 7, 1]
   };
   const NEEDS = {
@@ -38,7 +39,7 @@
     "inferenz":["parameter","transformer"], "open-weights":["parameter","inferenz"], "multimodal":["token","embedding"],
     "wissensstichtag":["training"], "benchmarks":["training"], "diffusion":["neuronales-netz","embedding"],
     "mixture-of-experts":["transformer","inferenz"], "destillation":["training","temperatur"],
-    "interpretierbarkeit":["neuronales-netz","embedding"], "alignment":["training"]
+    "interpretierbarkeit":["neuronales-netz","embedding"], "alignment":["training"], "reward-hacking":["reinforcement-learning","alignment"]
   };
   const STAGES = [
     ["e0","Etappe 0","Begriffe klären","Bevor es losgeht: Wie hängen KI, maschinelles Lernen, Deep Learning und Sprachmodelle zusammen?",["ki-ml-deep-learning"]],
@@ -49,7 +50,7 @@
     ["e5","Etappe 5","Darüber hinaus","Wie aus dem Modell mehr wird: aus Belohnung lernen, nachdenken, nachschlagen, handeln.",["reinforcement-learning","reasoning","rag","agenten"]],
     ["e6","Etappe 6","In der Praxis","Was man für den echten Einsatz wissen sollte: Tempo, Betrieb, Bilder als Eingabe, Aktualität, Vergleichbarkeit.",["inferenz","open-weights","multimodal","wissensstichtag","benchmarks"]],
     ["e6b","Etappe 6b","Bilder","Ein Seitenblick: Wie KI-Bilder entstehen – auf ganz anderem Weg als Text.",["diffusion"]],
-    ["e7","Etappe 7","Tiefer und verantwortlich","Zwei Bauweisen für Fortgeschrittene, dann die Fragen: Was passiert innen – und tut das Modell, was es soll?",["mixture-of-experts","destillation","interpretierbarkeit","alignment"]]
+    ["e7","Etappe 7","Tiefer und verantwortlich","Zwei Bauweisen für Fortgeschrittene, dann die Fragen: Was passiert innen – und tut das Modell, was es soll?",["mixture-of-experts","destillation","interpretierbarkeit","alignment","reward-hacking"]]
   ];
   const PATHS = [
     ["Nur das Wichtigste","etwa 45 Minuten",["ki-ml-deep-learning","was-ist-ein-sprachmodell","token","kontextfenster","halluzination"]],

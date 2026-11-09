@@ -96,6 +96,7 @@
 <div class="related">
   <a href="/erklaert/training/">Training</a>
   <a href="/erklaert/reinforcement-learning/">Reinforcement Learning</a>
+  <a href="/erklaert/reward-hacking/">Reward Hacking</a>
   <a href="/erklaert/interpretierbarkeit/">Interpretierbarkeit</a>
   <a href="/erklaert/agenten/">Agenten</a>
   <a href="/erklaert/halluzination/">Halluzination</a>

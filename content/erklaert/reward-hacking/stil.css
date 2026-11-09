@@ -1,0 +1,56 @@
+/* Seiteneigene Stile (reward-hacking) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Reward Hacking ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg)}
+.erklaert .sl{display:grid;grid-template-columns:10em minmax(0,1fr) 3em;gap:10px;align-items:center;font-size:.86rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{font:600 .82rem var(--mono);text-align:right}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:minmax(0,1fr) 3em}.erklaert .sl > span{grid-column:1/-1}}
+
+/* Goodhart */
+.erklaert .gh{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start;margin-top:8px}
+@media (max-width:600px){.erklaert .gh{grid-template-columns:minmax(0,1fr)}}
+.erklaert #ghSvg{width:100%;height:auto;display:block}
+.erklaert .gbar{display:grid;grid-template-columns:7.5em minmax(0,1fr) 2.6em;gap:8px;align-items:center;font-size:.84rem;margin:6px 0}
+.erklaert .gbar .m{height:12px;border-radius:6px;background:var(--bg);overflow:hidden}
+.erklaert .gbar .m i{display:block;height:100%;transition:width .2s}
+.erklaert .gbar output{font:600 .8rem var(--mono);text-align:right}
+.erklaert .beh{font-size:.86rem;padding:10px 12px;border-radius:9px;background:var(--bg);margin-top:8px}
+
+/* Prüfer */
+.erklaert .task{font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg)}
+.erklaert .task pre{margin:6px 0 0;font-size:.74rem}
+.erklaert .checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:6px;margin:10px 0}
+.erklaert .checks label{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:9px;border:1px solid var(--line);background:var(--card);font-size:.84rem;cursor:pointer}
+.erklaert .checks label small{display:block;color:var(--muted);font-size:.74rem}
+.erklaert .checks label span.c{margin-left:auto;font:600 .72rem var(--mono);color:var(--muted);white-space:nowrap}
+.erklaert .cands{display:flex;flex-direction:column;gap:8px}
+.erklaert .cand{border:2px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden}
+.erklaert .cand.slip{border-color:var(--bad)}
+.erklaert .cand.ok{border-color:var(--ok)}
+.erklaert .cand .hd{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 12px;cursor:pointer}
+.erklaert .cand .hd b{font-size:.9rem}
+.erklaert .cand .hd small{display:block;color:var(--muted);font-size:.76rem}
+.erklaert .cand .vd{font:700 .74rem var(--sans);padding:4px 8px;border-radius:6px;white-space:nowrap;text-align:center}
+.erklaert .vd.rew{background:var(--ok-soft);color:var(--ok)}
+.erklaert .vd.rej{background:var(--bg);color:var(--muted)}
+.erklaert .vd.slip{background:var(--bad);color:#fff}
+.erklaert .cand .ck{display:flex;flex-wrap:wrap;gap:4px;padding:0 12px 8px}
+.erklaert .cand .ck span{font:.7rem var(--mono);padding:2px 6px;border-radius:5px;background:var(--bg)}
+.erklaert .cand .ck span.f{background:rgba(200,60,60,.14);color:var(--bad)}
+.erklaert .cand .ck span.p{color:var(--ok)}
+.erklaert .cand pre{margin:0;border-radius:0;border:0;border-top:1px solid var(--line);font-size:.74rem;display:none}
+.erklaert .cand.open pre{display:block}
+.erklaert .cand pre .del{color:var(--bad)}
+.erklaert .kpi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.erklaert .kpi div{padding:8px;border-radius:9px;background:var(--bg);text-align:center;font-size:.72rem;color:var(--muted)}
+.erklaert .kpi b{display:block;font:600 1.05rem var(--serif);color:var(--fg)}
+.erklaert .kpi .bad b{color:var(--bad)}.erklaert .kpi .good b{color:var(--ok)}
+@media (max-width:520px){.erklaert .kpi div{font-size:.66rem;padding:6px 4px}}
+

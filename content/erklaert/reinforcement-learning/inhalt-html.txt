@@ -69,7 +69,7 @@
   <p class="fine">Echt gerechnet im Browser: Q-Learning mit Lernrate 0,5 und Abzinsung 0,9. Farbe = bester erwarteter Wert des Feldes (grün hoch, rot niedrig), Pfeil = die Richtung, die der Agent dort derzeit für die beste hält.</p>
 </div>
 
-<p>Die zweite Einstellung zeigt das bekannteste Problem des Reinforcement Learning. Die Münze sollte nur ein kleiner Anreiz auf dem Weg sein – aber sie wächst nach, und der Agent entdeckt, dass Hin- und Herlaufen mehr einbringt als das Ziel. Er tut genau, was belohnt wird, nicht, was gemeint war: <strong>Reward Hacking</strong>. Mehr dazu unter <a href="/erklaert/alignment/">Alignment</a>.</p>
+<p>Die zweite Einstellung zeigt das bekannteste Problem des Reinforcement Learning. Die Münze sollte nur ein kleiner Anreiz auf dem Weg sein – aber sie wächst nach, und der Agent entdeckt, dass Hin- und Herlaufen mehr einbringt als das Ziel. Er tut genau, was belohnt wird, nicht, was gemeint war: <strong><a href="/erklaert/reward-hacking/">Reward Hacking</a></strong>. Mehr dazu unter <a href="/erklaert/alignment/">Alignment</a>.</p>
 
 <h3>Von der Tabelle zum neuronalen Netz</h3>
 <p>Eine Tabelle mit einem Eintrag pro Zustand geht bei 30 Feldern. Ein Schachbrett hat mehr mögliche Stellungen, als das Universum Atome hat. Deshalb ersetzt man die Tabelle durch ein <a href="/erklaert/neuronales-netz/">neuronales Netz</a>, das aus dem Zustand die Werte <em>schätzt</em> und so auf nie gesehene Situationen verallgemeinert. Diese Kombination heißt <strong>Deep Reinforcement Learning</strong> und brachte die großen Erfolge:</p>
@@ -164,6 +164,7 @@
   <a href="/erklaert/training/">Training</a>
   <a href="/erklaert/reasoning/">Reasoning</a>
   <a href="/erklaert/alignment/">Alignment</a>
+  <a href="/erklaert/reward-hacking/">Reward Hacking</a>
   <a href="/erklaert/agenten/">Agenten</a>
   <a href="/erklaert/neuronales-netz/">Neuronales Netz</a>
   <a href="/erklaert/gradientenabstieg/">Gradientenabstieg</a>
