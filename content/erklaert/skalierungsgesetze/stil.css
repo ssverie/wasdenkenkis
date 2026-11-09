@@ -1,0 +1,24 @@
+/* Seiteneigene Stile (skalierungsgesetze) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Skalierungsgesetze ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg)}
+.erklaert .sl{display:grid;grid-template-columns:11em minmax(0,1fr) 6.5em;gap:10px;align-items:center;font-size:.86rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{font:600 .8rem var(--mono);text-align:right}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:minmax(0,1fr) 6.5em}.erklaert .sl > span{grid-column:1/-1}}
+.erklaert .sl[hidden], .erklaert .pre[hidden]{display:none}
+.erklaert .plot{width:100%;height:auto;display:block;margin-top:6px}
+.erklaert .kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+@media (max-width:560px){.erklaert .kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.erklaert .kpi div{padding:8px;border-radius:9px;background:var(--bg);text-align:center;font-size:.7rem;color:var(--muted)}
+.erklaert .kpi b{display:block;font:600 .98rem var(--mono);color:var(--fg)}
+.erklaert .kpi .hl b{color:var(--accent-2)}
+.erklaert .pre{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
+.erklaert .pre button{padding:4px 10px;font-size:.78rem}
+

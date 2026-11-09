@@ -1,0 +1,129 @@
+<div class="erklaert">
+<div class="tldr">
+<p><strong>Skalierungsgesetze</strong> beschreiben, wie der Fehler eines Sprachmodells sinkt, wenn man es größer macht, mit mehr Daten trainiert und mehr Rechenleistung hineinsteckt. Das Erstaunliche: Der Zusammenhang ist über viele Größenordnungen erstaunlich regelmäßig – ein <strong>Potenzgesetz</strong>. Jede Verzehnfachung der Rechenleistung verkleinert den vermeidbaren Fehler um einen ähnlichen Faktor. Damit lässt sich vor einem teuren Training vorhersagen, wie gut das Ergebnis wird.</p>
+<p>2022 zeigte die <strong>Chinchilla</strong>-Studie, dass viele Modelle zu groß und zu kurz trainiert waren: Bei festem Budget sollten Modellgröße und Datenmenge etwa gleich schnell wachsen. Heute trainiert man Modelle oft bewusst länger, weil kleinere Modelle billiger im Betrieb sind. Und seit 2024 ist eine zweite Achse hinzugekommen: Rechenleistung beim <em>Antworten</em> – längeres Nachdenken macht Modelle ebenfalls besser.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#achsen">Drei Regler: Größe, Daten, Rechenleistung</a></li>
+  <li><a href="#potenz">Ein Potenzgesetz</a></li>
+  <li><a href="#chinchilla">Groß oder lange? Die Chinchilla-Regel</a></li>
+  <li><a href="#emergenz">Tauchen Fähigkeiten plötzlich auf?</a></li>
+  <li><a href="#grenzen">Grenzen – und neue Achsen</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="achsen">Drei Regler: Größe, Daten, Rechenleistung</h2>
+<p>Beim <a href="/erklaert/training/">Training</a> eines Sprachmodells gibt es drei Größen, die man wählen kann:</p>
+<div class="cards">
+  <div class="card"><div class="num">N</div><h4>Modellgröße</h4><p>Die Zahl der <a href="/erklaert/parameter/">Parameter</a>, also der Gewichte, die beim Training eingestellt werden. Heute von wenigen Milliarden bis weit über eine Billion.</p></div>
+  <div class="card"><div class="num">D</div><h4>Datenmenge</h4><p>Die Zahl der <a href="/erklaert/token/">Tokens</a>, die das Modell im Training zu sehen bekommt. Große Modelle werden mit zweistelligen Billionen Tokens trainiert.</p></div>
+  <div class="card"><div class="num">C</div><h4>Rechenleistung</h4><p>Die Zahl der Rechenoperationen. Als Faustregel gilt C ≈ 6 · N · D: Für jeden Parameter und jedes Token gibt es eine Vorwärts- und eine doppelt so teure Rückwärtsrechnung (<a href="/erklaert/gradientenabstieg/">Backpropagation</a>).</p></div>
+</div>
+<p>Gemessen wird der Erfolg am <strong>Verlust</strong>: wie überrascht das Modell im Schnitt vom tatsächlich nächsten Token ist. 2020 zeigte eine Studie von OpenAI (Kaplan und Kollegen), dass dieser Verlust über sieben Größenordnungen hinweg einer einfachen Kurve folgt.</p>
+
+<h2 id="potenz">Ein Potenzgesetz</h2>
+<p>Ein Potenzgesetz hat die Form <code>Fehler ≈ a / C<sup>b</sup></code>. Auf normaler Achse sieht das aus wie eine Kurve, die schnell abfällt und dann immer flacher wird. Trägt man beide Achsen logarithmisch auf, wird daraus eine <strong>Gerade</strong>. Schieb die Rechenleistung hoch und schalte zwischen den Darstellungen um:</p>
+
+<div class="widget">
+  <div class="widget-title">Mehr Rechenleistung, weniger Fehler</div>
+  <div class="seg" id="pwA"><button data-a="lin">Normale Achsen</button><button data-a="log" aria-pressed="true">Logarithmische Achsen</button></div>
+  <div class="sl"><span>Rechenleistung C</span><input type="range" id="pwC" min="180" max="270" value="230"><output id="pwCo"></output></div>
+  <svg class="plot" id="pwS" viewBox="0 0 500 220" role="img" aria-label="Verlust abhängig von der Rechenleistung"></svg>
+  <div class="kpi" id="pwK"></div>
+  <div class="note" id="pwN"></div>
+  <p class="fine">Modellhaft, aber mit echten Zahlen: Verlustformel und Konstanten aus der Chinchilla-Studie (Hoffmann und Kollegen, 2022), jeweils mit der für das Budget günstigsten Aufteilung von Größe und Daten. 10²⁴ Rechenoperationen entsprechen grob dem Training eines Modells der Größenklasse von 2022.</p>
+</div>
+
+<p>Die Gerade im Log-Log-Bild ist der Kern des Ganzen: Man kann ein paar kleine, billige Modelle trainieren, die Gerade durch ihre Ergebnisse legen und verlängern – und so vorhersagen, was ein hundertmal größeres Training bringen wird, bevor man Millionen dafür ausgibt. Genau so planen die großen Labore. Die Kehrseite steht ebenfalls im Bild: Jede gleich große Verbesserung kostet zehnmal so viel wie die vorige. Fortschritt durch Skalierung ist planbar, aber exponentiell teuer.</p>
+
+<h2 id="chinchilla">Groß oder lange? Die Chinchilla-Regel</h2>
+<p>Bei festem Budget C muss man sich entscheiden: ein großes Modell mit wenig Daten oder ein kleines mit viel Daten – denn C ≈ 6·N·D. 2022 fand ein Team von DeepMind (Hoffmann und Kollegen), dass die damals größten Modelle falsch gewichtet waren. Ihr Modell <strong>Chinchilla</strong> mit 70 Milliarden Parametern und 1,4 Billionen Tokens schlug das viermal größere Gopher (280 Milliarden Parameter, 300 Milliarden Tokens) – mit etwa gleich viel Rechenleistung.</p>
+
+<div class="widget">
+  <div class="widget-title">Das gleiche Budget, anders verteilt</div>
+  <div class="seg" id="chM"><button data-m="train" aria-pressed="true">Nur das Training zählt</button><button data-m="use">Auch der Betrieb zählt</button></div>
+  <div class="pre" id="chP"><button data-n="280" data-c="5.04e23">Gopher (2021)</button><button data-n="70" data-c="5.88e23">Chinchilla (2022)</button></div>
+  <div class="sl" id="chBud"><span>Budget C</span><input type="range" id="chC" min="200" max="260" value="238"><output id="chCo"></output></div>
+  <div class="sl" id="chUse" hidden><span>Nutzung danach</span><input type="range" id="chU" min="0" max="40" value="20"><output id="chUo"></output></div>
+  <div class="sl"><span>Modellgröße N</span><input type="range" id="chN" min="80" max="130" value="114"><output id="chNo"></output></div>
+  <svg class="plot" id="chS" viewBox="0 0 500 200" role="img" aria-label="Verlust oder Kosten abhängig von der Modellgröße"></svg>
+  <div class="kpi" id="chK"></div>
+  <div class="note" id="chN2"></div>
+</div>
+
+<p>Die zweite Einstellung zeigt, warum heutige Modelle fast immer weit über „Chinchilla-optimal“ hinaus trainiert werden. Chinchilla optimiert nur die Trainingskosten. Ein Modell wird danach aber millionenfach benutzt, und jede Antwort kostet Rechenleistung proportional zur Modellgröße. Ein kleineres Modell, das dafür viel länger trainiert wurde, ist im Betrieb billiger und schneller. Metas Llama 3 mit 8 Milliarden Parametern wurde 2024 mit rund 15 Billionen Tokens trainiert – fast 2000 Tokens pro Parameter statt etwa 20. Das Training ist dadurch teurer als nötig, aber jede Antwort billiger.</p>
+
+<h2 id="emergenz">Tauchen Fähigkeiten plötzlich auf?</h2>
+<p>Der Verlust sinkt glatt. Bestimmte Fähigkeiten scheinen dagegen sprunghaft aufzutauchen: Ein kleines Modell kann dreistellige Zahlen nicht addieren, ein etwas größeres plötzlich schon. Man nannte das <strong>Emergenz</strong>. 2023 zeigte eine Studie (Schaeffer und Kollegen), dass ein Teil dieser Sprünge an der Messung liegt: Wer nur „ganze Antwort richtig“ zählt, sieht einen Sprung, auch wenn die zugrunde liegende Fähigkeit gleichmäßig wächst.</p>
+
+<div class="widget">
+  <div class="widget-title">Glatte Fähigkeit, sprunghafte Messung</div>
+  <div class="seg" id="emK"><button data-k="1">Antwort aus 1 Token</button><button data-k="5" aria-pressed="true">aus 5 Tokens</button><button data-k="20">aus 20 Tokens</button></div>
+  <svg class="plot" id="emS" viewBox="0 0 500 200" role="img" aria-label="Pro-Token-Genauigkeit und Anteil ganz richtiger Antworten"></svg>
+  <div class="note" id="emN"></div>
+  <p class="fine">Modellhaft: Die Genauigkeit pro Token steigt gleichmäßig mit dem Logarithmus der Rechenleistung. Eine Antwort ist nur dann ganz richtig, wenn alle Tokens stimmen – Wahrscheinlichkeit p hoch k.</p>
+</div>
+
+<p>Ganz erledigt ist die Frage damit nicht: Manche Fähigkeiten zeigen auch bei feinerer Messung deutliche Knicke, und für den Nutzer zählt am Ende nur, ob die ganze Antwort stimmt. Aber die Lehre ist wichtig: Ob etwas „plötzlich“ auftaucht, hängt oft davon ab, wie man hinschaut.</p>
+
+<h2 id="grenzen">Grenzen – und neue Achsen</h2>
+<p>Hält das ewig? Drei Grenzen werden diskutiert:</p>
+<div class="cards">
+  <div class="card"><div class="num">1</div><h4>Daten</h4><p>Hochwertiger öffentlicher Text ist endlich. Schätzungen (etwa von Epoch AI) sahen den Bestand bei anhaltendem Wachstum irgendwann zwischen 2026 und 2032 ausgeschöpft. Antworten darauf sind synthetische Daten, mehrfaches Lesen derselben Daten und andere Datenquellen wie Bilder, Video und Code-Ausführung.</p></div>
+  <div class="card"><div class="num">2</div><h4>Kosten und Energie</h4><p>Die Rechenleistung für die größten Trainingsläufe ist über Jahre um ein Vielfaches pro Jahr gewachsen. Jede weitere Verzehnfachung bedeutet neue Rechenzentren, Chips und Stromanschlüsse.</p></div>
+  <div class="card"><div class="num">3</div><h4>Der Verlust ist nicht alles</h4><p>Ein kleinerer Verlust heißt nicht automatisch, dass ein Modell nützlicher, ehrlicher oder sicherer ist. Was Nutzer brauchen, misst man mit <a href="/erklaert/benchmarks/">Benchmarks</a> – und die sättigen schnell.</p></div>
+</div>
+<p>Gleichzeitig sind neue Skalierungsachsen hinzugekommen. Seit 2024 zeigen <a href="/erklaert/reasoning/">Reasoning-Modelle</a>, dass auch die Rechenleistung beim Antworten skaliert: Lässt man ein Modell länger nachdenken, wird es bei schwierigen Aufgaben verlässlich besser – ebenfalls in einer Kurve, die mit dem Logarithmus der Rechenzeit steigt. Und das <a href="/erklaert/reinforcement-learning/">Reinforcement Learning</a> nach dem Vortraining hat sich als eigene Phase etabliert, in die immer mehr Rechenleistung fließt. Statt „größer“ heißt Skalierung heute: an mehreren Stellen mehr rechnen.</p>
+<p>Hinter allem steht eine Beobachtung, die der KI-Forscher Richard Sutton 2019 „die bittere Lektion“ nannte: In der Geschichte der KI haben allgemeine Verfahren, die mit mehr Rechenleistung besser werden, auf Dauer fast immer gegen ausgeklügeltes, von Menschen eingebautes Wissen gewonnen.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Ein Potenzgesetz erkennt man mit demselben Trick, mit dem man Laufzeitmessungen auswertet: logarithmieren und eine Gerade anpassen. Die Steigung ist der Exponent.</p>
+<pre><code><span class="c">// Messpunkte kleiner Testläufe (Beispielwerte): Rechenleistung und Verlust</span>
+<span class="k">double</span>[] c    = { <span class="n">1e18</span>, <span class="n">1e19</span>, <span class="n">1e20</span>, <span class="n">1e21</span> };
+<span class="k">double</span>[] loss = { <span class="n">3.95</span>, <span class="n">3.40</span>, <span class="n">2.98</span>, <span class="n">2.66</span> };
+
+<span class="c">// log-log: aus Fehler ≈ a · C^(−b) wird log(Fehler) = log(a) − b · log(C) – eine Gerade</span>
+SimpleRegression r = <span class="k">new</span> SimpleRegression();        <span class="c">// Apache Commons Math</span>
+<span class="k">for</span> (<span class="k">int</span> i = <span class="n">0</span>; i &lt; c.length; i++) r.addData(Math.log10(c[i]), Math.log10(loss[i]));
+
+<span class="k">double</span> b = -r.getSlope();                            <span class="c">// der Exponent</span>
+<span class="k">double</span> vorhersage = Math.pow(<span class="n">10</span>, r.predict(<span class="n">24</span>));      <span class="c">// Verlust bei 10^24 – extrapoliert</span></code></pre>
+<p>In der Praxis zieht man vorher noch den nicht vermeidbaren Rest ab (in der Chinchilla-Formel etwa 1,69), denn nur der Teil darüber folgt der Geraden. Die Tabelle übersetzt die Begriffe:</p>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Potenzgesetz</strong></td><td>wie O-Notation, nur umgekehrt: nicht „wie stark wächst der Aufwand“, sondern „wie stark sinkt der Fehler mit dem Aufwand“</td></tr>
+    <tr><td><strong>Log-Log-Diagramm</strong></td><td>die übliche Darstellung für Benchmarks über viele Größenordnungen – Geraden sind dort Potenzgesetze</td></tr>
+    <tr><td><strong>Chinchilla-optimal</strong></td><td>die günstigste Aufteilung eines festen Build-Budgets – ohne Betriebskosten</td></tr>
+    <tr><td><strong>Übertrainieren für den Betrieb</strong></td><td>einmalig länger kompilieren und optimieren, damit jede Ausführung schneller läuft – wie Ahead-of-Time-Kompilierung</td></tr>
+    <tr><td><strong>Rechenleistung beim Antworten</strong></td><td>mehr Zeit für die Suche geben, statt einen besseren Algorithmus zu bauen</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Skalierungsgesetze sind Naturgesetze.“</b> – Es sind empirische Regelmäßigkeiten für eine bestimmte Bauweise und bestimmte Daten. Sie haben sich erstaunlich gut gehalten, aber nichts garantiert, dass sie unbegrenzt weitergelten.</div>
+  <div><b>„Doppelt so viel Rechenleistung, doppelt so gut.“</b> – Der Fehler sinkt nach einem Potenzgesetz: Für gleich große Fortschritte braucht man jedes Mal ein Vielfaches mehr.</div>
+  <div><b>„Größer ist immer besser.“</b> – Bei festem Budget ist ein zu großes, zu kurz trainiertes Modell schlechter als ein kleineres. Und im Betrieb sind kleinere Modelle billiger und schneller.</div>
+  <div><b>„Ein kleinerer Verlust heißt ein klügeres Modell.“</b> – Er heißt, dass das Modell Text besser vorhersagt. Wie hilfreich, ehrlich oder sicher es ist, entscheidet zu einem großen Teil das Training danach.</div>
+  <div><b>„Die Skalierung ist vorbei.“</b> – Das reine Vergrößern des Vortrainings ist teurer und schwieriger geworden. Dafür wird an neuen Stellen skaliert: beim Nachdenken während der Antwort und beim Reinforcement Learning.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/gradientenabstieg/">Gradientenabstieg</a>
+  <a href="/erklaert/reasoning/">Reasoning</a>
+  <a href="/erklaert/benchmarks/">Benchmarks</a>
+  <a href="/erklaert/inferenz/">Inferenz</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>
