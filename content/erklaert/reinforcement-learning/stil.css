@@ -1,0 +1,77 @@
+/* Seiteneigene Stile (reinforcement-learning) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Reinforcement Learning ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .lbl{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg)}
+.erklaert .ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
+.erklaert .ctl button{padding:6px 11px;font-size:.84rem}
+.erklaert .sl{display:grid;grid-template-columns:9em minmax(0,1fr) 3em;gap:10px;align-items:center;font-size:.86rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{font:600 .82rem var(--mono);text-align:right}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:minmax(0,1fr) 3em}.erklaert .sl > span{grid-column:1/-1}}
+
+/* Kreislauf */
+.erklaert .loop{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;margin:1em 0}
+.erklaert .loop .bx{padding:12px;border-radius:12px;background:var(--card);border:1px solid var(--line);text-align:center;font-size:.86rem}
+.erklaert .loop .bx b{display:block;font-size:1rem;margin-bottom:2px}
+.erklaert .loop .ar{display:flex;flex-direction:column;gap:6px;font:.76rem var(--mono);color:var(--muted);text-align:center}
+.erklaert .loop .ar span{white-space:nowrap}
+
+/* Bandit */
+.erklaert .arms{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.erklaert .arm{padding:12px;border-radius:12px;border:2px solid var(--line);background:var(--card);text-align:center;cursor:pointer;font:inherit;color:var(--fg)}
+.erklaert .arm:hover{border-color:var(--accent)}
+.erklaert .arm .ic{font-size:1.8rem;line-height:1.2}
+.erklaert .arm .st{font:.76rem var(--mono);color:var(--muted);margin-top:4px}
+.erklaert .arm.win{border-color:var(--ok);background:var(--ok-soft)}
+.erklaert .arm.lose{border-color:var(--bad)}
+.erklaert .arm.best{outline:3px solid var(--accent-2);outline-offset:2px}
+.erklaert .kpi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+@media (max-width:520px){.erklaert .kpi div{font-size:.66rem;padding:6px 4px}.erklaert .kpi b{font-size:.95rem}}
+.erklaert .kpi div{padding:8px;border-radius:9px;background:var(--bg);text-align:center;font-size:.72rem;color:var(--muted)}
+.erklaert .kpi b{display:block;font:600 1.05rem var(--serif);color:var(--fg)}
+.erklaert .cmp{width:100%;border-collapse:collapse;font-size:.84rem;margin-top:8px}
+.erklaert .cmp td, .erklaert .cmp th{padding:5px 8px;border-bottom:1px solid var(--line)}
+.erklaert .cmp th{font:700 .7rem var(--sans);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:left}
+.erklaert .cmp td.n{text-align:right;font-family:var(--mono)}
+.erklaert .cmp tr.top td{font-weight:700;color:var(--ok)}
+
+/* Gitter */
+.erklaert .gw{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:640px){.erklaert .gw{grid-template-columns:minmax(0,1fr)}}
+.erklaert .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;max-width:360px}
+.erklaert .grid div{aspect-ratio:1;border-radius:6px;display:grid;place-items:center;position:relative;font:700 1rem var(--sans);color:#1b1b1b;overflow:hidden}
+.erklaert .grid div small{position:absolute;bottom:2px;right:4px;font:500 .58rem var(--mono);color:rgba(0,0,0,.55)}
+.erklaert .grid div.wall{background:#3a3a40 !important}
+.erklaert .grid div.goal{outline:3px solid var(--ok);outline-offset:-3px}
+.erklaert .grid div.trap{outline:3px solid var(--bad);outline-offset:-3px}
+.erklaert .grid div.coin{outline:3px dashed #d9a43b;outline-offset:-3px}
+.erklaert .grid div.ag::after{content:"";position:absolute;width:42%;height:42%;border-radius:50%;background:var(--accent);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.erklaert .grid div.path{box-shadow:inset 0 0 0 3px var(--accent)}
+.erklaert .grid .arw{font-size:1.15rem;opacity:.85}
+@media (max-width:420px){.erklaert .grid div{font-size:.85rem}.erklaert .grid div small{display:none}}
+.erklaert #gwSvg{width:100%;height:auto;display:block;margin-top:6px}
+
+/* Risiken */
+.erklaert .risk{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:1em 0}
+@media (max-width:620px){.erklaert .risk{grid-template-columns:minmax(0,1fr)}}
+.erklaert .risk > div{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent-2);border-radius:10px;padding:10px 14px}
+.erklaert .risk h4{margin:0 0 6px;font-size:1rem}
+.erklaert .risk p{margin:6px 0;font-size:.88rem}
+.erklaert .risk p span{display:block;font:700 .66rem var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+/* Policy */
+.erklaert .pol{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.erklaert .pol > div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) 3.4em;gap:10px;align-items:center;font-size:.84rem;padding:6px 8px;border-radius:8px;background:var(--bg)}
+@media (max-width:560px){.erklaert .pol > div{grid-template-columns:minmax(0,1fr) 3.4em}.erklaert .pol .meter{grid-column:1/-1;grid-row:2}}
+.erklaert .pol .meter{height:12px;border-radius:6px;background:var(--card);overflow:hidden;border:1px solid var(--line)}
+.erklaert .pol .meter i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.erklaert .pol output{font:600 .82rem var(--mono);text-align:right}
+.erklaert .pol > div.hit{outline:2px solid var(--accent-2)}
+.erklaert .pol small{display:block;color:var(--muted);font-size:.74rem}
+

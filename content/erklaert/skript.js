@@ -13,6 +13,7 @@
     "temperatur": ["Temperatur", "Der Regler für Zufall bei der Auswahl, und warum dieselbe Frage verschiedene Antworten ergibt.", 8, 1],
     "halluzination": ["Halluzination", "Plausibel, aber falsch: warum das aus dem Prinzip folgt und was dagegen hilft.", 8, 1],
     "prompt": ["Prompt", "Was ein Modell als Eingabe bekommt, was der Systemprompt ist und wie man gut fragt.", 7, 1],
+    "reinforcement-learning": ["Reinforcement Learning", "Lernen aus Belohnung: wie Programme Go lernten – und Sprachmodelle das gründliche Nachdenken.", 9, 3],
     "reasoning": ["Reasoning", "Warum Modelle klüger antworten, wenn sie vorher Zwischenschritte aufschreiben.", 8, 2],
     "rag": ["RAG", "Nachschlagen statt erinnern: wie man einem Modell eigene Dokumente zugänglich macht.", 7, 1],
     "agenten": ["Agenten", "Modell plus Werkzeuge plus Schleife: wenn ein Sprachmodell nicht nur antwortet, sondern handelt.", 10, 2],
@@ -31,7 +32,7 @@
   const NEEDS = {
     "parameter":["neuronales-netz"], "embedding":["token"], "aufmerksamkeit":["embedding"], "transformer":["aufmerksamkeit"],
     "training":["neuronales-netz","parameter"], "kontextfenster":["token"], "temperatur":["was-ist-ein-sprachmodell"],
-    "halluzination":["temperatur"], "prompt":["kontextfenster"], "reasoning":["training","kontextfenster"],
+    "halluzination":["temperatur"], "prompt":["kontextfenster"], "reinforcement-learning":["training"], "reasoning":["training","kontextfenster"],
     "rag":["embedding","kontextfenster"], "agenten":["prompt","kontextfenster"],
     "inferenz":["parameter","transformer"], "open-weights":["parameter","inferenz"], "multimodal":["token","embedding"],
     "wissensstichtag":["training"], "benchmarks":["training"], "diffusion":["neuronales-netz","embedding"],
@@ -44,7 +45,7 @@
     ["e2","Etappe 2","Grundbausteine","Woraus ein Modell besteht und womit es rechnet: Netz, Zahlen, Wortstücke, Bedeutungsvektoren.",["neuronales-netz","parameter","token","embedding"]],
     ["e3","Etappe 3","Das Innenleben","Wie die Bausteine zusammenspielen und wie das Ganze trainiert wird.",["aufmerksamkeit","transformer","training"]],
     ["e4","Etappe 4","Im Gebrauch","Was man beim Benutzen erlebt – und warum: Gedächtnis, Zufall, Fehler, Fragen.",["kontextfenster","temperatur","halluzination","prompt"]],
-    ["e5","Etappe 5","Darüber hinaus","Wie aus dem Modell mehr wird: Nachdenken, Nachschlagen, Handeln.",["reasoning","rag","agenten"]],
+    ["e5","Etappe 5","Darüber hinaus","Wie aus dem Modell mehr wird: aus Belohnung lernen, nachdenken, nachschlagen, handeln.",["reinforcement-learning","reasoning","rag","agenten"]],
     ["e6","Etappe 6","In der Praxis","Was man für den echten Einsatz wissen sollte: Tempo, Betrieb, Bilder als Eingabe, Aktualität, Vergleichbarkeit.",["inferenz","open-weights","multimodal","wissensstichtag","benchmarks"]],
     ["e6b","Etappe 6b","Bilder","Ein Seitenblick: Wie KI-Bilder entstehen – auf ganz anderem Weg als Text.",["diffusion"]],
     ["e7","Etappe 7","Tiefer und verantwortlich","Zwei Bauweisen für Fortgeschrittene, dann die Fragen: Was passiert innen – und tut das Modell, was es soll?",["mixture-of-experts","destillation","interpretierbarkeit","alignment"]]
