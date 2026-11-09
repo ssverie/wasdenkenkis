@@ -1,0 +1,51 @@
+/* Seiteneigene Stile (prompt-injection) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Prompt-Injection ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg)}
+.erklaert .tg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:6px;margin:8px 0}
+.erklaert .tg label{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border-radius:9px;border:1px solid var(--line);background:var(--card);font-size:.84rem;cursor:pointer}
+.erklaert .tg label small{display:block;color:var(--muted);font-size:.74rem}
+
+/* Kontext */
+.erklaert .ctx{font:.8rem/1.6 var(--mono);border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+.erklaert .ctx div{padding:8px 12px;white-space:pre-wrap;overflow-wrap:anywhere;border-left:4px solid transparent}
+.erklaert .ctx .sys{background:var(--accent-soft);border-left-color:var(--accent)}
+.erklaert .ctx .usr{background:var(--ok-soft);border-left-color:var(--ok)}
+.erklaert .ctx .dat{background:var(--bg);border-left-color:var(--muted)}
+.erklaert .ctx .inj{background:rgba(200,60,60,.13);color:var(--fg);border-radius:4px;padding:0 2px}
+.erklaert .ctx.flat div{background:var(--card) !important;border-left-color:transparent !important}
+.erklaert .ctx.flat .inj{background:transparent}
+.erklaert .ctx .who{display:block;font:700 .66rem var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.erklaert .ctx.flat .who{display:none}
+.erklaert .tok{margin-top:8px;font:.66rem/1.5 var(--mono);color:var(--muted);overflow-wrap:anywhere;max-height:5.5em;overflow:hidden;position:relative}
+.erklaert .tok::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2em;background:linear-gradient(transparent,var(--card))}
+
+/* Dreigespann */
+.erklaert .tri{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:14px;align-items:center}
+@media (max-width:600px){.erklaert .tri{grid-template-columns:minmax(0,1fr)}}
+.erklaert #triSvg{width:100%;max-width:300px;height:auto;display:block;margin:0 auto}
+.erklaert .risk{padding:12px 14px;border-radius:10px;font-size:.88rem}
+.erklaert .risk b.l{display:block;font:700 .72rem var(--sans);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.erklaert .risk.low{background:var(--ok-soft)}.erklaert .risk.low b.l{color:var(--ok)}
+.erklaert .risk.mid{background:var(--accent-2-soft)}.erklaert .risk.mid b.l{color:var(--accent-2)}
+.erklaert .risk.high{background:rgba(200,60,60,.13)}.erklaert .risk.high b.l{color:var(--bad)}
+
+/* Schichten */
+.erklaert .lay{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.erklaert .lay > div{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:8px 10px;border-radius:9px;border:1px solid var(--line);background:var(--card);font-size:.84rem}
+.erklaert .lay > div small{display:block;color:var(--muted);font-size:.74rem}
+.erklaert .lay > div.off{opacity:.5}
+.erklaert .lay > div.stop{border-color:var(--ok);background:var(--ok-soft)}
+.erklaert .lay .st{font:600 .74rem var(--mono);white-space:nowrap}
+.erklaert .flow{display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:10px;font-size:.8rem}
+.erklaert .flow span{padding:4px 8px;border-radius:6px;background:var(--bg)}
+.erklaert .flow span.bad{background:var(--bad);color:#fff}
+.erklaert .flow span.good{background:var(--ok);color:#fff}
+.erklaert .flow i{color:var(--muted);font-style:normal}
+

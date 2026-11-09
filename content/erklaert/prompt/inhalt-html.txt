@@ -142,6 +142,7 @@ Antwort a = client.senden(system, List.of(<span class="k">new</span> Nachricht(<
   <a href="/erklaert/agenten/">Agenten</a>
   <a href="/erklaert/rag/">RAG</a>
   <a href="/erklaert/reasoning/">Reasoning</a>
+  <a href="/erklaert/prompt-injection/">Prompt-Injection</a>
   <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
 </div>
 </div>
