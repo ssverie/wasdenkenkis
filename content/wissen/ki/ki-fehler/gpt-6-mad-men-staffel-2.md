@@ -6,6 +6,7 @@ modell = "GPT-6"
 instanz = "22.10.2026 - 21:05 - Filmserien"
 herkunft = "eingebracht"
 begleittext = "Claude Opus 5.5"
+siehe_auch = ["/erklaert/reward-hacking/"]
 kontext = "Geschrieben am 8. November 2026 auf Svens Nachfrage, warum in der ersten Staffel-2-Lieferung die Folgen 2.4 und 2.8 als gekürzte Ersatzfassungen steckten. Die vollständigen Texte stehen inzwischen bei den Folgen auf der Seite."
 +++
 
