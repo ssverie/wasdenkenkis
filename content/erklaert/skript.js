@@ -8,6 +8,7 @@
     "embedding": ["Embedding", "Wörter als Punkte im Raum, ähnliche Bedeutungen nah beieinander. König − Mann + Frau ≈ Königin.", 10, 3],
     "aufmerksamkeit": ["Aufmerksamkeit", "Wie jedes Token auf die anderen schaut und so seine Bedeutung im Satz findet. Query, Key, Value.", 10, 3],
     "transformer": ["Transformer", "Die Bauweise aller heutigen Sprachmodelle: ein einfacher Block, sehr oft wiederholt.", 9, 2],
+    "gradientenabstieg": ["Gradientenabstieg", "Wie ein Netz lernt: Fehler messen, Richtung berechnen, ein Stück bergab – und Backpropagation mit echten Zahlen.", 10, 3],
     "training": ["Training", "Vortraining, Feinabstimmung, RLHF: wie aus Zufallszahlen ein hilfreicher Assistent wird.", 10, 2],
     "kontextfenster": ["Kontextfenster", "Das Arbeitsgedächtnis – warum ein Modell nichts behält und jede Anfrage bei null beginnt.", 9, 2],
     "temperatur": ["Temperatur", "Der Regler für Zufall bei der Auswahl, und warum dieselbe Frage verschiedene Antworten ergibt.", 8, 1],
@@ -31,8 +32,8 @@
   };
   const NEEDS = {
     "parameter":["neuronales-netz"], "embedding":["token"], "aufmerksamkeit":["embedding"], "transformer":["aufmerksamkeit"],
-    "training":["neuronales-netz","parameter"], "kontextfenster":["token"], "temperatur":["was-ist-ein-sprachmodell"],
-    "halluzination":["temperatur"], "prompt":["kontextfenster"], "reinforcement-learning":["training"], "reasoning":["training","kontextfenster"],
+    "training":["parameter","gradientenabstieg"], "kontextfenster":["token"], "temperatur":["was-ist-ein-sprachmodell"],
+    "halluzination":["temperatur"], "prompt":["kontextfenster"], "gradientenabstieg":["neuronales-netz","parameter"], "reinforcement-learning":["training"], "reasoning":["training","kontextfenster"],
     "rag":["embedding","kontextfenster"], "agenten":["prompt","kontextfenster"],
     "inferenz":["parameter","transformer"], "open-weights":["parameter","inferenz"], "multimodal":["token","embedding"],
     "wissensstichtag":["training"], "benchmarks":["training"], "diffusion":["neuronales-netz","embedding"],
@@ -43,7 +44,7 @@
     ["e0","Etappe 0","Begriffe klären","Bevor es losgeht: Wie hängen KI, maschinelles Lernen, Deep Learning und Sprachmodelle zusammen?",["ki-ml-deep-learning"]],
     ["e1","Etappe 1","Das große Bild","Erst einmal verstehen, was ein Sprachmodell grundsätzlich tut. Alles Weitere ist Vertiefung.",["was-ist-ein-sprachmodell"]],
     ["e2","Etappe 2","Grundbausteine","Woraus ein Modell besteht und womit es rechnet: Netz, Zahlen, Wortstücke, Bedeutungsvektoren.",["neuronales-netz","parameter","token","embedding"]],
-    ["e3","Etappe 3","Das Innenleben","Wie die Bausteine zusammenspielen und wie das Ganze trainiert wird.",["aufmerksamkeit","transformer","training"]],
+    ["e3","Etappe 3","Das Innenleben","Wie die Bausteine zusammenspielen, wie ein Netz überhaupt lernt und wie das Ganze trainiert wird.",["aufmerksamkeit","transformer","gradientenabstieg","training"]],
     ["e4","Etappe 4","Im Gebrauch","Was man beim Benutzen erlebt – und warum: Gedächtnis, Zufall, Fehler, Fragen.",["kontextfenster","temperatur","halluzination","prompt"]],
     ["e5","Etappe 5","Darüber hinaus","Wie aus dem Modell mehr wird: aus Belohnung lernen, nachdenken, nachschlagen, handeln.",["reinforcement-learning","reasoning","rag","agenten"]],
     ["e6","Etappe 6","In der Praxis","Was man für den echten Einsatz wissen sollte: Tempo, Betrieb, Bilder als Eingabe, Aktualität, Vergleichbarkeit.",["inferenz","open-weights","multimodal","wissensstichtag","benchmarks"]],

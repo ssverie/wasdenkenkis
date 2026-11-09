@@ -1,0 +1,126 @@
+<div class="erklaert">
+<div class="tldr">
+<p>Ein neuronales Netz lernt, indem es seine <a href="/erklaert/parameter/">Parameter</a> – oft Milliarden Zahlen – so lange verstellt, bis seine Antworten gut sind. Wie gut, misst eine einzige Zahl: der <strong>Verlust</strong> (Loss). <strong>Gradientenabstieg</strong> heißt: Für jeden Parameter ausrechnen, in welche Richtung er den Verlust verkleinern würde, alle ein kleines Stück in diese Richtung schieben, wiederholen. Wie ein Wanderer im Nebel, der immer dort weitergeht, wo es am steilsten bergab geht.</p>
+<p>Die Richtung für jeden Parameter heißt <strong>Gradient</strong>. Ihn für Milliarden Parameter einzeln durch Ausprobieren zu ermitteln, wäre unbezahlbar. <strong>Backpropagation</strong> berechnet alle Gradienten auf einmal: einmal vorwärts durchs Netz rechnen, dann den Fehler rückwärts schicken, Schicht für Schicht mit der Kettenregel. Fast jedes heutige KI-Modell, vom Bilderkenner bis zum Sprachmodell, wird so trainiert.</p>
+</div>
+
+<nav class="toc" aria-label="Inhalt">
+<strong>Inhalt</strong>
+<ol>
+  <li><a href="#idee">Bergab im Nebel</a></li>
+  <li><a href="#backprop">Backpropagation: alle Gradienten auf einmal</a></li>
+  <li><a href="#praxis">Wie man in der Praxis absteigt</a></li>
+  <li><a href="#java">Für Entwickler übersetzt</a></li>
+  <li><a href="#irrtuemer">Häufige Irrtümer</a></li>
+</ol>
+</nav>
+
+<h2 id="idee">Bergab im Nebel</h2>
+<p>Man stelle sich den Verlust als Gelände vor: Jede Kombination von Parameterwerten ist ein Ort, die Höhe ist der Fehler. Gesucht ist das tiefste Tal. Man sieht die Landschaft nicht – bei Milliarden Dimensionen ohnehin unmöglich –, aber man kann am aktuellen Ort die <strong>Steigung</strong> messen. Der Gradient ist genau das: ein Pfeil, der für jeden Parameter angibt, wie stark und in welche Richtung der Verlust steigt, wenn man ihn ein wenig vergrößert. Man geht in die Gegenrichtung. Wie weit, bestimmt die <strong>Lernrate</strong>.</p>
+<p>Das kleinste mögliche Beispiel hat nur zwei Parameter: eine Gerade <code>y = w · x + b</code>, die durch fünf Punkte gelegt werden soll. Links die Punkte und die aktuelle Gerade, rechts das Gelände über allen Werten von w und b – je dunkler, desto kleiner der Fehler:</p>
+
+<div class="widget">
+  <div class="widget-title">Eine Gerade lernt, durch fünf Punkte zu gehen</div>
+  <div class="sl"><span>Lernrate</span><input type="range" id="ftL" min="2" max="90" value="30"><output id="ftLo"></output></div>
+  <div class="fit">
+    <div><div class="lbl2">Daten und Gerade</div><svg id="ftD" viewBox="0 0 240 200" role="img" aria-label="Datenpunkte und angepasste Gerade"></svg></div>
+    <div><div class="lbl2">Verlust-Gelände (w waagerecht, b senkrecht)</div><svg id="ftS" viewBox="0 0 240 200" role="img" aria-label="Verlustlandschaft mit dem Weg des Gradientenabstiegs"></svg></div>
+  </div>
+  <div class="vals" id="ftV"></div>
+  <div class="ctl"><button id="ft1">1 Schritt</button><button id="ft10">+10</button><button id="ft100">+100</button><button id="ftR">Zurück zum Start</button><span class="r" id="ftC"></span></div>
+  <div class="note" id="ftN"></div>
+  <p class="fine">Echt gerechnet: mittlerer quadratischer Fehler, Gradient exakt abgeleitet. Ein Klick in das Gelände setzt einen neuen Startpunkt.</p>
+</div>
+
+<p>Drei Dinge zeigt schon dieses Mini-Beispiel. Bei kleiner Lernrate kommt man sicher, aber langsam an. Bei zu großer springt man über das Tal hinweg, und ab etwa 0,084 schaukelt sich das auf, bis die Werte explodieren. Und das Tal ist langgezogen: In Richtung w ist es steil, in Richtung b flach. Der Abstieg zickzackt deshalb erst quer und kriecht dann längs. Genau dieses Problem haben große Netze in Millionen Richtungen gleichzeitig – deshalb gibt es bessere Verfahren als den reinen Abstieg (weiter unten).</p>
+
+<h2 id="backprop">Backpropagation: alle Gradienten auf einmal</h2>
+<p>Für eine Gerade lässt sich der Gradient mit Schulmathematik hinschreiben. In einem Netz mit vielen Schichten hängt jeder Parameter über viele Zwischenschritte mit dem Ergebnis zusammen. Die Lösung ist die <strong>Kettenregel</strong>: Man rechnet vom Fehler aus rückwärts, Schicht für Schicht, und multipliziert dabei die lokalen Steigungen. Jede Schicht erfährt so, wie viel vom Fehler „auf ihr Konto“ geht, und reicht das an die Schicht darunter weiter.</p>
+<p>Geoffrey Hinton, der das Verfahren 1986 mit David Rumelhart und Ronald Williams bekannt machte, erklärt es gern an einem Netz, das Vögel erkennen soll: Mit Zufallsgewichten sagt es „0,5 – vielleicht ein Vogel“; nach einem Lernschritt sagt es 0,51. Das lässt sich mit einem winzigen Netz exakt nachrechnen – zwei Eingänge (wie stark ein Schnabel- und ein Flügeldetektor anschlagen), zwei versteckte Neuronen, ein Ausgang, sieben Parameter:</p>
+
+<div class="widget bpw">
+  <div class="widget-title">Ein Lernschritt mit echten Zahlen</div>
+  <div class="steps" id="bpS"></div>
+  <div class="scr"><svg id="bpSvg" viewBox="0 0 560 260" role="img" aria-label="Kleines Netz mit zwei Eingängen, zwei versteckten Neuronen und einem Ausgang"></svg></div>
+  <p class="scrh">Das Bild lässt sich seitlich verschieben.</p>
+  <h4 id="bpH"></h4>
+  <div class="calc" id="bpC"></div>
+  <div class="note" id="bpN"></div>
+  <div class="ctl"><button id="bpP">← Zurück</button><button id="bpX">Weiter →</button><span class="r" id="bpI"></span></div>
+  <p class="fine">σ ist die Sigmoid-Funktion: Sie quetscht jede Zahl zwischen 0 und 1, und ihre Steigung an der Stelle y ist y·(1−y). Verlust ½·(y − Ziel)².</p>
+</div>
+
+<p>Warum rückwärts? Man könnte jeden Parameter auch einzeln ein winziges Stück verändern und messen, wie sich der Verlust ändert. Das ergibt dieselben Zahlen, kostet aber zwei Durchläufe <em>pro Parameter</em>. Bei einem Sprachmodell mit hundert Milliarden Parametern wären das zweihundert Milliarden Durchläufe für einen einzigen Lernschritt. Backpropagation braucht einen Durchlauf vorwärts und einen rückwärts, gleich wie viele Parameter es gibt – weil die Zwischenergebnisse jeder Schicht wiederverwendet werden. Entwickler kennen das Prinzip als dynamische Programmierung.</p>
+
+<h2 id="praxis">Wie man in der Praxis absteigt</h2>
+<p>Der reine Gradientenabstieg aus dem ersten Beispiel wird für große Modelle in drei Punkten verbessert:</p>
+<div class="cards">
+  <div class="card"><div class="num">1</div><h4>Mini-Batches</h4><p>Den Gradienten über alle Trainingsdaten zu berechnen, dauert zu lange. Man nimmt einen kleinen Stapel zufälliger Beispiele, schätzt daraus die Richtung und geht sofort einen Schritt. Das heißt <strong>stochastischer Gradientenabstieg</strong>. Die Richtung ist verrauscht, dafür kommt man viel öfter voran – und das Rauschen hilft sogar, flache Mulden wieder zu verlassen.</p></div>
+  <div class="card"><div class="num">2</div><h4>Schwung</h4><p>Statt nur die aktuelle Steigung zu nutzen, merkt man sich die bisherige Bewegung und lässt sie nachwirken, wie eine Kugel, die bergab rollt (<strong>Momentum</strong>). Das glättet das Zickzack im langgezogenen Tal und trägt über kleine Hügel hinweg.</p></div>
+  <div class="card"><div class="num">3</div><h4>Eigene Schrittweite je Parameter</h4><p>Der Optimierer <strong>Adam</strong> (2014) führt für jeden Parameter Buch, wie groß und wie schwankend seine Gradienten bisher waren, und passt die Schrittweite einzeln an. Steile Richtungen bekommen kleine, flache große Schritte. Adam und seine Varianten sind heute Standard für Sprachmodelle – kosten aber zwei zusätzliche Zahlen Speicher pro Parameter.</p></div>
+</div>
+<p>Bleibt die Frage nach den Tälern: Gradientenabstieg findet <em>ein</em> Tal, nicht unbedingt das tiefste. In einer Dimension sieht man das sofort:</p>
+
+<div class="widget">
+  <div class="widget-title">Lokales oder globales Minimum?</div>
+  <div class="seg" id="lsM"><button data-m="0" aria-pressed="true">Reiner Abstieg</button><button data-m="0.9">Mit Schwung (Momentum 0,9)</button></div>
+  <div class="sl"><span>Startpunkt</span><input type="range" id="lsX" min="-35" max="35" value="30"><output id="lsXo"></output></div>
+  <svg id="lsSvg" viewBox="0 0 500 220" role="img" aria-label="Verlustkurve mit zwei Tälern und dem Weg der Kugel"></svg>
+  <div class="ctl"><button id="lsGo">Loslassen</button><span class="r" id="lsC"></span></div>
+  <div class="note" id="lsN"></div>
+  <p class="fine">Echt gerechnet mit Lernrate 0,03 und 300 Schritten auf der Kurve 0,08·x⁴ − 0,7·x² + 0,7·x + 2.</p>
+</div>
+
+<p>Lange galt das als Hauptproblem neuronaler Netze. Inzwischen weiß man: Bei Millionen von Dimensionen sind echte Fallen selten. Ein Punkt, an dem es in <em>alle</em> Millionen Richtungen bergauf geht, ist sehr unwahrscheinlich; meist gibt es irgendwo noch einen Weg nach unten. Häufiger sind Sattelpunkte und weite Ebenen, auf denen der Abstieg lange stockt. Und die vielen Täler, die man findet, sind in großen Netzen oft ähnlich gut. Das ist einer der Gründe, warum Hinton im Rückblick sagt, viele hätten jahrelang erwartet, das Verfahren würde stecken bleiben – und dann funktionierte es erstaunlich gut.</p>
+
+<h2 id="java">Für Entwickler übersetzt</h2>
+<p>Das Geraden-Beispiel von oben als Java-Code – ohne Bibliothek, nur eine Schleife:</p>
+<pre><code><span class="k">double</span>[] x = { <span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">4</span>, <span class="n">5</span> };
+<span class="k">double</span>[] y = { <span class="n">2.1</span>, <span class="n">3.9</span>, <span class="n">6.2</span>, <span class="n">7.8</span>, <span class="n">10.1</span> };
+<span class="k">double</span> w = <span class="n">0</span>, b = <span class="n">4</span>, lernrate = <span class="n">0.03</span>;
+
+<span class="k">for</span> (<span class="k">int</span> schritt = <span class="n">0</span>; schritt &lt; <span class="n">1000</span>; schritt++) {
+    <span class="k">double</span> gw = <span class="n">0</span>, gb = <span class="n">0</span>;
+    <span class="k">for</span> (<span class="k">int</span> i = <span class="n">0</span>; i &lt; x.length; i++) {
+        <span class="k">double</span> fehler = (w * x[i] + b) - y[i];    <span class="c">// vorwärts: Vorhersage minus Wahrheit</span>
+        gw += <span class="n">2</span> * fehler * x[i] / x.length;      <span class="c">// ∂Verlust/∂w</span>
+        gb += <span class="n">2</span> * fehler / x.length;             <span class="c">// ∂Verlust/∂b</span>
+    }
+    w -= lernrate * gw;                             <span class="c">// bergab</span>
+    b -= lernrate * gb;
+}
+<span class="c">// w ≈ 1,99, b ≈ 0,05 – die Gerade y ≈ 2x</span></code></pre>
+<div class="tbl-wrap">
+<table>
+  <thead><tr><th>Begriff</th><th>Entspricht ungefähr</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Verlustfunktion</strong></td><td>eine Methode <code>double fehler(Modell m, Daten d)</code> – je kleiner, desto besser</td></tr>
+    <tr><td><strong>Gradient</strong></td><td>ein <code>double[]</code> so lang wie die Parameter: wie stark jede Zahl den Fehler beeinflusst</td></tr>
+    <tr><td><strong>Lernrate</strong></td><td>Schrittweite einer Schleife – zu groß, und sie schwingt sich auf wie ein schlecht eingestellter Regelkreis</td></tr>
+    <tr><td><strong>Epoche</strong></td><td>ein kompletter Durchlauf über alle Trainingsdaten</td></tr>
+    <tr><td><strong>Backpropagation</strong></td><td>der Stacktrace rückwärts: jede Schicht reicht weiter, wie viel vom Fehler sie verursacht hat</td></tr>
+    <tr><td><strong>Gradient-Check</strong></td><td>Unit-Test für Backpropagation: einzelne Parameter minimal verändern und vergleichen, ob dieselbe Steigung herauskommt</td></tr>
+    <tr><td><strong>Automatisches Differenzieren</strong></td><td>was Frameworks wie PyTorch oder in Java DJL und Deeplearning4j tun: aus dem Vorwärts-Code die Rückwärtsrechnung selbst ableiten</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2 id="irrtuemer">Häufige Irrtümer</h2>
+<div class="myth">
+  <div><b>„Backpropagation ist das Lernen.“</b> – Backpropagation berechnet nur die Gradienten. Was damit passiert, entscheidet der Optimierer – reiner Abstieg, Momentum oder Adam.</div>
+  <div><b>„Rückwärts laufen die Daten.“</b> – Die Daten gehen immer vorwärts. Rückwärts läuft nur die Information, wie jeder Parameter den Fehler beeinflusst.</div>
+  <div><b>„Größere Lernrate heißt schneller fertig.“</b> – Nur bis zu einer Grenze. Darüber springt der Abstieg über das Tal hinaus und kann ganz auseinanderlaufen. In der Praxis beginnt man vorsichtig, steigert die Lernrate und senkt sie zum Ende wieder.</div>
+  <div><b>„Das Training findet die beste mögliche Lösung.“</b> – Es findet eine gute in der Nähe. Welche, hängt vom Startpunkt, den Daten und dem Zufall ab – deshalb werden zwei gleich gebaute Modelle nie exakt gleich.</div>
+  <div><b>„So lernt auch das Gehirn.“</b> – Unwahrscheinlich, zumindest nicht in dieser Form. Ein Gehirn hat keinen offensichtlichen Weg, Fehler exakt rückwärts durch alle Verbindungen zu schicken. Wie es stattdessen lernt, ist eine offene Forschungsfrage.</div>
+</div>
+
+<h2 id="verwandt">Verwandte Begriffe</h2>
+<div class="related">
+  <a href="/erklaert/neuronales-netz/">Neuronales Netz</a>
+  <a href="/erklaert/parameter/">Parameter</a>
+  <a href="/erklaert/training/">Training</a>
+  <a href="/erklaert/reinforcement-learning/">Reinforcement Learning</a>
+  <a href="/erklaert/transformer/">Transformer</a>
+  <a href="/erklaert/lesereihenfolge/" style="border-style:dashed">Alle Begriffe: Lesereihenfolge →</a>
+</div>
+</div>

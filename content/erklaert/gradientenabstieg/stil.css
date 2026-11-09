@@ -1,0 +1,47 @@
+/* Seiteneigene Stile (gradientenabstieg) – aus der gelieferten Seite übernommen, auf .erklaert begrenzt. Grundstile: assets/css/erklaert.css */
+/* ---- Seitenspezifisch: Gradientenabstieg ---- */
+.erklaert .pro{color:var(--ok)}.erklaert .con{color:var(--bad)}
+
+.erklaert .seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.erklaert .seg button{padding:6px 11px;font-size:.84rem}
+.erklaert .seg button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .erklaert .seg button[aria-pressed="true"]{color:#0d1530}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .erklaert .seg button[aria-pressed="true"]{color:#0d1530}}
+.erklaert .note{margin-top:10px;font-size:.88rem;padding:10px 12px;border-radius:9px;background:var(--bg)}
+.erklaert .ctl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
+.erklaert .ctl button{padding:6px 11px;font-size:.84rem}
+.erklaert .ctl span.r{margin-left:auto;font-size:.8rem;color:var(--muted)}
+.erklaert .sl{display:grid;grid-template-columns:8em minmax(0,1fr) 3.6em;gap:10px;align-items:center;font-size:.86rem;margin:6px 0}
+.erklaert .sl input{width:100%;min-width:0;accent-color:var(--accent)}
+.erklaert .sl output{font:600 .82rem var(--mono);text-align:right}
+@media (max-width:520px){.erklaert .sl{grid-template-columns:minmax(0,1fr) 3.6em}.erklaert .sl > span{grid-column:1/-1}}
+.erklaert .lbl2{font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:4px 0 4px}
+
+/* Gerade anpassen */
+.erklaert .fit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:600px){.erklaert .fit{grid-template-columns:minmax(0,1fr)}}
+.erklaert .fit svg{width:100%;height:auto;display:block;border-radius:10px}
+.erklaert .vals{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:10px}
+@media (max-width:520px){.erklaert .vals{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.erklaert .vals div{padding:6px;border-radius:8px;background:var(--bg);text-align:center;font-size:.7rem;color:var(--muted)}
+.erklaert .vals b{display:block;font:600 .92rem var(--mono);color:var(--fg)}
+.erklaert .vals .bad b{color:var(--bad)}
+
+/* Backprop */
+.erklaert .steps{display:flex;gap:3px;margin-bottom:10px}
+.erklaert .steps span{flex:1;height:6px;border-radius:3px;background:var(--line)}
+.erklaert .steps span.on{background:var(--accent-2)}
+.erklaert .steps span.done{background:var(--accent)}
+.erklaert .bpw h4{margin:.3em 0 .3em;font-size:1rem}
+.erklaert .calc{font:.8rem/1.7 var(--mono);background:var(--bg);border-radius:9px;padding:8px 12px;overflow-x:auto;white-space:nowrap}
+.erklaert .calc b{color:var(--accent-2)}
+.erklaert .calc .g{color:var(--accent)}
+.erklaert .scr{overflow-x:auto}
+.erklaert #bpSvg{width:100%;height:auto;display:block}
+.erklaert #bpSvg text{font-family:var(--mono)}
+.erklaert .scrh{display:none;font-size:.76rem;color:var(--muted);margin:2px 0 0}
+@media (max-width:560px){.erklaert .scr #bpSvg{min-width:540px}.erklaert .scrh{display:block}}
+
+/* Landschaft */
+.erklaert #lsSvg{width:100%;height:auto;display:block}
+
