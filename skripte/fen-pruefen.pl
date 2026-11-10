@@ -109,8 +109,12 @@ sub pruefe {
     for my $c (split //, $recht) {
         next if $c eq '-';
         my $r = $rochade{$c} or do { push @f, "unbekanntes Rochaderecht $c"; next };
-        push @f, "Rochaderecht $c passt nicht zur Stellung"
-            unless ($brett{$r->[0]} // '') eq $r->[1] && ($brett{$r->[2]} // '') eq $r->[3];
+        next if ($brett{$r->[0]} // '') eq $r->[1] && ($brett{$r->[2]} // '') eq $r->[3];
+        # Chess960 (seit 2026-11-10): König irgendwo auf der Grundreihe, ein Turm auf der passenden Seite
+        my $y = (split /,/, $r->[0])[1];
+        my ($kx) = grep { ($brett{"$_,$y"} // '') eq $r->[1] } 0 .. 7;
+        my $ok = defined $kx && grep { ($brett{"$_,$y"} // '') eq $r->[3] } (lc $c eq 'k' ? $kx + 1 .. 7 : 0 .. $kx - 1);
+        push @f, "Rochaderecht $c passt nicht zur Stellung" unless $ok;
     }
     # Die Seite, die nicht am Zug ist, darf nicht im Schach stehen.
     my $amzug = $teile[1];

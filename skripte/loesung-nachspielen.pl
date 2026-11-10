@@ -212,10 +212,15 @@ sub zug {
     if ($s =~ /^[0O]-[0O](-[0O])?$/) {
         my $lang = defined $1;
         my ($k, $t) = $w ? ('K', 'R') : ('k', 'r');
-        return 'Rochade: König nicht auf e' . $grund unless ($b->{"e$grund"} // '') eq $k;
-        my ($tv, $tn, $kn) = $lang ? ("a$grund", "d$grund", "c$grund") : ("h$grund", "f$grund", "g$grund");
-        return 'Rochade: Turm fehlt' unless ($b->{$tv} // '') eq $t;
-        delete $b->{"e$grund"}; delete $b->{$tv};
+        # Auch Chess960: König irgendwo auf der Grundreihe, Turm = der äußerste auf der Rochadeseite;
+        # danach steht der König auf c/g, der Turm auf d/f (wie im normalen Schach).
+        my ($kf) = grep { ($b->{"$_$grund"} // '') eq $k } 'a' .. 'h';
+        return 'Rochade: König nicht auf der Grundreihe' unless defined $kf;
+        my @seite = $lang ? grep { $_ lt $kf } 'a' .. 'h' : reverse grep { $_ gt $kf } 'a' .. 'h';
+        my ($tf) = grep { ($b->{"$_$grund"} // '') eq $t } @seite;
+        return 'Rochade: Turm fehlt' unless defined $tf;
+        my ($tn, $kn) = $lang ? ("d$grund", "c$grund") : ("f$grund", "g$grund");
+        delete $b->{"$kf$grund"}; delete $b->{"$tf$grund"};
         $b->{$kn} = $k; $b->{$tn} = $t; $$epref = '';
         return '';
     }

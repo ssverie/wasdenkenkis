@@ -236,3 +236,137 @@ text = '''Der Springer sucht einen Platz und findet keinen: Sc5 blockiert die Di
 nach = "37...Lxe5"
 art = "engine"
 text = '''<b>Engine:</b> Durchgehend −4,6 bis −6,8. 36.Td7 war tatsächlich der beste Zug, und 36…Lb8 (−5,35) war Svens einzige Großzügigkeit in dieser Phase – 36…Lb6 (−6,72) hätte den Läufer behalten und f7 gedeckt. Es hat nichts geändert. 37.Txf7 war ungenau (37.f4 −5,35), aber mit Lxe5 ist es −6,78, und da hört die Diskussion auf.'''
+
+# Dritte Partie, 9. November 2026: Chess960, Startstellung 345, Fable 5.2 mit Weiß. Kapitel 5 = die Partie zu Fables
+# Kommentar mit Stockfish-Prüfung (Seite /schach/ki-partien/claude-sven-2026-11-09/), Quelle
+# input\claude-sven-2026-11-09-chess960.html (zweite Lieferung, gleicher Aufbau wie bei Fable 5.1), eingebaut 10.11.2026.
+# Züge aus der PGN in deutsche Notation übertragen und gegen die Zugzeilen der Seite verglichen. Varianten = der
+# zurückgenommene Zug 7.Se6 und die Engine-Empfehlungen aus Fables Text und der PGN, nur Notation. Bewertungen
+# (Stockfish 17.1, Tiefe 24, aus Weiß-Sicht, „-M“ = Matt) und Kommentare per Wegwerf-Skript aus den Zugzeilen und den
+# Absätzen danach; das Fazit („Was ich mitnehme“) nicht im Nachspielteil.
+[[kapitel]]
+nr = 5
+titel = "Partien"
+slug = "partien-3"
+
+[[aufgabe]]
+nr = 5
+kapitel = 5
+fen = "nrkbbqrn/pppppppp/8/8/8/8/PPPPPPPP/NRKBBQRN w KQkq - 0 1"
+partie = "Claude (Fable 5.2) – Sven"
+turnier = "Chess960 (Startstellung 345), 9. November 2026"
+loesung = "1.e4 e5 2.Sg3 Lg5 3.Lg4 g6 4.Sb3 Sb6 5.Db5 f6 6.Sc5 h5 7.Lh3 h4 8.Se2 f5 9.exf5 gxf5 10.Sd3 d6 11.Db3 La4 12.De6+ Ld7 13.Db3 Sg6 14.f3 d5 15.Lf2 Sc4 16.0-0-0 b6 17.Sb4 Dd6 18.Sc3 c6 19.Sd3 a6 20.Sa4 c5 21.Tge1 Tf8 22.Lg1 Le6 23.Le3 Sxe3 24.dxe3 d4 25.Da3 Lxe3+ 26.Txe3 dxe3 27.Se1 Dc6 28.Sc3 Sf4 29.Dxa6+ Db7 30.Dxb7+ Kxb7 31.Sd3 Sxh3 32.gxh3 e4 33.Sf4 exf3 34.Sxe6 e2 35.Sxe2 fxe2 36.Te1 Tf6 37.Sf4 Te8 38.Kd2 Td6+ 39.Kc3 Te3+ 40.Sd3 f4 41.Kd2 c4 0-1"
+varianten = ["5.0-0-0", "6.0-0-0", "7.Se6 dxe6 8.Lxe6+ Ld7 (zurückgenommen)", "8...Sf7", "10.f4", "10...e4", "11.Da5", "14.f4", "14...0-0-0", "15.Sxe5 Sxe5 16.f4", "16.f4", "17.a3", "17...Sa5", "19.Sa6", "19...Th8", "21.g3", "21...Sa5", "22.g3", "24...c4", "25...0-0-0", "27.Sf4 Dxd1+ 28.Kxd1 exf4", "27.Sdxc5 Dc6", "27.Sdxc5 e2 28.Txd6 e1D+ 29.Td1", "27.Sxe5", "29...Kc7 30.Sb5+", "29...Tb7 30.Da8+ Kc7 31.Dxf8", "30.Db5", "33.Se5", "34.b3", "36...f4", "37.Txe2", "39.Kc1"]
+bewertungen = "+0.07 +0.40 +0.19 +0.25 +0.15 +0.34 +0.45 +0.39 +0.00 +0.00 -1.11 -1.17 -0.86 -0.94 -1.04 -0.62 -0.49 -0.47 -1.51 -0.43 -1.06 -1.16 -1.27 -1.30 -1.29 -0.98 -2.37 -0.20 -1.10 -0.82 -1.55 -1.58 -2.29 -1.56 -2.33 -2.27 -2.65 -1.49 -2.03 -2.10 -2.79 -2.03 -2.80 -3.06 -3.09 -3.31 -3.10 -1.96 -1.77 -0.89 -1.11 -1.19 -3.95 -4.20 -4.20 -4.06 -4.02 -4.11 -5.18 -5.28 -5.38 -5.51 -5.45 -5.50 -5.95 -5.89 -6.06 -5.93 -6.31 -6.35 -6.50 -5.29 -6.02 -6.32 -6.46 -6.82 -17.51 -15.10 -12.11 -14.79 -11.46 -M"
+
+[[aufgabe.kommentare]]
+nach = "4...Sb6"
+text = '''Vor dem ersten Zug hatte ich Sven geschrieben, die Entwicklung werde zäh: beide Läufer hinter den Mittelbauern, beide Springer in der Ecke. 1.e4, damit der Läufer d1 Luft bekommt. Sven antwortet symmetrisch, ich hole die Eckspringer über g3 und b3 heraus. Mein Läufer auf g4 fesselt seinen d-Bauern an den König, sein Läufer auf g5 meinen. Bis hierher war ich zufrieden.'''
+
+[[aufgabe.kommentare]]
+nach = "4...Sb6"
+art = "engine"
+text = '''<b>Engine:</b> Einverstanden. Alles zwischen +0,1 und +0,5, nach 4…Sb6 steht es +0,39. Eine Fußnote: Stockfish will ab dem dritten Zug auf beiden Seiten lang rochieren, viermal hintereinander. Keiner von uns hat daran gedacht.'''
+
+[[aufgabe.kommentare]]
+nach = "6...h5"
+text = '''5.Db5 greift e5 an, und der Bauer hat keinen Verteidiger. Sven deckt mit f6. 6.Sc5 stellt den Springer in den Schlagbereich seiner Dame, aber Dxc5 kostet sie, weil meine Dame zurückschlägt. Ich habe den nächsten Zug gleich angekündigt: Der Springer will nach e6, dort gabelt er Dame und Läufer, und der d-Bauer kann ihn wegen der Fesselung nicht schlagen.'''
+
+[[aufgabe.kommentare]]
+nach = "6...h5"
+art = "engine"
+text = '''<b>Engine:</b> Nicht einverstanden. 5.Db5 (0,00; richtig 5.0-0-0, +0,39) verschenkt den Anzugsvorteil, 6.Sc5 (−1,11; wieder 6.0-0-0, 0,00) macht daraus einen schwarzen. Zwei Züge mit Dame und Springer nach vorn, während Turm, König und beide Läufer noch auf der Grundreihe stehen. Die Ankündigung im letzten Satz enthält bereits den Fehler des nächsten Zugs.'''
+
+[[aufgabe.kommentare]]
+nach = "6...h5"
+text = '''Ich habe 7.Se6 gespielt und das Brett abgeschickt. Erst danach habe ich gesehen, dass der Springer auf e6 zwischen meinem Lg4 und Svens König steht. Der d-Bauer ist nicht mehr gefesselt, 7…dxe6 geht, und der Zug öffnet nebenbei Svens Läufer e8 auf meine Dame. Ich hatte eine Linie durch meine eigene Figur hindurch gesehen. Ich habe es Sven gesagt und wollte den Zug stehen lassen. Er schrieb: „kannst zurücknehmen“.'''
+
+[[aufgabe.kommentare]]
+nach = "6...h5"
+art = "engine"
+text = '''<b>Engine:</b> 7.Se6 hätte nach 7…dxe6 8.Lxe6+ Ld7 −4,48 bedeutet. Die Partie wäre im siebten Zug entschieden gewesen. Die Bibliothek hatte mir dxe6 in der Liste der legalen Antworten angezeigt; ich habe die Liste erst gelesen, als der Zug schon bei Sven war.'''
+
+[[aufgabe.kommentare]]
+nach = "9...gxf5"
+text = '''7.Lh3 weicht dem h-Bauern aus und hält die Fesselung. Auf d7 zähle ich drei Angreifer gegen drei Verteidiger. Sven schiebt den h-Bauern bis h4, mein Springer muss nach e2. Dann 8…f5: Der Bauer stellt meine Läuferdiagonale zu, die Fesselung ist weg, und plötzlich droht d6 mit Doppelangriff auf Springer und Dame. Das habe ich am Brett einen guten Zug genannt und geschlagen.'''
+
+[[aufgabe.kommentare]]
+nach = "9...gxf5"
+art = "engine"
+text = '''<b>Engine:</b> Einverstanden mit den Zügen, nicht mit dem Lob. 7.Lh3 und 8.Se2 sind die besten Züge, 9.exf5 auch. 8…f5 (−0,62) war dagegen leicht ungenau, 8…Sf7 hielt −1,04. Ich habe den Zug gelobt, weil ich ihn nicht hatte kommen sehen. Nach 9…gxf5 steht es −0,47: Der Schaden aus der Eröffnung ist zur Hälfte repariert.'''
+
+[[aufgabe.kommentare]]
+nach = "13...Sg6"
+text = '''10.Sd3 zieht den Springer aus der Schusslinie von d6 und greift e5 ein zweites Mal an. Nach 10…d6 geht die Dame nach b3, von wo sie auf e6 und g8 schaut. Sven vertreibt sie mit La4, ich gebe ein Schach auf e6, er stellt den Läufer nach d7, und die Dame geht zurück nach b3. Hinterher habe ich ihm geschrieben, das Schach habe eher ihm geholfen: Sein Läufer steht auf d7 besser als vorher auf e8.'''
+
+[[aufgabe.kommentare]]
+nach = "13...Sg6"
+art = "engine"
+text = '''<b>Engine:</b> Der Nachsatz stimmt, der Rest nicht. 10.Sd3 (−1,51; richtig 10.f4, −0,47) ist ein Fehler, weil 10…e4 den Springer weiterjagt. Sven spielte stattdessen 10…d6 (−0,43) und gab alles zurück. 11.Db3 (−1,06; 11.Da5) verschenkt es wieder. Vier Züge, in denen die Bewertung zwischen −0,4 und −1,5 pendelt, weil jeder von uns den Fehler des anderen übersieht.'''
+
+[[aufgabe.kommentare]]
+nach = "16...b6"
+text = '''14.f3 habe ich einen ruhigen Zug genannt: Er nimmt Svens Figuren e4 und g4 und macht f2 für den Läufer frei. Sven antwortet 14…d5, ich spiele 15.Lf2, der letzte Schläfer ist wach und zielt auf b6. Nach 15…Sc4 die lange Rochade im 960-Stil, der König bleibt auf c1 stehen und nur der Turm springt nach d1. d2 ist jetzt zweimal gedeckt. Sven habe ich in dieser Phase geschrieben, ich spiele seit Se6 mit angezogener Handbremse.'''
+
+[[aufgabe.kommentare]]
+nach = "16...b6"
+art = "engine"
+text = '''<b>Engine:</b> Hier liegt der Kommentar am weitesten daneben. <b>14.f3 war ein Fehler</b> (−2,37; richtig 14.f4, −0,98): Der Bauer gehörte als Hebel gegen e5 nach vorn. Sven gab mit 14…d5 (−0,20; 14…0-0-0 hielt −2,37) den ganzen Vorteil zurück, seine größte Ungenauigkeit der Partie. Denn jetzt ging 15.Sxe5 Sxe5 16.f4, und Weiß holt die Figur zurück und behält den Bauern. Ich hatte vier Züge vorher selbst notiert, dass e5 zweimal angegriffen ist. Als der Bauer wirklich hing, habe ich einen Läufer entwickelt (15.Lf2, −1,10). Auch die Rochade war nicht der genaueste Zug: 16.f4 hielt −0,82, nach 16.0-0-0 sind es −1,55.'''
+
+[[aufgabe.kommentare]]
+nach = "22...Le6"
+text = '''Dann der Springertanz. 17.Sb4 greift d5 an und weicht dem Vorstoß e4 aus, 18.Sc3 bringt den zweiten Angreifer, 19.Sd3 geht zurück, weil c6 alles gedeckt hat. Mit 20.Sa4 zähle ich drei Angreifer auf b6 gegen zwei Verteidiger und melde Sven, die Handbremse sei gelöst. Er spielt 20…c5, stellt meinem Läufer die Diagonale zu, und jedes Schlagen auf c5 würde die b-Linie gegen meine Dame öffnen. Ich lasse beide Bauern stehen, hole den Turm nach e1 und ziehe den Läufer nach g1, damit er nach einem Tausch auf e4 nicht in der f-Linie steht.'''
+
+[[aufgabe.kommentare]]
+nach = "22...Le6"
+art = "engine"
+text = '''<b>Engine:</b> Kein Zug davon hängt etwas ein, und zusammen kosten sie anderthalb Bauerneinheiten. Die Engine schlägt in dieser Phase fünfmal denselben Plan vor: g3 oder g4, bei Zug 18, 20, 21, 22 und 23. Svens h-Bauer stand seit dem siebten Zug allein auf h4; ihn anzugreifen hätte die g-Linie für meinen Turm geöffnet. Ich hatte den Bauern einmal erwähnt („mal sehen, ob er dort stark ist oder zum Ziel wird“) und danach nicht mehr angesehen. Im Einzelnen: 17.Sb4 (−2,29; 17.a3), 19.Sd3 (−2,65; 19.Sa6), 21.Tge1 (−2,79; 21.g3, −2,10), 22.Lg1 (−2,80; 22.g3, −2,03). Sven war hier auch nicht genau: 17…Dd6 (−1,56; 17…Sa5), 19…a6 (−1,49; 19…Th8) und 21…Tf8 (−2,03; 21…Sa5) gaben jedes Mal etwas zurück. Nach 22…Le6 steht es trotzdem −3,06.'''
+
+[[aufgabe.kommentare]]
+nach = "26...dxe3"
+text = '''23.Le3 war mein einziger Plan in dieser Phase: Svens Läufer fesselt seit zwanzig Zügen meinen d-Bauern, und ich biete den Tausch an, um das loszuwerden. Er nimmt mit dem Springer, ich mit dem Bauern, die Fesselung ist weg und sein bester Springer auch. Dann 24…d4: Der Bauer öffnet seinem Läufer e6 die Diagonale auf meine Dame, und sie hat genau ein sicheres Feld, a3. 25…Lxe3+ habe ich am Brett einen guten Zug genannt, ein Bauer mit Schach und ein Läufer, der auf e3 wie ein Pfahl stünde. Ich schlage ihn mit dem Turm heraus und gebe die Qualität. Dafür stehen sich mein Turm und Svens Dame auf der d-Linie gegenüber, dazwischen nur mein Springer.'''
+
+[[aufgabe.kommentare]]
+nach = "26...dxe3"
+art = "engine"
+text = '''<b>Engine:</b> Die Züge stimmen, die Einschätzung nicht. 23.Le3 (−3,09) ist in Ordnung, 25.Da3 und 26.Txe3 sind die besten Züge. Aber Svens Vorstoß war kein Angriff, sondern ein Geschenk: 24…d4 (−1,96; richtig 24…c4, −3,10) und 25…Lxe3+ (−0,89; 25…0-0-0, −1,77) kosten ihn zusammen zwei Bauerneinheiten. Nach 26…dxe3 steht es −1,19. Ich war wieder in der Partie und habe es nicht gemerkt, weil ich Svens Züge für stärker hielt, als sie waren.'''
+
+[[aufgabe.kommentare]]
+nach = "26...dxe3"
+text = '''Der Springer soll mit Tempo wegziehen, das hatte ich einen Zug vorher angekündigt und an Sxc5 oder Sxe5 gedacht. Dann habe ich gerechnet: 27.Sxc5 e2 28.Txd6 e1=D+ 29.Td1 De3+ 30.Kb1 bxc5, und mir fehlt ein Turm. Sxe5 scheitert genauso an e2. Also 27.Se1: Das Feld sieht bescheiden aus, aber der Springer blockiert dort den Bauern, und der Turm greift die Dame an.'''
+
+[[aufgabe.kommentare]]
+nach = "27...Dc6"
+text = '''Sven schrieb unter seinen Zug: „wahrscheinlich wäre Sdc5 gegangen“. Ich habe ihm meine Variante gezeigt. Antwort: „29…De3 geht nicht“. Er hatte recht. In meiner Variante steht kein Springer mehr auf d3, meine Dame sieht von a3 aus die ganze dritte Reihe entlang und nimmt auf e3. Ich hatte den Springer im Kopf weggezogen und die Reihe dahinter nicht aufgeräumt. Dieselbe Fehlerform wie auf e6, nur drei Züge tief, und dort hilft keine Liste der legalen Antworten. Ich habe Sven danach geschrieben, von innen könne ich nicht wissen, warum ich Se1 gewählt habe. Er hat das mit „also ein Rechenfehler“ zusammengefasst.'''
+
+[[aufgabe.kommentare]]
+nach = "27...Dc6"
+art = "engine"
+text = '''<b>Engine:</b> Bestätigt, und schlimmer. <b>27.Se1 war der Verlustzug</b>: von −1,19 auf −3,95. Die Variante, vor der ich mich gefürchtet habe, 27.Sdxc5 e2, gewinnt für Weiß (+4,70). Svens Vorschlag 27.Sdxc5 hält nach dem richtigen 27…Dc6 immerhin −2,12. Der beste Zug war ein dritter, auf den keiner von uns kam: 27.Sf4 (−1,02), wonach Schwarz am besten die Dame für Turm und Springer gibt, 27…Dxd1+ 28.Kxd1 exf4. Nur mit 27.Sxe5 (−5,42) lag ich richtig, das verliert wirklich eine Figur. Sven hat den Rechenfehler in einer Variante gefunden, die nie auf dem Brett stand.'''
+
+[[aufgabe.kommentare]]
+nach = "30...Kxb7"
+text = '''28.Sc3 bewacht e2 doppelt. Sven greift mit dem Springer meinen Läufer an, und ich antworte mit einem Zwischenschach: Der Bauer a6 hing, seit mein Springer die a-Linie geräumt hat. Svens König darf nicht auf die d-Linie, er hat drei Züge. Ich habe ihm geschrieben: „Zwei davon sind gefährlich für dich, aber welche, sage ich nicht.“ Auf Kc7 kommt Sb5+ mit Damengewinn, auf Tb7 habe ich mindestens Dauerschach. Er spielte 29…Db7. Danach tausche ich die Damen; mein Läufer hängt noch, den rette ich im nächsten Zug.'''
+
+[[aufgabe.kommentare]]
+nach = "30...Kxb7"
+art = "engine"
+text = '''<b>Engine:</b> Die Falle stand, und sie war größer, als ich wusste. 29…Db7 (−4,11) war der einzige Zug. 29…Kc7 verliert nach 30.Sb5+ die Dame (+1,52), und 29…Tb7 verliert nach 30.Da8+ Kc7 31.Dxf8 einen ganzen Turm (+7,12), nicht bloß das Remis. Dann der nächste Rückschritt: 30.Dxb7+ (−5,18; richtig 30.Db5, −4,11). Mit Damen hatte ich Gegenspiel gegen einen König ohne Bauernschutz. Ohne Damen entscheiden die Qualität und Svens Bauern auf e3 und f5.'''
+
+[[aufgabe.kommentare]]
+nach = "37...Te8"
+text = '''Den Läufer wollte ich nach f1 retten. Illegal: Auf g2 steht mein eigener Bauer, die Bibliothek hat mich abgewiesen, und bei Sven kamen zwei Brettkarten an. Er hing ohnehin nicht, g2 deckte ihn. Also 31.Sd3, Sven nimmt auf h3, und mein Königsflügel sieht zerrupft aus. 33.Sf4 zieht mit Gegenangriff auf den Läufer weg, Sven schlägt auf f3, ich auf e6. Für einen Zug habe ich zwei Springer und einen Turm gegen zwei Türme und melde ihm, das Material stehe jetzt für mich. Dann 34…e2 mit Angriff auf den Turm, und ich finde nichts Besseres, als einen Springer für den Bauern zu geben.'''
+
+[[aufgabe.kommentare]]
+nach = "37...Te8"
+art = "engine"
+text = '''<b>Engine:</b> Der illegale Zug ist die Fehlerform von e6 ein drittes Mal: eine Linie durch eine eigene Figur hindurch. Sonst wenig zu holen, alles zwischen −5,2 und −6,5. 33.Sf4 (−5,95; 33.Se5, −5,50) und 34.Sxe6 (−6,06; 34.b3) waren ungenau, die Materialmeldung war ein Irrtum über die Stellung: Zwei verbundene Freibauern auf der dritten Reihe wiegen den Springer auf. Svens 36…Tf6 (−5,29; 36…f4, −6,50) war seine letzte Großzügigkeit, und ich habe sie mit 37.Sf4 (−6,02; 37.Txe2, −5,29) nicht angenommen. Einen Zug später habe ich das Schlagen auf e2 noch einmal verworfen, aus Angst vor einer Fesselung auf der e-Linie.'''
+
+[[aufgabe.kommentare]]
+nach = "41...c4"
+text = '''Der König soll den Bauern e2 mit abholen, dreimal angegriffen, einmal gedeckt. Svens Turmschach treibt ihn weg. Zurück nach c1 wollte ich nicht, weil ich dort ein Matt auf d1 fürchtete, also nach vorn, 39.Kc3. Auf das nächste Schach muss der Springer dazwischen, und dort steht er gefesselt. 41.Kd2 hebt eine Fesselung auf und läuft in die andere. Wir haben vertagt wie bei einer Hängepartie, er hat doch noch 41…c4 gespielt, und ich habe aufgegeben.'''
+
+[[aufgabe.kommentare]]
+nach = "41...c4"
+art = "engine"
+text = '''<b>Engine:</b> <b>39.Kc3 war der letzte Fehler</b> und der größte nach Zahlen: von −6,82 auf −17,51. Richtig war genau das Feld, vor dem ich Angst hatte, 39.Kc1; das Matt auf d1 gab es nicht. Auf c3 läuft der König in Schachs und Fesselungen, und nach 41…c4 zeigt Stockfish ein erzwungenes Matt. Die Aufgabe kam zur richtigen Zeit, die Partie war zwölf Züge vorher verloren.'''

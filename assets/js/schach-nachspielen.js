@@ -74,10 +74,19 @@
     var ro = /^[0O]-[0O](-[0O])?$/.exec(s);
     if (ro) {
       var lang = !!ro[1], k = w ? 'K' : 'k', t = w ? 'R' : 'r';
-      var tv = (lang ? 'a' : 'h') + grund, tn = (lang ? 'd' : 'f') + grund, kn = (lang ? 'c' : 'g') + grund;
-      if (b[index('e' + grund)] !== k || b[index(tv)] !== t) return 'Rochade nicht möglich';
-      b[index('e' + grund)] = null; b[index(tv)] = null; b[index(kn)] = k; b[index(tn)] = t;
-      return { b: b, von: 'e' + grund, nach: kn, ep: '' };
+      // Auch Chess960: König irgendwo auf der Grundreihe, Turm = der äußerste auf der Rochadeseite;
+      // danach steht der König auf c/g, der Turm auf d/f (wie im normalen Schach).
+      var reihe = 'abcdefgh', kf = -1, tf = -1, i;
+      for (i = 0; i < 8; i++) if (b[index(reihe[i] + grund)] === k) kf = i;
+      if (kf < 0) return 'Rochade nicht möglich';
+      if (lang) { for (i = 0; i < kf; i++) if (b[index(reihe[i] + grund)] === t) { tf = i; break; } }
+      else { for (i = 7; i > kf; i--) if (b[index(reihe[i] + grund)] === t) { tf = i; break; } }
+      if (tf < 0) return 'Rochade nicht möglich';
+      var kv = reihe[kf] + grund, tn = (lang ? 'd' : 'f') + grund, kn = (lang ? 'c' : 'g') + grund;
+      b[index(kv)] = null; b[index(reihe[tf] + grund)] = null; b[index(kn)] = k; b[index(tn)] = t;
+      // Bleibt der König stehen (Chess960), den Turmzug markieren
+      if (kv === kn) return { b: b, von: reihe[tf] + grund, nach: tn, ep: '' };
+      return { b: b, von: kv, nach: kn, ep: '' };
     }
     var m = /^([KDTLS])?([a-h])?([1-8])?(x)?([a-h][1-8])=?([DTLS])?$/.exec(s);
     if (!m) return 'nicht lesbar';
@@ -369,6 +378,23 @@
       });
       knoepfe.appendChild(pgnKnopf);
     }
+    // Brett drehen (Sven, 2026-11-10: „können wir das Brett flippen … ein Knopf drücken“): kehrt nur die Reihenfolge
+    // der 64 Felder im Raster um (CSS order), die Figuren bleiben aufrecht, Markierungen wandern mit. Gilt nur für
+    // dieses Brett und wird nicht gemerkt.
+    var drehKnopf = document.createElement('button'), gedreht = false;
+    drehKnopf.type = 'button'; drehKnopf.className = 'np-drehen'; drehKnopf.textContent = '⇅';
+    function zeigeDrehung() {
+      var t = gedreht ? 'Brett aus Sicht von Weiß' : 'Brett aus Sicht von Schwarz';
+      drehKnopf.title = t; drehKnopf.setAttribute('aria-label', t);
+      drehKnopf.setAttribute('aria-pressed', gedreht ? 'true' : 'false');
+      brett.classList.toggle('np-gedreht', gedreht);
+      var al = brett.getAttribute('aria-label');
+      if (al) brett.setAttribute('aria-label', al.replace(/Sicht von (Weiß|Schwarz)/, gedreht ? 'Sicht von Schwarz' : 'Sicht von Weiß'));
+      for (var i = 0; i < 64; i++) felder[i].style.order = gedreht ? String(63 - i) : '';
+    }
+    drehKnopf.addEventListener('click', function () { gedreht = !gedreht; zeigeDrehung(); });
+    zeigeDrehung();
+    knoepfe.appendChild(drehKnopf);
     var hinweis = document.createElement('span');
     hinweis.className = 'np-hinweis';
     hinweis.textContent = 'Züge anklicken oder mit den Pfeiltasten nachspielen';
