@@ -3,7 +3,8 @@
 #   perl skripte/zeichenpruefung.pl          (als Datei, damit der Aufruf ohne Rückfrage der App läuft)
 #   perl skripte/zeichenpruefung.pl <datei>  (nur diese Datei)
 use strict; use warnings;
-my @dateien = @ARGV ? @ARGV : ('CLAUDE.md', sort glob('notizen/*.md'));
+# Seit 2026-11-11 auch die Chronik (notizen/chronik/*.md, die wortgleichen Langfassungen der Notizen).
+my @dateien = @ARGV ? @ARGV : ('CLAUDE.md', sort(glob('notizen/*.md')), sort(glob('notizen/chronik/*.md')));
 my $n = 0;
 for my $datei (@dateien) {
   open my $f, '<:raw', $datei or die "$datei: $!\n";

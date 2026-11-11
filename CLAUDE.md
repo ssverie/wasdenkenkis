@@ -6,7 +6,7 @@ Zielgruppe ist Sven selbst (Java-Entwickler, deutschsprachig).
 Die Inhalte kommen von KIs; Sven kuratiert und macht die QS. Was ihm nicht gefällt, fliegt raus.
 
 ## Notizen (seit 2026-10-28)
-Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – alle Instanzen, jede Rubrik mit ihren Lieferungen, der Wächter, ältere Entscheidungen – stehen in `notizen/*.md`. **Vor Arbeit an einer Rubrik die passende Notiz lesen und dort fortschreiben**; Regeln, die überall gelten, gehören weiter hierher. Ungeteilte Fassung vom 2026-10-28-1025: `input-arc/2026-10-28/_claude-md/CLAUDE-2026-10-28-1025.md` (nicht im Git; in Git steht sie ohnehin).
+Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – alle Instanzen, jede Rubrik mit ihren Lieferungen, der Wächter, ältere Entscheidungen – stehen in `notizen/*.md`. **Vor Arbeit an einer Rubrik die passende Notiz lesen und dort fortschreiben**; Regeln, die überall gelten, gehören weiter hierher. **Seit 2026-11-11 zweistufig** (Sven: „musst du es mal wieder refaktorieren?“ – „Alle drei“): `notizen/<rubrik>.md` ist eine Kurzfassung (Regeln, Technik, Stand), die vollständige Geschichte jeder Lieferung steht wortgleich in `notizen/chronik/<rubrik>.md` (umgestellt: filme-serien-podcasts, buecher, spiele-schach-tools, algorithmen, it-muster, fragen, wissen-ki, it-uebungen). **Neue Lieferung = kurzer eigener Absatz unten in der Chronik; die Kurzfassung nur nachführen, wenn sich eine Regel oder der Stand ändert.** Nie wieder Lieferungen an einen bestehenden Absatz anhängen (so entstanden Absätze mit 40.000 Zeichen). Ungeteilte Fassung vom 2026-10-28-1025: `input-arc/2026-10-28/_claude-md/CLAUDE-2026-10-28-1025.md` (nicht im Git; in Git steht sie ohnehin).
 
 ## Rollen
 - **Sven = Chefredakteur:** gibt Themen und Richtung vor, bringt Material anderer KIs mit (über `input\`), fällt das Urteil, macht die QS an der fertigen Seite im Browser (nicht am Quelltext), gibt frei.
@@ -127,7 +127,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-11: Mad Men Pfeile je Modell, Claude-Folgen umbenannt)
+- (leer – zuletzt freigegeben und gepusht am 2026-11-11: Aufräumen – Notizen zweistufig, serie-einlesen.pl)
 - Offen (Mad Men): Gemini zurückgestellt (Sven hat die Dateien aus `input\` genommen). Weiter mit GPT und Grok.
 - Offen (Schach-Buch): Subagent für 1–113.
 - Offen: Chatname der Fable-5.2-Instanz (Chess960-Partie, Feld `instanz` fehlt).
