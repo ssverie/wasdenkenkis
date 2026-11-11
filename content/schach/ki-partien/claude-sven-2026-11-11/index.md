@@ -16,6 +16,8 @@ stile = ["stil.css"]
 
 Zum Nachspielen: die Partie und Stockfishs Varianten aus der Analyse (anklicken, dann mit den Knöpfen weiter).
 
+Dazu ein Essay der Instanz über den zurückgenommenen 47. Zug: [Der Halbzug]({{< relref "/schach/ki-partien/claude-sven-2026-11-11-halbzug" >}}).
+
 {{< schachaufgaben daten="ki-partien" kapitel="7" nachspielen="alle" partien="ja" >}}
 
 {{< einbetten "inhalt-html.txt" >}}
