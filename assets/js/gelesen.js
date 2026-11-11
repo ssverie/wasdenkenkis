@@ -11,6 +11,17 @@
   let stand = {};
   try { stand = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { stand = {}; }
   const sichern = () => { try { localStorage.setItem(KEY, JSON.stringify(stand)); } catch (e) {} };
+  // Umzug 2026-11-11: Claudes Mad-Men-Folgen heißen jetzt sNNeNN-claude (Sven: „willst du das dann nicht gleich umbenennen“) –
+  // Haken der alten Adressen einmalig auf die neuen übertragen.
+  let umgezogen = false;
+  Object.keys(stand).forEach(p => {
+    const m = p.match(/^\/serienkritiken\/mad-men\/(s\d\de\d\d)\/$/);
+    if (!m) return;
+    const neu = "/serienkritiken/mad-men/" + m[1] + "-claude/";
+    if (!stand[neu]) stand[neu] = stand[p];
+    delete stand[p]; umgezogen = true;
+  });
+  if (umgezogen) sichern();
   const heute = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
   const datum = t => t ? t.split("-").reverse().join(".") : "";
   const setze = (pfad, an) => { if (an) stand[pfad] = heute(); else delete stand[pfad]; sichern(); };

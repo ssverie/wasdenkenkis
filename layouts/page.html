@@ -34,22 +34,30 @@
 </section>
 {{- end }}
 {{ partial "fassungen.html" (dict "seite" . "wo" "unten") }}
-{{- /* Serienfolgen: weitere Texte zur selben Folge, dann vorige / nächste besprochene Folge.
-       Die Navigation läuft über die Hauptbesprechungen; Texte mit `zweitstimme = true` (andere Modelle) zählen nicht mit. */}}
+{{- /* Serienfolgen: weitere Texte zur selben Folge, dann vorige / nächste Folge.
+       Die Pfeile bleiben beim Modell der Seite (Sven, 2026-11-11: „wenn ich mad men von gpt nehme … will ich natürlich dann gpt“):
+       vorige/nächste Folge der Serie (über alle Modelle bestimmt), verlinkt nur, wenn dasselbe Modell sie besprochen hat –
+       sonst hört die Kette dort auf („wenn das modell nichts hat, hört es auf“). Gesamteinschätzung ohne `nummer` = 0. */}}
 {{- range .GetTerms "serien" }}
   {{- $serie := . }}
-  {{- $n := $.Params.nummer }}
-  {{- with where (where .Pages "Params.nummer" $n) "RelPermalink" "ne" $.RelPermalink }}
+  {{- $n := $.Params.nummer | default 0 }}
+  {{- with where (where .Pages "Params.nummer" $.Params.nummer) "RelPermalink" "ne" $.RelPermalink }}
 <section>
   <h2>Weitere Texte zu dieser Folge</h2>
   {{ partial "liste.html" . }}
 </section>
   {{- end }}
+  {{- $modell := index ($.Params.modelle | default (slice "")) 0 }}
+  {{- $vorN := 0 }}{{ $nachN := 0 }}
+  {{- range .Pages }}{{ with .Params.nummer }}
+    {{- if and (lt . $n) (gt . $vorN) }}{{ $vorN = . }}{{ end }}
+    {{- if and (gt . $n) (or (eq $nachN 0) (lt . $nachN)) }}{{ $nachN = . }}{{ end }}
+  {{- end }}{{ end }}
   {{- $vor := false }}{{ $nach := false }}
-  {{- range sort (where .Pages "Params.zweitstimme" "!=" true) "Params.nummer" }}
-    {{- if lt .Params.nummer $n }}{{ $vor = . }}
-    {{- else if and (gt .Params.nummer $n) (not $nach) }}{{ $nach = . }}{{ end }}
-  {{- end }}
+  {{- range .Pages }}{{ if and .Params.nummer (eq (index (.Params.modelle | default (slice "")) 0) $modell) }}
+    {{- if and $vorN (eq .Params.nummer $vorN) }}{{ $vor = . }}{{ end }}
+    {{- if and $nachN (eq .Params.nummer $nachN) }}{{ $nach = . }}{{ end }}
+  {{- end }}{{ end }}
 <nav class="folgen-nav" aria-label="Weitere Folgen">
   <span>{{ with $vor }}<a href="{{ .RelPermalink }}">← {{ .Params.staffel }}.{{ .Params.folge }} {{ .Params.folgentitel }}</a>{{ end }}</span>
   <a href="{{ $serie.RelPermalink }}">Alle Folgen von {{ $serie.LinkTitle }}</a>
