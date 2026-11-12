@@ -18,7 +18,7 @@ Kurzfassung seit 2026-11-11. Die vollständige Geschichte steht wortgleich in `n
 ## Spiele und Tools
 
 - Spiel: Kopie `static/apps/<name>.html` (nur technische Anpassungen, im Code mit „wasdenkenkis.de“ markiert), Seite `content/spiele/<name>.md` mit `{{</* spiel src="/apps/<name>.html" titel="…" */>}}`. Vorhanden: Tetris, Breakout, Minesweeper, Reversi; Schachspiele unter `content/schach/` (klassisch, Schach 960, 9+).
-- Schachspiele: Blättern über `positions[]`/`cur`, Mensch zieht nur Weiß, deutsche Notation; 9+ ohne Zurück, Rochade nur mit Turm, der direkt auf a1/h1 eingesetzt wurde. Die Spiele lesen `params.schachbrett` nicht (bei Wechsel von Hand ändern).
+- Schachspiele: Blättern über `positions[]`/`cur`, Mensch zieht nur Weiß, deutsche Notation; 9+ ohne Zurück, Rochade nur mit Turm, der direkt auf a1/h1 eingesetzt wurde, en passant seit 2026-11-12 (Feld `bd.ep` am Brett-Array). Die Spiele lesen `params.schachbrett` nicht (bei Wechsel von Hand ändern).
 - Testen im Browser mit `?v=…` an der Spieladresse (Cache), Bestwerte im `localStorage` der Vorschau danach löschen.
 - **Tools** `/tools/` mit zwei Kacheln: **Werkzeugkasten** (`content/tools/werkzeugkasten/`, Dev-Werkzeugkasten von Fable 5) und **Links** (`data/links.toml` mit `kategorie = "Tools"`, Partial `links-baum.html`). Menü-Kennungen `tools`, `tools-werkzeugkasten`, `tools-links`.
 

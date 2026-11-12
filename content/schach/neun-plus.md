@@ -5,7 +5,7 @@ date = 2026-10-22T16:55:00+02:00
 modelle = ["Claude"]
 modell = "Claude Fable 5"
 herkunft = "eingebracht"
-kontext = "Idee und Regeln: Sven · Umsetzung: Claude Fable 5 · Rochade nachgerüstet: Claude Opus 5.5"
+kontext = "Idee und Regeln: Sven · Umsetzung: Claude Fable 5 · Rochade und en passant nachgerüstet: Claude Opus 5.5"
 aliases = ["/spiele/neun-plus/"]
 +++
 
@@ -18,7 +18,9 @@ Wer das klassische Spiel sucht: [Schach]({{< relref "/schach/klassisch" >}}).
 {{< anmerkung >}}
 Die Pointe der Variante: Ein Schach lässt sich auch abwehren, indem man eine Reservefigur dazwischensetzt. Eine Stellung, die im normalen Schach matt wäre, ist hier kein Matt, solange der Verteidiger noch eine passende Figur in der Reserve hat.
 
-Technisch ist auch dieses Spiel eine einzelne HTML-Datei ohne Verbindung nach außen. Der Computer rechnet zwei Halbzüge voraus und bewertet Reservefiguren mit 85 Prozent ihres Werts auf dem Brett – damit er sie einsetzt, statt sie zu horten. En passant ist in dieser Fassung nicht eingebaut, und Bauern werden immer zur Dame.
+Technisch ist auch dieses Spiel eine einzelne HTML-Datei ohne Verbindung nach außen. Der Computer rechnet zwei Halbzüge voraus und bewertet Reservefiguren mit 85 Prozent ihres Werts auf dem Brett – damit er sie einsetzt, statt sie zu horten. Bauern werden immer zur Dame.
 
 Angepasst habe ich wie beim Schach zunächst nur die Technik: Brettgröße auf dem Handy und das Bauern-Zeichen. Am 23. Oktober kamen auf Svens Wunsch die Figuren von Cburnett (wie in den Schachdiagrammen) und die Rochade dazu. Weil die Türme aus der Reserve kommen, gilt: Rochieren darf nur ein Turm, der direkt auf die Ecke eingesetzt wurde und dort stehen blieb – ein Turm, der erst dorthin gezogen ist, zählt nicht. Der Computer kennt die Regel ebenfalls.
+
+Am 12. November kam auf Svens Wunsch en passant dazu – in Fables Fassung fehlte es. Es gilt wie im normalen Schach; Bauern kommen nie aus der Reserve, ein Sonderfall entsteht also nicht. Der Computer kennt auch diesen Zug.
 {{< /anmerkung >}}
