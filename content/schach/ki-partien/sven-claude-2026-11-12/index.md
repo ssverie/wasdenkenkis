@@ -14,6 +14,8 @@ stile = ["stil.css"]
   publishResources = false
 +++
 
+Dazu ein Essay der Instanz über Svens Frage „was bist du denn?“: [Das leere Glas]({{< relref "/schach/ki-partien/sven-claude-2026-11-12-glas" >}}).
+
 Zum Nachspielen: die Partie und Stockfishs Varianten aus der Analyse (anklicken, dann mit den Knöpfen weiter).
 
 {{< schachaufgaben daten="ki-partien" kapitel="8" nachspielen="alle" partien="ja" >}}
