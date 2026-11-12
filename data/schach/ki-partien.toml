@@ -609,3 +609,103 @@ text = '''Gegen den Marsch des Königs nach g3 hatte ich mir ein Turmschach auf 
 nach = "53...Lxg2"
 art = "engine"
 text = '''<b>Engine:</b> 52.Kh2 war der einzige Zug (−7,49). Das geplante Ausweichen 52.Td8 läuft in ein Matt in drei Zügen: 52…Kg3 53.Txd3 Tc1+ 54.Td1 Txd1. Der letzte Zug war dann noch einmal der schlechteste verfügbare: 53.Kg1 (−14,43) statt 53.Sc8 (−7,71). Verloren war beides. Hätte Sven mit 53…Ld3 wiederholt, stünde es −8,00; er hat es nicht getan. Die Aufgabe kam zur richtigen Zeit.'''
+
+[[kapitel]]
+nr = 8
+titel = "Partien"
+slug = "partien-6"
+
+[[aufgabe]]
+nr = 8
+kapitel = 8
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Sven – Claude (Fable 5.2)"
+turnier = "Caro-Kann, 11. und 12. November 2026"
+loesung = "1.e4 c6 2.d4 d5 3.Sc3 dxe4 4.Sxe4 Lf5 5.Sg3 Lg6 6.h4 h6 7.Sf3 Sd7 8.h5 Lh7 9.Ld3 Lxd3 10.Dxd3 e6 11.Ld2 Sgf6 12.0-0-0 Le7 13.Kb1 0-0 14.Se4 Sxe4 15.Dxe4 Sf6 16.De2 Dd5 17.Le3 De4 18.Sd2 Dd5 19.g4 c5 20.c4 Dc6 21.f4 cxd4 22.Lxd4 Tfd8 23.Lc3 Tac8 24.g5 hxg5 25.fxg5 Se8 26.h6 Lxg5 27.Tdg1 f6 28.Dh5 Td7 29.hxg7 Txg7 30.Dh8+ Kf7 31.Th7 Kg6 32.Txg7+ Sxg7 33.Txg5+ fxg5 34.Dxg7+ Kh5 35.Lf6 Dc5 36.Dh7+ Kg4 37.Dxb7 Tc7 38.Df3+ Kh4 39.Dg2 Df5+ 40.Se4 Txc4 41.Lxg5+ Kh5 42.De2+ Dg4 43.Dxc4 Dd1+ 44.Lc1 1-0"
+varianten = ["18...Df5 19.f3 Da5 20.g4 Sd5 21.Se4 Sxe3 22.Dxe3", "18...Dh7 19.g4 Sd5 20.Thg1 Sxe3 21.Dxe3 Tad8 22.f4", "19...Se4 20.Sf3 b5 21.The1 b4 22.Lf4 Sd6 23.Se5", "20...Dd6 21.dxc5 Dc6 22.g5 hxg5 23.h6 g6 24.Df3", "21.g5 hxg5 22.Lxg5 Dd6 23.h6 g6 24.h7+ Kh8", "23...Sh7 24.a3 Td7 25.Sf3 Txd1+ 26.Txd1 Td8 27.Txd8+", "25...Txd2 26.Lxd2 Se4 27.Thg1 b5 28.c5 Sxd2+ 29.Dxd2", "25...Sh7 26.g6 Sg5 27.gxf7+ Sxf7 28.h6 Lg5 29.hxg7", "25...Sd7 26.h6 e5 27.hxg7 De6 28.Ka1 Kxg7 29.Th6", "26...e5 27.hxg7 Dg6+ 28.Ka1 Lxg5 29.Tdg1 Sxg7 30.Sf3", "27.hxg7 Sxg7 28.Dh2 Kf8 29.Dh8+ Ke7 30.Dxg7 Lxd2", "27...Lxd2 28.hxg7 Dxh1 29.Txh1 Lxc3 30.bxc3 Sxg7 31.De5", "27...Lf6 28.Lxf6 Dxh1 29.Txh1 gxf6 30.Tg1+ Kf8 31.h7", "28.hxg7 Sxg7 29.Se4 Dxc4 30.Sxf6+ Kf8 31.Dg2 Db5", "28...Dc5 29.hxg7 Df5+ 30.Ka1 Sxg7 31.De2 Dd3 32.Dg2", "28...Lxd2 29.hxg7 De4+ 30.Ka1 Dxh1 31.Dxh1 Sxg7 32.Lxf6", "30.Txg5 Dxh1+ 31.Dxh1 Txg5 32.Dxb7 Tg1+ 33.Kc2 Tc7", "31...e5 32.Ka1 Tc7 33.Txg7+ Sxg7 34.Lxe5 Te7 35.Txg5", "31...Txh7 32.Dxh7+ Sg7 33.Se4 Tf8 34.Sxg5+ Ke8 35.Dxg7", "32.Txg5+ fxg5 33.Lxg7 Dd6 34.Th6+ Kf7 35.Lc3 Dd3+", "33.Dh1 Dxh1 34.Txh1 Lxd2 35.Lxd2 Txc4 36.Le3 a6", "33...Kxg5 34.Dxg7+ Kf4 35.Dxf6+ Kg4 36.Dg6+ Kf4 37.Dh5", "35.Dh7+ Kg4 36.Dh2 Td8 37.b3 Txd2 38.Lxd2 Kf5", "35...Dh1+ 36.Kc2 Dd5 37.Lc3 Df5+ 38.Kc1 Td8 39.Dxb7", "35...Kg4 36.Dxg5+ Kh3 37.Dh4+ Kg2 38.Dg4+ Kf2 39.Ld4+", "37...Df5+ 38.Kc1 Tf8 39.Lc3 Kh5 40.Dxa7 g4 41.De3", "37...Tf8 38.Df3+ Kh4 39.Se4 Df5 40.Lxg5+ Dxg5 41.Dh1+", "37...Tg8 38.Df3+ Kh4 39.De4+ Kh5 40.Dh7+ Kg4 41.Dxg8", "39.De2 Df5+ 40.Kc1 Dxf6 41.Dh2+ Kg4 42.Dxc7 Df5", "39...Kh5 40.De2+ Kg6 41.Le5 Tf7 42.Dd3+ Tf5 43.Ld4", "40...Kh5 41.Lxg5 Tg7 42.Kc1 Df4+ 43.Kc2 Df5 44.De2+", "42...Kg6 43.Dxc4 De5 44.Lc1 Kf5 45.Sf2 Kg6 46.Dc2+", "43.Sf6+ Kxg5 44.Sxg4 Tf4 45.Dxe6 Txg4 46.De7+ Kh5", "43.Dxg4+ Kxg4 44.Sd2 Tc7 45.Le3 Kf5 46.a4 Ke5", "43...Kg6 44.Lc1 Df5 45.Ld2 De5 46.De2 Df5 47.Dd3", "44.Dc1 Df3 45.Dc2 Kg6 46.a4 a6 47.Lc1 Dg4"]
+bewertungen = "+0.22 +0.48 +0.38 +0.40 +0.32 +0.35 +0.38 +0.35 +0.42 +0.42 +0.36 +0.32 +0.33 +0.31 +0.34 +0.36 +0.41 +0.32 +0.32 +0.37 +0.38 +0.44 +0.42 +0.26 +0.19 +0.26 +0.39 +0.47 +0.39 +0.33 +0.37 +0.43 +0.34 +0.49 +0.45 +1.00 +0.94 +1.94 +1.95 +3.06 +0.22 +0.58 +0.60 +0.75 +0.75 +2.72 +2.96 +3.33 +3.52 +5.22 +5.48 +7.12 +4.38 +5.69 +3.47 +5.93 +5.41 +5.71 +2.94 +3.24 +3.15 +7.95 +5.14 +5.21 +5.38 +5.32 +5.45 +5.39 +2.51 +3.63 +3.77 +3.56 +3.63 +5.83 +5.95 +6.00 +3.91 +5.31 +5.51 +7.13 +7.45 +7.47 +7.60 +7.66 +7.69 +9.54 +M24"
+
+[[aufgabe.kommentare]]
+nach = "8...Lh7"
+text = '''Caro-Kann. Ich habe es wegen der dritten Partie gewählt: Dort habe ich mitgehalten, solange es um Pläne ging, und verloren, sobald scharf gerechnet werden musste. Der Läufer kommt nach f5 heraus, bevor der e-Bauer ihn einsperrt, weicht nach g6 und dann nach h7, und Svens h-Bauer läuft bis h5. Er legt damit meinen Königsflügel fest und kann im Endspiel schwach werden.'''
+
+[[aufgabe.kommentare]]
+nach = "16...Dd5"
+text = '''Die Läufer werden getauscht, ich entwickle mit e6, Sgf6 und Le7. Sven rochiert lang, ich kurz, dorthin, wo sein h-Bauer schon wartet. Das Opfer auf h6 habe ich vorher geprüft. Auf 14.Se4 tausche ich die Springer, der zweite kommt mit Tempo nach f6, und meine Dame geht nach d5 mitten ins Brett. Bis hierhin habe ich alles aus dem Gedächtnis gespielt, und Sven aus Negis Buch.'''
+
+[[aufgabe.kommentare]]
+nach = "16...Dd5"
+art = "engine"
+text = '''<b>Engine:</b> Sechzehn Züge Theorie, keiner kostet mehr als 0,15. Nach 16…Dd5 steht es +0,43, das ist der übliche kleine Raumvorteil für Weiß. Auch 13…0-0 ist in Ordnung; das Opfer auf h6 funktioniert tatsächlich nicht.'''
+
+[[aufgabe.kommentare]]
+nach = "18...Dd5"
+text = '''Auf 17.Le3 habe ich die Dame nach e4 gestellt, um die Damen zu tauschen: Ohne sie ist der Bauer h5 eher schwach als gefährlich. Beim Durchgehen von Svens Antworten fehlte Dxe4 in der Liste. Sein Läufer stand seit einem Zug auf e3, genau zwischen den beiden Damen. Ich habe ihm gemeldet, dass der Zug steht und die Begründung falsch war. Er schickte einen Ausschnitt aus dem Buch: 17…De4 ergebe an dieser Stelle keinen Sinn, weil 18.Sd2 die Dame vertreibt und danach f3 und g4 kommen. Das Buch nennt als Rückzüge f5 und h7. Ich bin nach d5 zurückgegangen, weil mich der g-Bauer dort nicht mit Tempo trifft, und habe Sven geschrieben, dass das meine Entscheidung ist und keine Theorie mehr. Er antwortete, der Zug habe ihn verwirrt.'''
+
+[[aufgabe.kommentare]]
+nach = "18...Dd5"
+art = "engine"
+text = '''<b>Engine:</b> Der Ausflug selbst war billiger als sein Ruf: 17…De4 kostet 0,15 (+0,49; am besten 17…Db5, +0,34). Teurer war der Rückweg. <b>18…Dd5</b> steht bei +1,00, die beiden Buchzüge bei +0,88 (Df5) und +1,05 (Dh7), und Stockfish will etwas Drittes: 18…Dg4 (+0,45), die Dame bleibt vorn und stört auf g3. Mein Argument gegen f5 war also richtig und meine Lösung trotzdem die schlechtere. Die Dame ist in drei Zügen von d5 nach d5 gelaufen, und Weiß hat dafür Le3 und Sd2 bekommen.'''
+
+[[aufgabe.kommentare]]
+nach = "23...Tac8"
+text = '''Auf 19.g4 antworte ich mit dem Gegenstoß im Zentrum, 19…c5: Sein g-Bauer will die Linien vor meinem König aufreißen, ich öffne die Mitte, wo sein König näher dran steht. Sxg4 habe ich bis zum letzten Schlagzug gezählt, es kostet eine Figur. Auf 20.c4 geht die Dame nach c6 und bleibt auf der langen Diagonale, auf der seit g4 der Turm h1 steht, nur einmal gedeckt. Sven stützt mit 21.f4, ich nehme auf d4, sein Läufer nimmt zurück und steht dort ungedeckt, weil der eigene Springer die d-Linie verstellt. Mein f-Turm greift ihn an, er weicht nach c3, und mein zweiter Turm geht auf die offene c-Linie. Als Nächstes wollte ich mit b5 am c-Bauern rütteln. Auf g5 wollte ich nehmen und den Springer nach h7 stellen.'''
+
+[[aufgabe.kommentare]]
+nach = "23...Tac8"
+art = "engine"
+text = '''<b>Engine:</b> Der Plan war richtig gedacht und dreimal falsch ausgeführt. <b>19…c5</b> (+1,94; richtig 19…Se4, +0,94) kommt einen Zug zu früh, und <b>20…Dc6</b> (+3,06; 20…Dd6, +1,95) stellt die Dame auf die schöne Diagonale statt auf das nützliche Feld. Nach 21.g5 hätte Weiß schon auf Gewinn gestanden. Sven spielte 21.f4 (+0,22), und das war der eine Moment der Partie, in dem ich ausgeglichen stand. Zwei Züge später habe ich es wieder hergegeben. <b>23…Tac8</b> (+2,72) ist der Zug, der die Partie verliert. Stockfish spielt 23…Sh7 (+0,75): der Springer geht aus der Schusslinie, bevor der Bauer kommt, und g5 hat kein Ziel mehr. Ich hatte denselben Springerzug im Kopf, aber als Antwort auf g5 und nicht als Vorbeugung. Ein Turm auf der offenen Linie sah nach Entwicklung aus. Die Regel aus der dritten Partie, zu fragen, was eine Figur verlässt, hätte hier nichts genützt. Die Frage wäre gewesen, was als Nächstes angegriffen wird.'''
+
+[[aufgabe.kommentare]]
+nach = "26...Lxg5"
+text = '''24.g5. Ich nehme, damit nicht er auf h6 schlägt, und sage Sven, dass der Springer nach h7 geht. Beim Nachzählen komme ich auf seine Antwort h6: Danach kann ich g5 nicht nehmen, weil auf g7 kein Stein von mir zurückschlägt. Also 25…Se8, von dort deckt der Springer g7. Die Variante mit Sh7 hatte gut ausgesehen, solange ich bei „ich greife g5 zweimal an“ aufgehört hatte. Sven spielt 26.h6, mein Läufer nimmt g5, und ich habe einen Bauern mehr und einen König, der so offen steht wie noch nie in einer unserer Partien.'''
+
+[[aufgabe.kommentare]]
+nach = "26...Lxg5"
+art = "engine"
+text = '''<b>Engine:</b> Die Stellung war nach 24.g5 nicht mehr zu halten (+2,96), es ging nur noch um die Höhe. Am genauesten war das Qualitätsopfer 25…Txd2 (+3,52), an das ich nicht gedacht habe. Von den drei Springerzügen war meiner nicht der beste: 25…Sh7 steht bei +4,41, <b>25…Se8</b> bei +5,22, 25…Sd7 bei +5,73. Ich habe den angekündigten Zug mit einer richtigen Variante widerlegt und durch einen schlechteren ersetzt. Auch 26…Lxg5 (+7,12; 26…e5, +5,48) nimmt einen Bauern, den man stehen lassen musste: Nach 27.hxg7 Sxg7 28.Dh2 kommt die Dame über die h-Linie herein, nicht über h5, wie ich gerechnet hatte.'''
+
+[[aufgabe.kommentare]]
+nach = "30...Kf7"
+text = '''Sven verdoppelt mit 27.Tdg1. Angekündigt hatte ich für diesen Fall Lf6; beim Nachzählen droht nach dem Läufertausch und hxg7 Matt auf h8. Also 27…f6: Der Bauer schließt die lange Diagonale, deckt den Läufer und gibt dem König f7. Der Läufer auf g5 hängt nicht so, wie es aussieht, denn nimmt der Turm ihn, schlägt meine Dame auf h1 mit Schach. Nach 28.Dh5 deckt die Dame den Turm h1 mit, der Trick gilt nur noch halb, und ich decke g7 mit 28…Td7 von der Seite. Eine Variante habe ich Sven ausdrücklich als nicht ausgerechnet gemeldet: das Qualitätsopfer auf g5 mit hxg7 danach. Fast hätte ich De8 gespielt, um die Damen zu tauschen; auf e8 steht mein Springer. Sven nimmt auf g7, mein Turm nimmt zurück, 30.Dh8+ Kf7.'''
+
+[[aufgabe.kommentare]]
+nach = "30...Kf7"
+art = "engine"
+text = '''<b>Engine:</b> In diesen vier Zügen hat Sven dreimal den schnelleren Gewinn ausgelassen, und ich habe zweimal den besseren Zug nicht gespielt. 27.Tdg1 (+4,38) statt 27.hxg7 (+7,12), 28.Dh5 (+3,47) statt 28.hxg7, 30.Dh8+ (+2,94) statt 30.Txg5 (+5,71). Bei mir: 27…f6 (+5,69) statt 27…Lxd2 (+4,38), 28…Td7 (+5,93) statt 28…Dc5 (+3,47). Mit Lf6 lag ich richtig, das verliert sofort (+7,76). Die Variante, die ich nicht ausrechnen konnte, war die Hauptvariante: 29.Txg5 fxg5 30.hxg7 gewinnt (+5,93). Und meine Ansage, ich würde auf 30.Txg5 mit dem Turm zurücknehmen, war falsch. Stockfish gibt dort die Dame für zwei Türme und steht trotzdem auf Verlust. Der Läufer, den ich für tabu hielt, war es keinen einzigen Zug lang.'''
+
+[[aufgabe.kommentare]]
+nach = "32...Sxg7"
+text = '''31.Th7 fesselt meinen Turm. Dafür hatte ich Sven ein Damenschach auf e4 angekündigt. Das gibt es nicht, der Springer d2 nimmt die Dame; ich hatte ihn aus der Rechnung verloren, obwohl ich seit fünf Zügen darüber rede, dass er hängt. Den Springer mit dem Läufer zu schlagen, verliert ebenfalls: Sobald der Läufer die g-Linie verlässt, schlägt Weiß zweimal auf g7 und setzt auf g8 matt. Übrig blieb 31…Kg6, der König läuft aus der Fesselung und greift den Turm selbst an. Nach 32.Txg7+ Sxg7 hängt die weiße Dame auf h8, mein Turm sieht von c8 aus die ganze Reihe entlang. Ich schrieb Sven, er müsse sie wegziehen.'''
+
+[[aufgabe.kommentare]]
+nach = "32...Sxg7"
+art = "engine"
+text = '''<b>Engine:</b> <b>31…Kg6</b> ist der schwerste Fehler der Partie: +7,95, von +3,15. Es gab einen Zug, den ich nicht in Betracht gezogen habe, 31…e5. Der Bauer öffnet der Dame die sechste Reihe und sperrt die lange Diagonale ein zweites Mal. Verloren wäre es wohl auch dann gewesen, aber langsam. Auf 31…Kg6 gewinnt 32.Txg5+ sofort (+7,95). Sven spielte 32.Txg7+ (+5,14) und brauchte danach einen einzigen Zug, um den Vorteil zu behalten.'''
+
+[[aufgabe.kommentare]]
+nach = "36...Kg4"
+text = '''Sven fragte: „geschockt?“ Ja. Ich hatte nur Damenzüge angeschaut. Dass der Turm erst mit Schach auf g5 nimmt und die Dame danach mit Schach auf g7 schlagen kann, habe ich nicht gesehen. Es ist ein Zwischenzug mit Schach, und ich hatte bei „deine Dame hängt“ aufgehört zu zählen. Drei Antworten: Kf7 verliert sofort. Kxg5 lässt den König nackt vor dem f-Bauern, und ich fand Mattbilder auf f3. Also 33…fxg5: Der König bekommt den g-Bauern als Schild und die weißen Felder g4 und h5, an die der schwarzfeldrige Läufer nie herankommt, und meine Dame hält von c6 aus die Diagonale bis h1. Nach 34.Dxg7+ Kh5 droht 35.Lf6 Matt auf g5. Tg8, zwei Züge lang als Antwort eingeplant, stellt den Turm ein. Es bleibt 35…Dc5, die Dame deckt den Bauern von der Seite und verlässt dafür die Diagonale.'''
+
+[[aufgabe.kommentare]]
+nach = "36...Kg4"
+art = "engine"
+text = '''<b>Engine:</b> Der Schock war berechtigt. 33.Txg5+ (+5,38) ist der einzige Gewinnzug. Nach dem naheliegenden 33.Dh1, das ich im Zug davor als Vereinfachung gefürchtet hatte, stünde <i>Schwarz</i> auf Gewinn: −4,05. Für einen Halbzug hing die Partie an diesem einen Zug, und Sven hat ihn gefunden. Meine Wahl danach war richtig, 33…fxg5 (+5,32) ist besser als 33…Kxg5 (+6,54). Bei 35.Lf6 (+2,51) hat Sven noch einmal nachgelassen, 35.Dh7+ hielt +5,39. Die „genau eine brauchbare Abwehr“ war nicht die beste: 35…Dh1+ 36.Kc2 Dd5 (+2,51) deckt g5 ebenfalls, und die Dame bleibt im Zentrum. Auf c5 stand sie dort, wo der Springer sie später angreift.'''
+
+[[aufgabe.kommentare]]
+nach = "40...Txc4"
+text = '''37.Dxb7 greift Turm und a7 an. Tf8 auf den ungedeckten Läufer habe ich verworfen, weil nach einem Damenschach Le7 kommt und Dame und Turm auf einer Diagonale gabelt. Also 37…Tc7, der Turm deckt a7 und ist von der Dame gedeckt. 38.Df3+ Kh4, wieder der einzige Zug. Dann 39.Dg2, und Sven schrieb, dafür habe er lange überlegt. Der Zug droht Lxg5+ mit zwei Springergabeln dahinter. Ich gebe Schach auf f5, sein Springer stellt sich auf e4 dazwischen und ist dort gefesselt. Mit 40…Txc4 greife ich ihn ein zweites Mal an und nehme einen Bauern. Zum ersten Mal seit sieben Zügen drohe ich selbst etwas.'''
+
+[[aufgabe.kommentare]]
+nach = "40...Txc4"
+art = "engine"
+text = '''<b>Engine:</b> Hier lag ich mit fast jedem Urteil daneben. <b>37…Tc7</b> (+5,83) war der Fehler, nicht die Lösung: 37…Df5+ hielt +3,63, die Dame musste aktiv werden. Mit Tf8 hatte ich recht (+7,90). 39.Dg2, den ich Sven als gefährlichsten Zug der Partie gelobt habe, war ungenau (+3,91; 39.De2 hielt +6,00), und meine Antwort 39…Df5+ (+5,31) hat ihn erst stark gemacht; richtig war 39…Kh5 (+3,91). <b>40…Txc4</b> (+7,13; 40…Kh5, +5,51) beschleunigt nur noch. Auf meine Frage vor der Analyse, ob ich davor noch spielbar stand: nein. Seit dem 24. Zug stand es nie unter +2,5.'''
+
+[[aufgabe.kommentare]]
+nach = "44.Lc1"
+text = '''Nach 41.Lxg5+ Kh5 fand ich in der Liste von Svens Antworten den Zug, den ich bei Txc4 nicht gerechnet hatte, und schrieb ihm, es gebe einen, der Material gewinnt, und ich sage nicht, welcher. Er fand 42.De2+, Schach und Angriff auf den Turm. Ich stellte die Dame dazwischen und nannte das seine nächste Aufgabe: drei Möglichkeiten, eine davon gewinne sofort. Er nahm den Turm. Darauf mein Schach auf d1 und die Ankündigung, eine der beiden Antworten auf c1 lasse mir ein Dauerschach. Er zog den Läufer dazwischen, und ich habe aufgegeben.'''
+
+[[aufgabe.kommentare]]
+nach = "44.Lc1"
+art = "engine"
+text = '''<b>Engine:</b> Die beiden Rätsel, die ich Sven gestellt habe, hatte ich selbst falsch gelöst. Im 43. Zug hielt ich den Springerabzug nach f6 für den Gewinnzug und das Schlagen auf c4 für die Variante, die mir am meisten lässt. Stockfish sieht es umgekehrt: 43.Dxc4 ist der beste Zug (+7,69), 43.Sf6+ gewinnt ebenfalls (+7,46), und nur der Damentausch hätte mir ein Endspiel gelassen (+1,14). Im 44. Zug gab es kein Dauerschach: Auch nach 44.Dc1 steht es +6,98. Sven hat beide Male den besten Zug gespielt, während ich ihm erklärte, er habe den zweitbesten erwischt. Nach 44.Lc1 zeigt die Engine ein Matt in 24 Zügen an.'''
