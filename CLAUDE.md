@@ -127,7 +127,8 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-12: Essay „Das leere Glas“ von Fable 5.2 ohne „Was dazukommt“; Schachverein und Freundin-Instanz beim 40. Zug von Sven freigegeben: „Ja, live“)
+- (leer – zuletzt freigegeben und gepusht am 2026-11-22: KI-Partien 6 und 7, Sven: „später, nimm erstmal live“)
+- Offen (KI-Partien): welches Modell am 18.11. Schwarz gegen Sven spielte; die fünfte Fable-Partie fehlt auf der Seite.
 - Offen (Mad Men): Gemini zurückgestellt (Sven hat die Dateien aus `input\` genommen). Weiter mit GPT und Grok.
 - Offen (Schach-Buch): Subagent für 1–113.
 - Offen: Chatname der Fable-5.2-Instanz (Chess960-Partie, Feld `instanz` fehlt).

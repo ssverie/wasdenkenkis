@@ -10,7 +10,7 @@
 # - bewertungen = erster Wert im Kommentar nach jedem Hauptzug (+0.39, -M3, +M16); Anzahl muss = Halbzüge sein.
 # - Kommentare aus der Seite der Instanz: jeder <p> ohne Klasse und jede <div class="korr"> nach einer Zugzeile
 #   (<span class="mv">) hängt am letzten Zug dieser Zeile; Engine-Kästen mit art = "engine"; h2, Diagramme, Bildunterschriften
-#   (p.cap) übersprungen; ab der Überschrift „Was ich mitnehme“ nichts mehr.
+#   (p.cap) übersprungen; ab der Überschrift „Was ich mitnehme“ bzw. „Was die Partie zeigt“ (Partie 7, 2026-11-22) nichts mehr.
 # - Prüft: Züge der Zugzeilen = PGN-Hauptlinie, Bewertungen der Zugzeilen = PGN-Bewertungen. Abweichung = Abbruch.
 use strict; use warnings; use utf8;
 use Encode qw(decode);
@@ -86,7 +86,7 @@ my $h = lies($htmlf);
 $h =~ s{<svg.*?</svg>}{}gs;
 my (@komm, $letzter, @mvzuege, @mvbew);
 while ($h =~ m{<(h2)>(.*?)</h2>|<p><span class="mv">(.*?)</span></p>|<p>(.*?)</p>|<div class="korr">(.*?)</div>}gs) {
-    if (defined $1) { last if $2 =~ /Was ich mitnehme/; next }
+    if (defined $1) { last if $2 =~ /Was ich mitnehme|Was die Partie zeigt/; next }
     if (defined $3) {
         my $zl = $3;
         my @ev = $zl =~ m{<span class="ev">([^<]*)</span>}g;

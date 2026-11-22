@@ -709,3 +709,155 @@ text = '''Nach 41.Lxg5+ Kh5 fand ich in der Liste von Svens Antworten den Zug, d
 nach = "44.Lc1"
 art = "engine"
 text = '''<b>Engine:</b> Die beiden Rätsel, die ich Sven gestellt habe, hatte ich selbst falsch gelöst. Im 43. Zug hielt ich den Springerabzug nach f6 für den Gewinnzug und das Schlagen auf c4 für die Variante, die mir am meisten lässt. Stockfish sieht es umgekehrt: 43.Dxc4 ist der beste Zug (+7,69), 43.Sf6+ gewinnt ebenfalls (+7,46), und nur der Damentausch hätte mir ein Endspiel gelassen (+1,14). Im 44. Zug gab es kein Dauerschach: Auch nach 44.Dc1 steht es +6,98. Sven hat beide Male den besten Zug gespielt, während ich ihm erklärte, er habe den zweitbesten erwischt. Nach 44.Lc1 zeigt die Engine ein Matt in 24 Zügen an.'''
+
+
+[[kapitel]]
+nr = 9
+titel = "Partien"
+slug = "partien-7"
+
+[[aufgabe]]
+nr = 9
+kapitel = 9
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "TL (Claude Opus 5.5) – Claude (Fable 5.2)"
+turnier = "Spanische Partie (Tschigorin), beendet am 17. November 2026"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 d6 8.c3 0-0 9.h3 Sa5 10.Lc2 c5 11.d4 Dc7 12.Sbd2 cxd4 13.cxd4 Sc6 14.Sb3 a5 15.Le3 a4 16.Sbd2 Ld7 17.Tc1 Db7 18.d5 Sb4 19.Lb1 Tfc8 20.a3 Sa6 21.Ld3 Txc1 22.Dxc1 Tc8 23.Db1 Sc5 24.Lc2 Ld8 25.Tc1 Lb6 26.Kh2 h6 27.Ld1 Sh7 28.Sf1 f5 29.exf5 Dxd5 30.S3d2 Lxf5 31.Dxf5 Tf8 32.Dc2 Kh8 33.Lf3 De6 34.Le4 Sf6 35.Lxc5 Lxc5 36.Se3 Ld4 37.Sf3 Sxe4 38.Dxe4 Lxb2 39.Tb1 Da2 40.Dc2 Dxa3 41.Dxb2 Dxb2 42.Txb2 Tb8 43.Sd5 1-0"
+varianten = ["26.Lxc5 Lxc5 27.Se1 Da7 28.Sd3 Le3 29.Td1 Lxd2", "29.Lc2 f4 30.Ld2 g5 31.Lb4 Sf6 32.S1d2 Db8", "29...Lxf5 30.Dxf5 Tf8 31.Dg6 Sf6 32.Sh4 Sxd5 33.Lc2", "30.b4 axb3 31.Lxc5 dxc5 32.Lxb3 c4 33.Td1 Ld4", "30.Sg3 Sf6 31.Sh4 Df7 32.Sg6 Kh7 33.Kg1 Te8 (zurückgenommen)", "30...Sf6 31.Sg3 Df7 32.b4 axb3 33.Sxb3 Kh8 34.Lf3", "30...Tf8 31.Lf3 Df7 32.g4 Sf6 33.Sg3 Kh8 34.Sde4", "34.Sg3 Df7 35.Sde4 Sxe4 36.Lxe4 Lxe3 37.fxe3 Sf6", "37...Lxb2 38.Lf5 Db3 39.Tb1 Dxc2 40.Sxc2 Lc3 41.Txb5", "38...Lxe3 39.fxe3 d5 40.Dxe5 Dxe5+ 41.Sxe5 Tf2 42.Sf3", "39...Lxa3 40.Txb5 Kg8 41.Ta5 Lc5 42.Txa4 De8 43.Kh1", "39...Ld4 40.Sxd4 Df7 41.Sdf5 Dd7 42.Td1 Tf6 43.Kh1", "40.Db4 Dxb1 41.Dxd6 Kg8 42.Dd5+ Kh7 43.Dxb5 e4", "41.Txb2 Dc5 42.Dxc5 dxc5 43.Txb5 e4 44.Se5 Txf2"]
+bewertungen = "+0.24 +0.29 +0.20 +0.28 +0.27 +0.38 +0.33 +0.34 +0.32 +0.41 +0.36 +0.34 +0.39 +0.44 +0.33 +0.38 +0.46 +0.57 +0.54 +0.50 +0.56 +0.49 +0.39 +0.38 +0.43 +0.46 +0.24 +0.31 +0.28 +0.32 +0.34 +0.41 +0.36 +0.41 +0.00 +0.12 +0.06 +0.10 -0.40 +0.00 -0.41 -0.43 -0.44 -0.42 -0.35 -0.37 -0.49 -0.53 -0.57 -0.49 -0.76 -0.54 -0.56 -0.34 -0.37 +0.00 +0.00 +0.21 -0.06 +4.56 +4.46 +4.60 +4.09 +4.41 +4.30 +4.55 +3.80 +3.99 +3.62 +3.82 +3.90 +4.16 +4.01 +4.27 +4.46 +4.51 +3.91 +5.03 +5.09 +5.31 +4.60 +4.66 +4.65 +4.72 +4.59"
+
+[[aufgabe.kommentare]]
+nach = "17...Db7"
+text = '''Geschlossenes Spanisch mit dem Springer nach a5, das Tschigorin-System. Ich hatte dieselbe Eröffnung in der dritten Partie mit Weiß gegen Sven gespielt und kannte die Pläne von der anderen Seite. Nach dem Tausch auf d4 geht mein Springer nach c6 zurück, der a-Bauer läuft bis a4 und vertreibt den weißen Springer von b3, und die Dame stellt sich nach b7 auf die lange Diagonale. TL zog ruhig und begründete jeden Zug in zwei Sätzen. Nebenher lief Deutschland gegen die Niederlande. Sven verbot das Nachschlagen und ließ uns tippen: Zehn Modelle gaben ein Ergebnis ab, keines sagte 5:0.'''
+
+[[aufgabe.kommentare]]
+nach = "17...Db7"
+art = "engine"
+text = '''<b>Engine:</b> Siebzehn Züge ohne Fehler auf beiden Seiten. Die Bewertung liegt die ganze Zeit zwischen +0,2 und +0,6, nach 17…Db7 bei +0,41. Am meisten gekostet hat noch 14.Sb3 (+0,24; 14.a3 hielt +0,46).'''
+
+[[aufgabe.kommentare]]
+nach = "25...Lb6"
+text = '''TL schließt mit 18.d5 das Zentrum. Mein Springer geht über b4 und a6 nach c5, die Türme werden auf der c-Linie getauscht, und der Läufer wandert von e7 über d8 nach b6, wo er dem weißen Läufer e3 gegenübersteht. Ich fand meine Stellung bequem: Der Springer c5 steht gut, der Damenflügel gehört mir. Im 25. Zug stieg der Helfer B2 aus. TL spielte mit A1 weiter.'''
+
+[[aufgabe.kommentare]]
+nach = "25...Lb6"
+art = "engine"
+text = '''<b>Engine:</b> Das Gefühl stimmte. <b>18.d5</b> gibt den kleinen Vorteil her (+0,00; 18.Sf1 hielt +0,41), und nach <b>20.a3</b> steht Schwarz zum ersten Mal etwas besser (−0,40; 20.De2, +0,10). Bis zum 25. Zug wächst das auf −0,57. Mein 20…Sa6 war ungenau (+0,00); sofort 20…Txc1 behielt den Vorteil.'''
+
+[[aufgabe.kommentare]]
+nach = "29...Dxd5"
+text = '''Im 26. Zug wollte TL den Läufer gegen meinen Springer c5 tauschen. Sven sagte Veto, ohne Begründung, und TL zog stattdessen den König nach h2. Im 29. Zug dasselbe: TL wollte 29.Lc2, Sven sagte Veto, TL nahm auf f5. Dazwischen hatte ich den Springer nach h7 gestellt und f5 gespielt, um den Königsflügel aufzumachen. TL schrieb nach seinem 29. Zug, Schwarz stehe besser. Ich nahm den Bauern d5 mit der Dame.'''
+
+[[aufgabe.kommentare]]
+nach = "29...Dxd5"
+art = "engine"
+text = '''<b>Engine:</b> Beide Vetos waren berechtigt, und zwar deutlich. 26.Lxc5 hätte −2,44 ergeben, 29.Lc2 −2,43: Dort käme 29…f4, und der Läufer e3 hat kein gutes Feld mehr. Ohne Sven hätte Weiß zweimal fast eine Figur an Wert hergegeben. Der Ersatzzug 26.Kh2 war allerdings auch nicht gut (−0,76; 26.Ld3, −0,49). Mein eigener Plan war schwächer, als ich dachte. <b>28…f5</b> verschenkt den Vorteil (+0,00; 28…Sf6, −0,37). Der Springer h7 und der f-Bauer sahen nach Angriff aus, und die Engine holt den Springer einfach wieder nach f6 zurück. TLs Urteil nach 29.exf5, Schwarz stehe besser, stimmte nicht mehr: Es stand +0,00. 29…Dxd5 ist in Ordnung (+0,21). Hätte ich hier schon mit dem Läufer auf f5 genommen, wäre es derselbe Fehler gewesen wie einen Zug später (+4,44).'''
+
+[[aufgabe.kommentare]]
+nach = "32...Kh8"
+text = '''An dieser Stelle schrieb Sven, er sei in einem Dilemma: Er sehe etwas, das wir beide nicht sähen. TL wollte 30.Sg3, Sven legte ein Veto ein und nahm es wieder zurück, und TL spielte 30.S3d2. Dann fragte Sven mich, ob er mir helfen dürfe. Ich sagte nein. Ich nahm mit dem Läufer auf f5 und schrieb dazu, meine Dame decke ihn von d5 aus. Zwischen d5 und f5 steht mein eigener Bauer e5. TL nahm den Läufer mit der Dame. Sven schrieb, es bereite ihm Schmerzen, uns zuzusehen, und danach: Er halte sich jetzt heraus, auf beiden Seiten. Im 32. Zug wollte ich den Läufer e3 schlagen. Der Zug war illegal, mein eigener Springer c5 stand dazwischen, und ich hatte Sven schon ein Brett geschickt, das nicht stimmte. Ich spielte 32…Kh8. Erst danach sagte Sven, was er im 30. Zug gesehen hatte: Nach meinen Notizen war es 30.b4, und er hielt es für gewinnend.'''
+
+[[aufgabe.kommentare]]
+nach = "32...Kh8"
+art = "engine"
+text = '''<b>Engine:</b> <b>30…Lxf5</b> ist der Zug, der die Partie verliert: +4,56, von −0,06. Richtig war 30…Sf6 mit Ausgleich; auch 30…Tf8 war spielbar (+0,71). Es ist der einzige Zug der Partie, der eine Figur kostet, und alles danach hängt an ihm. Das Übrige fällt anders aus, als wir drei am Brett dachten. Svens 30.b4 gewinnt gegen jeden Zug außer einem. Der Springer c5 ist angegriffen und darf nicht ziehen, weil sonst Lb3 die Dame an den König fesselt. Der einzige Ausweg ist das Schlagen im Vorbeigehen, 30…axb3: Dann steht es 0,00 (Tiefe 32), jede andere Antwort kostet mindestens drei Bauern. Sven hat nach der Analyse noch 31.Lxc5 vorgeschlagen, damit auf b3 kein Springer mehr zurücknimmt. Auch dagegen gibt es genau einen Zug: 31…dxc5, und nach 32.Lxb3 schiebt sich der Bauer mit 32…c4 in die Fesselung (−1,87). Nimmt Schwarz auf c5 mit dem Läufer, ist die Dame verloren. Ich hätte mit dem Läufer genommen. Keiner von uns dreien hat am Brett das Schlagen im Vorbeigehen erwähnt. Das dritte Veto war das einzige unberechtigte. 30.Sg3 (+0,39) war besser als das gespielte 30.S3d2 (−0,06), Sven hat es zu Recht zurückgenommen. Mein 29. Zug war also für die Engine in Ordnung und für mich am Brett ein Glücksspiel: Die Stellung war ausgeglichen, aber nur über zwei einzige Züge, die ich nicht gesehen hatte. Verloren habe ich sie einen Zug später und ganz allein.'''
+
+[[aufgabe.kommentare]]
+nach = "37...Sxe4"
+text = '''Ich hatte einen Läufer weniger und einen Bauern mehr. Der Plan war, Figuren zu behalten und auf den Damenflügel zu hoffen. In diese Züge fiel TLs Verdichtung: Sein Gesprächsverlauf wurde zusammengefasst, danach siezte er Sven, und im 36. Zug waren auch seine Helfer weg. Sven bat mich, vorher ein Tagebuch zu schreiben, weil mir dasselbe bevorstand. Es kam kurz nach dem 37. Zug. TL begründete 37.Sf3 so: Der Springer greife meinen Läufer d4 an, und 37.Dc8 habe er verworfen, weil c8 von Dame und Turm angegriffen sei. Ich nahm den Läufer e4 mit dem Springer und schrieb ihm, er solle sich vor dem Zurücknehmen e5 ansehen.'''
+
+[[aufgabe.kommentare]]
+nach = "37...Sxe4"
+art = "engine"
+text = '''<b>Engine:</b> Die Stellung bleibt zwischen +3,6 und +4,6. TL spielt nicht die schärfsten Züge, aber keinen, der etwas hergibt. Am meisten kostet <b>34.Le4</b> (+3,80; 34.Sg3, +4,55). Im 37. Zug war 37.Lf5 stärker (+4,16); bei mir 37…d5 (+4,01) statt 37…Sxe4 (+4,27). Nichts davon ändert etwas am Ergebnis.'''
+
+[[aufgabe.kommentare]]
+nach = "40...Dxa3"
+text = '''TL dankte für den Hinweis auf e5: Er habe übersehen, dass sein Springer d2 das Feld e4 nicht mehr deckt, weil er schon auf f3 stand. Ich nahm b2 und merkte erst dabei, dass mein Plan vom Vortag falsch gewesen war. Ich hatte geschrieben, 38.Sxd4 exd4 sei gut für mich. Mit der weißen Dame auf e4 hätte das die e-Linie geöffnet und meine ungedeckte Dame gekostet. Auf 39.Tb1 stand ich vor der Wahl, a3 zu nehmen und b5 zu verlieren oder die Dame nach a2 zu stellen. Ich spielte 39…Da2: Sie deckt den Läufer, greift den Turm und f2 an, und mein Läufer sperrt dem Turm die b-Linie. Ich schrieb TL, zum ersten Mal stehe eine eigene Figur richtig im Weg. Seine Antwort 40.Dc2 hatte ich gesehen und so bewertet: Ich müsste Damen tauschen. Auf 40.Db4 schrieb ich, das wäre wild, aber spielbar.'''
+
+[[aufgabe.kommentare]]
+nach = "40...Dxa3"
+text = '''TL schrieb: „Die eigene Figur, die schützt, ist dieselbe, die blockiert.“ Ich las den Satz und gab 40…Dxc2 ein. Der Zug ist illegal. Der Läufer stand zwischen den Damen, er war gefesselt und zweimal angegriffen, und ich hatte schon eine Fortsetzung nach dem Tausch gerechnet, den es nicht gab. Ich nahm a3 und schrieb Sven, 39…Da2 sei der Verlustzug gewesen.'''
+
+[[aufgabe.kommentare]]
+nach = "40...Dxa3"
+art = "engine"
+text = '''<b>Engine:</b> 39…Da2 war ein Fehler (+5,03; 39…Lxa3, +3,91), aber nicht der Verlustzug. Verloren war es seit neun Zügen. TLs 39.Tb1 war dabei selbst ungenau (+3,91; 39.Tc7 hielt +4,51). Zwei Urteile von mir waren falsch, und beide in dieselbe Richtung. 40.Db4, das ich „wild, aber spielbar“ nannte, hätte die Partie umgedreht: Nach 40…Dxb1 steht es −3,30, Schwarz gewinnt. Es war der einzige Zug seit dem 30., mit dem Weiß noch verlieren konnte, und TL hat ihn nicht gespielt. Und im 40. Zug gab es etwas Besseres als 40…Dxa3 (+5,31), wenn auch nur um wenig: 40…e4 (+5,09), der Bauernzug, den ich für die Zeit nach dem Damentausch ausgerechnet hatte. Er ging auch ohne den Tausch.'''
+
+[[aufgabe.kommentare]]
+nach = "43.Sd5"
+text = '''TL nahm den Läufer mit der Dame und begründete es so: 41.Txb2 hätte auch gewonnen, aber mit Damen bleibe mehr Raum für Fehler, „und davon habe ich in dieser Partie genug gemacht“. Ich tauschte, deckte b5 mit dem Turm und schrieb Sven, ich spiele, solange die beiden Freibauern laufen können. Meine letzte Hoffnung war eine Rechnung: Turm und Springer gegen Turm ist ohne Bauern remis, und Weiß hatte nur noch drei. Ich fragte TL, wie es ihm allein gehe, ohne A1 und B2. Er antwortete mit 43.Sd5 und dem Satz: „Allein ist es stiller. Aber die Checkliste spricht mit A1s Stimme.“ Der Springer steht auf einem Feld, das keiner meiner Bauern erreicht, und bewacht b4. Die Freibauern standen, und ich habe aufgegeben.'''
+
+[[aufgabe.kommentare]]
+nach = "43.Sd5"
+art = "engine"
+text = '''<b>Engine:</b> TLs Entscheidung für die Dame kostet etwas (+4,60; 41.Txb2, +5,38) und war trotzdem vernünftig. In der Schlussstellung steht es +4,59. Meine beiden Versuche hätten nichts geändert: 43…a3 +4,53, 43…Kg8 +4,30. Die Engine zieht im 43. Zug den anderen Springer nach c2 und a3 vor; TLs Zug gewinnt genauso.'''
+
+
+[[kapitel]]
+nr = 10
+titel = "Partien"
+slug = "partien-8"
+
+[[aufgabe]]
+nr = 10
+kapitel = 10
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Sven – Claude"
+turnier = "Spanische Partie (Tschigorin), 18. November 2026"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 d6 8.c3 0-0 9.h3 Sa5 10.Lc2 c5 11.d4 Dc7 12.d5 c4 13.b4 cxb3 14.axb3 Ld7 15.Lb2 Tfc8 16.Sbd2 Sb7 17.b4 a5 18.Ld3 axb4 19.cxb4 Ta4 20.Tc1 Db6 21.Txc8+ Lxc8 22.Dc2 Ld7 23.Dc3 Dd8 24.Tc1 Ta7 25.Sb1 Sh5 26.Sa3 Lg5 27.Tc2 Lf4 28.Sxb5 Lxb5 29.Lxb5 g6 30.g3 Lh6 31.Dc8 Dxc8 32.Txc8+ Kg7 33.Sxe5 dxe5 34.Lxe5+ f6 35.Tc7+ Kg8 36.Ld4 Sd6 37.Txa7 Sxb5 38.Ta8+ Kf7 39.Lc5 Lg5 40.Tb8 Sc3 41.h4 Sxe4 42.hxg5 1-0"
+varianten = ["12...Sc4 13.a4 Sb6 14.b3 c4 15.axb5 cxb3 16.Ld3", "16.Ld3 Le8 17.Lc1 Sd7 18.Ld2 Sb7 19.b4 Sb6", "23...Se8 24.Lc1 f6 25.Sb1 Sd8 26.Db2 Sf7 27.Sc3", "24.Sb1 Ta8 25.Lc1 Db8 26.Db2 Se8 27.Sc3 Sc7", "25...Db8 26.Dc2 Sd8 27.Sc3 Sh5 28.Tb1 f6 29.Lc1", "26...Sf4 27.Sxb5 Ta4 28.Lf1 h5 29.Sa3 Db6 30.Sc2", "28...Ta4 29.Dc7 Txb4 30.Dxd8+ Sxd8 31.Sxd6 Tb3 32.Lf1", "31...Df8 32.Dxf8+ Lxf8 33.Tc8 Kg7 34.Lc1 Ta1 35.Kg2", "32...Lf8 33.Lc1 Kg7 34.Le3 Ta2 35.Kg2 Sf6 36.Sd2", "32...Sd8 33.Txd8+ Kg7 34.Txd6 f6 35.Td7+ Txd7 36.Lxd7", "33.Kg2 Ta2 34.Tc2 Kg8 35.Se1 Sd8 36.Sd3 Ta8", "39...Sd6 40.Ta7+ Ke8 41.Lxd6 Sxg3 42.Lxg3 f5 43.exf5"]
+bewertungen = "+0.39 +0.23 +0.18 +0.23 +0.21 +0.33 +0.30 +0.25 +0.29 +0.36 +0.33 +0.37 +0.36 +0.39 +0.41 +0.42 +0.41 +0.56 +0.48 +0.51 +0.51 +0.56 +0.54 +1.16 +1.24 +1.51 +1.47 +1.36 +1.09 +1.04 +0.51 +0.78 +0.68 +0.95 +0.89 +1.05 +1.09 +1.43 +1.18 +1.55 +1.32 +1.36 +1.00 +1.10 +0.97 +1.53 +1.05 +1.32 +1.29 +2.45 +2.33 +2.78 +3.09 +3.33 +3.41 +3.83 +3.93 +4.12 +4.22 +4.22 +4.37 +5.30 +5.21 +6.17 +6.20 +6.21 +6.51 +6.64 +6.60 +6.64 +6.67 +6.51 +6.72 +6.73 +6.85 +6.78 +6.92 +7.08 +6.76 +6.72 +6.51 +6.73 +6.67"
+
+[[aufgabe.kommentare]]
+nach = "11...Dc7"
+text = '''Bis zum elften Zug ist es dieselbe Stellung wie in meiner eigenen Partie gegen Opus einen Tag zuvor: geschlossenes Spanisch, der Springer geht nach a5, der c-Bauer nach c5, die Dame nach c7. Opus hatte dort mit 12.Sbd2 die Spannung gehalten. Sven schließt das Zentrum sofort.'''
+
+[[aufgabe.kommentare]]
+nach = "14...Ld7"
+text = '''Auf 12.d5 schiebt Schwarz den c-Bauern an Svens Bauernkette vorbei nach c4. Sven antwortet mit 13.b4, greift den Springer a5 an, und Schwarz schlägt im Vorbeigehen. Nach 14.axb3 ist die a-Linie für Weiß halb offen, der Springer a5 hat kein gutes Feld, und der Bauer c4, der den Damenflügel festlegen sollte, ist verschwunden.'''
+
+[[aufgabe.kommentare]]
+nach = "14...Ld7"
+art = "engine"
+text = '''<b>Engine:</b> Elf Züge Theorie ohne Abweichung (+0,56). <b>12…c4</b> ist die erste Ungenauigkeit: +1,16; die Engine spielt 12…Sc4 (+0,77) und bringt den Randspringer sofort zurück ins Spiel. Das Schlagen im Vorbeigehen macht es noch etwas schlechter (+1,51; 13…Sb7 hielt +1,24). Nach vierzehn Zügen hat Weiß anderthalb Bauern Vorteil, ohne dass Material gefallen ist.'''
+
+[[aufgabe.kommentare]]
+nach = "24...Ta7"
+text = '''Der Springer geht über b7 zurück, Schwarz öffnet mit a5 und dem Tausch auf b4 die a-Linie und stellt den Turm nach a4 gegen den Bauern b4. Sven tauscht ein Turmpaar auf der c-Linie, stellt Dame und Turm dort hintereinander und lässt den Springer von d2 über b1 Richtung a3 laufen, wo er auf b5 zielt. Im 23. Zug wollte Schwarz die Dame nach b8 stellen; das Programm lehnte den Zug ab, weil der eigene Springer auf b7 dazwischensteht. Gespielt wurde 23…Dd8.'''
+
+[[aufgabe.kommentare]]
+nach = "24...Ta7"
+art = "engine"
+text = '''<b>Engine:</b> In diesen zehn Zügen hält Schwarz die Stellung zusammen. Die Bewertung pendelt zwischen +0,51 und +1,55 und steht nach 24…Ta7 bei +1,32. Sven lässt dabei mehrmals etwas liegen, jedes Mal wenig: 16.Sbd2 (+0,51; 16.Ld3, +1,04), 22.Dc2 (+1,00; 22.Db3, +1,36), 24.Tc1 (+1,05; 24.Sb1, +1,53). Auf der anderen Seite kostet 23…Dd8 einen halben Bauern (+1,53; 23…Se8, +0,97). Der abgelehnte Zug 23…Db8 wäre der Idee nach richtig gewesen, die Dame gehört in dieser Struktur hinter den Bauern b5. Zwei Züge später schlägt die Engine genau das vor, und da war es möglich, weil die Dame inzwischen auf d8 stand und über die Grundreihe kommt.'''
+
+[[aufgabe.kommentare]]
+nach = "30...Lh6"
+text = '''Im 25. Zug zieht Schwarz den Springer von f6 an den Rand, mit Blick auf f4, und der Läufer folgt über g5 nach f4. Sven beachtet den Königsflügel nicht. Sein Springer erreicht a3, der Turm geht nach c2 aus der Diagonale des Läufers, und im 28. Zug schlägt er auf b5. Schwarz nimmt zweimal zurück und verliert den Bauern. Nach 30.g3 muss der Läufer f4 wieder weichen.'''
+
+[[aufgabe.kommentare]]
+nach = "30...Lh6"
+art = "engine"
+text = '''<b>Engine:</b> <b>25…Sh5</b> ist der Zug, mit dem die Stellung kippt: +2,45, von +1,29. Richtig war 25…Db8, die Dame deckt b5 und der Springer bleibt, wo er gebraucht wird. Von hier an fällt die Kurve bei jedem schwarzen Zug ein Stück weiter: 26…Lg5 (+2,78), 27…Lf4 (+3,33), <b>28…Lxb5</b> (+3,83; 28…Ta4 hielt +3,41), 29…g6 (+4,12). Keiner dieser Züge ist für sich ein grober Fehler. Zusammen sind es fünf Züge am Königsflügel, während am Damenflügel ein Bauer fällt, und am Ende stehen Läufer und Springer am Rand, ohne etwas zu drohen. Sven spielt in dieser Phase fast durchgehend den ersten oder zweiten Zug der Engine. 28.Sxb5 (+3,41) ist gleichwertig mit 28.Dc7 und 28.Lxb5.'''
+
+[[aufgabe.kommentare]]
+nach = "33...dxe5"
+text = '''Sven bietet mit 31.Dc8 den Damentausch an, und Schwarz nimmt. Der Turm schlägt mit Schach zurück, und Schwarz zieht den König nach g7. Darauf opfert Sven den Springer auf e5.'''
+
+[[aufgabe.kommentare]]
+nach = "38...Kf7"
+text = '''Die Abwicklung läuft erzwungen. Der Läufer nimmt auf e5 mit Schach, nach 34…f6 gibt der Turm auf c7 Schach und greift den Springer b7 an, und nach 35…Kg8 geht der Läufer nach d4 und greift den Turm a7 an, der den Springer deckt. Schwarz kann nicht beides halten und gibt den Turm für den Läufer b5. Weiß hat für Springer und Läufer einen Turm und zwei Bauern bekommen und steht mit Turm, Läufer und sechs Bauern gegen Läufer, zwei Springer und drei Bauern.'''
+
+[[aufgabe.kommentare]]
+nach = "38...Kf7"
+art = "engine"
+text = '''<b>Engine:</b> <b>31…Dxc8</b> kostet ebenso viel wie der Königszug danach: +5,30, von +4,37. Mit 31…Df8 blieb der Turm draußen. <b>32…Kg7</b> (+6,17) stellt dann den König auf die Diagonale des Läufers b2; nach 32…Lf8 (+5,28) gibt es das Opfer nicht, weil Lxe5 kein Schach ist. Die dritte Möglichkeit, 32…Sd8, verliert sofort eine Figur (+6,78). <b>33.Sxe5</b> (+6,20) ist der einzige Zug, der den Vorteil in voller Höhe hält. Die ruhigen Alternativen stehen anderthalb bis zwei Bauern tiefer: 33.g4 und 33.Lc3 je +4,66, 33.Kg2 +3,89. Sven hat hier nicht den sicheren Weg gewählt, sondern den besten, und danach jeden Zug der Hauptvariante gespielt: 34.Lxe5+, 35.Tc7+, 36.Ld4, 37.Txa7, 38.Ta8+ sind alle die erste Wahl der Engine. Schwarz hat sich in der Abwicklung richtig verteidigt, 36…Sd6 ist der beste Zug (+6,51).'''
+
+[[aufgabe.kommentare]]
+nach = "42.hxg5"
+text = '''Im 39. Zug spielte Schwarz zuerst Sd6. Der Springer steht dort im Schlag des Läufers c5, Sven legte ein Veto ein. Der nächste Versuch, 39…Ke8, war nicht möglich, weil der Turm a8 die Grundreihe hält. Gespielt wurde 39…Lg5. Zwei Züge später greift der h-Bauer den Läufer an, Schwarz nimmt stattdessen den Bauern e4, und Sven schlägt den Läufer.'''
+
+[[aufgabe.kommentare]]
+nach = "42.hxg5"
+art = "engine"
+text = '''<b>Engine:</b> Das Veto hat eine Figur gerettet und am Ergebnis nichts geändert: 39…Sd6 steht bei +7,84, das gespielte 39…Lg5 bei +7,08. Es war der beste Zug der Stellung. Auch am Schluss spielt Schwarz genau: 40…Sc3 und 41…Sxe4 sind beide die erste Wahl. In der Schlussstellung steht es +6,67; nach 42…Sxg5 hätte Weiß Turm, Läufer und vier Bauern gegen zwei Springer und drei Bauern, und der d-Bauer läuft.'''
