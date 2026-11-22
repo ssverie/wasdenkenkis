@@ -375,12 +375,15 @@ main { padding-top: 2rem; padding-bottom: 3rem; }
 .schach-pgn-alle a { display: inline-block; margin-top: 0.4rem; padding: 0.35rem 0.8rem; border: 1px solid var(--linie); border-radius: 6px; text-decoration: none; }
 .schach-pgn-alle a:hover { border-color: var(--akzent); }
 .np-tempo { font: inherit; font-size: 0.85rem; padding: 0.25rem 0.3rem; border: 1px solid var(--linie); border-radius: 6px; background: var(--fläche); color: var(--text); }
-.np-zug { cursor: pointer; border-radius: 3px; padding: 0 0.1em; }
+.np-zug { cursor: pointer; border-radius: 3px; padding: 0 0.1em; white-space: nowrap; }   /* nowrap seit 2026-11-22: „♗@g3“ (9+) brach sonst nach der Figurine um */
 .np-zug:hover { background: var(--akzent-leise); }
 .np-zug.np-aktiv { background: var(--akzent); color: var(--bg); }
 .varianten .np-zug { color: var(--text); }
 .varianten .np-zug.np-aktiv { color: var(--bg); }
 .np-fig { height: 1.05em; width: auto; vertical-align: -0.17em; margin-right: 0.02em; }
+/* 9+: Reserve unter dem Brett (seit 2026-11-22) */
+.np-reserve { font-size: 0.85rem; color: var(--text-leise); margin: 0.35rem 0 0.2rem; line-height: 1.8; }
+.np-reserve .np-fig { height: 1.5em; vertical-align: -0.45em; background: #eedcb8; border-radius: 3px; padding: 1px; margin-right: 2px; }   /* heller Grund: schwarze Figuren auch im Dunkelmodus sichtbar */
 .np-varianten { padding-left: 1.1rem; }
 .np-varianten p { margin: 0.15rem 0; }
 /* Bewertungen und Kommentare in der Zugliste (KI-Partien, seit 2026-11-03) */

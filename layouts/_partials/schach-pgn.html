@@ -37,6 +37,10 @@
       (printf "[White \"%s\"]" (replace $weiss $q "'"))
       (printf "[Black \"%s\"]" (replace $schwarz $q "'"))
       (printf "[Result \"%s\"]" $ergebnis) }}
+{{- /* 9+ (Reserve in eckigen Klammern): Variante wie in Fairy-Stockfish benannt; Einsetzen „S@f3“ wird oben zu „N@f3“ */}}
+{{- if in $a.fen "[" }}
+  {{- $kopf = $kopf | append `[Variant "neunplus"]` }}
+{{- end }}
 {{- if ne $a.fen "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" }}
   {{- $kopf = $kopf | append `[SetUp "1"]` (printf "[FEN \"%s\"]" $a.fen) }}
 {{- end }}

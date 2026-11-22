@@ -20,9 +20,14 @@
   function feld(c, r) { return (c < 0 || c > 7 || r < 1 || r > 8) ? null : String.fromCharCode(97 + c) + r; }
   function eigen(p, w) { return !!p && (w ? p === p.toUpperCase() : p === p.toLowerCase()); }
 
+  // 9+ (seit 2026-11-22, Sven: „kannst du auch 9+ einbauen, so dass man es nachspielen kann“): Reserve in eckigen
+  // Klammern am Ende der Stellung („…/4K3[QRRBBNNqrrbbnn]“, wie Fairy-Stockfish). Sie steht im Brett-Array als
+  // Feld 64 (Text, z. B. „QRRBBNNqrrbbnn“), damit sie mit jedem slice() mitkopiert wird; ohne Klammern bleibt Feld 64 leer.
   function ausFen(fen) {
     var b = new Array(64).fill(null);
-    fen.split(' ')[0].split('/').forEach(function (reihe, r) {
+    var stellung = fen.split(' ')[0], res = /\[([^\]]*)\]$/.exec(stellung);
+    if (res) { b[64] = res[1]; stellung = stellung.slice(0, res.index); }
+    stellung.split('/').forEach(function (reihe, r) {
       var c = 0;
       reihe.split('').forEach(function (ch) {
         if (/\d/.test(ch)) c += Number(ch); else { b[r * 8 + c] = ch; c++; }
@@ -71,6 +76,18 @@
   // Führt den Zug s (ohne !?+#) aus. Ergebnis: {b, von, nach, ep} oder eine Fehlermeldung (Text).
   function zug(alt, w, s, ep) {
     var b = alt.slice(), grund = w ? 1 : 8;
+    // Einsetzen aus der Reserve (9+): „S@f3“ – Figur in der Reserve, Feld frei und in den eigenen ersten drei Reihen.
+    var ein = /^([KDTLS])@([a-h][1-8])$/.exec(s);
+    if (ein) {
+      var rf = w ? TYP[ein[1]] : TYP[ein[1]].toLowerCase(), rr = Number(ein[2][1]);
+      if (typeof b[64] !== 'string' || b[64].indexOf(rf) < 0) return 'nicht in der Reserve';
+      if (b[index(ein[2])]) return 'Zielfeld besetzt';
+      if (w ? rr > 3 : rr < 6) return 'Einsetzen nur in den eigenen ersten drei Reihen';
+      b[64] = b[64].replace(rf, '');
+      b[index(ein[2])] = rf;
+      if (imSchach(b, w)) return 'eigener König im Schach';
+      return { b: b, von: null, nach: ein[2], ep: '' };
+    }
     var ro = /^[0O]-[0O](-[0O])?$/.exec(s);
     if (ro) {
       var lang = !!ro[1], k = w ? 'K' : 'k', t = w ? 'R' : 'r';
@@ -136,7 +153,7 @@
     return { b: b, von: start, nach: nach, ep: neuEp };
   }
 
-  var ZUG = /^(?:(\d+)(\.\.\.|\.))?([KDTLS]?[a-h]?[1-8]?x?[a-h][1-8](?:=?[DTLS])?|[0O]-[0O](?:-[0O])?)([+#]*)([!?]*)$/;   // „++“ = Doppelschach
+  var ZUG = /^(?:(\d+)(\.\.\.|\.))?([KDTLS]?[a-h]?[1-8]?x?[a-h][1-8](?:=?[DTLS])?|[KDTLS]@[a-h][1-8]|[0O]-[0O](?:-[0O])?)([+#]*)([!?]*)$/;   // „++“ = Doppelschach
 
   function einrichten(li) {
     var brett = li.querySelector('.brett'), loesung = li.querySelector('details.schachloesung');
@@ -175,7 +192,38 @@
       return frag;
     }
 
+    // 9+: Reserve beider Seiten als Zeile unter dem Brett (kleine Figurenbilder, alt = Buchstabe), nur bei Stellungen mit Reserve.
+    var reserveEl = null;
+    if (typeof startBrett[64] === 'string') {
+      reserveEl = document.createElement('div');
+      reserveEl.className = 'np-reserve';
+      brett.parentNode.insertBefore(reserveEl, brett.nextSibling);
+    }
+    function zeigeReserve(r) {
+      if (!reserveEl) return;
+      reserveEl.textContent = '';
+      [['Reserve Weiß', /[A-Z]/], ['Schwarz', /[a-z]/]].forEach(function (s, j) {
+        var teil = document.createElement('span');
+        teil.className = 'np-reserve-seite';
+        teil.appendChild(document.createTextNode((j ? ' · ' : '') + s[0] + ': '));
+        var n = 0;
+        'QRBN'.split('').forEach(function (typ) {
+          (r || '').split('').forEach(function (ch) {
+            if (ch.toUpperCase() !== typ || !s[1].test(ch)) return;
+            var img = document.createElement('img');
+            img.className = 'np-fig'; img.src = basis + (j ? 'b' : 'w') + typ + '.svg';
+            img.alt = ch; img.title = NAME[typ];
+            teil.appendChild(img); n++;
+          });
+        });
+        if (!n) teil.appendChild(document.createTextNode('leer'));
+        reserveEl.appendChild(teil);
+      });
+    }
+    zeigeReserve(startBrett[64]);
+
     function zeigen(b, von, nach) {
+      zeigeReserve(b[64]);
       for (var i = 0; i < 64; i++) {
         var f = felder[i], p = b[i], img = f.querySelector('img');
         if (p) {

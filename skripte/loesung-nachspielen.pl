@@ -42,6 +42,7 @@ if ($ersatzdatei) {
     while (<$e>) { $fen{$1} = $2 if /^(\d+) (.+?)\s*$/; }
 }
 my %de = (K => 'K', D => 'Q', T => 'R', L => 'B', S => 'N');
+our $reserve;   # 9+: Figuren in der Reserve (z. B. „QRRBBNNqrrbbnn“), undef = normales Schach
 my ($ok, $fehler, $vok, $vfehler) = (0, 0, 0, 0);
 for my $n (sort { $a <=> $b } keys %loes) {
     my $fe = $fen{$n};
@@ -85,6 +86,8 @@ sub zuege {
 sub spiele {
     my ($fe, $linie0) = @_;
     my ($brett, $seite) = split / /, $fe;
+    # 9+ (seit 2026-11-22): Reserve in eckigen Klammern am Ende („…/4K3[QRRBBNNqrrbbnn]“), Einsetzen „S@f3“
+    $reserve = ($brett =~ s/\[([^\]]*)\]$//) ? $1 : undef;
     my %b; my $r = 8;
     for my $reihe (split m{/}, $brett) {
         my $c = 0;
@@ -166,6 +169,17 @@ sub im_schach {
 # Hat Seite $w (1 = Weiß) mindestens einen legalen Zug? (Rochade zählt nicht – aus dem Schach ohnehin verboten.)
 sub hat_zug {
     my ($b, $w, $ep) = @_;
+    # 9+: Einsetzen einer Reservefigur kann das Schach decken
+    if (defined $reserve && $reserve =~ ($w ? qr/[QRBN]/ : qr/[qrbn]/)) {
+        my ($p) = $reserve =~ ($w ? qr/([QRBN])/ : qr/([qrbn])/);
+        for my $r ($w ? (1 .. 3) : (6 .. 8)) {
+            for my $f ('a' .. 'h') {
+                next if defined $b->{"$f$r"};
+                my %c = %$b; $c{"$f$r"} = $p;
+                return 1 unless im_schach(\%c, $w);
+            }
+        }
+    }
     for my $q (keys %$b) {
         my $p = $b->{$q};
         next unless eigen($p, $w);
@@ -209,6 +223,16 @@ sub hat_zug {
 sub zug {
     my ($b, $w, $s, $epref) = @_;
     my $grund = $w ? 1 : 8;
+    if ($s =~ /^([KDTLS])@([a-h])([1-8])$/) {    # 9+: Einsetzen aus der Reserve
+        my ($p, $ziel, $reihe) = ($w ? $de{$1} : lc $de{$1}, "$2$3", $3);   # Treffer sichern, s/// unten setzt $2/$3 zurück
+        return 'Einsetzen ohne Reserve' unless defined $reserve;
+        return 'Figur nicht in der Reserve' unless index($reserve, $p) >= 0;
+        return 'Zielfeld besetzt' if defined $b->{$ziel};
+        return 'Einsetzen nur in den eigenen ersten drei Reihen' if $w ? $reihe > 3 : $reihe < 6;
+        $reserve =~ s/\Q$p\E//;
+        $b->{$ziel} = $p; $$epref = '';
+        return '';
+    }
     if ($s =~ /^[0O]-[0O](-[0O])?$/) {
         my $lang = defined $1;
         my ($k, $t) = $w ? ('K', 'R') : ('k', 'r');

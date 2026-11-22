@@ -7,7 +7,8 @@
 {{- $schwarz := eq (index $teile 1) "b" }}
 {{- /* Reihen auf je 8 Zeichen ausschreiben (Ziffern = leere Felder als „.“) */}}
 {{- $zeilen := slice }}
-{{- range split (index $teile 0) "/" }}
+{{- /* 9+: Reserve in eckigen Klammern am Ende („…/4K3[QRRBBNNqrrbbnn]“) gehört nicht aufs Brett – die Zeile darunter macht schach-nachspielen.js */}}
+{{- range split (replaceRE `\[[^\]]*\]$` "" (index $teile 0)) "/" }}
   {{- $z := . }}
   {{- range seq 8 -1 1 }}{{ $z = replace $z (string .) (strings.Repeat . ".") }}{{ end }}
   {{- $zeilen = $zeilen | append $z }}

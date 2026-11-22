@@ -69,7 +69,10 @@ sub pruefe {
     my @f;
     return ("FEN unvollständig") if @teile < 2;
     return ("Seite am Zug muss w oder b sein") unless $teile[1] =~ /^[wb]$/;
-    my @reihen = split '/', $teile[0];
+    # 9+ (seit 2026-11-22): Reserve in eckigen Klammern am Ende der Stellung, nur Figuren außer König und Bauer
+    my $stellung = $teile[0];
+    if ($stellung =~ s/\[([^\]]*)\]$//) { push @f, "unbekanntes Zeichen in der Reserve: $1" if $1 =~ /[^QRBNqrbn]/ }
+    my @reihen = split '/', $stellung;
     return ("nicht 8 Reihen") if @reihen != 8;
     my %brett;   # "x,y" (x 0..7 = a..h, y 0..7 = Reihe 1..8) => Figur
     for my $i (0 .. 7) {

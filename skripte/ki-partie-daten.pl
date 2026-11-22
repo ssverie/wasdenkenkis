@@ -48,7 +48,7 @@ for my $t (@tok) {
     if ($t =~ /^\{\s*(.*?)\s*\}$/s) {
         my $k = $1;
         if ($tiefe == 0) {
-            my ($w) = $k =~ /^([+-]?(?:\d+\.\d+|M\d+))/;
+            my ($w) = $k =~ /^([+-]?(?:\d+\.\d+|M\d+|#\d+))/;   # „+#38“ = Matt in 38 (Fairy-Stockfish, 9+)
             $bew[$#haupt] //= $w if defined $w;
         } elsif ($tiefe == 1) { $aktvar->[2] .= " $k" }
         next;
@@ -91,6 +91,7 @@ while ($h =~ m{<(h2)>(.*?)</h2>|<p><span class="mv">(.*?)</span></p>|<p>(.*?)</p
         my $zl = $3;
         my @ev = $zl =~ m{<span class="ev">([^<]*)</span>}g;
         (my $nur = $zl) =~ s{<span class="ev">[^<]*</span>}{}g;
+        $nur =~ s{</?span(?: class="mv")?>}{ }g;   # 9+-Partie (2026-11-22): jeder Zug in eigenem <span class="mv">
         my @z = map { s/…/.../r } grep { /\S/ } split /\s+/, $nur;
         push @mvzuege, @z; push @mvbew, @ev;
         $letzter = $z[-1];
