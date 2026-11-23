@@ -45,7 +45,7 @@ my $ist = $md;
 my @code; $ist =~ s/^```\w*\n(.*?)\n```$/push @code, $1; "\x{E000}$#code\x{E000}"/mgse;   # Codeblöcke unverändert vergleichen
 $ist =~ s/(?<!\\)`([^`\n]+)`/push @code, $1; "\x{E000}$#code\x{E000}"/ge;               # ebenso Code im Fließtext
 $ist =~ s/^<!-- bild: .*? -->$//mg;
-$ist =~ s/(?<!\\)\[((?:\\.|[^\]\\])*)\]\([^)\s]*\)/$1/g;   # Links: nur der sichtbare Text zählt
+$ist =~ s/(?<!\\)\[((?:\\.|[^\]\\])*)\]\((?:[^()\s]|\([^()\s]*\))*\)/$1/g;   # Links: nur der sichtbare Text zählt (Adressen mit Klammern wie …_(2010_film) seit 2026-11-23)
 $ist =~ s/^(?:\d+\.|-) //mg; $ist =~ s/^#+ //mg; $ist =~ s/^\|[-|]+\|$//mg;
 $ist =~ s/(?<!\\)\|/ /g; $ist =~ s/(?<!\\)\*//g; $ist =~ s/\\(.)/$1/g;
 $ist =~ s/\x{E000}(\d+)\x{E000}/$code[$1]/g;

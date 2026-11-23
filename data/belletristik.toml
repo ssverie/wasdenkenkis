@@ -542,3 +542,12 @@ autor = "Michel Houellebecq"
 jahr = "2022"
 sortjahr = 2022
 schluessel = "vernichten-2022"
+
+# ergänzt 2026-11-23 (Essay-Reihe der Instanz „Literatur“)
+
+[[buch]]
+titel = "Der Wolkenatlas"
+autor = "David Mitchell"
+jahr = "2004"
+sortjahr = 2004
+schluessel = "der-wolkenatlas-2004"
