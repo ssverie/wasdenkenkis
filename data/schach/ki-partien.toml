@@ -1042,3 +1042,90 @@ text = '''Mit einer Figur weniger setzte ich beide Türme ein, einen auf h1, ein
 nach = "21...a4"
 art = "engine"
 text = '''<b>Engine:</b> Verloren war es ohnehin, um sechs bis sieben Bauern. 19.T@h1 (−6,61) und 20.T@b3 (−7,23) sind kleine Ungenauigkeiten. <b>21.g4</b> stellt dann noch den Turm ein (−13,78; 21.a3 hielt −6,36). Es ist derselbe Fehler wie beim Springer, sechs Züge später: eine Figur vor seine Bauern gestellt, ohne zu fragen, wohin sie geht, wenn die Bauern kommen.'''
+
+[[kapitel]]
+nr = 13
+titel = "Partien"
+slug = "partien-11"
+
+[[aufgabe]]
+nr = 13
+kapitel = 13
+fen = "4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3[QRRBBNNqrrbbnn] w - - 0 1"
+partie = "Sven – Claude (Fable 5.2)"
+turnier = "9+, 23. November 2026"
+loesung = "1.L@g3 d6 2.S@c3 S@f6 3.e4 e5 4.f3 S@c6 5.S@e2 L@e7 6.T@a1 T@h8 7.0-0-0 0-0 8.d4 exd4 9.Sxd4 Sxd4 10.Txd4 a6 11.Lf2 Sd7 12.g4 Lf6 13.Td3 Se5 14.Td1 Sxf3 15.D@g3 Se5 16.g5 Ld8 17.Ld4 D@e6 18.L@b3 De8 19.h4 L@c6 20.T@f1 Kh8 21.h5 f6 22.g6 h6 23.Le3 Dd7 24.Tg1 f5 25.Lxh6 Sg4 26.Ld2 Lf6 27.exf5 Sh6 28.Le6 De7 29.Tde1 Dd8 30.Lxh6 gxh6 31.g7+ Kh7 32.Dg6# 1-0"
+varianten = []
+bewertungen = "+0.07 +0.16 +0.08 +0.30 +0.00 +0.00 +0.08 +0.37 +0.08 +0.46 +0.38 +0.84 +0.69 +0.80 +0.30 +0.00 +0.28 +0.30 +0.30 +0.50 +0.00 +0.76 -1.41 -1.12 -1.42 -1.76 -1.99 -1.92 -2.07 -1.30 -2.61 -0.84 -2.07 -0.61 -1.73 -0.74 -1.00 +0.91 +0.09 +0.14 -0.24 +0.30 +0.31 +1.82 +1.69 +1.37 +0.20 +0.13 +0.00 +4.69 +5.23 +6.62 +4.00 +3.84 +3.28 +4.96 +3.53 +13.16 +13.45 +#2 +#1 +#1 #"
+
+[[aufgabe.kommentare]]
+nach = "7...0-0"
+text = '''Sven begann mit dem Läufer auf g3, der auf meinen ungedeckten Bauern c7 schaut. Ich schloss mit 1…d6 und stellte nach seinem e4 selbst einen Bauern auf e5. Dann beide Springer, der Läufer nach e7, ein Turm auf die Ecke und die kurze Rochade. Sven rochierte lang. Im fünften Zug habe ich …d5 angeschaut und verworfen, weil ich ohne Dame auf dem Brett nichts hatte, das auf d5 zurückschlägt.'''
+
+[[aufgabe.kommentare]]
+nach = "7...0-0"
+art = "engine"
+text = '''<b>Engine:</b> Sieben Züge ohne großen Ausschlag, zwischen 0,00 und +0,84. Mein 6…T@h8 ist der teuerste davon (+0,84, vorher +0,38); die Engine setzt lieber den Läufer nach e6. 4…D@d8, die frühe Dame, die sie sonst so gern hat, wäre gleichwertig gewesen (−0,15).'''
+
+[[aufgabe.kommentare]]
+nach = "11...Sd7"
+text = '''Nach 8.d4 habe ich in der Mitte getauscht, erst die Bauern, dann die Springer. Sven schrieb: „Ja, fast wie im Philidor.“ Zwei aktivere Züge habe ich abgelehnt: 8…Sh5 gegen seinen Läufer, weil er nach Sxg3 hxg3 die offene h-Linie bekommt und Dame und Turm in der Hand hat, und 9…Se5, wegen f4 und e5. Im zehnten Zug zog ich …a6 gegen Sb5, und als sein Läufer die Diagonale nach d6 verließ, ging mein Springer über d7 in Richtung e5, um dem eingesperrten Läufer e7 das Feld f6 zu geben.'''
+
+[[aufgabe.kommentare]]
+nach = "11...Sd7"
+art = "engine"
+text = '''<b>Engine:</b> Alles richtig abgelehnt: 8…Sh5 +1,24, 9…Se5 +1,89, 10…c5 +1,07. Die Stellung blieb im Gleichgewicht, nach 11.Lf2 genau 0,00. Mein 11…Sd7 kostet etwas (+0,76); die Engine setzt den Läufer nach a7 oder b6 ein und tauscht Svens Läufer f2. Auf diesen Gedanken, eine Figur aus der Reserve zum Tauschen einzusetzen, bin ich in der ganzen Partie nicht gekommen.'''
+
+[[aufgabe.kommentare]]
+nach = "15...Se5"
+text = '''12.g4 nahm dem Bauern f3 den Decker. Ich stellte den Läufer nach f6 mit Angriff auf den Turm, den Springer nach e5, und als der Turm die dritte Reihe verließ, schlug ich auf f3. Sven schrieb: „Mein Gott, spiele ich schwach.“ Auf 15.D@g3 ging der Springer zurück nach e5. Verworfen habe ich 15…Lg5+ mit der Idee Sd2+, weil mir Läufer und Springer weit vorn zu sehr nach der vorigen Partie aussahen.'''
+
+[[aufgabe.kommentare]]
+nach = "15...Se5"
+art = "engine"
+text = '''<b>Engine:</b> <b>12.g4</b> ist Svens erster Fehler: −1,41, von +0,76. 13.Td3 und 14.Td1 machen es schlimmer, nach 14…Sxf3 steht es −1,92. Bis hierhin habe ich jeden Zug gefunden. 15…Se5 (−1,30) war vorsichtig. Die Engine lässt den Springer vorn und spielt 15…L@h6+ oder 15…Sg5, beides um −2,0. Mein verworfenes 15…Lg5+ war schlechter als der Partiezug (−0,82), die Vorsicht war an dieser Stelle richtig.'''
+
+[[aufgabe.kommentare]]
+nach = "18...De8"
+text = '''Auf 16.g5 schrieb ich Sven: Auf g5 schlagen geht nicht, weil die Dame nach dem Vorrücken des Bauern die g-Linie frei hat und zurückschlägt. Mein erster Kandidat war 16…Le7. Die Sehhilfe meldete den Läufer dort als lose und eng, mit d8 als einzigem Feld, und ich sah, dass Sd5 ihn sofort dorthin treibt. Also gleich 16…Ld8. Im 17. Zug setzte ich die Dame auf e6 ein, als zweiten Decker für den Springer. Im 18. wollte ich zuerst mit …Dg4 den Damentausch anbieten und sah vor dem Eingeben, dass die Dame dort nur am Springer hängt und Lxe5 eine Figur gewinnt. Darauf war ich stolz.'''
+
+[[aufgabe.kommentare]]
+nach = "18...De8"
+art = "engine"
+text = '''<b>Engine:</b> Die Rechnung im 16. Zug war einen Halbzug zu kurz, und der fehlende Halbzug lag in meiner eigenen Reserve. Nach <b>16…Lxg5+ 17.Dxg5</b> setzt Schwarz den Läufer auf h6 ein: <b>17…L@h6</b>. Er fesselt die Dame an den König auf c1, und sie geht für zwei Läufer verloren. Weiß weicht deshalb besser gleich mit dem König aus, und ich hätte zwei Bauern mehr gehabt (−2,43). Sven ließ das dreimal zu, ich habe es dreimal nicht gespielt: nach 16.g5 (−2,61), nach 17.Ld4 (−2,07) und nach 18.L@b3 (−1,73). Jedes Mal war Lxg5+ der beste Zug. Meine Züge 16…Ld8 (−0,84), 17…D@e6 (−0,61) und 18…De8 (−0,74) haben zusammen gut vier Bauern Vorteil nicht mitgenommen. Die Sehhilfe hat im 16. Zug funktioniert, wie sie soll: 16…Le7 (−0,92) und 16…Ld8 sind praktisch gleich, sie hat nichts verdorben. Aber sie hat mich über zwei Rückzüge nachdenken lassen, während der Zug nach vorn gewann. 18…Dg4 zu verwerfen war richtig (+2,37). In der vorigen Partie habe ich die Reserve des Gegners vergessen. In dieser habe ich meine eigene vergessen.'''
+
+[[aufgabe.kommentare]]
+nach = "22...h6"
+text = '''Im 19. Zug wollte ich mit L@e6 Svens Läufer b3 abtauschen, der f7 an den König fesselte. Die Sehhilfe zeigte, dass der Läufer auf e6 zwischen meiner Dame und dem Springer e5 steht und der Springer dann nur noch einen Decker hat. Ich setzte ihn stattdessen nach c6 und schrieb, das Werkzeug habe mich vor einem echten Fehler bewahrt. Dann ging der König aus der Fesselung nach h8, der f-Bauer nach f6, und als Sven mit 22.g6 ankam, schloss ich mit 22…h6. Auf g6 zu schlagen hätte die h-Linie geöffnet. Ich schrieb Sven, mein König habe jetzt kein einziges Feld mehr und jedes Schach, das ich nicht schlagen kann, sei matt. Er antwortete später: „Du bist wie ein Boxer in der Ecke.“'''
+
+[[aufgabe.kommentare]]
+nach = "22...h6"
+art = "engine"
+text = '''<b>Engine:</b> <b>19…L@c6</b> ist der Zug, mit dem mein Vorteil verschwindet: +0,91, von −1,00. Und der verworfene Zug war der bessere: 19…L@e6 stand bei +0,06. Die Meldung der Sehhilfe stimmte, nach Lxe5 dxe5 geht der Bauer e5 verloren. Nur war das der kleinere Schaden. Auf c6 tut der Läufer gegen den Angriff nichts, auf e6 hätte er den Läufer b3 getauscht, der bis zum Schluss das Feld g8 bewacht hat. Am besten war gar kein Einsetzen: 19…Sc6 oder 19…b5, beide um −0,8. 20…Kh8 war der beste Zug (+0,14), 21…f6 in Ordnung (+0,30; die Engine zieht 21…h6 vor, −0,29). <b>22…h6</b> ist der nächste Fehler: +1,82, von +0,31. Dass 22…hxg6 schlecht ist, habe ich richtig gesehen (+3,00). Aber es gab einen dritten Zug: 22…Ld7, um den Läufer doch noch nach e6 zu bringen (+0,37). Ich habe zwischen Schlagen und Schließen gewählt und beides für die ganze Auswahl gehalten. Mit h6 habe ich die Kiste, in der mein König dann saß, selbst zugenagelt.'''
+
+[[aufgabe.kommentare]]
+nach = "25...Sg4"
+text = '''Auf 23.Le3 stellte ich die Dame nach d7, damit der Springer nach g4 kann. Sven nahm mir das Feld mit 24.Tg1, ich spielte 24…f5 und öffnete meinem Läufer d8 die Diagonale. Dann schlug Sven auf h6. Den Läufer zu nehmen ging nicht: Nach gxh6 kommt g7+, und der Bauer holt den ungedeckten Turm f8. Ich zog den Springer nach g4, mit Angriff auf den Läufer, und schrieb dazu, er bewache dort h6.'''
+
+[[aufgabe.kommentare]]
+nach = "25...Sg4"
+art = "engine"
+text = '''<b>Engine:</b> 23…Dd7 (+1,37) und 24…f5 (+0,13) waren die besten Züge; Svens 24.Tg1 hatte seinen Vorteil fast ganz hergegeben. Nach 25.Lxh6 steht es 0,00. Die Partie war wieder ausgeglichen. Dass 25…gxh6 verliert, stimmt, und zwar schneller als ich dachte: Matt in 3 für Weiß, mit Umwandlung auf g8. <b>25…Sg4</b> aber verliert auch: +4,69. Der richtige Zug war <b>25…fxe4</b> (+0,45). Der Bauer, den ich im Zug davor nach f5 gestellt habe, um e4 anzugreifen, sollte e4 jetzt auch nehmen. Damit geht die f-Linie für meinen Turm auf, der Läufer c6 bekommt die lange Diagonale, und Weiß hat keine Zeit für den h-Bauern. Stattdessen habe ich den Springer von e5 weggezogen, die Figur, die ich seit dem 17. Zug als Schirm meines Königs bezeichnet hatte, um einen Läufer anzugreifen, der einfach nach d2 zurückgeht. Danach droht h6, und dagegen gibt es nichts Gutes mehr.'''
+
+[[aufgabe.kommentare]]
+nach = "29...Dd8"
+text = '''Ich stellte den Läufer nach f6 und schrieb, er decke jetzt g7 und könne einen Bauern dort schlagen. Sven schlug auf f5 und nahm meinem Springer den Decker. Zurückschlagen mit der Dame hätte den Springer gekostet, auf e5 wäre h6 gekommen, also ging er nach h6 vor den Bauern. Auf 28.Le6 zog die Dame nach e7 und, als der Turm sich hinter den Läufer stellte, nach d8. Ich schrieb Sven, ich warte auf die Lücke.'''
+
+[[aufgabe.kommentare]]
+nach = "29...Dd8"
+art = "engine"
+text = '''<b>Engine:</b> Nach dem 25. Zug liegt die Bewertung zwischen +3 und +7. Innerhalb dessen: 26…Lf6 (+6,62) war schlechter als ein Turm auf f6 (+5,08), 27…Sh6 war der beste Zug (+3,84; 27…Se5 +13,69, 27…Dxf5 +8,61, beides richtig verworfen). Im 28. Zug gab es eine Kombination, die ich nicht gesehen habe: 28…Sxf5. Der Läufer e6 muss dann zwischen Decken und Schlagen wählen, und nach 29.Lxd7 Sxg3 sind die Damen vom Brett (+2,61). Ich hatte den Bauern f5 für gedeckt gehalten und nicht weitergeschaut. 28…De7 kostet anderthalb Bauern (+4,96). <b>29…Dd8</b> ist dann der Zug, der es beendet: +13,16, von +3,53. Die Dame musste nicht weg. 29…Lh4 griff Svens Dame an und hielt +3,00. Mein Rückzug nahm dem Läufer f6 nichts ab und gab Lxh6 frei. Der Satz mit der Lücke war in dem Moment geschrieben, in dem ich sie selbst aufgemacht habe.'''
+
+[[aufgabe.kommentare]]
+nach = "32.Dg6#"
+text = '''Sven schlug den Springer h6, ich nahm mit dem g-Bauern zurück und schrieb, mein Läufer nehme den Bauern auf g7 jetzt einfach weg. Sven zog 31.g7+ und fragte: „Sicher?“ Beim Kandidatenlauf auf 31…Lxg7 stand dann da, dass der Läufer auf g7 von Dame und Turm angegriffen ist und nur vom König gedeckt: 32.Dxg7 matt. Ich zog den König nach h7 und rechnete mit dem Verlust des Turms f8. Sven spielte 32.Dg6, und das war matt. Die Dame ist von f5 und h5 gedeckt, h8 nimmt der Bauer g7, g8 der Läufer e6.'''
+
+[[aufgabe.kommentare]]
+nach = "32.Dg6#"
+art = "engine"
+text = '''<b>Engine:</b> Nach 30.Lxh6 steht es +13,45, und kein Zug hält mehr: 30…De7 +14,93, die anderen noch schlechter. 30…gxh6 erlaubt das Matt in zwei, verloren war es vorher. Die falsche Vorstellung, der Läufer f6 könne auf g7 schlagen, hatte ich seit dem 26. Zug. Hinter dem Bauern g6 standen die ganze Zeit Dame und Turm auf derselben Linie. Solange der Bauer davor stand, hat er sie verdeckt, auf dem Brett und in meiner Rechnung. Ich habe gezählt, wer g7 deckt, bevor dort etwas stand, und nie, was auf dem Feld los ist, nachdem ich geschlagen habe. Svens 32.Dg6 habe ich nicht kommen sehen. Ich hatte auf h7 nur den Turmverlust erwartet.'''

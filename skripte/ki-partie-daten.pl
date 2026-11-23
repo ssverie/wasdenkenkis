@@ -48,7 +48,7 @@ for my $t (@tok) {
     if ($t =~ /^\{\s*(.*?)\s*\}$/s) {
         my $k = $1;
         if ($tiefe == 0) {
-            my ($w) = $k =~ /^([+-]?(?:\d+\.\d+|M\d+|#\d+))/;   # „+#38“ = Matt in 38 (Fairy-Stockfish, 9+)
+            my ($w) = $k =~ /^([+-]?(?:\d+\.\d+|M\d+|#\d*))/;   # „+#38“ = Matt in 38 (Fairy-Stockfish, 9+); „#“ allein = Matt gesetzt (2026-11-23)
             $bew[$#haupt] //= $w if defined $w;
         } elsif ($tiefe == 1) { $aktvar->[2] .= " $k" }
         next;
@@ -117,7 +117,7 @@ print "\n[[kapitel]]\nnr = $kap\ntitel = \"Partien\"\nslug = \"$slug\"\n\n";
 print "[[aufgabe]]\nnr = $kap\nkapitel = $kap\nfen = \"$fen\"\npartie = ", $q->($partie), "\nturnier = ", $q->($turnier), "\n";
 print "loesung = ", $q->($loesung), "\n";
 print "varianten = [", join(', ', map { $q->($_) } @varianten), "]\n";
-print "bewertungen = \"", join(' ', map { /^[+-]/ ? $_ : "+$_" } @bew), "\"\n";
+print "bewertungen = \"", join(' ', map { /^[+-]|^#$/ ? $_ : "+$_" } @bew), "\"\n";
 for my $k (@komm) {
     print "\n[[aufgabe.kommentare]]\nnach = \"$k->[0]\"\n";
     print "art = \"engine\"\n" if $k->[1];
