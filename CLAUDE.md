@@ -113,6 +113,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 
 ## Arbeitsweise
 - **Wächter (Sven, 2026-10-27):** Zugriff nur auf `C:\Projekte\opus-55` (PreToolUse-Hook `.claude/waechter.pl`, Einstellungen in `.claude/` – **ändern darf beides nur Sven**). Lesbar außerdem das Projekt-Gedächtnis unter `C:\Users\Sven Laptop\.claude\projects\C--Projekte-opus-55\` (nur Read/Glob/Grep) und der Bildordner der App (in Befehlen nur in Kurzschreibweise `C:/Users/SVENLA~1/AppData/Local/Temp/claude/C--Projekte-opus-55/…`, Bilder per `cp` ins Archiv). Kein `..` in Befehlen (auch nicht in Perl-Bereichen – Logik in Skriptdateien). Befehle, die mit `perl` beginnen, laufen ohne Rückfrage; Logik mit Schleifen, Variablen, `|`/`;` in Skriptdateien schreiben (Write-Werkzeug). Feste Prüfungen: `perl skripte/zeichenpruefung.pl`, `perl skripte/live-pruefen.pl`, `perl skripte/warte-auf-text.pl`. Behindert mich etwas, Sven melden statt umgehen. **Komme ich an eine Datei nicht heran, Sven fragen – er kopiert sie nach `input\`** (Sven, 2026-10-28). **Seit 2026-11-01 ist der Upload-Ordner der App freigegeben** (Sven hat `$LESEN`/`$TEMP` im Wächter und `additionalDirectories` in `.claude/settings.json` ergänzt): Bilder, die Sven im Chat schickt, hole ich selbst mit `cp C:/Users/SVENLA~1/.claude/uploads/<sitzung>/<bild>.jpg input/` (Kurzschreibweise, weil der Wächter am Leerzeichen in „Sven Laptop“ abschneidet). **Dort nur lesen und kopieren, nie löschen oder ändern** – der Wächter unterscheidet das nicht, die Grenze ist meine Disziplin. Ganze Geschichte und Tests: `notizen/waechter.md`.
+- **Hilfsagenten sparsam (Sven, 2026-11-23: „bin nicht ganz sicher, wir müssen auch auf die Token aufpassen, behalte es im Auge“):** Erster Einsatz bei Buchtexten am 2026-11-23 (13 Belletristik-Essays, drei Agenten zur Faktenprüfung, je rund 120.000–145.000 Tokens). Keine feste Regel: Agenten nur, wenn es sich deutlich lohnt; sonst selbst prüfen. Beim Melden sagen, dass Agenten liefen und was sie gekostet haben.
 - Langsam und iterativ: kleine Schritte, nach jedem Schritt Abnahme durch Sven.
 - Alles bleibt in `C:\Projekte\opus-55`; Tests nur in Wegwerf-Ordnern `test-<thema>\`, danach löschen.
 - Keine Schlüssel, Passwörter oder Tokens ins Repo (Repo ist öffentlich).
@@ -127,7 +128,7 @@ Diese Datei enthält die Regeln und je Rubrik einen Verweis. Einzelheiten – al
 ## Wartet auf Freigabe (gesammelt, Sven gibt gebündelt frei)
 Kleine Änderungen werden lokal eingebaut und hier gesammelt, nicht einzeln vorgelegt. Bei passender Gelegenheit die Liste zeigen; nach dem Push leeren. **Beim Leeren und Nachführen nie per Zeilennummer arbeiten** (verschiebt sich, sobald oben etwas dazukommt) – immer über den Text der Zeile.
 
-- (leer – zuletzt freigegeben und gepusht am 2026-11-23: 13 Belletristik-Essays der Instanz „Literatur“, Instanz von Sven bestätigt: „Ja, live“)
+- (leer – zuletzt freigegeben und gepusht am 2026-11-23: zweite Belletristik-Lieferung der Instanz „Literatur“, Sven: „Ja, live“)
 - Offen (KI-Partien): welches Modell am 18.11. Schwarz gegen Sven spielte; die fünfte Fable-Partie fehlt auf der Seite.
 - Offen (Mad Men): Gemini zurückgestellt (Sven hat die Dateien aus `input\` genommen). Weiter mit GPT und Grok.
 - Offen (Schach-Buch): Subagent für 1–113.

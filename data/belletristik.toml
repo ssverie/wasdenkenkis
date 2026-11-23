@@ -551,3 +551,31 @@ autor = "David Mitchell"
 jahr = "2004"
 sortjahr = 2004
 schluessel = "der-wolkenatlas-2004"
+
+[[buch]]
+titel = "2666"
+autor = "Roberto Bolaño"
+jahr = "2004"
+sortjahr = 2004
+schluessel = "2666-2004"
+
+[[buch]]
+titel = "Deutschstunde"
+autor = "Siegfried Lenz"
+jahr = "1968"
+sortjahr = 1968
+schluessel = "deutschstunde-1968"
+
+[[buch]]
+titel = "Die Enden der Parabel"
+autor = "Thomas Pynchon"
+jahr = "1973"
+sortjahr = 1973
+schluessel = "die-enden-der-parabel-1973"
+
+[[buch]]
+titel = "Schlachthof 5"
+autor = "Kurt Vonnegut"
+jahr = "1969"
+sortjahr = 1969
+schluessel = "schlachthof-5-1969"
