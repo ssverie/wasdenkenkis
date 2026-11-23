@@ -56,6 +56,24 @@ for my $f (glob("$quelle_ordner/s*.md")) {
     my ($s) = $t =~ /^staffel = (\d+)$/m; my ($e) = $t =~ /^folge = (\d+)$/m; my ($ft) = $t =~ /^folgentitel = "(.*)"$/m;
     $folgentitel{"$s.$e"} //= $ft if defined $s && defined $e && defined $ft;
 }
+# Ersatz (seit 2026-11-23, erste Texte zu den Sopranos): Folgentitel aus data/serien/<daten>.toml (Feld daten der Serienseite)
+{
+    my $si = "content/serien/$o{serie}/_index.md";
+    if (open my $fh, '<:encoding(UTF-8)', $si) {
+        my $t = do { local $/; <$fh> }; close $fh;
+        my ($daten) = $t =~ /^daten = "([^"]+)"$/m;
+        if ($daten && open my $dh, '<:encoding(UTF-8)', "data/serien/$daten.toml") {
+            my $st;
+            while (<$dh>) {
+                $st = $1 if /^\s*nummer = (\d+)/;
+                next unless defined $st && /^\s*titel = \[(.*)\]\s*$/;
+                my @tl = $1 =~ /"((?:[^"\\]|\\.)*)"/g;
+                $folgentitel{"$st." . ($_ + 1)} //= $tl[$_] for 0 .. $#tl;
+            }
+            close $dh;
+        }
+    }
+}
 
 my ($fehler, $n) = (0, 0);
 my @plan;
@@ -76,8 +94,12 @@ for my $f (@ARGV) {
     # Kopf
     while (@z && ($z[0] =~ /^\s*$/ || $z[0] =~ /^(\[\d+\] )?$M\S*\s*$/)) { push @kopf, shift @z }
     if ($art eq 'md') {
-        while (@z && ($z[0] =~ /^\s*$/ || $z[0] =~ /^# / || $z[0] =~ /^\*[^*].*\*$/)) {
-            ($untertitel) = $z[0] =~ /^\*(.+)\*$/ if $z[0] =~ /^\*[^*]/;
+        my $h1;   # Untertitel auch ohne Sternchen direkt nach der „# “-Zeile (Sopranos 1.4, 2026-11-23)
+        while (@z && ($z[0] =~ /^\s*$/ || $z[0] =~ /^# / || $z[0] =~ /^\*[^*].*\*$/
+                      || ($h1 && !defined $untertitel && $z[0] !~ /^#/))) {
+            if ($z[0] =~ /^# /) { $h1 = 1 }
+            elsif ($z[0] =~ /^\*([^*].*)\*$/) { $untertitel = $1 }
+            elsif ($z[0] =~ /\S/) { $untertitel = $z[0]; push @meldung, "Untertitel ohne Sternchen: $z[0]" }
             push @kopf, shift @z;
         }
         my $tz = shift @z;   # Titelzeile zählt im Wortvergleich mit (steht als title auf der Seite)
