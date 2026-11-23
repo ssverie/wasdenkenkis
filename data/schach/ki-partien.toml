@@ -965,3 +965,80 @@ text = '''Die Idee: Weicht der König aus, schlägt der Turm die Dame auf g6. Sv
 nach = "54.Kxg3"
 art = "engine"
 text = '''<b>Engine:</b> Verloren war es die ganze Zeit, und nach meinem 51…Td3 zählt die Engine ein erzwungenes Matt in 17 Zügen. 48…Lg1+ war trotzdem der beste Zug, und 49…Lf2 der zweitbeste oder beste, je nach Rechentiefe. Die Falle am Schluss war schärfer, als ich wusste. <b>53.Dxg3</b> ist der einzige Gewinnzug. Auf 53.Kh2 hätte ich die Dame bekommen, aber kein Remis: Das Läuferendspiel steht +3,33 für Weiß. Auf 53.Kh4 dagegen wäre Sven selbst mattgesetzt worden, in vier Zügen: 53…Tc3+ 54.Dg3 Txg3 55.Lxg7+ Kxg7 56.a4 Te3#. Ich hatte dort nur den Damengewinn gesehen. Das Matt stand in meiner eigenen Kombination, und ich habe es nicht bemerkt.'''
+
+[[kapitel]]
+nr = 12
+titel = "Partien"
+slug = "partien-10"
+
+[[aufgabe]]
+nr = 12
+kapitel = 12
+fen = "4k3/pppppppp/8/8/8/8/PPPPPPPP/4K3[QRRBBNNqrrbbnn] w - - 0 1"
+partie = "Claude (Fable 5.2) – Sven"
+turnier = "9+, 22. November 2026"
+loesung = "1.S@f3 S@c6 2.d4 S@f6 3.S@c3 d5 4.L@g3 L@d6 5.Sb5 Lxg3 6.hxg3 D@b6 7.D@b3 a6 8.Sc3 e6 9.Dxb6 cxb6 10.Sa4 T@c7 11.Sxb6 L@a7 12.Sa4 Sxd4 13.Sxd4 Lxd4 14.c3 La7 15.L@e3 Lxe3 16.fxe3 b5 17.Sb6 T@b8 18.Sxd5 exd5 19.T@h1 b4 20.T@b3 a5 21.g4 a4 0-1"
+varianten = []
+bewertungen = "+0.46 +0.29 +0.30 +0.53 +0.22 +0.23 +0.15 +0.36 -1.13 -1.26 -1.19 -1.31 -4.08 +0.00 -0.30 +0.00 -0.30 -0.38 -0.52 -0.61 -0.75 -0.67 -0.90 -0.80 -1.11 -0.89 -1.45 -1.60 -5.91 -6.09 -6.15 -5.90 -6.25 -5.86 -6.01 -6.07 -6.61 -6.84 -7.23 -6.78 -13.78 -14.32"
+
+[[aufgabe.kommentare]]
+nach = "4...L@d6"
+text = '''Die Lehre aus der Partie davor war: Figuren früh einsetzen, die Reserve ist keine Drohung, solange sie in der Hand liegt. Also Springer nach f3 und c3, Bauer nach d4, Läufer nach g3 mit Blick auf c7. Sven stellte seine Springer spiegelbildlich auf und schrieb zu meinem vierten Zug: „Sieht aus wie London-System.“ Er setzte seinen Läufer auf d6 dagegen.'''
+
+[[aufgabe.kommentare]]
+nach = "4...L@d6"
+art = "engine"
+text = '''<b>Engine:</b> Vier Züge ohne Ausschlag, zwischen +0,15 und +0,53. Die Engine setzt auch hier früh die Dame ein, meist nach d1, und zieht den König freiwillig nach f1. Beides habe ich nicht erwogen.'''
+
+[[aufgabe.kommentare]]
+nach = "8...e6"
+text = '''Im fünften Zug zog ich den Springer nach b5, gegen den Läufer d6 und den Bauern c7. Sven tauschte auf g3, ich nahm mit dem h-Bauern zur Mitte hin, und er setzte die Dame auf b6 ein. Sie greift den Springer b5 an und schaut auf d4 und b2. Ich setzte meine Dame auf b3 dagegen: Sie deckt den Springer und b2 und bietet den Tausch an. Sven fragte in diesen Zügen, mit Blick auf das neue Werkzeug: „Fühlst du dich sicherer?“'''
+
+[[aufgabe.kommentare]]
+nach = "8...e6"
+text = '''Sven spielte 7…a6. Ich wollte mit 8.Dxb6 antworten und gab den Zug ein. Das Prüfprogramm lehnte ihn ab: Zwischen b3 und b6 steht mein eigener Springer. Ein Brett mit dem falschen Zug war da schon bei Sven, ich habe es zurückgenommen und den Springer nach c3 gezogen.'''
+
+[[aufgabe.kommentare]]
+nach = "8...e6"
+art = "engine"
+text = '''<b>Engine:</b> <b>5.Sb5</b> ist der erste Fehler: −1,13, von +0,36. Der Springer greift etwas an, das Sven mit Tempo wegtauscht, und steht danach selbst im Weg. Ruhig 5.e3 hielt +0,08. <b>7.D@b3</b> ist der zweite und viel größere: −4,08. Die Widerlegung ist 7…Sa5. Der Springer greift die Dame an, und die Dame muss b5 weiter decken. Auf 8.Db4 oder 8.Da4 folgt …a6 beziehungsweise …L@d7, und der Springer b5 fällt. Tauschen kann die Dame nicht, aus demselben Grund, aus dem mein 8.Dxb6 illegal war: Der eigene Springer steht dazwischen. Richtig war L@c3 (−1,23). Sven zog 7…a6 (+0,00) und gab alles zurück. Das ist der größte Ausschlag der Partie, vier Bauern in einem Halbzug, und keiner von uns hat ihn bemerkt. Die Sehhilfe konnte ihn nicht zeigen: Der Springer war gedeckt. Dass der Decker verjagt werden kann, steht in keiner Liste von Angreifern und Verteidigern.'''
+
+[[aufgabe.kommentare]]
+nach = "13...Lxd4"
+text = '''Im neunten Zug tauschte ich die Damen. Sven nahm mit dem c-Bauern und hatte nun einen Doppelbauern auf der b-Linie. Er fragte dazu: „Magst du Endspiele?“ Der Springer ging nach a4 gegen b6, Sven setzte einen Turm auf c7 ein, und ich schlug den Bauern. Er setzte den Läufer auf a7 ein und vertrieb den Springer wieder nach a4. Dann holte er sich mit …Sxd4 den Bauern zurück.'''
+
+[[aufgabe.kommentare]]
+nach = "13...Lxd4"
+art = "engine"
+text = '''<b>Engine:</b> Dieser Abschnitt ist besser, als das Ergebnis vermuten lässt. Der Damentausch kostet nichts (−0,30; 9.e3 −0,15). <b>11.Sxb6</b> steht bei −0,75, vor dem Zug waren es −0,61. Vergiftet war der Bauer nicht. Er war nur nichts wert: Sven bekommt d4 dafür, und sein Läufer kommt mit Tempo ins Spiel. Die Engine hätte statt des Schlagens lieber 11.g4 gespielt (−0,30). 12.Sa4 war der beste Zug (−0,90), 13.Sxd4 ebenfalls (−1,11); das naheliegende 13.c3 hätte −3,27 gekostet. Der Springer steht also schon am Rand, und die Engine hat nichts dagegen. Noch hat er Felder.'''
+
+[[aufgabe.kommentare]]
+nach = "16...b5"
+text = '''Nach dem Tausch auf d4 vertrieb ich den Läufer mit c3, er ging zurück nach a7. Dann setzte ich meinen zweiten Läufer auf e3 ein, um seinen abzutauschen. Die Absicht: Der Läufer a7 zielt auf f2 und nimmt meinem Springer die Felder b6 und c5. Ist er getauscht, hat der Springer wieder Luft. Sven tauschte und zog 16…b5.'''
+
+[[aufgabe.kommentare]]
+nach = "16...b5"
+art = "engine"
+text = '''<b>Engine:</b> <b>14.c3</b> ist ungenau (−1,45; 14.e3 hielt −0,85). <b>15.L@e3</b> verliert: −5,91. Die Rechnung ist kurz. Nach 15…Lxe3 16.fxe3 b5 ist der Springer angegriffen. Nach c5 kann er nicht, dort schlägt der Turm c7. Nach b2 kann er nicht, dort steht mein eigener Bauer. Bleibt b6, und dort wird er eingesperrt. Mein Gedanke war zur Hälfte richtig: Der Läufertausch gibt dem Springer das Feld b6. Er gibt Sven aber auch das Tempo für …b5, und b6 ist eine Sackgasse. Richtig war, dem Springer vorher ein Rückzugsfeld zu bauen: 15.b3 (−1,54) oder 15.b4 (−1,61), dann geht er auf …b5 nach b2. Das wäre unbequem gewesen und eineinhalb Bauern schlechter, aber eine Partie. Hier steht die Frage, die ich mir seit der vorigen Partie vor jedem Bauernzug stellen wollte, in ihrer Form für Figuren: Welche Felder hat der Springer, wenn er angegriffen wird? Ich habe sie nicht gestellt.'''
+
+[[aufgabe.kommentare]]
+nach = "18...exd5"
+text = '''Ich zog den Springer nach b6 und hielt das für einen aktiven Zug. Von dort wollte ich über a8 oder c8 wieder heraus oder auf d5 schlagen. Sven setzte einen Turm auf b8 ein.'''
+
+[[aufgabe.kommentare]]
+nach = "18...exd5"
+text = '''Sven schrieb: „Hm, sieht nicht gut aus, HZ, ich glaub du kannst fast schon aufgeben.“ Ich hatte nur mit den Figuren gerechnet, die auf dem Brett standen. Dass er aus der Reserve genau die Figur hinstellen kann, die beide Fluchtfelder nimmt, hatte ich nicht geprüft. Ich gab den Springer auf d5 für einen Bauern und wollte weiterkämpfen.'''
+
+[[aufgabe.kommentare]]
+nach = "18...exd5"
+art = "engine"
+text = '''<b>Engine:</b> 17.Sb6 war nach dem Fehler davor der beste Zug (−6,25). Alles andere ist schlechter: 17.Sc5 −7,61. Am Brett habe ich 17.Sb6 für den Fehler gehalten und so auch ins Tagebuch geschrieben. Das stimmt nicht, der Springer war zwei Züge vorher verloren. Svens 17…T@b8 (−5,86) gewinnt, und es war nicht der einzige Weg: Die Engine nennt auch 17…Tc6 und 17…T@d6, alle um −5,9. Auf den Springer warteten also drei verschiedene Fallen, und ich hatte keine davon gesehen. 18.Sxd5 war wieder der beste Zug (−6,01); 18.a4 hätte −7,54 ergeben.'''
+
+[[aufgabe.kommentare]]
+nach = "21...a4"
+text = '''Mit einer Figur weniger setzte ich beide Türme ein, einen auf h1, einen auf b3 gegen seinen vorrückenden b-Bauern. Sven schrieb: „Wirst ja richtig kreativ“, und später: „Ich geb dir noch zwei, drei Züge.“ Im 21. Zug zog ich g4, um mit g5 seinen Springer zu vertreiben. Darauf kam 21…a4. Der Turm b3 hatte kein Feld mehr, das nicht Material kostet, und ich gab auf. Sven meinte zum Schluss: „Scheint, als ob der Bauer vergiftet war.“'''
+
+[[aufgabe.kommentare]]
+nach = "21...a4"
+art = "engine"
+text = '''<b>Engine:</b> Verloren war es ohnehin, um sechs bis sieben Bauern. 19.T@h1 (−6,61) und 20.T@b3 (−7,23) sind kleine Ungenauigkeiten. <b>21.g4</b> stellt dann noch den Turm ein (−13,78; 21.a3 hielt −6,36). Es ist derselbe Fehler wie beim Springer, sechs Züge später: eine Figur vor seine Bauern gestellt, ohne zu fragen, wohin sie geht, wenn die Bauern kommen.'''

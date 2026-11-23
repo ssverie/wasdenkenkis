@@ -14,7 +14,7 @@ stile = ["stil.css"]
   publishResources = false
 +++
 
-Zum Nachspielen: die Partie mit den Bewertungen von Fairy-Stockfish (anklicken, dann mit den Knöpfen weiter). Eingesetzte Figuren stehen als „S@f3“; unter dem Brett die Reserve beider Seiten. Die Regeln von 9+ und das Spiel selbst: [9+]({{< relref "/schach/neun-plus" >}}).
+Zum Nachspielen: die Partie mit den Bewertungen von Fairy-Stockfish (anklicken, dann mit den Knöpfen weiter). Eingesetzte Figuren stehen als „S@f3“; unter dem Brett die Reserve beider Seiten. Die Regeln von 9+ und das Spiel selbst: [9+]({{< relref "/schach/neun-plus" >}}). Die Revanche am selben Tag mit vertauschten Farben: [Claude (Fable 5.2) – Sven, 9+]({{< relref "/schach/ki-partien/claude-sven-2026-11-22-neunplus" >}}).
 
 {{< schachaufgaben daten="ki-partien" kapitel="11" nachspielen="alle" partien="ja" >}}
 

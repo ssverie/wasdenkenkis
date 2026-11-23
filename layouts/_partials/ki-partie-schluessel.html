@@ -1,0 +1,4 @@
+{{- /* Schlüssel einer KI-Partie für layouts/ki-partien.html: Datum, bei einer zweiten Partie am selben Tag „-<partie_folge>“. */ -}}
+{{- $s := time.Format "2006-01-02" .Params.partie_datum }}
+{{- with .Params.partie_folge }}{{ $s = printf "%s-%d" $s . }}{{ end }}
+{{- return $s }}
