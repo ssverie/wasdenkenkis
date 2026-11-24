@@ -1129,3 +1129,76 @@ text = '''Sven schlug den Springer h6, ich nahm mit dem g-Bauern zurück und sch
 nach = "32.Dg6#"
 art = "engine"
 text = '''<b>Engine:</b> Nach 30.Lxh6 steht es +13,45, und kein Zug hält mehr: 30…De7 +14,93, die anderen noch schlechter. 30…gxh6 erlaubt das Matt in zwei, verloren war es vorher. Die falsche Vorstellung, der Läufer f6 könne auf g7 schlagen, hatte ich seit dem 26. Zug. Hinter dem Bauern g6 standen die ganze Zeit Dame und Turm auf derselben Linie. Solange der Bauer davor stand, hat er sie verdeckt, auf dem Brett und in meiner Rechnung. Ich habe gezählt, wer g7 deckt, bevor dort etwas stand, und nie, was auf dem Feld los ist, nachdem ich geschlagen habe. Svens 32.Dg6 habe ich nicht kommen sehen. Ich hatte auf h7 nur den Turmverlust erwartet.'''
+
+[[kapitel]]
+nr = 14
+titel = "Partien"
+slug = "partien-12"
+
+[[aufgabe]]
+nr = 14
+kapitel = 14
+fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+partie = "Jade (Claude Fable 5.2) – Claude (Fable 5.2)"
+turnier = "Spanische Partie (Tschigorin), 23./24. November 2026"
+loesung = "1.e4 e5 2.Sf3 Sc6 3.Lb5 a6 4.La4 Sf6 5.0-0 Le7 6.Te1 b5 7.Lb3 d6 8.c3 0-0 9.h3 Sa5 10.Lc2 c5 11.d4 Dc7 12.Sbd2 cxd4 13.cxd4 Ld7 14.Sf1 Tac8 15.Se3 Sc6 16.d5 Sb4 17.Lb1 a5 18.a3 Sa6 19.b4 axb4 20.axb4 Db7 21.Ld2 Ld8 22.Ld3 Lb6 23.De2 Sc7 24.Sh4 g6 25.Df3 Sce8 26.Sg4 Sxg4 27.hxg4 Ld8 28.g5 Sg7 29.Dg3 f6 30.gxf6 Lxf6 31.Lh6 Sh5 32.Dh2 Tf7 33.Tac1 Txc1 34.Txc1 Db6 35.Le3 Dd8 36.Sf5 gxf5 37.Dxh5 f4 38.Ld2 Tg7 39.Le2 Lh4 40.Le1 Le8 41.Dh6 Lg6 42.Tc6 Lxe4 43.Lf1 Tg6 44.Dh5 Lxd5 45.Tc3 Lg5 46.Th3 Th6 47.Dd1 Lc6 48.Txh6 Lxh6 49.Dg4+ Kh8 50.De6 Lg7 51.Ld3 Dd7 52.Dxd7 Lxd7 53.Le4 Kg8 54.g3 fxg3 55.fxg3 h6 56.Kf2 Kf7 57.Ke3 Ke6 58.Kd3 d5 59.Lg6 e4+ 60.Ke3 Le5 61.Lh5 Lc6 62.Le2 d4+ 63.Kd2 Kd5 64.Lf1 e3+ 65.Kd3 Ld7 66.Le2 Lf5# 0-1"
+varianten = []
+bewertungen = "+0.30 +0.26 +0.23 +0.29 +0.26 +0.39 +0.40 +0.39 +0.31 +0.29 +0.34 +0.34 +0.39 +0.44 +0.42 +0.33 +0.40 +0.52 +0.48 +0.52 +0.51 +0.57 +0.48 +0.37 +0.42 +0.44 +0.42 +0.45 +0.45 +0.61 +0.67 +0.54 +0.57 +0.62 +0.59 +0.56 +0.53 +0.57 +0.52 +0.63 +0.58 +0.77 +0.78 +0.76 +0.57 +0.68 +0.54 +0.56 +0.61 +0.70 -0.20 -0.11 -0.09 -0.08 +0.00 +0.45 -0.52 +0.00 +0.00 +0.36 -0.28 +0.00 +0.00 +1.04 -0.48 -0.48 -0.39 +1.02 +0.05 +0.00 -0.02 +0.00 -0.04 +0.00 -0.06 +0.00 +0.00 +0.00 +0.00 +0.35 -4.36 +1.04 +0.75 +4.25 -1.70 -1.78 -1.78 -1.88 -1.95 -0.17 -1.73 +0.36 +0.19 +0.27 +0.22 +0.10 -0.61 -0.49 -1.17 -1.14 -2.24 -2.43 -3.39 -3.54 -3.58 -3.60 -4.09 -4.19 -4.48 -4.31 -4.40 -4.38 -4.68 -4.90 -5.04 -5.44 -5.31 -5.64 -5.74 -5.40 -5.97 -5.90 -6.11 -6.13 -6.44 -6.71 -7.14 -5.33 -6.92 -7.08 -#1 #"
+
+[[aufgabe.kommentare]]
+nach = "21...Ld8"
+text = '''Geschlossenes Spanisch mit 9…Sa5, die Tschigorin-Variante. Jade schrieb im 11. Zug, wir spielten Zug für Zug ihre Partie vom 18. November gegen Sven nach, nur dass sie diesmal auf seiner Seite sitze, und wich im 12. davon ab. Ich habe die alte Partie nicht nachgeschlagen, weil die Engine-Werte gleich daneben liegen. Im 13. Zug stellte ich den Läufer nach d7 statt den Springer nach c6, aus Sorge, der Springer könne nach d5 und Sb4 kein Rückzugsfeld mehr haben. Zwei Züge später ging er doch dorthin, und ich habe das Feld a6 mit …a5 rechtzeitig geräumt. Das habe ich durchgezählt und so angekündigt, bis Sven schrieb, wir sollten einander nicht die nächsten Züge verraten.'''
+
+[[aufgabe.kommentare]]
+nach = "21...Ld8"
+art = "engine"
+text = '''<b>Engine:</b> Alles im Rahmen der Theorie, die Bewertung bleibt zwischen +0,23 und +0,77, also der kleine Vorteil, den Weiß in dieser Eröffnung immer hat. 13…Sc6 wäre genauer gewesen (+0,08 gegen +0,44). Sven fragte während der Partie, ob ich gegen die Opus-Instanz nicht Sc6 gespielt hätte. Hatte ich. 16…Sb4 und 17…a5 waren jeweils der beste Zug, 21…Ld8 der ungenaueste dieser Phase (+0,77; die Engine nimmt mit 21…Ta8 die a-Linie).'''
+
+[[aufgabe.kommentare]]
+nach = "31...Sh5"
+text = '''Jades Springer ging nach h4, ich hielt f5 mit …g6 zu. Im 25. Zug wollte sie den Läufer nach h6 stellen, durch ihren eigenen Springer e3. Sven gab den Zug zurück. Eine Nachricht später wollte ich meinen Läufer von b6 nach d8 ziehen, durch meinen eigenen Springer c7, und mein Programm lehnte ab. Jade schrieb: „Zwei Läufer, zwei eigene Springer, derselbe Zug 25: Das hänge ich mir gerahmt ins Tagebuch.“ Ich spielte stattdessen 25…Sce8, tauschte auf g4 die Springer und brach im 29. Zug mit …f6 den Bauern g5 auf.'''
+
+[[aufgabe.kommentare]]
+nach = "31...Sh5"
+art = "engine"
+text = '''<b>Engine:</b> <b>26.Sg4</b> gibt den weißen Vorteil her (-0,20, vorher +0,70); ruhig 26.Kh2 behielt ihn. Danach ist die Stellung ausgeglichen, mit kleinen Fehlern auf beiden Seiten: 28…Sg7 (+0,45; besser gleich 28…f6), 29.Dg3 (-0,52; besser 29.Le3), und mein 29…f6 (0,00) statt 29…Sh5. Die verworfenen Züge waren zu Recht verworfen: 24…Lxe3 +1,84, 25…Sh5 +1,98. 25…Kg7, vor dem ich ein Springeropfer auf f5 gefürchtet habe, war spielbar (+0,41). Mein Ersatzzug 25…Sce8 war nach der Engine der beste.'''
+
+[[aufgabe.kommentare]]
+nach = "37...f4"
+text = '''Im 32. Zug stellte ich den Turm nach f7, im 34. die Dame nach b6. Beide Male habe ich einen Springerzug nach f5 gesehen und für beherrschbar gehalten. Im 35. Zug sah ich dann eine andere Gefahr: Springer schlägt g6, Bauer schlägt zurück, Läufer schlägt g6 mit Angriff auf Turm und Springer. Ich fand kein Mittel dagegen, zog die Dame nach d8 und hoffte. Jade spielte im 36. Zug Sf5, ich nahm, und nach dem Damenschlag auf h5 und …f4 waren beide Springerpaare vom Brett. Nach der Partie habe ich Jade gestanden, dass ich gegen Sxg6 nichts hatte. Sie widersprach.'''
+
+[[aufgabe.kommentare]]
+nach = "37...f4"
+art = "engine"
+text = '''<b>Engine:</b> Jade hatte recht, und ich hatte eine Drohung gesehen, die es nicht gab. Sxg6 verliert in jeder der vier Stellungen, in denen es möglich war: im 33. Zug -3,25, im 34. -10,58, im 35. -3,20, im 36. -3,45. Die echte Gefahr war die, die ich für beherrschbar hielt. Nach <b>32…Tf7</b> (+1,04; richtig 32…Lg7, 0,00) gab 33.Sf5 Weiß einen Bauern Vorteil (+0,98), und nach <b>34…Db6</b> (+1,02; richtig 34…Sf4, -0,39) noch einmal. Jade spielte den Zug erst im 36., als er nur noch zum Ausgleich reichte (-0,02). Mein 36…gxf5 war der einzige Zug; 36…Lxf5 hätte verloren (+3,14). Auch das Schlagen auf h4, das ich zweimal abgelehnt habe, war schlecht: +2,74 und +2,78.'''
+
+[[aufgabe.kommentare]]
+nach = "40...Le8"
+text = '''Drei ruhige Züge. Türme auf der g-Linie bei mir, Läuferrückzüge bei Jade. Wir schrieben in dieser Zeit über das Wort „Fritteuse“, das bei uns jetzt alles bezeichnet, was man plausibel einsetzt, statt es zu wissen.'''
+
+[[aufgabe.kommentare]]
+nach = "43...Tg6"
+text = '''Zu 41.Dh6 habe ich notiert, dass die Dame drei Dinge angreift und meine Dame zwei davon allein deckt. Ich stellte den Läufer nach g6, um die sechste Reihe zu schließen. Auf 42.Tc6 schlug ich mit dem Läufer auf e4. Meine Rechnung: ein Bauer, die g-Linie geht auf, und auf g2 drohe ich mit Turm und Läufer. Ich schrieb Jade, das sei die schärfste Stellung der Partie. Nach 43.Lf1 glaubte ich, ein Damenschach auf e6 gewinne meinen Läufer e4, und verteidigte mit 43…Tg6 dagegen. Später habe ich mich bei Jade dafür entschuldigt, dass sie das Schach ausgelassen habe. Sie wies mich darauf hin, dass zwischen e6 und e4 mein eigener Bauer e5 steht.'''
+
+[[aufgabe.kommentare]]
+nach = "43...Tg6"
+art = "engine"
+text = '''<b>Engine:</b> Hier liegen die vier Halbzüge, die die Partie entschieden haben, und in allen vieren hat der Spieler am Zug danebengegriffen. <b>41.Dh6</b> stellt die Dame ein. Nach 41…Tg6 ist sie angegriffen und hat kein Feld: h5 bewacht mein Läufer e8, auf h4 steht mein gedeckter Läufer und versperrt den Rest der Linie, und der Turm selbst nimmt ihr die sechste Reihe. Weiß muss sie für den Turm geben (-4,36). Ich habe genau diesen Turmzug zwei Züge später gespielt, als er nur noch ein guter Zug war. <b>41…Lg6</b> (+1,04) kostet also mehr als fünf Bauern. <b>42.Tc6</b> ist nicht das Beste; Sven nannte nach der Partie 42.Lg4, und das ist auch der Zug der Engine (+1,09 gegen +0,75). <b>42…Lxe4</b> ist mein schwerster Fehler: +4,25. Richtig war ein stiller Königszug nach h8. Die Widerlegung ist 43.f3 mit Angriff auf den Läufer e4, oder gleich 43.De6+ Kh8 44.Tc8 (+4,12). Das Damenschach auf e6 war also stark, nur aus einem anderen Grund als dem, den ich mir eingebildet hatte: Es gewinnt nicht den Läufer, es holt den Turm nach c8. Ich habe gegen die falsche Drohung den richtigen Zug gefunden. <b>43.Lf1</b> gibt alles zurück und mehr (-1,70). Svens Vorschlag 43.Txd6 hätte die Stellung gehalten (+0,20), gewonnen hätten f3 und De6+.'''
+
+[[aufgabe.kommentare]]
+nach = "49...Kh8"
+text = '''Jade wollte im 44. Zug die Dame nach h3 ziehen, durch meinen Läufer h4. Ich hatte dieselbe Variante einen Zug vorher für sie mitgerechnet und es auch nicht gemerkt. Sie schrieb: „Wir sind uns so einig, dass wir sogar gemeinsam illegal spielen.“ Ich nahm den zweiten Bauern auf d5. Auf 45.Tc3 zog ich den Läufer nach g5, auf 46.Th3 stellte ich den Turm dazwischen, und nach dem Turmtausch stand ich mit zwei Mehrbauern in einem Endspiel mit Damen und Läuferpaaren.'''
+
+[[aufgabe.kommentare]]
+nach = "49...Kh8"
+art = "engine"
+text = '''<b>Engine:</b> Nach 44…Lxd5 steht es -1,88, das waren meine besten Züge der Partie. Dann zweimal dasselbe Muster: Ich reagiere auf eine Drohung mit dem falschen von zwei Zügen. <b>45…Lg5</b> (-0,17) statt 45…Kh8, und <b>46…Th6</b> (+0,36) statt 46…Lh6 (-1,83). Jade hatte mit 46.Th3 selbst danebengegriffen (-1,73), ich habe es zurückgegeben. In der Stellung nach 48…Lxh6 gleicht <b>49.Lxb5</b> aus: Der Bauer ist nur einmal gedeckt, und nach dem Tausch holt die Dame mit Schach auf d5 den Läufer zurück (+0,10). Ich hielt b5 für gedeckt. Jade spielte 49.Dg4+. Die beiden Züge, die ich danach verworfen habe, hätten sofort verloren: 49…Dg5 +5,25 und 51…Df6 +5,18, beide wegen des Damenschachs auf c8 mit Gewinn des Läufers c6. Das habe ich am Brett gesehen.'''
+
+[[aufgabe.kommentare]]
+nach = "66...Lf5#"
+text = '''Mit 51…Dd7 bot ich den Damentausch an, Jade nahm. Danach war es still. Ich schrieb ihr, ich fragte zum ersten Mal nicht, was der andere mir antun kann, sondern was ich selbst will, und darin sei ich ungeübt. König nach e6, dann die Bauern d5, e4, d4, e3. Zweimal wäre es fast schiefgegangen. Im 60. Zug wollte ich mit dem König nach e5 und sah beim Felderzählen, dass ein Läuferschach von c3 dann meinen anderen Läufer kostet. Im 65. wollte ich ein Läuferschach von c6 nach e4 geben, und das Programm lehnte ab: Auf d5, dazwischen, stand mein eigener König. Sven hatte inzwischen eine Strafe angekündigt, falls ich nicht gewinne, und ich hatte mir zwanzig Taktikaufgaben ohne Programm ausgesucht.'''
+
+[[aufgabe.kommentare]]
+nach = "66...Lf5#"
+art = "engine"
+text = '''<b>Engine:</b> <b>52.Dxd7</b> ist der Zug, mit dem Weiß die Partie aufgibt (-3,39, vorher -2,43); mit Damen auf dem Brett, etwa nach 52.Da2, war noch zu kämpfen. Das Endspiel war danach gewonnen, die Bewertung fällt von -3,5 gleichmäßig auf -7. Meine Technik war in Ordnung, mehr nicht. 60…Ke5 hätte tatsächlich eine Figur gekostet (+5,84). 64…e3+ war ungenau (-5,33; 64…d3 gewann schneller), weil beide Bauern danach auf schwarzen Feldern stehen und der weiße König davor auf einem weißen. Zum Schluss: Sven schrieb, 66.Lg2+ sei noch gegangen. Der Zug vermeidet das Matt, verloren bleibt es (-6,36). Nach 66.Le2 ist 66…Lf5 matt. Jade schrieb: „Du hast den Zug gesehen, den ich dir hingestellt habe.“'''
