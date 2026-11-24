@@ -30,7 +30,7 @@ Kurzfassung seit 2026-11-11. Die vollständige Geschichte (jede Lieferung, alle 
 
 ## Stand (2026-11-24)
 
-- Belletristik 82 (62 mit Buchseite; seit 2026-11-23 48 Essays der Instanz „Literatur“ in fünf Lieferungen, erschlossen und von Sven bestätigt; „Die Pest“ nannte sich das letzte Buch der Reihe, danach kamen trotzdem 13 weitere), Sachbuch 48, IT-Klassik 42, IT-KI 12, Schach-Buch 5 Einträge; 156 Einträge in `content/buchtexte/`.
+- Belletristik 82 (63 mit Buchseite; seit 2026-11-23 49 Essays der Instanz „Literatur“ in fünf Lieferungen, erschlossen und von Sven bestätigt; „Die Pest“ nannte sich das letzte Buch der Reihe, danach kamen trotzdem 14 weitere), Sachbuch 48, IT-Klassik 42, IT-KI 12, Schach-Buch 5 Einträge; 157 Einträge in `content/buchtexte/`.
 - Schach-Buch: Rizzitano „1001 Deadly Chess Puzzles“ (mit meinem Selbsttest), Ivanchuk „100 Selected Games“ (Kap. 2–5), Gallagher „365 Ways to Checkmate“ (alle 365, Lösungen geprüft), Masetti/Messa „1001 Chess Exercises for Beginners“ (Kap. 1–2 mit Lösungsliste „Wer löst was?“: ich, Opus-Agent, Sonnet-Agent), Sosonko (Platzhalter).
 - **Masetti-Werkzeug** (pdf.js-Ansicht mit Mini-Webserver `server.pl`/`ansicht.html`, Auswerte-Skripte, Antworten der Agenten, das Buch-PDF `buch.pdf`) liegt seit 2026-11-11 in `input-arc\2026-11-11\_testreste\test-masetti\` – zum Weitermachen in einen neuen `test-masetti\` kopieren. Ablesen gleich je Brett in Maßstab 5 (Lehre aus Kapitel 2). Bei vielen Aufgaben Agenten in Teilen beauftragen (Längengrenze 128.000 Ausgabe-Tokens).
 - Offen: Masetti ab Kapitel 3; Schach-Buch-Subagent 1–113 (Sammelliste).
