@@ -54,6 +54,6 @@ Kurzfassung seit 2026-11-11 (Sven: „musst du es mal wieder refaktorieren?“ �
 ## Stand (2026-11-11)
 
 - **Mad Men:** Claude alle 92 Folgen + Gesamteinschätzung (Instanz „21.10.2026 - 22:08 - Mad Men episode summaries“, Schnitt 8,62, dreimal 10). **GPT-6 alle 92** (Instanz „22.10.2026 - 21:05 - Filmserien“, Wertungen steigen von 8,8 auf bis zu 10). **Grok 4.5** 1.1–1.7 (ohne Instanz). Gemini zurückgestellt.
-- **The Sopranos:** GPT-6 Staffel 1 (seit 2026-11-23, Zweitstimmen ohne Claude-Hauptbesprechung). `serie-einlesen.pl` holt Folgentitel ersatzweise aus den Seriendaten und nimmt Untertitel auch ohne Sternchen.
+- **The Sopranos:** GPT-6 Staffel 1 (seit 2026-11-23) und Staffel 2 (seit 2026-11-26), Zweitstimmen ohne Claude-Hauptbesprechung. `serie-einlesen.pl` holt Folgentitel ersatzweise aus den Seriendaten, nimmt Untertitel auch ohne Sternchen, Kopfzeilen mit führender Null („2.01“) und behandelt Angabezeilen der Instanz („Staffel 2 · Folge 5“, „Erstausstrahlung: …“) als Kopf.
 - **Serien mit Raster:** Mad Men, The Sopranos, Black Mirror (34 mit Bandersnatch als 4.7), Breaking Bad, Better Call Saul, Game of Thrones (73, ein Special fehlt), The Wire, Gomorra, Chernobyl, The Last Dance, Mr Inbetween. Ohne Raster: Band of Brothers, Sherlock, Dekalog, Narcos, Narcos: Mexico, Six Feet Under, Rectify. Serienliste 18.
 - Filme und Podcast-Folgen: siehe Seite und Chronik.

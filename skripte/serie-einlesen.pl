@@ -107,9 +107,13 @@ for my $f (@ARGV) {
         $titel = $1;
     } else {
         my $k = shift @z; push @kopf, $k;
-        die "$f: Kopfzeile „… $st.$fo: …“ erwartet, gefunden „$k“\n" unless $k =~ /\b$st\.$fo\b/;
+        die "$f: Kopfzeile „… $st.$fo: …“ erwartet, gefunden „$k“\n" unless $k =~ /\b$st\.0?$fo\b/;   # „2.01“ (Sopranos 2, 2026-11-26)
         $untertitel = shift @z; push @kopf, $untertitel;
-        push @kopf, shift @z while @z && $z[0] =~ /^\s*$/;
+        # Leerzeilen und Angabezeilen der Instanz („Staffel 2 · Folge 5“, „Erstausstrahlung: …“) gehören zum Kopf (Sopranos 2)
+        while (@z && ($z[0] =~ /^\s*$/ || $z[0] =~ /^(Staffel \d+ · Folge \d+|Erstausstrahlung: .+)$/)) {
+            push @meldung, "Kopfzeile entfernt: $z[0]" if $z[0] =~ /\S/;
+            push @kopf, shift @z;
+        }
         $titel = shift @z;
     }
     $titel = $versal{$titel} // ($o{versalien} && versal($titel) ? die "$f: Titel in Versalien ohne Tabelleneintrag: $titel\n" : $titel);
